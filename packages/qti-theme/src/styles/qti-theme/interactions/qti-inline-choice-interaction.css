@@ -66,4 +66,41 @@
       @apply act-bg;
     }
   }
+
+  qti-inline-choice-interaction {
+    display: inline-block;
+    margin: 0.2rem 0.2rem 0.2rem 0;
+    color: var(--qti-body-color);
+    background-color: var(--qti-bg);
+    border: var(--qti-border);
+    border-radius: var(--qti-field-border-radius);
+
+    &::part(trigger) {
+      background: transparent;
+      border: none;
+      border-radius: inherit;
+      color: inherit;
+    }
+
+    &::part(value),
+    &::part(dropdown-icon) {
+      color: inherit;
+    }
+
+    &:state(candidate-correct) {
+      @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+
+      &::part(trigger) {
+        background: transparent;
+      }
+    }
+
+    &:state(candidate-incorrect) {
+      @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+
+      &::part(trigger) {
+        background: transparent;
+      }
+    }
+  }
 }

@@ -83,4 +83,62 @@
     justify-content: center;
     text-align: center;
   }
+
+  qti-match-interaction.qti-match-tabular {
+    &::part(grid) {
+      gap: 1px;
+      background-color: var(--qti-border-color);
+      border: var(--qti-border-thickness) solid var(--qti-border-color);
+      border-radius: var(--qti-border-radius);
+      overflow: hidden;
+    }
+
+    &::part(corner),
+    &::part(input-cell) {
+      border: none;
+      background-color: white;
+    }
+
+    &::part(input-cell):hover {
+      background-color: var(--qti-hover-bg);
+    }
+
+    &::part(control checked) {
+      @mixin control-selected var(--qti-primary);
+    }
+
+    &::part(control-mark radio checked) {
+      background-color: white;
+      width: calc(var(--qti-form-size) - 8px);
+      height: calc(var(--qti-form-size) - 8px);
+    }
+
+    &::part(control-mark checkbox checked) {
+      background-color: white;
+    }
+
+    &::part(control checked correct) {
+      @mixin control-selected var(--qti-correct);
+    }
+
+    &::part(control checked incorrect) {
+      @mixin control-selected var(--qti-incorrect);
+    }
+  }
+
+  qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
+    border: none;
+    background-color: white;
+  }
+
+  .full-correct-response qti-match-interaction.qti-match-tabular {
+    &::part(control checked) {
+      @mixin answer;
+    }
+
+    &::part(control-mark radio checked),
+    &::part(control-mark checkbox checked) {
+      background-color: var(--qti-answer-fg);
+    }
+  }
 }

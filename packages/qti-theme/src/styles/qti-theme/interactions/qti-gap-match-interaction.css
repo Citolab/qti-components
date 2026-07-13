@@ -117,4 +117,24 @@
       }
     }
   }
+
+  /* The source and placed chip share one visual component. */
+  qti-gap-match-interaction qti-gap-text:state(drag),
+  qti-gap-match-interaction qti-gap::part(drag) {
+    @mixin chip;
+  }
+
+  qti-gap-match-interaction qti-gap-text {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  qti-gap-match-interaction .correct-option {
+    @mixin answer;
+    border: var(--qti-border-thickness) solid var(--qti-answer-border) !important;
+  }
+
+  .full-correct-response qti-gap-match-interaction::part(drags) {
+    display: none;
+  }
 }

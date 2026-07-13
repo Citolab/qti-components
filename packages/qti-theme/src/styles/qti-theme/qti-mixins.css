@@ -8,6 +8,72 @@
  * above (value first), not by editing these.
  * ========================================================================== */
 
+/*
+ * Semantic PostCSS mixins. Interaction files wire these to their own parts and states; the mixins
+ * own the shared visual vocabulary. The older @apply utilities below remain during the migration.
+ */
+@define-mixin candidate-tint $color, $background {
+  background-color: $background;
+  color: $color;
+  border-color: $color;
+  box-shadow: none;
+}
+
+@define-mixin answer {
+  background-color: var(--qti-answer-bg);
+  color: var(--qti-answer-fg);
+  border-color: var(--qti-answer-border);
+}
+
+@define-mixin chip {
+  box-sizing: border-box;
+  color: var(--qti-primary-fg);
+  background-color: var(--qti-primary);
+  border-color: var(--qti-primary);
+  border-radius: var(--qti-border-radius);
+  box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  padding: var(--qti-padding-vertical) 0.8em;
+}
+
+@define-mixin placeholder {
+  background-color: var(--qti-placeholder-bg);
+  opacity: 1;
+  box-shadow: inset var(--qti-placeholder-shadow);
+  border-color: transparent;
+  color: transparent;
+}
+
+@define-mixin grip {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 0.75em;
+  height: 1em;
+  margin-right: 0.5em;
+  background-color: currentColor;
+  mask: var(--qti-grip-mask) no-repeat center / contain;
+  -webkit-mask: var(--qti-grip-mask) no-repeat center / contain;
+}
+
+@define-mixin answer-check {
+  content: '';
+  background-color: var(--qti-answer-fg);
+  mask: var(--qti-check-mask) no-repeat center / contain;
+  -webkit-mask: var(--qti-check-mask) no-repeat center / contain;
+}
+
+@define-mixin control-selected $color {
+  border-color: $color;
+  background-color: $color;
+}
+
+@define-mixin field-typography {
+  color: var(--qti-body-color);
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 /* The hole a lifted / placed source chip leaves behind. @apply'd on the chip's
  * dragging / placeholder state. */
 .placeholder {

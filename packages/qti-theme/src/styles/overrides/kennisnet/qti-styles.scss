@@ -1,19 +1,22 @@
 @use '_variables_wikiwijs' as *;
 @use './qti/buttons';
-@use './qti/qti-vars';
+// QTI interaction tokens now have parity-compatible defaults in qti-theme/qti-variables.css.
+// @use './qti/qti-vars';
 @use './qti/feedback';
-@use './qti/extended-text-interaction';
-@use './qti/gap-match-interaction';
-@use './qti/match-interaction';
-@use './qti/order-interaction';
-@use './qti/choice-interaction';
-@use './qti/text-entry-interaction';
+// Interaction styling migrated to styles/qti-theme/interactions.
+// @use './qti/extended-text-interaction';
+// @use './qti/gap-match-interaction';
+// @use './qti/match-interaction';
+// @use './qti/order-interaction';
+// @use './qti/choice-interaction';
+// @use './qti/text-entry-interaction';
 @use './qti/rubric-block';
 @use './qti/modal-feedback';
-@use './qti/inline-choice-interaction';
-@use './qti/select-point-interaction';
-@use './qti/hottext-interaction';
-@use './qti/hotspot-interaction';
+// @use './qti/inline-choice-interaction';
+// The select-point marker is themed by qti-theme; the editor information panel remains below.
+// @use './qti/select-point-interaction';
+// @use './qti/hottext-interaction';
+// @use './qti/hotspot-interaction';
 
 qti-item-body {
   img {
@@ -24,6 +27,15 @@ qti-item-body {
   svg {
     vertical-align: initial;
   }
+}
+
+.select-point-info {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--bs-info-border-subtle);
+  border-radius: 0.2rem;
+  background-color: var(--bs-info-bg-subtle);
+  color: var(--bs-info-text-emphasis);
 }
 
 /*

@@ -103,4 +103,100 @@
       @apply act;
     }
   }
+
+  qti-order-interaction {
+    --qti-dropzone-min-height: 40px;
+
+    &::part(drops) {
+      padding: 0.5rem;
+      border-radius: var(--qti-border-radius);
+      overflow: visible;
+    }
+
+    &::part(drop) {
+      overflow: visible;
+      height: 100%;
+      border: var(--qti-drop-border, var(--qti-border-thickness) dashed var(--qti-border-color));
+      border-radius: var(--qti-border-radius);
+      background-color: transparent;
+      background-image: var(--qti-drop-bg-img, revert-layer);
+    }
+
+    &::part(active) {
+      border-color: var(--qti-border-active);
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(enabled) {
+      background-color: var(--qti-bg-active);
+    }
+
+    &:has(qti-simple-choice)::part(drop) {
+      align-self: flex-start;
+    }
+
+    & qti-simple-choice,
+    &::part(drag) {
+      box-shadow: var(--qti-secondary-shadow);
+      color: var(--qti-body-color);
+      position: relative;
+    }
+
+    & qti-simple-choice {
+      background-color: var(--qti-secondary-bg-subtle);
+      border: var(--qti-border-thickness) solid transparent;
+      font-weight: 600;
+      @mixin chip;
+    }
+
+    &::part(drag) {
+      background-color: white;
+      border: var(--qti-border-thickness) solid var(--qti-border-color);
+      overflow: visible;
+    }
+
+    /* Keep :state() in the same selector as ::part(). Native nesting after a
+       pseudo-element is not parsed consistently by the browser toolchain. */
+    &::part(drag):state(candidate-incorrect) {
+      border-color: var(--qti-incorrect);
+      background-color: var(--qti-incorrect-light);
+    }
+
+    &::part(drag):state(candidate-correct) {
+      border-color: var(--qti-correct);
+      background-color: var(--qti-correct-light);
+    }
+
+    &::part(container) {
+      gap: 2rem;
+    }
+
+    &[orientation='horizontal'] {
+      &::part(container) {
+        flex-direction: column;
+      }
+
+      &::part(drops) {
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fit, minmax(var(--qti-drop-min-width, 120px), 1fr));
+        gap: 0.5rem;
+      }
+    }
+
+    &[orientation='vertical'] {
+      &::part(container) {
+        flex-direction: row-reverse;
+      }
+
+      & qti-simple-choice,
+      &::part(drag) {
+        width: auto;
+      }
+    }
+  }
+
+  .full-correct-response qti-order-interaction::part(drags) {
+    display: none;
+  }
 }

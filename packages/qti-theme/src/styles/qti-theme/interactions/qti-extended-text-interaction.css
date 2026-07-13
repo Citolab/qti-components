@@ -12,4 +12,30 @@
       }
     }
   }
+
+  qti-extended-text-interaction {
+    position: relative;
+
+    &::part(textarea) {
+      @mixin field-typography;
+      border-radius: var(--qti-textarea-border-radius);
+      padding: 0.6rem 0.75rem 0.75rem;
+    }
+
+    &.correct::part(textarea) {
+      @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+      padding-left: 2.4rem;
+    }
+
+    &.partiallyCorrect::part(textarea) {
+      @mixin candidate-tint var(--qti-body-color), var(--qti-partially-correct-light);
+      border-color: var(--qti-partially-correct);
+      padding-left: 2.4rem;
+    }
+
+    &.incorrect::part(textarea) {
+      @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+      padding-left: 2.4rem;
+    }
+  }
 }

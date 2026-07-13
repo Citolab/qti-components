@@ -22,6 +22,19 @@
     outline-offset: 0.25rem;
   }
 
+  /* One chip vocabulary across the light-DOM bank, a placed drag and the
+     floating clone. Graphic gap-match is deliberately excluded: a filled
+     card would cover the image beneath its hotspot. */
+  :state(drag):where(
+      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
+    ),
+  qti-gap::part(drag),
+  qti-simple-associable-choice::part(drag),
+  qti-associate-interaction::part(drag),
+  [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])) {
+    @mixin chip;
+  }
+
   /*
    * A source chip in the drag bank that currently leaves a hole:
    *   `dragging`    — its clone is following the cursor
@@ -37,13 +50,78 @@
    * `pointer-events` here is belt-and-braces: the mixins also refuse to start a drag from a
    * chip in these states, so behaviour never depends on a stylesheet being present.
    */
-  :state(dragging),
-  :state(placeholder) {
-    background: var(--qti-placeholder-bg);
-    box-shadow: inset var(--qti-placeholder-shadow);
-    border-color: transparent;
-    color: transparent;
+  :state(drag):state(dragging),
+  :state(drag):state(placeholder),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(drag):state(dragging),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(drag):state(placeholder) {
+    @mixin placeholder;
     pointer-events: none;
+  }
+
+  /* The shared drag handle. Placed image hotspots are excluded for the same
+     reason as the filled chip above. */
+  :state(drag):where(
+      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
+    )::part(control)::before,
+  :where(:not(qti-associable-hotspot))::part(drag-control)::before,
+  [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction']))::before {
+    @mixin grip;
+  }
+
+  :state(drag):state(candidate-correct),
+  qti-gap::part(drag):state(candidate-correct),
+  qti-associable-hotspot::part(drag):state(candidate-correct),
+  qti-simple-associable-choice::part(drag):state(candidate-correct),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-correct),
+  [data-drag-clone]:state(candidate-correct) {
+    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+  }
+
+  :state(drag):state(candidate-incorrect),
+  qti-gap::part(drag):state(candidate-incorrect),
+  qti-associable-hotspot::part(drag):state(candidate-incorrect),
+  qti-simple-associable-choice::part(drag):state(candidate-incorrect),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-incorrect),
+  [data-drag-clone]:state(candidate-incorrect) {
+    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  /* A cloned interaction presents the answer key rather than a candidate
+     judgement, regardless of which interaction owns the value. */
+  .full-correct-response :state(drag),
+  .full-correct-response ::part(drag),
+  .full-correct-response qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-associable-choice::part(drag),
+  .full-correct-response qti-text-entry-interaction,
+  .full-correct-response qti-inline-choice-interaction,
+  .full-correct-response qti-hottext-interaction qti-hottext:state(checked) {
+    @mixin answer;
+  }
+
+  .full-correct-response qti-text-entry-interaction::part(input),
+  .full-correct-response qti-inline-choice-interaction::part(value) {
+    color: var(--qti-answer-fg);
+  }
+
+  span.correct-option {
+    @mixin answer;
+    border: var(--qti-border-thickness) solid var(--qti-answer-border);
+  }
+
+  .full-correct-response :state(drag)::part(control)::before,
+  .full-correct-response ::part(drag-control)::before {
+    @mixin answer-check;
+  }
+
+  span.correct-option::after {
+    @mixin answer-check;
+    display: inline-block;
+    vertical-align: middle;
+    width: 1em;
+    height: 1em;
+    margin-left: 0.4em;
   }
 
   /*
@@ -59,21 +137,23 @@
    */
   ::part(correction-correct) {
     background-color: var(--qti-correct);
-    @apply check-mask;
+    mask: var(--qti-check-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-check-mask) no-repeat center / contain;
   }
 
   ::part(correction-incorrect) {
     background-color: var(--qti-incorrect);
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E")
-      no-repeat center / contain;
+    mask: var(--qti-times-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
   }
 
   ::part(correction-correct)::after {
-    @apply check-mask;
+    mask: var(--qti-check-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-check-mask) no-repeat center / contain;
   }
 
   ::part(correction-incorrect)::after {
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E")
-      no-repeat center / contain;
+    mask: var(--qti-times-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
   }
 }

@@ -70,4 +70,83 @@
       }
     }
   }
+
+  /* Hotspots paint directly over an image, so every state keeps identical
+     geometry and changes only border/fill colour. The important border is
+     required to replace the legacy `.spot { border: 0 !important; }`. */
+  qti-hotspot-interaction qti-hotspot-choice {
+    border: var(--qti-hotspot-border-width, 3px) solid var(--qti-border-color) !important;
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:hover {
+    border-color: var(--qti-border-active);
+    background-color: color-mix(in srgb, var(--qti-border-active) 12%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:focus-visible {
+    outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+    outline-offset: 2px;
+  }
+
+  /* Answer-key state comes first so the candidate's own judgement wins when
+     both state families are present on the same choice. */
+  qti-hotspot-interaction qti-hotspot-choice:state(correct-response) {
+    border-color: var(--qti-answer-border) !important;
+    background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(checked) {
+    border-color: var(--qti-selected-bg) !important;
+    background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(candidate-correct) {
+    border-color: var(--qti-correct) !important;
+    background-color: color-mix(in srgb, var(--qti-correct) 35%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(candidate-incorrect) {
+    border-color: var(--qti-incorrect) !important;
+    background-color: color-mix(in srgb, var(--qti-incorrect) 35%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(disabled),
+  qti-hotspot-interaction qti-hotspot-choice:state(readonly) {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly'] {
+    border: 0 !important;
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(correct-response) {
+    background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(checked) {
+    background-color: color-mix(in srgb, var(--qti-selected-bg) 40%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(candidate-correct) {
+    background-color: color-mix(in srgb, var(--qti-correct) 40%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(candidate-incorrect) {
+    background-color: color-mix(in srgb, var(--qti-incorrect) 40%, transparent);
+  }
+
+  .full-correct-response qti-hotspot-interaction qti-hotspot-choice:state(checked) {
+    border-color: var(--qti-answer-border) !important;
+    background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
+  }
+
+  .full-correct-response qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(checked) {
+    background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
+  }
 }

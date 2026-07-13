@@ -9,8 +9,9 @@
   --qti-error: #df0000; /* red */
   --qti-info: #007ac3; /* blue — the answer key */
 
-  /* Foreground on a primary fill — a light tint of primary, so it tracks the brand. */
-  --qti-primary-fg: color-mix(in srgb, var(--qti-primary) 6%, white);
+  /* Foreground on a primary fill. */
+  --qti-primary-fg: #fff;
+  --qti-body-color: #3e144e;
 
   /* ── Correction — derived from the semantic colours, never set directly. ── */
   --qti-correct: var(--qti-success);
@@ -27,18 +28,33 @@
 
   /* Validation — the amber warning. */
   --qti-validation-error-bg: color-mix(in srgb, var(--qti-warning) 5%, white);
-  --qti-validation-text: var(--qti-warning);
+  --qti-validation-text: var(--qti-body-color);
 
   /* The hole a lifted / placed chip leaves — derived from primary. */
-  --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 15%, white);
-  --qti-placeholder-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 30%, white);
+  --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);
+  --qti-placeholder-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 30%, white);
 
   /* ── Surfaces & border ── */
   --qti-bg: white;
   --qti-hover-bg: #f9fafb;
+  --qti-secondary-bg-subtle: #edecf6;
+  --qti-secondary-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 20%, white);
   --qti-border-thickness: 1px; /* kept: some places need the width alone (invariance, calcs) */
   --qti-border-radius: 0.3rem;
-  --qti-border: var(--qti-border-thickness) solid #9b77a9; /* the one border shorthand */
+  --qti-field-border-radius: 0.25rem;
+  --qti-textarea-border-radius: 0.375rem;
+  --qti-border-style: solid;
+  --qti-border-color: #9b77a9;
+  --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+
+  /* Selection is a semantic alias of the primary action colour. */
+  --qti-selected-bg: var(--qti-primary);
+  --qti-selected-color: var(--qti-primary-fg);
+
+  /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime dependency. */
+  --qti-check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+  --qti-times-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E");
+  --qti-grip-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M40 352l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zm192 0l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 320c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 192l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 160c-22.1 0-40-17.9-40-40L0 72C0 49.9 17.9 32 40 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40z'/%3E%3C/svg%3E");
 
   /* ── Sizing ── */
   --qti-gap-size: 1rem; /* THE flex/grid gap, used everywhere incl .styles.ts */
@@ -56,12 +72,10 @@
    */
   --qti-bg-active: var(--qti-bg);
   --qti-border-active: var(--qti-primary);
-  --qti-border-style: solid;
-  --qti-border-color: #9b77a9;
   --qti-focus-border-width: 5px;
   --qti-focus-color: #bddcff7e;
-  --qti-disabled-bg: #f3f4f6;
-  --qti-disabled-color: #45484f;
+  --qti-disabled-bg: transparent;
+  --qti-disabled-color: var(--qti-body-color);
   --qti-light-bg-active: #f0f0f0;
   --qti-light-border-active: #d0d0d0;
   --qti-dark-bg-active: #1f2937;

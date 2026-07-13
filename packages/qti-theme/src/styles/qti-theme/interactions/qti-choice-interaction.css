@@ -102,4 +102,98 @@
       padding: 0 !important;
     }
   }
+
+  /* Kennisnet-led control appearance. The interaction owns the selectors; shared visual concepts
+     come from qti-mixins.css and qti-variables.css. */
+  qti-choice-interaction {
+    qti-simple-choice {
+      &::part(label) {
+        display: inline !important;
+      }
+
+      &::part(control) {
+        border-width: thin;
+        background-color: white;
+      }
+
+      &:state(radio):state(checked)::part(control),
+      &:state(checkbox):state(checked)::part(control) {
+        @mixin control-selected var(--qti-primary);
+      }
+
+      &:state(radio):state(checked)::part(control-mark) {
+        background-color: white;
+        width: calc(var(--qti-form-size) - 8px);
+        height: calc(var(--qti-form-size) - 8px);
+      }
+
+      &:state(checkbox):state(checked)::part(control-mark) {
+        background-color: white;
+      }
+
+      &:state(candidate-correct) {
+        background-color: transparent;
+
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-correct);
+        }
+      }
+
+      &:state(candidate-incorrect) {
+        background-color: transparent;
+
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-incorrect);
+        }
+      }
+
+      & p {
+        margin: 0;
+      }
+    }
+
+    &.qti-input-control-hidden qti-simple-choice {
+      &:state(checked) {
+        background-color: var(--qti-selected-bg);
+        color: var(--qti-selected-color);
+      }
+
+      &:state(candidate-correct) {
+        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+      }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+      }
+    }
+  }
+
+  /* The base theme scopes row correction through :not(.qti-input-control-hidden), which adds a
+     class worth of specificity. Restate the Kennisnet-led neutral row at that same boundary. */
+  qti-choice-interaction:not(.qti-input-control-hidden) qti-simple-choice {
+    &:state(candidate-correct),
+    &:state(candidate-incorrect) {
+      background-color: transparent;
+    }
+  }
+
+  .full-correct-response qti-choice-interaction {
+    qti-simple-choice {
+      &:state(radio):state(checked)::part(control),
+      &:state(checkbox):state(checked)::part(control) {
+        @mixin answer;
+      }
+
+      &:state(radio):state(checked)::part(control-mark),
+      &:state(checkbox):state(checked)::part(control-mark) {
+        background-color: var(--qti-answer-fg);
+      }
+    }
+
+    &.qti-input-control-hidden qti-simple-choice:state(checked) {
+      @mixin answer;
+    }
+  }
 }
