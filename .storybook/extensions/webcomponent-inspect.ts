@@ -3,7 +3,7 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
 /**
  * Web-component inspect toolbar extension.
  *
- * Adds three independent toolbar toggles that draw a debug overlay on top of the live
+ * Adds independent toolbar toggles that draw a debug overlay on top of the live
  * story, one box per finding, without touching the story DOM itself:
  *
  * - Parts:  every element carrying a `part="…"` attribute (inside any shadow root),
@@ -13,6 +13,9 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  *           live state list. These are what `:state(--checked)` selectors hook onto.
  * - Roles:  custom-element instances exposing an `ElementInternals.role` / `aria*` value
  *           (also from `attachInternals()`), labelled with the computed a11y semantics.
+ * - Min/Max attributes: any element carrying attributes whose names match min/max
+ *           prefix or contain `-min` / `-max`, labelled with the raw value plus a
+ *           parsed numeric value where possible.
  *
  * The toggles compose freely (they read like three checkboxes). Enable any combination.
  *
@@ -29,7 +32,8 @@ const OVERLAY_ID = 'wc-inspect-overlay';
 const COLORS = {
   parts: '#e5488a', // pink
   states: '#1f883d', // green
-  roles: '#0969da' // blue
+  roles: '#0969da', // blue
+  minMax: '#8a2be2' // violet
 };
 
 // ARIA reflection properties exposed on ElementInternals (ARIAMixin). Enumerated explicitly
@@ -62,7 +66,21 @@ const ARIA_PROPS = [
   'ariaBusy'
 ] as const;
 
-type Flags = { parts: boolean; states: boolean; roles: boolean };
+type Flags = { parts: boolean; states: boolean; roles: boolean; minMax: boolean };
+
+const isMinMaxName = (name: string) => {
+  const n = name.toLowerCase();
+  return n.startsWith('min-') || n.startsWith('max-') || n.includes('-min') || n.includes('-max');
+};
+
+const minMaxLabel = (name: string, raw: string): string => {
+  const trimmed = raw.trim();
+  const numeric = Number(trimmed);
+  if (trimmed !== '' && Number.isFinite(numeric)) {
+    return `${name}=${trimmed} (num:${numeric})`;
+  }
+  return `${name}=${raw}`;
+};
 
 /** Walk every element under `root`, descending into open shadow roots. */
 const eachElement = (root: ParentNode, cb: (el: HTMLElement) => void) => {
@@ -110,7 +128,7 @@ const render = (flags: Flags) => {
 
   // Never paint into an addon-vitest capture — the overlay is a human review tool only.
   if ((globalThis as { __vitest_browser__?: unknown }).__vitest_browser__) return;
-  if (!flags.parts && !flags.states && !flags.roles) return;
+  if (!flags.parts && !flags.states && !flags.roles && !flags.minMax) return;
 
   const root = document.getElementById('storybook-root') ?? document.body;
 
@@ -124,6 +142,17 @@ const render = (flags: Flags) => {
     // Parts live on (possibly non-custom) shadow-internal elements.
     if (flags.parts && el.hasAttribute('part')) {
       drawBox(overlay, el, COLORS.parts, [{ text: `part="${el.getAttribute('part')}"`, color: COLORS.parts }]);
+    }
+
+    if (flags.minMax && el.attributes.length) {
+      const labels: { text: string; color: string }[] = [];
+      for (const attr of Array.from(el.attributes)) {
+        if (!isMinMaxName(attr.name)) continue;
+        labels.push({ text: minMaxLabel(attr.name, attr.value), color: COLORS.minMax });
+      }
+      if (labels.length) {
+        drawBox(overlay, el, COLORS.minMax, labels);
+      }
     }
 
     // States + roles hang off the custom-element host via ElementInternals.
@@ -158,14 +187,14 @@ const render = (flags: Flags) => {
 };
 
 // Re-run the overlay (glued to elements, re-reading live internals) while it is active.
-let activeFlags: Flags = { parts: false, states: false, roles: false };
+let activeFlags: Flags = { parts: false, states: false, roles: false, minMax: false };
 let scheduled = false;
 const refresh = () => {
   if (scheduled) return;
   scheduled = true;
   requestAnimationFrame(() => {
     scheduled = false;
-    if (activeFlags.parts || activeFlags.states || activeFlags.roles) render(activeFlags);
+    if (activeFlags.parts || activeFlags.states || activeFlags.roles || activeFlags.minMax) render(activeFlags);
   });
 };
 
@@ -187,7 +216,8 @@ export const webComponentInspectDecorator: Decorator = (story, context) => {
   activeFlags = {
     parts: isOn(context.globals.inspectParts),
     states: isOn(context.globals.inspectStates),
-    roles: isOn(context.globals.inspectRoles)
+    roles: isOn(context.globals.inspectRoles),
+    minMax: isOn(context.globals.inspectMinMax)
   };
   // Re-evaluate after the story has painted so internals/states reflect the rendered state.
   requestAnimationFrame(() => render(activeFlags));
@@ -214,5 +244,6 @@ const toggle = (name: string, description: string, icon: ToolbarIcon): ToggleCon
 export const webComponentInspectGlobalTypes: Preview['globalTypes'] = {
   inspectParts: toggle('Parts', 'Outline every [part] element in the shadow DOM', 'component'),
   inspectStates: toggle('States', 'Show ElementInternals custom states (e.g. --checked)', 'lightning'),
-  inspectRoles: toggle('Roles', 'Show ElementInternals role / aria semantics', 'accessibility')
+  inspectRoles: toggle('Roles', 'Show ElementInternals role / aria semantics', 'accessibility'),
+  inspectMinMax: toggle('MinMax', 'Show min-* and max-* attributes with parsed numeric values', 'ruler')
 };
