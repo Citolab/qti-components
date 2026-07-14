@@ -953,29 +953,13 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       const validityAnchor = this.trackedDroppables[0] ?? this.trackedDraggables[0] ?? this;
-      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, validityAnchor);
+      this.setInteractionValidity(isValid, validityMessage, validityAnchor, { suppressInline: true });
 
       return isValid;
     }
 
     public override reportValidity(): boolean {
-      const isValid = this._internals.reportValidity();
-
-      // Query the validation message element directly in the shadow root
-      // to avoid timing issues with @query decorator
-      const validationMessageElement = this.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
-
-      if (validationMessageElement) {
-        if (!isValid) {
-          validationMessageElement.textContent = this._internals.validationMessage;
-          validationMessageElement.style.setProperty('display', 'block', 'important');
-        } else {
-          validationMessageElement.textContent = '';
-          validationMessageElement.style.display = 'none';
-        }
-      }
-
-      return isValid;
+      return super.reportValidity();
     }
   }
 

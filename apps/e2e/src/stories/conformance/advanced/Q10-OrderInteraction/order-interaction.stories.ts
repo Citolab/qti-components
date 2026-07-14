@@ -1,4 +1,5 @@
 import { expect } from 'storybook/test';
+import { fireEvent } from 'storybook/test';
 
 import { getItemByUri } from '@qti-components/loader';
 
@@ -17,7 +18,8 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 const getElements = (canvasElement: HTMLElement) => {
-  const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
+  const assessmentItem = (canvasElement.querySelector('qti-assessment-item') ||
+    canvasElement.querySelector('qti-item qti-assessment-item')) as QtiAssessmentItem;
   const orderInteraction = assessmentItem.querySelector('qti-order-interaction') as QtiOrderInteraction;
   const choiceA = orderInteraction.querySelector('qti-simple-choice[identifier="A"]') as HTMLElement;
   const choiceB = orderInteraction.querySelector('qti-simple-choice[identifier="B"]') as HTMLElement;
@@ -167,6 +169,57 @@ export const Q10_L1_D7: Story = {
 
     assessmentItem.processResponse();
     expect(getResponse(assessmentItem)).toEqual(['C', 'B', 'A']);
+  },
+  loaders: [loader]
+};
+
+// Q10-L1-D8: Default mode shows inline validation message on processResponse for invalid state
+export const Q10_L1_D8: Story = {
+  name: 'Q10-L1-D8',
+  render: (_, { loaded: { xml } }) => xml,
+  play: async ({ canvasElement }) => {
+    const { assessmentItem, orderInteraction } = getElements(canvasElement);
+    await orderInteraction.updateComplete;
+
+    orderInteraction.setAttribute('min-associations', '1');
+    orderInteraction.setAttribute('data-min-associations-message', 'Please place at least one driver.');
+
+    assessmentItem.processResponse();
+
+    const validationMessage = orderInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement;
+    expect((orderInteraction as any).internals.validity.valid).toBe(false);
+    expect(validationMessage).toBeTruthy();
+    expect(validationMessage.textContent).toContain('Please place at least one driver.');
+    expect(validationMessage.style.display).toBe('block');
+  },
+  loaders: [loader]
+};
+
+// Q10-L1-D9: validationDisplayMode='none' suppresses inline message while keeping invalid state
+export const Q10_L1_D9: Story = {
+  name: 'Q10-L1-D9',
+  render: (_, { loaded: { xml } }) => xml,
+  play: async ({ canvasElement }) => {
+    const { assessmentItem, orderInteraction } = getElements(canvasElement);
+    await orderInteraction.updateComplete;
+
+    (orderInteraction as any).configContext = {
+      ...((orderInteraction as any).configContext || {}),
+      validationDisplayMode: 'none'
+    };
+
+    orderInteraction.setAttribute('min-associations', '1');
+    orderInteraction.setAttribute('data-min-associations-message', 'Please place at least one driver.');
+
+    assessmentItem.processResponse();
+
+    const validationMessage = orderInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement;
+    expect((orderInteraction as any).internals.validity.valid).toBe(false);
+    expect(validationMessage).toBeTruthy();
+    expect(validationMessage.textContent).toBe('');
+    expect(validationMessage.style.display).toBe('none');
+
+    fireEvent.blur(orderInteraction);
   },
   loaders: [loader]
 };

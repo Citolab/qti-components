@@ -1,7 +1,9 @@
 import { html } from 'lit';
+import { expect } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTest } from './qti-test';
+import type { QtiChoiceInteraction } from '@qti-components/interactions';
 
 type Story = StoryObj<QtiTest>;
 
@@ -85,4 +87,45 @@ export const CSSVariablesForItem: Story = {
       </test-navigation>
     </qti-test>
   `
+};
+
+export const ValidationDisplayModePropagation: Story = {
+  render: () => html`
+    <qti-test data-testid="qti-test-host" navigate="item">
+      <test-navigation>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement }) => {
+    const qtiTest = canvasElement.querySelector('qti-test') as QtiTest | null;
+    expect(qtiTest).toBeTruthy();
+
+    if (!qtiTest) {
+      return;
+    }
+
+    qtiTest.configContext = {
+      ...(qtiTest.configContext || {}),
+      validationDisplayMode: 'none'
+    };
+
+    await qtiTest.updateComplete;
+
+    const choiceInteraction = qtiTest.querySelector('qti-choice-interaction') as QtiChoiceInteraction | null;
+    expect(choiceInteraction).toBeTruthy();
+
+    if (!choiceInteraction) {
+      return;
+    }
+
+    choiceInteraction.setAttribute('min-choices', '2');
+    choiceInteraction.validate();
+    choiceInteraction.reportValidity();
+
+    const messageEl = choiceInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
+    expect((choiceInteraction as any).internals.validity.valid).toBe(false);
+    expect(messageEl?.textContent || '').toBe('');
+    expect(messageEl?.style.display || '').toBe('none');
+  }
 };

@@ -15,7 +15,8 @@ const meta: Meta<QtiAssessmentItem> = {
 export default meta;
 
 const getElements = (canvasElement: HTMLElement) => {
-  const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
+  const assessmentItem = (canvasElement.querySelector('qti-assessment-item') ||
+    canvasElement.querySelector('qti-item qti-assessment-item')) as QtiAssessmentItem;
   const hotspotInteraction = assessmentItem.querySelector('qti-hotspot-interaction') as QtiHotspotInteraction;
   return { assessmentItem, hotspotInteraction };
 };
@@ -153,6 +154,34 @@ export const Q10_L2_D102: Story = {
     expect(validationMessage).toBeTruthy();
     expect(validationMessage.textContent).toBe("You've chosen too many cities!");
     expect(validationMessage.style.display).toBe('block');
+  },
+  loaders: [loaderSv2]
+};
+
+// Q10-L2-D103: validationDisplayMode='none' keeps validity state but suppresses inline validation message
+export const Q10_L2_D103: Story = {
+  name: 'Q10-L2-D103',
+  render: (_, { loaded: { xml } }) => xml,
+  play: async ({ canvasElement }) => {
+    const { assessmentItem, hotspotInteraction } = getElements(canvasElement);
+    const interaction = hotspotInteraction as HTMLElement;
+    (hotspotInteraction as any).configContext = {
+      ...((hotspotInteraction as any).configContext || {}),
+      validationDisplayMode: 'none'
+    };
+    const validationMessage = hotspotInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement;
+
+    fireEvent.click(getHotspot(hotspotInteraction, 'A'));
+    fireEvent.click(getHotspot(hotspotInteraction, 'B'));
+    fireEvent.click(getHotspot(hotspotInteraction, 'C'));
+    fireEvent.click(getHotspot(hotspotInteraction, 'D'));
+
+    assessmentItem.processResponse();
+
+    expect((interaction as any).internals.validity.valid).toBe(false);
+    expect(validationMessage).toBeTruthy();
+    expect(validationMessage.textContent).toBe('');
+    expect(validationMessage.style.display).toBe('none');
   },
   loaders: [loaderSv2]
 };

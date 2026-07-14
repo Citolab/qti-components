@@ -1,9 +1,5 @@
 @layer qti-components {
   qti-match-interaction.qti-match-tabular {
-    &::part(message) {
-      @apply validation-message;
-    }
-
     &::part(corner) {
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
       background-color: var(--qti-bg-active);

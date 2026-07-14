@@ -82,6 +82,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
             </div>`;
           })}
         </div>
+        <div id="validation-message" part="message" role="alert" style="display:none;"></div>
       </div>`;
   }
 

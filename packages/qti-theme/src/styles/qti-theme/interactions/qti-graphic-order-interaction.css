@@ -1,8 +1,5 @@
 @layer qti-components {
   qti-graphic-order-interaction {
-    &::part(message) {
-      @apply validation-message;
-    }
     & qti-hotspot-choice {
       width: 100%;
       height: 100%;

@@ -69,28 +69,37 @@ export class QtiExtendedTextInteraction extends Interaction {
   public override validate() {
     const textarea = this.shadowRoot.querySelector('textarea');
     if (!textarea) return false;
+    let validityMessage = '';
+    let isValid = false;
 
     if (this.patternMask && this.dataPatternmaskMessage) {
       // Clear any custom error initially
-      this._internals.setValidity({});
       textarea.setCustomValidity('');
       const patternSource =
         this.patternMask.startsWith('^') && this.patternMask.endsWith('$') ? this.patternMask : `^${this.patternMask}$`;
 
       const pattern = new RegExp(patternSource);
-      const isValid = textarea.checkValidity() && pattern.test(textarea.value);
+      isValid = textarea.checkValidity() && pattern.test(textarea.value);
 
       if (!isValid) {
         // Set custom error if invalid
-        this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
+        validityMessage = this.dataPatternmaskMessage;
         textarea.setCustomValidity(this.dataPatternmaskMessage);
       }
     } else {
-      const isValid = textarea.checkValidity();
-      this._internals.setValidity(isValid ? {} : { customError: false });
+      isValid = textarea.checkValidity();
     }
 
-    return !!this.response && textarea.checkValidity();
+    if (isValid && !this.response) {
+      isValid = false;
+    }
+
+    if (!isValid && !validityMessage) {
+      validityMessage = textarea.validationMessage || 'Invalid value.';
+    }
+
+    this.setInteractionValidity(isValid, validityMessage, textarea, { suppressInline: true });
+    return isValid;
   }
 
   public override toggleCorrectResponse() {
@@ -98,15 +107,8 @@ export class QtiExtendedTextInteraction extends Interaction {
   }
 
   override reportValidity() {
-    const textarea = this.shadowRoot.querySelector('textarea');
-    if (!textarea) return false;
-
-    // Run the validate function to ensure the custom validity state is up to date
-    const isValid = this.validate();
-    if (!isValid) {
-      textarea.reportValidity();
-    }
-    return isValid;
+    this.validate();
+    return super.reportValidity();
   }
 
   override render() {
@@ -128,7 +130,8 @@ export class QtiExtendedTextInteraction extends Interaction {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
         .value=${this.response}
-      ></textarea>`;
+      ></textarea>
+      <div id="validation-message" part="message" role="alert" style="display:none;"></div>`;
   }
 
   protected textChanged(event: Event) {

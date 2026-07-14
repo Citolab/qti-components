@@ -37,10 +37,6 @@
   --qti-answer-bg: color-mix(in srgb, var(--qti-info) 5%, white);
   --qti-answer-border: var(--qti-info);
 
-  /* Validation — the amber warning. */
-  --qti-validation-error-bg: color-mix(in srgb, var(--qti-warning) 5%, white);
-  --qti-validation-text: var(--qti-body-color);
-
   /* The hole a lifted / placed chip leaves — derived from primary. */
   --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);
   --qti-placeholder-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 30%, white);

@@ -1,8 +1,5 @@
 @layer qti-components {
   qti-graphic-associate-interaction {
-    &::part(message) {
-      @apply validation-message;
-    }
     position: relative;
     display: block;
     /*

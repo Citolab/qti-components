@@ -525,23 +525,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           `You haven't selected enough associations. Minimum required is ${this.minAssociations}.`;
       }
       const lastElementChild = this.lastElementChild as HTMLElement;
-      // Use null for the third argument if no specific anchor is needed
-      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
+      this.setInteractionValidity(isValid, validityMessage, lastElementChild, { suppressInline: true });
       return isValid;
     }
 
     override reportValidity(): boolean {
-      const validationMessageElement = this.shadowRoot.querySelector('#validation-message') as HTMLElement;
-      if (validationMessageElement) {
-        if (!this._internals.validity.valid) {
-          validationMessageElement.textContent = this._internals.validationMessage;
-          validationMessageElement.style.setProperty('display', 'block', 'important');
-        } else {
-          validationMessageElement.textContent = '';
-          validationMessageElement.style.display = 'none';
-        }
-      }
-      return this._internals.validity.valid;
+      return super.reportValidity();
     }
 
     private checkMaxAssociations(droppable: HTMLElement): boolean {

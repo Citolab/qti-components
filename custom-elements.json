@@ -1254,19 +1254,6 @@
             },
             {
               "kind": "field",
-              "name": "#validationMessageShown",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "class",
               "type": {
                 "text": "string"
@@ -1275,6 +1262,20 @@
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -1388,6 +1389,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -1580,6 +1595,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -1720,6 +1775,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -1733,6 +1802,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -5356,15 +5441,6 @@
                 "text": "MutationObserver | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#validationMessageShown",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
             },
             {
               "kind": "field",
@@ -11722,6 +11798,20 @@
               "attribute": "data-base-ref"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -11840,6 +11930,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -12033,6 +12137,46 @@
             },
             {
               "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setupCES",
               "description": "Sets up the CES custom interaction by creating the iframe structure and\nhandling the CES API communication via postMessage.\n\nFor interactions that use CES, this method:\n1. Fetches the original bootstrap.js and checks if it uses CES\n2. If CES is used, fetches index.html and injects the registerCES proxy\n3. Creates a blob URL for the modified HTML (stored in _contentBlobUrl)\n4. Replaces bootstrap.js with ciBootstrap that loads the blob URL\n5. Sets up postMessage listeners for CES API calls",
               "type": {
@@ -12180,6 +12324,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -12192,6 +12350,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -12721,6 +12895,20 @@
               "attribute": "class"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -12848,6 +13036,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -13062,6 +13264,46 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -13215,6 +13457,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -13228,6 +13484,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -14117,6 +14389,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -14401,6 +14687,20 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -15002,6 +15302,46 @@
             },
             {
               "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "shouldReturnToInventoryOnInventoryDrop",
               "privacy": "public",
               "return": {
@@ -15235,6 +15575,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "updateInventoryBasedOnMatchMax",
               "privacy": "private",
               "return": {
@@ -15284,6 +15638,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -15775,6 +16145,20 @@
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -15885,6 +16269,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -16063,6 +16461,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -16211,6 +16649,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -16223,6 +16675,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -17424,24 +17892,25 @@
             },
             {
               "kind": "field",
-              "name": "#validationMessageShown",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "choiceOrdering",
               "type": {
                 "text": "boolean"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "field",
@@ -17554,6 +18023,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -17746,6 +18229,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -17886,6 +18409,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -17899,6 +18436,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18515,16 +19068,17 @@
               ]
             },
             {
-              "kind": "field",
-              "name": "#validationMessageShown",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
-              "default": "false",
               "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18638,6 +19192,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18830,6 +19398,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -18970,6 +19578,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -18983,6 +19605,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -19557,16 +20195,17 @@
               }
             },
             {
-              "kind": "field",
-              "name": "#validationMessageShown",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
               },
-              "default": "false",
               "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -19680,6 +20319,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -19872,6 +20525,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -20012,6 +20705,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -20025,6 +20732,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -20583,6 +21306,20 @@
               "privacy": "private"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -20702,6 +21439,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -20883,6 +21634,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -21023,6 +21814,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -21036,6 +21841,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -21941,6 +22762,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -22234,6 +23069,20 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22844,6 +23693,46 @@
             },
             {
               "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "shouldReturnToInventoryOnInventoryDrop",
               "privacy": "public",
               "return": {
@@ -23103,6 +23992,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "updateInventoryBasedOnMatchMax",
               "privacy": "private",
               "return": {
@@ -23152,6 +24055,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -23548,6 +24467,20 @@
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -23658,6 +24591,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -23820,6 +24767,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -23960,6 +24947,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -23972,6 +24973,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -25336,6 +26353,20 @@
             },
             {
               "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "coerceBaseValue",
               "privacy": "private",
               "return": {
@@ -25585,6 +26616,20 @@
                 }
               },
               "description": "Collect template variables referenced by qti-template-variable children"
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
             },
             {
               "kind": "field",
@@ -25919,6 +26964,46 @@
               "description": "IFRAME MODE: Send message to iframe"
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -26064,6 +27149,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "useDefaultPaths",
               "type": {
@@ -26086,6 +27185,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -26895,6 +28010,20 @@
             },
             {
               "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "coerceBaseValue",
               "privacy": "private",
               "return": {
@@ -27204,6 +28333,20 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -27777,6 +28920,46 @@
             },
             {
               "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "setTestContext",
               "privacy": "public",
               "return": {
@@ -27942,6 +29125,20 @@
               }
             },
             {
+              "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "useDefaultPaths",
               "type": {
@@ -27968,6 +29165,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -28713,6 +29926,20 @@
               "attribute": "area-mappings"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -28823,6 +30050,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -29012,6 +30253,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -29152,6 +30433,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -29164,6 +30459,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -29635,6 +30946,20 @@
               "default": "0"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -29745,6 +31070,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -29926,6 +31265,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -30075,6 +31454,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -30087,6 +31480,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -30476,6 +31885,20 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -30602,6 +32025,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -30786,6 +32223,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -30944,6 +32421,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -30957,6 +32448,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -31350,6 +32857,20 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -31460,6 +32981,20 @@
               },
               "type": {
                 "text": "formResetCallback() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -31622,6 +33157,46 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "showCandidateCorrection",
               "type": {
@@ -31762,6 +33337,20 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -31774,6 +33363,22 @@
               },
               "type": {
                 "text": "validate() => boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
+              },
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -32025,6 +33630,16 @@
               "privacy": "protected"
             },
             {
+              "kind": "method",
+              "name": "clearInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
@@ -32101,6 +33716,16 @@
                 }
               },
               "description": "Called by the browser when the associated form is reset.\nPart of the Form-Associated Custom Elements API."
+            },
+            {
+              "kind": "method",
+              "name": "getValidationMessageElement",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
             },
             {
               "kind": "field",
@@ -32204,6 +33829,42 @@
                   "optional": true,
                   "type": {
                     "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setInteractionValidity",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isValid",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "validityMessage",
+                  "default": "''"
+                },
+                {
+                  "name": "anchor",
+                  "optional": true,
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ suppressInline?: boolean }"
                   }
                 }
               ]
@@ -32315,11 +33976,33 @@
             },
             {
               "kind": "method",
+              "name": "updateInlineValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
                   "text": "boolean"
                 }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationDisplayMode",
+              "type": {
+                "text": "ValidationDisplayMode"
+              },
+              "privacy": "protected",
+              "readonly": true,
+              "parsedType": {
+                "text": "'inline' | 'native' | 'both' | 'none'"
               }
             },
             {

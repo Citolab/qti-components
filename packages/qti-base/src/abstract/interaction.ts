@@ -11,6 +11,7 @@ import { responseAttributeConverter, type ResponseValue } from '../lib/response'
 
 import type { InteractionContext } from '../context/interaction.context';
 import type { ConfigContext } from '../context/config.context';
+import type { ValidationDisplayMode } from '../context/config.context';
 import type { ResponseVariable } from '../lib/variables';
 import type { IInteraction } from '../lib/interaction.interface';
 import type { ItemContext } from '../context/item.context';
@@ -368,7 +369,75 @@ export abstract class Interaction extends LitElement implements IInteraction {
   abstract set response(val: string | string[] | null);
 
   public reportValidity(): boolean {
-    return this._internals.reportValidity();
+    const isValid = this._internals.validity.valid;
+    const mode = this.validationDisplayMode;
+
+    if (mode === 'native' || mode === 'both') {
+      this._internals.reportValidity();
+    }
+
+    if (mode === 'inline' || mode === 'both') {
+      this.updateInlineValidationMessage();
+    } else {
+      this.clearInlineValidationMessage();
+    }
+
+    if (mode === 'none') {
+      this.clearInlineValidationMessage();
+    }
+
+    return isValid;
+  }
+
+  protected get validationDisplayMode(): ValidationDisplayMode {
+    return this.configContext?.validationDisplayMode ?? 'inline';
+  }
+
+  protected setInteractionValidity(
+    isValid: boolean,
+    validityMessage = '',
+    anchor?: HTMLElement | null,
+    options?: { suppressInline?: boolean }
+  ): void {
+    const validityAnchor = anchor ?? this;
+    this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, validityAnchor);
+
+    if (
+      options?.suppressInline !== true &&
+      (this.validationDisplayMode === 'inline' || this.validationDisplayMode === 'both')
+    ) {
+      this.updateInlineValidationMessage();
+    }
+  }
+
+  protected updateInlineValidationMessage(): void {
+    const validationMessageElement = this.getValidationMessageElement();
+    if (!validationMessageElement) {
+      return;
+    }
+
+    if (!this._internals.validity.valid) {
+      validationMessageElement.textContent = this._internals.validationMessage;
+      validationMessageElement.style.setProperty('display', 'block', 'important');
+      return;
+    }
+
+    validationMessageElement.textContent = '';
+    validationMessageElement.style.display = 'none';
+  }
+
+  protected clearInlineValidationMessage(): void {
+    const validationMessageElement = this.getValidationMessageElement();
+    if (!validationMessageElement) {
+      return;
+    }
+
+    validationMessageElement.textContent = '';
+    validationMessageElement.style.display = 'none';
+  }
+
+  protected getValidationMessageElement(): HTMLElement | null {
+    return this.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
   }
 
   public reset(): void {

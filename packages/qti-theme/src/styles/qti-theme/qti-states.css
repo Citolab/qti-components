@@ -8,6 +8,10 @@
  * Per-interaction states (`checked`, `radio`, `dragzone-active`, …) stay in their own files.
  */
 @layer qti-components {
+  ::part(message) {
+    @apply validation-message;
+  }
+
   /*
    * The interaction is presenting the answer key rather than the candidate's own response.
    * Set on the interaction host by `Interaction.toggleInternalCorrectResponse`.
@@ -52,9 +56,11 @@
    */
   :state(drag):state(dragging),
   :state(drag):state(placeholder),
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
     qti-simple-associable-choice:state(drag):state(dragging),
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
     qti-simple-associable-choice:state(drag):state(placeholder) {
     @mixin placeholder;
     pointer-events: none;
@@ -92,8 +98,7 @@
      judgement, regardless of which interaction owns the value. */
   .full-correct-response :state(drag),
   .full-correct-response ::part(drag),
-  .full-correct-response qti-match-interaction:not(.qti-match-tabular)
-    qti-simple-associable-choice::part(drag),
+  .full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag),
   .full-correct-response qti-text-entry-interaction,
   .full-correct-response qti-inline-choice-interaction {
     @mixin answer;

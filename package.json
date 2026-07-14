@@ -31,7 +31,7 @@
     "ci:push-quality": "run-s lint madge build test publint attw",
     "storybook": "run-p storybook:dev cem:storybook:watch",
     "lint": "eslint && pnpm run lint:css",
-    "test": "pnpm run build && vitest run",
+    "test": "node tools/testing/pretest-clean.mjs && pnpm run build && vitest run",
     "test:vrt": "VRT=1 vitest run --project vrt",
     "test:vrt:update": "VRT=1 vitest run --project vrt --update",
     "test:vrt:ui": "VRT=1 vitest --project vrt --ui",

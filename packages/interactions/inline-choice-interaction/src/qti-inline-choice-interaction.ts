@@ -105,6 +105,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
         </button>
         <slot @slotchange=${this.#onChoicesSlotChange}></slot>
       </div>
+      <div id="validation-message" part="message" role="alert" style="display:none;"></div>
       <span part=${this.correctionPart} aria-hidden="true"></span>
       ${this.correctOption}
     `;
@@ -227,7 +228,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   public validate(): boolean {
     const selectedOption = this.options.find(option => option.selected);
-    return selectedOption ? selectedOption.value !== '' : false;
+    const isValid = selectedOption ? selectedOption.value !== '' : false;
+    const validityMessage = this.dataset.minChoicesMessage || 'Please select an option.';
+    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true });
+    return isValid;
+  }
+
+  public override reportValidity(): boolean {
+    return super.reportValidity();
   }
 
   public override reset() {
@@ -289,6 +297,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
   #selectValue(value: string) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
     this.#syncSlottedChoices();
+    this.validate();
+    if (!this._internals.validity.valid) {
+      this.reportValidity();
+    }
     this.saveResponse(value);
     this.#setDropdownOpen(false);
   }

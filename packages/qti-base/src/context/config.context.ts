@@ -1,6 +1,7 @@
 import { createContext } from '@lit/context';
 
 export type CorrectResponseMode = 'internal' | 'full';
+export type ValidationDisplayMode = 'inline' | 'native' | 'both' | 'none';
 
 /**
  * Configuration context for QTI components. Provides runtime options for assessment item and interaction behavior.
@@ -17,6 +18,15 @@ export interface ConfigContext {
    * Used to trigger UI validation after a scoring event.
    */
   reportValidityAfterScoring?: boolean;
+
+  /**
+   * Controls how validation feedback is displayed by interactions:
+   * - 'inline': render message in #validation-message (default behavior)
+   * - 'native': use browser-native reportValidity popup behavior
+   * - 'both': show both inline and native feedback
+   * - 'none': keep validity state only, without visual feedback
+   */
+  validationDisplayMode?: ValidationDisplayMode;
 
   /**
    * If true, disables further selection in choice interactions after the maximum number of choices is reached.

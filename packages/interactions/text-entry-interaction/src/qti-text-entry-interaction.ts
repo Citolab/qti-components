@@ -96,21 +96,32 @@ export class QtiTextEntryInteraction extends Interaction {
 
   public override validate(): boolean {
     if (!this._input) return false;
+    let validityMessage = '';
+    let isValid = false;
+
     if (this.patternMask && this.dataPatternmaskMessage) {
       // Clear any custom error if the this._input is valid
-      this._internals.setValidity({});
       this._input.setCustomValidity(''); // Clear the custom message
-      const isValid = this._input.checkValidity();
+      isValid = this._input.checkValidity();
       if (!isValid) {
         // Set custom error if invalid
-        this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
+        validityMessage = this.dataPatternmaskMessage;
         this._input.setCustomValidity(this.dataPatternmaskMessage); // Set custom message only if invalid
       }
     } else {
-      const isValid = this._input.checkValidity();
-      this._internals.setValidity(isValid ? {} : { customError: false });
+      isValid = this._input.checkValidity();
     }
-    return this.response !== '' && this._input.checkValidity();
+
+    if (isValid && this.response === '') {
+      isValid = false;
+    }
+
+    if (!isValid && !validityMessage) {
+      validityMessage = this._input.validationMessage || 'Invalid value.';
+    }
+
+    this.setInteractionValidity(isValid, validityMessage, this._input, { suppressInline: true });
+    return isValid;
   }
 
   /**
@@ -151,6 +162,7 @@ export class QtiTextEntryInteraction extends Interaction {
       ${this._showCorrectOverlay && this.correctResponse
         ? html`<div part="correct">${this.correctResponse}</div>`
         : nothing}
+      <div id="validation-message" part="message" role="alert" style="display:none;"></div>
     `;
   }
   // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}
@@ -166,15 +178,8 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   override reportValidity(): boolean {
-    const input = this.shadowRoot.querySelector('input');
-    if (!input) return false;
-
-    // Run the validate function to ensure the custom validity state is up to date
-    const isValid = this.validate();
-    if (!isValid) {
-      input.reportValidity();
-    }
-    return isValid;
+    this.validate();
+    return super.reportValidity();
   }
 
   override reset(): void {

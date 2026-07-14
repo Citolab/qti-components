@@ -30,8 +30,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     @query('#validation-message')
     protected _validationMessageElement!: HTMLElement;
 
-    #validationMessageShown = false;
-
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
 
@@ -239,28 +237,15 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
 
-      // Always set validity state, regardless of whether there are selections
-      // Anchor must be a shadow-including descendant of this element, or use this as fallback
+      // Always set validity state, regardless of whether there are selections.
       const anchor = this._choiceElements.find(c => this.contains(c)) || this;
-      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, anchor);
+      this.setInteractionValidity(isValid, validityMessage, anchor, { suppressInline: true });
 
       return isValid;
     }
 
     override reportValidity() {
-      if (this._validationMessageElement) {
-        if (!this._internals.validity.valid) {
-          this._validationMessageElement.textContent = this._internals.validationMessage;
-          // Set the display to block to show the message, add important to override any styles
-          this._validationMessageElement.style.setProperty('display', 'block', 'important');
-          this.#validationMessageShown = true; // Track that validation message was shown
-        } else {
-          this._validationMessageElement.textContent = '';
-          this._validationMessageElement.style.display = 'none';
-          // Don't reset _validationMessageShown here - let it be cleared by user input
-        }
-      }
-      return this._internals.validity.valid;
+      return super.reportValidity();
     }
 
     /**
@@ -333,13 +318,8 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
       this.validate();
 
-      // Auto-update validation message if it was previously shown (FACE behavior)
-      if (this.#validationMessageShown) {
+      if (!this._internals.validity.valid) {
         this.reportValidity();
-        // Reset flag if now valid to prevent unnecessary future auto-updates
-        if (this._internals.validity.valid) {
-          this.#validationMessageShown = false;
-        }
       }
 
       this.saveResponse(this.response);
