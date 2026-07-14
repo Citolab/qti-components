@@ -2,23 +2,18 @@
  * Single-file Kennisnet vendor substrate. No external stylesheets, no CDN.
  *
  * Bundles everything the Kennisnet override needs to render on a host page:
- *  1. A self-contained reboot (normalize layer), ported from Bootstrap 5.3 Reboot.
- *  2. Wikiwijs-shaped bridge variables so the --bs-* references resolve to
+ *  1. Wikiwijs-shaped bridge variables so the --bs-* references resolve to
  *     Wikiwijs purples instead of Bootstrap blue.
- *  3. FontAwesome glyphs inlined as data-URI --fa-*-mask custom properties,
+ *  2. FontAwesome glyphs inlined as data-URI --fa-*-mask custom properties,
  *     used as `mask-image` targets in kennisnet/qti/*.scss.
- *  4. The compiled Kennisnet QTI overrides on top.
+ *  3. The compiled Kennisnet QTI overrides on top.
  *
  * Bootstrap itself is gone. Kennisnet never used its components: every --bs-* token it reads,
- * it also defines (see the bridge below and _variables_wikiwijs.scss). What it depended on
- * silently was Reboot — universal box-sizing, body typography, and the margins on paragraphs,
- * headings and lists. That now lives in _reboot.scss.
+ * it also defines (see the bridge below and _variables_wikiwijs.scss).
  *
  * Consumers load this single file (`?url`).
  */
 
-/* First, so everything below outranks it — the same position Bootstrap's import held. */
-@use 'styles/overrides/kennisnet/reboot';
 @use 'styles/overrides/kennisnet/qti-styles' as *;
 
 /*
