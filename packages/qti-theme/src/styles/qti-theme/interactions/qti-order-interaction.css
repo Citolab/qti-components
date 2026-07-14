@@ -97,7 +97,6 @@
         @apply foc;
       }
       display: flex;
-      min-height: 4rem;
     }
     &::part(active) {
       @apply act;
