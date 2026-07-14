@@ -5733,7 +5733,7 @@
                 "text": "DragState"
               },
               "privacy": "protected",
-              "default": "{ dragging: false, dragSource: null, dragClone: null, startOffset: { x: 0, y: 0 }, currentTarget: null, sourceDroppable: null, inputType: null }"
+              "default": "{ dragging: false, dragSource: null, dragClone: null, startOffset: { x: 0, y: 0 }, currentTarget: null, sourceDroppable: null, inputType: null, returnAnchorItems: [] }"
             },
             {
               "kind": "field",

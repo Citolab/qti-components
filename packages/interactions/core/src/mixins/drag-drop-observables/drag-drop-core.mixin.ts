@@ -6,6 +6,7 @@ import {
   clearDragChipStates,
   detectCollision,
   findDraggableTarget,
+  findInventoryItems,
   hasDragChipState,
   isDragChipHidden,
   isDraggableDisabled,
@@ -82,6 +83,7 @@ interface DragState {
   activationTimeout?: number;
   touchCleanup?: () => void;
   lastTargetChangeTime?: number;
+  returnAnchorItems?: HTMLElement[];
 }
 
 type DragEventSource = 'pointer' | 'mouse' | 'touch';
@@ -112,7 +114,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       startOffset: { x: 0, y: 0 },
       currentTarget: null,
       sourceDroppable: null,
-      inputType: null
+      inputType: null,
+      returnAnchorItems: []
     };
 
     private subscriptions: Array<{ unsubscribe: () => void }> = [];
@@ -593,7 +596,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         inputType: inputType,
         pointerId,
         startedFromTrustedEvent,
-        initialCoordinates: { x: startX, y: startY }
+        initialCoordinates: { x: startX, y: startY },
+        returnAnchorItems: []
       };
 
       if (isCloneInDroppable) {
@@ -606,6 +610,14 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         // Mark the source droppable so it won't be disabled during drag
         if (sourceDroppable) {
           sourceDroppable.setAttribute('data-drag-source', 'true');
+        }
+
+        // Mark the exact source placeholder(s) this chip would return to on invalid drop.
+        const identifier = dragElement.getAttribute('identifier');
+        if (identifier) {
+          const anchors = findInventoryItems(this.trackedDragContainers, identifier);
+          anchors.forEach(item => setDragChipState(item, 'return-anchor', true));
+          this.dragState.returnAnchorItems = anchors;
         }
       } else {
         this.dragState.dragClone?.setAttribute('data-drag-origin', 'inventory');
@@ -850,6 +862,10 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         dragClone.remove();
       }
 
+      (this.dragState.returnAnchorItems || []).forEach(item => {
+        setDragChipState(item, 'return-anchor', false);
+      });
+
       if (this.dragState.touchCleanup) {
         this.dragState.touchCleanup();
       }
@@ -949,6 +965,10 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         clearTimeout(this.dragState.activationTimeout);
       }
 
+      (this.dragState.returnAnchorItems || []).forEach(item => {
+        setDragChipState(item, 'return-anchor', false);
+      });
+
       if (this.dragState.touchCleanup) {
         try {
           this.dragState.touchCleanup();
@@ -978,7 +998,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         inputType: null,
         pointerId: undefined,
         startedFromTrustedEvent: undefined,
-        touchCleanup: undefined
+        touchCleanup: undefined,
+        returnAnchorItems: []
       };
     }
 

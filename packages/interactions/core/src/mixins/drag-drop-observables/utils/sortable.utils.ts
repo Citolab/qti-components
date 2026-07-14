@@ -19,7 +19,7 @@ export interface PlaceholderConfig {
 
 const defaultPlaceholderConfig: PlaceholderConfig = {
   borderStyle: '2px dashed',
-  borderColor: 'var(--qti-drop-placeholder, #c1c1c1)',
+  borderColor: 'var(--qti-drop-highlight-border-color, var(--qti-drop-placeholder, #c1c1c1))',
   background: 'transparent',
   transitionDuration: 150
 };

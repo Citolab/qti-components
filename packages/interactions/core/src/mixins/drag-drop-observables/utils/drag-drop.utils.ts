@@ -42,7 +42,7 @@ export function isDraggableDisabled(target: HTMLElement | null | undefined): boo
  * They are distinct: a theme may want a dashed outline while dragging and a solid inset box
  * once placed.
  */
-export type DragChipState = 'dragging' | 'placeholder';
+export type DragChipState = 'dragging' | 'placeholder' | 'return-anchor';
 
 const internalsOf = (el: HTMLElement | null | undefined): ElementInternals | undefined =>
   (el as { internals?: ElementInternals } | null | undefined)?.internals;
@@ -62,6 +62,7 @@ export function hasDragChipState(el: HTMLElement | null | undefined, state: Drag
 export function clearDragChipStates(el: HTMLElement | null | undefined): void {
   setDragChipState(el, 'dragging', false);
   setDragChipState(el, 'placeholder', false);
+  setDragChipState(el, 'return-anchor', false);
 }
 
 /** A chip that currently leaves a hole: not draggable, and skipped by keyboard navigation. */
