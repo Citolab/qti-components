@@ -4,32 +4,59 @@
       @apply validation-message;
     }
 
+    & qti-simple-choice {
+      width: fit-content;
+      cursor: pointer;
+
+      &::part(label) {
+        display: inline !important;
+      }
+
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        &::after {
+          content: '\02714';
+          color: var(--qti-correct);
+        }
+      }
+    }
+
     &.qti-input-control-hidden {
       & qti-simple-choice {
         position: relative;
         @apply button;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &::part(control) {
           display: none;
         }
+
         &:state(checked) {
           @apply act;
+          background-color: var(--qti-selected-bg);
+          color: var(--qti-selected-color);
         }
+
         &:state(readonly) {
           @apply readonly;
         }
+
         &:state(disabled) {
           @apply dis;
         }
+
         &:state(correct-response),
         &[data-correct-response='true'] {
           border: 3px solid var(--qti-correct) !important;
           padding-right: 30px;
+
           &::after {
             content: '\02714';
             color: var(--qti-correct);
@@ -40,142 +67,86 @@
             font-weight: bold;
           }
         }
+
+        /* Candidate judgement follows checked/correct-response paint so it can
+           recolour the same stable box without changing its geometry. */
+        &:state(candidate-correct) {
+          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+        }
+
+        &:state(candidate-incorrect) {
+          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+        }
       }
     }
 
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
         @apply check;
+
         &:not(:state(disabled), :state(readonly), :state(checked)):hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &:state(checked) {
           @apply act;
         }
+
         &:state(candidate-correct) {
-          background-color: var(--qti-correct);
+          background-color: transparent;
+
+          &:state(radio):state(checked)::part(control),
+          &:state(checkbox):state(checked)::part(control) {
+            @mixin control-selected var(--qti-correct);
+          }
         }
+
         &:state(candidate-incorrect) {
-          background-color: var(--qti-incorrect);
+          background-color: transparent;
+
+          &:state(radio):state(checked)::part(control),
+          &:state(checkbox):state(checked)::part(control) {
+            @mixin control-selected var(--qti-incorrect);
+          }
         }
+
         &:state(readonly) {
           @apply readonly;
         }
+
         &:state(disabled) {
           @apply dis;
         }
+
         &::part(control-mark) {
           @apply check-size;
         }
+
         &:state(radio)::part(control) {
           @apply check-radio;
         }
+
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-primary);
+        }
+
         &:state(radio):state(checked)::part(control-mark) {
           @apply check-radio-checked;
         }
+
         &:state(checkbox)::part(control) {
           @apply check-checkbox;
         }
+
         &:state(checkbox):state(checked)::part(control-mark) {
           @apply check-checkbox-checked;
         }
       }
-    }
-
-    & qti-simple-choice {
-      width: fit-content;
-      cursor: pointer;
-      &:state(correct-response),
-      &[data-correct-response='true'] {
-        &::after {
-          content: '\02714';
-          color: var(--qti-correct);
-        }
-      }
-    }
-
-    & qti-simple-choice > p {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-  }
-
-  /* Kennisnet-led control appearance. The interaction owns the selectors; shared visual concepts
-     come from qti-mixins.css and qti-variables.css. */
-  qti-choice-interaction {
-    qti-simple-choice {
-      &::part(label) {
-        display: inline !important;
-      }
-
-      &::part(control) {
-        border-width: thin;
-        background-color: white;
-      }
-
-      &:state(radio):state(checked)::part(control),
-      &:state(checkbox):state(checked)::part(control) {
-        @mixin control-selected var(--qti-primary);
-      }
-
-      &:state(radio):state(checked)::part(control-mark) {
-        background-color: white;
-        width: calc(var(--qti-form-size) - 8px);
-        height: calc(var(--qti-form-size) - 8px);
-      }
-
-      &:state(checkbox):state(checked)::part(control-mark) {
-        background-color: white;
-      }
-
-      &:state(candidate-correct) {
-        background-color: transparent;
-
-        &:state(radio):state(checked)::part(control),
-        &:state(checkbox):state(checked)::part(control) {
-          @mixin control-selected var(--qti-correct);
-        }
-      }
-
-      &:state(candidate-incorrect) {
-        background-color: transparent;
-
-        &:state(radio):state(checked)::part(control),
-        &:state(checkbox):state(checked)::part(control) {
-          @mixin control-selected var(--qti-incorrect);
-        }
-      }
-
-      & p {
-        margin: 0;
-      }
-    }
-
-    &.qti-input-control-hidden qti-simple-choice {
-      &:state(checked) {
-        background-color: var(--qti-selected-bg);
-        color: var(--qti-selected-color);
-      }
-
-      &:state(candidate-correct) {
-        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-      }
-
-      &:state(candidate-incorrect) {
-        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-      }
-    }
-  }
-
-  /* The base theme scopes row correction through :not(.qti-input-control-hidden), which adds a
-     class worth of specificity. Restate the Kennisnet-led neutral row at that same boundary. */
-  qti-choice-interaction:not(.qti-input-control-hidden) qti-simple-choice {
-    &:state(candidate-correct),
-    &:state(candidate-incorrect) {
-      background-color: transparent;
     }
   }
 

@@ -1,58 +1,64 @@
 {
-  "folders": [
-    {
-      "path": "."
-    },
-    // {
-    //   "path": "../../../editor/QTI-Editor"
-    // }
-  ],
-  "settings": {
-    "workbench.colorCustomizations": {
-      "activityBar.activeBackground": "#6657ba",
-      "activityBar.activeBorder": "#5b0542",
-      "activityBar.background": "#6657ba",
-      "activityBar.foreground": "#e7e7e7",
-      "activityBar.inactiveForeground": "#e7e7e799",
-      "activityBarBadge.background": "#d1988e",
-      "activityBarBadge.foreground": "#15202b",
-      "statusBar.background": "#4f419d",
-      "statusBar.foreground": "#e7e7e7",
-      "statusBarItem.hoverBackground": "#6657ba",
-      "titleBar.activeBackground": "#4f419d",
-      "titleBar.activeForeground": "#e7e7e7",
-      "titleBar.inactiveBackground": "#4f419d99",
-      "titleBar.inactiveForeground": "#e7e7e799",
-      "sash.hoverBorder": "#6657ba",
-      "statusBarItem.remoteBackground": "#4f419d",
-      "statusBarItem.remoteForeground": "#e7e7e7",
-      "commandCenter.border": "#e7e7e799"
-    },
-    "peacock.color": "#4f419d",
-    "xml.symbols.showReferencedGrammars": true,
-    "xml.format.maxLineWidth": 800,
-    "git.allowNoVerifyCommit": true,
-    "files.watcherExclude": {
-      "**/.git/objects/**": true,
-      "**/.git/subtree-cache/**": true,
-      "**/.hg/store/**": true,
-      "**/.git/**": true,
-      "**/node_modules/**": true,
-      "**/.vscode/**": true
-    }
-  },
-  "extensions": {
-    "recommendations": [
-      "dbaeumer.vscode-eslint",
-      "github.vscode-github-actions",
-      "runem.lit-plugin",
-      "hugo-vrijswijk.vscode-lit-xml",
-      "unifiedjs.vscode-mdx",
-      "esbenp.prettier-vscode",
-      "redhat.vscode-xml",
-      "joshbolduc.commitlint",
-      "wc-toolkit.web-components-language-server",
-      "sanjulaganepola.github-local-actions"
-    ]
-  }
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.activeBackground": "#6657ba",
+			"activityBar.activeBorder": "#5b0542",
+			"activityBar.background": "#6657ba",
+			"activityBar.foreground": "#e7e7e7",
+			"activityBar.inactiveForeground": "#e7e7e799",
+			"activityBarBadge.background": "#d1988e",
+			"activityBarBadge.foreground": "#15202b",
+			"statusBar.background": "#4f419d",
+			"statusBar.foreground": "#e7e7e7",
+			"statusBarItem.hoverBackground": "#6657ba",
+			"titleBar.activeBackground": "#4f419d",
+			"titleBar.activeForeground": "#e7e7e7",
+			"titleBar.inactiveBackground": "#4f419d99",
+			"titleBar.inactiveForeground": "#e7e7e799",
+			"sash.hoverBorder": "#6657ba",
+			"statusBarItem.remoteBackground": "#4f419d",
+			"statusBarItem.remoteForeground": "#e7e7e7",
+			"commandCenter.border": "#e7e7e799"
+		},
+		"peacock.color": "#4f419d",
+		"xml.symbols.showReferencedGrammars": true,
+		"xml.format.maxLineWidth": 800,
+		"git.allowNoVerifyCommit": true,
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/.hg/store/**": true,
+			"**/.git/**": true,
+			"**/node_modules/**": true,
+			"**/.vscode/**": true
+		},
+		"mcp": {
+			"servers": {
+				"my-qti-documentation-workspace": {
+					"url": "http://localhost:8000/mcp",
+					"type": "http"
+				}
+			},
+			"inputs": []
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"dbaeumer.vscode-eslint",
+			"github.vscode-github-actions",
+			"runem.lit-plugin",
+			"hugo-vrijswijk.vscode-lit-xml",
+			"unifiedjs.vscode-mdx",
+			"esbenp.prettier-vscode",
+			"redhat.vscode-xml",
+			"joshbolduc.commitlint",
+			"wc-toolkit.web-components-language-server",
+			"sanjulaganepola.github-local-actions"
+		]
+	}
 }

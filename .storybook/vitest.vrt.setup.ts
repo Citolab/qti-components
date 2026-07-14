@@ -1,9 +1,5 @@
-import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview';
-import { beforeAll, expect } from 'vitest';
+import { expect } from 'vitest';
 import { commands, page, server } from 'vitest/browser';
-import { setProjectAnnotations } from '@storybook/web-components-vite';
-
-import * as previewAnnotations from './preview';
 
 /**
  * Visual-regression (VRT) capture project.
@@ -106,12 +102,28 @@ const waitForStylesheets = async (doc: Document) => {
   );
 };
 
+/**
+ * Collect every <img> reachable from `node`, piercing shadow roots.
+ * `querySelectorAll('img')` is light-DOM only; Kennisnet interactions (hotspot,
+ * graphic-gap-match, …) render their images inside shadow trees, so a plain
+ * querySelector misses them and the screenshot fires before they paint.
+ */
+const findAllImages = (node: ParentNode): HTMLImageElement[] => {
+  const imgs: HTMLImageElement[] = Array.from(node.querySelectorAll('img'));
+  for (const el of Array.from(node.querySelectorAll('*'))) {
+    if ((el as Element).shadowRoot) imgs.push(...findAllImages((el as Element).shadowRoot!));
+  }
+  return imgs;
+};
+
 /** Wait for styles, fonts, and every image inside the story root to settle before capturing. */
 const waitForRenderStable = async (root: ParentNode) => {
   const doc = root instanceof Document ? root : root.ownerDocument;
   if (doc) await waitForStylesheets(doc);
   if (doc?.fonts?.ready) await doc.fonts.ready;
-  const imgs = Array.from(root.querySelectorAll('img'));
+
+  // Pierce shadow DOM — light-DOM querySelectorAll misses images inside web components.
+  const imgs = findAllImages(root);
   await Promise.all(
     imgs.map(async img => {
       // First wait for the network fetch to finish (load or error).
@@ -130,8 +142,16 @@ const waitForRenderStable = async (root: ParentNode) => {
       }
     })
   );
-  // Yield two animation frames so the final decoded paint has flushed.
-  await new Promise<void>(res => requestAnimationFrame(() => requestAnimationFrame(() => res())));
+
+  // Several Lit interactions in this suite schedule a second update mid-first-update
+  // (the "change-in-update" Lit warning). That second update is queued as a
+  // Promise.resolve() microtask. A setTimeout(0) creates a new task, so all
+  // microtask chains — including multi-step Lit update cycles — complete before
+  // this resolves, after which 3 rAF frames give the browser time to paint.
+  await new Promise<void>(res => setTimeout(res, 0));
+  await new Promise<void>(res =>
+    requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => res())))
+  );
 };
 
 const vrtAnnotations = {
@@ -182,7 +202,15 @@ const vrtAnnotations = {
   }
 };
 
-const annotations = setProjectAnnotations([a11yAddonAnnotations, previewAnnotations, vrtAnnotations]);
+const existingAnnotations = (globalThis as any).globalProjectAnnotations ?? {};
+const existingAfterEach = existingAnnotations.afterEach;
 
-// Run Storybook's beforeAll hook
-beforeAll(annotations.beforeAll);
+(globalThis as any).globalProjectAnnotations = {
+  ...existingAnnotations,
+  async afterEach(context: { id: string; canvasElement: HTMLElement }) {
+    if (typeof existingAfterEach === 'function') {
+      await existingAfterEach(context);
+    }
+    await vrtAnnotations.afterEach(context);
+  }
+};

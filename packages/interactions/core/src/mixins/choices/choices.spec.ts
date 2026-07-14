@@ -142,5 +142,21 @@ describe('ChoicesMixin', () => {
       expect(choiceB.internals.states.has('checked')).toBe(true);
       expect(choiceB.internals.ariaChecked).toBe('true');
     });
+
+    it('should deselect one choice without clearing the other selections', async () => {
+      const choiceA = getByTestId(document.body, 'A') as Choice;
+      const choiceB = getByTestId(document.body, 'B') as Choice;
+      const choiceC = getByTestId(document.body, 'C') as Choice;
+
+      await userEvent.click(choiceA);
+      await userEvent.click(choiceB);
+      await userEvent.click(choiceC);
+      await userEvent.click(choiceC);
+
+      expect(choiceA.internals.states.has('checked')).toBe(true);
+      expect(choiceB.internals.states.has('checked')).toBe(true);
+      expect(choiceC.internals.states.has('checked')).toBe(false);
+      expect(element.response).toEqual(['A', 'B']);
+    });
   });
 });

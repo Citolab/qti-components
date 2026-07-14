@@ -19545,12 +19545,6 @@
             },
             {
               "kind": "field",
-              "name": "#classObject",
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
               "name": "#mutationObserver",
               "privacy": "private",
               "type": {
@@ -19561,11 +19555,6 @@
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "#updateHostClasses",
-              "privacy": "private"
             },
             {
               "kind": "field",
@@ -19579,16 +19568,6 @@
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "class",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "class",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -20060,15 +20039,19 @@
               }
             }
           ],
-          "attributes": [
+          "mixins": [
             {
-              "name": "class",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "class"
-            },
+              "name": "ChoicesMixin",
+              "package": "@qti-components/interactions-core/mixins/choices/choices.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
+          "tagName": "qti-hottext-interaction",
+          "customElement": true,
+          "attributes": [
             {
               "name": "correct-response",
               "description": "The correct response for this interaction. Can be set as a comma-separated\nstring via attribute or as string/string[] via property.",
@@ -20203,18 +20186,6 @@
               }
             }
           ],
-          "mixins": [
-            {
-              "name": "ChoicesMixin",
-              "package": "@qti-components/interactions-core/mixins/choices/choices.mixin"
-            }
-          ],
-          "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
-          },
-          "tagName": "qti-hottext-interaction",
-          "customElement": true,
           "events": [
             {
               "name": "qti-interaction-response",

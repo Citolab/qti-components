@@ -4,30 +4,6 @@
       @apply validation-message;
     }
     qti-hottext {
-      display: inline-flex;
-      align-items: center;
-      @apply check;
-      &:hover {
-        @apply hov;
-      }
-      &:focus {
-        @apply foc;
-      }
-      &::part(control-mark) {
-        @apply check-size;
-      }
-      &:state(radio)::part(control) {
-        @apply check-radio;
-      }
-      &:state(radio):state(checked)::part(control-mark) {
-        @apply check-radio-checked;
-      }
-      &:state(checkbox)::part(control) {
-        @apply check-checkbox;
-      }
-      &:state(checkbox):state(checked)::part(control-mark) {
-        @apply check-checkbox-checked;
-      }
       &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
@@ -36,90 +12,165 @@
         }
       }
     }
+
     &.qti-input-control-hidden {
       qti-hottext {
-        @apply button;
+        border: var(--qti-border);
+        border-radius: var(--qti-border-radius);
+
+        background: var(--qti-bg);
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
+
         &::part(control) {
           display: none;
         }
+
         &:state(checked) {
-          @apply act;
+          border-color: var(--qti-border-active);
+          background-color: var(--qti-selected-bg);
+          color: var(--qti-selected-color);
         }
+
+        &:state(candidate-correct) {
+          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+        }
+
+        &:state(candidate-incorrect) {
+          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+        }
+
         &:state(readonly) {
           @apply readonly;
         }
+
         &:state(disabled) {
           @apply dis;
         }
       }
     }
+
     &.qti-unselected-hidden {
       qti-hottext {
+        border: 0;
+        border-radius: var(--qti-border-radius);
+        background-color: transparent;
+        outline: none;
+        cursor: pointer;
+
         &:hover {
           @apply hov;
         }
+
         &:focus {
           @apply foc;
         }
-        cursor: pointer;
+
         &::part(control) {
           display: none;
         }
+
         &:state(checked) {
-          background-color: var(--qti-bg-active);
+          background-color: var(--qti-selected-bg);
+          color: var(--qti-selected-color);
         }
+
+        &:state(candidate-correct) {
+          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-correct);
+        }
+
+        &:state(candidate-incorrect) {
+          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
+        }
+
         &:state(readonly) {
           @apply readonly;
         }
+
         &:state(disabled) {
           @apply dis;
         }
       }
     }
+
+    &:not(.qti-input-control-hidden, .qti-unselected-hidden) {
+      qti-hottext {
+        @apply check;
+
+        &:hover {
+          @apply hov;
+        }
+
+        &:focus {
+          @apply foc;
+        }
+
+        &::part(control-mark) {
+          @apply check-size;
+        }
+
+        &:state(radio)::part(control) {
+          @apply check-radio;
+        }
+
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-primary);
+        }
+
+        &:state(radio):state(checked)::part(control-mark) {
+          @apply check-radio-checked;
+        }
+
+        &:state(checkbox)::part(control) {
+          @apply check-checkbox;
+        }
+
+        &:state(checkbox):state(checked)::part(control-mark) {
+          @apply check-checkbox-checked;
+        }
+
+        &:state(candidate-correct) {
+          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-correct);
+        }
+
+        &:state(candidate-incorrect) {
+          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
+        }
+      }
+    }
   }
 
-  qti-hottext-interaction.qti-input-control-hidden qti-hottext {
-    background-color: var(--qti-bg);
-    padding: 0.2rem 0.5rem;
-    margin: 0.1rem 0;
+  .full-correct-response qti-hottext-interaction qti-hottext:state(checked) {
+    @mixin answer;
 
-    &:state(checked) {
-      background-color: var(--qti-selected-bg);
-      color: var(--qti-selected-color);
-    }
+    position: relative;
+    border-width: var(--qti-border-thickness);
+    border-style: var(--qti-border-style);
+    padding-inline-start: calc(1em + var(--qti-padding-horizontal) / 2);
+    padding-inline-end: calc(var(--qti-padding-horizontal) / 4);
 
+    /* The icon must not become the inline-flex container's first baseline item. */
     &::before {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      vertical-align: -0.15em;
-      margin-right: 0.25rem;
+      @mixin answer-check;
+
+      position: absolute;
+      inset-inline-start: calc(var(--qti-padding-horizontal) / 4);
+      top: 50%;
+      translate: 0 -50%;
+      display: block;
+      width: 1em;
+      height: 1em;
     }
-
-    &:state(candidate-correct) {
-      @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-    }
-
-    &:state(candidate-incorrect) {
-      @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-    }
-  }
-
-  qti-hottext-interaction.qti-unselected-hidden qti-hottext:not(:state(checked)) {
-    border: none;
-    padding: 0.2rem 0;
-    margin-top: calc(0.1rem + var(--qti-border-thickness));
-    margin-bottom: calc(0.1rem + var(--qti-border-thickness));
-    background-color: transparent;
-  }
-
-  .full-correct-response qti-hottext-interaction qti-hottext:state(checked)::before {
-    @mixin answer-check;
   }
 }

@@ -43,13 +43,8 @@ const config: StorybookConfig = {
           },
           {
             directory: '../packages/interactions',
-            files: '**/*.stories.*',
+            files: '*/src/**/*.stories.*',
             titlePrefix: 'QTI Interactions'
-          },
-          {
-            directory: '../packages/qti-processing/src/components',
-            files: '**/*.stories.*',
-            titlePrefix: 'QTI Processing'
           },
           {
             directory: '../packages/qti-item/src/components',
@@ -85,7 +80,7 @@ const config: StorybookConfig = {
     // (see preview.ts) can lay them over the live story for onion-skin review.
     { from: '../apps/e2e/src/stories/__screenshots__', to: '/baselines' }
   ],
-  async viteFinal(config: any, { configType }: { configType?: string }) {
+  async viteFinal(config: any) {
     return {
       ...config,
       plugins: [...(config.plugins || []), tsconfigPaths()],

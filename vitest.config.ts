@@ -26,6 +26,17 @@ const isVitestStorybook = process.env.VITEST_STORYBOOK === 'true';
 export default defineConfig({
   base: process.env.VITEST ? undefined : './',
   plugins: [tsconfigPaths()],
+  optimizeDeps: {
+    // Prevent mid-run Vite re-optimization in browser/story tests, which can reload the
+    // iframe and surface as Vitest "iframe reloaded during a test" unhandled errors.
+    include: [
+      '@open-wc/lit-helpers',
+      '@testing-library/dom',
+      'shadow-dom-testing-library',
+      'storybook/actions',
+      'lit/directives/unsafe-html.js'
+    ]
+  },
 
   test: {
     typecheck: {

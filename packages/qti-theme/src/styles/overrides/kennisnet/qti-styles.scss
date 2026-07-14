@@ -18,6 +18,41 @@
 // @use './qti/hottext-interaction';
 // @use './qti/hotspot-interaction';
 
+/*
+ * Kennisnet intentionally never exposes the radio/checkbox control of a hottext choice.
+ * The component no longer adds `qti-input-control-hidden` by default, so this substrate rule
+ * must remain in place to prevent those controls from accidentally becoming visible again.
+ */
+qti-hottext-interaction qti-hottext {
+  /* Keep every variant compact and aligned with the surrounding inline text. */
+  padding: var(--qti-border-thickness) 0;
+
+  &::part(control) {
+    display: none;
+  }
+}
+
+qti-hottext-interaction:not(.qti-input-control-hidden, .qti-unselected-hidden) qti-hottext {
+  border: var(--qti-border);
+
+  &:state(checked):not(:state(candidate-incorrect), :state(candidate-correct)) {
+    background-color: var(--qti-selected-bg);
+    color: var(--qti-selected-color);
+  }
+}
+
+/* The compact Kennisnet host rule is unlayered, so keep the answer state's semantic paint
+ * and icon space explicit when it wins over the layered interaction stylesheet. */
+.full-correct-response qti-hottext-interaction qti-hottext {
+  &:state(checked):not(:state(candidate-incorrect), :state(candidate-correct)) {
+    border-color: var(--qti-answer-border);
+    padding-inline-start: calc(1em + var(--qti-padding-horizontal) / 2);
+    padding-inline-end: calc(var(--qti-padding-horizontal) / 4);
+    background-color: var(--qti-answer-bg);
+    color: var(--qti-answer-fg);
+  }
+}
+
 qti-item-body {
   img {
     max-width: 100%;

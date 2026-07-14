@@ -95,8 +95,7 @@
   .full-correct-response qti-match-interaction:not(.qti-match-tabular)
     qti-simple-associable-choice::part(drag),
   .full-correct-response qti-text-entry-interaction,
-  .full-correct-response qti-inline-choice-interaction,
-  .full-correct-response qti-hottext-interaction qti-hottext:state(checked) {
+  .full-correct-response qti-inline-choice-interaction {
     @mixin answer;
   }
 
