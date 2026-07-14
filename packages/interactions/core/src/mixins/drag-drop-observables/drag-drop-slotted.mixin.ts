@@ -512,6 +512,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       } else if (hasDragChipState(dragSource, 'dragging')) {
         // Drag started from inventory: simply restore inventory visual state.
         this.restoreInventoryItem(dragSource, this.dragState.dragClone?.getBoundingClientRect());
+        const identifier = dragSource.getAttribute('identifier');
+        if (identifier) {
+          // If this identifier is already fully placed (match-max reached),
+          // keep the inventory item as a placeholder after invalid release.
+          this.updateInventoryBasedOnMatchMax(identifier);
+        }
         this.cacheInteractiveElements();
         this.checkAllMaxAssociations();
       }

@@ -193,4 +193,32 @@ describe('drag-drop characterization — response is currently derived from the 
     expect(chip.internals.states.has('placeholder')).toBe(true);
     expect(chip.style.opacity, 'presentation is not written inline any more').toBe('');
   });
+
+  test('invalid drop from spent inventory chip keeps placeholder state (no source+clone duplicate)', async () => {
+    document.body.innerHTML = `
+      <qti-gap-match-interaction response-identifier="R">
+        <qti-gap-text identifier="ht_winter" match-max="1">winter</qti-gap-text>
+        <p><qti-gap identifier="gap_1"></qti-gap></p>
+      </qti-gap-match-interaction>`;
+    await settle();
+
+    const interaction = el<any>('qti-gap-match-interaction');
+    const chip = byId('ht_winter');
+    const gap = el<HTMLElement>('[identifier="gap_1"]');
+
+    interaction.handleDrop(chip, gap);
+    await settle();
+    expect(interaction.response).toBe('ht_winter gap_1');
+    expect(chip.internals.states.has('placeholder')).toBe(true);
+
+    // Simulate an attempted re-drag from the spent source that ends invalid.
+    chip.internals.states.add('dragging');
+    interaction.handleInvalidDrop(chip);
+    await settle();
+
+    // Source remains spent because its placed copy still exists.
+    expect(chip.internals.states.has('placeholder')).toBe(true);
+    expect(interaction.response).toBe('ht_winter gap_1');
+    expect(gap.shadowRoot!.querySelectorAll('qti-gap-text')).toHaveLength(1);
+  });
 });

@@ -60,6 +60,9 @@ export const D107: Story = {
 
       // Verify validation behavior
       expect(gapMatchInteraction).not.toBeNull();
+
+      const winterNodes = gapMatchInteraction.querySelectorAll<QtiGapText>('qti-gap-text[identifier="W"]');
+      expect(winterNodes.length).toBe(1);
     });
   },
   loaders: [async () => ({ xml: await getItemByUri('/assets/qti-conformance/Advanced/Q6/gap-match-sv-3.xml') })]

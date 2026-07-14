@@ -163,12 +163,11 @@ export const Order: Story = {
         <qti-simple-choice identifier="A">Hypothese formuleren</qti-simple-choice>
         <qti-simple-choice identifier="B">Data verzamelen</qti-simple-choice>
       </qti-order-interaction>`,
-      `<strong>Order has two faults.</strong> The box model differs (below), <em>and</em> — even once
-       that is unified — a placed card stretches to fill its drop slot while the bank card sizes to
-       its content, and the drop grows ~2px the moment it is filled. That second, layout-coupling
-       fault is what keeps <code>drag-drop.invariance.spec.ts</code> red; it needs the drop to reserve
-       the chip's box up front (a component change, like gap-match's <code>--qti-dropzone-min-*</code>),
-       not just a CSS nudge. A green table below is necessary but not sufficient for order.`
+      `<strong>Order still has one remaining fault.</strong> The box model table below can be green,
+       but the placed card still stretches to fill its drop slot while the bank card sizes to its
+       content. The dropzone itself now keeps its outer box when filled; the remaining failure in
+       <code>drag-drop.invariance.spec.ts</code> is the placed chip stretching to the slot instead of
+       keeping the bank chip's natural footprint.`
     ),
   play: measure({
     interaction: 'qti-order-interaction',

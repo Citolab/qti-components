@@ -240,11 +240,10 @@ const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: ()
  *
  *   order      NOT a box-model mismatch — the placed chip's own padding/border/font-weight already
  *              match the bank's. The residual 2px is layout coupling: the placed chip stretches to
- *              fill its drop slot (a `width` a hair off the bank chip's natural two-line wrap), and
- *              the drop itself grows ~2px the moment it is filled (its empty min-height does not
- *              reserve the chip's height). Fixing it means the drop reserving the chip's box up
- *              front — what gap-match already does with `--qti-dropzone-min-*` (qti-gap.styles.ts) —
- *              a component change, not a CSS nudge. Both the chip-box and dropzone tests fail on it.
+ *              fill its drop slot (a `width` a hair off the bank chip's natural two-line wrap).
+ *              The dropzone-resize violation used to live here too, but the drop now reserves its
+ *              own outer box correctly; the remaining failure is the placed chip stretching to the
+ *              slot rather than keeping the bank chip's natural footprint.
  *
  * `associate` used to live here — its placed chip drew `16px` padding from the base `@apply drag`
  * while the bank chip drew `0.8em` from kennisnet's `:state(drag)` block, and nothing keyed the
@@ -252,7 +251,7 @@ const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: ()
  * selector to kennisnet's shared chip block, so a chip wears one box model in both homes.
  */
 const CHIP_BOX_KNOWN_BAD = new Set(['order']);
-const DROPZONE_KNOWN_BAD = new Set(['order']);
+const DROPZONE_KNOWN_BAD = new Set<string>();
 
 const chipCases = INTERACTIONS.map(i => [i.name, i] as const);
 
