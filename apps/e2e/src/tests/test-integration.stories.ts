@@ -47,7 +47,7 @@ const meta: Meta = {
 };
 export default meta;
 
-import UnbeleivableNight from '../../../../public/assets/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
+import UnbeleivableNight from './fixtures/qti-test-package-stimulus/items/ref/unbelievableNight.xml?raw';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 

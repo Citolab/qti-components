@@ -6,10 +6,10 @@ import { mswLoader } from 'msw-storybook-addon';
 
 import { type QtiAssessmentItemRef } from '@qti-components/test';
 
-import ChoiceSingleCardinality from '../../../../public/assets/qti-conformance/Basic/T4-T7/items/choice-single-cardinality.xml?raw';
-import ChoiceMultipleCardinality from '../../../../public/assets/qti-conformance/Basic/T4-T7/items/choice-multiple-cardinality.xml?raw';
-import ExtendedText from '../../../../public/assets/qti-conformance/Basic/T4-T7/items/extended-text.xml?raw';
-import TextEntry from '../../../../public/assets/qti-conformance/Basic/T4-T7/items/text-entry.xml?raw';
+import ChoiceSingleCardinality from './fixtures/qti-conformance/Basic/T4-T7/items/choice-single-cardinality.xml?raw';
+import ChoiceMultipleCardinality from './fixtures/qti-conformance/Basic/T4-T7/items/choice-multiple-cardinality.xml?raw';
+import ExtendedText from './fixtures/qti-conformance/Basic/T4-T7/items/extended-text.xml?raw';
+import TextEntry from './fixtures/qti-conformance/Basic/T4-T7/items/text-entry.xml?raw';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
