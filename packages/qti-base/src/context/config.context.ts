@@ -29,8 +29,14 @@ export interface ConfigContext {
   validationDisplayMode?: ValidationDisplayMode;
 
   /**
+   * If true, disables further user actions when an interaction reaches its configured maximum.
+   * Applies to both choice-based and drag/drop interactions.
+   */
+  disableAfterMaxReached?: boolean;
+
+  /**
    * If true, disables further selection in choice interactions after the maximum number of choices is reached.
-   * Used in multiple-choice and similar interactions to enforce maxChoices.
+   * @deprecated Legacy alias for choice interactions. Prefer disableAfterMaxReached.
    */
   disableAfterIfMaxChoicesReached?: boolean;
 

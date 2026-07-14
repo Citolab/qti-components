@@ -790,18 +790,6 @@
             },
             {
               "kind": "field",
-              "name": "_configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -1089,6 +1077,19 @@
               "inheritedFrom": {
                 "name": "VocabularyMixin",
                 "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -1523,6 +1524,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -5309,14 +5333,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "field",
-              "name": "_configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -11650,6 +11666,19 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getBaseCandidates",
               "privacy": "private",
@@ -12066,6 +12095,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -12888,6 +12940,19 @@
             },
             {
               "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "classNames",
               "type": {
                 "text": "string"
@@ -13180,6 +13245,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -13956,6 +14044,19 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -15137,6 +15238,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "response",
               "type": {
@@ -16074,6 +16198,19 @@
             },
             {
               "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#endPoint",
               "privacy": "private",
               "type": {
@@ -16390,6 +16527,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -17579,18 +17739,6 @@
             },
             {
               "kind": "field",
-              "name": "_configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -17839,6 +17987,19 @@
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18157,6 +18318,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18747,18 +18931,6 @@
             },
             {
               "kind": "field",
-              "name": "_configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -19007,6 +19179,19 @@
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -19326,6 +19511,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -19919,18 +20127,6 @@
             },
             {
               "kind": "field",
-              "name": "_configContext",
-              "type": {
-                "text": "ConfigContext"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "ChoicesMixin",
-                "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
-              }
-            },
-            {
-              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext"
@@ -20179,6 +20375,19 @@
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -20453,6 +20662,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -21172,6 +21404,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#estimateOptimalWidth",
               "privacy": "private"
@@ -21554,6 +21799,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22319,6 +22587,19 @@
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -23527,6 +23808,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "response",
               "type": {
@@ -24459,6 +24763,19 @@
             },
             {
               "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#value",
               "privacy": "private",
               "type": {
@@ -24697,6 +25014,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -26124,6 +26464,19 @@
               "description": "Converts QtiVariableJSON to a string or string array"
             },
             {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getFinalRequirePaths",
               "privacy": "private",
@@ -26841,6 +27194,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -27685,6 +28061,19 @@
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -28791,6 +29180,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "response",
               "type": {
@@ -29857,6 +30269,19 @@
             },
             {
               "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#imageHeightOriginal",
               "privacy": "private",
               "type": {
@@ -30176,6 +30601,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -30867,6 +31315,19 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#onDrag",
               "privacy": "private",
@@ -31194,6 +31655,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -31867,6 +32351,19 @@
               "description": "Display flag for the `[part='correct']` overlay. Separate from\n`_correctResponse` (the base's storage for the `correct-response`\nattribute value) — toggling this does NOT clobber the correct response."
             },
             {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#setEmptyAttribute",
               "privacy": "private",
@@ -32151,6 +32648,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -32836,6 +33356,19 @@
             },
             {
               "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#file",
               "privacy": "private",
               "type": {
@@ -33087,6 +33620,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -33630,6 +34186,15 @@
               "privacy": "protected"
             },
             {
+              "kind": "field",
+              "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
               "kind": "method",
               "name": "clearInlineValidationMessage",
               "privacy": "protected",
@@ -33784,6 +34349,25 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "resolveDisableAfterMaxReached",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -34951,6 +35535,14 @@
             "name": "*",
             "module": "packages/qti-base/src/utils/utils"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-base/src/testing/qti-config-test-provider"
+          }
         }
       ]
     },
@@ -35237,6 +35829,61 @@
       "path": "packages/qti-base/src/lib/variables.ts",
       "declarations": [],
       "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/testing/qti-config-test-provider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Test-only wrapper that provides `configContext` to slotted descendants.\n\nUsage:\n```ts\nhtml`<qti-config-test-provider .config=${{ disableAfterMaxReached: true }}>...</qti-config-test-provider>`\n```",
+          "name": "QtiConfigTestProvider",
+          "members": [
+            {
+              "kind": "field",
+              "name": "config",
+              "type": {
+                "text": "ConfigContext"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "configContext",
+              "type": {
+                "text": "ConfigContext"
+              },
+              "privacy": "public",
+              "default": "{}"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "qti-config-test-provider",
+          "customElement": true,
+          "modulePath": "packages/qti-base/src/testing/qti-config-test-provider.ts",
+          "definitionPath": "packages/qti-base/src/testing/qti-config-test-provider.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-config-test-provider",
+          "declaration": {
+            "name": "QtiConfigTestProvider",
+            "module": "packages/qti-base/src/testing/qti-config-test-provider.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiConfigTestProvider",
+          "declaration": {
+            "name": "QtiConfigTestProvider",
+            "module": "packages/qti-base/src/testing/qti-config-test-provider.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",

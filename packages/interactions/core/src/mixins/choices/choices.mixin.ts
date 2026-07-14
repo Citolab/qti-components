@@ -1,8 +1,7 @@
 import { property, query, state } from 'lit/decorators.js';
-import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { configContext, responseAttributeConverter, type ConfigContext } from '@qti-components/base';
+import { responseAttributeConverter } from '@qti-components/base';
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { Interaction, IInteraction } from '@qti-components/base';
@@ -65,9 +64,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._updateChoiceSelection();
     };
 
-    @state()
-    @consume({ context: configContext, subscribe: true })
-    protected _configContext: ConfigContext; //configContext
     override get value(): string | null {
       if (Array.isArray(this.response) && this.response.length === 0) {
         return null;
@@ -267,13 +263,14 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
       this._toggleChoiceChecked(event.target as Choice);
+      const shouldDisableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: false });
       if (this.maxChoices === 1) {
         this._choiceElements.forEach(choice => {
           if (choice.identifier !== event.detail.identifier) {
             this._setChoiceChecked(choice, false);
           }
         });
-      } else if (this.maxChoices !== 0 && this._configContext?.disableAfterIfMaxChoicesReached) {
+      } else if (this.maxChoices !== 0 && shouldDisableAtMax) {
         const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
         if (selectedChoices.length >= this.maxChoices) {
           this._choiceElements.forEach(choice => {
@@ -318,9 +315,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
       this.validate();
 
-      if (!this._internals.validity.valid) {
-        this.reportValidity();
-      }
+      // Always update the configured validity UI mode after user-driven selection changes.
+      // This ensures inline messages are cleared immediately when state becomes valid again.
+      this.reportValidity();
 
       this.saveResponse(this.response);
     }

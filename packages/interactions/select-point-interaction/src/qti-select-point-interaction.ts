@@ -335,7 +335,31 @@ export class QtiSelectPointInteraction extends Interaction {
   }
 
   validate(): boolean {
-    return this.response !== null && this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
+    const selectedCount = this.response?.length ?? 0;
+    const exceedsMax = this.maxChoices !== 0 && Number.isFinite(this.maxChoices) && selectedCount > this.maxChoices;
+    const belowMin = selectedCount < this.minChoices;
+
+    let isValid = true;
+    let validityMessage = '';
+
+    if (exceedsMax) {
+      isValid = false;
+      validityMessage =
+        this.dataset.maxSelectionsMessage ||
+        `Please select no more than ${this.maxChoices} ${this.maxChoices === 1 ? 'point' : 'points'}.`;
+    } else if (belowMin) {
+      isValid = false;
+      validityMessage =
+        this.dataset.minSelectionsMessage ||
+        `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'point' : 'points'}.`;
+    }
+
+    this.setInteractionValidity(isValid, validityMessage, this.#imgElement ?? this, { suppressInline: true });
+    return isValid;
+  }
+
+  public override reportValidity(): boolean {
+    return super.reportValidity();
   }
 
   #calculateScale() {

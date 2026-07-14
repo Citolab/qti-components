@@ -27,3 +27,5 @@ export * from './lib/qti-rule-base';
 
 export * from './utils/scoring-helper';
 export * from './utils/utils';
+
+export * from './testing/qti-config-test-provider';

@@ -28,6 +28,7 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   @consume({ context: configContext, subscribe: true })
   protected configContext: ConfigContext;
+  #didLogDisableAfterIfMaxChoicesReachedDeprecation = false;
 
   /*
    * Published to the choice elements inside this interaction — their role, and how to tell
@@ -391,6 +392,31 @@ export abstract class Interaction extends LitElement implements IInteraction {
 
   protected get validationDisplayMode(): ValidationDisplayMode {
     return this.configContext?.validationDisplayMode ?? 'inline';
+  }
+
+  protected resolveDisableAfterMaxReached(options?: { defaultWhenUnset?: boolean }): boolean {
+    const defaultWhenUnset = options?.defaultWhenUnset ?? false;
+    const config = this.configContext;
+
+    if (!config) {
+      return defaultWhenUnset;
+    }
+
+    if (config.disableAfterMaxReached !== undefined) {
+      return config.disableAfterMaxReached;
+    }
+
+    if (config.disableAfterIfMaxChoicesReached !== undefined) {
+      if (!this.#didLogDisableAfterIfMaxChoicesReachedDeprecation) {
+        this.#didLogDisableAfterIfMaxChoicesReachedDeprecation = true;
+        console.log(
+          '[QTI Config] `disableAfterIfMaxChoicesReached` is deprecated. Use `disableAfterMaxReached` instead.'
+        );
+      }
+      return config.disableAfterIfMaxChoicesReached;
+    }
+
+    return defaultWhenUnset;
   }
 
   protected setInteractionValidity(

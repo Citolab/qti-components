@@ -475,16 +475,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         this.updateInventoryBasedOnMatchMax(identifier);
       }
 
-      // After drop, check if we've exceeded max and auto-validate if so
-      const totalAssociations = this.totalAssociationsFromState();
-      const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;
-
-      if (exceedsMax) {
-        // Automatically show validation message when max is exceeded
-        this._dropBlockedDueToMax = true;
-        this.validate();
-        this.reportValidity();
-      }
+      // Always refresh configured validity UI after user-driven drop changes.
+      // This ensures inline messages clear immediately when state becomes valid again.
+      this.validate();
+      this.reportValidity();
     }
 
     public override handleInvalidDrop(dragSource: HTMLElement | null): void {
@@ -837,6 +831,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     private checkAllMaxAssociations(): void {
       const totalAssociations = this.totalAssociationsFromState();
+      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: true });
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 
@@ -845,7 +840,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         const isDragSource = droppable.hasAttribute('data-drag-source');
         const isAtCapacity = this.droppableAtCapacityFromState(droppable);
 
-        if ((maxReached || isAtCapacity) && !isDragSource) {
+        if ((isAtCapacity || (disableAtMax && maxReached)) && !isDragSource) {
           droppable.setAttribute('disabled', '');
         } else {
           droppable.removeAttribute('disabled');
