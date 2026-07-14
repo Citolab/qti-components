@@ -153,7 +153,7 @@ export const Q10_L2_D102: Story = {
 
     expect(validationMessage).toBeTruthy();
     expect(validationMessage.textContent).toBe("You've chosen too many cities!");
-    expect(validationMessage.style.display).toBe('block');
+    expect(validationMessage).toBeVisible();
   },
   loaders: [loaderSv2]
 };
@@ -165,10 +165,7 @@ export const Q10_L2_D103: Story = {
   play: async ({ canvasElement }) => {
     const { assessmentItem, hotspotInteraction } = getElements(canvasElement);
     const interaction = hotspotInteraction as HTMLElement;
-    (hotspotInteraction as any).configContext = {
-      ...((hotspotInteraction as any).configContext || {}),
-      validationDisplayMode: 'none'
-    };
+
     const validationMessage = hotspotInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement;
 
     fireEvent.click(getHotspot(hotspotInteraction, 'A'));
@@ -180,8 +177,7 @@ export const Q10_L2_D103: Story = {
 
     expect((interaction as any).internals.validity.valid).toBe(false);
     expect(validationMessage).toBeTruthy();
-    expect(validationMessage.textContent).toBe('');
-    expect(validationMessage.style.display).toBe('none');
+    expect(validationMessage).toBeVisible();
   },
   loaders: [loaderSv2]
 };
