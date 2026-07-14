@@ -23,7 +23,7 @@ qti-simple-choice:nth-child(2) {
   transform: rotate(3deg);
 }
 
-qti-simple-choice[aria-checked='true'] {
+qti-simple-choice:state(checked) {
   background-color: aqua !important;
 }
 

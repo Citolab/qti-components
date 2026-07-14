@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () =>
     html`<qti-assessment-item>
-      <qti-stylesheet href="/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
+      <qti-stylesheet href="assets/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
       <qti-item-body>
         <qti-choice-interaction
           class="qti-orientation-horizontal qti-input-control-hidden"
