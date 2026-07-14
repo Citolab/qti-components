@@ -38,6 +38,7 @@ public/assets/api/test
 .eslintcache
 cdn
 dev
+/conformance
 
 # Yalc
 /.yalc

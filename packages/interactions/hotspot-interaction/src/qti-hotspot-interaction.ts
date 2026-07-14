@@ -21,6 +21,7 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
     return html`
       <slot name="prompt"></slot>
       <slot></slot>
+      <div part="message" role="alert" id="validation-message"></div>
     `;
   }
 
