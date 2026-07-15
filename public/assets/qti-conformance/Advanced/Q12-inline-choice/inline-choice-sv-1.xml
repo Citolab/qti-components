@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd" 
+  identifier="q12-inline-choice-sv-1" title="Q12 Inline Choice - (SV 1) - widths"
+  adaptive="false" time-dependent="false">
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE">
+    <qti-correct-response>
+      <qti-value>Y</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE1"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE2"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE3"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE4"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE5"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE6"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE7"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE8"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE9"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE10"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE11"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE12"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE13"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE14"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE15"/>
+  <qti-response-declaration base-type="identifier" cardinality="single" identifier="RESPONSE16"/>
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE"/>
+  <qti-item-body>
+    <p>Identify the missing word in this famous quote from Shakespeare's Richard III.</p>
+    <blockquote>
+      <p>Now is the winter of our discontent
+      <br/>Made glorious summer by this sun of 
+      <qti-inline-choice-interaction class="qti-valign-baseline" response-identifier="RESPONSE">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction>;
+      <br/>And all the clouds that lour'd upon our house
+      <br/>In the deep bosom of the ocean buried.</p>
+    </blockquote>
+
+    <p>qti-input-width-1 : <qti-inline-choice-interaction class="qti-input-width-1 qti-valign-baseline" response-identifier="RESPONSE1">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-2 : <qti-inline-choice-interaction class="qti-input-width-2 qti-valign-baseline" response-identifier="RESPONSE2">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-3 : <qti-inline-choice-interaction class="qti-input-width-3 qti-valign-baseline" response-identifier="RESPONSE3">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-4 : <qti-inline-choice-interaction class="qti-input-width-4 qti-valign-baseline" response-identifier="RESPONSE4">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-5 : <qti-inline-choice-interaction class="qti-input-width-5 qti-valign-baseline" response-identifier="RESPONSE5">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-6 : <qti-inline-choice-interaction class="qti-input-width-6 qti-valign-baseline" response-identifier="RESPONSE6">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-10 : <qti-inline-choice-interaction class="qti-input-width-10 qti-valign-baseline" response-identifier="RESPONSE7">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-15 : <qti-inline-choice-interaction class="qti-input-width-15 qti-valign-baseline" response-identifier="RESPONSE8">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-20 : <qti-inline-choice-interaction class="qti-input-width-20 qti-valign-baseline" response-identifier="RESPONSE9">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-25 : <qti-inline-choice-interaction class="qti-input-width-25 qti-valign-baseline" response-identifier="RESPONSE10">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-30 : <qti-inline-choice-interaction class="qti-input-width-30 qti-valign-baseline" response-identifier="RESPONSE11">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-35 : <qti-inline-choice-interaction class="qti-input-width-35 qti-valign-baseline" response-identifier="RESPONSE12">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-40 : <qti-inline-choice-interaction class="qti-input-width-40 qti-valign-baseline" response-identifier="RESPONSE13">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-45 : <qti-inline-choice-interaction class="qti-input-width-45 qti-valign-baseline" response-identifier="RESPONSE14">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-50 : <qti-inline-choice-interaction class="qti-input-width-50 qti-valign-baseline" response-identifier="RESPONSE15">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+
+    <p>qti-input-width-72 : <qti-inline-choice-interaction class="qti-input-width-72 qti-valign-baseline" response-identifier="RESPONSE16">
+        <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+        <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+        <qti-inline-choice identifier="Y">York</qti-inline-choice>
+      </qti-inline-choice-interaction></p>
+    
+  </qti-item-body>
+</qti-assessment-item>

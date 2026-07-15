@@ -14,7 +14,6 @@
       @apply dropdown-trigger;
       font-size: inherit;
       vertical-align: baseline;
-      min-width: var(--qti-calculated-min-width, auto);
       &:focus-visible {
         @apply foc;
       }

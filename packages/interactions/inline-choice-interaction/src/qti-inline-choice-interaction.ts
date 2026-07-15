@@ -191,6 +191,13 @@ export class QtiInlineChoiceInteraction extends Interaction {
   }
 
   #estimateOptimalWidth() {
+    // Autosizing is opt-in via configContext.inlineChoiceAutosize (default: off).
+    if (!this.configContext?.inlineChoiceAutosize) return;
+
+    // If a qti-input-width-* class is present, CSS already sets --qti-inline-choice-width;
+    // let the class win and skip measurement entirely.
+    if (Array.from(this.classList).some(c => c.startsWith('qti-input-width-'))) return;
+
     const menu = this.#menuElement();
     const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
 
@@ -223,7 +230,8 @@ export class QtiInlineChoiceInteraction extends Interaction {
       menu.style.display = prevDisplay;
     }
 
-    trigger.style.width = `${widthPx + iconWidth}px`;
+    // Set via CSS variable so theming layers can still override it.
+    this.style.setProperty('--qti-inline-choice-width', `${widthPx + iconWidth}px`);
   }
 
   public validate(): boolean {
