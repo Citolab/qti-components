@@ -14,7 +14,7 @@ const config: StorybookConfig = {
   // projects (no VRT env) keep the full story set below.
   stories:
     process.env.VRT === '1'
-      ? [{ directory: '../apps/e2e/src', files: '**/kennisnet-all-items.stories.ts', titlePrefix: 'E2E' }]
+      ? [{ directory: '../apps/e2e/src', files: '**/all-items.stories.ts', titlePrefix: 'E2E' }]
       : [
           {
             directory: '../docs',

@@ -6,8 +6,7 @@
   "exports": {
     "./item.css": "./dist/item.css",
     "./native.css": "./dist/native.css",
-    "./minimal.css": "./dist/minimal.css",
-    "./kennisnet-override.css": "./dist/kennisnet-override.css"
+    "./minimal.css": "./dist/minimal.css"
   },
   "files": [
     "dist"
@@ -19,7 +18,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m && postcss ./src/minimal.css -d dist -m && sass --no-source-map ./src/kennisnet-override.scss ./dist/kennisnet-override.css",
+    "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m && postcss ./src/minimal.css -d dist -m",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",

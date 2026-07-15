@@ -17,10 +17,5 @@ module.exports = {
   useTabs: false,
   endOfLine: 'lf',
   plugins: [],
-  overrides: [
-    {
-      files: 'packages/qti-theme/src/kennisnet-override.scss',
-      options: { printWidth: 400 }
-    }
-  ]
+  overrides: []
 };

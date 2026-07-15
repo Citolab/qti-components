@@ -5,7 +5,7 @@ qti-modal-feedback-custom {
 .custom-modal-feedback {
   display: flex;
   width: 100%;
-  border: var(--qti-border-thickness) solid var(--info-color);
+  border: var(--qti-border-thickness) solid var(--qti-info);
   background-color: var(--qti-bg);
   border-radius: var(--qti-border-radius);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);

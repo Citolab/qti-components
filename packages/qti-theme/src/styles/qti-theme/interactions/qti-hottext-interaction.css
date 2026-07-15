@@ -1,6 +1,13 @@
 @layer qti-components {
   qti-hottext-interaction {
     qti-hottext {
+      /* Hide the native radio/checkbox control by default; all theme variants use custom styling. */
+      padding: var(--qti-border-thickness) 0;
+
+      &::part(control) {
+        display: none;
+      }
+
       &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
@@ -100,7 +107,8 @@
 
     &:not(.qti-input-control-hidden, .qti-unselected-hidden) {
       qti-hottext {
-        @apply check;
+        border: var(--qti-border);
+        border-radius: var(--qti-border-radius);
 
         &:hover {
           @apply hov;
@@ -110,29 +118,9 @@
           @apply foc;
         }
 
-        &::part(control-mark) {
-          @apply check-size;
-        }
-
-        &:state(radio)::part(control) {
-          @apply check-radio;
-        }
-
-        &:state(radio):state(checked)::part(control),
-        &:state(checkbox):state(checked)::part(control) {
-          @mixin control-selected var(--qti-primary);
-        }
-
-        &:state(radio):state(checked)::part(control-mark) {
-          @apply check-radio-checked;
-        }
-
-        &:state(checkbox)::part(control) {
-          @apply check-checkbox;
-        }
-
-        &:state(checkbox):state(checked)::part(control-mark) {
-          @apply check-checkbox-checked;
+        &:state(checked):not(:state(candidate-incorrect), :state(candidate-correct)) {
+          background-color: var(--qti-selected-bg);
+          color: var(--qti-selected-color);
         }
 
         &:state(candidate-correct) {
@@ -143,6 +131,14 @@
         &:state(candidate-incorrect) {
           @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
           box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
+        }
+
+        &:state(readonly) {
+          @apply readonly;
+        }
+
+        &:state(disabled) {
+          @apply dis;
         }
       }
     }

@@ -1,7 +1,6 @@
 import itemCss from '../../packages/qti-theme/src/item.css?inline';
 import minimalCss from '../../packages/qti-theme/src/minimal.css?inline';
 import nativeCss from '../../packages/qti-theme/src/native.css?inline';
-import kennisnetOverrideHref from '../../packages/qti-theme/src/kennisnet-override.scss?url';
 
 import type { Decorator, Preview } from '@storybook/web-components-vite';
 
@@ -23,18 +22,15 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  * - vanilla:   `native.css` + the minimal variable theme. The lightest styled baseline.
  * - citolab:   full qti-theme (`item.css`, which includes native). Default: the theme's own
  *   look, with no vendor stylesheet in the cascade.
- * - kennisnet: full qti-theme + a single self-contained override file. No CDN, no Bootstrap —
- *   it carries its own reboot (the opinionated margins/typography Bootstrap used to supply)
- *   and inlines its FontAwesome glyphs as data URIs. See kennisnet-override.scss.
  */
+
 const OVERRIDE_LINK_CLASS = 'qti-vendor-override';
 const THEME_STYLE_ID = 'qti-theme-style';
 const vanillaMinimalCss = `${nativeCss}\n${minimalCss}`;
 
 const SUBSTRATES: Record<string, { baseCss: string; overrides: string[] }> = {
   vanilla: { baseCss: vanillaMinimalCss, overrides: [] },
-  citolab: { baseCss: itemCss, overrides: [] },
-  kennisnet: { baseCss: itemCss, overrides: [kennisnetOverrideHref] }
+  citolab: { baseCss: itemCss, overrides: [] }
 };
 
 /*
@@ -122,7 +118,7 @@ export const styleSubstrateDecorator: Decorator = story => story();
 export const styleSubstrateGlobalTypes: Preview['globalTypes'] = {
   override: {
     name: 'Style',
-    description: 'Choose the style substrate: Vanilla minimal, Citolab, or Kennisnet',
+    description: 'Choose the style substrate: Vanilla minimal or Citolab',
     /*
      * Deliberately no `defaultValue`. It would seed `globals.override` for every story, which
      * always outranks `parameters.styleSubstrate` and would render the Kennisnet VRT stories
@@ -133,8 +129,7 @@ export const styleSubstrateGlobalTypes: Preview['globalTypes'] = {
       icon: 'paintbrush',
       items: [
         { value: 'vanilla', title: 'Vanilla minimal' },
-        { value: 'citolab', title: 'Citolab' },
-        { value: 'kennisnet', title: 'Kennisnet' }
+        { value: 'citolab', title: 'Citolab' }
       ],
       dynamicTitle: true
     }

@@ -4,7 +4,6 @@ import { expect, test, describe, beforeEach } from 'vitest';
 import '@qti-components/interactions';
 
 import itemCss from '../../../../../qti-theme/src/item.css?inline';
-import kennisnetCss from '../../../../../qti-theme/src/kennisnet-override.scss?inline';
 
 /**
  * Layout-invariance tests for drag and drop.
@@ -67,21 +66,13 @@ const GAP_MATCH = `
  * composes. Running them bare would pass vacuously — the offending rule would never load.
  */
 const SUBSTRATES: Record<string, string[]> = {
-  citolab: [normalizeCss, itemCss],
-  kennisnet: [normalizeCss, itemCss, kennisnetCss]
+  citolab: [normalizeCss, itemCss]
 };
 
 /**
- * Kennisnet is the leading substrate; citolab is deprecated and on its way out.
- *
- * The invariants are asserted against kennisnet only. Citolab styles a bank chip with tag
- * selectors and a placed chip with `::part(drag)`, and the two blocks never agreed — in
- * graphic-gap-match its bank chips carry no chip styling at all. Holding a deprecated theme to a
- * contract it predates would mean fixing CSS nobody will ship.
- *
- * Add `minimal` here once it is a real substrate rather than a sketch.
+ * Invariants are asserted against the citolab substrate — the single shipped theme.
  */
-const CONTRACT_SUBSTRATES = ['kennisnet'];
+const CONTRACT_SUBSTRATES = ['citolab'];
 
 const applySubstrate = (name: string) => {
   document.querySelectorAll('style[data-substrate]').forEach(s => s.remove());
