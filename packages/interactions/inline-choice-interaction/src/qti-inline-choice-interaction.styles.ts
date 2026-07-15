@@ -66,7 +66,7 @@ const own = css`
     --qti-inline-choice-width: 50ch;
   }
   :host(.qti-input-width-72) {
-    --qti-inline-choice-width: 100%;
+    --qti-inline-choice-width: 72ch;
   }
 
   /* ── Trigger button — layout only, all paint lives in the theme ───────────── */
