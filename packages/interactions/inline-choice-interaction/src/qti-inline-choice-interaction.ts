@@ -82,9 +82,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
         data-readonly="${this.readonly ? 'true' : 'false'}"
       >
         <span part="value">${selected?.content}</span>
-        <span part="${this._dropdownOpen ? 'dropdown-icon dropdown-icon-open' : 'dropdown-icon'}" aria-hidden="true"
-          >▾</span
-        >
+        <span
+          part="${this._dropdownOpen ? 'dropdown-icon dropdown-icon-open' : 'dropdown-icon'}"
+          aria-hidden="true"
+        ></span>
       </button>
       <div
         id="${this._menuId}"
@@ -295,20 +296,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
       return;
     }
 
-    this.correctOption = html`<span
-      part="correct-option"
-      style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block"
-      >${correctOptionData.content}</span
-    >`;
+    this.correctOption = html`<span part="correct-option">${correctOptionData.content}</span>`;
   }
 
   #selectValue(value: string) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
     this.#syncSlottedChoices();
     this.validate();
-    if (!this._internals.validity.valid) {
-      this.reportValidity();
-    }
+    this.reportValidity();
     this.saveResponse(value);
     this.#setDropdownOpen(false);
   }

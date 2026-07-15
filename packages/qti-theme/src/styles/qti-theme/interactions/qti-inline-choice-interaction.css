@@ -1,72 +1,6 @@
 @layer qti-components {
   qti-inline-choice-interaction {
-    &:state(candidate-correct) {
-      &::part(trigger) {
-        background-color: var(--qti-correct);
-      }
-    }
-    &:state(candidate-incorrect) {
-      &::part(trigger) {
-        background-color: var(--qti-incorrect);
-      }
-    }
-    &::part(trigger) {
-      @apply dropdown-trigger;
-      font-size: inherit;
-      vertical-align: baseline;
-      &:focus-visible {
-        @apply foc;
-      }
-    }
-    &:not(:state(readonly)):not([readonly])::part(trigger):hover {
-      @apply hov;
-    }
-    &:state(disabled)::part(trigger),
-    &[disabled]::part(trigger) {
-      @apply dis;
-    }
-    &:state(readonly)::part(trigger),
-    &[readonly]::part(trigger) {
-      @apply readonly;
-      @apply dis;
-    }
-    &::part(dropdown-icon) {
-      @apply dropdown-icon;
-      font-size: 1.75em;
-    }
-    &::part(dropdown-icon-open) {
-      @apply dropdown-icon-open;
-    }
-    &::part(menu) {
-      @apply dropdown-menu;
-    }
-    &::part(option) {
-      @apply dropdown-option;
-    }
-    &::part(option):hover {
-      @apply hov;
-    }
-    &::part(option):focus-visible {
-      @apply foc;
-    }
-    &::part(option-selected) {
-      @apply act-bg;
-    }
-    & qti-inline-choice {
-      @apply dropdown-option;
-    }
-    & qti-inline-choice:hover {
-      @apply hov;
-    }
-    & qti-inline-choice:focus-visible {
-      @apply foc;
-    }
-    & qti-inline-choice:state(checked) {
-      @apply act-bg;
-    }
-  }
-
-  qti-inline-choice-interaction {
+    /* ── Host: field appearance ─────────────────────────────────────────────── */
     display: inline-block;
     margin: 0.2rem 0.2rem 0.2rem 0;
     color: var(--qti-body-color);
@@ -74,18 +8,128 @@
     border: var(--qti-border);
     border-radius: var(--qti-field-border-radius);
 
+    /* ── Trigger: transparent inside the field border ───────────────────────── */
     &::part(trigger) {
+      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
       background: transparent;
       border: none;
       border-radius: inherit;
       color: inherit;
+      cursor: pointer;
+      font-size: inherit;
+      vertical-align: baseline;
     }
 
-    &::part(value),
+    &::part(trigger):focus-visible {
+      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+      outline: none;
+    }
+
+    &:not(:state(readonly)):not([readonly])::part(trigger):hover {
+      background-color: var(--qti-hover-bg);
+    }
+
+    &:state(disabled)::part(trigger),
+    &[disabled]::part(trigger) {
+      cursor: not-allowed;
+    }
+
+    &:state(readonly)::part(trigger),
+    &[readonly]::part(trigger) {
+      cursor: pointer;
+    }
+
+    /* ── Chevron icon: color only; transform/mask/size live in shadow DOM ────── */
     &::part(dropdown-icon) {
-      color: inherit;
+      color: var(--qti-border-color);
     }
 
+    &::part(dropdown-icon-open) {
+      color: var(--qti-border-active);
+    }
+
+    /* ── Popover menu ────────────────────────────────────────────────────────── */
+    &::part(menu) {
+      background: var(--qti-bg);
+      border: var(--qti-border);
+      border-radius: var(--qti-border-radius);
+      padding: 0.25rem;
+    }
+
+    /* ── Option rows ─────────────────────────────────────────────────────────── */
+    &::part(option) {
+      min-height: 2.25rem;
+      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      border: 0;
+      border-radius: calc(var(--qti-border-radius) - 2px);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    &::part(option):hover {
+      background-color: var(--qti-hover-bg);
+    }
+
+    &::part(option):focus-visible {
+      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+      outline: none;
+    }
+
+    &::part(option-selected) {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* ── Slotted qti-inline-choice elements (light DOM) ──────────────────────── */
+    & qti-inline-choice {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 2.25rem;
+      box-sizing: border-box;
+      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      border: 0;
+      border-radius: calc(var(--qti-border-radius) - 2px);
+      background: transparent;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    & qti-inline-choice:hover {
+      background-color: var(--qti-hover-bg);
+    }
+
+    & qti-inline-choice:focus-visible {
+      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+      outline: none;
+    }
+
+    & qti-inline-choice:state(checked) {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* ── Validation message ──────────────────────────────────────────────────── */
+    &::part(message) {
+      color: var(--qti-body-color);
+      background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      border: var(--qti-border-thickness) solid var(--qti-warning);
+      border-radius: var(--qti-border-radius);
+    }
+
+    /* ── Correct-option answer key overlay ───────────────────────────────────── */
+    &::part(correct-option) {
+      border: 1px solid var(--qti-correct);
+      border-radius: 4px;
+      padding: 2px 4px;
+      color: var(--qti-correct);
+    }
+
+    /* ── Candidate correction states ─────────────────────────────────────────── */
     &:state(candidate-correct) {
       @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
 
