@@ -22,6 +22,8 @@ type HotspotChoice = Choice & { order: number; orderCorrect?: number };
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
 
+  static readonly #LOCATOR_CLASS = 'qti-graphic-order-marker';
+
   protected choiceOrdering: boolean;
 
   protected _choiceElements: Choice[] = [];
@@ -69,11 +71,60 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
         });
       }
 
+      this.#renderLocatorPins();
       this.choiceOrdering = false;
     }
   }
 
-  public override toggleInternalCorrectResponse(show: boolean) {
+  #anchorNameForChoice(choice: HotspotChoice): string {
+    const raw = choice.identifier || choice.getAttribute('identifier') || 'hotspot';
+    const normalized = raw.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+    return `--qti-graphic-order-${normalized}`;
+  }
+
+  #resolvePinColor(choice: HotspotChoice): string {
+    if (choice.matches(':state(candidate-incorrect)')) {
+      return 'var(--qti-incorrect)';
+    }
+    if (choice.matches(':state(candidate-correct)')) {
+      return 'var(--qti-correct)';
+    }
+    if (choice.matches(':state(correct-response)')) {
+      return 'var(--qti-answer-border)';
+    }
+    return 'var(--qti-selected-bg)';
+  }
+
+  #renderLocatorPins() {
+    // Remove previous markers and anchor names managed by this component.
+    this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());
+
+    (this._choiceElements as HotspotChoice[]).forEach(choice => {
+      choice.style.removeProperty('anchor-name');
+    });
+
+    const orderedChoices = (this._choiceElements as HotspotChoice[])
+      .filter(choice => choice.order != null)
+      .sort((a, b) => a.order - b.order);
+
+    orderedChoices.forEach(choice => {
+      const anchorName = this.#anchorNameForChoice(choice);
+      choice.style.setProperty('anchor-name', anchorName);
+
+      const marker = document.createElement('span');
+      marker.className = QtiGraphicOrderInteraction.#LOCATOR_CLASS;
+      marker.style.setProperty('position-anchor', anchorName);
+      marker.style.setProperty('--qti-graphic-order-pin-color', this.#resolvePinColor(choice));
+      if (choice.getAttribute('shape') === 'poly') {
+        marker.classList.add('qti-graphic-order-marker--poly');
+      }
+      marker.setAttribute('aria-hidden', 'true');
+      marker.textContent = String(choice.order);
+      this.append(marker);
+    });
+  }
+
+  public toggleInternalCorrectResponse(show: boolean) {
     const correctResponseValue = this.correctResponse;
     const correctArr = Array.isArray(correctResponseValue)
       ? correctResponseValue
@@ -105,8 +156,10 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     super.connectedCallback();
     this.addEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
     this.addEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
+    this.#renderLocatorPins();
   }
   override disconnectedCallback() {
+    this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());
     super.disconnectedCallback();
     this.removeEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
     this.removeEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);

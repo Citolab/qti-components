@@ -17990,6 +17990,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#anchorNameForChoice",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "choice",
+                  "type": {
+                    "text": "HotspotChoice"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
               "privacy": "private",
@@ -18001,6 +18019,17 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "#LOCATOR_CLASS",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'qti-graphic-order-marker'"
             },
             {
               "kind": "field",
@@ -18029,6 +18058,29 @@
                   "name": "e",
                   "type": {
                     "text": "CustomEvent<QtiHotspotChoice>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderLocatorPins",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePinColor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "choice",
+                  "type": {
+                    "text": "HotspotChoice"
                   }
                 }
               ]

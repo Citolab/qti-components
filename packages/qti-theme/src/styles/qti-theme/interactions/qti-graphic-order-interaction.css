@@ -10,7 +10,7 @@
     & qti-hotspot-choice {
       width: 100%;
       height: 100%;
-      background-color: transparent;
+      background-color: color-mix(in srgb, var(--qti-border-color) 18%, transparent);
       padding: 0;
       cursor: pointer;
       transition:
@@ -25,125 +25,96 @@
       }
 
       &[shape='circle'] {
-        border: var(--qti-hotspot-border-width, 3px) solid var(--qti-border-color) !important;
         min-width: calc(var(--qti-graphic-order-pin-size) * 0.6);
         min-height: calc(var(--qti-graphic-order-pin-size) * 0.6);
       }
 
-      &[shape='circle']:hover {
-        border-color: var(--qti-border-active);
+      &[shape='poly'] {
+        background-color: color-mix(in srgb, var(--qti-border-color) 18%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:hover,
+      &[shape='rect']:hover,
+      &[shape='ellipse']:hover {
         background-color: color-mix(in srgb, var(--qti-border-active) 12%, transparent);
       }
 
-      &[shape='circle']:focus-visible {
+      &[shape='poly']:hover {
+        background-color: color-mix(in srgb, var(--qti-border-active) 20%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:focus-visible,
+      &[shape='rect']:focus-visible,
+      &[shape='ellipse']:focus-visible {
         outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
         outline-offset: 2px;
       }
 
-      &[shape='circle']:state(correct-response) {
-        border-color: var(--qti-answer-border) !important;
+      &[shape='poly']:focus-visible {
+        outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+        outline-offset: 2px;
+      }
+
+      &[shape='circle']:state(correct-response),
+      &[shape='rect']:state(correct-response),
+      &[shape='ellipse']:state(correct-response) {
         background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
       }
 
-      &[shape='circle']:state(checked) {
-        border-color: var(--qti-selected-bg) !important;
+      &[shape='poly']:state(correct-response) {
+        background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:state(checked),
+      &[shape='rect']:state(checked),
+      &[shape='ellipse']:state(checked) {
         background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
       }
 
-      &[shape='circle']:state(candidate-correct) {
-        border-color: var(--qti-correct) !important;
+      &[shape='poly']:state(checked) {
+        background-color: color-mix(in srgb, var(--qti-selected-bg) 40%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:state(candidate-correct),
+      &[shape='rect']:state(candidate-correct),
+      &[shape='ellipse']:state(candidate-correct) {
         background-color: color-mix(in srgb, var(--qti-correct) 35%, transparent);
       }
 
-      &[shape='circle']:state(candidate-incorrect) {
-        border-color: var(--qti-incorrect) !important;
+      &[shape='poly']:state(candidate-correct) {
+        background-color: color-mix(in srgb, var(--qti-correct) 40%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:state(candidate-incorrect),
+      &[shape='rect']:state(candidate-incorrect),
+      &[shape='ellipse']:state(candidate-incorrect) {
         background-color: color-mix(in srgb, var(--qti-incorrect) 35%, transparent);
       }
 
-      &[shape='circle'][aria-ordervalue] {
-        overflow: visible;
-        --qti-graphic-order-pin-color: var(--qti-selected-bg);
-        border: 0 !important;
-        background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
-      }
-
-      &[shape='circle'][aria-ordervalue]:hover,
-      &[shape='circle'][aria-ordervalue]:focus-visible,
-      &[shape='circle'][aria-ordervalue]:state(checked),
-      &[shape='circle'][aria-ordervalue]:state(correct-response),
-      &[shape='circle'][aria-ordervalue]:state(candidate-correct),
-      &[shape='circle'][aria-ordervalue]:state(candidate-incorrect) {
-        border-color: transparent !important;
-      }
-
-      /* Show a larger pin with inherited white fill and configurable border thickness. */
-      &[shape='circle'][aria-ordervalue]::before {
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, var(--qti-graphic-order-pin-anchor));
-        width: var(--qti-graphic-order-pin-size);
-        height: var(--qti-graphic-order-pin-size);
-        color: var(--qti-graphic-order-pin-color);
-        background: var(--qti-graphic-order-pin-svg) no-repeat center / contain;
-        z-index: 1;
-      }
-
-      &[shape='circle'][aria-ordervalue]::after {
-        content: attr(aria-ordervalue) !important;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: var(--qti-graphic-order-pin-size);
-        height: var(--qti-graphic-order-pin-size);
-        transform: translate(-50%, var(--qti-graphic-order-pin-anchor));
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding-top: calc(var(--qti-graphic-order-pin-size) * 0.2);
-        font-weight: 700;
-        font-size: var(--qti-graphic-order-pin-number-size);
-        line-height: 1;
-        color: var(--qti-graphic-order-pin-color);
-        text-shadow: 0 0 1px var(--qti-graphic-order-pin-fill);
-        pointer-events: none;
-        z-index: 2;
-      }
-
-      &[shape='circle'][aria-ordervalue]:state(correct-response)::before {
-        --qti-graphic-order-pin-color: var(--qti-answer-border);
-      }
-
-      &[shape='circle'][aria-ordervalue]:state(correct-response)::after {
-        color: var(--qti-graphic-order-pin-color);
-      }
-
-      &[shape='circle'][aria-ordervalue]:state(candidate-correct)::before {
-        --qti-graphic-order-pin-color: var(--qti-correct);
-      }
-
-      &[shape='circle'][aria-ordervalue]:state(candidate-correct)::after {
-        color: var(--qti-graphic-order-pin-color);
-      }
-
-      &[shape='circle'][aria-ordervalue]:state(candidate-incorrect)::before {
-        --qti-graphic-order-pin-color: var(--qti-incorrect);
-      }
-
-      &[shape='circle'][aria-ordervalue]:state(candidate-incorrect)::after {
-        color: var(--qti-graphic-order-pin-color);
+      &[shape='poly']:state(candidate-incorrect) {
+        background-color: color-mix(in srgb, var(--qti-incorrect) 40%, transparent);
+        box-shadow: none;
       }
 
       &[aria-ordervalue] {
-        display: grid;
-        place-content: center;
-        color: var(--qti-text);
-        font: 600 0.85rem/1 var(--qti-font-family, inherit);
+        overflow: visible;
+        border: 0 !important;
+        box-shadow: none;
+        background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
       }
-      &[aria-ordervalue]::after {
-        content: attr(aria-ordervalue) !important;
-        z-index: 2;
+
+      &[aria-ordervalue]:hover,
+      &[aria-ordervalue]:focus-visible,
+      &[aria-ordervalue]:state(checked),
+      &[aria-ordervalue]:state(correct-response),
+      &[aria-ordervalue]:state(candidate-correct),
+      &[aria-ordervalue]:state(candidate-incorrect) {
+        border-color: transparent !important;
       }
       &[aria-ordercorrectvalue] {
         display: grid;
@@ -157,6 +128,35 @@
         content: 'C=' attr(aria-ordercorrectvalue) !important;
         color: var(--qti-correct);
       }
+    }
+
+    & .qti-graphic-order-marker {
+      position: absolute;
+      position-anchor: --qti-graphic-order-hotspot;
+      left: anchor(center);
+      top: anchor(center);
+      transform: translate(-50%, var(--qti-graphic-order-pin-anchor));
+      width: var(--qti-graphic-order-pin-size);
+      height: var(--qti-graphic-order-pin-size);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: calc(var(--qti-graphic-order-pin-size) * 0.2);
+      font-weight: 700;
+      font-size: var(--qti-graphic-order-pin-number-size);
+      line-height: 1;
+      color: var(--qti-graphic-order-pin-color, var(--qti-selected-bg));
+      text-shadow: 0 0 1px var(--qti-graphic-order-pin-fill);
+      background: var(--qti-graphic-order-pin-svg) no-repeat center / contain;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    & .qti-graphic-order-marker--poly {
+      width: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.72);
+      height: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.72);
+      font-size: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.45);
+      padding-top: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.14);
     }
     &.qti-selections-light {
       &:state(dragzone-active)::part(drags) {
