@@ -1,5 +1,7 @@
 @layer qti-components {
   qti-select-point-interaction {
+    color: var(--qti-primary);
+
     &::part(point) {
       &:hover {
         @apply hov;
@@ -7,13 +9,14 @@
       &:focus {
         @apply foc;
       }
-      @apply point;
     }
+
     &::part(correct) {
-      background-color: var(--qti-correct);
+      color: var(--qti-correct);
     }
+
     &::part(incorrect) {
-      background-color: var(--qti-incorrect);
+      color: var(--qti-incorrect);
     }
   }
 }

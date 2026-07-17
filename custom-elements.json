@@ -30096,6 +30096,24 @@
           "kind": "class",
           "description": "Select-point interaction: candidates place points onto a background image.",
           "name": "QtiSelectPointInteraction",
+          "cssProperties": [
+            {
+              "description": "Marker mask image (SVG data URL). Should be a solid silhouette for color inheritance.",
+              "name": "--qti-select-point-icon"
+            },
+            {
+              "description": "Marker size.",
+              "name": "--qti-select-point-marker-size"
+            },
+            {
+              "description": "Vertical translate anchor (`-100%` for bottom tip, `-50%` for center).",
+              "name": "--qti-select-point-marker-anchor"
+            },
+            {
+              "description": "Marker color; defaults to currentColor so it can be inherited.",
+              "name": "--qti-select-point-marker-color"
+            }
+          ],
           "cssParts": [
             {
               "description": "Each selected point; carries `correct` or `incorrect` variants when candidate correction is shown.",
@@ -31099,7 +31117,6 @@
           ],
           "modulePath": "packages/interactions/select-point-interaction/src/qti-select-point-interaction.ts",
           "definitionPath": "packages/interactions/select-point-interaction/src/register.ts",
-          "cssProperties": [],
           "cssStates": []
         }
       ],

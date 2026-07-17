@@ -19,6 +19,10 @@ import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
  * @slot - Default slot for the base image.
  *
  * @csspart point - Each selected point; carries `correct` or `incorrect` variants when candidate correction is shown.
+ * @cssprop --qti-select-point-icon - Marker mask image (SVG data URL). Should be a solid silhouette for color inheritance.
+ * @cssprop --qti-select-point-marker-size - Marker size.
+ * @cssprop --qti-select-point-marker-anchor - Vertical translate anchor (`-100%` for bottom tip, `-50%` for center).
+ * @cssprop --qti-select-point-marker-color - Marker color; defaults to currentColor so it can be inherited.
  */
 export class QtiSelectPointInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
@@ -274,12 +278,6 @@ export class QtiSelectPointInteraction extends Interaction {
             const leftPercentage = (x / (this.#imageWidthOriginal || 1)) * 100;
             const topPercentage = (y / (this.#imageHeightOriginal || 1)) * 100;
 
-            // Base size is 1rem (16px), scaled proportionally to the image's current size
-            // Base size is 1rem in the original image size
-            const baseSize = 16; // Assuming 1rem = 16px
-            const widthPercentage = (baseSize / (this.#imageWidthOriginal || 1)) * 100;
-            const heightPercentage = (baseSize / (this.#imageHeightOriginal || 1)) * 100;
-
             let correctionPart = '';
             if (this._responseCorrection[index] === true) {
               correctionPart = ' correct';
@@ -293,15 +291,8 @@ export class QtiSelectPointInteraction extends Interaction {
                 style=${styleMap({
                   pointerEvents: this.maxChoices === 1 ? 'none' : 'auto',
                   position: 'absolute',
-                  transform: 'translate(-50%, -50%)',
                   left: `${leftPercentage}%`,
-                  top: `${topPercentage}%`,
-                  width: `min(${widthPercentage}%, 1rem)`,
-                  height: `min(${heightPercentage}%, 1rem)`,
-                  minWidth: `min(${widthPercentage}%, 1rem)`,
-                  minHeight: `min(${heightPercentage}%, 1rem)`,
-                  borderRadius: '50%', // Ensures round shape
-                  background: 'red' // Example styling, adjust as needed
+                  top: `${topPercentage}%`
                 })}
                 aria-label="Remove point at ${point}"
                 ?disabled=${this.disabled}
