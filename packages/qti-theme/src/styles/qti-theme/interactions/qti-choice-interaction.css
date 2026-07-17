@@ -88,10 +88,6 @@
           @apply foc;
         }
 
-        &:state(checked) {
-          @apply act;
-        }
-
         &:state(candidate-correct) {
           background-color: transparent;
 
