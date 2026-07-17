@@ -7,7 +7,11 @@ export default [
   correctionPart,
   css`
     :host {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      gap: calc(var(--qti-gap-size) / 2);
+      padding-inline-end: var(--qti-padding-horizontal);
     }
 
     /*
@@ -41,6 +45,17 @@ export default [
       box-sizing: content-box;
       width: calc(var(--qti-input-width) * 1ch + 2px);
       min-width: calc(var(--qti-input-width) * 1ch + 2px);
+    }
+
+    [part='input'] {
+      padding: calc(var(--qti-padding-vertical) / 2) var(--qti-padding-horizontal);
+    }
+
+    [part~='correction'] {
+      position: static;
+      translate: none;
+      width: var(--qti-form-size);
+      height: var(--qti-form-size);
     }
 
     :host(.qti-input-width-1) {

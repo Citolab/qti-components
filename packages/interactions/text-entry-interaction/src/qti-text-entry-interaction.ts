@@ -139,6 +139,7 @@ export class QtiTextEntryInteraction extends Interaction {
 
   override render() {
     return html`
+      <div part="answer" aria-hidden="true"></div>
       <input
         part="input"
         name="${this.responseIdentifier}"

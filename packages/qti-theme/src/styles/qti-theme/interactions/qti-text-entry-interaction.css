@@ -29,16 +29,13 @@
   }
 
   qti-text-entry-interaction {
-    position: relative;
     border: var(--qti-border);
     border-radius: var(--qti-field-border-radius);
-    margin: 0.2rem 0.2rem 0.2rem 0;
 
     &::part(input) {
       @mixin field-typography;
       border: none;
       background-color: transparent;
-      padding: 0.2rem 0.5rem;
     }
 
     &:state(candidate-correct) {
@@ -68,18 +65,11 @@
   }
 
   .full-correct-response qti-text-entry-interaction {
-    &::before {
+    &::part(answer) {
       @mixin answer-check;
-      position: absolute;
-      top: 50%;
-      left: 0.5rem;
-      translate: 0 -50%;
       width: 1rem;
       height: 1rem;
-    }
-
-    &::part(input) {
-      margin-left: 1.5rem;
+      margin-left: 0.4rem;
     }
   }
 }
