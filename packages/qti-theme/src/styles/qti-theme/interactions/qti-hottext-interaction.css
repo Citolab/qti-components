@@ -1,5 +1,7 @@
 @layer qti-components {
   qti-hottext-interaction {
+    --qti-hottext-selected-padding: calc(var(--qti-padding-vertical) / 2) calc(var(--qti-padding-horizontal) / 2);
+
     qti-hottext {
       /* Hide the native radio/checkbox control by default; all theme variants use custom styling. */
       padding: var(--qti-border-thickness) 0;
@@ -40,6 +42,7 @@
           border-color: var(--qti-border-active);
           background-color: var(--qti-selected-bg);
           color: var(--qti-selected-color);
+          padding: var(--qti-hottext-selected-padding);
         }
 
         &:state(candidate-correct) {
@@ -83,6 +86,7 @@
         &:state(checked) {
           background-color: var(--qti-selected-bg);
           color: var(--qti-selected-color);
+          padding: var(--qti-hottext-selected-padding);
         }
 
         &:state(candidate-correct) {
@@ -118,9 +122,10 @@
           @apply foc;
         }
 
-        &:state(checked):not(:state(candidate-incorrect), :state(candidate-correct)) {
+        &:state(checked) {
           background-color: var(--qti-selected-bg);
           color: var(--qti-selected-color);
+          padding: var(--qti-hottext-selected-padding);
         }
 
         &:state(candidate-correct) {
@@ -144,14 +149,18 @@
     }
   }
 
-  .full-correct-response qti-hottext-interaction qti-hottext:state(checked) {
+  .full-correct-response qti-hottext-interaction.qti-input-control-hidden qti-hottext:state(checked),
+  .full-correct-response qti-hottext-interaction.qti-unselected-hidden qti-hottext:state(checked),
+  .full-correct-response
+    qti-hottext-interaction:not(.qti-input-control-hidden, .qti-unselected-hidden)
+    qti-hottext:state(checked) {
     @mixin answer;
 
     position: relative;
     border-width: var(--qti-border-thickness);
     border-style: var(--qti-border-style);
     padding-inline-start: calc(1em + var(--qti-padding-horizontal) / 2);
-    padding-inline-end: calc(var(--qti-padding-horizontal) / 4);
+    padding-inline-end: calc(var(--qti-padding-horizontal) / 2);
 
     /* The icon must not become the inline-flex container's first baseline item. */
     &::before {
