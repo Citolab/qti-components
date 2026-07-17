@@ -64,6 +64,6 @@
   }
 }
 
-.full-correct-response qti-simple-associable-choice {
+.full-correct-response qti-associate-interaction qti-simple-associable-choice {
   display: none;
 }
