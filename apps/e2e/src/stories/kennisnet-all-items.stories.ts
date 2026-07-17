@@ -16,7 +16,8 @@ const meta: Meta = {
   // from the same origin in the dev canvas and the addon-vitest capture — keeping the VRT
   // baseline overlay aligned.
   parameters: {
-    // Use the default citolab substrate for VRT.\n    styleSubstrate: 'citolab',
+    // Use the default citolab substrate for VRT.
+    styleSubstrate: 'citolab',
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'vrtBaseline',
@@ -50,6 +51,10 @@ const meta: Meta = {
           min-width: ${KENNISNET_ITEM_WIDTH}px;
           max-width: ${KENNISNET_ITEM_WIDTH}px;
           box-sizing: border-box;
+        }
+        .kennisnet-item qti-item-body img {
+          max-width: 100%;
+          height: auto;
         }
       </style>
       <div class="kennisnet-item">${story()}</div>
