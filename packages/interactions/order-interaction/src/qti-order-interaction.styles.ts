@@ -39,16 +39,20 @@ export default [
       gap: 0.5rem;
     }
 
-    :host([orientation='horizontal']) [part='drags'] {
+    :host([orientation='horizontal']) [part='drags'],
+    :host(.qti-orientation-horizontal) [part='drags'] {
       flex-direction: row;
     }
-    :host([orientation='horizontal']) [part='drops'] {
+    :host([orientation='horizontal']) [part='drops'],
+    :host(.qti-orientation-horizontal) [part='drops'] {
       grid-auto-flow: column;
     }
-    :host([orientation='vertical']) [part='drags'] {
+    :host([orientation='vertical']) [part='drags'],
+    :host(.qti-orientation-vertical) [part='drags'] {
       flex-direction: column;
     }
-    :host([orientation='vertical']) [part='drops'] {
+    :host([orientation='vertical']) [part='drops'],
+    :host(.qti-orientation-vertical) [part='drops'] {
       grid-template-columns: 1fr;
     }
 
@@ -61,20 +65,57 @@ export default [
     }
 
     [part='container'] {
-      display: flex;
+      display: grid;
+      grid-template-areas:
+        'drags drops'
+        'message message';
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
       gap: 0.5rem;
     }
+
+    slot[part~='drags'] {
+      grid-area: drags;
+    }
+
+    [part='drops'] {
+      grid-area: drops;
+    }
+
+    [part='message'] {
+      grid-area: message;
+      width: 100%;
+      justify-self: start;
+    }
+
     :host(.qti-choices-top) [part='container'] {
-      flex-direction: column;
+      grid-template-areas:
+        'drags'
+        'drops'
+        'message';
+      grid-template-columns: minmax(0, 1fr);
     }
+
     :host(.qti-choices-bottom) [part='container'] {
-      flex-direction: column-reverse;
+      grid-template-areas:
+        'drops'
+        'drags'
+        'message';
+      grid-template-columns: minmax(0, 1fr);
     }
+
     :host(.qti-choices-left) [part='container'] {
-      flex-direction: row;
+      grid-template-areas:
+        'drags drops'
+        'message message';
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
+
     :host(.qti-choices-right) [part='container'] {
-      flex-direction: row-reverse;
+      grid-template-areas:
+        'drops drags'
+        'message message';
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   `
 ];

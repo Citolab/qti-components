@@ -37,8 +37,6 @@
     &::part(drop) {
       @apply drop;
       display: grid;
-      height: 3rem;
-      min-width: 10rem;
     }
     &::part(drop):focus {
       @apply foc;
@@ -64,4 +62,8 @@
       background-color: var(--qti-bg-active);
     }
   }
+}
+
+.full-correct-response qti-simple-associable-choice {
+  display: none;
 }

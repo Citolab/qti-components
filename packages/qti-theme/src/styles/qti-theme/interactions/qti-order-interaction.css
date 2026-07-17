@@ -96,7 +96,6 @@
       &:focus {
         @apply foc;
       }
-      display: flex;
     }
     &::part(active) {
       @apply act;
@@ -107,7 +106,7 @@
     --qti-dropzone-min-height: 40px;
 
     &::part(drops) {
-      padding: 0.5rem;
+      margin: 0;
       border-radius: var(--qti-border-radius);
       overflow: visible;
     }

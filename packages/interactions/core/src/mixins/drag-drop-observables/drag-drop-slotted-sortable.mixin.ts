@@ -123,7 +123,11 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
       // A declarative target renders its chips from `dragDropContext`. Moving its nodes here as a
       // hover preview would be undone by the next render, and the swap it was standing in for is
       // done properly at drop time over the placement map. So: no preview, just the hover state.
-      if ((targetSlot as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops) {
+      //
+      // Use the shared declarative-target predicate from DragDropSlottedMixin so both declarative
+      // forms are covered (property-based custom elements and attribute-based targets like
+      // `data-declarative-drops` in order-interaction).
+      if (this.isDeclarativeTarget(targetSlot)) {
         if (this.#sortableContext.placeholder?.parentElement) this.#sortableContext.placeholder.remove();
         this.#shiftState.hoveredSlot = targetSlot;
         return;

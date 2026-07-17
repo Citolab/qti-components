@@ -34,10 +34,10 @@ export default [
     [part~='drop'] {
       display: grid;
       min-height: var(--qti-dropzone-min-height, 3rem);
-      min-width: 10rem;
+      min-width: var(--qti-dropzone-min-width, 3rem);
       border: 1px solid var(--qti-border-color, #d1d5db);
       border-radius: 0.25rem;
-      box-sizing: border-box;
+      overflow: hidden;
     }
 
     [part='drops'] {
