@@ -23,6 +23,9 @@
 
   --qti-inline-padding: 2px 4px; /* for hottext and inline-choice and gap */
   --qti-inline-margin: 0; /* for hottext and inline-choice and gap */
+  --qti-popover-z-index: 1000;
+  --qti-overlay-z-index: 1;
+  --qti-motion-duration-fast: 150ms;
 
   /* ── Correction — derived from the semantic colours, never set directly. ── */
   --qti-correct: var(--qti-success);

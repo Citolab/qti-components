@@ -1,8 +1,7 @@
 @layer qti-components {
   qti-inline-choice-interaction {
     /* ── Host: field appearance ─────────────────────────────────────────────── */
-    display: inline-block;
-    margin: 0.2rem 0.2rem 0.2rem 0;
+    margin: var(--qti-inline-margin);
     color: var(--qti-body-color);
     background-color: var(--qti-bg);
     border: var(--qti-border);
@@ -17,7 +16,6 @@
       color: inherit;
       cursor: pointer;
       font-size: inherit;
-      vertical-align: baseline;
     }
 
     &::part(trigger):focus-visible {
@@ -26,7 +24,7 @@
     }
 
     &:not(:state(readonly)):not([readonly])::part(trigger):hover {
-      background-color: var(--qti-hover-bg);
+      /* background-color: var(--qti-hover-bg); */
     }
 
     &:state(disabled)::part(trigger),
@@ -41,11 +39,11 @@
 
     /* ── Chevron icon: color only; transform/mask/size live in shadow DOM ────── */
     &::part(dropdown-icon) {
-      color: var(--qti-border-color);
+      color: inherit;
     }
 
     &::part(dropdown-icon-open) {
-      color: var(--qti-border-active);
+      color: inherit;
     }
 
     /* ── Popover menu ────────────────────────────────────────────────────────── */
@@ -53,15 +51,15 @@
       background: var(--qti-bg);
       border: var(--qti-border);
       border-radius: var(--qti-border-radius);
-      padding: 0.25rem;
+      padding: calc(var(--qti-padding-vertical) / 2);
     }
 
     /* ── Option rows ─────────────────────────────────────────────────────────── */
     &::part(option) {
-      min-height: 2.25rem;
+      min-height: calc(var(--qti-form-size) * 2 + (var(--qti-padding-vertical) / 2));
       padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
       border: 0;
-      border-radius: calc(var(--qti-border-radius) - 2px);
+      border-radius: calc(var(--qti-border-radius) - (var(--qti-border-thickness) * 2));
       background: transparent;
       cursor: pointer;
     }
@@ -84,11 +82,11 @@
       display: flex;
       align-items: center;
       width: 100%;
-      min-height: 2.25rem;
+      min-height: calc(var(--qti-form-size) * 2 + (var(--qti-padding-vertical) / 2));
       box-sizing: border-box;
       padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
       border: 0;
-      border-radius: calc(var(--qti-border-radius) - 2px);
+      border-radius: calc(var(--qti-border-radius) - (var(--qti-border-thickness) * 2));
       background: transparent;
       text-align: left;
       font: inherit;
@@ -123,9 +121,9 @@
 
     /* ── Correct-option answer key overlay ───────────────────────────────────── */
     &::part(correct-option) {
-      border: 1px solid var(--qti-correct);
-      border-radius: 4px;
-      padding: 2px 4px;
+      border: var(--qti-border-thickness) solid var(--qti-correct);
+      border-radius: var(--qti-field-border-radius);
+      padding: var(--qti-inline-padding);
       color: var(--qti-correct);
     }
 

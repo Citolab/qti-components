@@ -13,10 +13,18 @@ const own = css`
        set by autosizing JS (inlineChoiceAutosize) → trigger matches widest option
   */
   :host {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     vertical-align: baseline;
     position: relative;
     --qti-inline-choice-width: 0;
+    --qti-inline-choice-trigger-gap: calc(var(--qti-gap-size) / 2);
+    --qti-inline-choice-overlay-z-index: var(--qti-overlay-z-index);
+    --qti-inline-choice-popover-z-index: var(--qti-popover-z-index);
+    --qti-inline-choice-motion-duration-fast: var(--qti-motion-duration-fast);
+    --qti-inline-choice-correct-option-margin: calc(var(--qti-padding-horizontal) / 4);
+    --qti-inline-choice-correction-gap-inline-start: calc(var(--qti-padding-horizontal) / 4);
+    --qti-inline-choice-correction-gap-inline-end: calc(var(--qti-padding-horizontal) / 2);
   }
 
   /* ── QTI mandatory input-width shared vocabulary (16 values) ─────────────── */
@@ -71,17 +79,17 @@ const own = css`
 
   /* ── Trigger button — layout only, all paint lives in the theme ───────────── */
   button[part='trigger'] {
-    display: inline-flex;
+    display: inline-grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    column-gap: var(--qti-inline-choice-trigger-gap);
     box-sizing: border-box;
     min-width: var(--qti-inline-choice-width);
+    vertical-align: baseline;
     anchor-name: --qti-inline-choice-trigger;
   }
 
   [part='value'] {
-    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -101,7 +109,7 @@ const own = css`
     background-color: currentColor;
     mask: var(--qti-chevron-mask) no-repeat center / contain;
     -webkit-mask: var(--qti-chevron-mask) no-repeat center / contain;
-    transition: transform 150ms ease;
+    transition: transform var(--qti-inline-choice-motion-duration-fast) ease;
     transform-origin: center;
   }
 
@@ -109,12 +117,17 @@ const own = css`
     transform: rotate(180deg);
   }
 
+  [part~='correction'] {
+    margin-left: var(--qti-inline-choice-correction-gap-inline-start);
+    margin-inline-end: var(--qti-inline-choice-correction-gap-inline-end);
+  }
+
   /* ── Popover menu — anchor positioning only, all paint in the theme ──────── */
   [part='menu'] {
     position-anchor: --qti-inline-choice-trigger;
     inset: auto;
     margin: 0;
-    z-index: 1000;
+    z-index: var(--qti-inline-choice-popover-z-index);
     top: anchor(bottom);
     left: anchor(left);
     min-width: anchor-size(width);
@@ -158,16 +171,16 @@ const own = css`
   */
   [part='message'] {
     position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    z-index: var(--qti-inline-choice-overlay-z-index);
     white-space: nowrap;
   }
 
   /* ── Correct-option answer key overlay ──────────────────────────────────── */
   [part='correct-option'] {
     display: inline-block;
-    margin: 0 0.25rem;
+    margin: 0 var(--qti-inline-choice-correct-option-margin);
   }
 `;
 
