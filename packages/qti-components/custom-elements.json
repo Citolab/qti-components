@@ -7309,6 +7309,25 @@
             },
             {
               "kind": "method",
+              "name": "toggleInternalCorrectResponse",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "show",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "For drag-and-drop interactions `show-correct-response` falls back to the full\ncorrect-response clone. Only trigger the clone when `show-full-correct-response` is not\nalready set — otherwise two calls would race to insert the same clone."
+            },
+            {
+              "kind": "method",
               "name": "totalAssociationsFromState",
               "privacy": "public",
               "return": {
@@ -15675,6 +15694,7 @@
                   }
                 }
               ],
+              "description": "For drag-and-drop interactions `show-correct-response` falls back to the full\ncorrect-response clone. Only trigger the clone when `show-full-correct-response` is not\nalready set — otherwise two calls would race to insert the same clone.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23162,15 +23182,6 @@
             },
             {
               "kind": "field",
-              "name": "correctOptions",
-              "type": {
-                "text": "{ source: string; target: string }[]"
-              },
-              "privacy": "protected",
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "correctResponse",
               "type": {
                 "text": "Readonly<string | string[] | null>"
@@ -24324,6 +24335,7 @@
                   }
                 }
               ],
+              "description": "For drag-and-drop interactions `show-correct-response` falls back to the full\ncorrect-response clone. Only trigger the clone when `show-full-correct-response` is not\nalready set — otherwise two calls would race to insert the same clone.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26217,27 +26229,6 @@
               ],
               "type": {
                 "text": "toggleCandidateCorrection(show: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleInternalCorrectResponse",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "show",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "type": {
-                "text": "toggleInternalCorrectResponse(show: boolean) => void"
               }
             }
           ],
@@ -32408,16 +32399,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "_showCorrectOverlay",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "description": "Display flag for the `[part='correct']` overlay. Separate from\n`_correctResponse` (the base's storage for the `correct-response`\nattribute value) — toggling this does NOT clobber the correct response."
             },
             {
               "kind": "field",

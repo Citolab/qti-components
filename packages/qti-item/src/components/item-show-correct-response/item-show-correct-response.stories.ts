@@ -429,8 +429,9 @@ export const TextEntryInternalCorrectResponse: Story = {
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
-      const correctElement = interaction.shadowRoot.querySelector('[part="correct"]');
-      expect(correctElement).toBeVisible();
+      const fullCR = interaction.nextElementSibling;
+      expect(fullCR?.getAttribute('role')).toBe('full-correct-response');
+      expect(fullCR?.querySelector('qti-text-entry-interaction')).toBeTruthy();
     });
   }
 };
@@ -512,10 +513,10 @@ export const GapMatch: Story = {
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
-      const correctOptions = interaction.querySelectorAll(`[class="correct-option"]`);
-      expect(correctOptions.length).toBe(2);
-      expect(correctOptions[0].textContent).toBe('winter');
-      expect(correctOptions[1].textContent).toBe('summer');
+      const gapMatchInteraction = interaction.querySelector('qti-gap-match-interaction');
+      const fullCR = gapMatchInteraction?.nextElementSibling;
+      expect(fullCR?.getAttribute('role')).toBe('full-correct-response');
+      expect(fullCR?.querySelector('qti-gap-match-interaction')).toBeTruthy();
     });
   }
 };
@@ -554,11 +555,10 @@ export const Match: Story = {
     const showCorrectButton = canvas.getAllByShadowText(/Show correct/i)[0];
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
-      const correctElements = interaction.querySelectorAll(`[class="correct-option"]`);
-      expect(correctElements.length).toBe(3);
-      const correctOptions = Array.from(correctElements).map(el => el.textContent);
-      const allExist = correctOptions.every(element => ['Prospero', 'Demetrius', 'Capulet'].includes(element));
-      expect(allExist).toBe(true);
+      const matchInteraction = interaction.querySelector('qti-match-interaction');
+      const fullCR = matchInteraction?.nextElementSibling;
+      expect(fullCR?.getAttribute('role')).toBe('full-correct-response');
+      expect(fullCR?.querySelector('qti-match-interaction')).toBeTruthy();
     });
   }
 };
@@ -645,25 +645,9 @@ export const MatchTabular: Story = {
 
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
-
-      // The `correct` token lives on the outer visual <span part="control ..."> indicator; the
-      // inner <span part="control-mark ..."> carries the same token, so anchor on
-      // [part~="control"] to select only the outer span and avoid counting each cell twice.
-      const correctIndicators = interaction.shadowRoot.querySelectorAll('[part~="control"][part~="correct"]');
-      const allCorrectElements = Array.from(correctIndicators)
-        .map(span => span.closest('label')?.querySelector('input') ?? null)
-        .filter((el): el is HTMLInputElement => el !== null);
-
-      // Verify we have the expected number of correct answers
-      expect(allCorrectElements.length).toBe(4);
-
-      // Parse the values to extract row IDs
-      const rowIds = allCorrectElements.map(el => el.value.split(' ')[0]);
-
-      // Verify the correct row IDs exist
-      const expectedRowIds = ['C', 'P', 'L', 'D'];
-      const allExist = rowIds.every(rowId => expectedRowIds.includes(rowId));
-      expect(allExist).toBe(true);
+      const fullCR = interaction.nextElementSibling;
+      expect(fullCR?.getAttribute('role')).toBe('full-correct-response');
+      expect(fullCR?.querySelector('qti-match-interaction')).toBeTruthy();
     });
   }
 };
@@ -832,11 +816,10 @@ export const Order: Story = {
 
     await step('Click on the Show Correct button', async () => {
       await showCorrectButton.click();
-      const correctOptions = interaction.shadowRoot?.querySelectorAll('.correct-option') ?? [];
-      expect(correctOptions.length).toBe(3);
-      expect(correctOptions[0]).toHaveTextContent('Michael Schumacher');
-      expect(correctOptions[1]).toHaveTextContent('Rubens Barrichello');
-      expect(correctOptions[2]).toHaveTextContent('Jenson Button');
+      const fullCR = interaction.nextElementSibling;
+      expect(fullCR?.getAttribute('role')).toBe('full-correct-response');
+      const cloneInteraction = fullCR?.querySelector('qti-order-interaction');
+      expect(cloneInteraction).toBeTruthy();
     });
   }
 };
@@ -1130,10 +1113,10 @@ export const GapMatchCorrectResponse: Story = {
       await showCorrectButton.click();
 
       await step('Verify correct response is shown', async () => {
-        const correctResponses = interaction.querySelectorAll('[class="correct-option"]');
-        expect(correctResponses.length).toBe(2);
-        expect(correctResponses[0].textContent).toBe('winter');
-        expect(correctResponses[1].textContent).toBe('summer');
+        const gapMatchInteraction = interaction.querySelector('qti-gap-match-interaction');
+        const fullCR = gapMatchInteraction?.nextElementSibling;
+        expect(fullCR?.getAttribute('role')).toBe('full-correct-response');
+        expect(fullCR?.querySelector('qti-gap-match-interaction')).toBeTruthy();
       });
     });
   }

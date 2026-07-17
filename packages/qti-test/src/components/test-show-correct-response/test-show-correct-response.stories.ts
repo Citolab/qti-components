@@ -117,8 +117,8 @@ export const Test: Story = {
     const showCorrectButton = await findByShadowText(canvasElement, 'Show correct response');
     showCorrectButton.click();
 
-    const incorrect = await canvas.findByShadowText('York');
-    expect(incorrect).toBeInTheDocument();
+    const fullCR = await canvas.findByShadowRole('full-correct-response');
+    expect(fullCR).toBeInTheDocument();
   }
 };
 

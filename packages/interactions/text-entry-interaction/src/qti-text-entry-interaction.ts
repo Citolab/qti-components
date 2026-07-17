@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit';
+import { html } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
@@ -124,17 +124,10 @@ export class QtiTextEntryInteraction extends Interaction {
     return isValid;
   }
 
-  /**
-   * Display flag for the `[part='correct']` overlay. Separate from
-   * `_correctResponse` (the base's storage for the `correct-response`
-   * attribute value) — toggling this does NOT clobber the correct response.
-   */
-  @state() private _showCorrectOverlay: boolean = false;
-
   public override toggleInternalCorrectResponse(show: boolean): void {
-    // Drive only the overlay flag; read the actual correct-response value at
-    // render time via `this.correctResponse` (works in standalone + item-context).
-    this._showCorrectOverlay = show && !!this.correctResponse;
+    if (!this.showFullCorrectResponse) {
+      this.toggleFullCorrectResponse(show);
+    }
   }
 
   override render() {
@@ -160,9 +153,6 @@ export class QtiTextEntryInteraction extends Interaction {
         ?readonly="${this.readonly}"
       />
       <span part=${this.correctionPart} aria-hidden="true"></span>
-      ${this._showCorrectOverlay && this.correctResponse
-        ? html`<div part="correct">${this.correctResponse}</div>`
-        : nothing}
       <div id="validation-message" part="message" role="alert" style="display:none;"></div>
     `;
   }

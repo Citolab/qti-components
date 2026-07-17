@@ -96,8 +96,6 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
 
   @property({ type: String, attribute: 'response-identifier' }) override responseIdentifier: string = '';
 
-  @state() protected correctOptions: { source: string; target: string }[] = null;
-
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     this.sourceChoices = Array.from<QtiSimpleAssociableChoice>(
@@ -217,55 +215,6 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
     return matches;
   }
 
-  public override toggleInternalCorrectResponse(show: boolean): void {
-    if (!this.correctResponse) {
-      // Remove all previously added correct responses
-      this.querySelectorAll('.correct-option').forEach(el => el.remove());
-      return;
-    }
-    const matches = this.#getMatches();
-
-    if (!this.class.split(' ').includes('qti-match-tabular')) {
-      if (show) {
-        // Clear old correct options first
-        this.querySelectorAll('.correct-option').forEach(el => el.remove());
-
-        this.targetChoices.forEach(targetChoice => {
-          const targetId = targetChoice.getAttribute('identifier');
-          const match = matches.find(m => m.target === targetId);
-
-          if (match?.source) {
-            const sourceChoice = this.querySelector(`qti-simple-associable-choice[identifier="${match.source}"]`);
-            const nodes = Array.from(sourceChoice?.childNodes || []).map(n => n.cloneNode(true));
-
-            if (nodes.length > 0 && !targetChoice.previousElementSibling?.classList.contains('correct-option')) {
-              const textSpan = document.createElement('span');
-              textSpan.classList.add('correct-option');
-              nodes.forEach(node => textSpan.appendChild(node));
-
-              // Style the span
-              textSpan.style.border = '1px solid var(--qti-correct)';
-              textSpan.style.borderRadius = '4px';
-              textSpan.style.padding = '2px 4px';
-              textSpan.style.display = 'inline-block';
-
-              // Insert before the target choice
-              targetChoice.insertAdjacentElement('beforebegin', textSpan);
-            }
-          }
-        });
-      } else {
-        this.correctOptions = null;
-      }
-    } else {
-      if (show) {
-        this.correctOptions = matches || [];
-      } else {
-        this.correctOptions = null;
-      }
-    }
-  }
-
   public override toggleCandidateCorrection(show: boolean) {
     if (!this.correctResponse) {
       return;
@@ -299,11 +248,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
 
   override render() {
     const isTabular = this.class.split(' ').includes('qti-match-tabular');
-    const hasCorrectResponse = this.correctOptions !== null;
-    // Candidate correction paints correct/incorrect on the user's own picks
-    // (checked cells only), independent of show-correct-response which paints
-    // every cell. Compute the correct-match lookup once per render from
-    // correctResponse so it's available even when correctOptions is null.
+    // Candidate correction paints correct/incorrect on the user's own picks (checked cells only).
     const showCandidateCorrection = isTabular && this.showCandidateCorrection && !!this.correctResponse;
     const correctSet = showCandidateCorrection ? new Set(this.#getMatches().map(m => `${m.source} ${m.target}`)) : null;
     return html`
@@ -332,9 +277,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                           (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
                         const checked = this.response?.includes(value) || false;
                         const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                        const isCorrect = hasCorrectResponse
-                          ? !!this.correctOptions?.find(option => option.source === rowId && option.target === colId)
-                          : correctSet?.has(value) || false;
+                        const isCorrect = correctSet?.has(value) || false;
                         /*
                          * The cells are plain spans in this interaction's shadow root, so they
                          * have no ElementInternals and cannot carry `:state()` — and
@@ -344,24 +287,17 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                          * `checked`, `correct`, `incorrect`) so a themer reads the same words
                          * everywhere.
                          *
-                         * show-correct-response paints every cell; candidate-correction paints
-                         * only the user's picks (checked cells).
+                         * candidate-correction paints the user's picks (checked cells only).
                          */
                         const correctVariant =
-                          hasCorrectResponse || (showCandidateCorrection && checked)
-                            ? isCorrect
-                              ? 'correct'
-                              : 'incorrect'
-                            : '';
+                          showCandidateCorrection && checked ? (isCorrect ? 'correct' : 'incorrect') : '';
                         const checkedMarker = checked ? 'checked' : '';
                         const controlPart = `control ${type} ${checkedMarker} ${correctVariant}`.trim();
                         const controlMarkPart = `control-mark ${type} ${checkedMarker} ${correctVariant}`.trim();
                         const disable =
-                          this.correctOptions?.length > 0
-                            ? true
-                            : row.matchMax === 1
-                              ? false
-                              : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
+                          row.matchMax === 1
+                            ? false
+                            : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
                         return html`
                           <label
                             part="input-cell"
