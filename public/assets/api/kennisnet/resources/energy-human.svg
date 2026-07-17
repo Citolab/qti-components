@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 90" width="70" height="90">
+  <!-- Head -->
+  <circle cx="35" cy="13" r="10" fill="#E8A87C" stroke="#333" stroke-width="1.5"/>
+  <!-- Body -->
+  <line x1="35" y1="23" x2="35" y2="52" stroke="#333" stroke-width="4" stroke-linecap="round"/>
+  <!-- Left arm (reaching back) -->
+  <line x1="35" y1="32" x2="16" y2="44" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+  <!-- Right arm (reaching forward) -->
+  <line x1="35" y1="32" x2="54" y2="26" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+  <!-- Left leg (back/push) -->
+  <line x1="35" y1="52" x2="18" y2="74" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="18" y1="74" x2="10" y2="68" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Right leg (forward/step) -->
+  <line x1="35" y1="52" x2="50" y2="68" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="50" y1="68" x2="58" y2="78" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

@@ -34,7 +34,7 @@
             </div>
             <div class="qti-layout-col8">
                 <p>Vul de juiste termen in:</p>
-                <qti-gap-match-interaction response-identifier="RESPONSE">
+                <qti-gap-match-interaction response-identifier="RESPONSE" max-associations="0">
                     <qti-gap-text identifier="ht_basisch" match-max="1">basisch</qti-gap-text>
                     <qti-gap-text identifier="ht_zuur" match-max="1">zuur</qti-gap-text>
                     <p>

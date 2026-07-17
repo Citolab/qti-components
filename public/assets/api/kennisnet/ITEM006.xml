@@ -13,15 +13,23 @@
             <qti-map-entry map-key="choice_hoger" mapped-value="1"/>
         </qti-mapping>
     </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE2" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>choice2_lager</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="choice2_lager" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
 
-    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="2">
         <qti-default-value>
             <qti-value>0</qti-value>
         </qti-default-value>
     </qti-outcome-declaration>
     <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
         <qti-default-value>
-            <qti-value>1</qti-value>
+            <qti-value>2</qti-value>
         </qti-default-value>
     </qti-outcome-declaration>
 
@@ -32,20 +40,29 @@
             </div>
             <div class="qti-layout-col8">
                 <p>De Doppler-verschuiving treedt op wanneer een geluidsbron en een waarnemer zich ten opzichte van elkaar bewegen.</p>
-                Het waargenomen geluid wordt dan
+                Het waargenomen geluid wordt
                 <qti-inline-choice-interaction response-identifier="RESPONSE" shuffle="false" data-prompt="kies het juiste antwoord…">
                     <qti-inline-choice identifier="choice_lager">lager</qti-inline-choice>
                     <qti-inline-choice identifier="choice_hoger">hoger</qti-inline-choice>
                     <qti-inline-choice identifier="choice_onveranderd">onveranderd</qti-inline-choice>
                 </qti-inline-choice-interaction>
-                wanneer de bron dichterbij komt.
+                wanneer de bron dichterbij komt, en
+                <qti-inline-choice-interaction response-identifier="RESPONSE2" shuffle="false" data-prompt="kies het juiste antwoord…">
+                    <qti-inline-choice identifier="choice2_lager">lager</qti-inline-choice>
+                    <qti-inline-choice identifier="choice2_hoger">hoger</qti-inline-choice>
+                    <qti-inline-choice identifier="choice2_onveranderd">onveranderd</qti-inline-choice>
+                </qti-inline-choice-interaction>
+                wanneer de bron verder weg beweegt.
             </div>
         </div>
     </qti-item-body>
 
     <qti-response-processing>
         <qti-set-outcome-value identifier="SCORE">
-            <qti-map-response identifier="RESPONSE"/>
+            <qti-sum>
+                <qti-map-response identifier="RESPONSE"/>
+                <qti-map-response identifier="RESPONSE2"/>
+            </qti-sum>
         </qti-set-outcome-value>
     </qti-response-processing>
 </qti-assessment-item>

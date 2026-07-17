@@ -443,6 +443,56 @@ export const SleepvraagMeerdereAntwoordenPerCategorie: Story = {
   `
 };
 
+/** ITEM017 — Sleepvraag – afbeeldingen koppelen (match met plaatjes). */
+export const SleepvraagAfbeeldingenKoppelen: Story = {
+  name: 'ITEM017 — Sleepvraag – afbeeldingen koppelen',
+  render: () => html`
+    <qti-item-body>
+      <p>Koppel elk vervoermiddel aan de bijbehorende energiebron:</p>
+      <qti-match-interaction
+        response-identifier="RESPONSE"
+        response="left_auto right_elektriciteit,left_trein right_brandstof,left_fiets right_spierkracht"
+        correct-response="left_auto right_brandstof,left_trein right_elektriciteit,left_fiets right_spierkracht"
+        show-candidate-correction
+        show-full-correct-response
+      >
+        <qti-simple-match-set>
+          <qti-simple-associable-choice identifier="left_auto" match-max="1">
+            <img src="/assets/api/kennisnet/resources/vehicle-car.svg" alt="Auto" width="100" height="65" />
+          </qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="left_trein" match-max="1">
+            <img src="/assets/api/kennisnet/resources/vehicle-train.svg" alt="Trein" width="110" height="65" />
+          </qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="left_fiets" match-max="1">
+            <img src="/assets/api/kennisnet/resources/vehicle-bike.svg" alt="Fiets" width="100" height="75" />
+          </qti-simple-associable-choice>
+        </qti-simple-match-set>
+        <qti-simple-match-set>
+          <qti-simple-associable-choice identifier="right_brandstof" match-max="1">
+            <img src="/assets/api/kennisnet/resources/energy-fuel.svg" alt="Brandstof" width="70" height="90" />
+          </qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="right_elektriciteit" match-max="1">
+            <img src="/assets/api/kennisnet/resources/energy-electric.svg" alt="Elektriciteit" width="70" height="90" />
+          </qti-simple-associable-choice>
+          <qti-simple-associable-choice identifier="right_spierkracht" match-max="1">
+            <img src="/assets/api/kennisnet/resources/energy-human.svg" alt="Spierkracht" width="70" height="90" />
+          </qti-simple-associable-choice>
+        </qti-simple-match-set>
+      </qti-match-interaction>
+
+      <qti-rubric-block view="scorer" use="scoring">
+        <qti-content-body>
+          <ul>
+            <li>Auto → Brandstof</li>
+            <li>Trein → Elektriciteit</li>
+            <li>Fiets → Spierkracht</li>
+          </ul>
+        </qti-content-body>
+      </qti-rubric-block>
+    </qti-item-body>
+  `
+};
+
 /** ITEM010 — Matrixvraag (tabular match). */
 export const Matrixvraag: Story = {
   name: 'ITEM010 — Matrixvraag',
@@ -799,7 +849,7 @@ export const PuntSelecteren: Story = {
 };
 
 /*
- * ITEM017 onwards cover the interactions the sixteen Kennisnet items never reached.
+ * ITEM018 onwards cover the interactions the zeventien Kennisnet items never reached.
  *
  * Every drag-and-drop interaction except gap-match and match was invisible to VRT, which is how a
  * change to the chip styling of graphic-gap-match could land with a green suite. They carry a
@@ -810,7 +860,7 @@ export const PuntSelecteren: Story = {
  * input renders per-OS), and the two custom-interaction packages (they execute author-supplied
  * script).
  *
- * ITEM019 is weaker than it looks: `qti-graphic-order-interaction` renders no order numbers for a
+ * ITEM020 is weaker than it looks: `qti-graphic-order-interaction` renders no order numbers for a
  * preset response, and its answer-key copy comes up empty. The baseline locks the layout and will
  * move the day that is fixed.
  *
@@ -822,9 +872,9 @@ export const PuntSelecteren: Story = {
  * small-element paint.
  */
 
-/** ITEM017 — Combineervraag (associate). */
+/** ITEM018 — Combineervraag (associate). */
 export const Combineervraag: Story = {
-  name: 'ITEM017 — Combineervraag',
+  name: 'ITEM018 — Combineervraag',
   render: () => html`
     <qti-item-body>
       <qti-associate-interaction
@@ -847,9 +897,9 @@ export const Combineervraag: Story = {
   `
 };
 
-/** ITEM018 — Hotspotvraag (hotspot). */
+/** ITEM019 — Hotspotvraag (hotspot). */
 export const Hotspotvraag: Story = {
-  name: 'ITEM018 — Hotspotvraag',
+  name: 'ITEM019 — Hotspotvraag',
   render: () => html`
     <qti-item-body>
       <qti-hotspot-interaction
@@ -870,9 +920,9 @@ export const Hotspotvraag: Story = {
   `
 };
 
-/** ITEM019 — Volgorde op afbeelding (graphic-order). */
+/** ITEM020 — Volgorde op afbeelding (graphic-order). */
 export const VolgordeOpAfbeelding: Story = {
-  name: 'ITEM019 — Volgorde op afbeelding',
+  name: 'ITEM020 — Volgorde op afbeelding',
   render: () => html`
     <qti-item-body>
       <qti-graphic-order-interaction
@@ -888,59 +938,6 @@ export const VolgordeOpAfbeelding: Story = {
         <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>
       </qti-graphic-order-interaction>
-    </qti-item-body>
-  `
-};
-
-/** ITEM020 — Sleepvraag op afbeelding (graphic-gap-match). */
-export const SleepvraagOpAfbeelding: Story = {
-  name: 'ITEM020 — Sleepvraag op afbeelding',
-  render: () => html`
-    <qti-item-body>
-      <qti-graphic-gap-match-interaction
-        response-identifier="RESPONSE"
-        response="DraggerB A,DraggerC B"
-        correct-response="DraggerB B,DraggerC C"
-        show-candidate-correction
-        show-full-correct-response
-      >
-        <qti-prompt>Sleep elke gebeurtenis naar het juiste vak op de tijdlijn.</qti-prompt>
-        <img
-          alt="Tijdlijn van 1939 tot 1991"
-          src="/assets/qti-graphic-gap-match-interaction/timeline-558.png"
-          height="326"
-          width="558"
-        />
-        <qti-gap-img identifier="DraggerB" match-max="1">
-          <img src="/assets/qti-graphic-gap-match-interaction/b-ww2.png" alt="Einde WO2" height="63" width="78" />
-        </qti-gap-img>
-        <qti-gap-img identifier="DraggerC" match-max="1">
-          <img
-            src="/assets/qti-graphic-gap-match-interaction/c-vietnam.png"
-            alt="Einde Vietnam"
-            height="63"
-            width="78"
-          />
-        </qti-gap-img>
-        <qti-associable-hotspot
-          coords="55,256,133,319"
-          identifier="A"
-          match-max="1"
-          shape="rect"
-        ></qti-associable-hotspot>
-        <qti-associable-hotspot
-          coords="190,256,268,319"
-          identifier="B"
-          match-max="1"
-          shape="rect"
-        ></qti-associable-hotspot>
-        <qti-associable-hotspot
-          coords="325,256,403,319"
-          identifier="C"
-          match-max="1"
-          shape="rect"
-        ></qti-associable-hotspot>
-      </qti-graphic-gap-match-interaction>
     </qti-item-body>
   `
 };

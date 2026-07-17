@@ -26,7 +26,7 @@
 
     <qti-item-body>
         <p>Sorteer de volgende getallen van klein naar groot:</p>
-        <qti-order-interaction response-identifier="RESPONSE" shuffle="false" class="qti-vertical">
+        <qti-order-interaction response-identifier="RESPONSE" shuffle="false" orientation="vertical">
             <qti-simple-choice identifier="num_sqrt2">√2 (≈ 1,414)</qti-simple-choice>
             <qti-simple-choice identifier="num_1">1</qti-simple-choice>
             <qti-simple-choice identifier="num_pi">π (≈ 3,14159)</qti-simple-choice>

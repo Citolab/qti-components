@@ -20,6 +20,7 @@
             <dependency identifierref="ITEM007"/>
             <dependency identifierref="ITEM008"/>
             <dependency identifierref="ITEM009"/>
+            <dependency identifierref="ITEM017"/>
             <dependency identifierref="ITEM010"/>
             <dependency identifierref="ITEM011"/>
             <dependency identifierref="ITEM012"/>
@@ -64,6 +65,15 @@
         <resource identifier="ITEM009" type="imsqti_item_xmlv3p0" href="ITEM009.xml">
             <file href="ITEM009.xml"/>
             <file href="resources/physics-chemistry.png"/>
+        </resource>
+        <resource identifier="ITEM017" type="imsqti_item_xmlv3p0" href="ITEM017.xml">
+            <file href="ITEM017.xml"/>
+            <file href="resources/vehicle-car.svg"/>
+            <file href="resources/vehicle-train.svg"/>
+            <file href="resources/vehicle-bike.svg"/>
+            <file href="resources/energy-fuel.svg"/>
+            <file href="resources/energy-electric.svg"/>
+            <file href="resources/energy-human.svg"/>
         </resource>
         <resource identifier="ITEM010" type="imsqti_item_xmlv3p0" href="ITEM010.xml">
             <file href="ITEM010.xml"/>
