@@ -13,9 +13,9 @@ name: "Prerelease: pkg.pr.new (refactor channel)"
 # pkg.pr.new does NOT run locally; it only works inside a CI workflow.
 
 on:
-  push:
-    branches:
-      - breaking-changes-for-editor-release
+  # push:
+  #   branches:
+  #     - breaking-changes-for-editor-release
   workflow_dispatch:
 
 # One publish at a time per branch; cancel superseded runs so rapid pushes

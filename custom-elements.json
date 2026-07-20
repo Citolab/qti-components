@@ -2169,31 +2169,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ActiveElementMixin",
-                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
-              },
-              "type": {
-                "text": "handleReadonlyChange(_oldValue: boolean, readonly: boolean) => void"
-              }
-            },
-            {
               "kind": "field",
               "name": "identifier",
               "type": {
@@ -2545,31 +2520,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ActiveElementMixin",
-                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
-              },
-              "type": {
-                "text": "handleReadonlyChange(_oldValue: boolean, readonly: boolean) => void"
-              }
-            },
-            {
               "kind": "field",
               "name": "identifier",
               "type": {
@@ -2862,31 +2812,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ActiveElementMixin",
-                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
-              },
-              "type": {
-                "text": "handleReadonlyChange(_oldValue: boolean, readonly: boolean) => void"
-              }
-            },
-            {
               "kind": "field",
               "name": "identifier",
               "type": {
@@ -3149,31 +3074,6 @@
               },
               "type": {
                 "text": "handleDisabledChange(_oldValue: boolean, disabled: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ActiveElementMixin",
-                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
-              },
-              "type": {
-                "text": "handleReadonlyChange(_oldValue: boolean, readonly: boolean) => void"
               }
             },
             {
@@ -3519,31 +3419,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ActiveElementMixin",
-                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
-              },
-              "type": {
-                "text": "handleReadonlyChange(_oldValue: boolean, readonly: boolean) => void"
-              }
-            },
-            {
               "kind": "field",
               "name": "identifier",
               "type": {
@@ -3864,31 +3739,6 @@
               },
               "type": {
                 "text": "handleDisabledChange(_oldValue: boolean, disabled: boolean) => void"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ActiveElementMixin",
-                "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
-              },
-              "type": {
-                "text": "handleReadonlyChange(_oldValue: boolean, readonly: boolean) => void"
               }
             },
             {
@@ -4316,24 +4166,6 @@
                 },
                 {
                   "name": "disabled",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleReadonlyChange",
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "readonly",
                   "type": {
                     "text": "boolean"
                   }
@@ -18544,8 +18376,7 @@
             {
               "kind": "method",
               "name": "#estimateOptimalWidth",
-              "privacy": "private",
-              "description": "Size the trigger to the widest option using character-based (`ch`) width\nrather than a JS pixel measurement.\n\nThe previous approach opened the menu invisibly and read\n`getBoundingClientRect()` / `scrollWidth`, freezing a pixel width in\n`connectedCallback`. That measurement raced against asynchronously-loading\ntheme CSS (e.g. the kennisnet Bootstrap `@import`) and web fonts, so the frozen\nwidth depended on load timing and drifted between environments/runs — the root\ncause of the inline-choice VRT flakiness.\n\n`ch` resolves against the trigger's own font at paint time, so the width tracks\nwhatever theme font ultimately applies — no reflow read, no timing race. The\nicon, inner gap and horizontal padding are covered by\n`--qti-inline-choice-width-allowance`, which themes can tune. Options rendered\nas non-text content (e.g. images) only contribute their text length; such\ndropdowns may need a larger allowance."
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -18619,24 +18450,6 @@
               "kind": "field",
               "name": "#onTriggerClick",
               "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "#optionTextLength",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "number"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "content",
-                  "type": {
-                    "text": "string | Node[]"
-                  }
-                }
-              ]
             },
             {
               "kind": "method",
@@ -32738,7 +32551,10 @@
               "type": {
                 "text": "BaseType"
               },
-              "attribute": "base-type"
+              "attribute": "base-type",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "kind": "field",
@@ -32746,7 +32562,10 @@
               "type": {
                 "text": "Cardinality"
               },
-              "attribute": "cardinality"
+              "attribute": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "kind": "method",
@@ -32813,14 +32632,20 @@
               "type": {
                 "text": "BaseType"
               },
-              "fieldName": "baseType"
+              "fieldName": "baseType",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "name": "cardinality",
               "type": {
                 "text": "Cardinality"
               },
-              "fieldName": "cardinality"
+              "fieldName": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "name": "external-scored",
@@ -32891,7 +32716,10 @@
               "type": {
                 "text": "QtiAreaMapping"
               },
-              "readonly": true
+              "readonly": true,
+              "parsedType": {
+                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, areaMapEntries: QtiAreaMapEntry[] }"
+              }
             },
             {
               "kind": "field",
@@ -32909,7 +32737,10 @@
               "type": {
                 "text": "QtiMapping"
               },
-              "readonly": true
+              "readonly": true,
+              "parsedType": {
+                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, mapEntries: QtiMapEntry[] }"
+              }
             },
             {
               "kind": "field",
@@ -32917,7 +32748,10 @@
               "type": {
                 "text": "BaseType"
               },
-              "attribute": "base-type"
+              "attribute": "base-type",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "kind": "field",
@@ -32925,7 +32759,10 @@
               "type": {
                 "text": "Cardinality"
               },
-              "attribute": "cardinality"
+              "attribute": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "kind": "method",
@@ -32975,14 +32812,20 @@
               "type": {
                 "text": "BaseType"
               },
-              "fieldName": "baseType"
+              "fieldName": "baseType",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "name": "cardinality",
               "type": {
                 "text": "Cardinality"
               },
-              "fieldName": "cardinality"
+              "fieldName": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "name": "identifier",
@@ -33407,7 +33250,10 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "attribute": "base-type"
+              "attribute": "base-type",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "kind": "field",
@@ -33475,7 +33321,10 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "fieldName": "baseType"
+              "fieldName": "baseType",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "name": "cardinality",
@@ -33839,7 +33688,10 @@
               "type": {
                 "text": "ComputedItemContext | undefined"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "parsedType": {
+                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
+              }
             }
           ],
           "superclass": {
@@ -33919,7 +33771,10 @@
               "type": {
                 "text": "ComputedItemContext | undefined"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
+              }
             },
             {
               "kind": "field",
@@ -34096,7 +33951,10 @@
               "type": {
                 "text": "ComputedItemContext | undefined"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
+              }
             },
             {
               "kind": "field",
@@ -34362,7 +34220,10 @@
               "type": {
                 "text": "ComputedItemContext"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] }"
+              }
             },
             {
               "kind": "field",
@@ -35203,7 +35064,10 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "attribute": "base-type"
+              "attribute": "base-type",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             },
             {
               "kind": "method",
@@ -35288,7 +35152,10 @@
                 "text": "BaseType"
               },
               "default": "'string'",
-              "fieldName": "baseType"
+              "fieldName": "baseType",
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             }
           ],
           "superclass": {
@@ -45001,7 +44868,10 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
+              }
             },
             {
               "kind": "field",
@@ -45183,7 +45053,10 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
+              }
             },
             {
               "kind": "field",
@@ -45286,7 +45159,10 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
+              }
             },
             {
               "kind": "field",
@@ -45398,7 +45274,10 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
+              }
             },
             {
               "kind": "field",
@@ -45477,7 +45356,10 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
+              }
             }
           ],
           "superclass": {
@@ -45524,7 +45406,10 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
+              }
             }
           ],
           "superclass": {
@@ -45584,7 +45469,10 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
+              }
             },
             {
               "kind": "field",
@@ -45683,7 +45571,10 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
+              }
             },
             {
               "kind": "field",
@@ -45693,7 +45584,10 @@
               },
               "privacy": "public",
               "default": "null",
-              "attribute": "view"
+              "attribute": "view",
+              "parsedType": {
+                "text": "'' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
+              }
             }
           ],
           "attributes": [
@@ -45703,7 +45597,10 @@
                 "text": "View"
               },
               "default": "null",
-              "fieldName": "view"
+              "fieldName": "view",
+              "parsedType": {
+                "text": "'' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
+              }
             }
           ],
           "superclass": {
@@ -45766,7 +45663,10 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
+              }
             },
             {
               "kind": "field",
@@ -45924,7 +45824,10 @@
               "type": {
                 "text": "ComputedContext | undefined"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] } | undefined"
+              }
             },
             {
               "kind": "field",
@@ -46069,7 +45972,10 @@
               "type": {
                 "text": "ComputedContext"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; }[]; }[] }"
+              }
             },
             {
               "kind": "field",
