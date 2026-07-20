@@ -20,7 +20,6 @@ description: Run canonical workspace start/build/test/lint/type-check flows for 
 - Type check: `pnpm tsc`
 
 ## Package-Scoped Patterns
-- Interactions Storybook: `pnpm storybook:interactions`
 - Package build example: `pnpm --filter @qti-components/interactions run build`
 
 ## Execution Order

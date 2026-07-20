@@ -67,11 +67,9 @@
   "scripts": {
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
-    "build-storybook": "storybook build",
     "cem": "pnpm run cem:qti",
     "cem:qti": "cem analyze --config ./cem-qti.config.mjs && mv custom-elements.json custom-elements.qti.json",
     "clean": "rm -rf dist",
-    "storybook": "storybook dev -p 6008 --no-open",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
     "publish": "node ../../tools/publish-if-needed.mjs"

@@ -18,7 +18,6 @@
 
 - Install dependencies: `pnpm install`
 - Start root Storybook and CEM watch: `pnpm storybook`
-- Start interactions Storybook only: `pnpm storybook:interactions`
 - Build all packages: `pnpm build`
 - Run test pipeline: `pnpm test`
 - Run full checks: `pnpm test-all`

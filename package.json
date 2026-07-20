@@ -47,7 +47,6 @@
     "build-storybook": "pnpm run cem && storybook build",
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "storybook:stackblitz": "pnpm run storybook:dev",
-    "storybook:interactions": "cd packages/qti-interactions && pnpm run storybook",
     "cem:storybook:watch": "cem analyze --watch --config cem.config.mjs",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
     "chromatic": "node chromatic-runner.cjs",
