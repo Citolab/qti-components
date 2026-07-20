@@ -12,7 +12,6 @@ description: Start or build Storybook for this repository with correct root or p
 ## Commands
 - Root dev Storybook + CEM watch: `pnpm storybook`
 - Root static build: `pnpm build-storybook`
-- Interactions-only dev: `pnpm storybook:interactions`
 
 ## Quick Checks
 - Confirm active Storybook config: `.storybook/main.ts`

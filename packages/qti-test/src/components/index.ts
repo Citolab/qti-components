@@ -24,3 +24,4 @@ export * from './test-scoring-buttons/test-scoring-buttons';
 export * from './test-view-toggle/test-view-toggle';
 export * from './test-scoring-feedback/test-scoring-feedback';
 export * from './test-check-item/test-check-item';
+export * from './test-item-to-speech/test-item-to-speech';

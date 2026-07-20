@@ -1,0 +1,559 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/choice-interaction/src/qti-choice-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiChoiceInteraction",
+          "tagName": "qti-choice-interaction",
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "class"
+            },
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "maxChoices"
+            },
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "minChoices"
+            },
+            {
+              "name": "orientation",
+              "type": {
+                "text": "Orientation"
+              },
+              "default": "'vertical'",
+              "fieldName": "orientation"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiGapImg",
+          "tagName": "qti-gap-img",
+          "attributes": [
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-gap-text/qti-gap-text.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiGapText",
+          "tagName": "qti-gap-text",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-gap/qti-gap.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiGap",
+          "tagName": "qti-gap",
+          "attributes": [
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-hottext/qti-hottext.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiHottext",
+          "tagName": "qti-hottext",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-inline-choice/qti-inline-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiInlineChoice",
+          "tagName": "qti-inline-choice",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-simple-associable-choice/qti-simple-associable-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiSimpleAssociableChoice",
+          "tagName": "qti-simple-associable-choice",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "fixed"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "match-max",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "the maximum number of selections a candidate must make, the other options will be disabled when max options is checked",
+              "fieldName": "matchMax"
+            },
+            {
+              "name": "match-min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "the minimal number of selections a candidate must make",
+              "fieldName": "matchMin"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-simple-choice/qti-simple-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiSimpleChoice",
+          "tagName": "qti-simple-choice",
+          "description": "qti-order-interaction\nqti-choice-interaction",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "fixed"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "show-hide",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "'show'",
+              "fieldName": "showHide"
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "templateIdentifier"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/extended-text-interaction/src/qti-extended-text-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiExtendedTextInteraction",
+          "tagName": "qti-extended-text-interaction",
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "classNames"
+            },
+            {
+              "name": "data-patternmask-message",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataPatternmaskMessage"
+            },
+            {
+              "name": "expected-length",
+              "type": {
+                "text": "number"
+              },
+              "description": "expected length is mapped to the property maxlength on the textarea",
+              "fieldName": "expectedLength"
+            },
+            {
+              "name": "pattern-mask",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "patternMask"
+            },
+            {
+              "name": "placeholder-text",
+              "type": {
+                "text": "string"
+              },
+              "description": "text appearing in the extended-text-interaction if it is empty",
+              "fieldName": "placeholderText"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/hottext-interaction/src/qti-hottext-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiHottextInteraction",
+          "tagName": "qti-hottext-interaction",
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "class"
+            },
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "maxChoices"
+            },
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "minChoices"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/match-interaction/src/qti-match-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiMatchInteraction",
+          "tagName": "qti-match-interaction",
+          "attributes": [
+            {
+              "name": "class",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "class"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "responseIdentifier"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/order-interaction/src/qti-order-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiOrderInteraction",
+          "tagName": "qti-order-interaction",
+          "attributes": [
+            {
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "description": "orientation of choices",
+              "fieldName": "orientation"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/text-entry-interaction/src/qti-text-entry-interaction.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiTextEntryInteraction",
+          "tagName": "qti-text-entry-interaction",
+          "attributes": [
+            {
+              "name": "data-patternmask-message",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataPatternmaskMessage"
+            },
+            {
+              "name": "expected-length",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "expectedLength"
+            },
+            {
+              "name": "pattern-mask",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "patternMask"
+            },
+            {
+              "name": "placeholder-text",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "placeholderText"
+            }
+          ]
+        }
+      ],
+      "exports": []
+    }
+  ]
+}

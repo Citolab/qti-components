@@ -10,9 +10,7 @@ npx lint-staged --allow-empty --quiet
 
 # Keep the committed custom-elements.json manifests in sync with source.
 # `cem` (analyzer) is much cheaper than a full `pnpm run build`.
-pnpm run cem                                                    # packages/*/custom-elements.json
-pnpm exec cem analyze --config custom-elements-manifest.config.mjs  # root custom-elements.json
+pnpm run cem
 git add \
   custom-elements.json \
-  packages/qti-components/custom-elements.json \
-  packages/qti-interactions/custom-elements.json
+  packages/qti-interactions/custom-elements.qti.json
