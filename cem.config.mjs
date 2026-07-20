@@ -10,6 +10,43 @@ console.log('Building the custom element manifest...');
 // Allow overriding outdir via environment variable or default to root
 const outdir = process.env.CEM_OUTDIR || './';
 
+/**
+ * Keep CEM output deterministic.
+ *
+ * The base CEM analyzer removes empty class arrays (cssProperties/cssParts/
+ * cssStates/slots/members/attributes/events), but `cemInheritancePlugin`
+ * can re-create those arrays as empty during package link processing.
+ * That causes noisy diffs where empty arrays sometimes appear/disappear.
+ *
+ * This plugin runs last and removes only empty arrays again so generated
+ * manifests stay stable across runs.
+ *
+ * Remove this once upstream inheritance handling no longer re-introduces
+ * empty arrays.
+ */
+function removeEmptyClassArraysPlugin() {
+  const fields = ['cssProperties', 'cssParts', 'cssStates', 'slots', 'members', 'attributes', 'events'];
+
+  return {
+    name: 'local-remove-empty-class-arrays',
+    packageLinkPhase({ customElementsManifest }) {
+      for (const moduleDoc of customElementsManifest.modules || []) {
+        for (const declaration of moduleDoc.declarations || []) {
+          if (declaration.kind !== 'class' && declaration.kind !== 'mixin') {
+            continue;
+          }
+
+          for (const field of fields) {
+            if (Array.isArray(declaration[field]) && declaration[field].length === 0) {
+              delete declaration[field];
+            }
+          }
+        }
+      }
+    }
+  };
+}
+
 export default {
   /** Globs to analyze */
   globs: [
@@ -83,6 +120,7 @@ export default {
           tagName: 'off'
         }
       }
-    })
+    }),
+    removeEmptyClassArraysPlugin()
   ]
 };
