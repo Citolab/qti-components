@@ -1,6 +1,11 @@
 name: Storybook Deployment
 
 on:
+  # Auto-deploy the site after a successful release. workflow_run is immune to
+  # the release commit's `[skip ci]`, unlike a tag-push trigger would be.
+  workflow_run:
+    workflows: ["Manual: release and publish packages (changesets)"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       tag:
@@ -16,6 +21,10 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Manual runs always deploy; release-triggered runs deploy only if the release succeeded.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -23,7 +32,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.tag || github.event.inputs.tag || github.ref }}
+          # dispatch: the given tag. release: latest main (incl. the version-bump commit). else: default ref.
+          ref: ${{ inputs.tag || (github.event_name == 'workflow_run' && 'main') || github.ref }}
           fetch-depth: 0
 
       - name: Install pnpm

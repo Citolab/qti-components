@@ -24,6 +24,17 @@
     &:state(--dragzone-enabled)::part(drags) {
       @apply dropping;
     }
+    /* Editor fake-drag projected into a filled <qti-gap>'s shadow. Same `drag`
+       styling so the editor preview matches runtime when a gap is filled. */
+    & qti-gap::part(drag) {
+      @apply drag;
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+    }
     & qti-gap-text {
       @apply drag;
       &[dragging] {

@@ -1,5 +1,16 @@
 #!/bin/bash
 set -e
+
+# One tier, same on every branch. Fast by design — heavy verification
+# (attw, madge, publint, full test suite) is the CI gate's job, not the commit's.
+#
+# lint-staged runs on STAGED files only: prettier --write, eslint --fix,
+# and `vitest related` — the "minimal tests" for what you touched.
 npx lint-staged --allow-empty --quiet
-pnpm run build
-git add custom-elements.json packages/qti-components/custom-elements.json
+
+# Keep the committed custom-elements.json manifests in sync with source.
+# `cem` (analyzer) is much cheaper than a full `pnpm run build`.
+pnpm run cem
+git add \
+  custom-elements.json \
+  packages/qti-interactions/custom-elements.qti.json

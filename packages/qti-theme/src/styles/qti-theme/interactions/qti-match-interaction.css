@@ -99,6 +99,19 @@
       background-color: var(--qti-incorrect, #f44336) !important;
     }
   }
+  /* Editor fake-drag projected into the target choice's `dropslot` shadow.
+     Reuses the same `drag` styling so the editor preview matches what students
+     see when an answer is dropped onto a target at runtime. */
+  qti-simple-associable-choice::part(drag) {
+    @apply drag;
+    &:hover {
+      @apply hov;
+    }
+    &:focus {
+      @apply foc;
+    }
+  }
+
   qti-match-interaction:not(.qti-match-tabular) {
     &:state(--dragzone-enabled) qti-simple-match-set:first-of-type {
       @apply dropping;

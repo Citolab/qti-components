@@ -7,11 +7,28 @@
       @apply dropping;
     }
     &::part(qti-simple-choice),
-    & qti-simple-choice {
+    & qti-simple-choice,
+    /* Editor fake-drag projected into the interaction's drop-list shadow.
+       Same `drag` styling so editor previews match runtime visuals. */
+    &::part(drag) {
       @apply drag;
       &[dragging] {
         @apply dragging;
       }
+      &:hover {
+        @apply hov;
+      }
+      &:focus {
+        @apply foc;
+      }
+    }
+    /* Editor fake-drag projected into the interaction's drop-list shadow.
+       Same `drag` styling so editor previews match runtime visuals.
+       Kept as its own block (separate from the runtime-drag selector list
+       above) because a CSS comment between commas inside a nested selector
+       list is silently dropped by Chrome's nesting parser. */
+    &::part(drag) {
+      @apply drag;
       &:hover {
         @apply hov;
       }
