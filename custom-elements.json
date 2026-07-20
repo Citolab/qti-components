@@ -40277,6 +40277,14 @@
             "name": "*",
             "module": "packages/qti-test/src/components/test-check-item/test-check-item"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech"
+          }
         }
       ]
     },
@@ -41677,6 +41685,757 @@
           "declaration": {
             "name": "TestItemLink",
             "module": "packages/qti-test/src/components/test-item-link/test-item-link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "`<test-item-to-speech>` is the controller and context provider. It manages\nspeech synthesis, word highlighting, and item element lookup. Compose your\nown player by placing control elements as children.",
+          "name": "TestItemToSpeech",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_sessionContext",
+              "type": {
+                "text": "SessionContext | undefined"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "_ttsContext",
+              "type": {
+                "text": "TtsContext"
+              },
+              "default": "{ state: 'idle', currentElementIndex: 0, elementCount: 0, play: () => this.#playSpeech(), pause: () => this.#pause(), resume: () => this.#resume(), stop: () => this.#stop(), prevElement: () => this.#prevElement(), nextElement: () => this.#nextElement() }"
+            },
+            {
+              "kind": "field",
+              "name": "#boundHandleItemConnected",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#boundHandleNavigation",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#clearAllHighlights",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#clearWordHighlight",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#collectTextNodes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Text[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Walk text nodes without crossing shadow DOM boundaries."
+            },
+            {
+              "kind": "field",
+              "name": "#currentElementIndex",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#elementHighlight",
+              "privacy": "private",
+              "default": "new Highlight()"
+            },
+            {
+              "kind": "method",
+              "name": "#ensureHighlightStyles",
+              "privacy": "private",
+              "description": "Add ::highlight() rules both to test-container's shadow root (where highlighted\ntext lives) and to the document (safety net — spec allows document rules to apply\nacross shadow DOM). Called lazily on first highlight use so test-container is\nguaranteed to be in the DOM by the time navigation or speech starts."
+            },
+            {
+              "kind": "field",
+              "name": "#eventHost",
+              "privacy": "private",
+              "type": {
+                "text": "EventTarget | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#getReadingElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              },
+              "description": "Return cached reading elements, collecting them lazily on first call for the active item."
+            },
+            {
+              "kind": "method",
+              "name": "#handleItemConnected",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<QtiAssessmentItem>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#highlightElement",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Highlight the whole element as the navigation cursor (blue)."
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#itemElements",
+              "privacy": "private",
+              "default": "new Map<string, QtiAssessmentItem>()"
+            },
+            {
+              "kind": "method",
+              "name": "#nextElement",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#pause",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#playSpeech",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#prevElement",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#prevNavItemRefId",
+              "privacy": "private",
+              "type": {
+                "text": "string | null | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "#readingElements",
+              "privacy": "private",
+              "type": {
+                "text": "Element[] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#resume",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#setSpeechState",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "SpeechState"
+                  }
+                }
+              ],
+              "description": "Update speech state on both the context (notifies children) and the host's CSS custom states."
+            },
+            {
+              "kind": "method",
+              "name": "#speakElement",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Speak the element at the given index, then auto-advance when it ends."
+            },
+            {
+              "kind": "method",
+              "name": "#stop",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#textNodes",
+              "privacy": "private",
+              "type": {
+                "text": "Text[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#updateContext",
+              "privacy": "private",
+              "description": "Push currentElementIndex and elementCount into context so children can react."
+            },
+            {
+              "kind": "method",
+              "name": "#updateWordHighlight",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "charIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "charLength",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Highlight the current word within #textNodes (yellow, during speech)."
+            },
+            {
+              "kind": "field",
+              "name": "#wordHighlight",
+              "privacy": "private",
+              "default": "new Highlight()"
+            },
+            {
+              "kind": "method",
+              "name": "#wordLengthAt",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "charIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Fallback word-length when charLength is 0."
+            },
+            {
+              "kind": "field",
+              "name": "language",
+              "type": {
+                "text": "string"
+              },
+              "default": "'nl-NL'",
+              "attribute": "language"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "language",
+              "type": {
+                "text": "string"
+              },
+              "default": "'nl-NL'",
+              "fieldName": "language"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "No speech active",
+              "name": "idle"
+            },
+            {
+              "description": "Speech is paused",
+              "name": "paused"
+            },
+            {
+              "description": "Speech is playing",
+              "name": "playing"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "test-item-to-speech",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Next-element button — moves cursor to the next reading element and pauses.\nDisabled at the last element or when no elements are loaded.",
+          "name": "TestTtsNext",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-next",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Pause button — enabled only when playing.",
+          "name": "TestTtsPause",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-pause",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Play/pause/resume toggle button — always enabled, cycles through states.\nUse named slots `play` and `pause` to customise the icons/labels independently.",
+          "name": "TestTtsPlay",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-play",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Prev-element button — moves cursor to the previous reading element and pauses.\nDisabled at the first element or when no elements are loaded.",
+          "name": "TestTtsPrev",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-prev",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Resume button — enabled only when paused.",
+          "name": "TestTtsResume",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-resume",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Stop button — enabled when playing or paused.",
+          "name": "TestTtsStop",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-stop",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "variable",
+          "name": "ttsContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SpeechState",
+          "declaration": {
+            "name": "SpeechState",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-item-to-speech",
+          "declaration": {
+            "name": "TestItemToSpeech",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-tts-next",
+          "declaration": {
+            "name": "TestTtsNext",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-tts-pause",
+          "declaration": {
+            "name": "TestTtsPause",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-tts-play",
+          "declaration": {
+            "name": "TestTtsPlay",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-tts-prev",
+          "declaration": {
+            "name": "TestTtsPrev",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-tts-resume",
+          "declaration": {
+            "name": "TestTtsResume",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "test-tts-stop",
+          "declaration": {
+            "name": "TestTtsStop",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestItemToSpeech",
+          "declaration": {
+            "name": "TestItemToSpeech",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsNext",
+          "declaration": {
+            "name": "TestTtsNext",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsPause",
+          "declaration": {
+            "name": "TestTtsPause",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsPlay",
+          "declaration": {
+            "name": "TestTtsPlay",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsPrev",
+          "declaration": {
+            "name": "TestTtsPrev",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsResume",
+          "declaration": {
+            "name": "TestTtsResume",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsStop",
+          "declaration": {
+            "name": "TestTtsStop",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ttsContext",
+          "declaration": {
+            "name": "ttsContext",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           }
         }
       ]
