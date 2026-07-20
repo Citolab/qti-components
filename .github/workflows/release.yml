@@ -81,6 +81,9 @@ jobs:
         run: |
           pnpm run changeset:version
 
+          # Keep generated manifests aligned with versioned sources in release commits.
+          pnpm run cem
+
           if git diff --quiet; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
             echo "No pending changesets. Nothing to release."
@@ -92,7 +95,7 @@ jobs:
       - name: Commit release version updates
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
         run: |
-          git add .changeset packages
+          git add .changeset packages custom-elements.json
           git commit -m "chore(release): changesets version [skip ci]"
 
       - name: Build workspace
