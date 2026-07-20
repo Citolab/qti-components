@@ -17,7 +17,12 @@ describe('qti-content-body', () => {
   it('expands MathML identifiers for template variables marked as math-variable', async () => {
     render(
       html`<qti-assessment-item>
-        <qti-template-declaration identifier="SOLUTION0_0" base-type="integer" cardinality="single" math-variable="true">
+        <qti-template-declaration
+          identifier="SOLUTION0_0"
+          base-type="integer"
+          cardinality="single"
+          math-variable="true"
+        >
           <qti-default-value>42</qti-default-value>
         </qti-template-declaration>
         <qti-content-body>
@@ -29,7 +34,7 @@ describe('qti-content-body', () => {
       container
     );
 
-    const templateDeclaration = container.querySelector('qti-template-declaration') as HTMLElement & {
+    const templateDeclaration = container.querySelector('qti-template-declaration') as unknown as HTMLElement & {
       updateComplete: Promise<void>;
     };
     await templateDeclaration.updateComplete;

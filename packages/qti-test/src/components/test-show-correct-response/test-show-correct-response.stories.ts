@@ -135,7 +135,9 @@ export const TestFullCorrectResponse: Story = {
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
-    const qtiTest = canvasElement.querySelector('qti-test') as { configContext?: Record<string, unknown> } | null;
+    const qtiTest = canvasElement.querySelector('qti-test') as unknown as {
+      configContext?: Record<string, unknown>;
+    } | null;
     if (qtiTest) {
       qtiTest.configContext = {
         ...(qtiTest.configContext || {}),
