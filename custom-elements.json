@@ -26259,6 +26259,72 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/interactions/order-interaction/src/utils/longest-increasing-subsequence.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "findCorrectlyPlacedIdentifiers",
+          "return": {
+            "type": {
+              "text": "Set<string>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "candidateOrder",
+              "type": {
+                "text": "string[]"
+              }
+            },
+            {
+              "name": "correctOrder",
+              "type": {
+                "text": "string[]"
+              }
+            }
+          ],
+          "description": "Domain wrapper: identifiers of candidate-placed choices counted as\ncorrectly placed, i.e. the longest run of choices whose relative order\nmatches the correct order.\n\nAssumes identifiers are unique within both arrays (guaranteed by QTI).\nIdentifiers not present in `correctOrder` are foreign to the response and\nare never included in the result."
+        },
+        {
+          "kind": "function",
+          "name": "findLongestIncreasingSubsequenceIndices",
+          "return": {
+            "type": {
+              "text": "Set<number>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "sequence",
+              "type": {
+                "text": "number[]"
+              }
+            }
+          ],
+          "description": "Numeric core: indices of the chosen longest increasing subsequence within a\nsequence of distinct numbers.\n\nTiebreaker: strict `>` comparisons keep the smallest predecessor index when\nlengths tie, and the smallest ending index is picked when multiple indices\nachieve the maximum length. This is equivalent to \"the first LIS found when\niterating left-to-right\"."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "findCorrectlyPlacedIdentifiers",
+          "declaration": {
+            "name": "findCorrectlyPlacedIdentifiers",
+            "module": "packages/interactions/order-interaction/src/utils/longest-increasing-subsequence.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "findLongestIncreasingSubsequenceIndices",
+          "declaration": {
+            "name": "findLongestIncreasingSubsequenceIndices",
+            "module": "packages/interactions/order-interaction/src/utils/longest-increasing-subsequence.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/interactions/portable-custom-interaction/src/index.ts",
       "declarations": [],
       "exports": [
