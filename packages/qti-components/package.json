@@ -82,7 +82,9 @@
   "scripts": {
     "-": "---build---",
     "attw": "attw --pack --profile esm-only --format table",
-    "build": "run-p tsup css",
+    "build": "run-s cem:react-types build:bundle",
+    "build:bundle": "run-p tsup css",
+    "cem:react-types": "CEM_OUTDIR=packages/qti-components/ pnpm -C ../.. run cem:core",
     "clean": "rm -rf dist cdn",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",
     "publint": "publint",
