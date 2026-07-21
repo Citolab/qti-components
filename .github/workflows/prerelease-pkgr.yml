@@ -15,7 +15,7 @@ name: "Prerelease: pkg.pr.new (refactor channel)"
 on:
   push:
     branches:
-      - editor-correction-package
+      - editor
   workflow_dispatch:
 
 # One publish at a time per branch; cancel superseded runs so rapid pushes
