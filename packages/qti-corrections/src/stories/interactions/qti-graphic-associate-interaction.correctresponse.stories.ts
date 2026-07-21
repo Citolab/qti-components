@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { withCorrectionRegistry } from '../with-correction-registry.decorator';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiGraphicAssociateInteractionCorrection as QtiGraphicAssociateInteraction } from '../../interactions/correction-interactions';
+import type { QtiGraphicAssociateInteractionCorrection as QtiGraphicAssociateInteraction } from '../../interactions';
 
 type Story = StoryObj<QtiGraphicAssociateInteraction>;
 

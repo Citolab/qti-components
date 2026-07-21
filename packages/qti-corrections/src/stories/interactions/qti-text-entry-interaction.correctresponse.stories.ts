@@ -5,7 +5,7 @@ import { within } from 'shadow-dom-testing-library';
 import { correctionCanvas, withCorrectionRegistry } from '../with-correction-registry.decorator';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiTextEntryInteractionCorrection as QtiTextEntryInteraction } from '../../interactions/correction-interactions';
+import type { QtiTextEntryInteractionCorrection as QtiTextEntryInteraction } from '../../interactions';
 
 type Story = StoryObj<QtiTextEntryInteraction>;
 

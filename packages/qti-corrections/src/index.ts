@@ -6,9 +6,8 @@ export type { CorrectResponseInterface } from './mixins/correct-response.mixin';
 export { correctionPart } from './styles/correction.styles';
 export { CandidateCorrectionMixin } from './mixins/candidate-correction.mixin';
 export { ChoiceCorrectionMixin } from './mixins/choice-correction.mixin';
-export { CorrectableInteractionBase } from './abstract/correctable-interaction-base';
 export * from './context/correction-config';
-export * from './elements/correctable-elements';
+export * from './elements/index';
 export * from './components/qti-assessment-item-correction';
 export * from './components/qti-item-correction';
 export * from './components/test-correction-elements';
@@ -17,7 +16,6 @@ export * from './components/item-show-candidate-correction/item-show-candidate-c
 export * from './components/item-show-correct-response/item-show-correct-response';
 export * from './components/test-show-correct-response/test-show-correct-response';
 
-export * from './interactions/correction-interactions';
+export * from './interactions';
 export * from './all-qti-elements';
-export * from './elements';
 export * from './registry';

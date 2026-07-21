@@ -9,7 +9,7 @@ import { QtiChoiceInteractionCorrection } from './interactions/qti-choice-intera
 import { QtiAssessmentItemCorrection } from './components/qti-assessment-item-correction';
 import { createCorrectionRegistry } from './registry';
 
-import type { QtiTextEntryInteractionCorrection } from './interactions/correction-interactions';
+import type { QtiTextEntryInteractionCorrection } from './interactions';
 
 class ExtraElement extends HTMLElement {}
 

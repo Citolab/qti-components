@@ -8,7 +8,7 @@ import {
   QtiHottextCorrection,
   QtiSimpleAssociableChoiceCorrection,
   QtiSimpleChoiceCorrection
-} from './elements/correctable-elements';
+} from './elements/index';
 import {
   QtiAssociateInteractionCorrection,
   QtiChoiceInteractionCorrection,
@@ -25,7 +25,7 @@ import {
   QtiSelectPointInteractionCorrection,
   QtiSliderInteractionCorrection,
   QtiTextEntryInteractionCorrection
-} from './interactions/correction-interactions';
+} from './interactions';
 import { QtiAssessmentItemCorrection } from './components/qti-assessment-item-correction';
 import { QtiItemCorrection } from './components/qti-item-correction';
 import {
