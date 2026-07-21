@@ -1,12 +1,13 @@
 import './register';
 
 export * from './context/computed-item.context';
+export * from './context/types/computed-item.types';
 export * from './context/computed.context';
+export * from './context/types/computed.types';
 export * from './context/config.context';
-export * from './context/drag-drop.context';
 export * from './context/interaction.context';
 export * from './context/item.context';
-export * from './context/qti-assessment-item.context';
+export * from './context/types/item.types';
 export * from './context/qti.context';
 export * from './context/session.context';
 export * from './context/test.context';

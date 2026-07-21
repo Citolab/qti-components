@@ -1,6 +1,6 @@
 import { createContext } from '@lit/context';
 
-import type { ItemContext } from './item.context';
+import type { ItemContext } from './types/item.types';
 import type { VariableDeclaration } from '../lib/variables';
 
 export interface TestContext {

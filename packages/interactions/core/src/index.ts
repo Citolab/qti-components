@@ -8,6 +8,7 @@ export * from './elements/qti-inline-choice';
 export * from './elements/qti-prompt';
 export * from './elements/qti-simple-associable-choice';
 export * from './elements/qti-simple-choice';
+export * from './context/drag-drop.context';
 export * from './mixins/active-element/active-element.mixin';
 export * from './mixins/choices/choices.mixin';
 export * from './mixins/vocabulary/vocabulary-mixin';

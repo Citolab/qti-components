@@ -4,14 +4,14 @@ import { property } from 'lit/decorators.js';
 
 import { configContext } from '../context/config.context';
 import { interactionContext } from '../context/interaction.context';
-import { itemContext } from '../context/qti-assessment-item.context';
+import { itemContext } from '../context/item.context';
 
 import type { PropertyValues } from 'lit';
 import type { InteractionContext } from '../context/interaction.context';
 import type { ConfigContext, ValidationDisplayMode } from '../context/config.context';
+import type { ItemContext } from '../context/types/item.types';
 import type { ValidatableInteraction } from '../lib/interaction.interface';
 import type { ResponseVariable } from '../lib/variables';
-import type { ItemContext } from '../context/item.context';
 
 /**
  * Shared QTI interaction base. Formative correction behavior is supplied by the

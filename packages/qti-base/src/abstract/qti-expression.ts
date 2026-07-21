@@ -2,12 +2,12 @@ import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { itemContext } from '../context/qti-assessment-item.context';
+import { itemContext } from '../context/item.context';
 import { qtiContext } from '../context/qti.context';
 
+import type { ItemContext } from '../context/types/item.types';
 import type { QtiContext, QtiContextType } from '../context/qti.context';
 import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
-import type { ItemContext } from '../context/item.context';
 
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;

@@ -1,8 +1,9 @@
 import { property } from 'lit/decorators.js';
 import { provide } from '@lit/context';
 
-import { dragDropContext, responseAttributeConverter } from '@qti-components/base';
+import { responseAttributeConverter } from '@qti-components/base';
 
+import { dragDropContext } from '../../context/drag-drop.context';
 import {
   clearDragChipStates,
   findInventoryItems,
@@ -23,7 +24,8 @@ import {
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
-import type { DragDropState, Interaction, RegisteredInteraction } from '@qti-components/base';
+import type { Interaction, RegisteredInteraction } from '@qti-components/base';
+import type { DragDropState } from '../../context/drag-drop.context';
 import type { DragDropCore } from './drag-drop-core.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;

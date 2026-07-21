@@ -1865,6 +1865,26 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/interactions/core/src/context/drag-drop.context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dragDropContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dragDropContext",
+          "declaration": {
+            "name": "dragDropContext",
+            "module": "packages/interactions/core/src/context/drag-drop.context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/interactions/core/src/elements.ts",
       "declarations": [
         {
@@ -4923,6 +4943,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/interactions/core/src/elements/qti-simple-choice"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/interactions/core/src/context/drag-drop.context"
           }
         },
         {
@@ -30486,26 +30514,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/qti-base/src/context/drag-drop.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "dragDropContext"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "dragDropContext",
-          "declaration": {
-            "name": "dragDropContext",
-            "module": "packages/qti-base/src/context/drag-drop.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/qti-base/src/context/interaction.context.ts",
       "declarations": [
         {
@@ -30530,27 +30538,6 @@
       "declarations": [
         {
           "kind": "variable",
-          "name": "itemContextVariables",
-          "default": "[ { identifier: 'completionStatus', cardinality: 'single', baseType: 'string', value: 'unknown', type: 'outcome' }, { identifier: 'numAttempts', cardinality: 'single', baseType: 'integer', value: '0', type: 'response' } ]"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "itemContextVariables",
-          "declaration": {
-            "name": "itemContextVariables",
-            "module": "packages/qti-base/src/context/item.context.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/qti-base/src/context/qti-assessment-item.context.ts",
-      "declarations": [
-        {
-          "kind": "variable",
           "name": "itemContext"
         }
       ],
@@ -30560,7 +30547,7 @@
           "name": "itemContext",
           "declaration": {
             "name": "itemContext",
-            "module": "packages/qti-base/src/context/qti-assessment-item.context.ts"
+            "module": "packages/qti-base/src/context/item.context.ts"
           }
         }
       ]
@@ -30711,6 +30698,39 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-base/src/context/types/computed-item.types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/context/types/computed.types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/context/types/item.types.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "itemContextVariables",
+          "default": "[ { identifier: 'completionStatus', cardinality: 'single', baseType: 'string', value: 'unknown', type: 'outcome' }, { identifier: 'numAttempts', cardinality: 'single', baseType: 'integer', value: '0', type: 'response' } ]"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "itemContextVariables",
+          "declaration": {
+            "name": "itemContextVariables",
+            "module": "packages/qti-base/src/context/types/item.types.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-base/src/elements.ts",
       "declarations": [
         {
@@ -30759,6 +30779,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-base/src/context/types/computed-item.types"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-base/src/context/computed.context"
           }
         },
@@ -30767,7 +30795,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "module": "packages/qti-base/src/context/config.context"
+            "module": "packages/qti-base/src/context/types/computed.types"
           }
         },
         {
@@ -30775,7 +30803,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "module": "packages/qti-base/src/context/drag-drop.context"
+            "module": "packages/qti-base/src/context/config.context"
           }
         },
         {
@@ -30799,7 +30827,7 @@
           "name": "*",
           "declaration": {
             "name": "*",
-            "module": "packages/qti-base/src/context/qti-assessment-item.context"
+            "module": "packages/qti-base/src/context/types/item.types"
           }
         },
         {

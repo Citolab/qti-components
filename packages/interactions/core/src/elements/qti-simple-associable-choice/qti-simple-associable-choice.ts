@@ -3,12 +3,11 @@ import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { consume } from '@lit/context';
 
-import { dragDropContext } from '@qti-components/base';
-
+import { dragDropContext } from '../../context/drag-drop.context';
 import { ActiveElementMixin } from '../../mixins/active-element/active-element.mixin';
 import styles from './qti-simple-associable-choice.styles';
 
-import type { DragDropState } from '@qti-components/base';
+import type { DragDropState } from '../../context/drag-drop.context';
 import type { CSSResultGroup } from 'lit';
 
 /*
