@@ -9,9 +9,7 @@ import {
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
 import styles from './qti-order-interaction.styles';
-import { findCorrectlyPlacedIdentifiers } from './utils/longest-increasing-subsequence';
 
-import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 import type { PropertyValueMap } from 'lit';
 
 const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[part~='drop']`, `slot[part~='drags']`);
@@ -33,30 +31,10 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
   protected childrenMap: Element[];
 
   @state() protected nrChoices: number = 0;
-  @state() correctResponses: string[] = [];
-  @state() showCorrectResponses: boolean = false;
 
   /** orientation of choices */
   @property({ type: String })
   public orientation: 'horizontal' | 'vertical';
-
-  #getCorrectOrderEntries(): Array<{ identifier: string; dropIndex: number }> {
-    const correctResponseValue = this.correctResponse;
-    if (!correctResponseValue) {
-      return [];
-    }
-
-    const response = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
-
-    return response
-      .map((entry, index) => {
-        const [identifier, dropId] = entry.split(' ');
-        const parsedDropIndex = dropId?.startsWith('droplist') ? parseInt(dropId.replace('droplist', ''), 10) : index;
-        const dropIndex = Number.isNaN(parsedDropIndex) ? index : parsedDropIndex;
-        return { identifier, dropIndex };
-      })
-      .filter(entry => Boolean(entry.identifier));
-  }
 
   override render() {
     const choices = Array.from(this.querySelectorAll('qti-simple-choice'));
@@ -85,45 +63,6 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
         </div>
         <div id="validation-message" part="message" role="alert" style="display:none;"></div>
       </div>`;
-  }
-
-  public override toggleCandidateCorrection(show: boolean): void {
-    super.toggleCandidateCorrection(show);
-
-    // Read placement, not the DOM. The drop targets render their chips from the placement map, and
-    // Lit renders on a microtask — a query here runs before the chip is in the tree, so no state was
-    // ever set and the correction badges silently stopped appearing. The nodes in the map are the
-    // same nodes that get rendered, so marking them now survives the render.
-    const dropTargets = Array.from(this.shadowRoot.querySelectorAll<HTMLElement>(`[part~='drop']`));
-    const placedChoices = dropTargets.flatMap(drop => this.chipsIn(drop) as QtiSimpleChoice[]);
-    placedChoices.forEach(choice => {
-      choice.candidateCorrection = null;
-    });
-
-    if (!show) return;
-
-    const correctOrder = this.#getCorrectOrderEntries()
-      .sort((entryA, entryB) => entryA.dropIndex - entryB.dropIndex)
-      .map(entry => entry.identifier);
-    if (correctOrder.length === 0) return;
-
-    // `placedChoices` is already in drop order — `dropTargets` comes back in document order, which
-    // is droplist0..n, and chipsIn preserves each target's own order.
-    const placedEntries = placedChoices
-      .map(placedChoice => ({ placedChoice, identifier: placedChoice.getAttribute('identifier') }))
-      .filter((entry): entry is { placedChoice: QtiSimpleChoice; identifier: string } => Boolean(entry.identifier));
-
-    // A single misplaced chip shouldn't cascade into every chip after it being marked wrong. The
-    // longest increasing subsequence is the largest set already in the right relative order;
-    // whatever falls outside it is what the candidate actually got wrong.
-    const correctlyPlacedIdentifiers = findCorrectlyPlacedIdentifiers(
-      placedEntries.map(entry => entry.identifier),
-      correctOrder
-    );
-
-    placedEntries.forEach(({ placedChoice, identifier }) => {
-      placedChoice.candidateCorrection = correctlyPlacedIdentifiers.has(identifier) ? 'correct' : 'incorrect';
-    });
   }
 
   // some interactions have a different way of getting the response

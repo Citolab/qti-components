@@ -53,12 +53,12 @@ export class QtiDurationLt extends QtiExpression<boolean | null> {
 
     const value = Number.parseFloat(variable.value.toString());
     if (Number.isNaN(value)) {
-      console.error(`qti-duration-lt requires duration values expressed in seconds, got "${variable.value.toString()}"`);
+      console.error(
+        `qti-duration-lt requires duration values expressed in seconds, got "${variable.value.toString()}"`
+      );
       return null;
     }
 
     return value;
   }
 }
-
-customElements.define('qti-duration-lt', QtiDurationLt);

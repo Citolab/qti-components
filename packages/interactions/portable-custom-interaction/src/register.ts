@@ -1,5 +1,7 @@
-import { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
-import { QtiPortableCustomInteractionTest } from './qti-portable-custom-test-interaction';
+import { elements } from './elements';
 
-customElements.define('qti-portable-custom-interaction', QtiPortableCustomInteraction);
-customElements.define('qti-portable-custom-interaction-test', QtiPortableCustomInteractionTest);
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

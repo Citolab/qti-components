@@ -86,5 +86,3 @@ export class QtiEqualRounded extends QtiExpression<boolean> {
     return null;
   }
 }
-
-customElements.define('qti-equal-rounded', QtiEqualRounded);

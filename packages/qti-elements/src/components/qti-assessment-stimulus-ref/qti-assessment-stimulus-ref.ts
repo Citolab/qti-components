@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
@@ -18,7 +18,7 @@ export class QtiAssessmentStimulusRefConnectedEvent extends Event {
 /**
  * Represents a custom element for referencing an assessment stimulus.
  */
-@customElement('qti-assessment-stimulus-ref')
+
 export class QtiAssessmentStimulusRef extends LitElement {
   @property({ type: String }) identifier = '';
   @property({ type: String }) href = '';

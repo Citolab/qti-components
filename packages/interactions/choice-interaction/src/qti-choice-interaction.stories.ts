@@ -149,27 +149,6 @@ export const Readonly: Story = {
   args: { readonly: true }
 };
 
-export const CorrectResponse: Story = {
-  render: Test.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' '),
-    'min-choices': 1,
-    'max-choices': 2,
-    disabled: false,
-    readonly: false,
-    'correct-response': 'A,B',
-    'show-candidate-correction': false,
-    'show-full-correct-response': true
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const [choiceInteraction] = canvas.getAllByTestId<QtiChoiceInteraction>('interaction');
-    choiceInteraction.correctResponse = ['A', 'B'];
-    // choiceInteraction.toggleCorrectResponse();
-  }
-};
-
 const formTemplate = (args, context) => html`
   <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
     ${Test.render(args, context)}

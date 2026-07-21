@@ -10,8 +10,7 @@ export class QtiHottext extends ActiveElementMixin(LitElement, 'qti-hottext') {
 
   override render() {
     return html`<div part="control"><div part="control-mark"></div></div>
-      <slot part="label"></slot>
-      <span part=${this.correctionPart} aria-hidden="true"></span>`;
+      <slot part="label"></slot>`;
   }
 }
 

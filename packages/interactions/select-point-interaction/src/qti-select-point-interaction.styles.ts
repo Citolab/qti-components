@@ -39,13 +39,5 @@ export default [
       -webkit-mask: var(--qti-select-point-icon) no-repeat center / contain;
       mask: var(--qti-select-point-icon) no-repeat center / contain;
     }
-
-    [part~='correct'] {
-      --qti-select-point-marker-color: var(--qti-correct);
-    }
-
-    [part~='incorrect'] {
-      --qti-select-point-marker-color: var(--qti-incorrect);
-    }
   `
 ];

@@ -1,10 +1,10 @@
-import { html } from 'lit';
-import { property, query, state } from 'lit/decorators.js';
+import { html, nothing } from 'lit';
+import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { watch } from '@qti-components/utilities';
-import { Correctness, Interaction } from '@qti-components/base';
+import { Interaction } from '@qti-components/base';
 
 import styles from './qti-text-entry-interaction.styles';
 
@@ -36,9 +36,6 @@ export class QtiTextEntryInteraction extends Interaction {
   protected _handleValueChange = () => {
     this._internals.setFormValue(this.value);
     this.validate();
-    if (this.showCandidateCorrection) {
-      this.toggleCandidateCorrection(true);
-    }
   };
 
   override get value(): string | null {
@@ -46,48 +43,6 @@ export class QtiTextEntryInteraction extends Interaction {
   }
   override set value(val: string | null) {
     this.response = val || null;
-  }
-
-  override get correctness(): Readonly<Correctness | null> {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable) {
-      // Standalone mode (no item context): fall through to the base correctness
-      // getter, which compares `this.response` to `this.correctResponse`.
-      return super.correctness;
-    }
-
-    if (responseVariable.value === null) {
-      return Correctness.Incorrect;
-    }
-
-    if (responseVariable.mapping) {
-      const maxScore = responseVariable.mapping.mapEntries.reduce<number>(
-        (currentMax, mapEntry) => Math.max(mapEntry.mappedValue, currentMax),
-        0
-      );
-      for (const mapEntry of responseVariable.mapping.mapEntries) {
-        let mapAnswer = mapEntry.mapKey;
-        let responseAnswer = responseVariable.value as string;
-        if (!mapEntry.caseSensitive) {
-          mapAnswer = mapAnswer.toLowerCase();
-          responseAnswer = responseAnswer.toLowerCase();
-        }
-        if (mapAnswer === responseAnswer) {
-          if (mapEntry.mappedValue === maxScore) {
-            return Correctness.Correct;
-          }
-          if (mapEntry.mappedValue <= (responseVariable.mapping.defaultValue || 0)) {
-            return Correctness.Incorrect;
-          }
-          return Correctness.PartiallyCorrect;
-        }
-      }
-    }
-
-    // Fallback to the correct response
-
-    return responseVariable.correctResponse === responseVariable.value ? Correctness.Correct : Correctness.Incorrect;
   }
 
   override get isInline(): boolean {
@@ -124,10 +79,9 @@ export class QtiTextEntryInteraction extends Interaction {
     return isValid;
   }
 
-  public override toggleInternalCorrectResponse(show: boolean): void {
-    if (!this.showFullCorrectResponse) {
-      this.toggleFullCorrectResponse(show);
-    }
+  /** Extension hook for optional content rendered beside the input. */
+  protected renderSupplementalContent(): unknown {
+    return nothing;
   }
 
   override render() {
@@ -152,11 +106,10 @@ export class QtiTextEntryInteraction extends Interaction {
         ?disabled="${this.disabled}"
         ?readonly="${this.readonly}"
       />
-      <span part=${this.correctionPart} aria-hidden="true"></span>
+      ${this.renderSupplementalContent()}
       <div id="validation-message" part="message" role="alert" style="display:none;"></div>
     `;
   }
-  // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}
 
   protected textChanged(event: Event): void {
     if (this.disabled || this.readonly) return;

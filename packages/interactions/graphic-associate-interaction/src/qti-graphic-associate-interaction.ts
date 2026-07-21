@@ -1,9 +1,8 @@
-import { html, svg } from 'lit';
+import { html, nothing, svg } from 'lit';
 import { property, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import { watch } from '@qti-components/utilities';
 import { Interaction, responseAttributeConverter } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
@@ -30,7 +29,6 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   #startPoint: HTMLElement | null = null;
   #endPoint: HTMLElement | null = null;
 
-  @state() private _correctLines: string[] = [];
   @state() private startCoord: { x: number; y: number };
   @state() private mouseCoord: { x: number; y: number };
   @queryAssignedElements({ selector: 'img' }) grImage: any[];
@@ -45,7 +43,6 @@ export class QtiGraphicAssociateInteraction extends Interaction {
 
   override reset(): void {
     this._response = [];
-    this._correctLines = [];
   }
 
   validate(): boolean {
@@ -66,13 +63,6 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     return this._response;
   }
 
-  @watch('_response' as never, { waitUntilFirstUpdate: true })
-  protected _handleResponseChange = () => {
-    if (this.showCandidateCorrection) {
-      this.toggleCandidateCorrection(true);
-    }
-  };
-
   #normalizeResponse(value: string | string[] | null | undefined): string[] {
     if (value === null || value === undefined || value === '') return [];
     return Array.isArray(value) ? value : [value];
@@ -82,13 +72,9 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     return this.#normalizeResponse(this._response);
   }
 
-  public override toggleInternalCorrectResponse(show: boolean) {
-    const correctResponseValue = this.correctResponse;
-    if (!show || !correctResponseValue) {
-      this._correctLines = [];
-      return;
-    }
-    this._correctLines = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
+  /** Extension hook for optional SVG lines rendered above the candidate response. */
+  protected renderSupplementalLines(): unknown {
+    return nothing;
   }
 
   override render() {
@@ -119,22 +105,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
               />
             `
           )}
-          ${repeat(
-            this._correctLines || [],
-            line => line,
-            (line, _index) => svg`
-              <line
-                part="correct-line"
-                x1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.left)}
-                y1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.top)}
-                x2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.left)}
-                y2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.top)}
-                stroke="var(--qti-correct)"
-                stroke-width="3"
-                stroke-dasharray="5,5"
-              />
-            `
-          )}
+          ${this.renderSupplementalLines()}
           ${this.#startPoint &&
           svg`<line
             part="point"

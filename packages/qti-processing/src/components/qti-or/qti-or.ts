@@ -43,5 +43,3 @@ export class QtiOr extends QtiConditionExpression {
     });
   }
 }
-
-customElements.define('qti-or', QtiOr);

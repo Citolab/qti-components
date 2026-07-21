@@ -1,2 +1,7 @@
-import { QtiChoiceInteraction } from './qti-choice-interaction';
-customElements.define('qti-choice-interaction', QtiChoiceInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

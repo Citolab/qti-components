@@ -1,6 +1,6 @@
 import { html, render } from 'lit';
 
-import './qti-basevalue';
+import '../../register';
 import type { QtiBaseValue } from './qti-basevalue';
 describe('qti-base-value', () => {
   it('should return value in the correct baseType(float)', () => {

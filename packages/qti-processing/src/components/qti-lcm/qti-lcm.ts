@@ -85,5 +85,3 @@ export class QtiLcm extends QtiExpression<number | null> {
     return Math.abs((a * b) / this.#gcd(a, b));
   }
 }
-
-customElements.define('qti-lcm', QtiLcm);

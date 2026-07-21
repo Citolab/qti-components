@@ -7,5 +7,3 @@ export class QtiVariable extends QtiExpression<string | string[]> {
     return result;
   }
 }
-
-customElements.define('qti-variable', QtiVariable);

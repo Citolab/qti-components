@@ -29,6 +29,7 @@ export default defineConfig({
   optimizeDeps: {
     // Prevent mid-run Vite re-optimization in browser/story tests, which can reload the
     // iframe and surface as Vitest "iframe reloaded during a test" unhandled errors.
+    noDiscovery: true,
     include: [
       '@open-wc/lit-helpers',
       '@testing-library/dom',
@@ -86,6 +87,9 @@ export default defineConfig({
         ],
         test: {
           name: 'stories',
+          // Full Storybook runs exercise hundreds of browser stories concurrently. PCI and
+          // transformer-backed stories can legitimately exceed Vitest's 15s default under load.
+          testTimeout: 40000,
           // No setupFiles: since Storybook 10.3 `@storybook/addon-vitest` provisions the
           // preview annotations (including addon-a11y) automatically. Declaring them by hand
           // makes it skip that provisioning.

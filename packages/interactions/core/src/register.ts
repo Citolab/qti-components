@@ -1,10 +1,7 @@
-import './elements/qti-associable-hotspot/register';
-import './elements/qti-gap/register';
-import './elements/qti-gap-img/register';
-import './elements/qti-gap-text/register';
-import './elements/qti-hotspot-choice/register';
-import './elements/qti-hottext/register';
-import './elements/qti-inline-choice/register';
-import './elements/qti-prompt/register';
-import './elements/qti-simple-associable-choice/register';
-import './elements/qti-simple-choice/register';
+import { qtiInteractionCoreElements } from './elements';
+
+for (const { tag, ctor } of qtiInteractionCoreElements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

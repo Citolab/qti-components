@@ -225,6 +225,12 @@ importers:
       publint:
         specifier: ^0.3.17
         version: 0.3.17
+      react:
+        specifier: 19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: 19.2.4
+        version: 19.2.4(react@19.2.4)
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
@@ -757,6 +763,85 @@ importers:
         specifier: workspace:^
         version: link:../qti-transformers
 
+  packages/qti-corrections:
+    dependencies:
+      '@qti-components/associate-interaction':
+        specifier: workspace:^
+        version: link:../interactions/associate-interaction
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../qti-base
+      '@qti-components/choice-interaction':
+        specifier: workspace:^
+        version: link:../interactions/choice-interaction
+      '@qti-components/elements':
+        specifier: workspace:^
+        version: link:../qti-elements
+      '@qti-components/gap-match-interaction':
+        specifier: workspace:^
+        version: link:../interactions/gap-match-interaction
+      '@qti-components/graphic-associate-interaction':
+        specifier: workspace:^
+        version: link:../interactions/graphic-associate-interaction
+      '@qti-components/graphic-gap-match-interaction':
+        specifier: workspace:^
+        version: link:../interactions/graphic-gap-match-interaction
+      '@qti-components/graphic-order-interaction':
+        specifier: workspace:^
+        version: link:../interactions/graphic-order-interaction
+      '@qti-components/hotspot-interaction':
+        specifier: workspace:^
+        version: link:../interactions/hotspot-interaction
+      '@qti-components/hottext-interaction':
+        specifier: workspace:^
+        version: link:../interactions/hottext-interaction
+      '@qti-components/inline-choice-interaction':
+        specifier: workspace:^
+        version: link:../interactions/inline-choice-interaction
+      '@qti-components/interactions':
+        specifier: workspace:^
+        version: link:../qti-interactions
+      '@qti-components/interactions-core':
+        specifier: workspace:^
+        version: link:../interactions/core
+      '@qti-components/item':
+        specifier: workspace:^
+        version: link:../qti-item
+      '@qti-components/match-interaction':
+        specifier: workspace:^
+        version: link:../interactions/match-interaction
+      '@qti-components/order-interaction':
+        specifier: workspace:^
+        version: link:../interactions/order-interaction
+      '@qti-components/portable-custom-interaction':
+        specifier: workspace:^
+        version: link:../interactions/portable-custom-interaction
+      '@qti-components/processing':
+        specifier: workspace:^
+        version: link:../qti-processing
+      '@qti-components/select-point-interaction':
+        specifier: workspace:^
+        version: link:../interactions/select-point-interaction
+      '@qti-components/slider-interaction':
+        specifier: workspace:^
+        version: link:../interactions/slider-interaction
+      '@qti-components/test':
+        specifier: workspace:^
+        version: link:../qti-test
+      '@qti-components/text-entry-interaction':
+        specifier: workspace:^
+        version: link:../interactions/text-entry-interaction
+      '@qti-components/utilities':
+        specifier: workspace:^
+        version: link:../qti-utilities
+    devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+
   packages/qti-elements:
     dependencies:
       '@qti-components/base':
@@ -781,6 +866,9 @@ importers:
       '@qti-components/associate-interaction':
         specifier: workspace:^
         version: link:../interactions/associate-interaction
+      '@qti-components/base':
+        specifier: workspace:^
+        version: link:../qti-base
       '@qti-components/choice-interaction':
         specifier: workspace:^
         version: link:../interactions/choice-interaction

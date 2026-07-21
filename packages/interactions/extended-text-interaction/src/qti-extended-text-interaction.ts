@@ -102,10 +102,6 @@ export class QtiExtendedTextInteraction extends Interaction {
     return isValid;
   }
 
-  public override toggleCorrectResponse() {
-    // No correct response possible for extended text interactions
-  }
-
   override reportValidity() {
     this.validate();
     return super.reportValidity();

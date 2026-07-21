@@ -20,6 +20,7 @@ export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
 
   protected _iframeLoaded = false;
+  protected _interactionReady = false;
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
   protected _iframeMessageOrigin: string | null = null;
@@ -610,6 +611,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
     switch (data.method) {
       case 'iframeReady':
+        this._interactionReady = true;
         this.#initializeInteraction();
         this.#processPendingMessages();
         this.dispatchEvent(
@@ -699,6 +701,7 @@ export class QtiPortableCustomInteraction extends Interaction {
    * IFRAME MODE: Create iframe element
    */
   protected createIframe() {
+    this._interactionReady = false;
     if (this._iframeObjectUrl) {
       URL.revokeObjectURL(this._iframeObjectUrl);
       this._iframeObjectUrl = null;
@@ -1760,126 +1763,6 @@ export class QtiPortableCustomInteraction extends Interaction {
       </html>`;
   }
 
-  /**
-   * Toggle the display of the correct response
-   * @param responseVariable The response variable containing the correct response
-   * @param show Whether to show or hide the correct response
-   */
-  public override toggleInternalCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-
-    // Store the correct response or clear it based on the show parameter
-    this.correctResponse = show
-      ? responseVariable?.correctResponse
-      : responseVariable.cardinality === 'single'
-        ? ''
-        : [];
-
-    // Get unique identifiers for this PCI's correct response elements
-    const containerId = `correct-response-container-${this.responseIdentifier}`;
-
-    // Check the parent element for any existing containers with this ID
-    const existingContainers = this.parentElement?.querySelectorAll(`#${containerId}`);
-    if (existingContainers) {
-      existingContainers.forEach(existingContainer => {
-        existingContainer.remove();
-      });
-    }
-
-    // Handle the current interaction's state
-    if (show) {
-      // Disable the current interaction when showing correct response
-      this.disable();
-    } else {
-      // Enable the current interaction when hiding correct response
-      this.enable();
-      return; // Exit early, nothing else to do
-    }
-
-    // If there's no correct response to show, exit. Read from
-    // `this.correctResponse` (works in both standalone and item-context modes).
-    if (!show || !this.correctResponse) {
-      return;
-    }
-
-    // Create a container for the correct response viewer
-    const correctResponseContainer = document.createElement('div');
-    correctResponseContainer.id = containerId;
-    correctResponseContainer.className = 'pci-correct-response-container';
-    correctResponseContainer.style.position = 'relative';
-    correctResponseContainer.style.marginTop = '20px';
-    correctResponseContainer.style.border = '2px solid green';
-    correctResponseContainer.style.padding = '16px';
-    correctResponseContainer.style.borderRadius = '4px';
-    correctResponseContainer.style.backgroundColor = 'rgba(0, 128, 0, 0.05)';
-
-    // Add a label for the correct response
-    const label = document.createElement('div');
-    label.textContent = 'Correct Response:';
-    label.style.fontWeight = 'bold';
-    label.style.marginBottom = '10px';
-    label.style.color = 'green';
-    correctResponseContainer.appendChild(label);
-
-    // Instead of cloning, we'll create a new instance and copy necessary attributes
-    const correctResponseViewer = document.createElement(
-      'qti-portable-custom-interaction'
-    ) as QtiPortableCustomInteraction;
-
-    // Copy all attributes from the original PCI
-    Array.from(this.attributes).forEach(attr => {
-      if (attr.name !== 'id' && attr.name !== 'response-identifier') {
-        correctResponseViewer.setAttribute(attr.name, attr.value);
-      }
-    });
-
-    // Set a unique response identifier to avoid conflicts
-    const originalResponseId = this.responseIdentifier;
-    correctResponseViewer.responseIdentifier = `${originalResponseId}-correct`;
-
-    // Copy any light DOM content from the original PCI
-    // This includes markup and properties
-    Array.from(this.children).forEach(child => {
-      const clonedChild = child.cloneNode(true);
-      correctResponseViewer.appendChild(clonedChild);
-    });
-
-    // Store the correct response value (works in both standalone and item-context modes).
-    const correctResponseValue = this.correctResponse as string | string[];
-    // Default cardinality/baseType for standalone mode where there's no responseVariable.
-    const cardinality = responseVariable?.cardinality ?? (Array.isArray(correctResponseValue) ? 'multiple' : 'single');
-    const baseType = responseVariable?.baseType ?? 'string';
-
-    // Ensure the correct-response viewer is initialized and then configured in the iframe
-    const originalConnectedCallback = correctResponseViewer.connectedCallback;
-    correctResponseViewer.connectedCallback = function () {
-      originalConnectedCallback.call(this);
-
-      const applyCorrectResponse = () => {
-        const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(correctResponseValue, cardinality, baseType);
-
-        this.sendMessageToIframe('setBoundTo', {
-          [originalResponseId]: qtiVariableJSON
-        });
-        this.sendMessageToIframe('setState', { state: 'review' });
-      };
-
-      if (this._iframeLoaded) {
-        applyCorrectResponse();
-      } else {
-        this.addEventListener('qti-portable-custom-interaction-loaded', applyCorrectResponse, { once: true });
-      }
-    };
-
-    // Make sure the viewer is not interactive
-    correctResponseViewer.style.pointerEvents = 'none';
-
-    // Add the correct response viewer to the container
-    correctResponseContainer.appendChild(correctResponseViewer);
-
-    // Append the container after this PCI
-    this.after(correctResponseContainer);
-  }
   /**
    * Method to disable the PCI for review mode
    * This can be used when showing the correct response

@@ -17,5 +17,3 @@ export class QtiRandom extends QtiExpression<string> {
     return null;
   }
 }
-
-customElements.define('qti-random', QtiRandom);

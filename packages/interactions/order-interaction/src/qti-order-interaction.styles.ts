@@ -10,7 +10,6 @@ import { boxSizing, dropRegion } from '@qti-components/base';
  *
  *   [part~='drop'][active] / [enabled]     -> ::part(active) / ::part(enabled)
  *   [part~='drop']:has([part='drag'])      -> ::part(filled)
- *   [part='drag']:state(candidate-*)       -> ::part(drag):state(candidate-*)
  *
  * They had to be rewritten, not relocated: an attribute selector and `:has()` cannot follow
  * `::part()`, so the drop's flags became part tokens (verified in Chromium, see setDropFlag).

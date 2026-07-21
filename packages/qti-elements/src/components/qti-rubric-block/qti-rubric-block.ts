@@ -1,9 +1,8 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { watch } from '@qti-components/utilities';
 
-@customElement('qti-rubric-block')
 export class QtiRubricBlock extends LitElement {
   @property({ type: String }) override id: string; // ="qtiAspectInhoudRubricBlock"
 

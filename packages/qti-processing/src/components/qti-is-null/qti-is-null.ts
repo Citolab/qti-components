@@ -24,5 +24,3 @@ export class QtiIsNull extends QtiExpression<boolean> {
     return null;
   }
 }
-
-customElements.define('qti-is-null', QtiIsNull);

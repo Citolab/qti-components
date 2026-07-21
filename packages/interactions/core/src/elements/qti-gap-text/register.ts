@@ -1,2 +1,7 @@
-import { QtiGapText } from './qti-gap-text';
-customElements.define('qti-gap-text', QtiGapText);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

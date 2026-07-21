@@ -1,0 +1,78 @@
+{
+  "name": "@qti-components/qti-corrections",
+  "description": "Formative-assessment correction overlays for QTI interactions",
+  "version": "0.1.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/associate-interaction": "workspace:^",
+    "@qti-components/base": "workspace:^",
+    "@qti-components/choice-interaction": "workspace:^",
+    "@qti-components/elements": "workspace:^",
+    "@qti-components/gap-match-interaction": "workspace:^",
+    "@qti-components/graphic-associate-interaction": "workspace:^",
+    "@qti-components/graphic-gap-match-interaction": "workspace:^",
+    "@qti-components/graphic-order-interaction": "workspace:^",
+    "@qti-components/hotspot-interaction": "workspace:^",
+    "@qti-components/hottext-interaction": "workspace:^",
+    "@qti-components/inline-choice-interaction": "workspace:^",
+    "@qti-components/interactions": "workspace:^",
+    "@qti-components/interactions-core": "workspace:^",
+    "@qti-components/item": "workspace:^",
+    "@qti-components/match-interaction": "workspace:^",
+    "@qti-components/order-interaction": "workspace:^",
+    "@qti-components/portable-custom-interaction": "workspace:^",
+    "@qti-components/processing": "workspace:^",
+    "@qti-components/select-point-interaction": "workspace:^",
+    "@qti-components/slider-interaction": "workspace:^",
+    "@qti-components/test": "workspace:^",
+    "@qti-components/text-entry-interaction": "workspace:^",
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.2"
+  },
+  "keywords": [
+    "qti",
+    "corrections",
+    "formative-assessment"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "peerDependencies": {
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --paths null --noEmit false",
+    "clean": "rm -rf dist"
+  },
+  "sideEffects": true,
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    },
+    "./registry": {
+      "types": "./dist/registry.d.ts",
+      "import": "./dist/registry.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-corrections"
+  }
+}

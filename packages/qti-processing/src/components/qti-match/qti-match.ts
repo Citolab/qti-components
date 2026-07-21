@@ -102,5 +102,3 @@ export class QtiMatch extends QtiExpression<boolean> {
     }
   }
 }
-
-customElements.define('qti-match', QtiMatch);

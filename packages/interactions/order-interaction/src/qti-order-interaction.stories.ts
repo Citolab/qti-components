@@ -746,47 +746,6 @@ export const ResponseSetterWithEmptyPlaceholders: Story = {
 };
 
 /**
- * Order interaction custom correct response rendering should show and hide annotations.
- */
-export const ToggleCorrectResponseRendersLabels: Story = {
-  name: 'Correct response: toggle renders order labels',
-  render: () => html`
-    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
-      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
-      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
-      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
-    </qti-order-interaction>
-  `,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
-    await interaction.updateComplete;
-
-    Object.defineProperty(interaction, 'responseVariable', {
-      configurable: true,
-      value: {
-        correctResponse: ['A droplist0', 'B droplist1', 'C droplist2']
-      }
-    });
-
-    await step('Show custom correct-response labels', async () => {
-      interaction.toggleCorrectResponse(true);
-      const labels = interaction.shadowRoot?.querySelectorAll('.correct-option') ?? [];
-      expect(labels.length).toBe(3);
-      expect(labels[0]).toHaveTextContent('Choice A');
-      expect(labels[1]).toHaveTextContent('Choice B');
-      expect(labels[2]).toHaveTextContent('Choice C');
-    });
-
-    await step('Hide labels again', async () => {
-      interaction.toggleCorrectResponse(false);
-      const labels = interaction.shadowRoot?.querySelectorAll('.correct-option') ?? [];
-      expect(labels.length).toBe(0);
-    });
-  }
-};
-
-/**
  * Touch events should be able to trigger the same drag lifecycle as mouse events.
  */
 export const TouchDragPath: Story = {

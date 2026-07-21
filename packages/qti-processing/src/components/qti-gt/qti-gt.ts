@@ -21,5 +21,3 @@ export class QtiGt extends QtiExpression<boolean> {
     return null;
   }
 }
-
-customElements.define('qti-gt', QtiGt);

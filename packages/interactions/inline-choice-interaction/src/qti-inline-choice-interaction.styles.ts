@@ -1,7 +1,5 @@
 import { css } from 'lit';
 
-import { correctionPart } from '@qti-components/base';
-
 import type { CSSResultGroup } from 'lit';
 
 const own = css`
@@ -22,9 +20,6 @@ const own = css`
     --qti-inline-choice-overlay-z-index: var(--qti-overlay-z-index);
     --qti-inline-choice-popover-z-index: var(--qti-popover-z-index);
     --qti-inline-choice-motion-duration-fast: var(--qti-motion-duration-fast);
-    --qti-inline-choice-correct-option-margin: calc(var(--qti-padding-horizontal) / 4);
-    --qti-inline-choice-correction-gap-inline-start: calc(var(--qti-padding-horizontal) / 4);
-    --qti-inline-choice-correction-gap-inline-end: calc(var(--qti-padding-horizontal) / 2);
   }
 
   /* ── QTI mandatory input-width shared vocabulary (16 values) ─────────────── */
@@ -117,11 +112,6 @@ const own = css`
     transform: rotate(180deg);
   }
 
-  [part~='correction'] {
-    margin-left: var(--qti-inline-choice-correction-gap-inline-start);
-    margin-inline-end: var(--qti-inline-choice-correction-gap-inline-end);
-  }
-
   /* ── Popover menu — anchor positioning only, all paint in the theme ──────── */
   [part='menu'] {
     position-anchor: --qti-inline-choice-trigger;
@@ -176,14 +166,8 @@ const own = css`
     z-index: var(--qti-inline-choice-overlay-z-index);
     white-space: nowrap;
   }
-
-  /* ── Correct-option answer key overlay ──────────────────────────────────── */
-  [part='correct-option'] {
-    display: inline-block;
-    margin: 0 var(--qti-inline-choice-correct-option-margin);
-  }
 `;
 
-const styles: CSSResultGroup = [correctionPart, own];
+const styles: CSSResultGroup = own;
 
 export default styles;

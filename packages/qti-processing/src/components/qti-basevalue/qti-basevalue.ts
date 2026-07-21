@@ -12,5 +12,3 @@ export class QtiBaseValue extends QtiExpression<string> {
     return value;
   }
 }
-
-customElements.define('qti-base-value', QtiBaseValue);

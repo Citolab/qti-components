@@ -1,9 +1,7 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import * as styles from '../styles';
 
-@customElement('test-end-attempt')
 export class TestEndAttempt extends LitElement {
   static override styles = css`
     :host {

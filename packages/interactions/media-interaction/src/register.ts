@@ -1,2 +1,7 @@
-import { QtiMediaInteraction } from './qti-media-interaction';
-customElements.define('qti-media-interaction', QtiMediaInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

@@ -1,6 +1,6 @@
 import { consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { computedContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
@@ -23,14 +23,12 @@ import type { TestContext } from '@qti-components/base';
 
 type CustomEventMap = {
   'test-end-attempt': CustomEvent;
-  'test-show-correct-response': CustomEvent<{ value: boolean }>;
 };
 
 declare global {
   interface GlobalEventHandlersEventMap extends CustomEventMap {}
 }
 
-@customElement('test-navigation')
 export class TestNavigation extends LitElement {
   @property({ type: String }) identifier: string | undefined = undefined;
 
@@ -75,9 +73,15 @@ export class TestNavigation extends LitElement {
     this.addEventListener('qti-interaction-changed', this.#handleInteractionChanged.bind(this));
 
     this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
-    this.addEventListener('test-show-correct-response', this.#handleTestShowCorrectResponse.bind(this));
-    this.addEventListener('test-show-candidate-correction', this.#handleTestShowCandidateCorrection.bind(this));
     this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
+  }
+
+  /** The currently active assessment item, exposed for optional presentation extensions. */
+  protected get activeAssessmentItem(): QtiAssessmentItem | undefined {
+    if (!this.#testElement || !this._sessionContext?.navItemRefId) return undefined;
+    return this.#testElement.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
+    )?.assessmentItem;
   }
 
   /**
@@ -93,35 +97,6 @@ export class TestNavigation extends LitElement {
     const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
-  }
-
-  /**
-   * Handles the 'test-show-correct-response' event.
-   * @private
-   * @listens TestNavigation#test-show-correct-response
-   * @param {CustomEvent} event - The custom event object.
-   */
-  #handleTestShowCorrectResponse(event: CustomEvent) {
-    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
-    );
-    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
-    if (!qtiAssessmentItemEl) return;
-    qtiAssessmentItemEl.showCorrectResponse(event.detail);
-  }
-
-  /**
-   * Handles the 'test-show-candidate-correction' event.
-   * @private
-   * @listens TestNavigation#test-show-candidate-correction
-   * @param {CustomEvent} event - The custom event object.
-   */
-  #handleTestShowCandidateCorrection(event: CustomEvent) {
-    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
-    );
-    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
-    qtiAssessmentItemEl.showCandidateCorrection(event.detail);
   }
 
   #handleTestUpdateOutcomeVariable(event: CustomEvent) {
@@ -405,5 +380,11 @@ export class TestNavigation extends LitElement {
         bubbles: true
       })
     );
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-navigation': TestNavigation;
   }
 }

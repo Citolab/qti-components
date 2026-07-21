@@ -24,5 +24,3 @@ export class QtiLte extends QtiConditionExpression {
     return null;
   }
 }
-
-customElements.define('qti-lte', QtiLte);

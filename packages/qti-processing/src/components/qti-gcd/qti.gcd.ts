@@ -132,5 +132,3 @@ export class QtiGcd extends QtiExpression<number | null> {
     return a;
   }
 }
-
-customElements.define('qti-gcd', QtiGcd);

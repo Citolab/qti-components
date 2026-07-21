@@ -12,5 +12,3 @@ export class QtiNull extends QtiExpression<null> {
     return null;
   }
 }
-
-customElements.define('qti-null', QtiNull);

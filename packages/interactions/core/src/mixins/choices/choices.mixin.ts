@@ -4,20 +4,18 @@ import { watch } from '@qti-components/utilities';
 import { responseAttributeConverter } from '@qti-components/base';
 
 import type { ComplexAttributeConverter } from 'lit';
-import type { Interaction, IInteraction } from '@qti-components/base';
+import type { Interaction, ValidatableInteraction } from '@qti-components/base';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
-export interface ChoicesInterface extends IInteraction {
+export interface ChoicesInterface extends ValidatableInteraction {
   minChoices: number;
   maxChoices: number;
   value: string | null;
   response: string | string[] | null;
-  validate(): boolean;
-  reportValidity(): boolean;
 }
 
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
@@ -81,75 +79,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    protected override toggleInternalCorrectResponse(show: boolean) {
-      // Get correct response from either responseVariable (item context) or local property (standalone)
-      const correctResponse = this.correctResponse;
-
-      if (correctResponse) {
-        const responseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
-        this._choiceElements.forEach(choice => {
-          choice.internals.states.delete('correct-response');
-          choice.internals.states.delete('incorrect-response');
-          if (show && responseArray.length > 0) {
-            if (responseArray.includes(choice.identifier)) {
-              choice.internals.states.add('correct-response');
-            } else {
-              choice.internals.states.add('incorrect-response');
-            }
-          }
-        });
-      }
-    }
-
-    public override toggleCandidateCorrection(show: boolean) {
-      // Get correct response from either responseVariable (item context) or local property (standalone)
-      const correctResponse = this.correctResponse;
-
-      if (!correctResponse) {
-        return;
-      }
-
-      const correctResponseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
-
-      // Get current response (works in both standalone and item context modes)
-      const currentResponse = this.response;
-      const candidateResponseArray = Array.isArray(currentResponse)
-        ? currentResponse
-        : currentResponse
-          ? [currentResponse]
-          : [];
-
-      this._choiceElements.forEach(choice => {
-        choice.candidateCorrection = null;
-        if (!show) {
-          return;
-        }
-        if (!candidateResponseArray.includes(choice.identifier)) {
-          return; // Not checked, so no feedback
-        }
-        if (correctResponseArray.includes(choice.identifier)) {
-          choice.candidateCorrection = 'correct';
-        } else {
-          choice.candidateCorrection = 'incorrect';
-        }
-      });
-
-      // Also update interaction-level states
-      super.toggleCandidateCorrection(show);
-    }
-
     protected override firstUpdated() {
       super.firstUpdated();
       // The `response` watcher has waitUntilFirstUpdate:true, so an initial
       // value set via the `response` attribute never fires it — sync the
       // radios/checkboxes explicitly here.
       this._updateChoiceSelection();
-      // Re-apply candidate correction now that response is known. The base
-      // class's firstUpdated already called toggleCandidateCorrection(true)
-      // earlier, but at that point response was still empty.
-      if (this.showCandidateCorrection) {
-        this.toggleCandidateCorrection(true);
-      }
     }
 
     override connectedCallback() {

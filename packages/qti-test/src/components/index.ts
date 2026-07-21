@@ -12,7 +12,6 @@ export * from './test-prev/test-prev';
 export * from './test-view-toggle/test-view';
 export * from './test-item-link/test-item-link';
 export * from './test-end-attempt/test-end-attempt';
-export * from './test-show-correct-response/test-show-correct-response';
 export * from './test-paging-buttons-stamp/test-paging-buttons-stamp';
 export * from './test-container/test-container';
 export * from './test-print-item-variables/test-print-item-variables';

@@ -1,3 +1,5 @@
+import './register';
+
 export * from './context/computed-item.context';
 export * from './context/computed.context';
 export * from './context/config.context';
@@ -10,7 +12,6 @@ export * from './context/session.context';
 export * from './context/test.context';
 
 export * from './styles/box-sizing.styles';
-export * from './styles/correction.styles';
 export * from './styles/drop-region.styles';
 
 export * from './abstract/interaction';
@@ -27,5 +28,3 @@ export * from './lib/qti-rule-base';
 
 export * from './utils/scoring-helper';
 export * from './utils/utils';
-
-export * from './testing/qti-config-test-provider';

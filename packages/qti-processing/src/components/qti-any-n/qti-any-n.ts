@@ -53,5 +53,3 @@ export class QtiAnyN extends QtiExpression<boolean | null> {
     return trueCount >= this.min && trueCount <= this.max;
   }
 }
-
-customElements.define('qti-any-n', QtiAnyN);

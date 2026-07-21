@@ -54,5 +54,3 @@ export class QtiIntegerModulus extends QtiExpression<number | null> {
     return values;
   }
 }
-
-customElements.define('qti-integer-modulus', QtiIntegerModulus);

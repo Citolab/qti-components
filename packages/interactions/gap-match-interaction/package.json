@@ -53,6 +53,10 @@
     "./styles": {
       "types": "./dist/qti-gap-match-interaction.styles.d.ts",
       "import": "./dist/qti-gap-match-interaction.styles.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
     }
   },
   "repository": {

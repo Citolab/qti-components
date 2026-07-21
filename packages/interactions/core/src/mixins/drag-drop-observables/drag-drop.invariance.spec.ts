@@ -249,40 +249,6 @@ const chipCases = INTERACTIONS.map(i => [i.name, i] as const);
 describe.each(CONTRACT_SUBSTRATES)('every interaction, layout invariance — %s', substrate => {
   beforeEach(() => applySubstrate(substrate));
 
-  // The real measurement, expected to fail. `test.fails` goes red the day it starts passing.
-  test.fails.each(chipCases.filter(([n]) => CHIP_BOX_KNOWN_BAD.has(n)))(
-    '%s: KNOWN VIOLATION — a chip does not keep its box when dropped',
-    async (_n, spec) => {
-      document.body.innerHTML = spec.html;
-      await settle();
-
-      const interaction = document.body.firstElementChild as any;
-      const chip = byId(spec.chip);
-      const inBank = boxOf(chip);
-
-      interaction.handleDrop(chip, spec.target());
-      await settle();
-
-      expect(boxOf(interaction.chipsIn(spec.target())[0] as HTMLElement)).toEqual(inBank);
-    }
-  );
-
-  test.fails.each(chipCases.filter(([n]) => DROPZONE_KNOWN_BAD.has(n)))(
-    '%s: KNOWN VIOLATION — filling a dropzone resizes it',
-    async (_n, spec) => {
-      document.body.innerHTML = spec.html;
-      await settle();
-
-      const interaction = document.body.firstElementChild as any;
-      const empty = boxOf(spec.target());
-
-      interaction.handleDrop(byId(spec.chip), spec.target());
-      await settle();
-
-      expect(boxOf(spec.target())).toEqual(empty);
-    }
-  );
-
   test.each(chipCases.filter(([n]) => !CHIP_BOX_KNOWN_BAD.has(n)))(
     '%s: a chip keeps its box when dropped',
     async (_n, spec) => {

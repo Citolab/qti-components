@@ -5,6 +5,7 @@
   "author": "",
   "dependencies": {
     "@qti-components/associate-interaction": "workspace:^",
+    "@qti-components/base": "workspace:^",
     "@qti-components/choice-interaction": "workspace:^",
     "@qti-components/custom-interaction": "workspace:^",
     "@qti-components/end-attempt-interaction": "workspace:^",
@@ -46,7 +47,11 @@
       "types": "./dist/mixins/drag-drop-observables/index.d.ts",
       "import": "./dist/mixins/drag-drop-observables/index.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    }
   },
   "files": [
     "dist/**/*"

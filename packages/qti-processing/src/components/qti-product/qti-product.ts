@@ -28,5 +28,3 @@ export class QtiProduct extends QtiExpression<number> {
     return product;
   }
 }
-
-customElements.define('qti-product', QtiProduct);

@@ -10,7 +10,6 @@ import type { CSSResultGroup } from 'lit';
 export class QtiHotspotChoice extends ActiveElementMixin(LitElement, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
   @property({ attribute: 'aria-ordervalue', type: Number, reflect: true }) order: number;
-  @property({ attribute: 'aria-ordercorrectvalue', type: Number, reflect: true }) orderCorrect: number;
 }
 
 declare global {

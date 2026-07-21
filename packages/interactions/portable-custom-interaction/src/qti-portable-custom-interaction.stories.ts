@@ -111,11 +111,7 @@ export const Default: Story = {
     </qti-portable-custom-interaction-test>`,
   play: async ({ canvasElement, step }) => {
     const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
-    await new Promise(resolve => {
-      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => {
-        resolve(true);
-      });
-    });
+    await pciElement?.waitForReady();
     await step('set first value', async () => {
       let content = await pciElement.getIFrameContent();
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -177,15 +173,7 @@ export const RestoreFromState: Story = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as unknown as QtiAssessmentItem;
     const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test') as any;
 
-    await new Promise(resolve => {
-      pciElement?.addEventListener(
-        'qti-portable-custom-interaction-loaded',
-        () => {
-          resolve(true);
-        },
-        { once: true }
-      );
-    });
+    await pciElement?.waitForReady();
 
     let savedState: string | null = null;
     const onContextUpdated = (e: CustomEvent<{ itemContext: any }>) => {
@@ -309,11 +297,7 @@ export const FallbackPath = {
   play: async ({ canvasElement, step }) => {
     const pciElements = canvasElement.querySelectorAll('qti-portable-custom-interaction-test');
     const secondPciElement = pciElements[1];
-    await new Promise(resolve => {
-      secondPciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => {
-        resolve(true);
-      });
-    });
+    await secondPciElement?.waitForReady();
     await step('check response without interaction', async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       const response = secondPciElement.response;
@@ -395,11 +379,7 @@ export const TapToReveal = {
     </qti-portable-custom-interaction-test>`,
   play: async ({ canvasElement, step }) => {
     const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
-    await new Promise(resolve => {
-      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => {
-        resolve(true);
-      });
-    });
+    await pciElement?.waitForReady();
     await step('check response without interaction', async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       const response = pciElement.response;

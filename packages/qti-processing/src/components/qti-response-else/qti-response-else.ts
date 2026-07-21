@@ -23,5 +23,3 @@ export class QtiResponseElse extends LitElement {
     }
   }
 }
-
-customElements.define('qti-response-else', QtiResponseElse);

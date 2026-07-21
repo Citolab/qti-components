@@ -42,5 +42,3 @@ export class QtiFieldValue extends QtiExpression<string | string[]> {
     return fieldValue;
   }
 }
-
-customElements.define('qti-field-value', QtiFieldValue);

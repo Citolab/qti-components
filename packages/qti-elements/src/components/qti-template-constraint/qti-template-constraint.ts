@@ -1,5 +1,4 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import type { QtiExpression } from '@qti-components/base';
 import type { QtiRuleBase } from '@qti-components/base';
@@ -13,7 +12,7 @@ import type { QtiRuleBase } from '@qti-components/base';
  * the Template Processing with different randomly-generated values until a predetermined
  * condition is satisfied.
  */
-@customElement('qti-template-constraint')
+
 export class QtiTemplateConstraint extends LitElement implements QtiRuleBase {
   override render() {
     return html`<slot></slot>`;

@@ -74,5 +74,3 @@ export class QtiRound extends QtiExpression<number | null> {
     return Math.floor(numericValue + 0.5);
   }
 }
-
-customElements.define('qti-round', QtiRound);

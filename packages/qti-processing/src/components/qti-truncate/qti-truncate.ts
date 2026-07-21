@@ -41,5 +41,3 @@ export class QtiTruncate extends QtiExpression<number | null> {
     return Math.trunc(value);
   }
 }
-
-customElements.define('qti-truncate', QtiTruncate);

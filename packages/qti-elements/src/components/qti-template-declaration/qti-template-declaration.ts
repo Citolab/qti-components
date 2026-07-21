@@ -1,5 +1,5 @@
 import { css, LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import type { TemplateVariable } from '@qti-components/base';
 import type { BaseType } from '@qti-components/base';
@@ -8,7 +8,7 @@ import type { BaseType } from '@qti-components/base';
  * @summary The qti-template-declaration element declares template variables for item cloning.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.template-declaration
  */
-@customElement('qti-template-declaration')
+
 export class QtiTemplateDeclaration extends LitElement {
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) cardinality: 'single' | 'multiple' | 'ordered' | 'record' = 'single';

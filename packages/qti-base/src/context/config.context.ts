@@ -1,6 +1,5 @@
 import { createContext } from '@lit/context';
 
-export type CorrectResponseMode = 'internal' | 'full';
 export type ValidationDisplayMode = 'inline' | 'native' | 'both' | 'none';
 
 /**
@@ -41,13 +40,6 @@ export interface ConfigContext {
   disableAfterIfMaxChoicesReached?: boolean;
 
   /**
-   * Controls the mode for showing correct responses:
-   * - 'internal': Only show correct responses for the current interaction.
-   * - 'full': Show all correct responses for the item.
-   */
-  correctResponseMode?: CorrectResponseMode;
-
-  /**
    * Optional prompt text to display in inline choice interactions when no option is selected.
    * Example: "Select an answer..."
    */
@@ -60,12 +52,6 @@ export interface ConfigContext {
    * precedence and autosizing is skipped regardless of this setting.
    */
   inlineChoiceAutosize?: boolean;
-
-  /**
-   * If true, only show the full correct response when the candidate's response is incorrect.
-   * Used to control feedback visibility in review/correction modes.
-   */
-  fullCorrectResponseOnlyWhenIncorrect?: boolean;
 }
 
 export const configContext = createContext<Readonly<ConfigContext>>(Symbol('configContext'));

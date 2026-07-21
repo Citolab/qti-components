@@ -17,5 +17,3 @@ export class QtiOrdered extends QtiExpression<ResponseVariable[]> {
     return variables;
   }
 }
-
-customElements.define('qti-ordered', QtiOrdered);

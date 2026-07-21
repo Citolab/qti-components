@@ -1,7 +1,6 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { property, query } from 'lit/decorators.js';
 
-import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
@@ -24,7 +23,6 @@ export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
   #value = 0;
-  #correctResponseNumber: number | null = null;
 
   @query('#rail') private _rail!: HTMLElement;
 
@@ -59,37 +57,9 @@ export class QtiSliderInteraction extends Interaction {
     }
   }
 
-  @watch('response' as never, { waitUntilFirstUpdate: true })
-  protected _handleResponseChange = () => {
-    if (this.showCandidateCorrection) {
-      this.toggleCandidateCorrection(true);
-    }
-  };
-
-  public override toggleInternalCorrectResponse(show: boolean) {
-    // Use `this.correctResponse` so both standalone (`correct-response="…"`
-    // attribute) and item-context (response-variable) modes work.
-    const correctResponse = this.correctResponse;
-    if (!correctResponse) {
-      this.#correctResponseNumber = null;
-      this.requestUpdate();
-      return;
-    }
-
-    if (show) {
-      const raw = Array.isArray(correctResponse) ? correctResponse[0] : correctResponse;
-      const nr = parseFloat(raw);
-      if (!isNaN(nr)) {
-        this.#correctResponseNumber = nr;
-        const valuePercentage = ((this.#correctResponseNumber - this.min) / (this.max - this.min)) * 100;
-        this.style.setProperty('--value-percentage-correct', `${valuePercentage}%`);
-      } else {
-        this.#correctResponseNumber = null;
-      }
-    } else {
-      this.#correctResponseNumber = null;
-    }
-    this.requestUpdate();
+  /** Extension hook for optional content rendered on the slider rail. */
+  protected renderRailSupplement(): unknown {
+    return nothing;
   }
 
   #updateValue(newValue: number) {
@@ -121,13 +91,7 @@ export class QtiSliderInteraction extends Interaction {
             <div id="value" part="value">${this.response}</div>
           </div>
 
-          ${this.#correctResponseNumber !== null
-            ? html`
-                <div id="knob-correct" part="knob-correct">
-                  <div id="value" part="value">${this.#correctResponseNumber}</div>
-                </div>
-              `
-            : null}
+          ${this.renderRailSupplement()}
         </div>
       </div>
     `;

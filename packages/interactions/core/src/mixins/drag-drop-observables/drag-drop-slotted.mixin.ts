@@ -23,7 +23,7 @@ import {
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
-import type { DragDropState, Interaction, IInteraction } from '@qti-components/base';
+import type { DragDropState, Interaction, RegisteredInteraction } from '@qti-components/base';
 import type { DragDropCore } from './drag-drop-core.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -83,7 +83,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     collisionAlgorithm
   );
 
-  abstract class DragDropSlottedElement extends Core implements IInteraction {
+  abstract class DragDropSlottedElement extends Core implements RegisteredInteraction {
     @property({ attribute: false, type: Object }) protected configuration: InteractionConfiguration = {
       copyStylesDragClone: true,
       dragCanBePlacedBack: true,
@@ -364,17 +364,6 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this._internals.setFormValue(JSON.stringify(this._response));
     }
 
-    /**
-     * For drag-and-drop interactions `show-correct-response` falls back to the full
-     * correct-response clone. Only trigger the clone when `show-full-correct-response` is not
-     * already set — otherwise two calls would race to insert the same clone.
-     */
-    public override toggleInternalCorrectResponse(show: boolean): void {
-      if (!this.showFullCorrectResponse) {
-        this.toggleFullCorrectResponse(show);
-      }
-    }
-
     public override afterCache(): void {
       // Order matters: auto-sizing writes `min-width` from the widest chip, and `min-width`
       // beats `width`. The author's configured width must therefore be applied last, and clear
@@ -387,17 +376,6 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         this._pendingResponse = undefined;
         this.response = pending;
       }
-      const interaction = this as unknown as {
-        showCorrectResponse?: boolean;
-        showCandidateCorrection?: boolean;
-        showFullCorrectResponse?: boolean;
-        toggleInternalCorrectResponse?: (show: boolean) => void;
-        toggleCandidateCorrection?: (show: boolean) => void;
-        toggleFullCorrectResponse?: (show: boolean) => void;
-      };
-      if (interaction.showCorrectResponse) interaction.toggleInternalCorrectResponse?.(true);
-      if (interaction.showCandidateCorrection) interaction.toggleCandidateCorrection?.(true);
-      if (interaction.showFullCorrectResponse) interaction.toggleFullCorrectResponse?.(true);
     }
 
     /**

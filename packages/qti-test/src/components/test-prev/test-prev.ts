@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
@@ -20,7 +20,7 @@ import type { ComputedContext, ComputedItem } from '@qti-components/base';
  * <test-prev></test-prev>
  * ```
  */
-@customElement('test-prev')
+
 export class TestPrev extends LitElement {
   @property({ type: Boolean, reflect: true, attribute: 'disabled' })
   public _internalDisabled = true;
@@ -89,6 +89,6 @@ export class TestPrev extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'test-previous': TestPrev;
+    'test-prev': TestPrev;
   }
 }

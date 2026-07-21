@@ -1,6 +1,6 @@
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { computedContext } from '@qti-components/base';
 
@@ -8,7 +8,6 @@ import type { View } from '@qti-components/base';
 import type { OutcomeVariable } from '@qti-components/base';
 import type { ComputedContext } from '@qti-components/base';
 
-@customElement('test-scoring-feedback')
 export class TestScoringFeedback extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   protected computedContext?: ComputedContext;

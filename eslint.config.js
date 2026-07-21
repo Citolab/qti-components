@@ -185,6 +185,7 @@ export default [
       '**/dist/**', // Build output directories
       'build/**',
       'coverage/**',
+      'conformance/**', // Third-party QTI conformance fixtures and bundled vendor code
       'public/**',
       'storybook-static/**', // Storybook build output
       '**/*.d.ts', // TypeScript declaration files

@@ -41,5 +41,3 @@ export class QtiIntegerToFloat extends QtiExpression<number | null> {
     return value;
   }
 }
-
-customElements.define('qti-integer-to-float', QtiIntegerToFloat);

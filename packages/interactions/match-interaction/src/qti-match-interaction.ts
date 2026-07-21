@@ -200,57 +200,13 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
     }
   }
 
-  #getMatches(): { source: string; target: string }[] {
-    const correctResponseValue = this.correctResponse;
-    if (!correctResponseValue) {
-      return [];
-    }
-    const correctResponse = Array.isArray(correctResponseValue) ? correctResponseValue : [correctResponseValue];
-
-    const matches: { source: string; target: string }[] = [];
-    correctResponse.forEach(x => {
-      const split = x.split(' ');
-      matches.push({ source: split[0], target: split[1] });
-    });
-    return matches;
-  }
-
-  public override toggleCandidateCorrection(show: boolean) {
-    if (!this.correctResponse) {
-      return;
-    }
-    const matches = this.#getMatches();
-
-    this.targetChoices.forEach(targetChoice => {
-      const targetId = targetChoice.getAttribute('identifier');
-      const targetMatches = matches.filter(m => m.target === targetId);
-
-      // The placed chips are in the target choice's own shadow root now, one boundary deeper than
-      // a query reaches. The target knows what it holds; ask it.
-      const selectedChoices = (targetChoice as unknown as { drags: readonly QtiSimpleAssociableChoice[] }).drags;
-
-      selectedChoices.forEach(selectedChoice => {
-        selectedChoice.candidateCorrection = null;
-
-        if (!show) {
-          return;
-        }
-
-        const isCorrect = targetMatches.find(m => m.source === selectedChoice.identifier)?.source !== undefined;
-        if (isCorrect) {
-          selectedChoice.candidateCorrection = 'correct';
-        } else {
-          selectedChoice.candidateCorrection = 'incorrect';
-        }
-      });
-    });
+  /** Extension hook for packages that add visual state tokens to tabular cells. */
+  protected getCellStateVariant(_value: string, _checked: boolean): string {
+    return '';
   }
 
   override render() {
     const isTabular = this.class.split(' ').includes('qti-match-tabular');
-    // Candidate correction paints correct/incorrect on the user's own picks (checked cells only).
-    const showCandidateCorrection = isTabular && this.showCandidateCorrection && !!this.correctResponse;
-    const correctSet = showCandidateCorrection ? new Set(this.#getMatches().map(m => `${m.source} ${m.target}`)) : null;
     return html`
       <slot name="prompt"></slot>
       <slot ?hidden=${isTabular}></slot>
@@ -277,7 +233,6 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                           (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
                         const checked = this.response?.includes(value) || false;
                         const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                        const isCorrect = correctSet?.has(value) || false;
                         /*
                          * The cells are plain spans in this interaction's shadow root, so they
                          * have no ElementInternals and cannot carry `:state()` — and
@@ -287,13 +242,11 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                          * `checked`, `correct`, `incorrect`) so a themer reads the same words
                          * everywhere.
                          *
-                         * candidate-correction paints the user's picks (checked cells only).
                          */
-                        const correctVariant =
-                          showCandidateCorrection && checked ? (isCorrect ? 'correct' : 'incorrect') : '';
+                        const stateVariant = this.getCellStateVariant(value, checked);
                         const checkedMarker = checked ? 'checked' : '';
-                        const controlPart = `control ${type} ${checkedMarker} ${correctVariant}`.trim();
-                        const controlMarkPart = `control-mark ${type} ${checkedMarker} ${correctVariant}`.trim();
+                        const controlPart = `control ${type} ${checkedMarker} ${stateVariant}`.trim();
+                        const controlMarkPart = `control-mark ${type} ${checkedMarker} ${stateVariant}`.trim();
                         const disable =
                           row.matchMax === 1
                             ? false

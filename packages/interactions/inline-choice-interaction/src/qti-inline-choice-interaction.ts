@@ -52,10 +52,12 @@ export class QtiInlineChoiceInteraction extends Interaction {
   protected options: OptionType[] = [];
 
   @state()
-  protected correctOption: any = nothing;
-
-  @state()
   protected _dropdownOpen = false;
+
+  /** Extension hook for optional content rendered after the validation message. */
+  protected renderSupplementalContent(): unknown {
+    return nothing;
+  }
 
   private _slotObserver: MutationObserver | null = null;
   private readonly _menuId = `qti-inline-choice-menu-${inlineChoiceMenuCounter++}`;
@@ -107,8 +109,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
         <slot @slotchange=${this.#onChoicesSlotChange}></slot>
       </div>
       <div id="validation-message" part="message" role="alert" style="display:none;"></div>
-      <span part=${this.correctionPart} aria-hidden="true"></span>
-      ${this.correctOption}
+      ${this.renderSupplementalContent()}
     `;
   }
 
@@ -269,34 +270,10 @@ export class QtiInlineChoiceInteraction extends Interaction {
     }
     this.options = this.options.map(option => ({ ...option, selected: option.value === nextValue }));
     this.#syncSlottedChoices();
-    if (this.showCandidateCorrection) {
-      this.toggleCandidateCorrection(true);
-    }
   }
   get response(): string | null {
     const value = this.options.find(option => option.selected)?.value ?? '';
     return value === '' ? null : value;
-  }
-
-  override toggleInternalCorrectResponse(show: boolean) {
-    // Call base class implementation to manage CSS states
-    super.toggleInternalCorrectResponse(show);
-
-    // Get correct response from either responseVariable (item context) or local property (standalone)
-    const correctResponseValue = this.correctResponse;
-
-    if (!show || !correctResponseValue) {
-      this.correctOption = nothing;
-      return;
-    }
-
-    const correctOptionData = this.options.find(option => correctResponseValue === option.value);
-    if (!correctOptionData) {
-      this.correctOption = nothing;
-      return;
-    }
-
-    this.correctOption = html`<span part="correct-option">${correctOptionData.content}</span>`;
   }
 
   #selectValue(value: string) {

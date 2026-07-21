@@ -76,7 +76,6 @@ export class QtiSimpleAssociableChoice extends ActiveElementMixin(LitElement, 'q
     return html`
       <div part="control"></div>
       <slot part="label"></slot>
-      <span part=${this.correctionPart} aria-hidden="true"></span>
       <div part="drop">
         ${repeat(
           this.drags,

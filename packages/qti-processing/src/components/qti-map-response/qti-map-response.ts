@@ -57,5 +57,3 @@ export class QtiMapResponse extends QtiExpression<number> {
     return result;
   }
 }
-
-customElements.define('qti-map-response', QtiMapResponse);

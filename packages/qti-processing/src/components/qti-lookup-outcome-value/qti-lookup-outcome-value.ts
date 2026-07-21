@@ -53,7 +53,6 @@ export class QtiLookupOutcomeValue extends QtiRule {
     return value;
   }
 }
-customElements.define('qti-lookup-outcome-value', QtiLookupOutcomeValue);
 
 declare global {
   interface HTMLElementTagNameMap {

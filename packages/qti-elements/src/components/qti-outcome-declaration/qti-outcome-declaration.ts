@@ -1,6 +1,6 @@
 import { consume } from '@lit/context';
 import { css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { itemContext } from '@qti-components/base';
 import { QtiVariableDeclaration } from '@qti-components/base';
@@ -9,7 +9,6 @@ import type { BaseType, Cardinality } from '@qti-components/base';
 import type { OutcomeVariable } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 
-@customElement('qti-outcome-declaration')
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
   @property({ type: String, attribute: 'base-type' }) baseType: BaseType;
   @property({ type: String, attribute: 'external-scored' }) externalScored: 'human' | 'externalMachine' | null = null;

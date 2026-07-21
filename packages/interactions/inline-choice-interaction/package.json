@@ -53,6 +53,10 @@
     "./styles": {
       "types": "./dist/qti-inline-choice-interaction.styles.d.ts",
       "import": "./dist/qti-inline-choice-interaction.styles.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
     }
   },
   "repository": {

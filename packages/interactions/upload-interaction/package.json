@@ -53,6 +53,10 @@
     "./styles": {
       "types": "./dist/qti-upload-interaction.styles.d.ts",
       "import": "./dist/qti-upload-interaction.styles.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
     }
   },
   "repository": {

@@ -1,5 +1,4 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import type { QtiRuleBase } from '@qti-components/base';
 import type { QtiTemplateConstraint } from '../qti-template-constraint/qti-template-constraint';
@@ -9,7 +8,7 @@ import type { PropertyValueMap } from 'lit';
  * @summary The qti-template-processing element contains template processing rules.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.template-processing
  */
-@customElement('qti-template-processing')
+
 export class QtiTemplateProcessing extends LitElement {
   static override styles = [
     css`

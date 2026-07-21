@@ -1,6 +1,6 @@
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 
 import { itemContext } from '@qti-components/base';
 
@@ -19,7 +19,7 @@ import type { ItemContext } from '@qti-components/base';
       </qti-custom-operator>
     </qti-set-outcome-value>
  */
-@customElement('qti-custom-operator')
+
 export class QtiCustomOperator extends LitElement implements Calculate {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   #operatorFunction: Function;

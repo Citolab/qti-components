@@ -1,6 +1,6 @@
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
 import { qtiContext } from '@qti-components/base';
@@ -26,8 +26,12 @@ import type { QtiContext } from '@qti-components/base';
  * </qti-item>
  * ```
  */
-@customElement('item-container')
+
 export class ItemContainer extends LitElement {
+  /** Scoped registry used by the item shadow root. Must be set before connection. */
+  @property({ attribute: false })
+  customElementRegistry: CustomElementRegistry | null = null;
+
   /** URL of the item to load */
   @property({ type: String, attribute: 'item-url' })
   itemURL: string = null;
@@ -48,6 +52,21 @@ export class ItemContainer extends LitElement {
 
   /** Template content if provided */
   #templateContent: unknown = null;
+  #resolvedCustomElementRegistry: CustomElementRegistry | null = null;
+
+  protected override createRenderRoot(): HTMLElement | DocumentFragment {
+    const registry = this.customElementRegistry;
+
+    this.#resolvedCustomElementRegistry = registry;
+
+    return (
+      this.shadowRoot ??
+      this.attachShadow({
+        ...(this.constructor as typeof ItemContainer).shadowRootOptions,
+        ...(registry ? { customElementRegistry: registry } : {})
+      })
+    );
+  }
 
   @watch('itemURL', { waitUntilFirstUpdate: true })
   protected async handleItemURLChange() {
@@ -55,7 +74,7 @@ export class ItemContainer extends LitElement {
     try {
       const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
       const api = (await qtiTransformItem().load(this.itemURL)).shuffleInteractions(explicitSeed);
-      this.itemDoc = api.htmlDoc();
+      this.itemDoc = api.htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
     } catch (error) {
       console.error('Error loading or parsing XML:', error);
     }
@@ -65,7 +84,9 @@ export class ItemContainer extends LitElement {
   protected handleItemXMLChange() {
     if (!this.itemXML) return;
     try {
-      this.itemDoc = qtiTransformItem().parse(this.itemXML).htmlDoc();
+      this.itemDoc = qtiTransformItem()
+        .parse(this.itemXML)
+        .htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
     } catch (error) {
       console.error('Error parsing XML:', error);
     }

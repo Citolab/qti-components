@@ -23,5 +23,3 @@ export class QtiResponseCondition extends QtiRule {
     }
   }
 }
-
-customElements.define('qti-response-condition', QtiResponseCondition);

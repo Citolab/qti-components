@@ -66,5 +66,3 @@ export class QtiMapResponsePoint extends QtiExpression<number> {
     return result;
   }
 }
-
-customElements.define('qti-map-response-point', QtiMapResponsePoint);

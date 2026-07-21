@@ -42,5 +42,3 @@ export class QtiMember extends QtiExpression<boolean | null> {
     return projection2.includes(projection1);
   }
 }
-
-customElements.define('qti-member', QtiMember);

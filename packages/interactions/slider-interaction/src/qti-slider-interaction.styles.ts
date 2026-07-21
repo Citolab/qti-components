@@ -60,19 +60,6 @@ export default [
       border-radius: 9999px; /* rounded-full */
       left: var(--value-percentage);
     }
-    [part='knob-correct'] {
-      background-color: var(--qti-correct-light);
-      border: 2px solid var(--qti-correct);
-      position: relative;
-      height: 1rem; /* h-4 */
-      width: 1rem; /* w-4 */
-      transform-origin: center;
-      transform: translateX(-50%);
-      cursor: pointer;
-      border-radius: 9999px; /* rounded-full */
-      left: var(--value-percentage-correct);
-    }
-
     [part='value'] {
       position: absolute;
       bottom: 2rem; /* bottom-8 */

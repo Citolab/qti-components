@@ -7,7 +7,7 @@ import '../src';
 import '../../../packages/qti-theme/src/item.css';
 
 import './styles.css';
-import customElements from '../custom-elements.json';
+import customElements from '../custom-elements.qti.json';
 
 const options: Options = {
   /** hides the `arg ref` label on each control */

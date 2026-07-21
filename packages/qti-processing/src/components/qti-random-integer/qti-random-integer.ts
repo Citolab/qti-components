@@ -80,5 +80,3 @@ export class QtiRandomInteger extends QtiExpression<number> {
     return possibleValues.length > 0 ? possibleValues : [Number.isInteger(this.min) ? this.min : Math.floor(this.min)];
   }
 }
-
-customElements.define('qti-random-integer', QtiRandomInteger);

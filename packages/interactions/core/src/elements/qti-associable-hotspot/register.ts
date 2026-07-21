@@ -1,2 +1,7 @@
-import { QtiAssociableHotspot } from './qti-associable-hotspot';
-customElements.define('qti-associable-hotspot', QtiAssociableHotspot);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

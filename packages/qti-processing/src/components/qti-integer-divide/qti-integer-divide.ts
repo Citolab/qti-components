@@ -54,5 +54,3 @@ export class QtiIntegerDivide extends QtiExpression<number | null> {
     return values;
   }
 }
-
-customElements.define('qti-integer-divide', QtiIntegerDivide);

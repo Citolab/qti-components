@@ -1,4 +1,3 @@
-import { customElement } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 
 import styles from './qti-item-body.styles';
@@ -15,7 +14,7 @@ import type { CSSResultGroup } from 'lit';
  * @slot qti-rubric-block - the qti rubric block is placed above the item
  * @part qti-rubric-block - the qti rubric block part
  */
-@customElement('qti-item-body')
+
 export class QtiItemBody extends LitElement {
   static override styles: CSSResultGroup = styles;
 

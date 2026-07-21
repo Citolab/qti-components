@@ -10,7 +10,7 @@ import type { QtiHotspotChoice } from '@qti-components/interactions-core/element
 import type { Choice } from '@qti-components/interactions-core/mixins/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
-type HotspotChoice = Choice & { order: number; orderCorrect?: number };
+type HotspotChoice = Choice & { order: number };
 /**
  * Graphic order interaction: candidates order hotspots on an image.
  *
@@ -71,7 +71,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
         });
       }
 
-      this.#renderLocatorPins();
+      this.refreshLocatorPins();
       this.choiceOrdering = false;
     }
   }
@@ -82,20 +82,12 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     return `--qti-graphic-order-${normalized}`;
   }
 
-  #resolvePinColor(choice: HotspotChoice): string {
-    if (choice.matches(':state(candidate-incorrect)')) {
-      return 'var(--qti-incorrect)';
-    }
-    if (choice.matches(':state(candidate-correct)')) {
-      return 'var(--qti-correct)';
-    }
-    if (choice.matches(':state(correct-response)')) {
-      return 'var(--qti-answer-border)';
-    }
+  /** Extension hook for packages that add semantic color states to locator pins. */
+  protected resolvePinColor(_choice: HotspotChoice): string {
     return 'var(--qti-selected-bg)';
   }
 
-  #renderLocatorPins() {
+  protected refreshLocatorPins() {
     // Remove previous markers and anchor names managed by this component.
     this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());
 
@@ -114,7 +106,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
       const marker = document.createElement('span');
       marker.className = QtiGraphicOrderInteraction.#LOCATOR_CLASS;
       marker.style.setProperty('position-anchor', anchorName);
-      marker.style.setProperty('--qti-graphic-order-pin-color', this.#resolvePinColor(choice));
+      marker.style.setProperty('--qti-graphic-order-pin-color', this.resolvePinColor(choice));
       if (choice.getAttribute('shape') === 'poly') {
         marker.classList.add('qti-graphic-order-marker--poly');
       }
@@ -122,24 +114,6 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
       marker.textContent = String(choice.order);
       this.append(marker);
     });
-  }
-
-  public toggleInternalCorrectResponse(show: boolean) {
-    const correctResponseValue = this.correctResponse;
-    const correctArr = Array.isArray(correctResponseValue)
-      ? correctResponseValue
-      : correctResponseValue
-        ? [correctResponseValue]
-        : [];
-    const hotspots = this._choiceElements as HotspotChoice[];
-    for (const hotspot of hotspots) {
-      if (show && correctArr.length > 0) {
-        const index = correctArr.findIndex(identifier => identifier === hotspot.identifier);
-        hotspot.orderCorrect = index >= 0 ? index + 1 : null;
-      } else {
-        hotspot.orderCorrect = null;
-      }
-    }
   }
 
   #positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
@@ -156,7 +130,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     super.connectedCallback();
     this.addEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
     this.addEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
-    this.#renderLocatorPins();
+    this.refreshLocatorPins();
   }
   override disconnectedCallback() {
     this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());

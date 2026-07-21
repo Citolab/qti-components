@@ -175,49 +175,6 @@ export const ResponseIdentifier: Story = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CORRECT RESPONSE
-// ═══════════════════════════════════════════════════════════════════════════════
-
-export const CorrectResponseSingle: Story = {
-  name: 'Correct Response - Single',
-  render: () => html`
-    <qti-choice-interaction name="RESPONSE" max-choices="1" data-testid="interaction">
-      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-    </qti-choice-interaction>
-  `,
-  play: async ({ canvasElement }) => {
-    const { interaction } = getElements(canvasElement);
-
-    // Set correct response programmatically
-    interaction.correctResponse = 'B';
-
-    expect(interaction.correctResponse).toBe('B');
-  }
-};
-
-export const CorrectResponseMultiple: Story = {
-  name: 'Correct Response - Multiple',
-  render: () => html`
-    <qti-choice-interaction name="RESPONSE" max-choices="4" data-testid="interaction">
-      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-    </qti-choice-interaction>
-  `,
-  play: async ({ canvasElement }) => {
-    const { interaction } = getElements(canvasElement);
-
-    // Set correct response programmatically
-    interaction.correctResponse = ['A', 'C'];
-
-    expect(interaction.correctResponse).toContain('A');
-    expect(interaction.correctResponse).toContain('C');
-  }
-};
-
-// ═══════════════════════════════════════════════════════════════════════════════
 // DATA ATTRIBUTES
 // ═══════════════════════════════════════════════════════════════════════════════
 

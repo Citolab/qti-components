@@ -1,11 +1,21 @@
 const xml = String.raw;
 
+import { afterEach, beforeEach, vi } from 'vitest';
+
 import { qtiTransformTest } from '../src/qti-transform-test';
+import { resetMissingSeedWarning } from '../src/shared/missing-seed-warning';
 
 const order = (xmlStr: string, seed: string | number): string[] =>
   qtiTransformTest()
     .parse(xmlStr)
     .shuffleOrdering(seed)
+    .items()
+    .map(i => i.identifier);
+
+const orderUnseeded = (xmlStr: string): string[] =>
+  qtiTransformTest()
+    .parse(xmlStr)
+    .shuffleOrdering()
     .items()
     .map(i => i.identifier);
 
@@ -126,5 +136,42 @@ describe('shuffleOrdering', () => {
     const min = Math.min(...positions);
     const max = Math.max(...positions);
     expect(max - min).toBe(4);
+  });
+});
+
+describe('shuffleOrdering (no seed)', () => {
+  const EIGHT = wrap(refs('I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8'));
+
+  // The missing-seed warning fires once per session, so reset it between tests rather than
+  // letting the first unseeded call in this file consume it.
+  beforeEach(() => {
+    resetMissingSeedWarning();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('is a permutation of the items', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect([...orderUnseeded(EIGHT)].sort()).toEqual(['I1', 'I2', 'I3', 'I4', 'I5', 'I6', 'I7', 'I8']);
+  });
+
+  it('is deterministic across runs when seed is omitted', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(orderUnseeded(EIGHT)).toEqual(orderUnseeded(EIGHT));
+  });
+
+  it('warns about the deterministic fallback seed when seed is omitted', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    orderUnseeded(EIGHT);
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('deterministic fallback seed'));
+  });
+
+  it('warns only once per session', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    orderUnseeded(EIGHT);
+    orderUnseeded(EIGHT);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 });

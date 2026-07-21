@@ -69,7 +69,11 @@
       "types": "./dist/internal/*.d.ts",
       "import": "./dist/internal/*.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    }
   },
   "repository": {
     "type": "git",

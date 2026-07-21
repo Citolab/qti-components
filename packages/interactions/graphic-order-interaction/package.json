@@ -53,6 +53,10 @@
     "./styles": {
       "types": "./dist/qti-graphic-order-interaction.styles.d.ts",
       "import": "./dist/qti-graphic-order-interaction.styles.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
     }
   },
   "repository": {

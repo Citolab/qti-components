@@ -1,10 +1,9 @@
 import { css } from 'lit';
 
-import { boxSizing, correctionPart } from '@qti-components/base';
+import { boxSizing } from '@qti-components/base';
 
 export default [
   boxSizing,
-  correctionPart,
   css`
     :host {
       display: inline-flex;
@@ -51,13 +50,6 @@ export default [
       padding: calc(var(--qti-padding-vertical) / 2) var(--qti-padding-horizontal);
     }
 
-    [part~='correction'] {
-      position: static;
-      translate: none;
-      width: var(--qti-form-size);
-      height: var(--qti-form-size);
-    }
-
     :host(.qti-input-width-1) {
       --qti-input-width: 1;
     }
@@ -102,31 +94,6 @@ export default [
     }
     :host(.qti-input-width-72) {
       --qti-input-width: 72;
-    }
-
-    :host {
-      position: relative;
-      /* Both names, one declaration: anchor-name is not additive, and this rule comes after the
-         shared correctionPart fragment, so declaring only --text-entry-host would silently drop the
-         correction badge's anchor. */
-      anchor-name: --text-entry-host, --qti-correction-anchor;
-    }
-
-    /*
-   * Correct-response overlay sits ABOVE the host's border, anchored to the
-   * host via CSS anchor positioning (position-area: top). Visually
-   * decoupled from the host's bordered/colored candidate-correction state —
-   * even when both modes are on, the "paris" tag doesn't get the red/green
-   * border.
-   */
-    [part='correct'] {
-      position: absolute;
-      position-anchor: --text-entry-host;
-      position-area: top span-right;
-      margin-bottom: 0.25rem;
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-      background-color: var(--qti-bg);
-      white-space: nowrap;
     }
   `
 ];

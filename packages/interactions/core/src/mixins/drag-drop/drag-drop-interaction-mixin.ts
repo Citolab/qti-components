@@ -2,9 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { liveQuery, watch } from '@qti-components/utilities';
 
-import { FlippablesMixin } from './flippables-mixin';
-
-import type { Interaction, IInteraction } from '@qti-components/base';
+import type { Interaction } from '@qti-components/base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -33,11 +31,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   droppablesSelector: string,
   dragContainersSelector: string
 ) => {
-  abstract class DragDropInteractionElement extends FlippablesMixin(
-    superClass,
-    droppablesSelector,
-    draggablesSelector
-  ) {
+  abstract class DragDropInteractionElement extends superClass {
     // protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
     private observer: MutationObserver | null = null;
     private droppableObsever: MutationObserver | null = null;
@@ -1061,5 +1055,5 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
   }
 
-  return DragDropInteractionElement as Constructor<IInteraction> & T;
+  return DragDropInteractionElement as Constructor<Interaction> & T;
 };
