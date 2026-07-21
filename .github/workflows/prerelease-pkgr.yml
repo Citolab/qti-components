@@ -1,5 +1,5 @@
 name: "Prerelease: pkg.pr.new (refactor channel)"
-
+# This workflow is triggered manually via the "workflow_dispatch" event.
 # Publishes ephemeral prerelease builds of every workspace package to pkg.pr.new
 # on each push to the refactor branch. The editor can then depend on the floating
 # branch URL, e.g.:
@@ -13,9 +13,9 @@ name: "Prerelease: pkg.pr.new (refactor channel)"
 # pkg.pr.new does NOT run locally; it only works inside a CI workflow.
 
 on:
-  # push:
-  #   branches:
-  #     - breaking-changes-for-editor-release
+  push:
+    branches:
+      - editor-correction-package
   workflow_dispatch:
 
 # One publish at a time per branch; cancel superseded runs so rapid pushes
