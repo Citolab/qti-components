@@ -59,6 +59,22 @@
     pointer-events: none;
   }
 
+  /* Text placeholders are already hidden by `color: transparent`; image chips
+     need descendants hidden explicitly to render as the same empty footprint. */
+  :state(dragging) > *,
+  :state(placeholder) > *,
+  :state(drag):state(dragging) > *,
+  :state(drag):state(placeholder) > * {
+    visibility: hidden;
+  }
+
+  :state(dragging)::part(label),
+  :state(placeholder)::part(label),
+  :state(drag):state(dragging)::part(label),
+  :state(drag):state(placeholder)::part(label) {
+    visibility: hidden;
+  }
+
   /*
    * Unified drop-target highlight: the exact destination while dragging.
    *
