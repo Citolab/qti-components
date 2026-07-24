@@ -3,14 +3,14 @@
  * by editing these. Split from qti-base.css. */
 
 /* ============================================================================
- * Shared utility classes, applied with @apply. Only styles ≥2 interactions share
- * belong here. A substrate expresses its look by overriding the --qti-* variables
- * above (value first), not by editing these.
+ * Shared semantic mixins. Only styles ≥2 interactions share belong here.
+ * A substrate expresses its look by overriding the --qti-* variables above
+ * (value first), not by editing these.
  * ========================================================================== */
 
 /*
  * Semantic PostCSS mixins. Interaction files wire these to their own parts and states; the mixins
- * own the shared visual vocabulary. The class utilities below remain only for direct demo markup.
+ * own the shared visual vocabulary.
  */
 @define-mixin candidate-tint $color, $background {
   background-color: $background;
@@ -196,22 +196,13 @@
   background-color: var(--qti-bg);
 }
 
-@define-mixin chevron {
-  background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
-    no-repeat center right 6px;
-}
-
-@define-mixin filled {
+@define-mixin drag {
   box-sizing: border-box;
   color: var(--qti-primary-fg);
   background-color: var(--qti-primary);
   border: var(--qti-border-thickness) solid var(--qti-primary);
   border-radius: var(--qti-border-radius);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-}
-
-@define-mixin drag {
-  @mixin filled;
   cursor: grab;
 }
 
@@ -224,123 +215,4 @@
 }
 
 @define-mixin hov {
-}
-
-/*
-  Following are classes that can be applied directly in theme/demo markup.
-  Production interaction styles now use the semantic @define-mixin layer above.
-*/
-
-/* Apply .button rules for button-like elements, such as drags and buttons */
-.button {
-  @mixin button;
-}
-
-/* Apply .select for the select dropdown element */
-.select {
-  @mixin bordered;
-  @mixin chevron;
-  border-radius: var(--qti-border-radius);
-  position: relative;
-  appearance: none;
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  padding-right: calc(var(--qti-padding-horizontal) + 1.5rem); /* 1.5rem for the chevron */
-}
-
-/* Apply .text for the input text and textarea */
-.text {
-  @mixin text;
-}
-
-/* Apply .spot for hotspot shapes */
-.spot {
-  @mixin spot;
-}
-
-/* Apply .drag for draggable elements */
-/* The drag chip is a filled element. */
-.drag {
-  @mixin drag;
-}
-
-/* Apply .dragging for the dragging state of a draggable element */
-.dragging {
-  @mixin dragging;
-}
-
-/* Apply .drop for an element where you can drop the draggable */
-.drop {
-  @mixin drop;
-}
-
-/* Apply .dropping for an indicator where you can drop the draggable */
-.dropping {
-  @mixin dropping;
-}
-
-/* Apply .order for a small circular button */
-.order {
-  @mixin bordered;
-  display: grid;
-  place-content: center;
-
-  /* background-color: var(--qti-bg-active); */
-  box-sizing: border-box;
-  border-radius: 100%;
-  width: var(--qti-order-size);
-  height: var(--qti-order-size);
-}
-
-/* Apply .check-size for radio and checkbox size */
-.check-size {
-  @mixin check-size;
-}
-
-/* Apply .check for checkbox */
-.check {
-  @mixin check;
-}
-
-/* Apply .check-radio for outer circle of the radio buttons */
-.check-radio {
-  @mixin check-radio;
-}
-
-/* Apply .check-radio-checked for the inner checked radio */
-.check-radio-checked {
-  @mixin check-radio-checked;
-}
-
-/* Apply .check-checkbox for outer square of the checkbox */
-.check-checkbox {
-  @mixin check-checkbox;
-}
-
-/* Apply .check-checkbox-checked for the inner checkmark */
-.check-checkbox-checked {
-  @mixin check-checkbox-checked;
-}
-
-/* Apply .hov for hover state */
-.hov {
-  @mixin hov;
-}
-
-/* Apply .foc for focus state */
-.foc {
-  @mixin foc;
-}
-
-/* Apply .act for active state */
-.act {
-  @mixin act;
-}
-
-.act-bg {
-  background-color: var(--qti-bg-active);
-}
-
-/* Disabled — just dim it. No colour variables. */
-.dis {
-  @mixin dis;
 }
