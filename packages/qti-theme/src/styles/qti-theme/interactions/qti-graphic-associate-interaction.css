@@ -13,7 +13,7 @@
       &[shape='square'] {
         @mixin spot;
         &:hover {
-          @apply hov;
+          @mixin hov;
         }
         &:focus {
           @mixin foc;

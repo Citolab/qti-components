@@ -19,7 +19,7 @@
       @mixin text;
     }
     &:hover {
-      @apply hov;
+      @mixin hov;
     }
     &:focus-within {
       &::part(input) {

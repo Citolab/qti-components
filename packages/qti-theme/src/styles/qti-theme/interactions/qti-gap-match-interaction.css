@@ -27,21 +27,21 @@
     /* Editor fake-drag projected into a filled <qti-gap>'s shadow. Same `drag`
        styling so the editor preview matches runtime when a gap is filled. */
     & qti-gap::part(drag) {
-      @apply drag;
+      @mixin drag;
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;
       }
     }
     & qti-gap-text {
-      @apply drag;
+      @mixin drag;
       &[dragging] {
-        @apply dragging;
+        @mixin dragging;
       }
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;

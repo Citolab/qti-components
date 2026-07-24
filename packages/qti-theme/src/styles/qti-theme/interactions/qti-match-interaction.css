@@ -3,9 +3,9 @@
      Reuses the same `drag` styling so the editor preview matches what students
      see when an answer is dropped onto a target at runtime. */
   qti-simple-associable-choice::part(drag) {
-    @apply drag;
+    @mixin drag;
     &:hover {
-      @apply hov;
+      @mixin hov;
     }
     &:focus {
       @mixin foc;
@@ -31,12 +31,12 @@
       align-items: flex-start;
       gap: var(--qti-gap-size);
       & qti-simple-associable-choice {
-        @apply drag;
+        @mixin drag;
         &[dragging] {
-          @apply dragging;
+          @mixin dragging;
         }
         &:hover {
-          @apply hov;
+          @mixin hov;
         }
         &:focus {
           @mixin foc;
@@ -73,7 +73,7 @@
         &::part(drop) {
           @mixin drop;
           &[dragging] {
-            @apply dragging;
+            @mixin dragging;
           }
           &:focus {
             @mixin foc;
@@ -89,7 +89,7 @@
           pointer-events: none;
         }
         & > qti-simple-associable-choice {
-          @apply drag;
+          @mixin drag;
           &:state(candidate-correct) {
             background-color: var(--qti-correct);
           }
@@ -100,7 +100,7 @@
             display: none;
           }
           &:hover {
-            @apply hov;
+            @mixin hov;
           }
           &:focus {
             @mixin foc;

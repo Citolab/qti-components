@@ -10,15 +10,15 @@
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
        `::part(qti-simple-associable-choice)`, a part named after the tag. */
     &::part(drag) {
-      @apply drag;
+      @mixin drag;
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;
       }
       &[dragging] {
-        @apply dragging;
+        @mixin dragging;
       }
     }
     /* Editor fake-drag projected into the interaction's drop-target shadow.
@@ -26,9 +26,9 @@
        because a CSS comment between commas in a nested selector list is
        silently dropped by Chrome's nesting parser. */
     &::part(drag) {
-      @apply drag;
+      @mixin drag;
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;

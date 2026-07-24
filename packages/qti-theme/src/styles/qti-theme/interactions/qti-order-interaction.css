@@ -11,12 +11,12 @@
     /* Editor fake-drag projected into the interaction's drop-target shadow.
        Same `drag` styling so editor previews match runtime visuals. */
     &::part(drag) {
-      @apply drag;
+      @mixin drag;
       &[dragging] {
-        @apply dragging;
+        @mixin dragging;
       }
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;
@@ -28,9 +28,9 @@
        above) because a CSS comment between commas inside a nested selector
        list is silently dropped by Chrome's nesting parser. */
     &::part(drag) {
-      @apply drag;
+      @mixin drag;
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;
@@ -91,7 +91,7 @@
         }
       }
       &:hover {
-        @apply hov;
+        @mixin hov;
       }
       &:focus {
         @mixin foc;

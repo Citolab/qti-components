@@ -23,7 +23,7 @@
         @mixin button;
 
         &:hover {
-          @apply hov;
+          @mixin hov;
         }
 
         &:focus {
@@ -81,7 +81,7 @@
         @mixin check;
 
         &:not(:state(disabled), :state(readonly), :state(checked)):hover {
-          @apply hov;
+          @mixin hov;
         }
 
         &:focus {

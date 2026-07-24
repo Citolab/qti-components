@@ -196,6 +196,31 @@
   background-color: var(--qti-bg);
 }
 
+@define-mixin filled {
+  box-sizing: border-box;
+  color: var(--qti-primary-fg);
+  background-color: var(--qti-primary);
+  border: var(--qti-border-thickness) solid var(--qti-primary);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+}
+
+@define-mixin drag {
+  @mixin filled;
+  cursor: grab;
+}
+
+@define-mixin dragging {
+  pointer-events: none;
+  rotate: -2deg;
+  box-shadow:
+    0 8px 12px rgb(0 0 0 / 20%),
+    0 4px 8px rgb(0 0 0 / 10%);
+}
+
+@define-mixin hov {
+}
+
 /* The hole a lifted / placed source chip leaves behind. @apply'd on the chip's
  * dragging / placeholder state. */
 .placeholder {
