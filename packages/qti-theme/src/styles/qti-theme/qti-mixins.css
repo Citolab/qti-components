@@ -25,17 +25,45 @@
   border-color: var(--qti-answer-border);
 }
 
-@define-mixin chip {
+/*
+ * A drag: the movable token a candidate drags into a gap, a drop target or an order slot.
+ *
+ * This used to be two mixins. `drag` drew the box — box-sizing, colours, a full `border`
+ * shorthand, padding, `cursor: grab` — and a second one, `chip`, drew the skin over it: the same
+ * colours again, the same radius, a lift, and `border-color` alone. Because that second mixin only
+ * ever recoloured a border it could not create, the two had to be applied in that order, from two
+ * different cascade layers, to every drag. Nine call sites did; a few did not, and those are where
+ * the box models diverged — see the `associate` note in drag-drop.invariance.spec.ts.
+ *
+ * They are one mixin now, and it is the whole drag. Nothing has to run before it.
+ *
+ * `box-sizing` is deliberate and load-bearing: the floating clone is appended to document.body,
+ * outside reset.css's `@scope (qti-item-body)`, so it inherits no border-box from anywhere else.
+ * Under content-box the clone's padding would be added to the width the drag code measured off the
+ * bank drag, and it would jump the instant it was picked up.
+ */
+@define-mixin drag {
   box-sizing: border-box;
   color: var(--qti-primary-fg);
   background-color: var(--qti-primary);
-  border-color: var(--qti-primary);
+  border: var(--qti-border-thickness) solid var(--qti-primary);
   border-radius: var(--qti-border-radius);
   box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
-  padding: var(--qti-padding-vertical) 0.8em;
+  padding: var(--qti-drag-padding);
+  cursor: grab;
 }
 
-@define-mixin placeholder {
+/*
+ * The hole a drag leaves behind: lifted mid-drag, or spent because its copy is already placed.
+ *
+ * A modifier, not a look of its own. It repaints a drag and must be applied *with* `drag`, never
+ * instead of it — `border-color: transparent` needs a border to make transparent, and the padding
+ * holding the hole open is the drag's own. That is why `:state(drag)` survives `:state(placeholder)`:
+ * an element that stopped being a drag when it was placed would take its footprint with it, and the
+ * bank would reflow around a hole 20px narrower than the thing that left it. Measured in
+ * drag-drop.invariance.spec.ts, "a spent drag keeps its footprint".
+ */
+@define-mixin drag-placeholder {
   background-color: var(--qti-placeholder-bg);
   opacity: 1;
   box-shadow: inset var(--qti-placeholder-shadow);
@@ -213,16 +241,12 @@
   background-color: var(--qti-bg);
 }
 
-@define-mixin drag {
-  box-sizing: border-box;
-  color: var(--qti-primary-fg);
-  background-color: var(--qti-primary);
-  border: var(--qti-border-thickness) solid var(--qti-primary);
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  cursor: grab;
-}
-
+/*
+ * A drag in flight. The other `drag` modifier — applied with `drag`, never instead of it.
+ *
+ * `rotate` is paint: a transform never reflows, which is what lets a drag tilt under the cursor
+ * without the bank shifting behind it.
+ */
 @define-mixin dragging {
   pointer-events: none;
   rotate: -2deg;

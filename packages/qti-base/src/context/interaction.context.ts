@@ -27,7 +27,7 @@ export interface InteractionContext {
 
   /**
    * The selector this interaction uses to recognise its draggable chips. An element tests
-   * itself with `this.matches(draggablesSelector)` and takes `:state(drag)` if it matches.
+   * itself with `this.matches(draggablesSelector)` and takes `:state(chip)` if it matches.
    *
    * Published rather than pushed because draggability can be positional: match-interaction's
    * selector distinguishes the source match-set from the target one, so two elements of the

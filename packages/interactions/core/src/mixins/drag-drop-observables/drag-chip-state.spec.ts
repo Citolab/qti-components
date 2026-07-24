@@ -28,7 +28,12 @@ describe('drag chip states', () => {
 
     const a = chip('A');
     expect(a.internals.states.has('placeholder'), 'placed chip is a placeholder').toBe(true);
-    expect(a.internals.states.has('drag'), 'placeholder is not marked as draggable role').toBe(false);
+    // The role survives being spent. `drag` says what this element IS — the same noun `part="drags"`
+    // uses for the bank — so a placed one is still a drag. The theme draws its box from :state(drag)
+    // and only repaints it from :state(placeholder), so dropping the role here would collapse the
+    // hole the placeholder is meant to hold open. Pickability is the separate question, asserted on
+    // the two attributes below.
+    expect(a.internals.states.has('drag'), 'a spent drag is still a drag').toBe(true);
     expect(a.hasAttribute('qti-draggable'), 'spent source is not exposed as draggable').toBe(false);
     expect(a.hasAttribute('tabindex'), 'spent source leaves keyboard tab order').toBe(false);
 

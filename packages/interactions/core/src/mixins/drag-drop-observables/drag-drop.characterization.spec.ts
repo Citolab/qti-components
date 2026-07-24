@@ -188,10 +188,11 @@ describe('drag-drop characterization — response is currently derived from the 
     interaction.handleDrop(byId('ht_zuur'), el<HTMLElement>('[identifier="gap_low"]'));
     await settle();
 
-    // `isDragChipHidden` gates both the pointerdown filter and the keyboard draggables list
+    // `isDragChipHidden` gates both the pointerdown filter and the keyboard draggables list. It does
+    // not gate the `drag` role state: a spent drag is still a drag, and keeps its box.
     const chip = byId('ht_zuur');
     expect(chip.internals.states.has('placeholder')).toBe(true);
-    expect(chip.internals.states.has('drag')).toBe(false);
+    expect(chip.internals.states.has('drag'), 'role survives; only pickability is withdrawn').toBe(true);
     expect(chip.hasAttribute('qti-draggable')).toBe(false);
     expect(chip.hasAttribute('tabindex')).toBe(false);
     expect(chip.style.opacity, 'presentation is not written inline any more').toBe('');

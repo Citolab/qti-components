@@ -33,7 +33,7 @@
       :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
     ),
   [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])) {
-    @mixin chip;
+    @mixin drag;
   }
 
   /* The shared drag handle. Placed image hotspots are excluded for the same

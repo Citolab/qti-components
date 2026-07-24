@@ -237,9 +237,11 @@ const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: ()
  *              slot rather than keeping the bank chip's natural footprint.
  *
  * `associate` used to live here — its placed chip drew `16px` padding from the base `@apply drag`
- * while the bank chip drew `0.8em` from kennisnet's `:state(drag)` block, and nothing keyed the
- * placed chip (`qti-associate-interaction::part(drag)`) to the same `0.8em`. Fixed by adding that
- * selector to kennisnet's shared chip block, so a chip wears one box model in both homes.
+ * while the bank chip drew `0.8em` from the `:state(drag)` block, and nothing keyed the placed chip
+ * (`qti-associate-interaction::part(drag)`) to the same `0.8em`. It was fixed by hand, per selector.
+ *
+ * The class of bug is gone now: `drag` and `chip` were merged into one `chip` mixin whose padding is
+ * `--qti-drag-padding`, so there is no longer a second box model for a selector to miss.
  */
 const CHIP_BOX_KNOWN_BAD = new Set(['order']);
 const DROPZONE_KNOWN_BAD = new Set<string>();
@@ -283,4 +285,39 @@ describe.each(CONTRACT_SUBSTRATES)('every interaction, layout invariance — %s'
       expect(boxOf(spec.target()), 'an empty drop is already the size of the chip it will hold').toEqual(empty);
     }
   );
+});
+
+/**
+ * The hole a spent drag leaves is the drag's own box.
+ *
+ * This is the invariant that decides whether `:state(drag)` may be filtered. A theme draws the
+ * drag's box once, from `:state(drag)`, and only repaints it from `:state(placeholder)` — so if the
+ * role is withdrawn the moment one is spent, the base rule stops matching, the padding and border go
+ * with it, and the source collapses. The bank then rewraps around a hole smaller than the thing that
+ * left it, which is rule 1 in the header failing in its second half: "must not resize the hole it
+ * leaves behind".
+ *
+ * Measured here rather than argued about, because it was argued about: the role used to be filtered
+ * by isDragChipHidden, unfiltering it moved seven VRT captures, and nothing said which way was
+ * right. Restoring the filter fails these five at 72 vs 92, 83 vs 103 and 110 vs 130 — a hole
+ * exactly one drag's horizontal padding too narrow.
+ */
+describe.each(CONTRACT_SUBSTRATES)('a spent drag keeps its footprint — %s', substrate => {
+  beforeEach(() => applySubstrate(substrate));
+
+  test.each(chipCases)('%s: the placeholder is the same box as the chip', async (_n, spec) => {
+    document.body.innerHTML = spec.html;
+    await settle();
+
+    const interaction = document.body.firstElementChild as any;
+    const chip = byId(spec.chip);
+    const inBank = boxOf(chip);
+
+    interaction.handleDrop(chip, spec.target());
+    await settle();
+
+    expect(chip.internals.states.has('placeholder'), 'the source is spent').toBe(true);
+    expect(chip.internals.states.has('drag'), 'and is still a drag').toBe(true);
+    expect(boxOf(chip), 'the hole is the size of the drag that left it').toEqual(inBank);
+  });
 });

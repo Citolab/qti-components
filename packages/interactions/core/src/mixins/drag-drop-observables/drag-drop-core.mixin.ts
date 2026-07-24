@@ -258,9 +258,24 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       const draggableSet = new Set(this.trackedDraggables);
       const droppableSet = new Set(this.trackedDroppables);
-      const effectiveDraggableSet = dragDropEnabled
-        ? new Set([...draggableSet].filter(el => !isDragChipHidden(el)))
-        : new Set<HTMLElement>();
+      /*
+       * The `drag` role state is NOT filtered by isDragChipHidden.
+       *
+       * `drag` is the noun here, the same one `part="drags"` uses for the bank: it says what an
+       * element *is*, not what is happening to it. One that has been lifted or spent is still a
+       * drag, and has to keep saying so — the theme draws its box from `:state(drag)` and only
+       * repaints it from `:state(placeholder)` / `:state(dragging)`. Filter the role and those stop
+       * composing: the base rule stops matching the moment it is placed, the box collapses, and the
+       * bank reflows around a hole 20px narrower than the thing that left it.
+       *
+       * Measured in drag-drop.invariance.spec.ts, "a spent drag keeps its footprint". Restore the
+       * filter and those five assertions fail.
+       *
+       * Pickability is the separate question, and still filtered: isDragChipHidden is consulted
+       * directly at the drag-start and keyboard-navigation sites below, and a spent drag still loses
+       * `qti-draggable` and its tabindex.
+       */
+      const dragRoleSet = dragDropEnabled ? draggableSet : new Set<HTMLElement>();
       const effectiveDroppableSet = dragDropEnabled ? droppableSet : new Set<HTMLElement>();
       const currentStateful = new Set<StatefulElement>([...draggableSet, ...droppableSet].filter(hasStates));
 
@@ -273,7 +288,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       // Drag-drop ownership of drag/drop role states.
       for (const el of currentStateful) {
-        const isDrag = effectiveDraggableSet.has(el);
+        const isDrag = dragRoleSet.has(el);
         const isDrop = !isDrag && effectiveDroppableSet.has(el);
         if (isDrag) el.internals.states.add('drag');
         else el.internals.states.delete('drag');

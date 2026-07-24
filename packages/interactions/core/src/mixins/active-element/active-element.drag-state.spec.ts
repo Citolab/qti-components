@@ -5,7 +5,7 @@ import '@qti-components/interactions';
 /**
  * Drag/drop role states are owned by the drag-drop mixins.
  *
- * `drag` and `drop` are custom states (never ARIA roles). The mixin assigns them from its own
+ * `chip` and `drop` are custom states (never ARIA roles). The mixin assigns them from its own
  * tracked draggable/droppable sets, including positional cases where the same tag is source in
  * one place and target in another.
  */

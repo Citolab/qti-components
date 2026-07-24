@@ -12,10 +12,11 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 /**
  * Some states classify an element rather than describe a moment in an interaction.
  *
- * :state(drag) means "this element is a drag chip" — it is set once, when the interaction
- * publishes its draggablesSelector, and it is where a theme legitimately gives a chip its padding
- * and drag handle. :state(radio) and :state(checkbox) are the same kind of thing: they say what a
- * control *is*.
+ * :state(drag) means "this element is a drag" — the noun, the same one `part="drags"` uses for the
+ * bank. It is set from the interaction's draggablesSelector and holds for as long as the element is
+ * one, including while it is lifted or spent. It is where a theme legitimately gives a drag its
+ * padding and drag handle. :state(radio) and :state(checkbox) are the same kind of thing: they say
+ * what a control *is*.
  *
  * Everything else — dragging, placeholder, checked, hover, candidate-correct — toggles while the
  * user is interacting. Those may only paint.

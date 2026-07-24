@@ -109,7 +109,7 @@
     qti-simple-match-set:first-of-type
     qti-simple-associable-choice:state(drag),
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag) {
-    @mixin chip;
+    @mixin drag;
   }
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice {
@@ -144,7 +144,7 @@
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
     qti-simple-associable-choice:state(placeholder) {
-    @mixin placeholder;
+    @mixin drag-placeholder;
     pointer-events: none;
   }
 

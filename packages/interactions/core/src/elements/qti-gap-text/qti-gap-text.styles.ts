@@ -17,7 +17,7 @@ export default [
      */
     :host {
       display: flex;
-      justify-content: var(--qti-chip-justify-content, normal);
+      justify-content: var(--qti-drag-justify-content, normal);
       user-select: none;
     }
 

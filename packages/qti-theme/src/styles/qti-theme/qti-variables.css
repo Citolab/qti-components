@@ -86,6 +86,19 @@
     --qti-form-size: 1rem; /* radio / checkbox */
     --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
 
+    /*
+     * A drag's own padding, deliberately not --qti-padding-horizontal.
+     *
+     * `em`, so a drag scales with the text it wraps rather than with the root — a drag is a token
+     * around a word, and a word that grows should take its box with it.
+     *
+     * It is a token because the two mixins that used to draw a drag disagreed here: `drag` paid
+     * `var(--qti-padding-horizontal)` and the old `chip` paid `0.8em`, and which one you got
+     * depended on the layer the call site happened to sit in. That is the associate bug recorded in
+     * drag-drop.invariance.spec.ts — one drag, two box models, depending on where it was standing.
+     */
+    --qti-drag-padding: var(--qti-padding-vertical) 0.8em;
+
     --qti-inline-padding: 2px 4px; /* for hottext and inline-choice and gap */
     --qti-inline-margin: 0; /* for hottext and inline-choice and gap */
 
