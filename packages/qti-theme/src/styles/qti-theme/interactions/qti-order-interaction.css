@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-order-interaction {
     &:state(dragzone-active)::part(drags) {
       @mixin act;
@@ -196,5 +196,19 @@
 
   .full-correct-response qti-order-interaction::part(drags) {
     display: none;
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-order-interaction::part(hover),
+  qti-order-interaction::part(active) {
+    border-color: var(--qti-drop-highlight-border-color);
+    background-color: var(--qti-drop-highlight-bg);
+    box-shadow: var(--qti-drop-highlight-shadow);
+  }
+
+  qti-order-interaction::part(enabled) {
+    border-color: var(--qti-drop-highlight-enabled-border-color);
+    background-color: var(--qti-drop-highlight-enabled-bg);
   }
 }

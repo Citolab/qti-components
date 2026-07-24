@@ -1,5 +1,9 @@
+@layer qti-components.global, qti-components.interactions.base, qti-components.interactions.states,
+	qti-components.interactions.corrections, qti-components.overrides;
+
+@import url('./reset.css');
 @import url('./qti-variables.css');
 @import url('./qti-mixins.css');
 @import url('./qti-interactions.css');
-@import url('./qti-states.css');
 @import url('./qti-elements.css');
+@import url('./qti-states.css');

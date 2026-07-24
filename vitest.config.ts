@@ -40,6 +40,7 @@ export default defineConfig({
   },
 
   test: {
+    setupFiles: process.env.VRT === '1' ? ['./.storybook/vitest.vrt.setup.ts'] : [],
     typecheck: {
       tsconfig: './tsconfig.json'
     },

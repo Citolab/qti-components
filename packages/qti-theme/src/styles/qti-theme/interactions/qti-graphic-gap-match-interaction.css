@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-graphic-gap-match-interaction {
     position: relative;
     &.qti-selections-light {
@@ -109,5 +109,19 @@
       margin: 0;
       padding: 0;
     }
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(hover),
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(active) {
+    border-color: var(--qti-drop-highlight-border-color);
+    background-color: var(--qti-drop-highlight-bg);
+    box-shadow: var(--qti-drop-highlight-shadow);
+  }
+
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(enabled) {
+    border-color: var(--qti-drop-highlight-enabled-border-color);
+    background-color: var(--qti-drop-highlight-enabled-bg);
   }
 }

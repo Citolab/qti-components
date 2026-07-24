@@ -14,12 +14,12 @@ That is the QTI 3.0 shared vocabulary stylesheet, not vendor theming.
 
 ### 1.1 The four layers
 
-| # | Layer | Location | LOC | Intent | Reality |
-|---|-------|----------|-----|--------|---------|
-| 0 | Spec vocabulary | `styles/qti-native/` | 1549 | QTI 3.0 shared CSS classes | out of scope |
-| 1 | Shadow / structural | `packages/interactions/**/*.styles.ts` (33 files) | 957 | mandatory layout + function | leaks presentation |
-| 2 | Light-DOM presentational | `styles/qti-theme/` (22 files) | 1565 | pure presentation, keyed on parts + states | is the unnamed Cito theme |
-| 3 | Vendor override | `styles/overrides/kennisnet/` (17 files) | 1223 | vendor look | is a *patch*, not a theme |
+| #   | Layer                    | Location                                          | LOC  | Intent                                     | Reality                   |
+| --- | ------------------------ | ------------------------------------------------- | ---- | ------------------------------------------ | ------------------------- |
+| 0   | Spec vocabulary          | `styles/qti-native/`                              | 1549 | QTI 3.0 shared CSS classes                 | out of scope              |
+| 1   | Shadow / structural      | `packages/interactions/**/*.styles.ts` (33 files) | 957  | mandatory layout + function                | leaks presentation        |
+| 2   | Light-DOM presentational | `styles/qti-theme/` (22 files)                    | 1565 | pure presentation, keyed on parts + states | is the unnamed Cito theme |
+| 3   | Vendor override          | `styles/overrides/kennisnet/` (17 files)          | 1223 | vendor look                                | is a _patch_, not a theme |
 
 Plus `styles/qti-minimal/index.css` (63 LOC), a token-only sheet.
 
@@ -37,7 +37,7 @@ kennisnet = item.css (native + qti-theme) + kennisnet-override.scss
 
 **Consequences:**
 
-- There is no Cito theme. `qti-theme` *is* the Cito theme, unnamed, carrying Cito's
+- There is no Cito theme. `qti-theme` _is_ the Cito theme, unnamed, carrying Cito's
   palette (`--qti-bg-active: #ffecec`, `--qti-border-active: #f86d70` in `qti-base.css`).
   It therefore cannot also serve as the neutral default.
 - Kennisnet is not a theme. It is a diff applied over Cito's theme. This is the direct
@@ -53,20 +53,20 @@ kennisnet = item.css (native + qti-theme) + kennisnet-override.scss
 
 Every `internals.states.add()` call site in `packages/**/src` (excluding specs/stories):
 
-| State | Added at | Convention |
-|---|---|---|
-| `--checked` | `choices.mixin.ts:314`, `qti-inline-choice-interaction.ts:441` | dashed |
-| `--dragzone-active` | `drag-drop-interaction-mixin.ts:264,274,972`, `drag-drop-core.mixin.ts:777` | dashed |
-| `--dragzone-enabled` | `drag-drop-interaction-mixin.ts:374,972`, `drag-drop-core.mixin.ts:777` | dashed |
-| `radio` / `checkbox` | `choices.mixin.ts:283` — dynamic, `states.add(role)` | bare |
-| `candidate-correct` | `interaction.ts:304`, `choices.mixin.ts:138`, `order:136`, `match:276`, `gap-match:123` | bare |
-| `candidate-incorrect` | `interaction.ts:310`, and the same four sites | bare |
-| `candidate-partially-correct` | `interaction.ts:307` | bare |
-| `correct-response` | `choices.mixin.ts:101` | bare |
-| `incorrect-response` | `choices.mixin.ts:103` | bare |
-| `show-correct-response` | `interaction.ts:289` | bare |
-| `disabled` | `active-element.mixin.ts:74,107` | bare |
-| `readonly` | `active-element.mixin.ts:87,112` | bare |
+| State                         | Added at                                                                                | Convention |
+| ----------------------------- | --------------------------------------------------------------------------------------- | ---------- |
+| `--checked`                   | `choices.mixin.ts:314`, `qti-inline-choice-interaction.ts:441`                          | dashed     |
+| `--dragzone-active`           | `drag-drop-interaction-mixin.ts:264,274,972`, `drag-drop-core.mixin.ts:777`             | dashed     |
+| `--dragzone-enabled`          | `drag-drop-interaction-mixin.ts:374,972`, `drag-drop-core.mixin.ts:777`                 | dashed     |
+| `radio` / `checkbox`          | `choices.mixin.ts:283` — dynamic, `states.add(role)`                                    | bare       |
+| `candidate-correct`           | `interaction.ts:304`, `choices.mixin.ts:138`, `order:136`, `match:276`, `gap-match:123` | bare       |
+| `candidate-incorrect`         | `interaction.ts:310`, and the same four sites                                           | bare       |
+| `candidate-partially-correct` | `interaction.ts:307`                                                                    | bare       |
+| `correct-response`            | `choices.mixin.ts:101`                                                                  | bare       |
+| `incorrect-response`          | `choices.mixin.ts:103`                                                                  | bare       |
+| `show-correct-response`       | `interaction.ts:289`                                                                    | bare       |
+| `disabled`                    | `active-element.mixin.ts:74,107`                                                        | bare       |
+| `readonly`                    | `active-element.mixin.ts:87,112`                                                        | bare       |
 
 Two conventions coexist. The dashed form is legacy `CustomStateSet` syntax, from when
 the spec required a `<dashed-ident>`. Bare idents are current.
@@ -93,18 +93,18 @@ Blast radius for the rename: `--checked` has 2 `states.add` sites and is matched
 
 ### 2.3 Dead state rules — delete
 
-| File:line | Selector | Why dead |
-|---|---|---|
-| `qti-theme/interactions/qti-hotspot-interaction.css:16` | `:state(--readonly)` | TS adds bare `readonly` |
-| `qti-theme/interactions/qti-hotspot-interaction.css:20` | `:state(--disabled)` | TS adds bare `disabled` |
-| `qti-minimal/index.css:61` | `:state(radio):state(checked)` | TS adds dashed `--checked` |
+| File:line                                               | Selector                       | Why dead                   |
+| ------------------------------------------------------- | ------------------------------ | -------------------------- |
+| `qti-theme/interactions/qti-hotspot-interaction.css:16` | `:state(--readonly)`           | TS adds bare `readonly`    |
+| `qti-theme/interactions/qti-hotspot-interaction.css:20` | `:state(--disabled)`           | TS adds bare `disabled`    |
+| `qti-minimal/index.css:61`                              | `:state(radio):state(checked)` | TS adds dashed `--checked` |
 
 ### 2.4 States with no styling
 
 **`incorrect-response`** (`choices.mixin.ts:103`) — ⛔ **deliberately left unstyled. Do not
 add a ✗ for it.**
 
-It is set on *every* choice outside the answer key, not just the ones the candidate picked, so
+It is set on _every_ choice outside the answer key, not just the ones the candidate picked, so
 it cannot be painted unconditionally. The tempting fix — `:state(incorrect-response):state(checked)`,
 "you selected this and it is wrong" — was tried and reverted, because that predicate is
 **exactly `:state(candidate-incorrect)`**, which every theme already styles:
@@ -119,11 +119,11 @@ if (correctResponseArray.includes(choice.identifier)) …            // else →
 Kennisnet, which already draws one via `::before` on `:state(candidate-incorrect)`
 (`overrides/kennisnet/qti/hottext-interaction.scss:38`). Caught by ITEM012's VRT baseline.
 
-What remains unique to `incorrect-response` is *unchecked* distractors while the key is shown —
+What remains unique to `incorrect-response` is _unchecked_ distractors while the key is shown —
 i.e. it is `:not(:state(correct-response))` under `show-correct-response`, carrying no
 information a theme needs. **Recommend removing the state** rather than finding a use for it.
 
-**`show-correct-response`** (`interaction.ts:289`) — ✅ styled. Set on the interaction *host*.
+**`show-correct-response`** (`interaction.ts:289`) — ✅ styled. Set on the interaction _host_.
 It only reaches the host where the base implementation runs: `qti-extended-text-interaction` (no
 override) and `qti-inline-choice-interaction` (the single override that calls `super`).
 Everything using `ChoicesMixin` or the drag-drop mixins overrides the method without calling
@@ -249,27 +249,27 @@ in the mixin explaining the distinction.
 
 ### 3.1 What each component exposes today
 
-| Component | Parts declared |
-|---|---|
-| `qti-choice-interaction` | `prompt` `slot` `message` |
-| `qti-simple-choice` | `ch` `cha` `slot` |
-| `qti-simple-associable-choice` | `ch` `slot` `dropslot` + imperative `part="qti-simple-associable-choice"` |
-| `qti-gap-text` | `ch` |
-| `qti-hottext` | `ch` `cha` |
-| `qti-hottext-interaction` | `message` |
-| `qti-order-interaction` | `container` `drags` `drops` `drop-list` + imperative `part="qti-simple-choice"` |
-| `qti-associate-interaction` | `associable-choices` `drop-container` `associables-container` `drop-list` `message` |
-| `qti-gap-match-interaction` | `drags` `drops` `message` |
-| `qti-graphic-gap-match-interaction` | `image` `drags` `message` |
-| `qti-graphic-associate-interaction` | `line` `correct-line` `point` `message` |
-| `qti-graphic-order-interaction` | `message` |
-| `qti-match-interaction` | `grid` `corner` `cols-wrap` `c-header` `rows-wrap` `r-header` `checkbox-grid` `input-cell` `message` + dynamic `ch`/`cha` |
-| `qti-inline-choice-interaction` | `trigger` `value` `menu` `option-content` `correct-option` `dropdown-icon` |
-| `qti-text-entry-interaction` | `input` `correct` |
-| `qti-extended-text-interaction` | `textarea` |
-| `qti-slider-interaction` | `slider` `bounds` `ticks` `rail` `knob` `value` `knob-correct` |
-| `qti-end-attempt-interaction` | `button` |
-| drag-drop mixins | `drags` `dropslot` |
+| Component                           | Parts declared                                                                                                            |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `qti-choice-interaction`            | `prompt` `slot` `message`                                                                                                 |
+| `qti-simple-choice`                 | `ch` `cha` `slot`                                                                                                         |
+| `qti-simple-associable-choice`      | `ch` `slot` `dropslot` + imperative `part="qti-simple-associable-choice"`                                                 |
+| `qti-gap-text`                      | `ch`                                                                                                                      |
+| `qti-hottext`                       | `ch` `cha`                                                                                                                |
+| `qti-hottext-interaction`           | `message`                                                                                                                 |
+| `qti-order-interaction`             | `container` `drags` `drops` `drop-list` + imperative `part="qti-simple-choice"`                                           |
+| `qti-associate-interaction`         | `associable-choices` `drop-container` `associables-container` `drop-list` `message`                                       |
+| `qti-gap-match-interaction`         | `drags` `drops` `message`                                                                                                 |
+| `qti-graphic-gap-match-interaction` | `image` `drags` `message`                                                                                                 |
+| `qti-graphic-associate-interaction` | `line` `correct-line` `point` `message`                                                                                   |
+| `qti-graphic-order-interaction`     | `message`                                                                                                                 |
+| `qti-match-interaction`             | `grid` `corner` `cols-wrap` `c-header` `rows-wrap` `r-header` `checkbox-grid` `input-cell` `message` + dynamic `ch`/`cha` |
+| `qti-inline-choice-interaction`     | `trigger` `value` `menu` `option-content` `correct-option` `dropdown-icon`                                                |
+| `qti-text-entry-interaction`        | `input` `correct`                                                                                                         |
+| `qti-extended-text-interaction`     | `textarea`                                                                                                                |
+| `qti-slider-interaction`            | `slider` `bounds` `ticks` `rail` `knob` `value` `knob-correct`                                                            |
+| `qti-end-attempt-interaction`       | `button`                                                                                                                  |
+| drag-drop mixins                    | `drags` `dropslot`                                                                                                        |
 
 ### 3.2 `::part(drag)` — styled but never declared
 
@@ -289,7 +289,7 @@ projected into the interaction's drop-list shadow") document an integration cont
 QTI-Editor, which projects an element carrying `part="drag"` into the shadow root. The
 comments ship in `packages/qti-components/cdn/index.js`, confirming this is public surface.
 
-The rules are inert *for our own components* only because none of them sets `part="drag"`.
+The rules are inert _for our own components_ only because none of them sets `part="drag"`.
 Adding that part (§3.6) makes these rules live for runtime and editor alike — which is
 exactly what they were written for. This is the highest-value gap in the audit — see §3.5.
 
@@ -300,14 +300,14 @@ qti-order-interaction.ts:174          el.setAttribute('part', 'qti-simple-choice
 qti-simple-associable-choice.ts:46    this.setAttribute('part', 'qti-simple-associable-choice')
 ```
 
-A part names a *role*, not the tag. Both should become `drag`.
+A part names a _role_, not the tag. Both should become `drag`.
 
 ### 3.4 `qti-match-interaction` encodes state inside part names
 
 `qti-match-interaction.ts:332-333`:
 
 ```ts
-const chPart  = `ch ${typeBase} ${checkedMarker} ${correctVariant}`.trim();  // "ch rb rb-checked rb-correct"
+const chPart = `ch ${typeBase} ${checkedMarker} ${correctVariant}`.trim(); // "ch rb rb-checked rb-correct"
 const chaPart = `cha ${checkedMarker} ${correctVariant}`.trim();
 ```
 
@@ -352,32 +352,32 @@ A single `part="drag"` collapses all six repetitions to `::part(drag)`.
 
 **Universal — every interaction:**
 
-| Part | Meaning |
-|---|---|
-| `prompt` | the `qti-prompt` region |
-| `slot` | default content slot |
+| Part      | Meaning                       |
+| --------- | ----------------------------- |
+| `prompt`  | the `qti-prompt` region       |
+| `slot`    | default content slot          |
 | `message` | validation / feedback message |
 
 **Choice controls — every choice-like element:**
 
-| Part | Meaning |
-|---|---|
-| `ch` | the control box (radio circle / checkbox square) |
-| `cha` | the control mark (inner dot / checkmark) |
+| Part  | Meaning                                          |
+| ----- | ------------------------------------------------ |
+| `ch`  | the control box (radio circle / checkbox square) |
+| `cha` | the control mark (inner dot / checkmark)         |
 
 **Drag & drop — every dnd interaction:**
 
-| Part | Meaning |
-|---|---|
-| `drags` | source container |
-| `drag` | an individual draggable chip |
-| `drops` | target container |
-| `drop` | an individual drop target (replaces `dropslot`, `drop-list`, `drop-container`) |
+| Part    | Meaning                                                                        |
+| ------- | ------------------------------------------------------------------------------ |
+| `drags` | source container                                                               |
+| `drag`  | an individual draggable chip                                                   |
+| `drops` | target container                                                               |
+| `drop`  | an individual drop target (replaces `dropslot`, `drop-list`, `drop-container`) |
 
 **Correct-answer display — every interaction that shows one:**
 
-| Part | Meaning |
-|---|---|
+| Part      | Meaning                                              |
+| --------- | ---------------------------------------------------- |
 | `correct` | the correct-answer affordance, whatever its geometry |
 
 ---
@@ -386,11 +386,11 @@ A single `part="drag"` collapses all six repetitions to `::part(drag)`.
 
 Two vocabularies are live simultaneously:
 
-| Concept | Composite (`qti-minimal`) | Longhand (`qti-base.css`, `kennisnet`) |
-|---|---|---|
-| border | `--qti-border` | `--qti-border-thickness` `-style` `-color` |
-| padding | `--qti-padding` | `--qti-padding-vertical` `-horizontal` |
-| gap | `--qti-gap` | `--qti-gap-size` |
+| Concept | Composite (`qti-minimal`) | Longhand (`qti-base.css`, `kennisnet`)     |
+| ------- | ------------------------- | ------------------------------------------ |
+| border  | `--qti-border`            | `--qti-border-thickness` `-style` `-color` |
+| padding | `--qti-padding`           | `--qti-padding-vertical` `-horizontal`     |
+| gap     | `--qti-gap`               | `--qti-gap-size`                           |
 
 The shadow DOM briefly consumed **both**: an in-flight experiment had
 `qti-simple-choice.styles.ts` set `border: var(--qti-border)`, `padding: var(--qti-padding)`,
@@ -401,11 +401,11 @@ three resolved to nothing under the `citolab` and `kennisnet` substrates. VRT pr
 
 **Resolved for now by reverting `qti-simple-choice.styles.ts` and
 `qti-choice-interaction.styles.ts` to their previous form.** The composite tokens stay
-declared in `qti-minimal/index.css` as the *proposal*, with a comment saying they have no
+declared in `qti-minimal/index.css` as the _proposal_, with a comment saying they have no
 consumer yet. The shadow DOM speaks longhand again.
 
 Naïvely defining the composites in `qti-base.css` does **not** work: it makes the shadow
-`border`/`padding` take effect *on top of* the `.check` rule that `qti-theme` already applies
+`border`/`padding` take effect _on top of_ the `.check` rule that `qti-theme` already applies
 from the light DOM, so the choices grow instead (ITEM001 816px vs the 662px baseline). Whoever
 takes step 2 must move padding/border ownership to exactly one layer, not add it to both.
 
@@ -456,7 +456,7 @@ Kennisnet consumes **26 distinct `--bs-*` tokens**. Its own bridge
 Set-diffed: the Bootstrap CDN supplies zero tokens that survive the cascade. The token
 dependency is already nil.
 
-What the CDN still supplies is Bootstrap *classes*. Only two families are used:
+What the CDN still supplies is Bootstrap _classes_. Only two families are used:
 
 - `.btn` — and `buttons.scss:119` already reimplements `.btn` from scratch under `:host`.
 - `.my-2` — and `qti-styles.scss:43` already overrides it.
@@ -475,25 +475,25 @@ What the CDN still supplies is Bootstrap *classes*. Only two families are used:
 
 ## 7. Consolidated dead-code list
 
-| Kind | Count | Where | Status |
-|---|---|---|---|
-| `[aria-checked='true']` rules, attribute never set | 12 | qti-theme ×10, kennisnet ×2 | ✅ removed |
-| `[aria-disabled]`/`[aria-readonly]` rules | 25 | 6 qti-theme files | ✅ replaced with `:state()` |
-| `:state(--readonly)` / `:state(--disabled)` | 2 | `qti-hotspot-interaction.css:16,20` | ✅ fixed to bare |
-| `:state(checked)` (bare, should be `--checked`) | 1 | `qti-minimal/index.css:61` | ✅ resolved by rename |
-| Unused decorator that hard-codes `--` prefix | 1 | `prop-internal-state.ts` | ✅ deleted |
-| Duplicate `--qti-incorrect` / `--qti-correct` block | 1 | `qti-minimal/index.css:19-23` | ✅ removed |
-| `& drop-list { &[shape=…] }` block | 1 | `qti-order-interaction.css:75-112` | ✅ deleted — see below |
-| `qti-associable-hotspot` aria rules | 6 | `qti-graphic-associate-interaction.css` | ✅ deleted — see below |
-| State added but never styled | 1 | `show-correct-response` | ✅ styled (§2.4) |
-| State that duplicates `candidate-incorrect` | 1 | `incorrect-response` | ⬜ recommend removing (§2.4) |
-| `@apply hov` → empty rule body | all | `.hov` in `qti-base.css` | ⬜ open (step 3) |
-| `::part(drag)` rules | 7 | order ×2, associate ×2, gap-match, match, graphic-gap-match | ⬜ **keep** — QTI-Editor contract (§3.2) |
+| Kind                                                | Count | Where                                                       | Status                                   |
+| --------------------------------------------------- | ----- | ----------------------------------------------------------- | ---------------------------------------- |
+| `[aria-checked='true']` rules, attribute never set  | 12    | qti-theme ×10, kennisnet ×2                                 | ✅ removed                               |
+| `[aria-disabled]`/`[aria-readonly]` rules           | 25    | 6 qti-theme files                                           | ✅ replaced with `:state()`              |
+| `:state(--readonly)` / `:state(--disabled)`         | 2     | `qti-hotspot-interaction.css:16,20`                         | ✅ fixed to bare                         |
+| `:state(checked)` (bare, should be `--checked`)     | 1     | `qti-minimal/index.css:61`                                  | ✅ resolved by rename                    |
+| Unused decorator that hard-codes `--` prefix        | 1     | `prop-internal-state.ts`                                    | ✅ deleted                               |
+| Duplicate `--qti-incorrect` / `--qti-correct` block | 1     | `qti-minimal/index.css:19-23`                               | ✅ removed                               |
+| `& drop-list { &[shape=…] }` block                  | 1     | `qti-order-interaction.css:75-112`                          | ✅ deleted — see below                   |
+| `qti-associable-hotspot` aria rules                 | 6     | `qti-graphic-associate-interaction.css`                     | ✅ deleted — see below                   |
+| State added but never styled                        | 1     | `show-correct-response`                                     | ✅ styled (§2.4)                         |
+| State that duplicates `candidate-incorrect`         | 1     | `incorrect-response`                                        | ⬜ recommend removing (§2.4)             |
+| `@apply hov` → empty rule body                      | all   | `.hov` in `qti-base.css`                                    | ⬜ open (step 3)                         |
+| `::part(drag)` rules                                | 7     | order ×2, associate ×2, gap-match, match, graphic-gap-match | ⬜ **keep** — QTI-Editor contract (§3.2) |
 
 Two deletions found during implementation, both dead twice over:
 
 - **`qti-order-interaction.css` `& drop-list { &[shape='circle'|'square'] … }`.** `<drop-list>`
-  lives in the *shadow* root, so a light-DOM descendant selector can't reach it; and it never
+  lives in the _shadow_ root, so a light-DOM descendant selector can't reach it; and it never
   carries a `shape` attribute. Copy-paste from graphic-associate.
 - **`qti-graphic-associate-interaction.css` `qti-associable-hotspot[aria-*]`.** That element does
   not use `ActiveElementMixin`, has no `disabled`/`readonly`/`checked` properties, no
@@ -529,7 +529,7 @@ Two deletions found during implementation, both dead twice over:
 Each step unblocks the next. Doing the split first would fork today's inconsistencies into
 three places and require fixing each three times.
 
-1. **Normalize the contract.** — *states half done; parts still open*
+1. **Normalize the contract.** — _states half done; parts still open_
    - ✅ Rename dashed states → bare (`--checked` → `checked`, `--dragzone-*` → `dragzone-*`).
    - ✅ Delete `prop-internal-state.ts` — it hard-codes the `--` prefix and has no users.
    - ✅ Stop reflecting `aria-disabled` / `aria-readonly` (§2.6), after migrating the four
@@ -538,19 +538,20 @@ three places and require fixing each three times.
    - ✅ Make `:state()` the sole styling contract: all `[aria-checked]` and
      `[aria-disabled]`/`[aria-readonly]` rules removed, negation at
      `qti-choice-interaction.css:52` rewritten to `:not(:state(disabled), :state(readonly),
-     :state(checked))`.
+:state(checked))`.
    - ✅ Style the two live-but-unstyled states: `incorrect-response` (only when also
      `checked`) and `show-correct-response`, the latter in a new shared
      `qti-theme/qti-states.css` (§2.4).
    - ✅ Storybook default substrate switched to `citolab`; `kennisnet-all-items` VRT stories
-     pin `parameters.styleSubstrate: 'kennisnet'`. Note: meta-level `globals` would *lock* the
+     pin `parameters.styleSubstrate: 'kennisnet'`. Note: meta-level `globals` would _lock_ the
      toolbar picker (Storybook ≥ 8.3), and `globalTypes.defaultValue` must stay unset or it
      outranks the parameter.
    - ⬜ Introduce `part="drag"` / `part="drop"` (this also activates the QTI-Editor rules in
      §3.2). Unify drop-target and correct-answer part names. Move `qti-match-interaction` off
      part-encoded state. Add `prompt` / `slot` / `message` everywhere.
    - ⬜ Give `qti-associable-hotspot` the `ActiveElementMixin` so it has real states (§7).
-   - ⬜ *Ship a `CONTRACT.md` documenting the frozen surface.*
+   - ✅ Ship `packages/qti-theme/CONTRACT.md` documenting the active styling contract
+     (layer order, ownership, precedence, and verification).
 2. **Freeze one token vocabulary.** Choose composite. Write `tokens.css` as the theme
    interface. Give the seven orphan variables a home. Purge hardcoded colors from `.styles.ts`.
 3. **Drop `@apply`.** Promote the utility classes to real CSS in a cascade layer. Delete

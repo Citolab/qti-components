@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-associate-interaction {
     &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
       @mixin act;
@@ -66,4 +66,33 @@
 
 .full-correct-response qti-associate-interaction qti-simple-associable-choice {
   display: none;
+}
+
+@layer qti-components.interactions.states {
+  qti-simple-associable-choice::part(drag),
+  qti-associate-interaction::part(drag) {
+    @mixin chip;
+  }
+
+  qti-associate-interaction::part(hover),
+  qti-associate-interaction::part(active) {
+    border-color: var(--qti-drop-highlight-border-color);
+    background-color: var(--qti-drop-highlight-bg);
+    box-shadow: var(--qti-drop-highlight-shadow);
+  }
+
+  qti-associate-interaction::part(enabled) {
+    border-color: var(--qti-drop-highlight-enabled-border-color);
+    background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  qti-simple-associable-choice::part(drag):state(candidate-correct),
+  qti-associate-interaction::part(drag):state(candidate-correct) {
+    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+  }
+
+  qti-simple-associable-choice::part(drag):state(candidate-incorrect),
+  qti-associate-interaction::part(drag):state(candidate-incorrect) {
+    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+  }
 }

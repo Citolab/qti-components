@@ -1,5 +1,8 @@
 import { expect } from 'vitest';
 import { commands, page, server } from 'vitest/browser';
+import { setProjectAnnotations } from '@storybook/web-components-vite';
+
+import * as previewAnnotations from './preview';
 
 /**
  * Visual-regression (VRT) capture project.
@@ -25,6 +28,7 @@ const PIXEL_CHANNEL_THRESHOLD = 51; // roughly pixelmatch threshold 0.2 on an 8-
 // (~725 px) still absorbs sub-pixel antialiasing drift (the channel threshold does the real AA
 // work) but fails on a single repainted small element. See the theme-merge plan, Phase 1.
 const ALLOWED_MISMATCHED_PIXEL_RATIO = 0.0005;
+const SLEEPVRAAG_OPTIES_BOVEN_ID = 'qti-corrections-qti-corrections-kennisnet-all-items--sleepvraag-opties-boven';
 
 const sanitizeStoryId = (id: string) => id.replace(/[^a-z0-9]+/gi, '-');
 
@@ -154,6 +158,55 @@ const waitForRenderStable = async (root: ParentNode) => {
   );
 };
 
+const parseRgb = (value: string) => {
+  const match = value.match(/rgba?\(([^)]+)\)/i);
+  if (!match) return null;
+  const parts = match[1].split(',').map(part => Number.parseFloat(part.trim()));
+  if (parts.length < 3 || parts.some(Number.isNaN)) return null;
+  return { r: parts[0], g: parts[1], b: parts[2] };
+};
+
+const isGreenish = (value: string) => {
+  const rgb = parseRgb(value);
+  if (!rgb) return false;
+  return rgb.g - Math.max(rgb.r, rgb.b) >= 25;
+};
+
+const isReddish = (value: string) => {
+  const rgb = parseRgb(value);
+  if (!rgb) return false;
+  return rgb.r - Math.max(rgb.g, rgb.b) >= 25;
+};
+
+const assertSleepvraagDroppedDragTint = async (root: ParentNode) => {
+  const allElements = [
+    ...(root instanceof Document ? Array.from(root.querySelectorAll<HTMLElement>('*')) : []),
+    ...(root instanceof HTMLElement ? Array.from(root.querySelectorAll<HTMLElement>('*')) : [])
+  ];
+
+  const droppedDragSamples: string[] = [];
+  for (const host of allElements) {
+    if (!host.shadowRoot) continue;
+    const drags = Array.from(host.shadowRoot.querySelectorAll<HTMLElement>('[part~="drag"]'));
+    for (const drag of drags) {
+      const style = getComputedStyle(drag);
+      const color = style.backgroundColor;
+      if (!color || color === 'rgba(0, 0, 0, 0)' || color === 'transparent') continue;
+      droppedDragSamples.push(color);
+    }
+  }
+
+  const hasGreen = droppedDragSamples.some(isGreenish);
+  const hasRed = droppedDragSamples.some(isReddish);
+
+  if (!hasGreen || !hasRed) {
+    throw new Error(
+      `Expected both green and red dropped drag candidate-correction tints in ${SLEEPVRAAG_OPTIES_BOVEN_ID}. ` +
+        `Found samples: ${droppedDragSamples.slice(0, 20).join(', ') || '(none)'}`
+    );
+  }
+};
+
 const vrtAnnotations = {
   async afterEach(context: { id: string; canvasElement: HTMLElement }) {
     const root = context.canvasElement ?? document.getElementById('storybook-root') ?? document.body;
@@ -165,6 +218,7 @@ const vrtAnnotations = {
         : (root.querySelector(CAPTURE_TARGET) as HTMLElement)) ?? (root as HTMLElement);
     stabilizeStyles(target.ownerDocument);
     await waitForRenderStable(root);
+
     const locator = page.elementLocator(target);
     const screenshot = await locator.screenshot({ base64: true, save: false });
     const actual = typeof screenshot === 'string' ? screenshot : screenshot.base64;
@@ -202,7 +256,7 @@ const vrtAnnotations = {
   }
 };
 
-const existingAnnotations = (globalThis as any).globalProjectAnnotations ?? {};
+const existingAnnotations = setProjectAnnotations(previewAnnotations as any);
 const existingAfterEach = existingAnnotations.afterEach;
 
 (globalThis as any).globalProjectAnnotations = {

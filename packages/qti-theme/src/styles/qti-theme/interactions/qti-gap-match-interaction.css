@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-gap-match-interaction {
     &.qti-selections-light {
       &:state(dragzone-active)::part(drags) {
@@ -136,5 +136,32 @@
 
   .full-correct-response qti-gap-match-interaction::part(drags) {
     display: none;
+  }
+}
+
+@layer qti-components.interactions.states {
+  /* One chip vocabulary across the bank and placed drags for gap-match only. */
+  qti-gap::part(drag) {
+    @mixin chip;
+  }
+
+  qti-gap-match-interaction qti-gap:state(hover),
+  qti-gap-match-interaction qti-gap:state(active) {
+    border-color: var(--qti-drop-highlight-border-color);
+    background-color: var(--qti-drop-highlight-bg);
+    box-shadow: var(--qti-drop-highlight-shadow);
+  }
+
+  qti-gap-match-interaction qti-gap:state(enabled) {
+    border-color: var(--qti-drop-highlight-enabled-border-color);
+    background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  qti-gap::part(drag):state(candidate-correct) {
+    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+  }
+
+  qti-gap::part(drag):state(candidate-incorrect) {
+    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 }
