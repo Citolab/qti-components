@@ -1,4 +1,4 @@
-import { expect, fireEvent } from 'storybook/test';
+import { expect, fireEvent, waitFor } from 'storybook/test';
 
 import { getItemByUri } from '@qti-components/loader';
 
@@ -122,6 +122,50 @@ export const Q10_L2_D101: Story = {
     expect(interactions[2].classList.contains('qti-unselected-hidden')).toBe(true);
     expect(interactions[3].classList.contains('qti-selections-dark')).toBe(true);
     expect(interactions[3].classList.contains('qti-unselected-hidden')).toBe(true);
+
+    /*
+     * The assertions above only prove the classes survived import. They passed for as long as this
+     * story has existed while the theme had no hotspot selections rules at all, so on their own they
+     * are not coverage — hence the computed-style checks below.
+     */
+    const firstHotspot = (interaction: HTMLElement) => interaction.querySelector('qti-hotspot-choice') as HTMLElement;
+
+    // A selection is themed differently under light than under dark. §3.2.6 requires only that a
+    // selection be clearly indicated; what makes these classes worth having is that they differ.
+    const [light, dark] = [interactions[0], interactions[1]].map(firstHotspot);
+    for (const hotspot of [light, dark]) {
+      await fireEvent.click(hotspot);
+    }
+    // The base rule transitions background-color over 150ms, so a read taken straight after the
+    // click lands mid-interpolation and reports something close to transparent. waitFor retries
+    // until it has settled.
+    const bgOf = (el: HTMLElement) => getComputedStyle(el).backgroundColor;
+    await waitFor(() => {
+      expect(bgOf(light), 'a light selection is painted').not.toBe('rgba(0, 0, 0, 0)');
+      expect(bgOf(dark), 'a dark selection is painted').not.toBe('rgba(0, 0, 0, 0)');
+      expect(bgOf(light), 'light and dark selections differ').not.toBe(bgOf(dark));
+    });
+
+    /*
+     * qti-unselected-hidden, §3.2.6: "the delivery engine must hide the hotspots in their
+     * unselected and unfocused state."
+     *
+     * Only half of this is assertable. An unselected hotspot must be invisible and a selected one
+     * must not be, and both are checked below. The other half of what the class does — suppressing
+     * the hover reveal, so sweeping a mouse across the picture does not hand back the answer
+     * regions — cannot be driven from here: CSS :hover follows real pointer position and does not
+     * respond to a synthetic mouseOver. It is covered by the rule's own comment in
+     * qti-hotspot-interaction.css and needs an eye on the story.
+     *
+     * The resting check is also weak on its own: this theme paints no fill on any unselected
+     * hotspot, so it would pass with the class absent. It stands as a regression guard for the day
+     * hotspots get a visible resting affordance, not as proof the class works today.
+     */
+    const hiddenHotspot = firstHotspot(interactions[2]);
+    expect(bgOf(hiddenHotspot), 'unselected is hidden').toBe('rgba(0, 0, 0, 0)');
+
+    await fireEvent.click(hiddenHotspot);
+    await waitFor(() => expect(bgOf(hiddenHotspot), 'selecting it reveals it').not.toBe('rgba(0, 0, 0, 0)'));
   },
   loaders: [loaderSv1]
 };

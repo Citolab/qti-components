@@ -73,12 +73,6 @@
       @mixin drop;
       &[enabled] {
         @mixin dropping;
-        .qti-selections-light {
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          border-color: var(--qti-dark-border-active);
-        }
       }
       &:focus {
         @mixin foc;

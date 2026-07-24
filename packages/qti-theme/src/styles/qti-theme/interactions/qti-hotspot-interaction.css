@@ -64,6 +64,63 @@
     background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
   }
 
+  /*
+   * Selections theming — QTI 3 shared interaction vocabulary, Appendix B.1.
+   *
+   * A hotspot is drawn over a photograph the theme has never seen, so the brand purple above can
+   * land on top of something the same colour and vanish. These two classes let the *item author*
+   * pick the contrast: `qti-selections-light` draws the selection light, for a dark image;
+   * `qti-selections-dark` draws it dark, for a light one.
+   *
+   * `!important` on the border to match the base rule in this file, which uses it to beat the
+   * legacy `.spot { border: 0 !important }`. Both are paint — a hotspot's box comes from its
+   * authored `coords`, so nothing here can move it.
+   */
+  qti-hotspot-interaction.qti-selections-light qti-hotspot-choice:state(checked) {
+    border-color: var(--qti-selections-light-border) !important;
+    background-color: color-mix(in srgb, var(--qti-selections-light-bg) 55%, transparent);
+  }
+
+  qti-hotspot-interaction.qti-selections-dark qti-hotspot-choice:state(checked) {
+    border-color: var(--qti-selections-dark-border) !important;
+    background-color: color-mix(in srgb, var(--qti-selections-dark-bg) 55%, transparent);
+  }
+
+  /* poly carries no border, so its fill does the whole job and is mixed stronger — mirroring the
+     neutral [shape='poly'] rule below. */
+  qti-hotspot-interaction.qti-selections-light qti-hotspot-choice[shape='poly']:state(checked) {
+    background-color: color-mix(in srgb, var(--qti-selections-light-bg) 65%, transparent);
+  }
+
+  qti-hotspot-interaction.qti-selections-dark qti-hotspot-choice[shape='poly']:state(checked) {
+    background-color: color-mix(in srgb, var(--qti-selections-dark-bg) 65%, transparent);
+  }
+
+  /*
+   * qti-unselected-hidden — the one normative requirement in this file. §3.2.6:
+   *
+   *   "If the shared interaction vocabulary class qti-unselected-hidden is present, the delivery
+   *    engine must hide the hotspots in their unselected and unfocused state."
+   *
+   * Both halves matter. Unselected hotspots disappear, so the candidate reads the picture rather
+   * than a grid of rings — and a *focused* one comes back, which is the only thing that makes the
+   * interaction operable from a keyboard. Take the `:not(:focus-visible)` out and tabbing through
+   * an item becomes invisible.
+   *
+   * Hover deliberately does not reveal, and this rule sits in `states` so it outranks the `:hover`
+   * paint in the base layer. That is not an oversight: an item using this class is normally asking
+   * the candidate to find something in the picture, and rings that light up under the pointer hand
+   * back the answer regions one sweep at a time.
+   *
+   * Paint, not `border: 0`: the ring keeps its width and turns transparent, so the box is identical
+   * hidden or shown and the focus outline sits in the same place either way.
+   */
+  qti-hotspot-interaction.qti-unselected-hidden
+    qti-hotspot-choice:not(:state(checked)):not(:focus-visible) {
+    border-color: transparent !important;
+    background-color: transparent;
+  }
+
   qti-hotspot-interaction qti-hotspot-choice:state(disabled),
   qti-hotspot-interaction qti-hotspot-choice:state(readonly) {
     cursor: not-allowed;

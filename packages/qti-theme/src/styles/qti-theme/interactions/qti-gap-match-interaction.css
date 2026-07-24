@@ -1,23 +1,9 @@
 @layer qti-components.interactions.base {
   qti-gap-match-interaction {
-    &.qti-selections-light {
-      &:state(dragzone-active)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-        border-color: var(--qti-light-border-active);
-      }
-      &:state(dragzone-enabled)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-      }
-    }
-    &.qti-selections-dark {
-      &:state(dragzone-active)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-        border-color: var(--qti-dark-border-active);
-      }
-      &:state(dragzone-enabled)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-      }
-    }
+    /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
+       that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
+       item in this repo ever set it on a gap-match interaction. What was here overrode the neutral
+       drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
     &:state(dragzone-active)::part(drags) {
       @mixin act;
     }
@@ -59,23 +45,9 @@
       }
       &[enabled] {
         @mixin dropping;
-        .qti-selections-light {
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          border-color: var(--qti-dark-border-active);
-        }
       }
       &[active] {
         @mixin act;
-        .qti-selections-light {
-          background-color: var(--qti-light-bg-active);
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          background-color: var(--qti-dark-bg-active);
-          border-color: var(--qti-dark-border-active);
-        }
       }
       /* The gap's own box — inline-flex, centred, baseline-aligned — is in qti-gap.styles.ts. */
 

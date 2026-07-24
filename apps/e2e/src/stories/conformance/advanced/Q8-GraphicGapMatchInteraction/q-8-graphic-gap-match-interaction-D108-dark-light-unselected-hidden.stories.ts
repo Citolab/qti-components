@@ -80,20 +80,20 @@ export const Q8_L2_D108: Story = {
   args: {},
   play: async ({ canvasElement, step }) => {
     //     /* Light theme colors */
-    // --qti-light-bg-active: #f0f0f0; /* Light gray */
-    // --qti-light-border-active: #d0d0d0; /* Medium gray */
+    // --qti-selections-light-bg: #f0f0f0; /* Light gray */
+    // --qti-selections-light-border: #d0d0d0; /* Medium gray */
 
     // /* Dark theme colors */
-    // --qti-dark-bg-active: #1f2937; /* Dark gray */
-    // --qti-dark-border-active: #64748b; /* Medium gray */
+    // --qti-selections-dark-bg: #1f2937; /* Dark gray */
+    // --qti-selections-dark-border: #64748b; /* Medium gray */
 
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     const rootElement = document.documentElement;
     const rootStyles = window.getComputedStyle(rootElement);
-    const qtiLightBgActive = rootStyles.getPropertyValue('--qti-light-bg-active').trim();
-    const qtiLightBorderActive = rootStyles.getPropertyValue('--qti-light-border-active').trim();
-    const qtiDarkBgActive = rootStyles.getPropertyValue('--qti-dark-bg-active').trim();
-    const qtiDarkBorderActive = rootStyles.getPropertyValue('--qti-dark-border-active').trim();
+    const qtiLightBgActive = rootStyles.getPropertyValue('--qti-selections-light-bg').trim();
+    const qtiLightBorderActive = rootStyles.getPropertyValue('--qti-selections-light-border').trim();
+    const qtiDarkBgActive = rootStyles.getPropertyValue('--qti-selections-dark-bg').trim();
+    const qtiDarkBorderActive = rootStyles.getPropertyValue('--qti-selections-dark-border').trim();
 
     const qtiLightBgActiveRgb = rgbStringToRgb(qtiLightBgActive) || hexToRgb(qtiLightBgActive);
     const qtiLightBorderActiveRgb = rgbStringToRgb(qtiLightBorderActive) || hexToRgb(qtiLightBorderActive);

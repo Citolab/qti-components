@@ -643,7 +643,6 @@ export const WoordenSelecterenNietHerkenbaar: Story = {
           show-candidate-correction
           show-full-correct-response
           show-correct-response
-          readonly
         >
           <div>
             “De

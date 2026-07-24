@@ -74,13 +74,6 @@
      *     including the shadow `act` omits. So "highlight this drop" has two spellings that do
      *     not agree.
      *
-     *   light/dark → NOT dead, despite an earlier note here saying the feature was being dropped.
-     *     qti-selections-light / -dark are QTI 3 shared-vocabulary classes and they are asserted
-     *     by conformance stories — Q10 hotspot-interaction checks all four combinations, and Q8
-     *     graphic-gap-match D108 is named for them. Removing these four tokens means dropping
-     *     conformance coverage for a spec feature, which is a product decision rather than a
-     *     cleanup. Left alone until someone makes it.
-     *
      * Deliberately left in `global` rather than assigned an owning layer: these are read from both
      * interactions.base and interactions.states, so any single owner would be a false claim. They
      * leave the file entirely rather than move layers.
@@ -89,15 +82,15 @@
      * disabled vocabulary but no interaction ever read them — the theme's disabled treatment is
      * `@mixin dis`, which is `cursor: not-allowed` and nothing else. Their only reader in the repo
      * was one button in qti-modal-feedback, and the two values now sit there literally.
+     *
+     * The four --qti-light-* and --qti-dark-* tokens that used to sit here are now
+     * --qti-selections-*, in the interactions.states block below. They are not a page-level light
+     * and dark theme, which is what the old names suggested and why they were mistaken for dead.
      */
     --qti-bg-active: var(--qti-drop-highlight-bg);
     --qti-border-active: var(--qti-drop-highlight-border-color);
     --qti-focus-border-width: 5px;
     --qti-focus-color: #bddcff7e;
-    --qti-light-bg-active: #f0f0f0;
-    --qti-light-border-active: #d0d0d0;
-    --qti-dark-bg-active: #1f2937;
-    --qti-dark-border-active: #64748b;
   }
 }
 
@@ -147,6 +140,25 @@
     /* The hole a lifted / placed chip leaves — derived from primary. */
     --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);
     --qti-placeholder-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 30%, white);
+
+    /*
+     * Selections theming, for the two interactions Appendix B.1 of the QTI 3 implementation guide
+     * defines it on: qti-hotspot-interaction and qti-graphic-gap-match-interaction.
+     *
+     * `light` and `dark` name the colour the *selection* is drawn in, not a page theme — light for
+     * a selection sitting over a dark image, dark for one over a light image. The point is that a
+     * selection stays visible whatever the picture underneath it looks like, which is why the item
+     * author chooses, not the substrate.
+     *
+     * These were --qti-selections-light-bg and friends, in `global`. Both halves of that were wrong:
+     * the names read as a light/dark page theme, which is how they came to be mistaken for a dead
+     * feature, and `global` claimed an ownership they never had — nothing outside these two
+     * interactions' state rules reads them.
+     */
+    --qti-selections-light-bg: #f0f0f0;
+    --qti-selections-light-border: #d0d0d0;
+    --qti-selections-dark-bg: #1f2937;
+    --qti-selections-dark-border: #64748b;
 
     /* Unified drop target highlight vocabulary (active + hover + sortable placeholder). */
     --qti-drop-highlight-border-width: 2px;

@@ -2,20 +2,20 @@
   qti-graphic-gap-match-interaction {
     &.qti-selections-light {
       &:state(dragzone-active)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-        border-color: var(--qti-light-border-active);
+        background-color: var(--qti-selections-light-bg);
+        border-color: var(--qti-selections-light-border);
       }
       &:state(dragzone-enabled)::part(drags) {
-        background-color: var(--qti-light-bg-active);
+        background-color: var(--qti-selections-light-bg);
       }
     }
     &.qti-selections-dark {
       &:state(dragzone-active)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-        border-color: var(--qti-dark-border-active);
+        background-color: var(--qti-selections-dark-bg);
+        border-color: var(--qti-selections-dark-border);
       }
       &:state(dragzone-enabled)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
+        background-color: var(--qti-selections-dark-bg);
       }
     }
     &:state(dragzone-active)::part(drags) {
@@ -47,28 +47,32 @@
         @mixin foc;
       }
     }
-    /* The hotspot centres its chip in qti-associable-hotspot.styles.ts. */
+    /*
+     * The hotspot centres its chip in qti-associable-hotspot.styles.ts.
+     *
+     * There is no `.qti-unselected-hidden` rule for this interaction, and none is needed. Appendix
+     * B.1 lists the class here, and §3.2.6's requirement is to hide hotspots in their unselected and
+     * unfocused state — which this transparent border already does, for every item, whether or not
+     * the author sets the class. An empty hotspot shows nothing; `:state(filled)` paints the
+     * selection, and `:state(enabled)` / `:state(hover)` / `:state(active)` bring the drop targets
+     * up for the duration of a drag so the candidate can still aim.
+     *
+     * Adding a rule would be a redundant restatement of this line. Left as a note rather than code
+     * because the absence is the kind of thing that reads as an oversight.
+     */
     & qti-associable-hotspot {
       border: 2px solid transparent;
+      /* No .qti-selections-* branches in here. They used to sit inside both of these blocks as
+         *descendant* selectors — and the class is on the interaction, an ancestor of this hotspot,
+         so they never matched anything. The pair that works is scoped from the interaction down;
+         see the :state(filled) rules below.
+         A drop target lighting up mid-drag is not a "selection" anyway — Appendix B calls this
+         Selections theming, and the selection is the chip once it has landed. */
       &[enabled] {
         @mixin dropping;
-        .qti-selections-light {
-          background-color: var(--qti-light-bg-active);
-        }
-        .qti-selections-dark {
-          background-color: var(--qti-dark-bg-active);
-        }
       }
       &[active] {
         @mixin act;
-        .qti-selections-light {
-          background-color: var(--qti-light-bg-active);
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          background-color: var(--qti-dark-bg-active);
-          border-color: var(--qti-dark-border-active);
-        }
       }
       &[disabled] {
         @mixin dis;
@@ -97,12 +101,12 @@
     /* `:not(:empty)` tested light-DOM children. The hotspot renders its chips into its own shadow
        root now, so it is always "empty" to a selector — `:state(filled)` is the occupancy hook. */
     &.qti-selections-light qti-associable-hotspot:state(filled) {
-      background-color: var(--qti-light-bg-active) !important;
-      border-color: var(--qti-light-border-active) !important;
+      background-color: var(--qti-selections-light-bg) !important;
+      border-color: var(--qti-selections-light-border) !important;
     }
     &.qti-selections-dark qti-associable-hotspot:state(filled) {
-      background-color: var(--qti-dark-bg-active) !important;
-      border-color: var(--qti-dark-border-active) !important;
+      background-color: var(--qti-selections-dark-bg) !important;
+      border-color: var(--qti-selections-dark-border) !important;
     }
     & img {
       margin: 0;
