@@ -1,9 +1,12 @@
-qti-modal-feedback-custom {
-  display: none;
-}
-
+/*
+ * Neither selector below matches anything this repo renders — `qti-modal-feedback-custom` is not a
+ * registered element and nothing sets `.custom-modal-feedback`. They are kept as a downstream
+ * integration point rather than deleted from a published stylesheet.
+ *
+ * Their `display` declarations are gone: a host app that renders these owns their box. What is left
+ * is paint and spacing.
+ */
 .custom-modal-feedback {
-  display: flex;
   width: 100%;
   border: var(--qti-border-thickness) solid var(--qti-info);
   background-color: var(--qti-bg);

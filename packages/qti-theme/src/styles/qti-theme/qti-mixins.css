@@ -43,6 +43,18 @@
   color: transparent;
 }
 
+/*
+ * The drag handle glyph.
+ *
+ * `display` and `vertical-align` are layout, and stay here under the pseudo-element exception in
+ * CONTRACT.md §7: the theme creates this ::before, so no component can lay it out. One of its three
+ * call sites is `[data-drag-clone]::before`, on a div the drag-drop JS builds at pointer-down —
+ * there is no shadow root to delegate to at all.
+ *
+ * The exception is narrow on purpose: a theme-authored pseudo may place its own box and nothing
+ * else. This one is in flow and takes real width, which is why it reserves an explicit width/height
+ * rather than leaning on the glyph's intrinsic size.
+ */
 @define-mixin grip {
   content: '';
   display: inline-block;
@@ -78,10 +90,11 @@
   border: var(--qti-border);
 }
 
+/* Size and paint of the radio/checkbox box. Centring its mark is the component's job:
+   qti-simple-choice.styles.ts already flex-centres [part='control'], and this mixin's
+   `display: grid; place-content: center` was overriding it from the document. */
 @define-mixin form {
   @mixin bordered;
-  display: grid;
-  place-content: center;
   width: var(--qti-form-size);
   height: var(--qti-form-size);
   border-width: thin;
@@ -106,8 +119,10 @@
   cursor: pointer;
 }
 
+/* The initial `display: none` moved to `validationMessage` in qti-base — the message is a shadow
+   node, and `Interaction.reportValidity` already owns showing and hiding it with an inline style.
+   What is left here is paint. */
 @define-mixin validation-message {
-  display: none;
   color: var(--qti-body-color);
   background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
@@ -130,8 +145,6 @@
 
 @define-mixin check-checkbox {
   @mixin form;
-  display: flex;
-  place-items: center;
   border-radius: var(--qti-border-radius);
 }
 
@@ -176,15 +189,20 @@
   background: var(--qti-bg);
 }
 
+/*
+ * A hotspot fills its positioned parent exactly. Sizing, spacing and paint only.
+ *
+ * Two declarations left: `box-sizing: border-box !important`, which reset.css already applies to
+ * everything inside qti-item-body, and a leading `@mixin bordered` that the `border: 0 !important`
+ * three lines down had always overridden.
+ */
 @define-mixin spot {
-  @mixin bordered;
   width: 100%;
   height: 100%;
   background-color: transparent;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
-  box-sizing: border-box !important;
 }
 
 @define-mixin drop {
@@ -192,7 +210,6 @@
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
     center no-repeat;
   border-radius: var(--qti-border-radius);
-  position: relative;
   background-color: var(--qti-bg);
 }
 

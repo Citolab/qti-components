@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, validationMessage } from '@qti-components/base';
 // import componentStyles from '../../utilities/styles/component.styles';
 // :host {
 //   display: inline-block;
@@ -9,6 +9,7 @@ import { boxSizing } from '@qti-components/base';
 /* ${componentStyles} */
 export default [
   boxSizing,
+  validationMessage,
   css`
     :host {
       display: flex;
@@ -42,6 +43,13 @@ export default [
       padding: 0.3rem;
       border-radius: 0.3rem;
       gap: 0.5rem;
+    }
+
+    /* An answer key shows the answer, not the bank you would have dragged it from. The attribute is
+       set on the clone by the correct-response mixin; the theme used to do this with a
+       '.full-correct-response' descendant selector, from the document. */
+    :host([answer-key]) [part~='drags'] {
+      display: none;
     }
   `
 ];

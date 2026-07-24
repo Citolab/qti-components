@@ -112,3 +112,65 @@ Regression gate:
 - That assertion must continue to detect both green and red dropped-drag candidate tints.
 
 If this contract changes, update this file and the VRT guard in the same PR.
+
+## 7. Property contract — the theme does not do layout
+
+The theme is **spacing, sizing and paint**. Where a box goes, and whether it is in flow at all,
+belongs to the `.styles.ts` beside the component that owns the box.
+
+| Class            | Properties                                                                                                                                                                                  | Theme |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| Paint            | `color`, `background*`, `box-shadow`, `outline*`, `opacity`, `mask*`, `cursor`, `transition`, `visibility`, `font-*`, `text-*`, `transform` / `rotate`                                          | yes   |
+| Border           | `border*`, `border-radius`                                                                                                                                                                    | yes   |
+| Spacing          | `margin*`, `padding*`, `gap`                                                                                                                                                                  | yes   |
+| Sizing           | `width`, `height`, `min-*`, `max-*`, `box-sizing`                                                                                                                                             | yes   |
+| Layout           | `display`, `position`, `inset` / `top` / `right` / `bottom` / `left`, `float`, `clear`, `flex*`, `grid*`, `justify-*`, `align-*`, `place-*`, `order`, `overflow*`, `vertical-align`, `z-index`, `white-space`, `columns`, `aspect-ratio` | no    |
+
+Enforced by `qti/no-layout-in-theme` (`tools/stylelint/no-layout-in-theme.mjs`), scoped to this
+directory. Note that it and `qti/no-layout-in-transient-state` disagree on purpose: inside a
+transient state `padding` and `width` *are* layout, because toggling them reflows the page, while in
+the theme they are exactly what belongs.
+
+### Two exceptions
+
+1. **Borders**, as above. A border has width, but it is paint that happens to occupy space, and a
+   substrate cannot express itself without it.
+
+2. **Theme-authored pseudo-elements.** A `::before` / `::after` the theme itself creates may place
+   its own box, because there is no component to delegate to — the theme invented the element. The
+   sharpest case is `[data-drag-clone]::before`: the drag handle on a div the drag-drop JS builds at
+   pointer-down and appends to `document.body`, where no shadow root exists at all. The licence
+   covers the generated box and nothing else.
+
+### Reaching what a shadow root cannot select
+
+Some elements are light-DOM grandchildren of a slotted node — a `qti-simple-associable-choice` inside
+a `qti-simple-match-set`, say. No selector in the interaction's shadow root reaches them, because
+`::slotted()` takes no descendants, and the element cannot tell which arrangement it is in.
+
+Hand the decision over as a custom property and spend it in the component:
+
+```css
+/* theme */
+qti-match-interaction.qti-match-tabular qti-simple-match-set {
+  --qti-choice-align-items: center;
+}
+```
+
+```ts
+/* qti-simple-associable-choice.styles.ts */
+:host { align-items: var(--qti-choice-align-items, normal); }
+```
+
+The theme still decides; the box model stays with the component. The same pattern carries
+`--qti-choice-label-display`, `--qti-control-display`, `--qti-chip-justify-content` and
+`--qti-match-target-min-width`.
+
+### Hiding
+
+`display: none` is layout — it removes a box from flow. An interaction hides its own parts:
+
+- the answer key's chip bank, on `:host([answer-key])`. The attribute is set on the clone by
+  `CorrectResponseMixin`; the theme cannot see it, because `.full-correct-response` is on the wrapper
+  *around* the interaction and only a document selector reaches that.
+- the native radio/checkbox under `.qti-input-control-hidden`, via `--qti-control-display`.

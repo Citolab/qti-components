@@ -14,8 +14,16 @@ export default [
    * it arrives with --qti-dropzone-min-width: 0 — otherwise the measured min-width would win
    * over the authored width, since min-width beats width.
    */
+    /*
+     * A gap sits in a line of prose, so it is inline-flex and rides the text baseline. All four of
+     * these were in the theme, set on this host from the document — which also meant the
+     * 'display: flex' this file declared never took effect.
+     */
     :host {
-      display: flex;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
       user-select: none;
     }
 

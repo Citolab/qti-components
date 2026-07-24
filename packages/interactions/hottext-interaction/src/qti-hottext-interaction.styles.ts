@@ -1,3 +1,3 @@
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, validationMessage } from '@qti-components/base';
 
-export default [boxSizing];
+export default [boxSizing, validationMessage];

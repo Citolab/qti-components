@@ -36,10 +36,8 @@
         @mixin foc;
       }
     }
+    /* The drag's box — flex, centred, clipped — is in qti-order-interaction.styles.ts. */
     &::part(drag) {
-      display: flex;
-      overflow: hidden;
-      align-items: center;
       width: 100%;
       text-overflow: ellipsis;
     }
@@ -100,11 +98,9 @@
     &::part(drops) {
       margin: 0;
       border-radius: var(--qti-border-radius);
-      overflow: visible;
     }
 
     &::part(drop) {
-      overflow: visible;
       height: 100%;
       border: var(--qti-drop-border, var(--qti-border-thickness) dashed var(--qti-border-color));
       border-radius: var(--qti-border-radius);
@@ -121,15 +117,12 @@
       background-color: var(--qti-bg-active);
     }
 
-    &:has(qti-simple-choice)::part(drop) {
-      align-self: flex-start;
-    }
-
+    /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
+       chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
     & qti-simple-choice,
     &::part(drag) {
       box-shadow: var(--qti-secondary-shadow);
       color: var(--qti-body-color);
-      position: relative;
     }
 
     & qti-simple-choice {
@@ -142,31 +135,26 @@
     &::part(drag) {
       background-color: white;
       border: var(--qti-border-thickness) solid var(--qti-border-color);
-      overflow: visible;
     }
 
     &::part(container) {
       gap: 2rem;
     }
 
-    &[orientation='horizontal'] {
-      &::part(container) {
-        flex-direction: column;
-      }
-
-      &::part(drops) {
-        display: grid;
-        grid-auto-flow: row;
-        grid-template-columns: repeat(auto-fit, minmax(var(--qti-drop-min-width, 120px), 1fr));
-        gap: 0.5rem;
-      }
-    }
-
+    /*
+     * Orientation is laid out by qti-order-interaction.styles.ts. What used to be here:
+     *
+     *   [orientation='horizontal']::part(drops)  restated the styles.ts base rule verbatim, which
+     *     cancelled that file's `grid-auto-flow: column`. It only matched the attribute, so
+     *     `orientation="horizontal"` wrapped while `class="qti-orientation-horizontal"` did not —
+     *     two spellings of one QTI concept rendering differently. Both now wrap; see styles.ts.
+     *
+     *   ::part(container) { flex-direction }     inert. The container is `display: grid` with
+     *     grid-template-areas, so flex-direction never applied. It was reaching for "horizontal puts
+     *     the bank above the drops" — that is what the qti-choices-top/bottom/left/right classes
+     *     already do, and wiring orientation to them is a behaviour change, not a move.
+     */
     &[orientation='vertical'] {
-      &::part(container) {
-        flex-direction: row-reverse;
-      }
-
       & qti-simple-choice,
       &::part(drag) {
         width: auto;
@@ -229,7 +217,6 @@
     background-color: var(--qti-correct-light);
   }
 
-  .full-correct-response qti-order-interaction::part(drags) {
-    display: none;
-  }
+  /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
+     qti-order-interaction.styles.ts. */
 }

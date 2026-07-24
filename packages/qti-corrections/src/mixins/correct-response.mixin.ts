@@ -103,6 +103,15 @@ export const CorrectResponseMixin = <T extends AbstractConstructor<Interaction>>
         // answer key that is meant to be crisp. inert is enough.
         this.setAttribute('inert', '');
         this.setAttribute('response-identifier', this.responseIdentifier + '_cr');
+        // An answer key shows the answer, not the means of giving one, so every drag-drop
+        // interaction hides its chip bank here. Each one does that in its own stylesheet, keyed on
+        // this attribute — hiding removes a box from the flow, which makes it layout, and layout is
+        // not the theme's to declare (CONTRACT.md §7).
+        //
+        // The class the theme used instead, `.full-correct-response`, is on the wrapper *around*
+        // this element, so only a document selector could see it. This attribute is on the clone
+        // itself, which is what a shadow root can reach.
+        this.setAttribute('answer-key', '');
       }
     }
 

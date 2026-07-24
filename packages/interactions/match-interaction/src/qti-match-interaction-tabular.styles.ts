@@ -16,6 +16,9 @@ export default [
     }
     :host(.qti-match-tabular) [part='grid'] {
       display: grid;
+      /* Clips the cell rules — which are the grid's own background showing through a 1px gap — to the
+         theme's border-radius. */
+      overflow: hidden;
       width: fit-content;
       max-width: 100%;
       grid-template-columns: minmax(min-content, max-content) repeat(var(--qti-match-cols, 1), auto);
@@ -46,6 +49,22 @@ export default [
     }
     :host(.qti-match-tabular) ::slotted(qti-simple-match-set) {
       display: contents;
+    }
+
+    /*
+     * The radio/checkbox box centres its own mark. qti-simple-choice.styles.ts does the same for
+     * the non-tabular control; here the cells are plain spans in this shadow root, so the rule
+     * belongs to this file.
+     *
+     * The theme's 'form' mixin used to carry 'display: grid; place-content: center', which centred
+     * both — from a document stylesheet, overriding qti-simple-choice's own flex centring. The mixin
+     * keeps the box's size and paint; the box itself is laid out here.
+     */
+    :host(.qti-match-tabular) [part~='control'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
   `
 ];

@@ -10,6 +10,8 @@ export default [
      custom properties on its host; the properties themselves live here. */
     :host {
       display: flex;
+      align-items: center;
+      justify-content: center;
       user-select: none;
       position: absolute;
       min-height: var(--qti-dropzone-min-height, 0);

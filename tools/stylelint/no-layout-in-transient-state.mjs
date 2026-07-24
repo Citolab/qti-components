@@ -74,6 +74,27 @@ const isOutOfFlowPseudoElement = ruleNode => {
   );
 };
 
+/**
+ * The answer key is not a state, it is a second rendering.
+ *
+ * `.full-correct-response` is a wrapper the correct-response mixin builds once, around a clone, and
+ * it never toggles — the clone is created when the key is shown and removed when it is hidden. So a
+ * rule scoped to it cannot reflow anything under the candidate's cursor, which is the entire reason
+ * this rule exists. It may size and space freely.
+ *
+ * The `:state(...)` in those selectors is doing a different job: picking which choices the key
+ * should mark, not describing a moment in an interaction.
+ *
+ * This replaces `ignoreStates: ['checked', 'correct-response']`, which switched the rule off for
+ * every `checked` and `correct-response` rule in the repo in order to permit these few.
+ */
+const isAnswerKeyScope = ruleNode => {
+  for (let node = ruleNode; node; node = node.parent) {
+    if (node.type === 'rule' && /\.full-correct-response\b/.test(node.selector)) return true;
+  }
+  return false;
+};
+
 const rule = (primary, secondary) => (root, result) => {
   const valid = stylelint.utils.validateOptions(
     result,
@@ -89,6 +110,7 @@ const rule = (primary, secondary) => (root, result) => {
     const states = transientStatesIn(ruleNode.selector).filter(s => !ignored.has(s));
     if (states.length === 0) return;
     if (isOutOfFlowPseudoElement(ruleNode)) return;
+    if (isAnswerKeyScope(ruleNode)) return;
 
     // Own declarations only. `walkDecls` would descend into nested SCSS rules and blame this
     // selector for a child's declarations — including the absolutely positioned `&::after`

@@ -55,23 +55,30 @@
     font-weight: 500;
     padding: var(--qti-padding-vertical) 0.75rem;
     border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
     cursor: default !important;
   }
+
+  /* A header cell centres its label. The choice is a light-DOM grandchild of the slotted match-set,
+     so nothing in the interaction's shadow root can select it; these two variables are the hand-off,
+     and qti-simple-associable-choice.styles.ts spends them on its own :host box. */
+  qti-match-interaction.qti-match-tabular qti-simple-match-set {
+    --qti-choice-align-items: center;
+  }
+  qti-match-interaction.qti-match-tabular qti-simple-match-set:last-of-type {
+    --qti-choice-justify-content: center;
+  }
   qti-match-interaction.qti-match-tabular qti-simple-match-set:last-of-type qti-simple-associable-choice {
-    justify-content: center;
     text-align: center;
   }
 
   qti-match-interaction.qti-match-tabular {
+    /* The 1px gap is the grid's own background showing through, which is what draws the cell rules.
+       Clipping it to the rounded corners is layout and lives in qti-match-interaction-tabular.styles.ts. */
     &::part(grid) {
       gap: 1px;
       background-color: var(--qti-border-color);
       border: var(--qti-border-thickness) solid var(--qti-border-color);
       border-radius: var(--qti-border-radius);
-      overflow: hidden;
     }
 
     &::part(corner),

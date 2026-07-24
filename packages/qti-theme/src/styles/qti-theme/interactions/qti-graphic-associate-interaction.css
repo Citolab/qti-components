@@ -1,7 +1,5 @@
 @layer qti-components.interactions.base {
   qti-graphic-associate-interaction {
-    position: relative;
-    display: block;
     /*
      * qti-associable-hotspot does not use ActiveElementMixin, so it carries no
      * checked/disabled/readonly custom states. Selection and correction are drawn as

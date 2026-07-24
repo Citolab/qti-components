@@ -1,6 +1,5 @@
 @layer qti-components.interactions.base {
   qti-graphic-gap-match-interaction {
-    position: relative;
     &.qti-selections-light {
       &:state(dragzone-active)::part(drags) {
         background-color: var(--qti-light-bg-active);
@@ -34,11 +33,12 @@
     * plain while the placed chip picked up drag-card styling through `::part(drag)` — fixed then by
      * giving both the card, fixed better now by giving neither.
      */
+    /* A chip here is a tile filling its hotspot, so it centres its content — see
+       qti-gap-img.styles.ts and qti-gap-text.styles.ts. gap-match's chips hug their text instead,
+       which is why the justification is a variable rather than the element's default. */
     & qti-gap-img,
     & qti-gap-text {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      --qti-chip-justify-content: center;
       cursor: grab;
     }
     /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only. */
@@ -47,10 +47,8 @@
         @mixin foc;
       }
     }
+    /* The hotspot centres its chip in qti-associable-hotspot.styles.ts. */
     & qti-associable-hotspot {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       border: 2px solid transparent;
       &[enabled] {
         @mixin dropping;
@@ -89,8 +87,9 @@
         padding: 0;
         width: auto;
       }
+      /* `flex: 1` left with the rest of the drop's layout; dropRegion in qti-base gives a hosted
+         chip `flex: 0 0 auto`, which is the invariance rule this was quietly fighting. */
       &:not(:empty) > * {
-        flex: 1;
         transform: rotate(0);
         box-shadow: 0 0 0 1px #e5e7eb;
       }

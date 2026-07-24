@@ -30881,6 +30881,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-base/src/styles/validation-message.styles"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-base/src/abstract/interaction"
           }
         },

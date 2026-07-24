@@ -15,8 +15,6 @@
   }
 
   qti-extended-text-interaction {
-    position: relative;
-
     &::part(textarea) {
       @mixin field-typography;
       border-radius: var(--qti-textarea-border-radius);

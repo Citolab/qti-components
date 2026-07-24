@@ -2,13 +2,24 @@
   qti-hottext-interaction {
     --qti-hottext-selected-padding: calc(var(--qti-padding-vertical) / 2) calc(var(--qti-padding-horizontal) / 2);
 
+    /* The native radio/checkbox control is never rendered for a hottext — every variant uses custom
+       styling. That is unconditional, so it lives in qti-hottext.styles.ts, which hides [part='control']
+       outright. It used to be repeated here three times, once per variant, under an unconditional rule
+       that had already hidden it. */
+    /*
+     * The selected padding, reserved unselected.
+     *
+     * :state(checked) used to swap 'var(--qti-border-thickness) 0' for the padding above, so
+     * clicking a word grew it and reflowed the sentence around it — every following word moved, and
+     * on a wrapping line so did the paragraph. That is the 'checked' entry the .stylelintrc.mjs
+     * comment describes.
+     *
+     * Reserving it here is the same move as the 'border: 2px solid transparent' that holds a drop
+     * target's active border: pay the space once, up front, so the state has only to repaint. Every
+     * hottext is now the size a selected one used to be, which is also a larger target to click.
+     */
     qti-hottext {
-      /* Hide the native radio/checkbox control by default; all theme variants use custom styling. */
-      padding: var(--qti-border-thickness) 0;
-
-      &::part(control) {
-        display: none;
-      }
+      padding: var(--qti-hottext-selected-padding);
     }
 
     &.qti-input-control-hidden {
@@ -24,10 +35,6 @@
 
         &:focus {
           @mixin foc;
-        }
-
-        &::part(control) {
-          display: none;
         }
       }
     }
@@ -46,10 +53,6 @@
 
         &:focus {
           @mixin foc;
-        }
-
-        &::part(control) {
-          display: none;
         }
       }
     }
@@ -78,7 +81,6 @@
         border-color: var(--qti-border-active);
         background-color: var(--qti-selected-bg);
         color: var(--qti-selected-color);
-        padding: var(--qti-hottext-selected-padding);
       }
 
       &:state(readonly) {
@@ -95,7 +97,6 @@
       &:state(checked) {
         background-color: var(--qti-selected-bg);
         color: var(--qti-selected-color);
-        padding: var(--qti-hottext-selected-padding);
       }
 
       &:state(readonly) {
@@ -152,7 +153,6 @@
     qti-hottext:state(checked) {
     @mixin answer;
 
-    position: relative;
     border-width: var(--qti-border-thickness);
     border-style: var(--qti-border-style);
     padding-inline-start: calc(1em + var(--qti-padding-horizontal) / 2);

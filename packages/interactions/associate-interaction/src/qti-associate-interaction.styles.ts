@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-import { boxSizing, dropRegion } from '@qti-components/base';
+import { boxSizing, dropRegion, validationMessage } from '@qti-components/base';
 
 /**
  * Layout and sizing only. Paint and state live in the theme.
@@ -14,6 +14,7 @@ import { boxSizing, dropRegion } from '@qti-components/base';
 
 export default [
   boxSizing,
+  validationMessage,
   dropRegion,
   css`
     :host {
@@ -55,6 +56,13 @@ export default [
         var(--qti-border-color) calc(50%),
         rgb(0 0 0 / 0%) calc(50% + 1px)
       );
+    }
+
+    /* An answer key shows the answer, not the bank you would have dragged it from. The attribute is
+       set on the clone by the correct-response mixin; the theme used to do this with a
+       '.full-correct-response' descendant selector, from the document. */
+    :host([answer-key]) ::slotted(qti-simple-associable-choice) {
+      display: none;
     }
   `
 ];

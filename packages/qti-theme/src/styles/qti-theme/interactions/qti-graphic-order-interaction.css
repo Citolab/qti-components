@@ -1,6 +1,5 @@
 @layer qti-components.interactions.base {
   qti-graphic-order-interaction {
-    overflow: visible;
     --qti-graphic-order-pin-size: calc(var(--qti-select-point-marker-size, 1.5rem) * 1.2);
     --qti-graphic-order-pin-anchor: -100%;
     --qti-graphic-order-pin-fill: var(--qti-background, #fff);
@@ -51,7 +50,6 @@
       }
 
       &[aria-ordervalue] {
-        overflow: visible;
         border: 0 !important;
         box-shadow: none;
         background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
@@ -60,10 +58,6 @@
       &[aria-ordervalue]:hover,
       &[aria-ordervalue]:focus-visible {
         border-color: transparent !important;
-      }
-      &[aria-ordercorrectvalue] {
-        display: grid;
-        place-content: center;
       }
       &[aria-ordercorrectvalue][aria-ordervalue]:not([shape='circle'])::after {
         content: 'C=' attr(aria-ordercorrectvalue) '  R=' attr(aria-ordervalue) !important;
@@ -75,17 +69,11 @@
       }
     }
 
+    /* The pin's face. Where it sits — absolute, anchored to its hotspot, above the image — is
+       placement, and lives in qti-graphic-order-interaction.styles.ts as ::slotted(). */
     & .qti-graphic-order-marker {
-      position: absolute;
-      position-anchor: --qti-graphic-order-hotspot;
-      left: anchor(center);
-      top: anchor(center);
-      transform: translate(-50%, var(--qti-graphic-order-pin-anchor));
       width: var(--qti-graphic-order-pin-size);
       height: var(--qti-graphic-order-pin-size);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
       padding-top: calc(var(--qti-graphic-order-pin-size) * 0.2);
       font-weight: 700;
       font-size: var(--qti-graphic-order-pin-number-size);
@@ -94,7 +82,6 @@
       text-shadow: 0 0 1px var(--qti-graphic-order-pin-fill);
       background: var(--qti-graphic-order-pin-svg) no-repeat center / contain;
       pointer-events: none;
-      z-index: 3;
     }
 
     & .qti-graphic-order-marker--poly {

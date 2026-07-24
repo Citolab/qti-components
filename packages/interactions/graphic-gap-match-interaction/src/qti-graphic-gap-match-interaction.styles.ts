@@ -1,9 +1,10 @@
 import { css } from 'lit';
 
-import { boxSizing } from '@qti-components/base';
+import { boxSizing, validationMessage } from '@qti-components/base';
 
 export default [
   boxSizing,
+  validationMessage,
   css`
     :host {
       display: flex;
@@ -11,6 +12,9 @@ export default [
       flex-direction: column;
       flex-wrap: wrap;
       gap: 0.5rem;
+      /* Containing block for the absolutely positioned hotspots over the image. Was set on this
+         host from the theme. */
+      position: relative;
     }
 
     :host(.qti-choices-top) {

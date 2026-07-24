@@ -33,6 +33,9 @@ export const dropRegion = css`
     align-items: flex-start;
     justify-content: flex-start;
     gap: var(--qti-drop-gap, 0);
+    /* Containing block for anything a theme draws over the drop. Was 'position: relative' in the
+       theme's 'drop' mixin, which put a document stylesheet in charge of a shadow node's position. */
+    position: relative;
   }
 
   [part~='drop'] > * {

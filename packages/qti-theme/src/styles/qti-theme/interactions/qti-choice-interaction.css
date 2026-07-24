@@ -1,18 +1,26 @@
 @layer qti-components.interactions.base {
   qti-choice-interaction {
+    /* A choice hugs its text here, unlike order-interaction, which uses the same element as a chip.
+       Handed to qti-simple-choice.styles.ts, which owns the label's box; this was an
+       `::part(label) { display: inline !important }`. */
+    --qti-choice-label-display: inline;
+
     & qti-simple-choice {
       width: fit-content;
       cursor: pointer;
-
-      &::part(label) {
-        display: inline !important;
-      }
     }
 
     &.qti-input-control-hidden {
+      /* The badge's containing block is qti-simple-choice's own `position: relative`; only the
+         badge itself is positioned here. See CONTRACT.md §7. */
       & qti-simple-choice {
-        position: relative;
         @mixin button;
+        /* Reserved for the answer-key tick drawn at the top right, so that revealing it does not
+           resize the choice. See the correction rules below. */
+        padding-right: 30px;
+        /* Hiding the native control is layout; qti-simple-choice.styles.ts spends this on
+           [part='control']. */
+        --qti-control-display: none;
 
         &:hover {
           @mixin hov;
@@ -20,10 +28,6 @@
 
         &:focus {
           @mixin foc;
-        }
-
-        &::part(control) {
-          display: none;
         }
       }
     }
@@ -112,10 +116,18 @@
     }
 
     &.qti-input-control-hidden qti-simple-choice {
+      /*
+       * Paint only. This used to set `border: 3px` over a 1px base and add `padding-right: 30px`,
+       * so revealing the answer key grew every correct choice and reflowed the list around it.
+       *
+       * The thicker edge is now an inset shadow, which paints inside the existing border box and
+       * costs no layout. The 30px that kept the label clear of the tick is reserved in the base
+       * rule for this variant, whether or not a tick ever appears.
+       */
       &:state(correct-response),
       &[data-correct-response='true'] {
-        border: 3px solid var(--qti-correct) !important;
-        padding-right: 30px;
+        border-color: var(--qti-correct) !important;
+        box-shadow: inset 0 0 0 2px var(--qti-correct);
 
         &::after {
           content: '\02714';

@@ -25,10 +25,14 @@
      * so that a transient state could repaint without resizing. With nothing left to repaint, it is
      * 4px of nothing.
      */
+    /* Non-tabular match wants an inline label, so a chip hugs its text. Handed to
+       qti-simple-associable-choice.styles.ts, which owns its own box; this used to be an
+       `::part(label) { display: inline !important }` further down the file. */
+    --qti-choice-label-display: inline;
+
+    /* The bank and the target grid are laid out in qti-match-interaction.styles.ts. Only the gaps
+       are still set here — gap is spacing. */
     & qti-simple-match-set:first-of-type {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
       gap: var(--qti-gap-size);
       & qti-simple-associable-choice {
         @mixin drag;
@@ -44,17 +48,8 @@
       }
     }
     & qti-simple-match-set:last-of-type {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      grid-auto-flow: unset;
-      grid-auto-columns: unset;
       gap: var(--qti-gap-size);
       & > qti-simple-associable-choice {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        grid-row: unset;
-        box-sizing: border-box;
         & img {
           max-width: 100%;
           height: auto;
@@ -80,43 +75,33 @@
           }
           margin-top: var(--qti-padding-vertical);
           gap: var(--qti-padding-vertical);
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          align-items: center;
         }
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;
         }
+        /* A chip nested in a drop target renders no drop region of its own. That is the component's
+           own rule — qti-simple-associable-choice.styles.ts hides [part~='drop'] for both
+           :host(:state(drag)) and :host([part~='drag']), which covers the placed clone this
+           selector could not reach. */
         & > qti-simple-associable-choice {
           @mixin drag;
-          &::part(drop) {
-            display: none;
-          }
           &:hover {
             @mixin hov;
           }
           &:focus {
             @mixin foc;
           }
-          flex-basis: fit-content;
         }
       }
     }
   }
 
-  qti-match-interaction:not(.qti-match-tabular):disabled qti-simple-match-set:first-of-type {
-    display: none;
-  }
-
+  /* The label's `display: inline` is now --qti-choice-label-display, set at the top of this file.
+     Author markup running inline inside a chip is qti-simple-associable-choice's own ::slotted(p)
+     rule; the margin reset stays here, because margin is spacing. */
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice {
-    &::part(label) {
-      display: inline !important;
-    }
-
     & p {
       margin: 0;
-      display: inline;
     }
   }
 
@@ -128,19 +113,18 @@
   }
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice {
+    /* The label's `align-content` and the drop's `flex-grow` are the target card's own box, and live
+       in qti-simple-associable-choice.styles.ts under :host([qti-droppable]). `box-sizing` went with
+       them: border-box is already the reset, and content-box is what dropRegion sets. */
     &::part(label) {
       border: var(--qti-border);
       border-top-left-radius: var(--qti-border-radius);
       border-top-right-radius: var(--qti-border-radius);
-      box-sizing: border-box;
-      align-content: flex-end;
       padding: 0.5rem;
     }
 
     &::part(drop) {
-      flex-grow: 1;
       margin-top: 0;
-      box-sizing: content-box;
       border-top: none;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
@@ -242,7 +226,6 @@
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
-  .full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type {
-    display: none;
-  }
+  /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
+     qti-match-interaction.styles.ts. */
 }

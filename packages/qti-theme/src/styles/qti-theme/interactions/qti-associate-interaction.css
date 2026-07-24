@@ -1,7 +1,6 @@
 @layer qti-components.interactions.base {
   qti-associate-interaction {
     & qti-simple-associable-choice {
-      box-sizing: border-box;
       padding: var(--qti-padding-vertical) 0.8em;
       border: var(--qti-border-thickness) solid transparent;
     }
@@ -40,9 +39,10 @@
         @mixin foc;
       }
     }
+    /* `display: grid` lives in qti-associate-interaction.styles.ts, which already declares it on
+       [part~='drop'] alongside the drop's min-height/min-width. */
     &::part(drop) {
       @mixin drop;
-      display: grid;
     }
     &::part(drop):focus {
       @mixin foc;
@@ -130,7 +130,6 @@
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
-  .full-correct-response qti-associate-interaction qti-simple-associable-choice {
-    display: none;
-  }
+  /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
+     qti-associate-interaction.styles.ts. */
 }
