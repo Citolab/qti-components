@@ -10,7 +10,11 @@
         @mixin foc;
       }
     }
+  }
+}
 
+@layer qti-components.interactions.corrections {
+  qti-select-point-interaction {
     &::part(correct) {
       color: var(--qti-correct);
     }
@@ -18,11 +22,5 @@
     &::part(incorrect) {
       color: var(--qti-incorrect);
     }
-  }
-}
-
-@layer qti-components.interactions.corrections {
-  qti-noop-corrections-layer-placeholder {
-    --qti-corrections-layer-present: 1;
   }
 }

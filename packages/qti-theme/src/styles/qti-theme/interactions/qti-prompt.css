@@ -5,9 +5,3 @@
     width: 100%;
   }
 }
-
-@layer qti-components.interactions.corrections {
-  qti-noop-corrections-layer-placeholder {
-    --qti-corrections-layer-present: 1;
-  }
-}
