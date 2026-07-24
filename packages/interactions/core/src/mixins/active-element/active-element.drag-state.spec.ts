@@ -3,10 +3,11 @@ import { expect, test, describe } from 'vitest';
 import '@qti-components/interactions';
 
 /**
- * `:state(drag)` is derived positionally: an element tests itself against the interaction's
- * `draggablesSelector`, published on `interactionContext`. It is NOT a `choiceRole`, because in
- * match-interaction the same tag is a drag in one match-set and a drop target in the other.
- * It is also not a valid ARIA role, so it must never reach `internals.role`.
+ * Drag/drop role states are owned by the drag-drop mixins.
+ *
+ * `drag` and `drop` are custom states (never ARIA roles). The mixin assigns them from its own
+ * tracked draggable/droppable sets, including positional cases where the same tag is source in
+ * one place and target in another.
  */
 
 type Stateful = HTMLElement & { internals: ElementInternals; updateComplete?: Promise<unknown> };
@@ -21,6 +22,7 @@ const settle = async () => {
 };
 
 const hasDrag = (el: Element | null) => !!el && (el as Stateful).internals.states.has('drag');
+const hasDrop = (el: Element | null) => !!el && (el as Stateful).internals.states.has('drop');
 
 describe(':state(drag) from draggablesSelector', () => {
   test('order-interaction: every qti-simple-choice is a drag, and takes no ARIA role', async () => {
@@ -72,9 +74,15 @@ describe(':state(drag) from draggablesSelector', () => {
     expect(sources).toHaveLength(2);
     expect(targets).toHaveLength(1);
 
-    for (const s of sources) expect(hasDrag(s)).toBe(true);
+    for (const s of sources) {
+      expect(hasDrag(s)).toBe(true);
+      expect(hasDrop(s)).toBe(false);
+    }
     // the drop target is the same tag, in the last match-set — it must NOT be a drag
-    for (const t of targets) expect(hasDrag(t)).toBe(false);
+    for (const t of targets) {
+      expect(hasDrag(t)).toBe(false);
+      expect(hasDrop(t)).toBe(true);
+    }
   });
 
   test('match-interaction in tabular mode: nothing is a drag — it is a radio/checkbox grid', async () => {
@@ -91,7 +99,10 @@ describe(':state(drag) from draggablesSelector', () => {
 
     const all = Array.from(document.querySelectorAll('qti-simple-associable-choice'));
     expect(all).toHaveLength(2);
-    for (const el of all) expect(hasDrag(el)).toBe(false);
+    for (const el of all) {
+      expect(hasDrag(el)).toBe(false);
+      expect(hasDrop(el)).toBe(false);
+    }
   });
 
   test('a chip with no interaction above it is not a drag — standalone use', async () => {

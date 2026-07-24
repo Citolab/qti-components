@@ -191,6 +191,9 @@ describe('drag-drop characterization — response is currently derived from the 
     // `isDragChipHidden` gates both the pointerdown filter and the keyboard draggables list
     const chip = byId('ht_zuur');
     expect(chip.internals.states.has('placeholder')).toBe(true);
+    expect(chip.internals.states.has('drag')).toBe(false);
+    expect(chip.hasAttribute('qti-draggable')).toBe(false);
+    expect(chip.hasAttribute('tabindex')).toBe(false);
     expect(chip.style.opacity, 'presentation is not written inline any more').toBe('');
   });
 

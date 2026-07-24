@@ -96,7 +96,7 @@ export const ShowCorrectResponseInline: Story = {
  */
 export const ToggleCorrectResponse: Story = {
   render: () => `
-    <button data-testid="toggle-btn">Toggle</button>
+    <button type="button" data-testid="toggle-btn">Toggle</button>
     ${singleChoice('correct-response="A"')}
   `,
   play: async ({ canvasElement }) => {

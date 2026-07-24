@@ -281,7 +281,7 @@ export const ToggleShowCorrectResponse: Story = {
   name: 'Show Correct Response - Toggle',
   tags: ['xfail'],
   render: () => html`
-    <button data-testid="toggle-btn">Toggle</button>
+    <button type="button" data-testid="toggle-btn">Toggle</button>
     ${baseTemplate({ correctResponseAttr: 'Paris' })}
   `,
   play: async ({ canvasElement }) => {

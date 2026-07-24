@@ -54,14 +54,14 @@
    * `pointer-events` here is belt-and-braces: the mixins also refuse to start a drag from a
    * chip in these states, so behaviour never depends on a stylesheet being present.
    */
-  :state(drag):state(dragging),
-  :state(drag):state(placeholder),
+  :state(dragging),
+  :state(placeholder),
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(drag):state(dragging),
+    qti-simple-associable-choice:state(dragging),
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(drag):state(placeholder) {
+    qti-simple-associable-choice:state(placeholder) {
     @mixin placeholder;
     pointer-events: none;
   }
@@ -105,10 +105,10 @@
   }
 
   /* Differentiate the exact dragged source from placed placeholders. */
-  :state(drag):state(dragging),
+  :state(dragging),
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(drag):state(dragging) {
+    qti-simple-associable-choice:state(dragging) {
     border-color: var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color));
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
       color-mix(in srgb, var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color)) 55%, transparent);
@@ -118,10 +118,10 @@
    * Exact return anchor while dragging from a drop container.
    * This marks only the source placeholder(s) tied to the dragged identifier.
    */
-  :state(drag):state(return-anchor),
+  :state(return-anchor),
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(drag):state(return-anchor) {
+    qti-simple-associable-choice:state(return-anchor) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
       color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);

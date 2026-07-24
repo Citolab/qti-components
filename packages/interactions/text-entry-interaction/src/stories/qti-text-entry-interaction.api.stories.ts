@@ -385,7 +385,7 @@ export const FormInternalsFormAssociated: Story = {
 export const FormInternalsLabels: Story = {
   name: 'Form Internals: labels',
   render: () => html`
-    <form data-testid="form" role="form">
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <label for="text-input">Answer Label</label>
       <qti-text-entry-interaction
         id="text-input"

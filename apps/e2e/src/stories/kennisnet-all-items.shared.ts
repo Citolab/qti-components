@@ -21,32 +21,7 @@ export const kennisnetMetaBase: Pick<Meta, 'tags' | 'parameters' | 'decorators'>
         }
       }
     }
-  },
-  decorators: [
-    story => html`
-      <style>
-        .kennisnet-item qti-rubric-block {
-          display: block !important;
-        }
-        .kennisnet-item {
-          width: ${KENNISNET_ITEM_WIDTH}px;
-          min-width: ${KENNISNET_ITEM_WIDTH}px;
-        }
-        .kennisnet-item qti-item-body {
-          display: block;
-          width: ${KENNISNET_ITEM_WIDTH}px;
-          min-width: ${KENNISNET_ITEM_WIDTH}px;
-          max-width: ${KENNISNET_ITEM_WIDTH}px;
-          box-sizing: border-box;
-        }
-        .kennisnet-item qti-item-body img {
-          max-width: 100%;
-          height: auto;
-        }
-      </style>
-      <div class="kennisnet-item">${story()}</div>
-    `
-  ]
+  }
 };
 
 type Story = StoryObj;

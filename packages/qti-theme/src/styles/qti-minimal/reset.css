@@ -1,0 +1,25 @@
+@scope (qti-item-body) {
+  :scope,
+  :scope * {
+    box-sizing: border-box;
+  }
+
+  :scope *::before,
+  :scope *::after {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    appearance: none;
+    color: inherit;
+    font: inherit;
+  }
+
+  img:not([width]) {
+    max-width: 100%;
+    height: auto;
+  }
+}

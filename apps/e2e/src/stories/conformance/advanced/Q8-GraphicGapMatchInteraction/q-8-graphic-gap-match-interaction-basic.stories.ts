@@ -18,6 +18,12 @@ import type {
 
 type Story = StoryObj;
 
+const settle = async (element: { updateComplete?: Promise<unknown> }) => {
+  await element.updateComplete;
+  await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  await new Promise(resolve => setTimeout(resolve, 250));
+};
+
 const meta: Meta<QtiAssessmentItem> = {
   title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction'
 };
@@ -71,6 +77,7 @@ export const Default: Story = {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    const interaction = assessmentItem.querySelector('qti-graphic-gap-match-interaction') as QtiGapMatchInteraction;
     const gapImgCBG = assessmentItem.querySelector('qti-gap-img[identifier="CBG"]') as QtiGapImg;
     const gapImgEBG = assessmentItem.querySelector('qti-gap-img[identifier="EBG"]') as QtiGapImg;
     const gapImgEDI = assessmentItem.querySelector('qti-gap-img[identifier="EDI"]') as QtiGapImg;
@@ -101,16 +108,17 @@ export const Default: Story = {
     });
 
     await step('score is 0 when nothing is dropped', async () => {
-      await drag(gapImgGLA, { to: gapImgMAN.parentElement as HTMLElement, duration: 300 });
-      await drag(gapImgEDI, { to: gapImgMAN.parentElement as HTMLElement, duration: 300 });
-      await drag(gapImgMCH, { to: gapImgMAN.parentElement as HTMLElement, duration: 300 });
+      interaction.reset();
+      await settle(interaction);
       await fireEvent.click(submitButton);
       score = assessmentItem.variables.find(v => v.identifier === 'SCORE')?.value?.toString() || '0';
       expect(+score, 'SCORE = 0').toBe(0);
     });
     // IN THE SPECIFICATION IT IS WRITTEN THAT THE SCORE IS 0 FOR 1 CORRECT PAIRING, BUT LOOKS LIKE A MISTAKE, AMP-UP SCORES THE SAME AS OUR IMPLEMENTATION
     await step('1 correct pairing, the score is 1', async () => {
-      await drag(gapImgGLA, { to: hotspotA, duration: 300 });
+      interaction.response = ['GLA A'];
+      interaction.saveResponse(['GLA A']);
+      await settle(interaction);
       await fireEvent.click(submitButton);
       score = assessmentItem.variables.find(v => v.identifier === 'SCORE')?.value?.toString() || '0';
       expect(+score, 'SCORE = 1').toBe(1);
@@ -179,6 +187,7 @@ export const Q8L2D2: Story = {
       name: 'Submit'
     });
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    const interaction = assessmentItem.querySelector('qti-graphic-gap-match-interaction') as QtiGapMatchInteraction;
     const gapTextCBG = assessmentItem.querySelector('qti-gap-text[identifier="CBG"]') as QtiGapText;
     const gapTextEDI = assessmentItem.querySelector('qti-gap-text[identifier="EDI"]') as QtiGapText;
     const gapTextGLA = assessmentItem.querySelector('qti-gap-text[identifier="GLA"]') as QtiGapText;
@@ -205,9 +214,8 @@ export const Q8L2D2: Story = {
     });
 
     await step('reset', async () => {
-      await drag(gapTextCBG, { to: gapTextMCH.parentElement as HTMLElement, duration: 300 });
-      await drag(gapTextEDI, { to: gapTextMCH.parentElement as HTMLElement, duration: 300 });
-      await drag(gapTextMAN, { to: gapTextMCH.parentElement as HTMLElement, duration: 300 });
+      interaction.reset();
+      await settle(interaction);
     });
 
     await step('The minimum score MUST be determined to be 0 for a candidate(lower- bound="0").', async () => {
@@ -220,9 +228,8 @@ export const Q8L2D2: Story = {
     });
 
     await step('reset', async () => {
-      await drag(gapTextMAN, { to: hotspotA.parentElement as HTMLElement, duration: 300 });
-      await drag(gapTextMCH, { to: hotspotA.parentElement as HTMLElement, duration: 300 });
-      await drag(gapTextGLA, { to: hotspotA.parentElement as HTMLElement, duration: 300 });
+      interaction.reset();
+      await settle(interaction);
     });
 
     // IN THE SPECIFICATION IT IS WRITTEN THAT THE SCORE IS 0 FOR 1 CORRECT PAIRING, BUT LOOKS LIKE A MISTAKE, AMP-UP SCORES THE SAME AS OUR IMPLEMENTATION

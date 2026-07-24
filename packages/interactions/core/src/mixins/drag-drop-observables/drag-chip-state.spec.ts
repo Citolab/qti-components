@@ -28,6 +28,9 @@ describe('drag chip states', () => {
 
     const a = chip('A');
     expect(a.internals.states.has('placeholder'), 'placed chip is a placeholder').toBe(true);
+    expect(a.internals.states.has('drag'), 'placeholder is not marked as draggable role').toBe(false);
+    expect(a.hasAttribute('qti-draggable'), 'spent source is not exposed as draggable').toBe(false);
+    expect(a.hasAttribute('tabindex'), 'spent source leaves keyboard tab order').toBe(false);
 
     // presentation must no longer be painted onto the element
     expect(a.style.opacity, 'no inline opacity').toBe('');
@@ -46,6 +49,8 @@ describe('drag chip states', () => {
     expect(a.internals.states.has('dragging')).toBe(false);
     // it is still a drag source
     expect(a.internals.states.has('drag')).toBe(true);
+    expect(a.getAttribute('qti-draggable')).toBe('true');
+    expect(a.getAttribute('tabindex')).toBe('0');
   });
 
   test('a successful drop clears `dragging` from the source — it must not stay mid-drag', async () => {

@@ -2328,7 +2328,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2877,7 +2877,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3251,7 +3251,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -3614,7 +3614,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -4091,7 +4091,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -4546,7 +4546,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other.",
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly.",
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -5078,7 +5078,7 @@
               "kind": "method",
               "name": "#syncChoiceRole",
               "privacy": "private",
-              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom\nstate — it is not a valid ARIA role — and it is derived positionally, by testing this\nelement against the interaction's `draggablesSelector`. In match-interaction the same tag\nis a drag in one match-set and a drop target in the other."
+              "description": "Apply what the interaction published. No provider (standalone) means no role.\n\n`radio` / `checkbox` are both ARIA roles and custom states.\n\nDrag/drop states are owned by the drag-drop mixins, because they already track which\nelements are draggable or droppable and can update those states directly."
             },
             {
               "kind": "field",
@@ -5514,6 +5514,12 @@
               "kind": "field",
               "name": "#onContextRequest",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#statefulRoleElements",
+              "privacy": "private",
+              "default": "new Set<StatefulElement>()"
             },
             {
               "kind": "method",

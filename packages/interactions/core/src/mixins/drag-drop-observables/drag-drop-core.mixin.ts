@@ -7,7 +7,6 @@ import {
   detectCollision,
   findDraggableTarget,
   findInventoryItems,
-  hasDragChipState,
   isDragChipHidden,
   isDraggableDisabled,
   setDragChipState,
@@ -88,6 +87,11 @@ interface DragState {
 
 type DragEventSource = 'pointer' | 'mouse' | 'touch';
 
+type StatefulElement = HTMLElement & { internals: ElementInternals };
+
+const hasStates = (el: HTMLElement): el is StatefulElement =>
+  !!(el as { internals?: ElementInternals }).internals?.states;
+
 export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
@@ -122,6 +126,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     private dragSubscriptions: Array<{ unsubscribe: () => void }> = [];
     private lastPointerDownAt = 0;
     private lastTouchStartAt = 0;
+    #statefulRoleElements = new Set<StatefulElement>();
 
     abstract saveResponse(value?: string | string[]): void;
 
@@ -249,14 +254,59 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       this.allDropzones = [...this.trackedDroppables, ...this.trackedDragContainers];
 
+      const dragDropEnabled = this.isDragDropEnabled();
+
+      const draggableSet = new Set(this.trackedDraggables);
+      const droppableSet = new Set(this.trackedDroppables);
+      const effectiveDraggableSet = dragDropEnabled
+        ? new Set([...draggableSet].filter(el => !isDragChipHidden(el)))
+        : new Set<HTMLElement>();
+      const effectiveDroppableSet = dragDropEnabled ? droppableSet : new Set<HTMLElement>();
+      const currentStateful = new Set<StatefulElement>([...draggableSet, ...droppableSet].filter(hasStates));
+
+      // Clear stale drag/drop role states from elements that are no longer tracked.
+      for (const el of this.#statefulRoleElements) {
+        if (currentStateful.has(el)) continue;
+        el.internals.states.delete('drag');
+        el.internals.states.delete('drop');
+      }
+
+      // Drag-drop ownership of drag/drop role states.
+      for (const el of currentStateful) {
+        const isDrag = effectiveDraggableSet.has(el);
+        const isDrop = !isDrag && effectiveDroppableSet.has(el);
+        if (isDrag) el.internals.states.add('drag');
+        else el.internals.states.delete('drag');
+
+        if (isDrop) el.internals.states.add('drop');
+        else el.internals.states.delete('drop');
+      }
+
+      this.#statefulRoleElements = currentStateful;
+
       this.trackedDraggables.forEach(draggable => {
-        draggable.style.cursor = 'grab';
-        draggable.style.userSelect = 'none';
-        draggable.style.touchAction = 'none'; // Prevent ALL default touch behaviors
-        draggable.style.webkitUserSelect = 'none'; // Safari compatibility
-        (draggable.style as any).webkitTouchCallout = 'none'; // Prevent iOS callout
-        draggable.setAttribute('qti-draggable', 'true');
-        draggable.setAttribute('tabindex', '0');
+        const draggableHidden = isDragChipHidden(draggable);
+        const canStartDrag = dragDropEnabled && !draggableHidden;
+
+        if (canStartDrag) {
+          draggable.style.cursor = 'grab';
+          draggable.style.userSelect = 'none';
+          draggable.style.touchAction = 'none'; // Prevent ALL default touch behaviors
+          draggable.style.webkitUserSelect = 'none'; // Safari compatibility
+          (draggable.style as any).webkitTouchCallout = 'none'; // Prevent iOS callout
+          draggable.setAttribute('qti-draggable', 'true');
+          draggable.setAttribute('tabindex', '0');
+        } else {
+          draggable.style.cursor = '';
+          draggable.style.userSelect = '';
+          draggable.style.touchAction = '';
+          draggable.style.webkitUserSelect = '';
+          (draggable.style as any).webkitTouchCallout = '';
+          draggable.removeAttribute('qti-draggable');
+          if (draggable.getAttribute('tabindex') === '0') {
+            draggable.removeAttribute('tabindex');
+          }
+        }
       });
 
       // The drop-side twin of `qti-draggable`. Three of the five drop targets are light-DOM
@@ -268,7 +318,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       // Gated on `isDragDropEnabled()`: match-interaction's tabular mode is a radio grid, and its
       // `qti-simple-associable-choice` elements are row and column headers, not drop targets. They
       // must not reserve a dropzone's worth of space.
-      const droppableAttribute = this.isDragDropEnabled();
+      const droppableAttribute = dragDropEnabled;
       this.trackedDroppables.forEach(droppable => {
         if (droppableAttribute) droppable.setAttribute('qti-droppable', 'true');
         else droppable.removeAttribute('qti-droppable');
@@ -294,11 +344,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           }
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
-          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
-          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
-          // drags conformance tests use to return a placed chip to the bank.
-          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
+          // Refuse drag starts from chips that currently leave a hole in the bank.
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
           const touchHandledRecently = Date.now() - this.lastTouchStartAt < 50;
           return (
             target &&
@@ -379,11 +426,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: MouseEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
-          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
-          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
-          // drags conformance tests use to return a placed chip to the bank.
-          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
+          // Refuse drag starts from chips that currently leave a hole in the bank.
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
           const isLeftButton = e.button === 0;
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && isLeftButton && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -412,11 +456,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         .filter((e: TouchEvent) => {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
-          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
-          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
-          // drags conformance tests use to return a placed chip to the bank.
-          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
+          // Refuse drag starts from chips that currently leave a hole in the bank.
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
           const hasTouchPoint = Boolean(e.touches?.[0] || e.changedTouches?.[0]);
           const pointerHandledRecently = Date.now() - this.lastPointerDownAt < 50;
           return target && hasTouchPoint && !hostDisabled && !targetDisabled && !pointerHandledRecently;
@@ -459,11 +500,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         if (!keyboardState.dragging) {
           const target = findDraggableTarget(e, draggablesSelector);
           const hostDisabled = (this as any).disabled || (this as any).readonly;
-          // Refuse a second drag from a chip whose clone is already in flight. A `placeholder` chip
-          // is deliberately NOT refused: it is invisible and `pointer-events: none`, so a real
-          // pointer cannot reach it, while blocking it in code would also forbid the programmatic
-          // drags conformance tests use to return a placed chip to the bank.
-          const targetDisabled = isDraggableDisabled(target) || hasDragChipState(target, 'dragging');
+          // Refuse drag starts from chips that currently leave a hole in the bank.
+          const targetDisabled = isDraggableDisabled(target) || isDragChipHidden(target);
 
           if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();
@@ -1027,6 +1065,14 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       if (this.dragState.dragClone) {
         this.dragState.dragClone.remove();
       }
+
+      for (const el of this.#statefulRoleElements) {
+        if (!hasStates(el)) continue;
+        el.internals.states.delete('drag');
+        el.internals.states.delete('drop');
+      }
+      this.#statefulRoleElements.clear();
+
       this.resetDragState();
     }
   }

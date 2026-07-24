@@ -1,0 +1,65 @@
+qti-simple-choice {
+  position: relative !important;
+  margin: 20px !important;
+  background: #fff;
+  color: rgb(63 63 63) !important;
+  font-size: 20px !important;
+  line-height: 1.3em !important;
+  border: 2px dashed rgb(172 172 172) !important;
+  border-radius: 10px !important;
+  font-weight: 800 !important;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+qti-simple-choice:first-child {
+  transform: rotate(1deg);
+}
+
+qti-simple-choice:nth-child(1) {
+  transform: rotate(-2deg);
+}
+
+qti-simple-choice:nth-child(2) {
+  transform: rotate(3deg);
+}
+
+qti-simple-choice:state(checked) {
+  background-color: aqua !important;
+}
+
+qti-simple-choice:hover {
+  animation-name: wiggle;
+  animation-duration: 1.4s;
+  animation-direction: infinite;
+
+  /* animation: wiggle 1.4s ease-in-out infinite; */
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    /* transform: rotate(6deg); */
+  }
+
+  50% {
+    transform: rotate(-6deg);
+  }
+
+  100% {
+    /* transform: rotate(6deg); */
+  }
+}
+
+button:active {
+  transform: translate(0, 5px);
+  border-bottom: 1px solid;
+}

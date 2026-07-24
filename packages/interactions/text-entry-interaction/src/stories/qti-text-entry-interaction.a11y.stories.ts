@@ -40,7 +40,7 @@ const getElements = (canvasElement: HTMLElement) => {
 
 export const LabelAssociation: Story = {
   render: () => html`
-    <form data-testid="form" role="form">
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <label for="text-input">Enter your answer:</label>
       <qti-text-entry-interaction
         id="text-input"
@@ -63,7 +63,7 @@ export const ClickOnLabelFocusesInput: Story = {
   name: 'Click on Label Focuses Input',
   tags: ['xfail'], // This test may fail due to browser focus delegation behavior
   render: () => html`
-    <form data-testid="form" role="form">
+    <form data-testid="form" role="form" @submit=${(e: Event) => e.preventDefault()}>
       <label for="text-input" data-testid="label">Enter your answer:</label>
       <qti-text-entry-interaction
         id="text-input"
@@ -95,13 +95,13 @@ export const TabFocusable: Story = {
   name: 'Tab - Focusable',
   tags: ['xfail'],
   render: () => html`
-    <button data-testid="before">Before</button>
+    <button type="button" data-testid="before">Before</button>
     <qti-text-entry-interaction
       name="RESPONSE"
       response-identifier="RESPONSE"
       data-testid="interaction"
     ></qti-text-entry-interaction>
-    <button data-testid="after">After</button>
+    <button type="button" data-testid="after">After</button>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -123,14 +123,14 @@ export const TabFocusable: Story = {
 export const TabSkipsDisabled: Story = {
   name: 'Tab - Skips Disabled',
   render: () => html`
-    <button data-testid="before">Before</button>
+    <button type="button" data-testid="before">Before</button>
     <qti-text-entry-interaction
       name="RESPONSE"
       response-identifier="RESPONSE"
       disabled
       data-testid="interaction"
     ></qti-text-entry-interaction>
-    <button data-testid="after">After</button>
+    <button type="button" data-testid="after">After</button>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -201,14 +201,14 @@ export const ReadonlyStillFocusable: Story = {
   name: 'Readonly - Still Focusable',
   tags: ['xfail'],
   render: () => html`
-    <button data-testid="before">Before</button>
+    <button type="button" data-testid="before">Before</button>
     <qti-text-entry-interaction
       name="RESPONSE"
       response-identifier="RESPONSE"
       readonly
       data-testid="interaction"
     ></qti-text-entry-interaction>
-    <button data-testid="after">After</button>
+    <button type="button" data-testid="after">After</button>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

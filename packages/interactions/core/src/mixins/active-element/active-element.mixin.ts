@@ -89,10 +89,10 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
     /**
      * Apply what the interaction published. No provider (standalone) means no role.
      *
-     * `radio` / `checkbox` are both ARIA roles and custom states. `drag` is only a custom
-     * state — it is not a valid ARIA role — and it is derived positionally, by testing this
-     * element against the interaction's `draggablesSelector`. In match-interaction the same tag
-     * is a drag in one match-set and a drop target in the other.
+     * `radio` / `checkbox` are both ARIA roles and custom states.
+     *
+     * Drag/drop states are owned by the drag-drop mixins, because they already track which
+     * elements are draggable or droppable and can update those states directly.
      */
     #syncChoiceRole() {
       const ctx = this._interactionContext;
@@ -104,11 +104,6 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
         this.internals.role = role;
         if (role) this.internals.states.add(role);
       }
-
-      const selector = ctx?.draggablesSelector;
-      const isDrag = !!selector && this.matches(selector);
-      if (isDrag) this.internals.states.add('drag');
-      else this.internals.states.delete('drag');
     }
 
     @watch('disabled', { waitUntilFirstUpdate: true })
