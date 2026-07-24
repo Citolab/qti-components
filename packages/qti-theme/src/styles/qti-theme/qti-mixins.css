@@ -1,5 +1,5 @@
-/* QTI base — utility classes, applied with @apply. Only styles >=2 interactions share. They
- * read the variables in qti-variables.css; a substrate re-colours by overriding those, not
+/* QTI base — shared theme utilities and semantic mixins. Only styles >=2 interactions share.
+ * They read the variables in qti-variables.css; a substrate re-colours by overriding those, not
  * by editing these. Split from qti-base.css. */
 
 /* ============================================================================
@@ -10,7 +10,7 @@
 
 /*
  * Semantic PostCSS mixins. Interaction files wire these to their own parts and states; the mixins
- * own the shared visual vocabulary. The older @apply utilities below remain during the migration.
+ * own the shared visual vocabulary. The class utilities below remain only for direct demo markup.
  */
 @define-mixin candidate-tint $color, $background {
   background-color: $background;
@@ -196,6 +196,11 @@
   background-color: var(--qti-bg);
 }
 
+@define-mixin chevron {
+  background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
+    no-repeat center right 6px;
+}
+
 @define-mixin filled {
   box-sizing: border-box;
   color: var(--qti-primary-fg);
@@ -221,92 +226,20 @@
 @define-mixin hov {
 }
 
-/* The hole a lifted / placed source chip leaves behind. @apply'd on the chip's
- * dragging / placeholder state. */
-.placeholder {
-  background-color: var(--qti-placeholder-bg);
-  opacity: 1;
-  box-shadow: inset var(--qti-placeholder-shadow);
-  /* border-color, never `border`: a state repaints, it never resizes (drag-drop.invariance.spec). */
-  border-color: transparent;
-  color: transparent;
-}
-
-/* The answer key: "here is the right answer", one look across every interaction. */
-.answer {
-  background-color: var(--qti-answer-bg);
-  color: var(--qti-answer-fg);
-  border-color: var(--qti-answer-border);
-}
-
-/* SVG masks and backgrounds */
-.chevron {
-  background: url("data:image/svg+xml,%3Csvg fill='currentColor' width='22' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'%3E%3Cpath clip-rule='evenodd' fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'%3E%3C/path%3E%3C/svg%3E")
-    no-repeat center right 6px;
-}
-
-.check-mask {
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
-}
-
 /*
-  Following are classes that can be applied to elements and element states, so they are not used directly
-  The @apply directive is used to apply these classes to elements
+  Following are classes that can be applied directly in theme/demo markup.
+  Production interaction styles now use the semantic @define-mixin layer above.
 */
-
-/* A visible border. Used as a primitive by other classes. */
-.bordered {
-  border: var(--qti-border);
-}
-
-/* A FILLED element — primary background, contrast text, matching border, roomy padding. This is the
- * kennisnet chip/button look; the drag chip is a filled element. A substrate recolours the whole
- * thing by overriding --qti-primary alone. (box-sizing kept: the light-DOM clone has no shadow to
- * inherit it from.) */
-.filled {
-  box-sizing: border-box;
-  color: var(--qti-primary-fg);
-  background-color: var(--qti-primary);
-  border: var(--qti-border-thickness) solid var(--qti-primary);
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-}
-
-/* An OUTLINED element — same shape as filled, but a border instead of a fill. */
-.outlined {
-  box-sizing: border-box;
-  color: var(--qti-primary);
-  background-color: transparent;
-  border: var(--qti-border-thickness) solid var(--qti-primary);
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-}
-
-/* Apply .form rules for checkbox and radiobutton */
-.form {
-  @apply bordered;
-
-  display: grid;
-  place-content: center;
-  width: var(--qti-form-size);
-  height: var(--qti-form-size);
-  border-width: thin;
-  background-color: white;
-}
 
 /* Apply .button rules for button-like elements, such as drags and buttons */
 .button {
-  @apply bordered;
-
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  background: var(--qti-bg);
+  @mixin button;
 }
 
 /* Apply .select for the select dropdown element */
 .select {
-  @apply bordered chevron;
-
+  @mixin bordered;
+  @mixin chevron;
   border-radius: var(--qti-border-radius);
   position: relative;
   appearance: none;
@@ -316,74 +249,38 @@
 
 /* Apply .text for the input text and textarea */
 .text {
-  @apply bordered;
-  border-radius: 0;
-  cursor: text;
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  background: var(--qti-bg);
+  @mixin text;
 }
 
 /* Apply .spot for hotspot shapes */
 .spot {
-  @apply bordered;
-
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  box-sizing: border-box !important;
-}
-
-/* Apply .point for circular small hotspots */
-.point {
-  @apply bordered;
-
-  box-sizing: border-box;
-  border-radius: 100%;
-  border: 1px solid white;
-  background-color: black;
-  opacity: 0.5;
-  padding: 0;
+  @mixin spot;
 }
 
 /* Apply .drag for draggable elements */
 /* The drag chip is a filled element. */
 .drag {
-  @apply filled;
-  cursor: grab;
+  @mixin drag;
 }
 
 /* Apply .dragging for the dragging state of a draggable element */
 .dragging {
-  pointer-events: none;
-  rotate: -2deg;
-  box-shadow:
-    0 8px 12px rgb(0 0 0 / 20%),
-    0 4px 8px rgb(0 0 0 / 10%);
+  @mixin dragging;
 }
 
 /* Apply .drop for an element where you can drop the draggable */
 .drop {
-  /* @apply bordered; */
-  border: var(--qti-border-thickness) dashed var(--qti-border-color);
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
-    center no-repeat;
-  border-radius: var(--qti-border-radius);
-  position: relative;
-  background-color: var(--qti-bg);
+  @mixin drop;
 }
 
 /* Apply .dropping for an indicator where you can drop the draggable */
 .dropping {
-  background-color: var(--qti-bg-active);
+  @mixin dropping;
 }
 
 /* Apply .order for a small circular button */
 .order {
-  @apply bordered;
-
+  @mixin bordered;
   display: grid;
   place-content: center;
 
@@ -396,90 +293,54 @@
 
 /* Apply .check-size for radio and checkbox size */
 .check-size {
-  width: calc(var(--qti-form-size) - 6px);
-  height: calc(var(--qti-form-size) - 6px);
+  @mixin check-size;
 }
 
 /* Apply .check for checkbox */
 .check {
-  gap: 0.5rem;
-  background-color: var(--qti-bg);
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  outline: none;
-  cursor: pointer;
-}
-
-.validation-message {
-  display: none;
-  color: var(--qti-body-color);
-  background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  border: var(--qti-border-thickness) solid var(--qti-warning);
-  border-radius: var(--qti-border-radius);
-  margin-top: var(--qti-gap-size);
+  @mixin check;
 }
 
 /* Apply .check-radio for outer circle of the radio buttons */
 .check-radio {
-  @apply form;
-
-  border-radius: 100%;
+  @mixin check-radio;
 }
 
 /* Apply .check-radio-checked for the inner checked radio */
 .check-radio-checked {
-  width: calc(var(--qti-form-size) - 8px);
-  height: calc(var(--qti-form-size) - 8px);
-  background-color: white;
-  border-radius: 100%;
+  @mixin check-radio-checked;
 }
 
 /* Apply .check-checkbox for outer square of the checkbox */
 .check-checkbox {
-  @apply form;
-
-  display: flex;
-  place-items: center;
-  border-radius: var(--qti-border-radius);
+  @mixin check-checkbox;
 }
 
 /* Apply .check-checkbox-checked for the inner checkmark */
 .check-checkbox-checked {
-  background-color: white;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+  @mixin check-checkbox-checked;
 }
 
 /* Apply .hov for hover state */
 .hov {
-  /* background-color: var(--qti-hover-bg); */
+  @mixin hov;
 }
 
 /* Apply .foc for focus state */
 .foc {
-  box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+  @mixin foc;
 }
 
 /* Apply .act for active state */
 .act {
-  border-color: var(--qti-border-active);
-  background-color: var(--qti-bg-active);
+  @mixin act;
 }
 
 .act-bg {
   background-color: var(--qti-bg-active);
 }
 
-.act-bor {
-  border-color: var(--qti-border-active);
-}
-
-/* Readonly — leave it looking normal; just the pointer cursor. */
-.readonly {
-  cursor: pointer;
-}
-
 /* Disabled — just dim it. No colour variables. */
 .dis {
-  cursor: not-allowed;
+  @mixin dis;
 }

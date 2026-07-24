@@ -50,7 +50,7 @@
      * These come *after* ::part(drop). They tie it on specificity, so source order decides — put
      * them first and the idle drop repaints over its own active highlight.
      *
-     * Deleted here: `&::part(drop)[dragging] { @apply act }`. An attribute selector after ::part()
+    * Deleted here: `&::part(drop)[dragging] { @mixin act }`. An attribute selector after ::part()
      * never matches; that rule has never applied.
      */
     &::part(active) {

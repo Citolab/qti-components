@@ -198,9 +198,6 @@ importers:
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
-      postcss-class-apply:
-        specifier: ^4.0.1
-        version: 4.0.1(postcss@8.5.6)
       postcss-cli:
         specifier: ^11.0.1
         version: 11.0.1(jiti@2.6.1)(postcss@8.5.6)
@@ -6023,11 +6020,6 @@ packages:
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
-
-  postcss-class-apply@4.0.1:
-    resolution: {integrity: sha512-vcCpAkaM/PfkMav011W3do3sal/1R5rTScHkeWJDaQV/S7iISfXebAvG/S8wAeiHZl+ssYUkmts0dXzJUZ6apg==}
-    peerDependencies:
-      postcss: ^8.4.1
 
   postcss-cli@11.0.1:
     resolution: {integrity: sha512-0UnkNPSayHKRe/tc2YGW6XnSqqOA9eqpiRMgRlV1S6HdGi16vwJBx7lviARzbV1HpQHqLLRH3o8vTcB0cLc+5g==}
@@ -13001,10 +12993,6 @@ snapshots:
       points-on-curve: 0.2.0
 
   possible-typed-array-names@1.1.0: {}
-
-  postcss-class-apply@4.0.1(postcss@8.5.6):
-    dependencies:
-      postcss: 8.5.6
 
   postcss-cli@11.0.1(jiti@2.6.1)(postcss@8.5.6):
     dependencies:
