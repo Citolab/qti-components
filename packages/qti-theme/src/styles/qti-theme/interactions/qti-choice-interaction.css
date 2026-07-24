@@ -20,14 +20,14 @@
     &.qti-input-control-hidden {
       & qti-simple-choice {
         position: relative;
-        @apply button;
+        @mixin button;
 
         &:hover {
           @apply hov;
         }
 
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
 
         &::part(control) {
@@ -35,17 +35,17 @@
         }
 
         &:state(checked) {
-          @apply act;
+          @mixin act;
           background-color: var(--qti-selected-bg);
           color: var(--qti-selected-color);
         }
 
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
 
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
 
         &:state(correct-response),
@@ -78,14 +78,14 @@
 
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
-        @apply check;
+        @mixin check;
 
         &:not(:state(disabled), :state(readonly), :state(checked)):hover {
           @apply hov;
         }
 
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
 
         &:state(candidate-correct) {
@@ -107,19 +107,19 @@
         }
 
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
 
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
 
         &::part(control-mark) {
-          @apply check-size;
+          @mixin check-size;
         }
 
         &:state(radio)::part(control) {
-          @apply check-radio;
+          @mixin check-radio;
         }
 
         &:state(radio):state(checked)::part(control),
@@ -128,15 +128,15 @@
         }
 
         &:state(radio):state(checked)::part(control-mark) {
-          @apply check-radio-checked;
+          @mixin check-radio-checked;
         }
 
         &:state(checkbox)::part(control) {
-          @apply check-checkbox;
+          @mixin check-checkbox;
         }
 
         &:state(checkbox):state(checked)::part(control-mark) {
-          @apply check-checkbox-checked;
+          @mixin check-checkbox-checked;
         }
       }
     }

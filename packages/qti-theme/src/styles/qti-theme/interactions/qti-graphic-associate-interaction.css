@@ -11,12 +11,12 @@
     & qti-associable-hotspot {
       &[shape='circle'],
       &[shape='square'] {
-        @apply spot;
+        @mixin spot;
         &:hover {
           @apply hov;
         }
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
       }
     }
@@ -39,10 +39,10 @@
       }
     }
     &:state(dragzone-active)::part(drags) {
-      @apply act;
+      @mixin act;
     }
     &:state(dragzone-enabled)::part(drags) {
-      @apply dropping;
+      @mixin dropping;
     }
   }
 }

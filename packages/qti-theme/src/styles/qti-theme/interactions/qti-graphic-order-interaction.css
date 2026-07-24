@@ -18,10 +18,10 @@
         border-color var(--qti-motion-duration-fast, 0.15s) ease;
 
       &:state(readonly) {
-        @apply readonly;
+        @mixin readonly;
       }
       &:state(disabled) {
-        @apply dis;
+        @mixin dis;
       }
 
       &[shape='circle'] {
@@ -177,10 +177,10 @@
       }
     }
     &:state(dragzone-active)::part(drags) {
-      @apply act;
+      @mixin act;
     }
     &:state(dragzone-enabled)::part(drags) {
-      @apply dropping;
+      @mixin dropping;
     }
   }
 }

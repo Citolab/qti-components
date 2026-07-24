@@ -22,23 +22,23 @@
        the part's own element. They therefore carry variant *part tokens*, which deliberately
        reuse the state vocabulary: radio | checkbox, checked, correct | incorrect. */
     &::part(control radio) {
-      @apply check-radio;
+      @mixin check-radio;
     }
     &::part(control checkbox) {
-      @apply check-checkbox;
+      @mixin check-checkbox;
     }
     &::part(control-mark) {
-      @apply check-size;
+      @mixin check-size;
     }
     /* Both `control` and `control-mark` carry the variant tokens, so themes can repaint the
        outer box and the inner indicator independently. Scope the base inner-fill rules to
        `control-mark` so the classic dot-in-ring look stays intact; themes wanting the inverted
        look (outer filled, e.g. Kennisnet) add their own `::part(control checked)` rules. */
     &::part(control-mark radio checked) {
-      @apply check-radio-checked;
+      @mixin check-radio-checked;
     }
     &::part(control-mark checkbox checked) {
-      @apply check-checkbox-checked;
+      @mixin check-checkbox-checked;
     }
 
     /* Correct / incorrect overlays — border on the outer box, and a matching fill on the inner

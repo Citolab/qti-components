@@ -8,7 +8,7 @@
       @apply hov;
     }
     &:focus {
-      @apply foc;
+      @mixin foc;
     }
   }
 
@@ -39,7 +39,7 @@
           @apply hov;
         }
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
       }
     }
@@ -61,7 +61,7 @@
         }
         &[disabled] {
           &::part(drop) {
-            @apply dis;
+            @mixin dis;
           }
         }
         /*
@@ -71,12 +71,12 @@
          * chip's own `:state(dragging)` / `:state(placeholder)`.
          */
         &::part(drop) {
-          @apply drop;
+          @mixin drop;
           &[dragging] {
             @apply dragging;
           }
           &:focus {
-            @apply foc;
+            @mixin foc;
           }
           margin-top: var(--qti-padding-vertical);
           gap: var(--qti-padding-vertical);
@@ -103,7 +103,7 @@
             @apply hov;
           }
           &:focus {
-            @apply foc;
+            @mixin foc;
           }
           flex-basis: fit-content;
         }
@@ -126,14 +126,14 @@
     }
   }
 
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
     qti-simple-associable-choice:state(drag),
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag) {
     @mixin chip;
   }
 
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type
-    > qti-simple-associable-choice {
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice {
     &::part(label) {
       border: var(--qti-border);
       border-top-left-radius: var(--qti-border-radius);

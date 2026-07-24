@@ -9,7 +9,7 @@
  */
 @layer qti-components {
   ::part(message) {
-    @apply validation-message;
+    @mixin validation-message;
   }
 
   /*

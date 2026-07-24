@@ -74,6 +74,128 @@
   line-height: 1.5;
 }
 
+@define-mixin bordered {
+  border: var(--qti-border);
+}
+
+@define-mixin form {
+  @mixin bordered;
+  display: grid;
+  place-content: center;
+  width: var(--qti-form-size);
+  height: var(--qti-form-size);
+  border-width: thin;
+  background-color: white;
+}
+
+@define-mixin dropping {
+  background-color: var(--qti-bg-active);
+}
+
+@define-mixin check-size {
+  width: calc(var(--qti-form-size) - 6px);
+  height: calc(var(--qti-form-size) - 6px);
+}
+
+@define-mixin check {
+  gap: 0.5rem;
+  background-color: var(--qti-bg);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  outline: none;
+  cursor: pointer;
+}
+
+@define-mixin validation-message {
+  display: none;
+  color: var(--qti-body-color);
+  background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  border: var(--qti-border-thickness) solid var(--qti-warning);
+  border-radius: var(--qti-border-radius);
+  margin-top: var(--qti-gap-size);
+}
+
+@define-mixin check-radio {
+  @mixin form;
+  border-radius: 100%;
+}
+
+@define-mixin check-radio-checked {
+  width: calc(var(--qti-form-size) - 8px);
+  height: calc(var(--qti-form-size) - 8px);
+  background-color: white;
+  border-radius: 100%;
+}
+
+@define-mixin check-checkbox {
+  @mixin form;
+  display: flex;
+  place-items: center;
+  border-radius: var(--qti-border-radius);
+}
+
+@define-mixin check-checkbox-checked {
+  background-color: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+}
+
+@define-mixin foc {
+  box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+}
+
+@define-mixin act {
+  border-color: var(--qti-border-active);
+  background-color: var(--qti-bg-active);
+}
+
+@define-mixin act-bor {
+  border-color: var(--qti-border-active);
+}
+
+@define-mixin readonly {
+  cursor: pointer;
+}
+
+@define-mixin dis {
+  cursor: not-allowed;
+}
+
+@define-mixin button {
+  @mixin bordered;
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  background: var(--qti-bg);
+}
+
+@define-mixin text {
+  @mixin bordered;
+  border-radius: 0;
+  cursor: text;
+  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  background: var(--qti-bg);
+}
+
+@define-mixin spot {
+  @mixin bordered;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-sizing: border-box !important;
+}
+
+@define-mixin drop {
+  border: var(--qti-border-thickness) dashed var(--qti-border-color);
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
+    center no-repeat;
+  border-radius: var(--qti-border-radius);
+  position: relative;
+  background-color: var(--qti-bg);
+}
+
 /* The hole a lifted / placed source chip leaves behind. @apply'd on the chip's
  * dragging / placeholder state. */
 .placeholder {

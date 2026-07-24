@@ -7,7 +7,7 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
 

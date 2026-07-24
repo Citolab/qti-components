@@ -16,14 +16,15 @@
       }
     }
     &::part(input) {
-      @apply text;
+      @mixin text;
     }
     &:hover {
       @apply hov;
     }
     &:focus-within {
       &::part(input) {
-        @apply foc act-bor;
+        @mixin foc;
+        @mixin act-bor;
       }
     }
   }

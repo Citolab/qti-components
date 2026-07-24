@@ -20,10 +20,10 @@
       }
     }
     &:state(dragzone-active)::part(drags) {
-      @apply act;
+      @mixin act;
     }
     &:state(dragzone-enabled)::part(drags) {
-      @apply dropping;
+      @mixin dropping;
     }
     /*
      * A graphic-gap-match chip is an image, not a card. No `@apply drag` — no border, no padding,
@@ -44,7 +44,7 @@
     /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only. */
     & qti-associable-hotspot::part(drag) {
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     & qti-associable-hotspot {
@@ -53,7 +53,7 @@
       align-items: center;
       border: 2px solid transparent;
       &[enabled] {
-        @apply dropping;
+        @mixin dropping;
         .qti-selections-light {
           background-color: var(--qti-light-bg-active);
         }
@@ -62,7 +62,7 @@
         }
       }
       &[active] {
-        @apply act;
+        @mixin act;
         .qti-selections-light {
           background-color: var(--qti-light-bg-active);
           border-color: var(--qti-light-border-active);
@@ -73,7 +73,7 @@
         }
       }
       &[disabled] {
-        @apply dis;
+        @mixin dis;
         &:not(:empty) {
           cursor: default !important;
         }

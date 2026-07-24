@@ -19,10 +19,10 @@
       }
     }
     &:state(dragzone-active)::part(drags) {
-      @apply act;
+      @mixin act;
     }
     &:state(dragzone-enabled)::part(drags) {
-      @apply dropping;
+      @mixin dropping;
     }
     /* Editor fake-drag projected into a filled <qti-gap>'s shadow. Same `drag`
        styling so the editor preview matches runtime when a gap is filled. */
@@ -32,7 +32,7 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     & qti-gap-text {
@@ -44,7 +44,7 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
       &:state(candidate-correct) {
         background-color: var(--qti-correct);
@@ -54,9 +54,9 @@
       }
     }
     & qti-gap {
-      @apply drop;
+      @mixin drop;
       &[disabled] {
-        @apply dis;
+        @mixin dis;
         /* `:not(:empty)` tested light-DOM children; the gap renders its chips into its own shadow
            root now, so it is always "empty" to a selector. `:state(filled)` is the occupancy hook. */
         &:state(filled) {
@@ -64,7 +64,7 @@
         }
       }
       &[enabled] {
-        @apply dropping;
+        @mixin dropping;
         .qti-selections-light {
           border-color: var(--qti-light-border-active);
         }
@@ -73,7 +73,7 @@
         }
       }
       &[active] {
-        @apply act;
+        @mixin act;
         .qti-selections-light {
           background-color: var(--qti-light-bg-active);
           border-color: var(--qti-light-border-active);

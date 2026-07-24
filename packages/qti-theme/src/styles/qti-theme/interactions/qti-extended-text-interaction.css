@@ -1,14 +1,15 @@
 @layer qti-components {
   qti-extended-text-interaction {
     &::part(textarea) {
-      @apply text;
+      @mixin text;
     }
     &:hover {
       @apply hov;
     }
     &:focus-within {
       &::part(textarea) {
-        @apply foc act-bor;
+        @mixin foc;
+        @mixin act-bor;
       }
     }
   }

@@ -31,7 +31,7 @@
         }
 
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
 
         &::part(control) {
@@ -54,11 +54,11 @@
         }
 
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
 
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
       }
     }
@@ -76,7 +76,7 @@
         }
 
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
 
         &::part(control) {
@@ -100,11 +100,11 @@
         }
 
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
 
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
       }
     }
@@ -119,7 +119,7 @@
         }
 
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
 
         &:state(checked) {
@@ -139,11 +139,11 @@
         }
 
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
 
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
       }
     }

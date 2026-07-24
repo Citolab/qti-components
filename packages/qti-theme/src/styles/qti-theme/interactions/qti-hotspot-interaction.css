@@ -2,36 +2,36 @@
   qti-hotspot-interaction {
     & qti-hotspot-choice {
       &[shape='circle'] {
-        @apply spot;
+        @mixin spot;
         &:hover {
           @apply hov;
         }
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
         &:state(checked) {
-          @apply act-bor;
+          @mixin act-bor;
         }
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
       }
       &[shape='rect'] {
-        @apply spot;
+        @mixin spot;
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
         &:state(checked) {
-          @apply act-bor;
+          @mixin act-bor;
         }
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
       }
       &[shape='poly'] {
@@ -62,10 +62,10 @@
           display: block;
         }
         &:state(readonly) {
-          @apply readonly;
+          @mixin readonly;
         }
         &:state(disabled) {
-          @apply dis;
+          @mixin dis;
         }
       }
     }

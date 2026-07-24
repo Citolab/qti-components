@@ -1,10 +1,10 @@
 @layer qti-components {
   qti-order-interaction {
     &:state(dragzone-active)::part(drags) {
-      @apply act;
+      @mixin act;
     }
     &:state(dragzone-enabled)::part(drags) {
-      @apply dropping;
+      @mixin dropping;
     }
     &::part(drag),
     & qti-simple-choice,
@@ -19,7 +19,7 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     /* Editor fake-drag projected into the interaction's drop-target shadow.
@@ -33,7 +33,7 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     &::part(drag) {
@@ -80,9 +80,9 @@
       gap: var(--qti-padding-vertical);
     }
     &::part(drop) {
-      @apply drop;
+      @mixin drop;
       &[enabled] {
-        @apply dropping;
+        @mixin dropping;
         .qti-selections-light {
           border-color: var(--qti-light-border-active);
         }
@@ -94,11 +94,11 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     &::part(active) {
-      @apply act;
+      @mixin act;
     }
   }
 

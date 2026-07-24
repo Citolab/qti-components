@@ -1,10 +1,10 @@
 @layer qti-components {
   qti-associate-interaction {
     &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
-      @apply act;
+      @mixin act;
     }
     &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
-      @apply dropping;
+      @mixin dropping;
     }
     & qti-simple-associable-choice,
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
@@ -15,7 +15,7 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
       &[dragging] {
         @apply dragging;
@@ -31,15 +31,15 @@
         @apply hov;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     &::part(drop) {
-      @apply drop;
+      @mixin drop;
       display: grid;
     }
     &::part(drop):focus {
-      @apply foc;
+      @mixin foc;
     }
 
     /*
