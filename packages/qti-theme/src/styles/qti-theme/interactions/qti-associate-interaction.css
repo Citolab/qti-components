@@ -11,7 +11,7 @@
     &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
       @mixin dropping;
     }
-     & qti-simple-associable-choice::part(drag),
+    & qti-simple-associable-choice::part(drag),
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
        `::part(qti-simple-associable-choice)`, a part named after the tag. */
     &::part(drag) {
