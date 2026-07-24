@@ -21,34 +21,43 @@ Precedence rule: later layer wins at equal specificity.
 
 ## 2. Ownership by layer
 
+qti-variables.css groups its tokens into these same layers. The declaring layer records which kind
+of rule owns a token; it does not scope readability — custom properties are inherited computed
+values, so any layer can read a token declared in any other.
+
 ### qti-components.global
 
 - Cross-interaction semantics only.
 - Shared chip, placeholder, drag-highlight, return-anchor, and correction-badge rules.
 - Must not contain interaction-specific geometry.
+- Tokens: brand palette, rhythm/timing, surfaces and border, icon masks.
 
 ### qti-components.interactions.base
 
 - Interaction-local baseline paint and structure.
 - Neutral appearance only (no candidate-correction judgement colors).
 - May define stable geometry needed for rendering.
+- Tokens: form/dropzone/inline geometry, field and textarea radii.
 
 ### qti-components.interactions.states
 
 - Interaction-local state paint for :state(...).
 - Must express dynamic UI states (checked, dragging, placeholder, candidate-\*, etc.).
 - Must not change layout metrics when toggling state.
+- Tokens: selection, chip placeholder, drop-target highlight vocabulary.
 
 ### qti-components.interactions.corrections
 
 - Answer-key and correction-view paint, including full-correct-response.
 - Owns answer-blue treatment and answer check glyphs.
 - Can override base/states paint where answer-key semantics require it.
+- Tokens: correct / incorrect / partially-correct (plus -light variants), answer key.
 
 ### qti-components.overrides
 
 - Optional downstream overrides (vendor or host-specific).
 - Never used for fixing base contract violations.
+- Declares no tokens; it exists for downstream consumers.
 
 ## 3. Selector contract
 

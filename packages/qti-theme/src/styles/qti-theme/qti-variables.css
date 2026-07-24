@@ -1,96 +1,143 @@
 /* QTI base — design variables. The theme's tokens; a substrate overrides their VALUES to
- * express its look (value first). Split from qti-base.css. See also qti-mixins.css. */
-:root,
-:host {
-  /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
-  --qti-primary: #581d70; /* purple — chips, selection, active border */
-  --qti-success: #2b830e; /* green */
-  --qti-warning: #ffa700; /* amber */
-  --qti-error: #df0000; /* red */
-  --qti-info: #007ac3; /* blue — the answer key */
+ * express its look (value first). Split from qti-base.css. See also qti-mixins.css.
+ *
+ * Grouped into the same cascade layers the rest of the theme uses (see index.css and
+ * CONTRACT.md §2), so the declaring layer documents which kind of rule OWNS a token.
+ *
+ * The layer is documentation, not scope: custom properties are inherited computed values, so a
+ * token declared in `global` is readable from a rule in any layer, and `var()` substitution across
+ * these blocks (--qti-correct reads --qti-success) is layer-independent. Nothing here renders
+ * differently for being grouped this way.
+ */
 
-  /* Foreground on a primary fill. */
-  --qti-primary-fg: #fff;
-  --qti-body-color: #3e144e;
+/* ============================================================================
+ * global — the foundation every layer reads.
+ * ========================================================================== */
+@layer qti-components.global {
+  :root,
+  :host {
+    /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
+    --qti-primary: #581d70; /* purple — chips, selection, active border */
+    --qti-success: #2b830e; /* green */
+    --qti-warning: #ffa700; /* amber */
+    --qti-error: #df0000; /* red */
+    --qti-info: #007ac3; /* blue — the answer key */
 
-  /* ── Sizing ── */
-  --qti-gap-size: 1rem; /* THE flex/grid gap, used everywhere incl .styles.ts */
-  --qti-form-size: 1rem; /* radio / checkbox */
-  --qti-padding-vertical: 0.5rem; /* the base spacing unit */
-  --qti-padding-horizontal: 1rem;
-  --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
+    /* Foreground on a primary fill. */
+    --qti-primary-fg: #fff;
+    --qti-body-color: #3e144e;
 
-  --qti-inline-padding: 2px 4px; /* for hottext and inline-choice and gap */
-  --qti-inline-margin: 0; /* for hottext and inline-choice and gap */
-  --qti-popover-z-index: 1000;
-  --qti-overlay-z-index: 1;
-  --qti-motion-duration-fast: 150ms;
+    /* ── Rhythm & timing ── */
+    --qti-gap-size: 1rem; /* THE flex/grid gap, used everywhere incl .styles.ts */
+    --qti-padding-vertical: 0.5rem; /* the base spacing unit */
+    --qti-padding-horizontal: 1rem;
+    --qti-popover-z-index: 1000;
+    --qti-overlay-z-index: 1;
+    --qti-motion-duration-fast: 150ms;
 
-  /* ── Correction — derived from the semantic colours, never set directly. ── */
-  --qti-correct: var(--qti-success);
-  --qti-incorrect: var(--qti-error);
-  --qti-partially-correct: var(--qti-warning);
-  --qti-correct-light: color-mix(in srgb, var(--qti-correct) 5%, white);
-  --qti-incorrect-light: color-mix(in srgb, var(--qti-incorrect) 5%, white);
-  --qti-partially-correct-light: color-mix(in srgb, var(--qti-partially-correct) 5%, white);
+    /* ── Surfaces & border ── */
+    --qti-bg: white;
+    --qti-hover-bg: #f9fafb;
+    --qti-secondary-bg-subtle: #edecf6;
+    --qti-secondary-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 20%, white);
+    --qti-border-thickness: 1px; /* kept: some places need the width alone (invariance, calcs) */
+    --qti-border-radius: 0.3rem;
+    --qti-border-style: solid;
+    --qti-border-color: #9b77a9;
+    --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
-  /* The answer key — the info blue, deliberately NOT the correct green. */
-  --qti-answer-fg: var(--qti-info);
-  --qti-answer-bg: color-mix(in srgb, var(--qti-info) 5%, white);
-  --qti-answer-border: var(--qti-info);
+    /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
+       dependency. One vocabulary, kept together even though --qti-times-mask is read only from
+       the corrections layer. */
+    --qti-check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+    --qti-times-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E");
+    --qti-grip-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M40 352l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zm192 0l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 320c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 192l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 160c-22.1 0-40-17.9-40-40L0 72C0 49.9 17.9 32 40 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40z'/%3E%3C/svg%3E");
+    --qti-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E");
 
-  /* The hole a lifted / placed chip leaves — derived from primary. */
-  --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);
-  --qti-placeholder-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 30%, white);
+    /* ── Slated for removal — still referenced across mixins/interactions; migrating next: ──
+     *   focus  → a single :focus-visible outline (no vars)
+     *   disabled → an opacity change (no vars)
+     *   light/dark → the qti-selections-light/dark feature is being dropped
+     *   border-active / border-style / border-color / bg-active → fold into --qti-primary / --qti-border
+     *
+     * Deliberately left in `global` rather than assigned an owning layer: these are read from both
+     * interactions.base and interactions.states, so any single owner would be a false claim. They
+     * leave the file entirely rather than move layers.
+     */
+    --qti-bg-active: var(--qti-drop-highlight-bg);
+    --qti-border-active: var(--qti-drop-highlight-border-color);
+    --qti-focus-border-width: 5px;
+    --qti-focus-color: #bddcff7e;
+    --qti-disabled-bg: transparent;
+    --qti-disabled-color: var(--qti-body-color);
+    --qti-light-bg-active: #f0f0f0;
+    --qti-light-border-active: #d0d0d0;
+    --qti-dark-bg-active: #1f2937;
+    --qti-dark-border-active: #64748b;
+  }
+}
 
-  /* Unified drop target highlight vocabulary (active + hover + sortable placeholder). */
-  --qti-drop-highlight-border-width: 2px;
-  --qti-drop-highlight-border-color: var(--qti-primary);
-  --qti-drop-highlight-bg: color-mix(in srgb, var(--qti-primary) 8%, white);
-  --qti-drop-highlight-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width)
-    color-mix(in srgb, var(--qti-drop-highlight-border-color) 45%, transparent);
-  --qti-drop-highlight-enabled-bg: color-mix(in srgb, var(--qti-primary) 4%, white);
-  --qti-drop-highlight-enabled-border-color: color-mix(in srgb, var(--qti-drop-highlight-border-color) 45%, white);
-  --qti-dragging-border-color: var(--qti-drop-highlight-border-color);
-  --qti-drop-placeholder: var(--qti-drop-highlight-border-color);
+/* ============================================================================
+ * interactions.base — interaction-local geometry. Neutral, no judgement colour.
+ * ========================================================================== */
+@layer qti-components.interactions.base {
+  :root,
+  :host {
+    --qti-form-size: 1rem; /* radio / checkbox */
+    --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
 
-  /* ── Surfaces & border ── */
-  --qti-bg: white;
-  --qti-hover-bg: #f9fafb;
-  --qti-secondary-bg-subtle: #edecf6;
-  --qti-secondary-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 20%, white);
-  --qti-border-thickness: 1px; /* kept: some places need the width alone (invariance, calcs) */
-  --qti-border-radius: 0.3rem;
-  --qti-field-border-radius: 0.25rem;
-  --qti-textarea-border-radius: 0.375rem;
-  --qti-border-style: solid;
-  --qti-border-color: #9b77a9;
-  --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+    --qti-inline-padding: 2px 4px; /* for hottext and inline-choice and gap */
+    --qti-inline-margin: 0; /* for hottext and inline-choice and gap */
 
-  /* Selection is a semantic alias of the primary action colour. */
-  --qti-selected-bg: var(--qti-primary);
-  --qti-selected-color: var(--qti-primary-fg);
+    --qti-field-border-radius: 0.25rem;
+    --qti-textarea-border-radius: 0.375rem;
+  }
+}
 
-  /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime dependency. */
-  --qti-check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
-  --qti-times-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E");
-  --qti-grip-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M40 352l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zm192 0l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 320c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 192l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 160c-22.1 0-40-17.9-40-40L0 72C0 49.9 17.9 32 40 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40z'/%3E%3C/svg%3E");
-  --qti-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E");
+/* ============================================================================
+ * interactions.states — state paint. Selection, drag, and drop-target highlight.
+ * ========================================================================== */
+@layer qti-components.interactions.states {
+  :root,
+  :host {
+    /* Selection is a semantic alias of the primary action colour. */
+    --qti-selected-bg: var(--qti-primary);
+    --qti-selected-color: var(--qti-primary-fg);
 
-  /* ── Slated for removal — still referenced across mixins/interactions; migrating next: ──
-   *   focus  → a single :focus-visible outline (no vars)
-   *   disabled → an opacity change (no vars)
-   *   light/dark → the qti-selections-light/dark feature is being dropped
-   *   border-active / border-style / border-color / bg-active → fold into --qti-primary / --qti-border
-   */
-  --qti-bg-active: var(--qti-drop-highlight-bg);
-  --qti-border-active: var(--qti-drop-highlight-border-color);
-  --qti-focus-border-width: 5px;
-  --qti-focus-color: #bddcff7e;
-  --qti-disabled-bg: transparent;
-  --qti-disabled-color: var(--qti-body-color);
-  --qti-light-bg-active: #f0f0f0;
-  --qti-light-border-active: #d0d0d0;
-  --qti-dark-bg-active: #1f2937;
-  --qti-dark-border-active: #64748b;
+    /* The hole a lifted / placed chip leaves — derived from primary. */
+    --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);
+    --qti-placeholder-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 30%, white);
+
+    /* Unified drop target highlight vocabulary (active + hover + sortable placeholder). */
+    --qti-drop-highlight-border-width: 2px;
+    --qti-drop-highlight-border-color: var(--qti-primary);
+    --qti-drop-highlight-bg: color-mix(in srgb, var(--qti-primary) 8%, white);
+    --qti-drop-highlight-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 45%, transparent);
+    --qti-drop-highlight-enabled-bg: color-mix(in srgb, var(--qti-primary) 4%, white);
+    --qti-drop-highlight-enabled-border-color: color-mix(in srgb, var(--qti-drop-highlight-border-color) 45%, white);
+    --qti-dragging-border-color: var(--qti-drop-highlight-border-color);
+    --qti-drop-placeholder: var(--qti-drop-highlight-border-color);
+  }
+}
+
+/* ============================================================================
+ * interactions.corrections — answer-key and judgement paint.
+ * ========================================================================== */
+@layer qti-components.interactions.corrections {
+  :root,
+  :host {
+    /* ── Correction — derived from the semantic colours, never set directly. ── */
+    --qti-correct: var(--qti-success);
+    --qti-incorrect: var(--qti-error);
+    --qti-partially-correct: var(--qti-warning);
+    --qti-correct-light: color-mix(in srgb, var(--qti-correct) 5%, white);
+    --qti-incorrect-light: color-mix(in srgb, var(--qti-incorrect) 5%, white);
+    --qti-partially-correct-light: color-mix(in srgb, var(--qti-partially-correct) 5%, white);
+
+    /* The answer key — the info blue, deliberately NOT the correct green. */
+    --qti-answer-fg: var(--qti-info);
+    --qti-answer-bg: color-mix(in srgb, var(--qti-info) 5%, white);
+    --qti-answer-border: var(--qti-info);
+  }
 }
