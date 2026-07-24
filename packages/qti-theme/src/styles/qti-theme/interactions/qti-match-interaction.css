@@ -5,7 +5,7 @@
   qti-simple-associable-choice::part(drag) {
     @mixin drag;
     &:hover {
-      @mixin hov;
+      @mixin drag-hover;
     }
     &:focus {
       @mixin foc;
@@ -40,7 +40,7 @@
           @mixin dragging;
         }
         &:hover {
-          @mixin hov;
+          @mixin drag-hover;
         }
         &:focus {
           @mixin foc;
@@ -86,7 +86,7 @@
         & > qti-simple-associable-choice {
           @mixin drag;
           &:hover {
-            @mixin hov;
+            @mixin drag-hover;
           }
           &:focus {
             @mixin foc;

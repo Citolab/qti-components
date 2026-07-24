@@ -38,7 +38,8 @@
     /* ── Surfaces & border ── */
     --qti-bg: white;
     --qti-hover-bg: #f9fafb;
-    --qti-secondary-bg-subtle: #edecf6;
+    /* --qti-secondary-bg-subtle went with order-interaction's two dead declarations: its only
+       reader set it immediately before `@mixin drag` overwrote it in the same rule. */
     --qti-secondary-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 20%, white);
     --qti-border-thickness: 1px; /* kept: some places need the width alone (invariance, calcs) */
     --qti-border-radius: 0.3rem;
@@ -54,22 +55,45 @@
     --qti-grip-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M40 352l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zm192 0l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 320c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 192l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 160c-22.1 0-40-17.9-40-40L0 72C0 49.9 17.9 32 40 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40z'/%3E%3C/svg%3E");
     --qti-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E");
 
-    /* ── Slated for removal — still referenced across mixins/interactions; migrating next: ──
-     *   focus  → a single :focus-visible outline (no vars)
-     *   disabled → an opacity change (no vars)
-     *   light/dark → the qti-selections-light/dark feature is being dropped
-     *   border-active / border-style / border-color / bg-active → fold into --qti-primary / --qti-border
+    /* ── Slated for removal — still referenced across mixins/interactions ──
+     *
+     *   focus → a single :focus-visible outline (no vars)
+     *     Two treatments already read these two tokens: `@mixin foc` draws a box-shadow, while
+     *     hotspot and graphic-order draw an outline. The box-shadow half is the problem — four
+     *     rules contest that one property on a drag (the resting lift, the in-flight elevation,
+     *     the placeholder's inset, the focus ring) and the last one declared wins, so focusing a
+     *     drag mid-interaction drops either its ring or its elevation. An outline joins no such
+     *     fight and costs no layout. The theme also still says `:focus` 24 times against
+     *     `:focus-visible` 10, so most rings show on mouse click too. Once it is an outline on
+     *     :focus-visible, a width and a colour are not worth tokenising.
+     *
+     *   bg-active / border-active → fold into the --qti-drop-highlight-* vocabulary
+     *     Read their definitions below: they are aliases, nothing more. Two names for one value,
+     *     and the same split that `drag`/`chip` used to have — `@mixin act` spends the aliases
+     *     while all five drag-drop interactions write the --qti-drop-highlight-* triple inline,
+     *     including the shadow `act` omits. So "highlight this drop" has two spellings that do
+     *     not agree.
+     *
+     *   light/dark → NOT dead, despite an earlier note here saying the feature was being dropped.
+     *     qti-selections-light / -dark are QTI 3 shared-vocabulary classes and they are asserted
+     *     by conformance stories — Q10 hotspot-interaction checks all four combinations, and Q8
+     *     graphic-gap-match D108 is named for them. Removing these four tokens means dropping
+     *     conformance coverage for a spec feature, which is a product decision rather than a
+     *     cleanup. Left alone until someone makes it.
      *
      * Deliberately left in `global` rather than assigned an owning layer: these are read from both
      * interactions.base and interactions.states, so any single owner would be a false claim. They
      * leave the file entirely rather than move layers.
+     *
+     * Gone already: --qti-disabled-bg and --qti-disabled-color. They were named as a global
+     * disabled vocabulary but no interaction ever read them — the theme's disabled treatment is
+     * `@mixin dis`, which is `cursor: not-allowed` and nothing else. Their only reader in the repo
+     * was one button in qti-modal-feedback, and the two values now sit there literally.
      */
     --qti-bg-active: var(--qti-drop-highlight-bg);
     --qti-border-active: var(--qti-drop-highlight-border-color);
     --qti-focus-border-width: 5px;
     --qti-focus-color: #bddcff7e;
-    --qti-disabled-bg: transparent;
-    --qti-disabled-color: var(--qti-body-color);
     --qti-light-bg-active: #f0f0f0;
     --qti-light-border-active: #d0d0d0;
     --qti-dark-bg-active: #1f2937;
@@ -116,6 +140,9 @@
     /* Selection is a semantic alias of the primary action colour. */
     --qti-selected-bg: var(--qti-primary);
     --qti-selected-color: var(--qti-primary-fg);
+
+    /* How far a drag rises under the pointer. Paint, not layout: `translate` never reflows. */
+    --qti-drag-hover-lift: -2px;
 
     /* The hole a lifted / placed chip leaves — derived from primary. */
     --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);

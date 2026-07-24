@@ -255,5 +255,28 @@
     0 4px 8px rgb(0 0 0 / 10%);
 }
 
-@define-mixin hov {
+/*
+ * A drag lifts a little under the pointer. The one hover affordance in the theme.
+ *
+ * Guarded by `@media (hover: hover)` because touch does not lack hover — it emulates it, and the
+ * emulated state sticks after a tap. Without the guard a tapped drag stays lifted until the
+ * candidate taps somewhere else, which is worse than no hover at all.
+ *
+ * So this may only ever decorate. Everything it says is also said by `:focus-visible` for a keyboard
+ * and by the resting state for a finger; nothing is communicated by hover alone.
+ *
+ * `translate`, not `box-shadow`. A transform does not reflow, so the lift cannot move the bank —
+ * and `box-shadow` is already contested on a drag by four rules at once: the resting lift, the
+ * in-flight elevation, the placeholder's inset, and the focus ring. `translate` composes with
+ * `dragging`'s `rotate` instead of fighting it, since those are separate properties.
+ *
+ * It replaces `hov`, an empty mixin invoked 21 times. It was empty because it was applied to drags,
+ * drop targets, textareas, hotspots and choices alike, and no single rule suits all of those — a
+ * drop target already paints `:state(hover)`, and a textarea has no business lifting. This one is
+ * called from drags only.
+ */
+@define-mixin drag-hover {
+  @media (hover: hover) {
+    translate: 0 var(--qti-drag-hover-lift);
+  }
 }

@@ -3,9 +3,6 @@
     & qti-hotspot-choice {
       &[shape='circle'] {
         @mixin spot;
-        &:hover {
-          @mixin hov;
-        }
         &:focus {
           @mixin foc;
         }

@@ -10,9 +10,6 @@
       &[shape='circle'],
       &[shape='square'] {
         @mixin spot;
-        &:hover {
-          @mixin hov;
-        }
         &:focus {
           @mixin foc;
         }

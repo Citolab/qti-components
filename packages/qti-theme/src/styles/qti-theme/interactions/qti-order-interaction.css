@@ -16,7 +16,7 @@
         @mixin dragging;
       }
       &:hover {
-        @mixin hov;
+        @mixin drag-hover;
       }
       &:focus {
         @mixin foc;
@@ -30,7 +30,7 @@
     &::part(drag) {
       @mixin drag;
       &:hover {
-        @mixin hov;
+        @mixin drag-hover;
       }
       &:focus {
         @mixin foc;
@@ -80,9 +80,6 @@
           border-color: var(--qti-dark-border-active);
         }
       }
-      &:hover {
-        @mixin hov;
-      }
       &:focus {
         @mixin foc;
       }
@@ -119,15 +116,18 @@
 
     /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
        chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
-    & qti-simple-choice,
+    /* Only the placed drag. `qti-simple-choice` used to be in this selector too, but the block
+       below re-declares both properties through `@mixin drag`, so it never received either. */
     &::part(drag) {
       box-shadow: var(--qti-secondary-shadow);
       color: var(--qti-body-color);
     }
 
+    /* `background-color: var(--qti-secondary-bg-subtle)` and `border: … solid transparent` used to
+       open this block. `@mixin drag` closes it and sets both, so neither ever rendered — visible in
+       dist/item.css as two dead declarations directly above the mixin's own. Removing them left
+       --qti-secondary-bg-subtle with no reader at all. */
     & qti-simple-choice {
-      background-color: var(--qti-secondary-bg-subtle);
-      border: var(--qti-border-thickness) solid transparent;
       font-weight: 600;
       @mixin drag;
     }

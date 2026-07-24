@@ -17,7 +17,7 @@
     &::part(drag) {
       @mixin drag;
       &:hover {
-        @mixin hov;
+        @mixin drag-hover;
       }
       &:focus {
         @mixin foc;
@@ -33,7 +33,7 @@
     &::part(drag) {
       @mixin drag;
       &:hover {
-        @mixin hov;
+        @mixin drag-hover;
       }
       &:focus {
         @mixin foc;

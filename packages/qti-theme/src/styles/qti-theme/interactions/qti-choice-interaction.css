@@ -22,9 +22,6 @@
            [part='control']. */
         --qti-control-display: none;
 
-        &:hover {
-          @mixin hov;
-        }
 
         &:focus {
           @mixin foc;
@@ -36,9 +33,6 @@
       & qti-simple-choice {
         @mixin check;
 
-        &:not(:state(disabled), :state(readonly), :state(checked)):hover {
-          @mixin hov;
-        }
 
         &:focus {
           @mixin foc;

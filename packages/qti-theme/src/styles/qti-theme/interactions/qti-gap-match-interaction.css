@@ -29,7 +29,7 @@
     & qti-gap::part(drag) {
       @mixin drag;
       &:hover {
-        @mixin hov;
+        @mixin drag-hover;
       }
       &:focus {
         @mixin foc;
@@ -41,7 +41,7 @@
         @mixin dragging;
       }
       &:hover {
-        @mixin hov;
+        @mixin drag-hover;
       }
       &:focus {
         @mixin foc;

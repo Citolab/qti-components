@@ -8,9 +8,6 @@
     &::part(input) {
       @mixin text;
     }
-    &:hover {
-      @mixin hov;
-    }
     &:focus-within {
       &::part(input) {
         @mixin foc;

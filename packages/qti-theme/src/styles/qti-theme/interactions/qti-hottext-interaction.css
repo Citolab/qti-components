@@ -29,9 +29,6 @@
 
         background: var(--qti-bg);
 
-        &:hover {
-          @mixin hov;
-        }
 
         &:focus {
           @mixin foc;
@@ -47,9 +44,6 @@
         outline: none;
         cursor: pointer;
 
-        &:hover {
-          @mixin hov;
-        }
 
         &:focus {
           @mixin foc;
@@ -62,9 +56,6 @@
         border: var(--qti-border);
         border-radius: var(--qti-border-radius);
 
-        &:hover {
-          @mixin hov;
-        }
 
         &:focus {
           @mixin foc;

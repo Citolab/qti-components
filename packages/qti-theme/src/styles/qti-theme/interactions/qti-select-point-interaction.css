@@ -3,9 +3,6 @@
     color: var(--qti-primary);
 
     &::part(point) {
-      &:hover {
-        @mixin hov;
-      }
       &:focus {
         @mixin foc;
       }
