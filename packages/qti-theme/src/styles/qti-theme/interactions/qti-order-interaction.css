@@ -197,24 +197,28 @@
 }
 
 @layer qti-components.interactions.corrections {
+  /*
+   * Judgement paint, via the shared mixin — every other drag-drop interaction already uses it.
+   *
+   * Order hand-rolled this, and set `background-color` and `border-color` but never `color`. The
+   * drag handle is `background-color: currentColor` behind a mask (see `@mixin grip`), so it can
+   * only be as green as the element's `color` — and `color` stayed at the `--qti-body-color` the
+   * base layer gives a drag, which is #3e144e and reads as black. Every other interaction's grip
+   * turned green or red because `candidate-tint` sets all three.
+   *
+   * Two rules went with it, both dead: a `background-color: var(--qti-correct-response, …)` pair
+   * that the blocks below overrode at equal specificity, naming a `--qti-correct-response` token
+   * that is not defined anywhere in the repo.
+   *
+   * Keep :state() in the same selector as ::part(). Native nesting after a pseudo-element is not
+   * parsed consistently by the browser toolchain.
+   */
   qti-order-interaction::part(drag):state(candidate-correct) {
-    background-color: var(--qti-correct-response, var(--qti-correct));
+    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
   }
 
   qti-order-interaction::part(drag):state(candidate-incorrect) {
-    background-color: var(--qti-incorrect);
-  }
-
-  /* Keep :state() in the same selector as ::part(). Native nesting after a
-     pseudo-element is not parsed consistently by the browser toolchain. */
-  qti-order-interaction::part(drag):state(candidate-incorrect) {
-    border-color: var(--qti-incorrect);
-    background-color: var(--qti-incorrect-light);
-  }
-
-  qti-order-interaction::part(drag):state(candidate-correct) {
-    border-color: var(--qti-correct);
-    background-color: var(--qti-correct-light);
+    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
