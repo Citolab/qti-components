@@ -27,10 +27,17 @@ import { withCorrectionRegistry } from './with-correction-registry.decorator';
 
 import type { Meta } from '@storybook/web-components-vite';
 
+const inheritedDecorators = kennisnetMetaBase.decorators
+  ? Array.isArray(kennisnetMetaBase.decorators)
+    ? kennisnetMetaBase.decorators
+    : [kennisnetMetaBase.decorators]
+  : [];
+
 const meta: Meta = {
   title: 'qti-corrections/Kennisnet All Items',
   ...kennisnetMetaBase,
-  decorators: [...(kennisnetMetaBase.decorators ?? []), withCorrectionRegistry]
+  tags: ['autodocs', 'vrt'],
+  decorators: [...inheritedDecorators, withCorrectionRegistry]
 };
 
 export default meta;

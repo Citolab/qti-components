@@ -18,7 +18,7 @@ const config: StorybookConfig = {
           { directory: '../apps/e2e/src', files: '**/kennisnet-all-items.stories.ts', titlePrefix: 'E2E' },
           {
             directory: '../packages/qti-corrections/src',
-            files: '**/kennisnet-all-items.stories.ts',
+            files: '**/correction.stories.ts',
             titlePrefix: 'QTI Corrections'
           }
         ]
