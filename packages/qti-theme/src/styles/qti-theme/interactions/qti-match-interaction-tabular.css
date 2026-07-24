@@ -115,12 +115,6 @@
     &::part(control incorrect) {
       border-color: var(--qti-incorrect);
     }
-    &::part(control-mark checked correct) {
-      background-color: var(--qti-correct);
-    }
-    &::part(control-mark checked incorrect) {
-      background-color: var(--qti-incorrect);
-    }
 
     &::part(control checked correct) {
       @mixin control-selected var(--qti-correct);

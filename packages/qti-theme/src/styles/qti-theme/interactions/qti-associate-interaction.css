@@ -1,12 +1,17 @@
 @layer qti-components.interactions.base {
   qti-associate-interaction {
+    & qti-simple-associable-choice {
+      box-sizing: border-box;
+      border: var(--qti-border-thickness) solid transparent;
+    }
+
     &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
       @mixin act;
     }
     &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
       @mixin dropping;
     }
-    & qti-simple-associable-choice,
+     & qti-simple-associable-choice::part(drag),
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
        `::part(qti-simple-associable-choice)`, a part named after the tag. */
     &::part(drag) {
@@ -80,6 +85,14 @@
   qti-associate-interaction::part(enabled) {
     border-color: var(--qti-drop-highlight-enabled-border-color);
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  qti-associate-interaction qti-simple-associable-choice:state(placeholder) {
+    @mixin placeholder;
+    /* Keep the source placeholder footprint equal to the live bank chip. */
+    padding: var(--qti-padding-vertical) 0.8em;
+    border: var(--qti-border-thickness) solid transparent;
+    pointer-events: none;
   }
 }
 

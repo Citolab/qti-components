@@ -485,7 +485,7 @@ export const Matrixvraag: Story = {
           <qti-match-interaction
             response-identifier="RESPONSE_CHECK"
             class="qti-match-tabular"
-            .response=${['egypte afrika', 'brazilie zuidamerika', 'japan azie', 'japan afrika']}
+            response="egypte afrika,brazilie zuidamerika,japan azie,japan afrika"
             correct-response="egypte afrika,brazilie zuidamerika,japan azie"
             show-candidate-correction
             show-full-correct-response

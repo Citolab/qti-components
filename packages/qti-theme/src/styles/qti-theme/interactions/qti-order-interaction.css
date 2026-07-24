@@ -176,6 +176,11 @@
 }
 
 @layer qti-components.interactions.states {
+  qti-order-interaction qti-simple-choice:state(placeholder) {
+    @mixin placeholder;
+    pointer-events: none;
+  }
+
   qti-order-interaction::part(hover),
   qti-order-interaction::part(active) {
     border-color: var(--qti-drop-highlight-border-color);

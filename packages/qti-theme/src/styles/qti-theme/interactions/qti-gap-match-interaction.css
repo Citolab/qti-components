@@ -130,6 +130,11 @@
     @mixin chip;
   }
 
+  qti-gap-match-interaction qti-gap-text:state(placeholder) {
+    @mixin placeholder;
+    pointer-events: none;
+  }
+
   qti-gap-match-interaction qti-gap:state(hover),
   qti-gap-match-interaction qti-gap:state(active) {
     border-color: var(--qti-drop-highlight-border-color);
