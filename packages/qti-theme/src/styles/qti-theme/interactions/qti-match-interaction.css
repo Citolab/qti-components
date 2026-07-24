@@ -165,6 +165,26 @@
   }
 
   qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(dragging)
+    > *,
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(placeholder)
+    > * {
+    visibility: hidden;
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(dragging)::part(label),
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(placeholder)::part(label) {
+    visibility: hidden;
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:last-of-type
     > qti-simple-associable-choice:state(hover)::part(drop),
   qti-match-interaction:not(.qti-match-tabular)

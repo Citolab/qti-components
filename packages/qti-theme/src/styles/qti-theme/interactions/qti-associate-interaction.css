@@ -2,6 +2,7 @@
   qti-associate-interaction {
     & qti-simple-associable-choice {
       box-sizing: border-box;
+      padding: var(--qti-padding-vertical) 0.8em;
       border: var(--qti-border-thickness) solid transparent;
     }
 
@@ -89,10 +90,32 @@
 
   qti-associate-interaction qti-simple-associable-choice:state(placeholder) {
     @mixin placeholder;
-    /* Keep the source placeholder footprint equal to the live bank chip. */
-    padding: var(--qti-padding-vertical) 0.8em;
-    border: var(--qti-border-thickness) solid transparent;
+    border-color: transparent;
     pointer-events: none;
+  }
+
+  qti-associate-interaction qti-simple-associable-choice:state(dragging) {
+    @mixin placeholder;
+    border-color: var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color));
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color)) 55%, transparent);
+    pointer-events: none;
+  }
+
+  qti-associate-interaction qti-simple-associable-choice:state(placeholder) > *,
+  qti-associate-interaction qti-simple-associable-choice:state(dragging) > * {
+    visibility: hidden;
+  }
+
+  qti-associate-interaction qti-simple-associable-choice:state(placeholder)::part(label),
+  qti-associate-interaction qti-simple-associable-choice:state(dragging)::part(label) {
+    visibility: hidden;
+  }
+
+  qti-associate-interaction qti-simple-associable-choice:state(return-anchor) {
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 }
 
