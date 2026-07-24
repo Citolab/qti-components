@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-graphic-associate-interaction {
     position: relative;
     display: block;

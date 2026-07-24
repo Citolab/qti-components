@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-inline-choice-interaction {
     /* ── Host: field appearance ─────────────────────────────────────────────── */
     margin: var(--qti-inline-margin);

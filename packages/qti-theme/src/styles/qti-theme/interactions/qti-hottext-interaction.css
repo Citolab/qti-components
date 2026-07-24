@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-hottext-interaction {
     --qti-hottext-selected-padding: calc(var(--qti-padding-vertical) / 2) calc(var(--qti-padding-horizontal) / 2);
 

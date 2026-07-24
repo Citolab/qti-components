@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-extended-text-interaction {
     &::part(textarea) {
       @mixin text;

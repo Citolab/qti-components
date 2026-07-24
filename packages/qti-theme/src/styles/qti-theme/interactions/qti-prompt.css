@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-prompt {
     margin: var(--qti-padding-vertical) 0;
     display: block;

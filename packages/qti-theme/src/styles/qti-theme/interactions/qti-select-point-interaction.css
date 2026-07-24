@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-select-point-interaction {
     color: var(--qti-primary);
 

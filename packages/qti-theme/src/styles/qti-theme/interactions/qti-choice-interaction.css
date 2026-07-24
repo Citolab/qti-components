@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-choice-interaction {
     & qti-simple-choice {
       width: fit-content;

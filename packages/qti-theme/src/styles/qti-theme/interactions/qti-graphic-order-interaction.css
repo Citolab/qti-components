@@ -1,4 +1,4 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-graphic-order-interaction {
     overflow: visible;
     --qti-graphic-order-pin-size: calc(var(--qti-select-point-marker-size, 1.5rem) * 1.2);
