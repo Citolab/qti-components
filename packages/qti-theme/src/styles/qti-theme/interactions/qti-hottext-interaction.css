@@ -9,14 +9,6 @@
       &::part(control) {
         display: none;
       }
-
-      &:state(correct-response),
-      &[data-correct-response='true'] {
-        &::after {
-          content: '\02714';
-          color: var(--qti-correct);
-        }
-      }
     }
 
     &.qti-input-control-hidden {
@@ -36,29 +28,6 @@
 
         &::part(control) {
           display: none;
-        }
-
-        &:state(checked) {
-          border-color: var(--qti-border-active);
-          background-color: var(--qti-selected-bg);
-          color: var(--qti-selected-color);
-          padding: var(--qti-hottext-selected-padding);
-        }
-
-        &:state(candidate-correct) {
-          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-        }
-
-        &:state(candidate-incorrect) {
-          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-        }
-
-        &:state(readonly) {
-          @mixin readonly;
-        }
-
-        &:state(disabled) {
-          @mixin dis;
         }
       }
     }
@@ -82,30 +51,6 @@
         &::part(control) {
           display: none;
         }
-
-        &:state(checked) {
-          background-color: var(--qti-selected-bg);
-          color: var(--qti-selected-color);
-          padding: var(--qti-hottext-selected-padding);
-        }
-
-        &:state(candidate-correct) {
-          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-correct);
-        }
-
-        &:state(candidate-incorrect) {
-          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
-        }
-
-        &:state(readonly) {
-          @mixin readonly;
-        }
-
-        &:state(disabled) {
-          @mixin dis;
-        }
       }
     }
 
@@ -121,30 +66,81 @@
         &:focus {
           @mixin foc;
         }
+      }
+    }
+  }
+}
 
-        &:state(checked) {
-          background-color: var(--qti-selected-bg);
-          color: var(--qti-selected-color);
-          padding: var(--qti-hottext-selected-padding);
-        }
+@layer qti-components.interactions.states {
+  qti-hottext-interaction {
+    &.qti-input-control-hidden qti-hottext {
+      &:state(checked) {
+        border-color: var(--qti-border-active);
+        background-color: var(--qti-selected-bg);
+        color: var(--qti-selected-color);
+        padding: var(--qti-hottext-selected-padding);
+      }
 
-        &:state(candidate-correct) {
-          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-correct);
-        }
+      &:state(readonly) {
+        @mixin readonly;
+      }
 
-        &:state(candidate-incorrect) {
-          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-          box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
-        }
+      &:state(disabled) {
+        @mixin dis;
+      }
+    }
 
-        &:state(readonly) {
-          @mixin readonly;
-        }
+    &.qti-unselected-hidden qti-hottext,
+    &:not(.qti-input-control-hidden, .qti-unselected-hidden) qti-hottext {
+      &:state(checked) {
+        background-color: var(--qti-selected-bg);
+        color: var(--qti-selected-color);
+        padding: var(--qti-hottext-selected-padding);
+      }
 
-        &:state(disabled) {
-          @mixin dis;
+      &:state(readonly) {
+        @mixin readonly;
+      }
+
+      &:state(disabled) {
+        @mixin dis;
+      }
+    }
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-hottext-interaction {
+    qti-hottext {
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        &::after {
+          content: '\02714';
+          color: var(--qti-correct);
         }
+      }
+    }
+
+    &.qti-input-control-hidden qti-hottext {
+      &:state(candidate-correct) {
+        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+      }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+      }
+    }
+
+    &.qti-unselected-hidden qti-hottext,
+    &:not(.qti-input-control-hidden, .qti-unselected-hidden) qti-hottext {
+      &:state(candidate-correct) {
+        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+        box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-correct);
+      }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+        box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
       }
     }
   }

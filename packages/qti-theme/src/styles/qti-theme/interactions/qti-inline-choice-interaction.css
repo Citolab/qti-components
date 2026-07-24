@@ -118,8 +118,11 @@
       border: var(--qti-border-thickness) solid var(--qti-warning);
       border-radius: var(--qti-border-radius);
     }
+  }
+}
 
-    /* ── Correct-option answer key overlay ───────────────────────────────────── */
+@layer qti-components.interactions.corrections {
+  qti-inline-choice-interaction {
     &::part(correct-option) {
       border: var(--qti-border-thickness) solid var(--qti-correct);
       border-radius: var(--qti-field-border-radius);
@@ -127,7 +130,6 @@
       color: var(--qti-correct);
     }
 
-    /* ── Candidate correction states ─────────────────────────────────────────── */
     &:state(candidate-correct) {
       @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
 

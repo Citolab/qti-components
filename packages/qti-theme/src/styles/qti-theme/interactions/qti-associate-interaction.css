@@ -64,10 +64,6 @@
   }
 }
 
-.full-correct-response qti-associate-interaction qti-simple-associable-choice {
-  display: none;
-}
-
 @layer qti-components.interactions.states {
   qti-simple-associable-choice::part(drag),
   qti-associate-interaction::part(drag) {
@@ -85,7 +81,9 @@
     border-color: var(--qti-drop-highlight-enabled-border-color);
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
+}
 
+@layer qti-components.interactions.corrections {
   qti-simple-associable-choice::part(drag):state(candidate-correct),
   qti-associate-interaction::part(drag):state(candidate-correct) {
     @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
@@ -94,5 +92,9 @@
   qti-simple-associable-choice::part(drag):state(candidate-incorrect),
   qti-associate-interaction::part(drag):state(candidate-incorrect) {
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  .full-correct-response qti-associate-interaction qti-simple-associable-choice {
+    display: none;
   }
 }

@@ -20,29 +20,45 @@
         }
       }
     }
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-graphic-associate-interaction {
     &.qti-selections-light {
       &:state(dragzone-active)::part(drags) {
         background-color: var(--qti-light-bg-active);
         border-color: var(--qti-light-border-active);
       }
+
       &:state(dragzone-enabled)::part(drags) {
         background-color: var(--qti-light-bg-active);
       }
     }
+
     &.qti-selections-dark {
       &:state(dragzone-active)::part(drags) {
         background-color: var(--qti-dark-bg-active);
         border-color: var(--qti-dark-border-active);
       }
+
       &:state(dragzone-enabled)::part(drags) {
         background-color: var(--qti-dark-bg-active);
       }
     }
+
     &:state(dragzone-active)::part(drags) {
       @mixin act;
     }
+
     &:state(dragzone-enabled)::part(drags) {
       @mixin dropping;
     }
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-noop-corrections-layer-placeholder {
+    --qti-corrections-layer-present: 1;
   }
 }

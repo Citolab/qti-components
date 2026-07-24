@@ -7,14 +7,6 @@
       &::part(label) {
         display: inline !important;
       }
-
-      &:state(correct-response),
-      &[data-correct-response='true'] {
-        &::after {
-          content: '\02714';
-          color: var(--qti-correct);
-        }
-      }
     }
 
     &.qti-input-control-hidden {
@@ -33,46 +25,6 @@
         &::part(control) {
           display: none;
         }
-
-        &:state(checked) {
-          @mixin act;
-          background-color: var(--qti-selected-bg);
-          color: var(--qti-selected-color);
-        }
-
-        &:state(readonly) {
-          @mixin readonly;
-        }
-
-        &:state(disabled) {
-          @mixin dis;
-        }
-
-        &:state(correct-response),
-        &[data-correct-response='true'] {
-          border: 3px solid var(--qti-correct) !important;
-          padding-right: 30px;
-
-          &::after {
-            content: '\02714';
-            color: var(--qti-correct);
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-          }
-        }
-
-        /* Candidate judgement follows checked/correct-response paint so it can
-           recolour the same stable box without changing its geometry. */
-        &:state(candidate-correct) {
-          @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-        }
-
-        &:state(candidate-incorrect) {
-          @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-        }
       }
     }
 
@@ -88,55 +40,121 @@
           @mixin foc;
         }
 
-        &:state(candidate-correct) {
-          background-color: transparent;
-
-          &:state(radio):state(checked)::part(control),
-          &:state(checkbox):state(checked)::part(control) {
-            @mixin control-selected var(--qti-correct);
-          }
-        }
-
-        &:state(candidate-incorrect) {
-          background-color: transparent;
-
-          &:state(radio):state(checked)::part(control),
-          &:state(checkbox):state(checked)::part(control) {
-            @mixin control-selected var(--qti-incorrect);
-          }
-        }
-
-        &:state(readonly) {
-          @mixin readonly;
-        }
-
-        &:state(disabled) {
-          @mixin dis;
-        }
-
         &::part(control-mark) {
           @mixin check-size;
         }
+      }
+    }
+  }
+}
 
-        &:state(radio)::part(control) {
-          @mixin check-radio;
+@layer qti-components.interactions.states {
+  qti-choice-interaction {
+    &.qti-input-control-hidden qti-simple-choice {
+      &:state(checked) {
+        @mixin act;
+        background-color: var(--qti-selected-bg);
+        color: var(--qti-selected-color);
+      }
+
+      &:state(readonly) {
+        @mixin readonly;
+      }
+
+      &:state(disabled) {
+        @mixin dis;
+      }
+    }
+
+    &:not(.qti-input-control-hidden) qti-simple-choice {
+      &:state(readonly) {
+        @mixin readonly;
+      }
+
+      &:state(disabled) {
+        @mixin dis;
+      }
+
+      &:state(radio)::part(control) {
+        @mixin check-radio;
+      }
+
+      &:state(radio):state(checked)::part(control),
+      &:state(checkbox):state(checked)::part(control) {
+        @mixin control-selected var(--qti-primary);
+      }
+
+      &:state(radio):state(checked)::part(control-mark) {
+        @mixin check-radio-checked;
+      }
+
+      &:state(checkbox)::part(control) {
+        @mixin check-checkbox;
+      }
+
+      &:state(checkbox):state(checked)::part(control-mark) {
+        @mixin check-checkbox-checked;
+      }
+    }
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-choice-interaction {
+    & qti-simple-choice {
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        &::after {
+          content: '\02714';
+          color: var(--qti-correct);
         }
+      }
+    }
+
+    &.qti-input-control-hidden qti-simple-choice {
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        border: 3px solid var(--qti-correct) !important;
+        padding-right: 30px;
+
+        &::after {
+          content: '\02714';
+          color: var(--qti-correct);
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          font-size: 1.2em;
+          font-weight: bold;
+        }
+      }
+
+      /* Candidate judgement follows checked/correct-response paint so it can
+         recolour the same stable box without changing its geometry. */
+      &:state(candidate-correct) {
+        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+      }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+      }
+    }
+
+    &:not(.qti-input-control-hidden) qti-simple-choice {
+      &:state(candidate-correct) {
+        background-color: transparent;
 
         &:state(radio):state(checked)::part(control),
         &:state(checkbox):state(checked)::part(control) {
-          @mixin control-selected var(--qti-primary);
+          @mixin control-selected var(--qti-correct);
         }
+      }
 
-        &:state(radio):state(checked)::part(control-mark) {
-          @mixin check-radio-checked;
-        }
+      &:state(candidate-incorrect) {
+        background-color: transparent;
 
-        &:state(checkbox)::part(control) {
-          @mixin check-checkbox;
-        }
-
-        &:state(checkbox):state(checked)::part(control-mark) {
-          @mixin check-checkbox-checked;
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-incorrect);
         }
       }
     }

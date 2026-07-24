@@ -90,12 +90,6 @@
         }
         & > qti-simple-associable-choice {
           @mixin drag;
-          &:state(candidate-correct) {
-            background-color: var(--qti-correct);
-          }
-          &:state(candidate-incorrect) {
-            background-color: var(--qti-incorrect);
-          }
           &::part(drop) {
             display: none;
           }
@@ -157,10 +151,6 @@
   qti-match-interaction .correct-option {
     margin: 0 0.5rem;
   }
-
-  .full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type {
-    display: none;
-  }
 }
 
 @layer qti-components.interactions.states {
@@ -207,6 +197,22 @@
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
       color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:last-of-type
+    > qti-simple-associable-choice
+    > qti-simple-associable-choice:state(candidate-correct) {
+    background-color: var(--qti-correct);
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:last-of-type
+    > qti-simple-associable-choice
+    > qti-simple-associable-choice:state(candidate-incorrect) {
+    background-color: var(--qti-incorrect);
+  }
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-correct) {
     @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
@@ -214,5 +220,9 @@
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-incorrect) {
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  .full-correct-response qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:first-of-type {
+    display: none;
   }
 }

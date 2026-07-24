@@ -40,21 +40,6 @@
     &::part(control-mark checkbox checked) {
       @mixin check-checkbox-checked;
     }
-
-    /* Correct / incorrect overlays — border on the outer box, and a matching fill on the inner
-       indicator when checked. */
-    &::part(control correct) {
-      border-color: var(--qti-correct);
-    }
-    &::part(control incorrect) {
-      border-color: var(--qti-incorrect);
-    }
-    &::part(control-mark checked correct) {
-      background-color: var(--qti-correct);
-    }
-    &::part(control-mark checked incorrect) {
-      background-color: var(--qti-incorrect);
-    }
   }
 
   /* Header cells — the two slotted <qti-simple-match-set>s have display:contents
@@ -112,6 +97,30 @@
     &::part(control-mark checkbox checked) {
       background-color: white;
     }
+  }
+
+  qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
+    border: none;
+    background-color: white;
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-match-interaction.qti-match-tabular {
+    /* Correct / incorrect overlays — border on the outer box, and a matching fill on the inner
+       indicator when checked. */
+    &::part(control correct) {
+      border-color: var(--qti-correct);
+    }
+    &::part(control incorrect) {
+      border-color: var(--qti-incorrect);
+    }
+    &::part(control-mark checked correct) {
+      background-color: var(--qti-correct);
+    }
+    &::part(control-mark checked incorrect) {
+      background-color: var(--qti-incorrect);
+    }
 
     &::part(control checked correct) {
       @mixin control-selected var(--qti-correct);
@@ -120,11 +129,6 @@
     &::part(control checked incorrect) {
       @mixin control-selected var(--qti-incorrect);
     }
-  }
-
-  qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
-    border: none;
-    background-color: white;
   }
 
   .full-correct-response qti-match-interaction.qti-match-tabular {

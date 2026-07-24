@@ -9,29 +9,11 @@
         &:focus {
           @mixin foc;
         }
-        &:state(checked) {
-          @mixin act-bor;
-        }
-        &:state(readonly) {
-          @mixin readonly;
-        }
-        &:state(disabled) {
-          @mixin dis;
-        }
       }
       &[shape='rect'] {
         @mixin spot;
         &:focus {
           @mixin foc;
-        }
-        &:state(checked) {
-          @mixin act-bor;
-        }
-        &:state(readonly) {
-          @mixin readonly;
-        }
-        &:state(disabled) {
-          @mixin dis;
         }
       }
       &[shape='poly'] {
@@ -47,25 +29,6 @@
             transparent 10px
           );
           display: block;
-        }
-        &:state(checked)::after {
-          content: '';
-          width: 100%;
-          height: 100%;
-          background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 5px,
-            var(--qti-border-active) 5px,
-            var(--qti-border-active) 10px
-          );
-          display: block;
-        }
-        &:state(readonly) {
-          @mixin readonly;
-        }
-        &:state(disabled) {
-          @mixin dis;
         }
       }
     }
@@ -93,16 +56,34 @@
     outline-offset: 2px;
   }
 
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly'] {
+    border: 0 !important;
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-hotspot-interaction qti-hotspot-choice:state(checked) {
+    border-color: var(--qti-selected-bg) !important;
+    background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(disabled),
+  qti-hotspot-interaction qti-hotspot-choice:state(readonly) {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(checked) {
+    background-color: color-mix(in srgb, var(--qti-selected-bg) 40%, transparent);
+  }
+}
+
+@layer qti-components.interactions.corrections {
   /* Answer-key state comes first so the candidate's own judgement wins when
      both state families are present on the same choice. */
   qti-hotspot-interaction qti-hotspot-choice:state(correct-response) {
     border-color: var(--qti-answer-border) !important;
     background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
-  }
-
-  qti-hotspot-interaction qti-hotspot-choice:state(checked) {
-    border-color: var(--qti-selected-bg) !important;
-    background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
   }
 
   qti-hotspot-interaction qti-hotspot-choice:state(candidate-correct) {
@@ -115,22 +96,8 @@
     background-color: color-mix(in srgb, var(--qti-incorrect) 35%, transparent);
   }
 
-  qti-hotspot-interaction qti-hotspot-choice:state(disabled),
-  qti-hotspot-interaction qti-hotspot-choice:state(readonly) {
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  qti-hotspot-interaction qti-hotspot-choice[shape='poly'] {
-    border: 0 !important;
-  }
-
   qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(correct-response) {
     background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
-  }
-
-  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(checked) {
-    background-color: color-mix(in srgb, var(--qti-selected-bg) 40%, transparent);
   }
 
   qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(candidate-correct) {

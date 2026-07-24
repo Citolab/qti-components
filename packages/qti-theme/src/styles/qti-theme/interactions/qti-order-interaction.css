@@ -65,14 +65,6 @@
       --qti-drop-bg-img: none;
     }
 
-    &::part(drag):state(candidate-correct) {
-      background-color: var(--qti-correct-response, var(--qti-correct));
-    }
-
-    &::part(drag):state(candidate-incorrect) {
-      background-color: var(--qti-incorrect);
-    }
-
     &::part(drops) {
       gap: var(--qti-padding-vertical);
     }
@@ -153,18 +145,6 @@
       overflow: visible;
     }
 
-    /* Keep :state() in the same selector as ::part(). Native nesting after a
-       pseudo-element is not parsed consistently by the browser toolchain. */
-    &::part(drag):state(candidate-incorrect) {
-      border-color: var(--qti-incorrect);
-      background-color: var(--qti-incorrect-light);
-    }
-
-    &::part(drag):state(candidate-correct) {
-      border-color: var(--qti-correct);
-      background-color: var(--qti-correct-light);
-    }
-
     &::part(container) {
       gap: 2rem;
     }
@@ -193,10 +173,6 @@
       }
     }
   }
-
-  .full-correct-response qti-order-interaction::part(drags) {
-    display: none;
-  }
 }
 
 @layer qti-components.interactions.states {
@@ -210,5 +186,31 @@
   qti-order-interaction::part(enabled) {
     border-color: var(--qti-drop-highlight-enabled-border-color);
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-order-interaction::part(drag):state(candidate-correct) {
+    background-color: var(--qti-correct-response, var(--qti-correct));
+  }
+
+  qti-order-interaction::part(drag):state(candidate-incorrect) {
+    background-color: var(--qti-incorrect);
+  }
+
+  /* Keep :state() in the same selector as ::part(). Native nesting after a
+     pseudo-element is not parsed consistently by the browser toolchain. */
+  qti-order-interaction::part(drag):state(candidate-incorrect) {
+    border-color: var(--qti-incorrect);
+    background-color: var(--qti-incorrect-light);
+  }
+
+  qti-order-interaction::part(drag):state(candidate-correct) {
+    border-color: var(--qti-correct);
+    background-color: var(--qti-correct-light);
+  }
+
+  .full-correct-response qti-order-interaction::part(drags) {
+    display: none;
   }
 }

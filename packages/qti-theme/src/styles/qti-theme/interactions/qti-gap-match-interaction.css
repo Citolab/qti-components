@@ -46,12 +46,6 @@
       &:focus {
         @mixin foc;
       }
-      &:state(candidate-correct) {
-        background-color: var(--qti-correct);
-      }
-      &:state(candidate-incorrect) {
-        background-color: var(--qti-incorrect);
-      }
     }
     & qti-gap {
       @mixin drop;
@@ -128,15 +122,6 @@
     display: flex !important;
     align-items: center !important;
   }
-
-  qti-gap-match-interaction .correct-option {
-    @mixin answer;
-    border: var(--qti-border-thickness) solid var(--qti-answer-border) !important;
-  }
-
-  .full-correct-response qti-gap-match-interaction::part(drags) {
-    display: none;
-  }
 }
 
 @layer qti-components.interactions.states {
@@ -156,6 +141,16 @@
     border-color: var(--qti-drop-highlight-enabled-border-color);
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-gap-match-interaction qti-gap-text:state(candidate-correct) {
+    background-color: var(--qti-correct);
+  }
+
+  qti-gap-match-interaction qti-gap-text:state(candidate-incorrect) {
+    background-color: var(--qti-incorrect);
+  }
 
   qti-gap::part(drag):state(candidate-correct) {
     @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
@@ -163,5 +158,14 @@
 
   qti-gap::part(drag):state(candidate-incorrect) {
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  qti-gap-match-interaction .correct-option {
+    @mixin answer;
+    border: var(--qti-border-thickness) solid var(--qti-answer-border) !important;
+  }
+
+  .full-correct-response qti-gap-match-interaction::part(drags) {
+    display: none;
   }
 }
