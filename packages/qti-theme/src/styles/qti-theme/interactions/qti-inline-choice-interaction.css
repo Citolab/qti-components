@@ -2,7 +2,7 @@
   qti-inline-choice-interaction {
     /* ── Host: field appearance ─────────────────────────────────────────────── */
     margin: var(--qti-inline-margin);
-    color: var(--qti-body-color);
+    color: var(--qti-fg);
     background-color: var(--qti-bg);
     border: var(--qti-border);
     border-radius: var(--qti-field-border-radius);
@@ -110,7 +110,7 @@
 
     /* ── Validation message ──────────────────────────────────────────────────── */
     &::part(message) {
-      color: var(--qti-body-color);
+      color: var(--qti-fg);
       background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
       padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
       border: var(--qti-border-thickness) solid var(--qti-warning);

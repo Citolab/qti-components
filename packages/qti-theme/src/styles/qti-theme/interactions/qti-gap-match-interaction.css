@@ -5,7 +5,7 @@
        item in this repo ever set it on a gap-match interaction. What was here overrode the neutral
        drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
     &:state(dragzone-active)::part(drags) {
-      @mixin act;
+      @mixin dropping;
     }
     &:state(dragzone-enabled)::part(drags) {
       @mixin dropping;
@@ -47,7 +47,7 @@
         @mixin dropping;
       }
       &[active] {
-        @mixin act;
+        @mixin dropping;
       }
       /* The gap's own box — inline-flex, centred, baseline-aligned — is in qti-gap.styles.ts. */
 
@@ -102,9 +102,9 @@
 
   qti-gap-match-interaction qti-gap-text:state(dragging) {
     @mixin drag-placeholder;
-    border-color: var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color));
+    border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color)) 55%, transparent);
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
     pointer-events: none;
   }
 
@@ -116,13 +116,10 @@
 
   qti-gap-match-interaction qti-gap:state(hover),
   qti-gap-match-interaction qti-gap:state(active) {
-    border-color: var(--qti-drop-highlight-border-color);
     background-color: var(--qti-drop-highlight-bg);
-    box-shadow: var(--qti-drop-highlight-shadow);
   }
 
   qti-gap-match-interaction qti-gap:state(enabled) {
-    border-color: var(--qti-drop-highlight-enabled-border-color);
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
 }

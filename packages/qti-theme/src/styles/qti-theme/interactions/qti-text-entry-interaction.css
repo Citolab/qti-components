@@ -27,7 +27,7 @@
     }
 
     &:state(candidate-partially-correct) {
-      @mixin candidate-tint var(--qti-body-color), var(--qti-partially-correct-light);
+      @mixin candidate-tint var(--qti-fg), var(--qti-partially-correct-light);
       border-color: var(--qti-partially-correct);
 
       &::part(input) {

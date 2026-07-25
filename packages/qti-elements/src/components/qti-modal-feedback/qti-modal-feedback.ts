@@ -38,7 +38,7 @@ export class QtiModalFeedback extends QtiFeedback {
        ever used them: the theme's disabled treatment is '@mixin dis', and that is cursor only. */
     .button:disabled {
       background-color: transparent;
-      color: var(--qti-body-color);
+      color: var(--qti-fg);
       cursor: not-allowed;
     }
 

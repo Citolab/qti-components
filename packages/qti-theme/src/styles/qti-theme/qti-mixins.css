@@ -108,7 +108,7 @@
 }
 
 @define-mixin field-typography {
-  color: var(--qti-body-color);
+  color: var(--qti-fg);
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.5;
@@ -151,7 +151,7 @@
    node, and `Interaction.reportValidity` already owns showing and hiding it with an inline style.
    What is left here is paint. */
 @define-mixin validation-message {
-  color: var(--qti-body-color);
+  color: var(--qti-fg);
   background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
   padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   border: var(--qti-border-thickness) solid var(--qti-warning);

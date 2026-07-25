@@ -1,7 +1,7 @@
 @layer qti-components.interactions.base {
   qti-order-interaction {
     &:state(dragzone-active)::part(drags) {
-      @mixin act;
+      @mixin dropping;
     }
     &:state(dragzone-enabled)::part(drags) {
       @mixin dropping;
@@ -48,7 +48,6 @@
      * `::part()`, and a <div> cannot carry a custom state (attachInternals throws). See setDropFlag.
      */
     &::part(active) {
-      border-color: var(--qti-border-active);
       background-color: var(--qti-bg-active);
     }
 
@@ -79,7 +78,7 @@
       }
     }
     &::part(active) {
-      @mixin act;
+      @mixin dropping;
     }
   }
 
@@ -100,7 +99,6 @@
     }
 
     &::part(active) {
-      border-color: var(--qti-border-active);
       background-color: var(--qti-bg-active);
     }
 
@@ -113,8 +111,7 @@
     /* Only the placed drag. `qti-simple-choice` used to be in this selector too, but the block
        below re-declares both properties through `@mixin drag`, so it never received either. */
     &::part(drag) {
-      box-shadow: var(--qti-secondary-shadow);
-      color: var(--qti-body-color);
+      color: var(--qti-fg);
     }
 
     /* `background-color: var(--qti-secondary-bg-subtle)` and `border: … solid transparent` used to
@@ -165,9 +162,9 @@
 
   qti-order-interaction qti-simple-choice:state(dragging) {
     @mixin drag-placeholder;
-    border-color: var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color));
+    border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-dragging-border-color, var(--qti-drop-highlight-border-color)) 55%, transparent);
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
     pointer-events: none;
   }
 
@@ -179,13 +176,10 @@
 
   qti-order-interaction::part(hover),
   qti-order-interaction::part(active) {
-    border-color: var(--qti-drop-highlight-border-color);
     background-color: var(--qti-drop-highlight-bg);
-    box-shadow: var(--qti-drop-highlight-shadow);
   }
 
   qti-order-interaction::part(enabled) {
-    border-color: var(--qti-drop-highlight-enabled-border-color);
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
 }
@@ -196,7 +190,7 @@
    *
    * Order hand-rolled this, and set `background-color` and `border-color` but never `color`. The
    * drag handle is `background-color: currentColor` behind a mask (see `@mixin grip`), so it can
-   * only be as green as the element's `color` — and `color` stayed at the `--qti-body-color` the
+   * only be as green as the element's `color` — and `color` stayed at the `--qti-fg` the
    * base layer gives a drag, which is #3e144e and reads as black. Every other interaction's grip
    * turned green or red because `candidate-tint` sets all three.
    *
