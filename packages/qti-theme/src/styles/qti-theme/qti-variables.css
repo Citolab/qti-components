@@ -103,6 +103,14 @@
     --qti-form-size: 1rem; /* radio / checkbox */
     --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
 
+    /* Hotspot selection ring (qti-hotspot-interaction.css). Resting stroke width — :state(checked)
+       and the correction states double it. The halo is the near-white outline either side of the
+       ring that keeps it legible over any background image (vocab §1.2.5.1 "suitable contrast").
+       --qti-hotspot-ring-color is intentionally NOT defined here: it is neutral by default and set
+       contextually by the qti-selections-* classes and the correction states. */
+    --qti-hotspot-ring-width: 2px;
+    --qti-hotspot-halo: rgb(255 255 255 / 85%);
+
     /*
      * A drag's own padding, deliberately not --qti-padding-horizontal.
      *

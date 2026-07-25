@@ -88,6 +88,8 @@ export const Q10_L2_D3: Story = {
 
     assessmentItem.processResponse();
     expect(getResponse(assessmentItem)).toBe('i4');
+    // The poly ring path (an SVG-stroke mask published by positionShapes) is unit-tested directly in
+    // hotspot.spec.ts — it does not depend on a fixture image loading, which this story's does.
   },
   loaders: [loaderShapes]
 };
@@ -125,47 +127,46 @@ export const Q10_L2_D101: Story = {
 
     /*
      * The assertions above only prove the classes survived import. They passed for as long as this
-     * story has existed while the theme had no hotspot selections rules at all, so on their own they
-     * are not coverage — hence the computed-style checks below.
+     * story has existed while the theme had no hotspot selection rules at all, so on their own they
+     * are not coverage — hence the computed checks below.
+     *
+     * The selection is a ring, not a fill (see qti-hotspot-interaction.css). Its colour lives in the
+     * one custom property both shape families read — `--hs-ring` — so reading that is shape-agnostic
+     * and the single source of truth, rather than picking apart box-shadow vs a poly's background.
      */
     const firstHotspot = (interaction: HTMLElement) => interaction.querySelector('qti-hotspot-choice') as HTMLElement;
+    const ringOf = (el: HTMLElement) => getComputedStyle(el).getPropertyValue('--hs-ring').trim();
+    // Hidden means the ring var is exactly `transparent` (set by qti-unselected-hidden) or unset.
+    // NOT a substring match: the resting value is `color-mix(… 60%, transparent)`, a *visible* pale
+    // ring whose text merely contains the word.
+    const transparent = (v: string) => v === '' || v === 'transparent' || v === 'rgba(0, 0, 0, 0)';
 
-    // A selection is themed differently under light than under dark. §3.2.6 requires only that a
-    // selection be clearly indicated; what makes these classes worth having is that they differ.
+    // A resting ring is present by default — regions are discoverable before any interaction. This
+    // is the check that had no coverage and let the border bug hide.
+    expect(transparent(ringOf(firstHotspot(interactions[0]))), 'a resting ring is painted').toBe(false);
+
+    // Light and dark selections are themed differently. §3.2.6 only requires a selection be clearly
+    // indicated; what makes these classes worth having is that they differ.
     const [light, dark] = [interactions[0], interactions[1]].map(firstHotspot);
-    for (const hotspot of [light, dark]) {
-      await fireEvent.click(hotspot);
-    }
-    // The base rule transitions background-color over 150ms, so a read taken straight after the
-    // click lands mid-interpolation and reports something close to transparent. waitFor retries
-    // until it has settled.
-    const bgOf = (el: HTMLElement) => getComputedStyle(el).backgroundColor;
+    for (const hotspot of [light, dark]) await fireEvent.click(hotspot);
     await waitFor(() => {
-      expect(bgOf(light), 'a light selection is painted').not.toBe('rgba(0, 0, 0, 0)');
-      expect(bgOf(dark), 'a dark selection is painted').not.toBe('rgba(0, 0, 0, 0)');
-      expect(bgOf(light), 'light and dark selections differ').not.toBe(bgOf(dark));
+      expect(transparent(ringOf(light)), 'a light selection is painted').toBe(false);
+      expect(transparent(ringOf(dark)), 'a dark selection is painted').toBe(false);
+      expect(ringOf(light), 'light and dark selections differ').not.toBe(ringOf(dark));
     });
 
     /*
-     * qti-unselected-hidden, §3.2.6: "the delivery engine must hide the hotspots in their
-     * unselected and unfocused state."
+     * qti-unselected-hidden — vocab §1.2.5.1: "visually hidden until focused or selected."
      *
-     * Only half of this is assertable. An unselected hotspot must be invisible and a selected one
-     * must not be, and both are checked below. The other half of what the class does — suppressing
-     * the hover reveal, so sweeping a mouse across the picture does not hand back the answer
-     * regions — cannot be driven from here: CSS :hover follows real pointer position and does not
-     * respond to a synthetic mouseOver. It is covered by the rule's own comment in
-     * qti-hotspot-interaction.css and needs an eye on the story.
-     *
-     * The resting check is also weak on its own: this theme paints no fill on any unselected
-     * hotspot, so it would pass with the class absent. It stands as a regression guard for the day
-     * hotspots get a visible resting affordance, not as proof the class works today.
+     * Unselected+unfocused must have no ring; selecting must bring it back. The other half — that
+     * hover must NOT reveal — cannot be driven here: CSS :hover follows real pointer position and
+     * ignores a synthetic mouseOver. That half is asserted by the rule sitting in the `states` layer
+     * (so it outranks :hover) and is the reason to keep an eye on the --unselected-hidden story.
      */
-    const hiddenHotspot = firstHotspot(interactions[2]);
-    expect(bgOf(hiddenHotspot), 'unselected is hidden').toBe('rgba(0, 0, 0, 0)');
-
-    await fireEvent.click(hiddenHotspot);
-    await waitFor(() => expect(bgOf(hiddenHotspot), 'selecting it reveals it').not.toBe('rgba(0, 0, 0, 0)'));
+    const hidden = firstHotspot(interactions[2]);
+    expect(transparent(ringOf(hidden)), 'unselected + unfocused is hidden').toBe(true);
+    await fireEvent.click(hidden);
+    await waitFor(() => expect(transparent(ringOf(hidden)), 'selecting it reveals the ring').toBe(false));
   },
   loaders: [loaderSv1]
 };

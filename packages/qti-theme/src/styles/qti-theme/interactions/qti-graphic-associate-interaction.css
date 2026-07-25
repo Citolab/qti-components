@@ -7,9 +7,11 @@
      * ActiveElementMixin states before adding state-dependent rules here.
      */
     & qti-associable-hotspot {
-      &[shape='circle'],
-      &[shape='square'] {
-        @mixin spot;
+      /* `[shape='square']` used to be in this selector. It is not a QTI shape — the spec has
+         circle, default, ellipse, poly and rect — positionShapes has no branch for it, and no item
+         in the repo sets it. */
+      &[shape='circle'] {
+        background-color: transparent;
         &:focus {
           @mixin foc;
         }
