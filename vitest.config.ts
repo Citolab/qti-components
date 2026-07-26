@@ -111,10 +111,16 @@ export default defineConfig({
         }
       },
       /* visual-regression project: only stories tagged `vrt`, screenshots each.
-         Omitted when launched from the Storybook UI — see `isVitestStorybook` above.
+         Included ONLY under `VRT=1` (i.e. `npm run test:vrt`, which then selects it with
+         `--project vrt`). Two @storybook/addon-vitest projects (`stories` + `vrt`) sharing a
+         configDir cannot run in the same Vitest invocation: the plugin renames both to
+         `storybook:<configDir>`, and in the browser one project then fails to fetch the other's
+         per-file setup module ("Failed to fetch … setup-file-with-project-annotations.js"). So the
+         default `just test` runs `stories` only; VRT runs on its own via test:vrt.
+         Also omitted when launched from the Storybook UI — see `isVitestStorybook` above.
          Annotated so the conditional spread doesn't widen the projects array and strip
          contextual typing from the sibling project literals. */
-      ...((isVitestStorybook
+      ...((isVitestStorybook || process.env.VRT !== '1'
         ? []
         : [
             {

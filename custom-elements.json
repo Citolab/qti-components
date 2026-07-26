@@ -121,6 +121,31 @@
               "privacy": "protected"
             },
             {
+              "kind": "field",
+              "name": "#allowReorderExplicit",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragOriginDroppable",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getItemInSlot",
               "privacy": "private",
@@ -395,8 +420,6 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "public",
-              "default": "true",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -1476,6 +1499,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -6085,6 +6131,23 @@
           "name": "DragDropSlottedSortableMixin",
           "members": [
             {
+              "kind": "field",
+              "name": "#allowReorderExplicit",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragOriginDroppable",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "#getItemInSlot",
               "privacy": "private",
@@ -6273,9 +6336,7 @@
               "name": "allowReorder",
               "type": {
                 "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true"
+              }
             },
             {
               "kind": "method",
@@ -6909,7 +6970,7 @@
                   }
                 }
               ],
-              "description": "Is this a full declarative target receiving a chip dragged out of a different target?"
+              "description": "Is this a full *single-capacity* declarative target receiving a chip dragged out of a\ndifferent target? Only single-capacity targets swap — the occupant leaves so the incoming chip\ncan take its place. A multi-capacity target at match-max has no room to give: it must stay\nblocked, or a cross-target move would append past its capacity (the per-target match-max is\nmeaningless otherwise). `allowDrop` uses this to re-permit a target it disabled for capacity."
             },
             {
               "kind": "field",
@@ -7370,6 +7431,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "_enableFlipAnimations",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
               "name": "_initialOrder",
               "type": {
                 "text": "string[]"
@@ -7435,9 +7505,7 @@
               "name": "enableFlipAnimations",
               "type": {
                 "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true"
+              }
             },
             {
               "kind": "field",
@@ -9228,6 +9296,24 @@
         },
         {
           "kind": "function",
+          "name": "motionEnabled",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element | null | undefined"
+              }
+            }
+          ],
+          "description": "Whether FLIP should run for this element, honouring `--qti-motion` and `prefers-reduced-motion`."
+        },
+        {
+          "kind": "function",
           "name": "performFlip",
           "return": {
             "type": {
@@ -9259,6 +9345,24 @@
             }
           ],
           "description": "Helper to perform a complete FLIP animation cycle"
+        },
+        {
+          "kind": "function",
+          "name": "resolveMotionScale",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "Element | null | undefined"
+              }
+            }
+          ],
+          "description": "The interaction's motion budget: the computed `--qti-motion` custom property — a unitless\nmultiplier, default 1 — forced to 0 when the OS requests reduced motion. `0` means \"no motion\":\nFLIP is skipped entirely. A positive value scales the configured FLIP duration, so a theme (or a\nPNP profile) can slow motion down (`0.5`) or switch it off (`0`) from CSS, the single source of\ntruth the drag-drop engine reads. `--qti-motion` inherits from the interaction down to the items\nit animates, so reading it off any animated element is representative.\n\nEvery FLIP path funnels through `animateFlip`, so gating here covers slotted, slotted-sortable,\nsortable reorder and return animations in one place."
         }
       ],
       "exports": [
@@ -9320,9 +9424,25 @@
         },
         {
           "kind": "js",
+          "name": "motionEnabled",
+          "declaration": {
+            "name": "motionEnabled",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "performFlip",
           "declaration": {
             "name": "performFlip",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/flip.utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveMotionScale",
+          "declaration": {
+            "name": "resolveMotionScale",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/flip.utils.ts"
           }
         }
@@ -11863,6 +11983,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -12776,6 +12919,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -13354,6 +13520,18 @@
             },
             {
               "kind": "field",
+              "name": "#allowReorderExplicit",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
               "privacy": "private",
               "type": {
@@ -13363,6 +13541,19 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragOriginDroppable",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -13638,8 +13829,6 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "public",
-              "default": "true",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -14255,7 +14444,7 @@
                   }
                 }
               ],
-              "description": "Is this a full declarative target receiving a chip dragged out of a different target?",
+              "description": "Is this a full *single-capacity* declarative target receiving a chip dragged out of a\ndifferent target? Only single-capacity targets swap — the occupant leaves so the incoming chip\ncan take its place. A multi-capacity target at match-max has no room to give: it must stay\nblocked, or a cross-target move would append past its capacity (the per-target match-max is\nmeaningless otherwise). `allowDrop` uses this to re-permit a target it disabled for capacity.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -14477,6 +14666,29 @@
               },
               "type": {
                 "text": "reset(save: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -15495,6 +15707,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -15893,6 +16128,31 @@
           ],
           "members": [
             {
+              "kind": "field",
+              "name": "#allowReorderExplicit",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragOriginDroppable",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getItemInSlot",
               "privacy": "private",
@@ -16155,8 +16415,6 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "public",
-              "default": "true",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -17081,6 +17339,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -18022,6 +18303,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -18897,6 +19201,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -19761,6 +20088,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -20328,6 +20678,18 @@
             },
             {
               "kind": "field",
+              "name": "#allowReorderExplicit",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
               "privacy": "private",
               "type": {
@@ -20337,6 +20699,19 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragOriginDroppable",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
               }
             },
             {
@@ -20612,8 +20987,6 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "public",
-              "default": "true",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -21263,7 +21636,7 @@
                   }
                 }
               ],
-              "description": "Is this a full declarative target receiving a chip dragged out of a different target?",
+              "description": "Is this a full *single-capacity* declarative target receiving a chip dragged out of a\ndifferent target? Only single-capacity targets swap — the occupant leaves so the incoming chip\ncan take its place. A multi-capacity target at match-max has no room to give: it must stay\nblocked, or a cross-target move would append past its capacity (the per-target match-max is\nmeaningless otherwise). `allowDrop` uses this to re-permit a target it disabled for capacity.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -21494,6 +21867,29 @@
               },
               "type": {
                 "text": "reset(save: boolean) => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -22432,6 +22828,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -22818,6 +23237,31 @@
           ],
           "members": [
             {
+              "kind": "field",
+              "name": "#allowReorderExplicit",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragOriginDroppable",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "DragDropSlottedSortableMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getItemInSlot",
               "privacy": "private",
@@ -23062,8 +23506,6 @@
               "type": {
                 "text": "boolean"
               },
-              "privacy": "public",
-              "default": "true",
               "inheritedFrom": {
                 "name": "DragDropSlottedSortableMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted-sortable.mixin.ts"
@@ -24321,6 +24763,29 @@
               },
               "type": {
                 "text": "reset() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
               }
             },
             {
@@ -26006,6 +26471,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -27256,6 +27744,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -28032,6 +28543,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -28751,6 +29285,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -29447,6 +30004,29 @@
             },
             {
               "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Interaction",
+                "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "resolveDisableAfterMaxReached",
               "privacy": "protected",
               "return": {
@@ -29904,6 +30484,25 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "resolveAllowReorder",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ defaultWhenUnset?: boolean }"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",

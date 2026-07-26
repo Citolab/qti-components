@@ -3,7 +3,12 @@
  * Used by both DragDropSortableMixin (standalone) and SlotSortableEnhancerMixin (composition).
  */
 
-import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './flip.utils';
+import {
+  captureMultipleFlipStates,
+  animateMultipleFlips,
+  resolveMotionScale,
+  type FlipAnimationOptions
+} from './flip.utils';
 
 import type { SortingStrategy, InsertPosition } from '../strategies/sorting.strategy';
 
@@ -76,7 +81,8 @@ export function createDropPlaceholder(source: HTMLElement, rect: DOMRect, config
   placeholder.style.border = `${mergedConfig.borderStyle} ${mergedConfig.borderColor}`;
   placeholder.style.borderRadius = getComputedStyle(source).borderRadius;
   placeholder.style.background = mergedConfig.background!;
-  placeholder.style.transition = `transform ${mergedConfig.transitionDuration}ms ease`;
+  // Same --qti-motion budget as FLIP: 0 (or reduced-motion) snaps the placeholder instead of sliding.
+  placeholder.style.transition = `transform ${mergedConfig.transitionDuration! * resolveMotionScale(source)}ms ease`;
   placeholder.style.pointerEvents = 'none';
 
   return placeholder;

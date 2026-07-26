@@ -19,6 +19,7 @@ import {
   captureMultipleFlipStates,
   animateMultipleFlips,
   flipStateFromRect,
+  motionEnabled,
   type FlipAnimationOptions
 } from './utils/flip.utils';
 
@@ -148,10 +149,19 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      */
     #placement = new WeakMap<HTMLElement, HTMLElement[]>();
 
-    /** Is this a full declarative target receiving a chip dragged out of a different target? */
+    /**
+     * Is this a full *single-capacity* declarative target receiving a chip dragged out of a
+     * different target? Only single-capacity targets swap — the occupant leaves so the incoming chip
+     * can take its place. A multi-capacity target at match-max has no room to give: it must stay
+     * blocked, or a cross-target move would append past its capacity (the per-target match-max is
+     * meaningless otherwise). `allowDrop` uses this to re-permit a target it disabled for capacity.
+     */
     protected isSwapTarget(droppable: HTMLElement): boolean {
       const source = this.dragState.sourceDroppable;
+      const parsedMatchMax = parseInt(droppable.getAttribute('match-max') || '1', 10);
+      const isSingleCapacity = (Number.isNaN(parsedMatchMax) ? 1 : parsedMatchMax) === 1;
       return (
+        isSingleCapacity &&
         this.isDeclarativeTarget(droppable) &&
         !!source &&
         source !== droppable &&
@@ -289,8 +299,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       return !this._enableFlipAnimations;
     }
 
+    /* The `disable-animations` attribute AND the theme's motion budget: FLIP runs only when both
+       allow it, so `--qti-motion: 0` / reduced-motion disables it without any consumer code. */
     get enableFlipAnimations(): boolean {
-      return this._enableFlipAnimations;
+      return this._enableFlipAnimations && motionEnabled(this as unknown as Element);
     }
 
     @property({ type: Boolean, attribute: 'auto-size-dropzones' })

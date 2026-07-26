@@ -1,5 +1,8 @@
 import { action } from 'storybook/actions';
-import { expect, fn } from 'storybook/test';
+import { expect, fn, waitFor } from 'storybook/test';
+// Dropped chips land in the qti-gap's shadow root; light-DOM textContent/querySelector can't see
+// them, so use shadow-piercing queries to assert placement.
+import { within, deepQuerySelector, deepQuerySelectorAll } from 'shadow-dom-testing-library';
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
@@ -34,7 +37,7 @@ const meta: Meta<QtiGapMatchInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs', 'no-tests', 'iol']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 
@@ -45,36 +48,6 @@ const settleInteraction = async (interaction: QtiGapMatchInteraction) => {
 
 const getGap = (interaction: QtiGapMatchInteraction, identifier: string) =>
   interaction.querySelector(`qti-gap[identifier="${identifier}"]`) as HTMLElement;
-
-// Compare the RGB values
-const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: number; g: number; b: number }) =>
-  color1 && color2 && color1.r === color2.r && color1.g === color2.g && color1.b === color2.b;
-
-// Utility function to convert hex color to RGB
-function hexToRgb(hex) {
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  hex = hex.replace(shorthandRegex, (_m, r, g, b) => r + r + g + g + b + b);
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      }
-    : null;
-}
-
-// Utility function to convert RGB string to RGB object
-function rgbStringToRgb(rgbString) {
-  const result = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(rgbString);
-  return result
-    ? {
-        r: parseInt(result[1], 10),
-        g: parseInt(result[2], 10),
-        b: parseInt(result[3], 10)
-      }
-    : null;
-}
 
 export const Default: Story = {
   name: 'qti-gap-match-interaction',
@@ -140,29 +113,29 @@ export const SortableSwapFilledGaps: Story = {
         await drag(summer, { to: gap3, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).toHaveTextContent('winter');
-        expect(gap2).toHaveTextContent('spring');
-        expect(gap3).toHaveTextContent('summer');
+        expect((await within(gap1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect((await within(gap3).findAllByShadowText('summer')).length).toBeGreaterThan(0);
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['W G1', 'Sp G2', 'Su G3']);
       });
 
       await step('Drag placed winter from G1 onto occupied G2 to trigger sortable swap', async () => {
-        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        const placedWinter = deepQuerySelector(getGap(interaction, 'G1'), '[identifier="W"]') as HTMLElement;
         await drag(placedWinter, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).toHaveTextContent('spring');
-        expect(gap2).toHaveTextContent('winter');
-        expect(gap3).toHaveTextContent('summer');
+        expect((await within(gap1).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect((await within(gap3).findAllByShadowText('summer')).length).toBeGreaterThan(0);
       });
 
       await step('Response and associations are updated after swap', async () => {
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['Sp G1', 'W G2', 'Su G3']);
-        expect(getGap(interaction, 'G1').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(getGap(interaction, 'G2').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(getGap(interaction, 'G3').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G1'), '[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G2'), '[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G3'), '[qti-draggable="true"]').length).toBe(1);
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback as EventListener);
@@ -207,29 +180,29 @@ export const SortableSwapPartialGaps: Story = {
         await drag(spring, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).toHaveTextContent('winter');
-        expect(gap2).toHaveTextContent('spring');
-        expect(gap3).not.toHaveTextContent('summer');
+        expect((await within(gap1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect(within(gap3).queryAllByShadowText('summer')).toHaveLength(0);
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['W G1', 'Sp G2']);
       });
 
       await step('Drag placed winter onto occupied G2 to swap with spring', async () => {
-        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        const placedWinter = deepQuerySelector(getGap(interaction, 'G1'), '[identifier="W"]') as HTMLElement;
         await drag(placedWinter, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).toHaveTextContent('spring');
-        expect(gap2).toHaveTextContent('winter');
-        expect(gap3).not.toHaveTextContent('summer');
+        expect((await within(gap1).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect(within(gap3).queryAllByShadowText('summer')).toHaveLength(0);
       });
 
       await step('Response remains partial and reflects swapped assignments', async () => {
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['Sp G1', 'W G2']);
-        expect(getGap(interaction, 'G1').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(getGap(interaction, 'G2').querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(getGap(interaction, 'G3').querySelectorAll('[qti-draggable="true"]').length).toBe(0);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G1'), '[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G2'), '[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G3'), '[qti-draggable="true"]').length).toBe(0);
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback as EventListener);
@@ -274,21 +247,21 @@ export const SortableAppendWhenGapAllowsMultiple: Story = {
         await drag(spring, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).toHaveTextContent('winter');
-        expect(gap2).toHaveTextContent('spring');
-        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect((await within(gap1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(1);
       });
 
       await step('Move winter from G1 onto occupied G2 to append (no swap-out)', async () => {
-        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        const placedWinter = deepQuerySelector(getGap(interaction, 'G1'), '[identifier="W"]') as HTMLElement;
         await drag(placedWinter, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).not.toHaveTextContent('winter');
-        expect(gap2).toHaveTextContent('winter');
-        expect(gap2).toHaveTextContent('spring');
-        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
-        expect(gap3.querySelectorAll('[qti-draggable="true"]').length).toBe(0);
+        expect(within(gap1).queryAllByShadowText('winter')).toHaveLength(0);
+        expect((await within(gap2).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(2);
+        expect(deepQuerySelectorAll(gap3, '[qti-draggable="true"]').length).toBe(0);
       });
 
       await step('Response reflects both associations on G2', async () => {
@@ -341,18 +314,18 @@ export const SortableAppendBlockedAtGapMatchMax: Story = {
         await drag(summer, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(2);
       });
 
       await step('Move winter from G1 onto full G2; drop should be blocked', async () => {
-        const placedWinter = getGap(interaction, 'G1').querySelector('[identifier="W"]') as HTMLElement;
+        const placedWinter = deepQuerySelector(getGap(interaction, 'G1'), '[identifier="W"]') as HTMLElement;
         await drag(placedWinter, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(gap1).toHaveTextContent('winter');
-        expect(gap2.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
-        expect(gap2).toHaveTextContent('spring');
-        expect(gap2).toHaveTextContent('summer');
+        expect((await within(gap1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
+        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(2);
+        expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
+        expect((await within(gap2).findAllByShadowText('summer')).length).toBeGreaterThan(0);
       });
 
       await step('Response remains unchanged after blocked append attempt', async () => {
@@ -489,8 +462,8 @@ export const CanRedrop: Story = {
       await drag(gapTextWinter, { delta: { x: 1, y: 1 } });
     });
 
-    // check if the first dragged value is in the gap
-    expect(gapG1.textContent).toBe('winter');
+    // check if the first dragged value is in the gap (chip lives in the gap's shadow root)
+    expect((await within(gapG1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
     expect(gapG1.hasAttribute('disabled')).toBe(true);
     expect(gapG1.hasAttribute('enable')).toBe(false);
   },
@@ -537,46 +510,24 @@ export const DraggableContainerHasDropInDication: Story = {
     const assessmentItem = canvasElement.querySelector('qti-assessment-item') as QtiAssessmentItem;
     assessmentItem.querySelector('qti-prompt').innerHTML = `
       When a draggable is dragged, the dragzone should indicate that it can be dropped`;
-    const rootElement = document.documentElement;
-    const rootStyles = window.getComputedStyle(rootElement);
-    const qtiBorderActive = rootStyles.getPropertyValue('--qti-border-active').trim();
     const gapTextWinter = assessmentItem.querySelector('qti-gap-text[identifier="W"]') as QtiGapText;
-    // const gapTextSpring = assessmentItem.querySelector('qti-gap-text[identifier="Sp"]') as QtiGapText;
-    // const gapTextSummer = assessmentItem.querySelector('qti-gap-text[identifier="Su"]') as QtiGapText;
-    // const gapTextAutumn = assessmentItem.querySelector('qti-gap-text[identifier="A"]') as QtiGapText;
-
     const gapG1 = assessmentItem.querySelector('qti-gap[identifier="G1"]') as QtiGapText;
+    const qtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction') as QtiGapMatchInteraction;
 
-    // const gapG2 = assessmentItem.querySelector('qti-gap[identifier="G2"]') as QtiGapText;
-    await step('drag Winter to G1', async () => {
-      // Simulate the drag and drop operation
+    await step('dragging a choice puts the interaction in the dropzone-active state', async () => {
+      // State, not CSS: while a choice is in flight the interaction exposes the `dragzone-active`
+      // custom state (see drag-drop-core.mixin), and the theme is free to paint that state however it
+      // likes — a border, a background, an outline. Asserting the STATE keeps this test valid across
+      // restyles of the drop indication (e.g. the drop-highlight border→background change) instead of
+      // pinning it to a specific computed colour.
+      const dragging = drag(gapTextWinter, { to: gapG1, duration: 400 });
+      await waitFor(() => expect(qtiGapMatchInteraction.matches(':state(dragzone-active)')).toBe(true));
+      await dragging;
 
-      const qtiGapMatchInteraction = assessmentItem.querySelector('qti-gap-match-interaction');
-      const slots = qtiGapMatchInteraction.shadowRoot.querySelectorAll('slot');
-      const dragsPart = Array.from(slots).find(slot => slot.getAttribute('part') === 'drags');
-      // Convert both colors to RGB
-      const dragStyles = window.getComputedStyle(dragsPart);
-      const borderColorOrg = dragStyles.getPropertyValue('border-color').trim();
-      const qtiBorderActiveRgb = rgbStringToRgb(qtiBorderActive) || hexToRgb(qtiBorderActive);
-
-      drag(gapTextWinter, { to: gapG1, duration: 300 }).then(async () => {
-        const computedStylesGap1 = window.getComputedStyle(gapG1);
-        const borderColorGap1 = computedStylesGap1.getPropertyValue('border-color').trim();
-        const borderColorGap1Rgb = rgbStringToRgb(borderColorGap1) || hexToRgb(borderColorGap1);
-        expect(rgbIsEqual(qtiBorderActiveRgb, borderColorGap1Rgb)).toBe(true);
-        await timeoutPromise(50);
-
-        // Convert both colors to RGB
-        const computedStyles = window.getComputedStyle(dragsPart);
-        const borderColor = computedStyles.getPropertyValue('border-color').trim();
-        expect(borderColor).toBe(borderColorOrg);
-      });
-      await timeoutPromise(50);
-      // Convert both colors to RGB
-      const computedStyles = window.getComputedStyle(dragsPart);
-      const borderColor = computedStyles.getPropertyValue('border-color').trim();
-      const borderColorRgb = rgbStringToRgb(borderColor) || hexToRgb(borderColor);
-      expect(rgbIsEqual(qtiBorderActiveRgb, borderColorRgb)).toBe(true);
+      // The transient drop-indication state clears once the drop completes.
+      expect(qtiGapMatchInteraction.matches(':state(dragzone-active)')).toBe(false);
+      // …and the choice landed in the gap (chip lives in the gap's shadow root).
+      expect((await within(gapG1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
     });
 
     // --qti-border-active

@@ -108,6 +108,18 @@ export abstract class Interaction extends LitElement implements ValidatableInter
     return this.configContext?.validationDisplayMode ?? 'inline';
   }
 
+  protected resolveAllowReorder(options?: { defaultWhenUnset?: boolean }): boolean {
+    const defaultWhenUnset = options?.defaultWhenUnset ?? true;
+    const config = this.configContext;
+    if (!config) {
+      return defaultWhenUnset;
+    }
+    if (config.allowReorder !== undefined) {
+      return config.allowReorder;
+    }
+    return defaultWhenUnset;
+  }
+
   protected resolveDisableAfterMaxReached(options?: { defaultWhenUnset?: boolean }): boolean {
     const defaultWhenUnset = options?.defaultWhenUnset ?? false;
     const config = this.configContext;

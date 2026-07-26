@@ -35,7 +35,12 @@
     --qti-padding-horizontal: 1rem;
     --qti-popover-z-index: 1000;
     --qti-overlay-z-index: 1;
-    --qti-motion-duration-fast: 150ms;
+    /* Motion master switch — a unitless multiplier every animation scales by. 1 = normal, 0 = no
+       motion. CSS transitions read it through the calc below; the drag-drop FLIP engine reads
+       --qti-motion directly (see flip.utils.ts resolveMotionScale), so this one token silences both
+       CSS motion and JS FLIP. A theme or PNP profile can set 0.5 to slow motion or 0 to stop it. */
+    --qti-motion: 1;
+    --qti-motion-duration-fast: calc(150ms * var(--qti-motion));
 
     /* ── Surfaces & border ── */
     --qti-bg: white;
@@ -94,6 +99,16 @@
      */
     --qti-focus-border-width: 2px;
     --qti-focus-color: var(--qti-info);
+  }
+
+  /* Honour the OS "reduce motion" request through the same knob, so CSS transitions and the JS FLIP
+     engine switch off together. A theme can still force motion back on by re-declaring --qti-motion
+     with higher specificity. */
+  @media (prefers-reduced-motion: reduce) {
+    :root,
+    :host {
+      --qti-motion: 0;
+    }
   }
 }
 

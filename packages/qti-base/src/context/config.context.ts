@@ -34,6 +34,13 @@ export interface ConfigContext {
   disableAfterMaxReached?: boolean;
 
   /**
+   * If false, chips already placed in a drop target cannot be reordered or moved between targets in
+   * drag/drop sortable interactions (order, match, gap-match). Defaults to true. A per-interaction
+   * `allowReorder` property overrides this.
+   */
+  allowReorder?: boolean;
+
+  /**
    * If true, disables further selection in choice interactions after the maximum number of choices is reached.
    * @deprecated Legacy alias for choice interactions. Prefer disableAfterMaxReached.
    */
