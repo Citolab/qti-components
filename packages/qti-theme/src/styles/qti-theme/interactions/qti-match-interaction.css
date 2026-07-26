@@ -205,22 +205,22 @@
     qti-simple-match-set:last-of-type
     > qti-simple-associable-choice
     > qti-simple-associable-choice:state(candidate-correct) {
-    background-color: var(--qti-correct);
+    --component-background-color: var(--qti-correct);
   }
 
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:last-of-type
     > qti-simple-associable-choice
     > qti-simple-associable-choice:state(candidate-incorrect) {
-    background-color: var(--qti-incorrect);
+    --component-background-color: var(--qti-incorrect);
   }
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-correct) {
-    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
   }
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-incorrect) {
-    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see

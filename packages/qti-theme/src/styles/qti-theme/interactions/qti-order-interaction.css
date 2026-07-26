@@ -108,24 +108,13 @@
 
     /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
        chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
-    /* Only the placed drag. `qti-simple-choice` used to be in this selector too, but the block
-       below re-declares both properties through `@mixin drag`, so it never received either. */
-    &::part(drag) {
-      color: var(--qti-fg);
-    }
-
-    /* `background-color: var(--qti-secondary-bg-subtle)` and `border: … solid transparent` used to
-       open this block. `@mixin drag` closes it and sets both, so neither ever rendered — visible in
-       dist/item.css as two dead declarations directly above the mixin's own. Removing them left
-       --qti-secondary-bg-subtle with no reader at all. */
+    /* The placed order chip's INVERTED look (white fill, dark text, neutral border) is
+       Kennisnet-specific — a light chip against the primary bank — so it lives in
+       kennisnet-overrides.css, not here. In the base theme a placed chip is just the neutral chip
+       (@mixin drag), and its corrections route through --component-* like every other chip. */
     & qti-simple-choice {
       font-weight: 600;
       @mixin drag;
-    }
-
-    &::part(drag) {
-      background-color: white;
-      border: var(--qti-border-thickness) solid var(--qti-border-color);
     }
 
     &::part(container) {
@@ -202,11 +191,11 @@
    * parsed consistently by the browser toolchain.
    */
   qti-order-interaction::part(drag):state(candidate-correct) {
-    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
   }
 
   qti-order-interaction::part(drag):state(candidate-incorrect) {
-    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see

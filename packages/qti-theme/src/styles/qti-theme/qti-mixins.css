@@ -19,10 +19,57 @@
   box-shadow: none;
 }
 
+/*
+ * The chip form of candidate-tint: it paints the correction THROUGH the --component-* contract
+ * instead of as direct properties, so a corrected chip stays part of the same paint system as every
+ * other chip. Only for drag chips — the choices and text fields that also correct have no component
+ * binding, so they keep `@mixin candidate-tint` (direct). Same computed result as candidate-tint.
+ */
+@define-mixin candidate-chip $color, $background {
+  --component-background-color: $background;
+  --component-color: $color;
+  --component-border-color: $color;
+  --component-box-shadow: none;
+}
+
 @define-mixin answer {
   background-color: var(--qti-answer-bg);
   color: var(--qti-answer-fg);
   border-color: var(--qti-answer-border);
+}
+
+/*
+ * THE generic paint contract. Every visual component is, at rest, a bordered box on the theme's
+ * surface. This mixin binds each PAINT property to a --component-* variable exactly once, so a
+ * state — or a theme — repaints by SWITCHING a variable, never by re-declaring the property.
+ * Selectors choose state; variables describe appearance; this block renders it.
+ *
+ * The fallbacks ARE the resting look: the surfaces & border tokens (a white surface, the theme
+ * border, no shadow). A component that overrides nothing looks like a plain bordered box.
+ *
+ * Only paint lives here. box-sizing / padding / margin are STRUCTURAL and stay on the component
+ * (see `drag`) — a state must never switch them or the layout-invariance contract breaks. For the
+ * same reason border-WIDTH and -radius are bound but must be treated as constant: a state may
+ * switch --component-border-color, never --component-border-width.
+ *
+ * Deliberately NOT bound yet (they need their own VRT-checked step): `outline` (touches focus
+ * rings) and a MULTI-SLOT box-shadow (so an element's resting lift, in-flight elevation and focus
+ * ring compose instead of the last one winning — the documented four-rule box-shadow contention).
+ */
+@define-mixin component {
+  background-color: var(--component-background-color, var(--qti-bg));
+  background-image: var(--component-background-image, none);
+
+  border-width: var(--component-border-width, var(--qti-border-thickness));
+  border-style: var(--component-border-style, var(--qti-border-style));
+  border-color: var(--component-border-color, var(--qti-border-color));
+  border-radius: var(--component-border-radius, var(--qti-border-radius));
+
+  box-shadow: var(--component-box-shadow, none);
+
+  color: var(--component-color, inherit);
+  opacity: var(--component-opacity, 1);
+  filter: var(--component-filter, none);
 }
 
 /*
@@ -43,14 +90,23 @@
  * bank drag, and it would jump the instant it was picked up.
  */
 @define-mixin drag {
+  /* Structural — the load-bearing box, never state-switched (layout-invariance contract).
+     box-sizing is deliberate: the clone is appended to document.body outside reset.css's
+     @scope, so it inherits no border-box from anywhere else and this sets it. */
   box-sizing: border-box;
-  color: var(--qti-primary-fg);
-  background-color: var(--qti-primary);
-  border: var(--qti-border-thickness) solid var(--qti-primary);
-  border-radius: var(--qti-border-radius);
-  box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
   padding: var(--qti-drag-padding);
   cursor: grab;
+
+  /* Paint via the generic contract, reading brand-swappable chip tokens. A brand
+     (kennisnet-overrides.css) re-values --qti-chip-* under its class and EVERY chip repaints — the
+     bank chip, the placed `::part(drag)` clone and the body-appended `[data-drag-clone]` alike —
+     because they all run this mixin, no matter which selector applied it. Default tokens make a
+     neutral bordered box (see qti-variables.css). */
+  @mixin component;
+  --component-background-color: var(--qti-chip-bg);
+  --component-color: var(--qti-chip-fg);
+  --component-border-color: var(--qti-chip-border);
+  --component-box-shadow: var(--qti-chip-shadow);
 }
 
 /*
@@ -64,11 +120,14 @@
  * drag-drop.invariance.spec.ts, "a spent drag keeps its footprint".
  */
 @define-mixin drag-placeholder {
-  background-color: var(--qti-placeholder-bg);
-  opacity: 1;
-  box-shadow: inset var(--qti-placeholder-shadow);
-  border-color: transparent;
-  color: transparent;
+  /* The hole a spent/lifted chip leaves — brand-swappable like the chip. Default is a plain bordered
+     white box with its text hidden; a brand re-values --qti-placeholder-* (kennisnet = a tint + an
+     inset shadow, no border). Text is hidden in both brands. */
+  --component-background-color: var(--qti-placeholder-fill);
+  --component-border-color: var(--qti-placeholder-edge);
+  --component-box-shadow: var(--qti-placeholder-lift);
+  --component-color: transparent;
+  --component-opacity: 1;
 }
 
 /*
@@ -234,7 +293,7 @@
 @define-mixin dragging {
   pointer-events: none;
   rotate: -2deg;
-  box-shadow:
+  --component-box-shadow:
     0 8px 12px rgb(0 0 0 / 20%),
     0 4px 8px rgb(0 0 0 / 10%);
 }

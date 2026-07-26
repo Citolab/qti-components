@@ -1,0 +1,44 @@
+/*
+ * Kennisnet brand overrides.
+ *
+ * The base draws chips and placeholders by reading --qti-chip-* / --qti-placeholder-* tokens (see
+ * qti-mixins.css @mixin drag / @mixin drag-placeholder; defaults in qti-variables.css). Kennisnet
+ * re-values those TOKENS under .qti-theme-kennisnet, so EVERY chip repaints — the bank chip, the
+ * placed ::part(drag) clone, the body [data-drag-clone], AND the inert answer-key clone chips that
+ * never get :state(drag) — because they all read the tokens through the mixins.
+ *
+ * That is why no chip selector is listed here: a selector keyed on :state(drag) / ::part(drag) can't
+ * reach the inert clones, and listing every bare-element selector with its guards would force this
+ * file to know every interaction's internal structure. The tokens ARE the contract; re-valuing them
+ * reaches all chips at once. The one genuine DEVIATION — order's inverted placed chip — is the only
+ * thing that still names a selector.
+ *
+ * Layering: the tokens sit in `brand` (above `base`, where the defaults are). The placeholder RULE
+ * reads its tokens from the `states` layer, so re-valuing the token here composes without a layer
+ * fight. Corrections set --component-* directly in the `corrections` layer, above all of this, so a
+ * green/red judgement still wins. border-COLOR goes transparent, never the width (layout-invariance).
+ */
+@layer qti-components.interactions.brand {
+  .qti-theme-kennisnet {
+    /* Chip: primary fill, white text, a coloured lift, no border. */
+    --qti-chip-bg: var(--qti-primary);
+    --qti-chip-fg: var(--qti-primary-fg);
+    --qti-chip-border: transparent;
+    --qti-chip-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+
+    /* Placeholder: a tint fill + inset shadow, no border. */
+    --qti-placeholder-fill: var(--qti-placeholder-bg);
+    --qti-placeholder-edge: transparent;
+    --qti-placeholder-lift: inset var(--qti-placeholder-shadow);
+  }
+
+  /* Order's placed chip is INVERTED — a light chip (white fill, dark text, neutral border) against
+     the primary bank, so a dropped answer reads as settled. The only chip that departs from the
+     token-driven look, so the only one that names a selector; it overrides the tokens' fill. */
+  .qti-theme-kennisnet qti-order-interaction::part(drag) {
+    --component-background-color: white;
+    --component-color: var(--qti-fg);
+    --component-border-color: var(--qti-border-color);
+    --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  }
+}

@@ -86,10 +86,19 @@ setCustomElementsManifest(customElements);
 
 const preview: Preview = {
   decorators: [
+    /*
+     * One class-based theme axis. `withThemeByClassName` applies the theme class to <html>, which is
+     * why `kennisnet` reaches the floating drag clone the drag-drop JS appends to document.body.
+     * `light` is the neutral default (a chip is a bordered box); `kennisnet` is the brand (primary
+     * fill + lift, no border — see kennisnet-overrides.css). Trade-off of folding brand in here: it
+     * is one dropdown, so brand is mutually exclusive with dark — split it back into its own
+     * decorator if you ever need "dark + kennisnet" at once.
+     */
     withThemeByClassName({
       themes: {
         light: 'light-theme',
-        dark: 'dark-theme'
+        dark: 'dark-theme',
+        kennisnet: 'qti-theme-kennisnet'
       },
       defaultTheme: 'light'
     }),

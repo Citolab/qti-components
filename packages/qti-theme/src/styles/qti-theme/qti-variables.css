@@ -148,6 +148,30 @@
     --qti-field-border-radius: 0.25rem;
     --qti-textarea-border-radius: 0.375rem;
   }
+
+  /*
+   * Chip and placeholder look — brand-swappable tokens read by @mixin drag / @mixin drag-placeholder.
+   * Default = a neutral bordered box (white fill, theme border, no lift); a brand
+   * (kennisnet-overrides.css) re-values them under its class on <html>.
+   *
+   * Declared on `:root` ONLY, never `:host` — and that is load-bearing. A brand sets these on <html>;
+   * custom properties inherit THROUGH shadow boundaries, so a chip deep inside an interaction's — or
+   * the corrections wrapper's — shadow reads the brand value. But item.css is injected into some
+   * container shadow roots (the corrections view is one), and a `:host` copy of these defaults would
+   * re-declare them ON that shadow's host and shadow the inherited brand value, leaving the chip at
+   * the neutral default. That is exactly the bug it caused: a Kennisnet corrections chip stayed white.
+   * :root-only lets the brand inherit in; the document-level item.css still defines them for everyone.
+   */
+  :root {
+    --qti-chip-bg: var(--qti-bg);
+    --qti-chip-fg: var(--qti-fg);
+    --qti-chip-border: var(--qti-border-color);
+    --qti-chip-shadow: none;
+
+    --qti-placeholder-fill: var(--qti-bg);
+    --qti-placeholder-edge: var(--qti-border-color);
+    --qti-placeholder-lift: none;
+  }
 }
 
 /* ============================================================================

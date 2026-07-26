@@ -77,7 +77,9 @@
          The rotate reset and the outline are paint. */
       &::part(drag) {
         transform: rotate(0);
-        box-shadow: 0 0 0 1px #e5e7eb;
+        /* Through --component-* so a correction (which sets --component-box-shadow) composes over it
+           instead of this leaking onto a corrected chip. */
+        --component-box-shadow: 0 0 0 1px #e5e7eb;
       }
     }
   }
@@ -126,19 +128,19 @@
 
 @layer qti-components.interactions.corrections {
   qti-gap-match-interaction qti-gap-text:state(candidate-correct) {
-    background-color: var(--qti-correct);
+    --component-background-color: var(--qti-correct);
   }
 
   qti-gap-match-interaction qti-gap-text:state(candidate-incorrect) {
-    background-color: var(--qti-incorrect);
+    --component-background-color: var(--qti-incorrect);
   }
 
   qti-gap::part(drag):state(candidate-correct) {
-    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
   }
 
   qti-gap::part(drag):state(candidate-incorrect) {
-    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   qti-gap-match-interaction .correct-option {

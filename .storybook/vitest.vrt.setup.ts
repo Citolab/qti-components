@@ -216,6 +216,12 @@ const vrtAnnotations = {
       ((root as HTMLElement).matches?.(CAPTURE_TARGET)
         ? (root as HTMLElement)
         : (root.querySelector(CAPTURE_TARGET) as HTMLElement)) ?? (root as HTMLElement);
+    // These are Kennisnet items — capture them in the Kennisnet brand. The brand is a class on
+    // <html> (see kennisnet-overrides.css, scoped under .qti-theme-kennisnet), and putting it there
+    // rather than on the story root also reaches the floating drag clone the JS appends to
+    // document.body. Custom properties inherit through shadow roots, so the class recolours chips
+    // inside interaction shadow trees; the waitForRenderStable() below forces the repaint.
+    target.ownerDocument.documentElement.classList.add('qti-theme-kennisnet');
     stabilizeStyles(target.ownerDocument);
     await waitForRenderStable(root);
 
