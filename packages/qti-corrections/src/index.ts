@@ -17,5 +17,3 @@ export * from './components/item-show-correct-response/item-show-correct-respons
 export * from './components/test-show-correct-response/test-show-correct-response';
 
 export * from './interactions';
-export * from './all-qti-elements';
-export * from './registry';

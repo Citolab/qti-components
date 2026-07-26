@@ -6,7 +6,7 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  * Lays the committed reference screenshot over the live story for onion-skin review,
  * driven by the `baseline` (off / overlay / diff) and `baselineOpacity` toolbar controls.
  *
- * Baselines are served from apps/e2e/src/stories/__screenshots__ at /baselines (see
+ * Baselines are served from apps/e2e/src/stories/kennisnet/__screenshots__ at /baselines (see
  * main.ts `staticDirs`). Vitest names each file `<sanitized-story-id>-<browser>-<platform>.png`,
  * where the story id has every non-alphanumeric run collapsed to a single '-'. The overlay
  * targets the same element the VRT setup captures (qti-item-body). Vitest's Playwright
@@ -15,7 +15,7 @@ import type { Decorator, Preview } from '@storybook/web-components-vite';
  */
 const BASELINE_OVERLAY_ID = 'vrt-baseline-overlay';
 const BASELINE_URL_BASE = '/baselines';
-const BASELINE_SUBFOLDER = 'kennisnet-all-items.stories.ts'; // v1: kennisnet-scoped
+const BASELINE_SUBFOLDER = 'kennisnet.stories.ts'; // v1: kennisnet-scoped
 const BASELINE_PLATFORM = 'chromium-darwin'; // local capture platform (see plan A5)
 const BASELINE_TARGET = 'qti-item-body'; // element captured by the VRT setup
 

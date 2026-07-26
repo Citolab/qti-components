@@ -109,9 +109,10 @@
     /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
        chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
     /* The placed order chip's INVERTED look (white fill, dark text, neutral border) is
-       Kennisnet-specific — a light chip against the primary bank — so it lives in
-       kennisnet-overrides.css, not here. In the base theme a placed chip is just the neutral chip
-       (@mixin drag), and its corrections route through --component-* like every other chip. */
+       Kennisnet-specific — a light chip against the primary bank — so it lives in the Kennisnet brand
+       overlay (apps/e2e/src/stories/kennisnet/kennisnet.css), not here. In the base theme a placed
+       chip is just the neutral chip (@mixin drag), and its corrections route through --component-*
+       like every other chip. */
     & qti-simple-choice {
       font-weight: 600;
       @mixin drag;

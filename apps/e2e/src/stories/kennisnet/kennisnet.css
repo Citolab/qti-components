@@ -1,0 +1,51 @@
+/*
+ * Kennisnet brand overlay. Adopted directly into each item's shadow root by kennisnet.stories.ts, so
+ * it needs no scoping class — it only applies where it is adopted, and it is adopted nowhere else.
+ * Explicit chip selectors (not tokens) keep the internal structure visible: a chip is `:state(drag)`
+ * on the bank, `::part(drag)` on a placed clone, `[data-drag-clone]` on the body clone. Each block
+ * only switches `--component-*`; nothing is redeclared.
+ *
+ * A RESTING-look override sits in `brand` (above base, below states, so functional states still win).
+ * A STATE override (the placeholder) sits in `states`; the base placeholder sets no fill / border /
+ * shadow of its own (see `@mixin drag-placeholder`), so this restyles the hole with no specificity
+ * contest. border-COLOR goes transparent, never the width, so switching brands can't move a chip or
+ * reflow a bank (layout-invariance). The `@layer` order is declared by item.css, adopted alongside
+ * this sheet in the same shadow.
+ */
+@layer qti-components.interactions.brand {
+  /* The chip: primary fill, white text, a coloured lift, no border. */
+  :state(drag):where(
+      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
+    ),
+  [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])),
+  qti-gap::part(drag),
+  qti-associate-interaction::part(drag),
+  qti-simple-associable-choice::part(drag) {
+    --component-background-color: var(--qti-primary);
+    --component-color: var(--qti-primary-fg);
+    --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --component-border-color: transparent;
+  }
+
+  /* Order's placed chip is INVERTED — a light chip (white fill, dark text, neutral border) against
+     the primary bank, so a dropped answer reads as settled. Kennisnet-specific: in the base theme a
+     placed order chip is just the neutral chip. */
+  qti-order-interaction::part(drag) {
+    --component-background-color: white;
+    --component-color: var(--qti-fg);
+    --component-border-color: var(--qti-border-color);
+    --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  }
+}
+
+@layer qti-components.interactions.states {
+  /* The placeholder: a tint fill + inset shadow, no border (the base default is a plain bordered
+     white box). Corrections, a layer higher, keep winning. */
+  :state(placeholder):where(
+      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
+    ) {
+    --component-background-color: var(--qti-placeholder-bg);
+    --component-border-color: transparent;
+    --component-box-shadow: inset var(--qti-placeholder-shadow);
+  }
+}

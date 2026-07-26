@@ -9,8 +9,6 @@ export default [
       display: inline-flex;
       align-items: center;
       vertical-align: middle;
-      gap: calc(var(--qti-gap-size) / 2);
-      padding-inline-end: var(--qti-padding-horizontal);
     }
 
     /*

@@ -26,9 +26,6 @@
     /* Foreground on a primary fill. */
     --qti-primary-fg: #fff;
 
-    /* THE body text colour — the foreground half of the --qti-bg / --qti-fg surface pair. */
-    --qti-fg: #3e144e;
-
     /* ── Rhythm & timing ── */
     --qti-gap-size: 1rem; /* THE flex/grid gap, used everywhere incl .styles.ts */
     --qti-padding-vertical: 0.5rem; /* the base spacing unit */
@@ -42,13 +39,18 @@
     --qti-motion: 1;
     --qti-motion-duration-fast: calc(150ms * var(--qti-motion));
 
-    /* ── Surfaces & border ── */
+    /* ── The component surface ──
+       Every token @mixin component falls back to when a component (chip, field, button, choice) sets
+       no --component-* of its own. Grouped so a component's whole resting look reads in one place, in
+       the order the contract uses them: the bg / fg surface pair, then the border (width, style,
+       colour, radius). */
     --qti-bg: white;
+    --qti-fg: #3e144e; /* THE body text colour — the foreground half of the --qti-bg / --qti-fg pair */
     --qti-hover-bg: #f9fafb;
-    --qti-border-thickness: 1px; /* kept: some places need the width alone (invariance, calcs) */
-    --qti-border-radius: 0.3rem;
+    --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid;
     --qti-border-color: #9b77a9;
+    --qti-border-radius: 0.3rem;
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
@@ -159,9 +161,6 @@
     /* Selection is a semantic alias of the primary action colour. */
     --qti-selected-bg: var(--qti-primary);
     --qti-selected-color: var(--qti-primary-fg);
-
-    /* How far a drag rises under the pointer. Paint, not layout: `translate` never reflows. */
-    --qti-drag-hover-lift: -2px;
 
     /* The hole a lifted / placed chip leaves — derived from primary. */
     --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);

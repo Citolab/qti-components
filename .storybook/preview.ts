@@ -23,17 +23,19 @@ initialize({
  * typography — belong to whichever theme wants them (see kennisnet/_reboot.scss).
  */
 import 'modern-normalize/modern-normalize.css';
-
+// The single QTI theme, inlined into the preview document so every story is themed. This replaces
+// the old multi-substrate switcher (one theme now — see the theme-architecture pivot); a story that
+// scopes its own brand adopts its stylesheets into its own shadow instead (see kennisnet.stories.ts).
+import itemCss from '../packages/qti-theme/src/item.css?inline';
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
 import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
-import { styleSubstrateGlobalTypes, styleSubstrateLoader } from './extensions/style-substrate';
 import { webComponentInspectDecorator, webComponentInspectGlobalTypes } from './extensions/webcomponent-inspect';
 import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
 
-export const loaders = [styleSubstrateLoader, mswLoader];
+export const loaders = [mswLoader];
 
 export const customViewports = {
   default: {
@@ -84,21 +86,25 @@ expect.extend({ toBePositionedRelativeTo });
 
 setCustomElementsManifest(customElements);
 
+// Put the theme first in <head> so the reset/normalize imported above still wins where it should,
+// mirroring how the old substrate loader injected it. One <style>, once, for the whole preview.
+const qtiThemeStyle = document.createElement('style');
+qtiThemeStyle.id = 'qti-theme-style';
+qtiThemeStyle.textContent = itemCss;
+document.head.insertBefore(qtiThemeStyle, document.head.firstChild);
+
 const preview: Preview = {
   decorators: [
     /*
-     * One class-based theme axis. `withThemeByClassName` applies the theme class to <html>, which is
-     * why `kennisnet` reaches the floating drag clone the drag-drop JS appends to document.body.
-     * `light` is the neutral default (a chip is a bordered box); `kennisnet` is the brand (primary
-     * fill + lift, no border — see kennisnet-overrides.css). Trade-off of folding brand in here: it
-     * is one dropdown, so brand is mutually exclusive with dark — split it back into its own
-     * decorator if you ever need "dark + kennisnet" at once.
+     * One class-based theme axis. `withThemeByClassName` applies the theme class to <html>. `light`
+     * is the neutral default (a chip is a bordered box); `dark` is its dark counterpart. The
+     * Kennisnet brand is NOT a global theme here — it is a brand overlay adopted straight into the
+     * item shadow by its own story (apps/e2e/src/stories/kennisnet/kennisnet.stories.ts).
      */
     withThemeByClassName({
       themes: {
         light: 'light-theme',
-        dark: 'dark-theme',
-        kennisnet: 'qti-theme-kennisnet'
+        dark: 'dark-theme'
       },
       defaultTheme: 'light'
     }),
@@ -143,7 +149,6 @@ const preview: Preview = {
   },
 
   globalTypes: {
-    ...styleSubstrateGlobalTypes,
     ...baselineOverlayGlobalTypes,
     ...webComponentInspectGlobalTypes
   },

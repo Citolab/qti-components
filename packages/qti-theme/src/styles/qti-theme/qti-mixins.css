@@ -194,11 +194,14 @@
   height: calc(var(--qti-form-size) - 6px);
 }
 
+/* A choice with its native control shown (radio/checkbox visible) is the button component with its
+   border made TRANSPARENT — no visible box, but the 1px edge is still there, so it is the same box
+   as the `.qti-input-control-hidden` choice (which keeps the border visible because the whole choice
+   is the control). Only the border COLOUR differs between the two, never the geometry. */
 @define-mixin check {
+  @mixin button;
+  --component-border-color: transparent;
   gap: 0.5rem;
-  background-color: var(--qti-bg);
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
   outline: none;
   cursor: pointer;
 }
@@ -258,27 +261,27 @@
   cursor: not-allowed;
 }
 
+/* A button is just the component box with padding — @mixin component already gives it the white
+   surface, the theme border and the radius, all switchable via --component-*. */
 @define-mixin button {
-  @mixin bordered;
-  border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  background: var(--qti-bg);
+  @mixin component;
 }
 
+/* A text field is the component box with square corners and a text cursor. */
 @define-mixin text {
-  @mixin bordered;
-  border-radius: 0;
+  @mixin component;
+  --component-border-radius: 0;
   cursor: text;
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  background: var(--qti-bg);
 }
 
+/* A drop target is the component box with a DASHED edge — the one thing that distinguishes it from
+   any other component. `border-style` is set DIRECTLY, not via `--component-border-style`: that is a
+   custom property and CUSTOM PROPERTIES INHERIT, so any chip placed inside the drop would inherit the
+   dashed edge (it did — a chip in a drop went dashed). A direct `border-style` does not inherit.
+   Colour / width / radius / fill stay themeable through @mixin component. */
 @define-mixin drop {
-  border: var(--qti-border-thickness) dashed var(--qti-border-color);
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" stroke="%23CCCCCC" stroke-width="1" fill="transparent" /></svg>')
-    center no-repeat;
-  border-radius: var(--qti-border-radius);
-  background-color: var(--qti-bg);
+  @mixin component;
+  border-style: dashed;
 }
 
 /*
@@ -290,33 +293,31 @@
 @define-mixin dragging {
   pointer-events: none;
   rotate: -2deg;
-  --component-box-shadow:
-    0 8px 12px rgb(0 0 0 / 20%),
-    0 4px 8px rgb(0 0 0 / 10%);
+  --component-box-shadow: 0 8px 12px rgb(0 0 0 / 20%), 0 4px 8px rgb(0 0 0 / 10%);
 }
 
 /*
- * A drag lifts a little under the pointer. The one hover affordance in the theme.
+ * A drag darkens a little under the pointer. The one hover affordance in the theme.
  *
  * Guarded by `@media (hover: hover)` because touch does not lack hover — it emulates it, and the
- * emulated state sticks after a tap. Without the guard a tapped drag stays lifted until the
+ * emulated state sticks after a tap. Without the guard a tapped drag stays darkened until the
  * candidate taps somewhere else, which is worse than no hover at all.
  *
  * So this may only ever decorate. Everything it says is also said by `:focus-visible` for a keyboard
  * and by the resting state for a finger; nothing is communicated by hover alone.
  *
- * `translate`, not `box-shadow`. A transform does not reflow, so the lift cannot move the bank —
- * and `box-shadow` is already contested on a drag by four rules at once: the resting lift, the
- * in-flight elevation, the placeholder's inset, and the focus ring. `translate` composes with
- * `dragging`'s `rotate` instead of fighting it, since those are separate properties.
+ * A background darken, not a lift: it costs no layout (paint only, never reflows the bank), and it
+ * reads the chip's own `--component-background-color`, so it tracks whatever the brand painted the
+ * chip — primary under Kennisnet, white otherwise. `background-color` is a DIRECT property (not
+ * `--component-background-color`): it overrides the @mixin component binding on `:hover`, does not
+ * self-reference the var it reads, and — being a real property — never inherits into children.
  *
- * It replaces `hov`, an empty mixin invoked 21 times. It was empty because it was applied to drags,
- * drop targets, textareas, hotspots and choices alike, and no single rule suits all of those — a
- * drop target already paints `:state(hover)`, and a textarea has no business lifting. This one is
- * called from drags only.
+ * It replaces `hov`, an empty mixin invoked 21 times, applied to drags, drop targets, textareas,
+ * hotspots and choices alike where no single rule suited all of them. This one is called from drags
+ * only.
  */
 @define-mixin drag-hover {
   @media (hover: hover) {
-    translate: 0 var(--qti-drag-hover-lift);
+    background-color: color-mix(in srgb, var(--component-background-color, var(--qti-bg)) 92%, black);
   }
 }

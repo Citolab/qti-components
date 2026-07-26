@@ -15,12 +15,9 @@ const config: StorybookConfig = {
   stories:
     process.env.VRT === '1'
       ? [
-          { directory: '../apps/e2e/src', files: '**/kennisnet-all-items.stories.ts', titlePrefix: 'E2E' },
-          {
-            directory: '../packages/qti-corrections/src',
-            files: '**/correction.stories.ts',
-            titlePrefix: 'QTI Corrections'
-          }
+          // The single Kennisnet suite now registers the correction element variants and applies the
+          // brand itself (see kennisnet/kennisnet.stories.ts), so this one file is the whole VRT set.
+          { directory: '../apps/e2e/src', files: '**/kennisnet.stories.ts', titlePrefix: 'E2E' }
         ]
       : [
           {
@@ -54,11 +51,6 @@ const config: StorybookConfig = {
             titlePrefix: 'QTI Interactions'
           },
           {
-            directory: '../packages/qti-corrections/src',
-            files: '**/*.stories.*',
-            titlePrefix: 'QTI Corrections'
-          },
-          {
             directory: '../packages/qti-item/src/components',
             files: '**/*.stories.*',
             titlePrefix: 'Item'
@@ -90,7 +82,7 @@ const config: StorybookConfig = {
     '../public',
     // Serve committed VRT baseline screenshots so the in-canvas overlay decorator
     // (see preview.ts) can lay them over the live story for onion-skin review.
-    { from: '../apps/e2e/src/stories/__screenshots__', to: '/baselines' }
+    { from: '../apps/e2e/src/stories/kennisnet/__screenshots__', to: '/baselines' }
   ],
   async viteFinal(config: any) {
     return {

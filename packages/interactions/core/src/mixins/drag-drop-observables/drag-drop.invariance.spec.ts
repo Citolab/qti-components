@@ -60,10 +60,10 @@ const GAP_MATCH = `
   </qti-gap-match-interaction>`;
 
 /**
- * The invariants are a property of the *substrate*, not of the components alone: a vendor
- * stylesheet is exactly where a rule like `:state(dragging) { border: none }` gets written. So
- * these run against every substrate we ship, mirroring what .storybook/extensions/style-substrate
- * composes. Running them bare would pass vacuously — the offending rule would never load.
+ * The invariants are a property of the *theme*, not of the components alone: a theme rule like
+ * `:state(dragging) { border: none }` is exactly where the footprint gets broken. So these run with
+ * the shipped theme (`item.css`) applied, the same stylesheet .storybook/preview.ts inlines into the
+ * preview document. Running them bare would pass vacuously — the offending rule would never load.
  */
 const SUBSTRATES: Record<string, string[]> = {
   citolab: [normalizeCss, itemCss]

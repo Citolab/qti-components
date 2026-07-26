@@ -67,9 +67,10 @@
          */
         &::part(drop) {
           @mixin drop;
-          &[dragging] {
-            @mixin dragging;
-          }
+          /* No `@mixin dragging` on the drop. It is a chip-in-flight look (rotate, pointer-events:
+             none, elevation) that never belonged on a drop, and its `--component-box-shadow` inherits
+             onto the chips nested in the drop. Per the comment above, a drop shows nothing while a
+             drag is in flight; the hole is painted on the chip. */
           &:focus {
             @mixin foc;
           }

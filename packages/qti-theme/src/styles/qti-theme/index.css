@@ -8,4 +8,3 @@
 @import url('./qti-interactions.css');
 @import url('./qti-elements.css') layer(qti-components.elements);
 @import url('./qti-states.css');
-@import url('./kennisnet-overrides.css');

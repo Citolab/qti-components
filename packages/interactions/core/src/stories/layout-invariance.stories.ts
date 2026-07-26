@@ -23,14 +23,13 @@ import '@qti-components/interactions';
  * — it compares the styling, not the rendered width, so a narrow drop slot wrapping the chip can't
  * mask or fake it.
  *
- * Pinned to the Kennisnet substrate (`parameters.styleSubstrate`), the theme the contract is held
- * to; flip the toolbar Style picker to compare. `order` and `associate` are the two known
- * violators; `gap-match` and `match` are the compliant controls.
+ * Held against the single shipped theme (inlined into the preview document by .storybook/preview.ts).
+ * `order` and `associate` are the two known violators; `gap-match` and `match` are the compliant
+ * controls.
  */
 const meta: Meta = {
   title: 'Diagnostics/Layout Invariance',
   parameters: {
-    styleSubstrate: 'kennisnet',
     chromatic: { disableSnapshot: true }
   }
 };

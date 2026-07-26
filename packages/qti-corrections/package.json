@@ -64,10 +64,6 @@
     "./elements": {
       "types": "./dist/elements.d.ts",
       "import": "./dist/elements.js"
-    },
-    "./registry": {
-      "types": "./dist/registry.d.ts",
-      "import": "./dist/registry.js"
     }
   },
   "repository": {

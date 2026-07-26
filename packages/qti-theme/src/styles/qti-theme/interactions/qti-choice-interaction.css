@@ -6,23 +6,15 @@
     --qti-choice-label-display: inline;
 
     & qti-simple-choice {
+      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
       width: fit-content;
       cursor: pointer;
     }
 
     &.qti-input-control-hidden {
-      /* The badge's containing block is qti-simple-choice's own `position: relative`; only the
-         badge itself is positioned here. See CONTRACT.md §7. */
       & qti-simple-choice {
         @mixin button;
-        /* Reserved for the answer-key tick drawn at the top right, so that revealing it does not
-           resize the choice. See the correction rules below. */
-        padding-right: 30px;
-        /* Hiding the native control is layout; qti-simple-choice.styles.ts spends this on
-           [part='control']. */
         --qti-control-display: none;
-
-
         &:focus {
           @mixin foc;
         }
@@ -32,7 +24,6 @@
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
         @mixin check;
-
 
         &:focus {
           @mixin foc;

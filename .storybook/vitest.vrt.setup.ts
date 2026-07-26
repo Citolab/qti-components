@@ -17,7 +17,7 @@ import * as previewAnnotations from './preview';
  */
 
 const CAPTURE_TARGET = 'qti-item-body';
-const SCREENSHOT_DIR = 'apps/e2e/src/stories/__screenshots__/kennisnet-all-items.stories.ts';
+const SCREENSHOT_DIR = 'apps/e2e/src/stories/kennisnet/__screenshots__/kennisnet.stories.ts';
 const PIXEL_CHANNEL_THRESHOLD = 51; // roughly pixelmatch threshold 0.2 on an 8-bit channel
 // The fraction of pixels allowed to differ (above the channel threshold) before a capture fails.
 // This is the ONE effective VRT tolerance — the comparatorOptions in vitest.config.ts are inert
@@ -28,7 +28,6 @@ const PIXEL_CHANNEL_THRESHOLD = 51; // roughly pixelmatch threshold 0.2 on an 8-
 // (~725 px) still absorbs sub-pixel antialiasing drift (the channel threshold does the real AA
 // work) but fails on a single repainted small element. See the theme-merge plan, Phase 1.
 const ALLOWED_MISMATCHED_PIXEL_RATIO = 0.0005;
-const SLEEPVRAAG_OPTIES_BOVEN_ID = 'qti-corrections-qti-corrections-kennisnet-all-items--sleepvraag-opties-boven';
 
 const sanitizeStoryId = (id: string) => id.replace(/[^a-z0-9]+/gi, '-');
 
@@ -158,55 +157,6 @@ const waitForRenderStable = async (root: ParentNode) => {
   );
 };
 
-const parseRgb = (value: string) => {
-  const match = value.match(/rgba?\(([^)]+)\)/i);
-  if (!match) return null;
-  const parts = match[1].split(',').map(part => Number.parseFloat(part.trim()));
-  if (parts.length < 3 || parts.some(Number.isNaN)) return null;
-  return { r: parts[0], g: parts[1], b: parts[2] };
-};
-
-const isGreenish = (value: string) => {
-  const rgb = parseRgb(value);
-  if (!rgb) return false;
-  return rgb.g - Math.max(rgb.r, rgb.b) >= 25;
-};
-
-const isReddish = (value: string) => {
-  const rgb = parseRgb(value);
-  if (!rgb) return false;
-  return rgb.r - Math.max(rgb.g, rgb.b) >= 25;
-};
-
-const assertSleepvraagDroppedDragTint = async (root: ParentNode) => {
-  const allElements = [
-    ...(root instanceof Document ? Array.from(root.querySelectorAll<HTMLElement>('*')) : []),
-    ...(root instanceof HTMLElement ? Array.from(root.querySelectorAll<HTMLElement>('*')) : [])
-  ];
-
-  const droppedDragSamples: string[] = [];
-  for (const host of allElements) {
-    if (!host.shadowRoot) continue;
-    const drags = Array.from(host.shadowRoot.querySelectorAll<HTMLElement>('[part~="drag"]'));
-    for (const drag of drags) {
-      const style = getComputedStyle(drag);
-      const color = style.backgroundColor;
-      if (!color || color === 'rgba(0, 0, 0, 0)' || color === 'transparent') continue;
-      droppedDragSamples.push(color);
-    }
-  }
-
-  const hasGreen = droppedDragSamples.some(isGreenish);
-  const hasRed = droppedDragSamples.some(isReddish);
-
-  if (!hasGreen || !hasRed) {
-    throw new Error(
-      `Expected both green and red dropped drag candidate-correction tints in ${SLEEPVRAAG_OPTIES_BOVEN_ID}. ` +
-        `Found samples: ${droppedDragSamples.slice(0, 20).join(', ') || '(none)'}`
-    );
-  }
-};
-
 const vrtAnnotations = {
   async afterEach(context: { id: string; canvasElement: HTMLElement }) {
     const root = context.canvasElement ?? document.getElementById('storybook-root') ?? document.body;
@@ -216,12 +166,9 @@ const vrtAnnotations = {
       ((root as HTMLElement).matches?.(CAPTURE_TARGET)
         ? (root as HTMLElement)
         : (root.querySelector(CAPTURE_TARGET) as HTMLElement)) ?? (root as HTMLElement);
-    // These are Kennisnet items — capture them in the Kennisnet brand. The brand is a class on
-    // <html> (see kennisnet-overrides.css, scoped under .qti-theme-kennisnet), and putting it there
-    // rather than on the story root also reaches the floating drag clone the JS appends to
-    // document.body. Custom properties inherit through shadow roots, so the class recolours chips
-    // inside interaction shadow trees; the waitForRenderStable() below forces the repaint.
-    target.ownerDocument.documentElement.classList.add('qti-theme-kennisnet');
+    // The Kennisnet brand is applied entirely by the story's own decorator, which adopts kennisnet.css
+    // into each item's shadow root (the overlay carries no scoping class — adoption is the scoping).
+    // Nothing to toggle on the document here.
     stabilizeStyles(target.ownerDocument);
     await waitForRenderStable(root);
 

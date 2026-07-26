@@ -5,8 +5,7 @@
   "author": "",
   "exports": {
     "./item.css": "./dist/item.css",
-    "./native.css": "./dist/native.css",
-    "./minimal.css": "./dist/minimal.css"
+    "./native.css": "./dist/native.css"
   },
   "files": [
     "dist"
@@ -18,7 +17,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m && postcss ./src/minimal.css -d dist -m",
+    "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",

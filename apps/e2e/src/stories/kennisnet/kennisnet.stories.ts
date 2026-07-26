@@ -1,13 +1,108 @@
-import { html } from 'lit';
+import { html, nothing, render } from 'lit';
 
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import { qtiBaseElements } from '@qti-components/base/elements';
+import { qtiContentElements } from '@qti-components/elements/elements';
+import { qtiInteractionElements } from '@qti-components/interactions/elements';
+import { qtiItemElements } from '@qti-components/item/elements';
+import { qtiProcessingElements } from '@qti-components/processing/elements';
+// The qti-corrections package only exports the correction interactions themselves — building a
+// registry from them is the implementor's job, done right here.
+import { qtiCorrectionElements } from '@qti-components/qti-corrections/elements';
+import { qtiTestElements } from '@qti-components/test/elements';
 
-const KENNISNET_ITEM_WIDTH = 906;
+// The raw theme stylesheet is a build-time asset (the theme package only exports its index).
 
-export const kennisnetMetaBase: Pick<Meta, 'tags' | 'parameters' | 'decorators'> = {
+import itemCss from '../../../../../packages/qti-theme/src/item.css?inline';
+// The Kennisnet brand overlay lives with this story now (no longer bundled into the theme).
+import kennisnetCss from './kennisnet.css?inline';
+
+import type { Decorator, Meta, StoryObj } from '@storybook/web-components-vite';
+
+/**
+ * Registration lives here, on the implementor side. qti-corrections only ships the correction
+ * interactions (`qtiCorrectionElements`, keyed by their standard QTI tag); wiring them into a scoped
+ * custom element registry (https://developer.chrome.com/blog/scoped-registries) is this file's job.
+ *
+ * Inside a shadow root created with this registry, `qti-choice-interaction` &co resolve to their
+ * `…Correction` variants instead of the standard classes registered globally, so
+ * `show-candidate-correction` / `show-full-correct-response` actually paint — and the mapping stays
+ * local to these stories.
+ *
+ * A scoped registry has NO global fallback: it must define every tag the items render. So the full
+ * set of standard QTI manifests is merged in, with the correction variants overriding by tag.
+ */
+const correctionRegistry = (() => {
+  const registry = new CustomElementRegistry();
+  const overrides = new Map<string, CustomElementConstructor>(
+    qtiCorrectionElements.map(({ tag, ctor }) => [tag, ctor])
+  );
+  const everyElement = [
+    ...qtiBaseElements,
+    ...qtiProcessingElements,
+    ...qtiContentElements,
+    ...qtiItemElements,
+    ...qtiTestElements,
+    ...qtiInteractionElements,
+    ...qtiCorrectionElements
+  ];
+  for (const { tag, ctor } of everyElement) {
+    if (!registry.get(tag)) registry.define(tag, overrides.get(tag) ?? ctor);
+  }
+  return registry;
+})();
+
+/**
+ * Parsed once — every story's shadow root adopts both sheets. item.css declares the full `@layer`
+ * order; kennisnet.css only adds rules to the already-declared `brand` / `states` layers, so it is
+ * adopted after item.css.
+ */
+const itemSheet = new CSSStyleSheet();
+itemSheet.replaceSync(itemCss);
+const kennisnetSheet = new CSSStyleSheet();
+kennisnetSheet.replaceSync(kennisnetCss);
+
+/**
+ * Render each item into a shadow root backed by the scoped correction registry, in the Kennisnet
+ * brand.
+ *
+ * The markup is assigned via `innerHTML` so the browser upgrades its custom elements against the
+ * scoped registry (lit's `render()` binds elements to the global registry at creation time, which
+ * would ignore the scoped mapping); the lit template is serialized to a string first.
+ *
+ * `item.css` and the Kennisnet brand overlay (`kennisnet.css`) are both adopted into the shadow,
+ * because a document sheet can't cross the boundary. The overlay carries no scoping class — being
+ * adopted into this shadow (and nowhere else) is what scopes it — so its rules reach every chip
+ * here, including the corrections chips that live in this shadow.
+ */
+const withKennisnetCorrection: Decorator = story => {
+  const scratch = document.createElement('div');
+  render(story() as Parameters<typeof render>[0], scratch);
+  const markup = scratch.innerHTML;
+  render(nothing, scratch);
+
+  const host = document.createElement('div');
+  const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry });
+  shadow.adoptedStyleSheets = [itemSheet, kennisnetSheet];
+
+  // Wrapped in a container `<div>` on purpose: `show-full-correct-response` inserts its clone through
+  // `interaction.parentElement`, which is null for a direct child of a shadow root. Real items always
+  // nest the interaction inside `qti-item-body`.
+  shadow.innerHTML = `<div>${markup}</div>`;
+
+  for (const container of shadow.querySelectorAll<HTMLElement & { customElementRegistry: CustomElementRegistry }>(
+    'item-container, test-container'
+  )) {
+    container.customElementRegistry = correctionRegistry;
+  }
+
+  return host;
+};
+
+const meta: Meta = {
+  title: 'Kennisnet',
   tags: ['autodocs', 'no-tests', 'vrt'],
+  decorators: [withKennisnetCorrection],
   parameters: {
-    styleSubstrate: 'citolab',
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'vrtBaseline',
@@ -23,6 +118,8 @@ export const kennisnetMetaBase: Pick<Meta, 'tags' | 'parameters' | 'decorators'>
     }
   }
 };
+
+export default meta;
 
 type Story = StoryObj;
 
@@ -792,111 +889,6 @@ export const PuntSelecteren: Story = {
           </p>
         </qti-content-body>
       </qti-rubric-block>
-    </qti-item-body>
-  `
-};
-
-export const Combineervraag: Story = {
-  name: 'ITEM018 — Combineervraag',
-  render: () => html`
-    <qti-item-body>
-      <qti-associate-interaction
-        response-identifier="RESPONSE"
-        max-associations="3"
-        response="A M,C P,D L"
-        correct-response="A P,C M,D L"
-        show-candidate-correction
-        show-full-correct-response
-      >
-        <qti-prompt>Combineer elke tegenspeler met zijn rivaal.</qti-prompt>
-        <qti-simple-associable-choice identifier="A" match-max="1">Antonio</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="M" match-max="1">Montague</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
-      </qti-associate-interaction>
-    </qti-item-body>
-  `
-};
-
-export const Hotspotvraag: Story = {
-  name: 'ITEM019 — Hotspotvraag',
-  render: () => html`
-    <qti-item-body>
-      <qti-hotspot-interaction
-        response-identifier="RESPONSE"
-        max-choices="1"
-        response="A"
-        correct-response="C"
-        show-candidate-correction
-        show-full-correct-response
-      >
-        <qti-prompt>Klik op de meest zuidelijke luchthaven.</qti-prompt>
-        <img src="/assets/qti-hotspot-interaction/uk.png" height="280" width="206" alt="Kaart van het VK" />
-        <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
-        <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
-        <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
-      </qti-hotspot-interaction>
-    </qti-item-body>
-  `
-};
-
-export const VolgordeOpAfbeelding: Story = {
-  name: 'ITEM020 — Volgorde op afbeelding',
-  render: () => html`
-    <qti-item-body>
-      <qti-graphic-order-interaction
-        response-identifier="RESPONSE"
-        response="A B C"
-        correct-response="C B A"
-        show-candidate-correction
-        show-full-correct-response
-      >
-        <qti-prompt>Zet de luchthavens op volgorde van noord naar zuid.</qti-prompt>
-        <img src="/assets/qti-graphic-order-interaction/uk.png" height="280" width="206" alt="Kaart van het VK" />
-        <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>
-        <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
-        <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>
-      </qti-graphic-order-interaction>
-    </qti-item-body>
-  `
-};
-
-export const VerbindDePunten: Story = {
-  name: 'ITEM021 — Verbind de punten',
-  render: () => html`
-    <qti-item-body>
-      <qti-graphic-associate-interaction
-        response-identifier="RESPONSE"
-        max-associations="2"
-        response="A B"
-        correct-response="A B,B C"
-        show-candidate-correction
-        show-full-correct-response
-      >
-        <qti-prompt>Teken de nieuwe routes van de luchtvaartmaatschappij.</qti-prompt>
-        <img
-          src="/assets/qti-graphic-associate-interaction/uk.png"
-          alt="Kaart van luchthavens in het VK"
-          width="206"
-          height="280"
-        />
-        <qti-associable-hotspot shape="circle" coords="78,102,8" identifier="A" match-max="2"></qti-associable-hotspot>
-        <qti-associable-hotspot shape="circle" coords="117,171,8" identifier="B" match-max="2"></qti-associable-hotspot>
-        <qti-associable-hotspot shape="circle" coords="166,227,8" identifier="C" match-max="2"></qti-associable-hotspot>
-      </qti-graphic-associate-interaction>
-    </qti-item-body>
-  `
-};
-
-export const Schuifbalk: Story = {
-  name: 'ITEM022 — Schuifbalk',
-  render: () => html`
-    <qti-item-body>
-      <qti-slider-interaction response-identifier="RESPONSE" lower-bound="0" upper-bound="100" step="5" response="35">
-        <qti-prompt>Hoeveel procent van het aardoppervlak is bedekt met water?</qti-prompt>
-      </qti-slider-interaction>
     </qti-item-body>
   `
 };
