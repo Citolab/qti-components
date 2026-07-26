@@ -12,6 +12,25 @@
  * reflow a bank (layout-invariance). The `@layer` order is declared by item.css, adopted alongside
  * this sheet in the same shadow.
  */
+
+@layer qti-components.global {
+  :root,
+  :host {
+    /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
+    --qti-primary: #581d70; /* purple — chips, selection, active border */
+    --qti-success: #2b830e; /* green */
+    --qti-warning: #ffa700; /* amber */
+    --qti-error: #df0000; /* red */
+    --qti-info: #007ac3; /* blue — the answer key */
+
+    --qti-padding-vertical: 0.5rem; /* the base spacing unit */
+    --qti-padding-horizontal: 1rem;
+
+    --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
+    --qti-border-radius: 0.3rem;
+  }
+}
+
 @layer qti-components.interactions.brand {
   /* The chip: primary fill, white text, a coloured lift, no border. */
   :state(drag):where(

@@ -17,7 +17,7 @@
   :root,
   :host {
     /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
-    --qti-primary: #581d70; /* purple — chips, selection, active border */
+    --qti-primary: #0175aa; /* purple — chips, selection, active border */
     --qti-success: #2b830e; /* green */
     --qti-warning: #ffa700; /* amber */
     --qti-error: #df0000; /* red */
@@ -49,8 +49,8 @@
     --qti-hover-bg: #f9fafb;
     --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid;
-    --qti-border-color: #9b77a9;
-    --qti-border-radius: 0.3rem;
+    --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
+    --qti-border-radius: 0.5rem;
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
