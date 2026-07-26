@@ -97,16 +97,14 @@
   padding: var(--qti-drag-padding);
   cursor: grab;
 
-  /* Paint via the generic contract, reading brand-swappable chip tokens. A brand
-     (kennisnet-overrides.css) re-values --qti-chip-* under its class and EVERY chip repaints — the
-     bank chip, the placed `::part(drag)` clone and the body-appended `[data-drag-clone]` alike —
-     because they all run this mixin, no matter which selector applied it. Default tokens make a
-     neutral bordered box (see qti-variables.css). */
+  /* Paint via the generic contract, nothing more — @mixin component's fallbacks already make a
+     neutral bordered box (white surface, theme border, no shadow). The chip sets NO --component-*
+     of its own, and that is load-bearing: if it did (e.g. `--component-background-color: white`),
+     that declaration would ride the interaction's HIGH-specificity chip selector
+     (`qti-gap-match-interaction qti-gap::part(drag)`) and out-specify a brand overlay's bare
+     `qti-gap::part(drag)`, so the brand could never win. With nothing set here, the overlay's
+     --component-* is the only declaration and wins with no specificity/layer contest. */
   @mixin component;
-  --component-background-color: var(--qti-chip-bg);
-  --component-color: var(--qti-chip-fg);
-  --component-border-color: var(--qti-chip-border);
-  --component-box-shadow: var(--qti-chip-shadow);
 }
 
 /*
@@ -120,12 +118,11 @@
  * drag-drop.invariance.spec.ts, "a spent drag keeps its footprint".
  */
 @define-mixin drag-placeholder {
-  /* The hole a spent/lifted chip leaves — brand-swappable like the chip. Default is a plain bordered
-     white box with its text hidden; a brand re-values --qti-placeholder-* (kennisnet = a tint + an
-     inset shadow, no border). Text is hidden in both brands. */
-  --component-background-color: var(--qti-placeholder-fill);
-  --component-border-color: var(--qti-placeholder-edge);
-  --component-box-shadow: var(--qti-placeholder-lift);
+  /* The hole a spent/lifted chip leaves. Like the chip (see `drag`), it sets NO fill / border /
+     shadow of its own — those inherit from the resting chip (neutral by default, the brand's fill
+     when an overlay is on), so a brand can restyle the hole via a `:state(placeholder)` overlay
+     with no specificity contest. The one thing a placeholder always does, in every brand, is hide
+     its text; the default hole is then just the resting chip (white + border) with its text gone. */
   --component-color: transparent;
   --component-opacity: 1;
 }

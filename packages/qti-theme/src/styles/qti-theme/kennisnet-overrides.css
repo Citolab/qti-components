@@ -1,44 +1,53 @@
 /*
- * Kennisnet brand overrides.
+ * Kennisnet brand overrides. Explicit chip selectors (not tokens) so the internal structure stays
+ * visible: a chip is `:state(drag)` on the bank, `::part(drag)` on a placed clone, `[data-drag-clone]`
+ * on the body clone. Each block only switches `--component-*`; nothing is redeclared.
  *
- * The base draws chips and placeholders by reading --qti-chip-* / --qti-placeholder-* tokens (see
- * qti-mixins.css @mixin drag / @mixin drag-placeholder; defaults in qti-variables.css). Kennisnet
- * re-values those TOKENS under .qti-theme-kennisnet, so EVERY chip repaints — the bank chip, the
- * placed ::part(drag) clone, the body [data-drag-clone], AND the inert answer-key clone chips that
- * never get :state(drag) — because they all read the tokens through the mixins.
+ * Scoped under `.qti-theme-kennisnet` (the class the Storybook switcher puts on <html>). NOTE this
+ * only reaches chips in the light DOM — a chip rendered inside a shadow root (e.g. the corrections
+ * view, or anything inside item-container) is NOT reached by a document class. Crossing that
+ * boundary needs either inherited tokens or this overlay adopted INTO that shadow.
  *
- * That is why no chip selector is listed here: a selector keyed on :state(drag) / ::part(drag) can't
- * reach the inert clones, and listing every bare-element selector with its guards would force this
- * file to know every interaction's internal structure. The tokens ARE the contract; re-valuing them
- * reaches all chips at once. The one genuine DEVIATION — order's inverted placed chip — is the only
- * thing that still names a selector.
- *
- * Layering: the tokens sit in `brand` (above `base`, where the defaults are). The placeholder RULE
- * reads its tokens from the `states` layer, so re-valuing the token here composes without a layer
- * fight. Corrections set --component-* directly in the `corrections` layer, above all of this, so a
- * green/red judgement still wins. border-COLOR goes transparent, never the width (layout-invariance).
+ * A RESTING-look override sits in `brand` (above base, below states, so functional states still
+ * win). A STATE override (the placeholder) sits in `states` and beats the neutral default there by
+ * the extra `.qti-theme-kennisnet` class. border-COLOR goes transparent, never the width, so
+ * switching brands can't move a chip or reflow a bank (layout-invariance).
  */
 @layer qti-components.interactions.brand {
-  .qti-theme-kennisnet {
-    /* Chip: primary fill, white text, a coloured lift, no border. */
-    --qti-chip-bg: var(--qti-primary);
-    --qti-chip-fg: var(--qti-primary-fg);
-    --qti-chip-border: transparent;
-    --qti-chip-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
-
-    /* Placeholder: a tint fill + inset shadow, no border. */
-    --qti-placeholder-fill: var(--qti-placeholder-bg);
-    --qti-placeholder-edge: transparent;
-    --qti-placeholder-lift: inset var(--qti-placeholder-shadow);
+  /* The chip: primary fill, white text, a coloured lift, no border. */
+  .qti-theme-kennisnet :state(drag):where(
+      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
+    ),
+  .qti-theme-kennisnet [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])),
+  .qti-theme-kennisnet qti-gap::part(drag),
+  .qti-theme-kennisnet qti-associate-interaction::part(drag),
+  .qti-theme-kennisnet qti-simple-associable-choice::part(drag) {
+    --component-background-color: var(--qti-primary);
+    --component-color: var(--qti-primary-fg);
+    --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --component-border-color: transparent;
   }
 
   /* Order's placed chip is INVERTED — a light chip (white fill, dark text, neutral border) against
-     the primary bank, so a dropped answer reads as settled. The only chip that departs from the
-     token-driven look, so the only one that names a selector; it overrides the tokens' fill. */
+     the primary bank, so a dropped answer reads as settled. Kennisnet-specific: in the base theme a
+     placed order chip is just the neutral chip. */
   .qti-theme-kennisnet qti-order-interaction::part(drag) {
     --component-background-color: white;
     --component-color: var(--qti-fg);
     --component-border-color: var(--qti-border-color);
     --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  }
+}
+
+@layer qti-components.interactions.states {
+  /* The placeholder: a tint fill + inset shadow, no border (the base default is a plain bordered
+     white box). Same layer as the default placeholder, winning by the extra class. Corrections,
+     higher still, keep winning. */
+  .qti-theme-kennisnet :state(placeholder):where(
+      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
+    ) {
+    --component-background-color: var(--qti-placeholder-bg);
+    --component-border-color: transparent;
+    --component-box-shadow: inset var(--qti-placeholder-shadow);
   }
 }
