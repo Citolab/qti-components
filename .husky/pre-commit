@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
 
-# One tier, same on every branch. Fast by design — heavy verification
+# Visual-regression gate, first. The committed VRT baselines must still match, so a stray visual
+# change can't slip through unnoticed. Compare-only (never --update): a browser run of a handful of
+# stories, a few seconds. If this fails on an INTENTIONAL visual change, refresh the baselines with
+# `pnpm test:vrt:update` and stage them, then commit again.
+echo "→ Checking VRT screenshots…"
+pnpm run test:vrt
+
+# One tier, same on every branch. Fast by design — heavier verification
 # (attw, madge, publint, full test suite) is the CI gate's job, not the commit's.
 #
 # lint-staged runs on STAGED files only: prettier --write, eslint --fix,
