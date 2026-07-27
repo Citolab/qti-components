@@ -27,8 +27,13 @@
        * qti-choice-interaction reserves its answer-key tick the same way, for the same reason: "the
        * 30px that kept the label clear of the tick is reserved in the base rule, whether or not a
        * tick ever appears."
+       *
+       * --qti-correction-gutter is derived from the badge's inset, size and glyph gap, so this
+       * padding and the badge's own offsets cannot drift apart. It was a literal 2.4rem that had to
+       * be kept in agreement by hand with numbers in a different package.
        */
-      padding: 0.6rem 0.75rem 0.75rem 2.4rem;
+      padding: var(--qti-spacing) var(--qti-correction-inset) var(--qti-spacing)
+        var(--qti-correction-gutter);
 
       @mixin text;
     }

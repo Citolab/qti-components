@@ -11,11 +11,20 @@ export class QtiTextEntryInteractionCorrection extends CandidateCorrectionMixin(
     QtiTextEntryInteraction.styles,
     correctionPart,
     css`
+      /*
+       * The trailing inset only — size and leading gap come from the shared sheet.
+       *
+       * This block used to also set position: static; translate: none (dead: nothing positions this
+       * badge) and size it with --qti-form-size, the radio/checkbox token — 1rem, absolute, where
+       * every other badge is 1em and scales with the text it annotates. The two agreed only while the
+       * item's font-size happened to equal the root's.
+       *
+       * The inset is needed because the field's box is the HOST while its padding is on ::part(input),
+       * so the badge — a child of the host — falls outside that padding and lands flush on the border.
+       * Measured at 0px from the border, against 16px for a choice and 12.8px for a chip.
+       */
       [part~='correction'] {
-        position: static;
-        translate: none;
-        width: var(--qti-form-size);
-        height: var(--qti-form-size);
+        margin-inline-end: var(--qti-correction-inset);
       }
       :host {
         position: relative;

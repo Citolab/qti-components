@@ -35,8 +35,20 @@ export const correctionPart = css`
   [part~='correction-partially-correct'] {
     display: inline-flex;
     flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
+
+    /*
+     * The badge aligns ITSELF, and that is the whole of the vertical story.
+     *
+     * It is a flex item with a definite height, so left alone its cross-axis position is decided by
+     * whatever its host says — and the hosts disagree: qti-simple-associable-choice defaults to
+     * align-items: normal, and qti-gap-text gates center behind :not([part~='drag']), so the
+     * same chip centred its badge in the bank and top-aligned it once placed. align-self settles it
+     * from the badge's side, in one line, without touching a single container.
+     *
+     * This replaces an align-items/justify-content: center pair that had never done anything: the
+     * badge is empty — a mask painted over a background — so centring its CONTENTS centres nothing.
+     */
+    align-self: center;
 
     box-sizing: border-box;
     width: var(--qti-correction-size, 1em);

@@ -39,15 +39,7 @@
     -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
   }
 
-  ::part(correction-correct)::after {
-    mask: var(--qti-check-mask) no-repeat center / contain;
-    -webkit-mask: var(--qti-check-mask) no-repeat center / contain;
-  }
 
-  ::part(correction-incorrect)::after {
-    mask: var(--qti-times-mask) no-repeat center / contain;
-    -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
-  }
 
   /*
    * The third verdict. correction.styles.ts has always SIZED `correction-partially-correct` beside
@@ -61,10 +53,6 @@
     -webkit-mask: var(--qti-partial-mask) no-repeat center / contain;
   }
 
-  ::part(correction-partially-correct)::after {
-    mask: var(--qti-partial-mask) no-repeat center / contain;
-    -webkit-mask: var(--qti-partial-mask) no-repeat center / contain;
-  }
 
   /* A cloned interaction presents the answer key rather than a candidate judgement. What is left
      here is the part no interaction owns: any chip, anywhere. The text-entry and inline-choice

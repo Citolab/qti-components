@@ -220,6 +220,42 @@
        --qti-glyph-gap below). */
     --qti-correction-size: 1em;
 
+    /*
+     * How far a correction badge sits from the trailing edge of the box it annotates.
+     *
+     * Only two interactions need it. Everywhere else the badge is a child of the element that carries
+     * the padding, so it is inset by that padding for free — 12.8px on a chip, 16px on a choice, 4px
+     * on a hottext, each matching how far that container insets its own text. text-entry and
+     * inline-choice are the exception: their field box is the HOST, but the padding lives on an inner
+     * ::part(input) / ::part(trigger), so their badge falls outside it and lands on the border. This
+     * gives it back the same inset the text has.
+     *
+     * A NAMED token rather than a calc over --qti-padding-box, which the rhythm contract above
+     * forbids; --qti-drag-padding is the precedent. It is --qti-gap because that IS the horizontal
+     * half of --qti-padding-box, which is the padding those two inner elements use.
+     */
+    --qti-correction-inset: var(--qti-gap);
+
+    /* The line-height @mixin field-typography gives a field. A token because the correction badge
+       has to be exactly one field-line tall to centre on the text, and `1lh` cannot be used for it:
+       that unit resolves against the badge's own inherited line-height, not the field's. */
+    --qti-field-line-height: 1.5;
+
+    /*
+     * The left gutter a multi-line field reserves for its correction badge.
+     *
+     * DERIVED, so it cannot drift from the thing it makes room for: the badge's own inset, plus the
+     * badge, plus the gap that separates it from the first character. It used to be a literal
+     * `2.4rem` in the theme that had to be kept in agreement, by hand and across two packages, with a
+     * `0.75rem` left offset in the correction component.
+     *
+     * Reserved unconditionally, graded or not — padding is layout, and switching it on a verdict
+     * would re-wrap the candidate's answer at the moment they are marked.
+     */
+    --qti-correction-gutter: calc(
+      var(--qti-correction-inset) + var(--qti-correction-size) + var(--qti-glyph-gap)
+    );
+
     /* The gap between a masked glyph and the text it sits beside — the drag-handle grip before a
        label, the correction badge after one. `em`, because a glyph is sized off the text it
        annotates (see --qti-correction-size, --qti-grip-mask), so its gap has to scale with the same

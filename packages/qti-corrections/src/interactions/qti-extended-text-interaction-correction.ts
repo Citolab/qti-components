@@ -65,18 +65,41 @@ export class QtiExtendedTextInteractionCorrection extends ActiveElementCorrectio
         position-anchor: --qti-extended-text-field;
         margin: 0;
         width: var(--qti-correction-size);
-        height: var(--qti-correction-size);
 
-        /* Fallback for engines without anchor positioning: the BOTTOM of the gutter, which needs no
-           knowledge of where the field starts. The gutter runs the full height, so the badge clears
-           the text either way. */
-        left: 0.75rem;
-        bottom: 0.75rem;
+        /*
+         * One FIELD line tall, not square — this is what puts the glyph on the text rather than near
+         * it. The mask is drawn center / contain, so in a box exactly one line high it centres itself
+         * on that line while the width still governs the glyph's size.
+         *
+         * Not 1lh: that unit resolves against the BADGE's own inherited line-height (measured 18.4px),
+         * not the textarea's (24px), so it landed a third of a line low. --qti-field-line-height is
+         * the same number @mixin field-typography gives the field, so the two cannot drift.
+         */
+        height: calc(var(--qti-correction-size) * var(--qti-field-line-height));
 
-        /* Anchored: the top of the gutter, level with the first line — the textarea's own
-           padding-top is 0.6rem. Setting top and height together over-constrains the box, so the
-           bottom above is ignored wherever this line parses, and used where it does not. */
-        top: calc(anchor(top) + 0.6rem);
+        /* Inset exactly as the text is: the same trailing token the two field-shaped interactions
+           use, read here as a LEADING inset because this badge lives in a left gutter. */
+        left: var(--qti-correction-inset);
+
+        /* Anchored to the field's first line: its top edge plus the field's own padding-top. */
+        top: calc(anchor(top) + var(--qti-spacing));
+      }
+
+      /*
+       * Fallback for engines without anchor positioning, where the top above does not parse and the
+       * badge would fall to its static position below the field. The bottom of the gutter needs no
+       * knowledge of where the field starts, and the gutter runs the full height, so the badge still
+       * clears the text.
+       *
+       * Scoped by @supports rather than declared alongside. Both were set at first, on the assumption
+       * that top + height over-constrains the box and bottom is ignored — it is not: measured, the
+       * bottom won and put the badge on the third line.
+       */
+      @supports not (anchor-name: --probe) {
+        [part~='correction'] {
+          top: auto;
+          bottom: var(--qti-correction-inset);
+        }
       }
     `
   ];

@@ -159,6 +159,36 @@ describe('candidate correction paint', () => {
   });
 
   /**
+   * The badge aligns itself, and must keep doing so.
+   *
+   * It is a flex item with a definite height, so without `align-self` its cross-axis position is
+   * whatever its host happens to say — and the hosts disagreed: qti-simple-associable-choice defaults
+   * to `align-items: normal`, and qti-gap-text used to gate `center` behind `:not([part~='drag'])`,
+   * so one chip centred its badge in the bank and top-aligned it once placed. Both were measured at
+   * roughly 1.4px high before the fix, which is exactly the kind of drift nobody catches by eye and
+   * VRT waves through at 0.0005 tolerance.
+   *
+   * Asserted against the host's CONTENT box, not its border box, so it stays true whatever padding a
+   * container uses.
+   */
+  test.each([
+    ['associable choice', 'qti-simple-associable-choice'],
+    ['simple choice', 'qti-simple-choice'],
+    ['hottext', 'qti-hottext']
+  ])('%s: the correction badge is vertically centred in its host', async (_n, tag) => {
+    const probe = document.createElement(tag);
+    probe.setAttribute('identifier', 'X');
+    document.body.innerHTML = '<qti-item-body></qti-item-body>';
+    document.querySelector('qti-item-body')!.appendChild(probe);
+    await settle();
+
+    const badge = probe.shadowRoot?.querySelector('[part~="correction"]') as HTMLElement | null;
+    if (!badge) return; // base element, no correction variant registered in this suite
+
+    expect(getComputedStyle(badge).alignSelf, 'the badge decides its own cross-axis position').toBe('center');
+  });
+
+  /**
    * Graphic-gap-match is corrected but takes NO card — a filled box would cover the picture its
    * hotspot sits on. It is the reason its correction stays direct properties instead of --drag-*
    * slots: nothing there reads the slots, so routing it through them would erase the correction.

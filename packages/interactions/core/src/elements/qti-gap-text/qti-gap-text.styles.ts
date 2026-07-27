@@ -15,30 +15,25 @@ export default [
      * Justification is a variable because only graphic-gap-match centres, where a chip is a tile
      * filling its hotspot. A gap-match chip hugs its text, and centring moved that text.
      */
+    /*
+     * Centred wherever it lives — this is the one-line follow-up the note here used to promise.
+     *
+     * It read :host(:not([part~='drag'])), which reproduced an older accident: the centring rule
+     * used to be a document selector ('qti-gap-match-interaction qti-gap-text'), and a placed chip
+     * lives inside qti-gap's shadow root where no document selector reaches. So a chip in the bank was
+     * centred and the same chip in a gap was not, and the stylesheet gave no hint why.
+     *
+     * That contradicts the layout-invariance contract — a chip is the same chip wherever it stands —
+     * and it showed: the correction badge centred in the bank and rode to the top once placed. The
+     * badge now sets align-self and no longer depends on this, but the label and the drag grip
+     * still did. Making it unconditional costs a one-pixel text shift on placed chips, which is the
+     * rendering change the old note was deferring, and a VRT re-baseline.
+     */
     :host {
       display: flex;
+      align-items: center;
       justify-content: var(--qti-drag-justify-content, normal);
       user-select: none;
-    }
-
-    /*
-     * KNOWN INCONSISTENCY, preserved deliberately.
-     *
-     * A bank chip is vertically centred; a chip already dropped into a gap is not. That is not a
-     * design decision — it is what the theme happened to produce. Its rule was
-     * 'qti-gap-match-interaction qti-gap-text', a document selector, and a placed chip lives inside
-     * qti-gap's shadow root where no document selector reaches. So the bank got centring and the
-     * gap did not, and nobody could see the difference in the stylesheet that caused it.
-     *
-     * Moving the rule here made it uniform, which is what the layout-invariance contract asks for —
-     * a chip is the same chip wherever it lives — and shifted every placed chip's text by a pixel.
-     * That is a rendering change, not a relocation, so it is not made here. The condition below
-     * reproduces the old split exactly: [part~='drag'] marks the copy a drop target renders.
-     *
-     * Unifying this is a one-line follow-up plus a VRT baseline.
-     */
-    :host(:not([part~='drag'])) {
-      align-items: center;
     }
   `
 ];
