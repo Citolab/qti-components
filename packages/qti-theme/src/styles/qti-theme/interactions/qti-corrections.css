@@ -1,16 +1,25 @@
+/*
+ * What is LEFT here is what the base class owns.
+ *
+ * The chip corrections that used to head this file are gone, into the five drag interactions. They
+ * were one unscoped `:state(drag)` rule claiming every interaction at once — the same shape the chip
+ * vocabulary had in qti-states.css, moved for the same reason: an interaction's rules belong in that
+ * interaction's file, and a shared rule is only honest when no interaction can own it.
+ *
+ * The rules below pass that test. `part="correction"` is stamped by the correction machinery on every
+ * corrected element, whichever interaction it belongs to, so no single file could own the badge; the
+ * same goes for the `.full-correct-response` answer-key presentation, which is a property of the
+ * cloned item rather than of any interaction. Spraying those would be four rules copied N times with
+ * nothing gained and one of them eventually missed.
+ *
+ * Two things died in the move, both measured rather than reasoned:
+ *   - `[data-drag-clone]:state(candidate-*)` matched nothing, ever. cloneNode does not copy
+ *     ElementInternals, so a floating clone carries no custom states at all.
+ *   - a pair of `--drag-background-color` rules in gap-match and match asked for a SOLID fill that
+ *     never rendered, because the shared rule declared `background-color` directly and outranked the
+ *     binding that reads them. Deleted with the rule that was hiding them.
+ */
 @layer qti-components.interactions.corrections {
-  :state(drag):state(candidate-correct),
-  qti-associable-hotspot::part(drag):state(candidate-correct),
-  [data-drag-clone]:state(candidate-correct) {
-    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-  }
-
-  :state(drag):state(candidate-incorrect),
-  qti-associable-hotspot::part(drag):state(candidate-incorrect),
-  [data-drag-clone]:state(candidate-incorrect) {
-    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-  }
-
   /*
    * The candidate-correction badge, `part="correction"` on every corrected element.
    *
@@ -40,18 +49,12 @@
     -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
   }
 
-  /* A cloned interaction presents the answer key rather than a candidate
-     judgement, regardless of which interaction owns the value. */
+  /* A cloned interaction presents the answer key rather than a candidate judgement. What is left
+     here is the part no interaction owns: any chip, anywhere. The text-entry and inline-choice
+     halves moved into their own files — those name one interaction each, so they belong to it. */
   .full-correct-response :state(drag),
-  .full-correct-response ::part(drag),
-  .full-correct-response qti-text-entry-interaction,
-  .full-correct-response qti-inline-choice-interaction {
+  .full-correct-response ::part(drag) {
     @mixin answer;
-  }
-
-  .full-correct-response qti-text-entry-interaction::part(input),
-  .full-correct-response qti-inline-choice-interaction::part(value) {
-    color: var(--qti-answer-fg);
   }
 
   .full-correct-response :state(drag)::part(control)::before,

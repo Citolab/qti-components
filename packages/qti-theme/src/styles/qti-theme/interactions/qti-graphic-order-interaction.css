@@ -97,11 +97,11 @@
   qti-graphic-order-interaction {
     & qti-hotspot-choice {
       &:state(readonly) {
-        @mixin readonly;
+        cursor: pointer;
       }
 
       &:state(disabled) {
-        @mixin dis;
+        cursor: not-allowed;
       }
 
       &[shape='circle']:state(checked),
@@ -128,7 +128,11 @@
        item in this repo ever set it on a graphic-order interaction. What was here overrode the neutral
        drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
     &:state(dragzone-active)::part(drags) {
-      @mixin act;
+      /* Direct properties, not slots: ::part(drags) is a bare slot container with no paint role of
+         its own (the other interactions paint it with `@mixin dropping`, also direct), so there is
+         no --<role>-* to switch. Inlined from `@mixin act`. */
+      border-color: var(--qti-border-active);
+      background-color: var(--qti-bg-active);
     }
 
     &:state(dragzone-enabled)::part(drags) {

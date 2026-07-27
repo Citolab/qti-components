@@ -109,6 +109,16 @@
 }
 
 @layer qti-components.interactions.corrections {
+  /* The answer key, moved here from the shared qti-corrections.css: it names this interaction, so
+     this file owns it. */
+  .full-correct-response qti-inline-choice-interaction {
+    @mixin answer;
+
+    &::part(value) {
+      color: var(--qti-answer-fg);
+    }
+  }
+
   qti-inline-choice-interaction {
     &::part(correct-option) {
       border: var(--qti-border-thickness) solid var(--qti-correct);
@@ -117,7 +127,7 @@
     }
 
     &:state(candidate-correct) {
-      @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+      @mixin candidate field, var(--qti-correct), var(--qti-correct-light);
 
       &::part(trigger) {
         background: transparent;
@@ -125,7 +135,7 @@
     }
 
     &:state(candidate-incorrect) {
-      @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+      @mixin candidate field, var(--qti-incorrect), var(--qti-incorrect-light);
 
       &::part(trigger) {
         background: transparent;

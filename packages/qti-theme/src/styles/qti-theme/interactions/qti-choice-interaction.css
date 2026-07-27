@@ -30,7 +30,7 @@
         }
 
         &::part(control-mark) {
-          @mixin check-size;
+          @mixin mark-size;
         }
       }
     }
@@ -40,32 +40,37 @@
 @layer qti-components.interactions.states {
   qti-choice-interaction {
     &.qti-input-control-hidden qti-simple-choice {
+      /* A selected choice, repainted through the button role's slots rather than by re-declaring the
+         properties — the choice is `@mixin button`, so switching a variable is all a state has to do.
+         This used to be `@mixin act` followed by two direct declarations, and half of `act` was dead
+         on arrival: it set `background-color: var(--qti-bg-active)` and the very next line overwrote
+         it with the selected fill. Only its border-colour ever survived, which is written out here. */
       &:state(checked) {
-        @mixin act;
-        background-color: var(--qti-selected-bg);
-        color: var(--qti-selected-color);
+        --button-border-color: var(--qti-border-active);
+        --button-background-color: var(--qti-selected-bg);
+        --button-color: var(--qti-selected-color);
       }
 
       &:state(readonly) {
-        @mixin readonly;
+        cursor: pointer;
       }
 
       &:state(disabled) {
-        @mixin dis;
+        cursor: not-allowed;
       }
     }
 
     &:not(.qti-input-control-hidden) qti-simple-choice {
       &:state(readonly) {
-        @mixin readonly;
+        cursor: pointer;
       }
 
       &:state(disabled) {
-        @mixin dis;
+        cursor: not-allowed;
       }
 
       &:state(radio)::part(control) {
-        @mixin check-radio;
+        @mixin radio;
       }
 
       &:state(radio):state(checked)::part(control),
@@ -74,15 +79,15 @@
       }
 
       &:state(radio):state(checked)::part(control-mark) {
-        @mixin check-radio-checked;
+        @mixin radio-checked;
       }
 
       &:state(checkbox)::part(control) {
-        @mixin check-checkbox;
+        @mixin checkbox;
       }
 
       &:state(checkbox):state(checked)::part(control-mark) {
-        @mixin check-checkbox-checked;
+        @mixin checkbox-checked;
       }
     }
   }
@@ -128,11 +133,11 @@
       /* Candidate judgement follows checked/correct-response paint so it can
          recolour the same stable box without changing its geometry. */
       &:state(candidate-correct) {
-        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+        @mixin candidate button, var(--qti-correct), var(--qti-correct-light);
       }
 
       &:state(candidate-incorrect) {
-        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+        @mixin candidate button, var(--qti-incorrect), var(--qti-incorrect-light);
       }
     }
 

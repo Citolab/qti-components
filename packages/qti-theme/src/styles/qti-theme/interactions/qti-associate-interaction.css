@@ -36,7 +36,19 @@
   qti-associate-interaction {
     & qti-simple-associable-choice {
       padding: var(--qti-drag-padding);
-      border: var(--qti-border-thickness) solid transparent;
+      /*
+       * The bank chip's border is INVISIBLE, not absent: same box as a placed chip, only the colour
+       * differs, so a chip does not resize when it lands.
+       *
+       * Through the SLOT, not a `border` shorthand. A direct declaration here (interactions.base)
+       * outranks the paint binding that draws the chip (global layer), so nothing switching
+       * --drag-border-color could ever recolour this edge — and a correction is exactly that. It only
+       * worked before because the shared corrections rule declared `border-color` directly too, and
+       * won by layer. Spraying that rule into this file turned the correction into a slot switch, and
+       * this line silently ate it: a corrected associate chip lost its green border and went
+       * transparent. Caught by the computed-style diff, not by eye.
+       */
+      --drag-border-color: transparent;
     }
 
     &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
@@ -150,14 +162,22 @@
 }
 
 @layer qti-components.interactions.corrections {
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  qti-associate-interaction :state(drag):state(candidate-correct),
   qti-simple-associable-choice::part(drag):state(candidate-correct),
   qti-associate-interaction::part(drag):state(candidate-correct) {
-    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
+  qti-associate-interaction :state(drag):state(candidate-incorrect),
   qti-simple-associable-choice::part(drag):state(candidate-incorrect),
   qti-associate-interaction::part(drag):state(candidate-incorrect) {
-    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see

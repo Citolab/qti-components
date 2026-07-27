@@ -75,11 +75,11 @@
       }
 
       &:state(readonly) {
-        @mixin readonly;
+        cursor: pointer;
       }
 
       &:state(disabled) {
-        @mixin dis;
+        cursor: not-allowed;
       }
     }
 
@@ -91,11 +91,11 @@
       }
 
       &:state(readonly) {
-        @mixin readonly;
+        cursor: pointer;
       }
 
       &:state(disabled) {
-        @mixin dis;
+        cursor: not-allowed;
       }
     }
   }

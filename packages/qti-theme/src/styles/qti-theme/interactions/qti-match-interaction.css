@@ -85,7 +85,7 @@
         }
         &[disabled] {
           &::part(drop) {
-            @mixin dis;
+            cursor: not-allowed;
           }
         }
         /*
@@ -229,26 +229,24 @@
 }
 
 @layer qti-components.interactions.corrections {
-  qti-match-interaction:not(.qti-match-tabular)
-    qti-simple-match-set:last-of-type
-    > qti-simple-associable-choice
-    > qti-simple-associable-choice:state(candidate-correct) {
-    --drag-background-color: var(--qti-correct);
-  }
-
-  qti-match-interaction:not(.qti-match-tabular)
-    qti-simple-match-set:last-of-type
-    > qti-simple-associable-choice
-    > qti-simple-associable-choice:state(candidate-incorrect) {
-    --drag-background-color: var(--qti-incorrect);
-  }
-
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  /* Two rules setting `--drag-background-color` on the placed chip are gone from here, dead for the
+     same reason as gap-match's: the shared rule's DIRECT `background-color` outranked the binding
+     that reads them, so their solid fill never rendered. They out-specify this block, so leaving them
+     would have flipped a corrected placed chip from the pale tint to solid. */
+  qti-match-interaction:not(.qti-match-tabular) :state(drag):state(candidate-correct),
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-correct) {
-    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
+  qti-match-interaction:not(.qti-match-tabular) :state(drag):state(candidate-incorrect),
   qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-incorrect) {
-    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see

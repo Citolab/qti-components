@@ -65,7 +65,7 @@
     & qti-gap {
       @mixin drop;
       &[disabled] {
-        @mixin dis;
+        cursor: not-allowed;
         /* `:not(:empty)` tested light-DOM children; the gap renders its chips into its own shadow
            root now, so it is always "empty" to a selector. `:state(filled)` is the occupancy hook. */
         &:state(filled) {
@@ -156,20 +156,25 @@
 }
 
 @layer qti-components.interactions.corrections {
-  qti-gap-match-interaction qti-gap-text:state(candidate-correct) {
-    --drag-background-color: var(--qti-correct);
-  }
-
-  qti-gap-match-interaction qti-gap-text:state(candidate-incorrect) {
-    --drag-background-color: var(--qti-incorrect);
-  }
-
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  /* The two `qti-gap-text:state(candidate-*) { --drag-background-color: var(--qti-correct) }` rules
+     that used to sit here are gone, and were already dead: the shared rule declared `background-color`
+     DIRECTLY, which outranks the paint binding that reads --drag-background-color, so the solid fill
+     they asked for never rendered — a corrected gap-text has always been the pale tint. Left in place
+     they would have come alive the moment the shared rule left, and turned solid. */
+  qti-gap-match-interaction :state(drag):state(candidate-correct),
   qti-gap::part(drag):state(candidate-correct) {
-    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
+  qti-gap-match-interaction :state(drag):state(candidate-incorrect),
   qti-gap::part(drag):state(candidate-incorrect) {
-    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see

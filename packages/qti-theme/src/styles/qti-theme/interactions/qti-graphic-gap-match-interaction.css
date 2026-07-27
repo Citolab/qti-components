@@ -75,7 +75,7 @@
         @mixin dropping;
       }
       &[disabled] {
-        @mixin dis;
+        cursor: not-allowed;
         &:not(:empty) {
           cursor: default !important;
         }
@@ -152,5 +152,30 @@
 
   qti-graphic-gap-match-interaction qti-associable-hotspot:state(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  /*
+   * The one place this interaction joins the shared chip vocabulary: its chips take no card, but they
+   * do take a correction.
+   *
+   * And it is the one that must stay DIRECT. Everywhere else a correction switches --<role>-* slots
+   * (`@mixin candidate drag`), because the chip is painted by `@mixin paint drag` and reads them.
+   * A ggm chip is a photograph on a picture with no paint role at all — nothing reads --drag-*, so
+   * routing the correction through a slot would simply erase it. Measured: a corrected ggm chip is
+   * pale-green filled with a green tint on its text and no border at all.
+   *
+   * Moved here from qti-corrections.css, whose unscoped `:state(drag)` rule covered these chips
+   * along with everyone else's.
+   */
+  qti-graphic-gap-match-interaction :state(drag):state(candidate-correct),
+  qti-graphic-gap-match-interaction qti-associable-hotspot::part(drag):state(candidate-correct) {
+    @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+  }
+
+  qti-graphic-gap-match-interaction :state(drag):state(candidate-incorrect),
+  qti-graphic-gap-match-interaction qti-associable-hotspot::part(drag):state(candidate-incorrect) {
+    @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 }

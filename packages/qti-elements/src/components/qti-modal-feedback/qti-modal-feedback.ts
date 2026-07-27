@@ -31,7 +31,7 @@ export class QtiModalFeedback extends QtiFeedback {
 
     /* Inlined from --qti-disabled-bg / --qti-disabled-color, which this button was the only reader
        of anywhere in the repo. They were named as a global disabled vocabulary but no interaction
-       ever used them: the theme's disabled treatment is '@mixin dis', and that is cursor only. */
+       ever used them: the theme's disabled treatment is cursor only (see the note in qti-mixins.css). */
     .button:disabled {
       background-color: transparent;
       color: var(--qti-fg);

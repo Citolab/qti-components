@@ -20,16 +20,26 @@
 }
 
 /*
- * The chip form of candidate-tint: it paints the correction THROUGH the drag role's slots instead of
- * as direct properties, so a corrected chip stays part of the same paint system as every other chip.
- * Only for drag chips — the choices and text fields that also correct have no paint binding, so they
- * keep `@mixin candidate-tint` (direct). Same computed result as candidate-tint.
+ * A candidate correction, painted through the corrected element's own role.
+ *
+ * $role is whatever that element already is — `drag`, `button`, `text`, `field` — so this is the same
+ * shape as `@mixin paint $role`, and obeys the same rule: a state repaints by SWITCHING a variable,
+ * never by re-declaring the property. A brand's `--drag-*` and a correction's `--drag-*` are then the
+ * same kind of declaration, resolved by the cascade rather than by one of them being a direct
+ * property that the other can never outrank.
+ *
+ * This replaces the `candidate-chip` / `candidate-tint` pair. That split existed for one reason,
+ * stated in candidate-chip's own comment: only chips had a paint binding, so everything else had to
+ * correct by writing the four properties directly. Choices are `button`, text fields are `text` and
+ * inline-choice is `field` now, so the reason is gone and one parameterized mixin covers all of them.
+ *
+ * `candidate-tint` below survives for the one corrected element with no role: qti-hottext.
  */
-@define-mixin candidate-chip $color, $background {
-  --drag-background-color: $background;
-  --drag-color: $color;
-  --drag-border-color: $color;
-  --drag-box-shadow: none;
+@define-mixin candidate $role, $color, $background {
+  --$(role)-background-color: $background;
+  --$(role)-color: $color;
+  --$(role)-border-color: $color;
+  --$(role)-box-shadow: none;
 }
 
 @define-mixin answer {
@@ -182,26 +192,47 @@
   line-height: 1.5;
 }
 
-@define-mixin bordered {
-  border: var(--qti-border);
-}
-
-/* Size and paint of the radio/checkbox box. Centring its mark is the component's job:
-   qti-simple-choice.styles.ts already flex-centres [part='control'], and this mixin's
-   `display: grid; place-content: center` was overriding it from the document. */
-@define-mixin form {
-  @mixin bordered;
-  width: var(--qti-form-size);
-  height: var(--qti-form-size);
-  border-width: thin;
-  background-color: white;
-}
-
 @define-mixin dropping {
   background-color: var(--qti-bg-active);
 }
 
-@define-mixin check-size {
+/*
+ * The radio and the checkbox: the other two things this theme draws as boxes, and so the other two
+ * paint roles. A control is a bordered box on the theme's surface exactly like a chip is, and now it
+ * says so — a third party restyles a checkbox through --checkbox-background-color the same way it
+ * restyles a chip through --drag-background-color, with no specificity contest and nothing to
+ * redeclare.
+ *
+ * They replace `form`, and the single-use `bordered` it wrapped, which hand-wrote this same paint
+ * outside the contract: a `border` shorthand, then `border-width: thin` over the top of it, then a
+ * hardcoded `background-color: white`. All three land on identical computed values through the
+ * contract — `thin` computes to 1px, which is what --qti-component-border-width is, and
+ * --qti-component-background-color resolves through --qti-bg to white. Measured, not assumed. The
+ * one behavioural difference is the improvement: the fill now tracks the theme's surface instead of
+ * being pinned to the literal `white`.
+ *
+ * Size stays a DIRECT property, deliberately. --qti-form-size is the control's box, and the
+ * layout-invariance contract says a state may repaint a control but must never resize it, so this is
+ * not a paint slot. Centring the mark is the component's job — qti-simple-choice.styles.ts already
+ * flex-centres [part='control'].
+ */
+@define-mixin radio {
+  @mixin paint radio;
+  width: var(--qti-form-size);
+  height: var(--qti-form-size);
+  /* Round. Re-declared with the slot in FRONT of the default, the same shape as the drop's dashed
+     edge, so a brand can square a radio off without having to out-specify this rule. */
+  border-radius: var(--radio-border-radius, 100%);
+}
+
+@define-mixin checkbox {
+  @mixin paint checkbox;
+  width: var(--qti-form-size);
+  height: var(--qti-form-size);
+}
+
+/* The mark inside a control at rest — the box the tick or dot is drawn into. Structural. */
+@define-mixin mark-size {
   width: calc(var(--qti-form-size) - 6px);
   height: calc(var(--qti-form-size) - 6px);
 }
@@ -218,37 +249,23 @@
   cursor: pointer;
 }
 
-/* The initial `display: none` moved to `validationMessage` in qti-base — the message is a shadow
-   node, and `Interaction.reportValidity` already owns showing and hiding it with an inline style.
-   What is left here is paint. */
-@define-mixin validation-message {
-  color: var(--qti-fg);
-  background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
-  padding: var(--qti-padding-box);
-  border: var(--qti-border-thickness) solid var(--qti-warning);
-  border-radius: var(--qti-border-radius);
-  margin-top: var(--qti-gap);
-}
-
-@define-mixin check-radio {
-  @mixin form;
-  border-radius: 100%;
-}
-
-@define-mixin check-radio-checked {
+/*
+ * The mark a checked control shows: a dot for a radio, a tick for a checkbox.
+ *
+ * A glyph, not a box — the same kind of thing as `grip` and `answer-check`, so it gets a colour slot
+ * rather than a whole paint role. It is drawn ON the checked control's accent fill (see
+ * `control-selected`), so the two belong together: override --checkbox-background-color and you will
+ * usually want --checkbox-mark-color with it. `white` is the resting value, not a fixed one.
+ */
+@define-mixin radio-checked {
   width: calc(var(--qti-form-size) - 8px);
   height: calc(var(--qti-form-size) - 8px);
-  background-color: white;
+  background-color: var(--radio-mark-color, white);
   border-radius: 100%;
 }
 
-@define-mixin check-checkbox {
-  @mixin form;
-  border-radius: var(--qti-border-radius);
-}
-
-@define-mixin check-checkbox-checked {
-  background-color: white;
+@define-mixin checkbox-checked {
+  background-color: var(--checkbox-mark-color, white);
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
 }
 
@@ -256,22 +273,34 @@
   box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
 }
 
-@define-mixin act {
-  border-color: var(--qti-border-active);
-  background-color: var(--qti-bg-active);
-}
+/*
+ * `act`, `readonly` and `dis` used to live here. They are written out at their call sites now, for
+ * two different reasons.
+ *
+ * `readonly` and `dis` were a single `cursor` declaration each — `pointer` and `not-allowed`. A mixin
+ * that expands to one property is a name you have to look up to read the rule, and thirteen call
+ * sites had to. THE POLICY THEY CARRIED IS STILL THE POLICY, and is worth stating once here rather
+ * than losing with them: **the theme's disabled and readonly treatments are cursor ONLY.** No dimming,
+ * no desaturation, no border change. A disabled control keeps its box and its colour so the page does
+ * not reflow or change meaning when an item locks; the pointer is the whole affordance. If that ever
+ * stops being true it becomes a state that PAINTS, and it belongs in the contract below, not in a
+ * one-line mixin.
+ *
+ * `act` set `border-color` + `background-color` directly, which is what the paint contract exists to
+ * stop: a state repaints by SWITCHING a variable, never by re-declaring the property. Its three call
+ * sites split two ways — the selected choice now switches --button-* (see qti-choice-interaction.css,
+ * where half of `act` turned out to be dead code), while the two `::part(drags)` containers keep
+ * direct properties because a bare slot container has no paint role to switch.
+ *
+ * `act-bor` was deleted outright: zero call sites anywhere in the repo.
+ */
 
-@define-mixin act-bor {
-  border-color: var(--qti-border-active);
-}
-
-@define-mixin readonly {
-  cursor: pointer;
-}
-
-@define-mixin dis {
-  cursor: not-allowed;
-}
+/* `foc` stays a mixin, deliberately, and is the one state still painting a property directly.
+ * Twenty call sites read it, and it draws a `box-shadow` — the property the contract has NOT bound
+ * (see `paint` above). Routing it through --<role>-box-shadow would not fix anything: focus would
+ * then fight the resting lift and the in-flight elevation over one slot, last-declared winning,
+ * which is the four-rule contention already documented in qti-variables.css. The intended fix
+ * recorded there is a single `outline` on `:focus-visible`, and that is its own VRT-checked step. */
 
 /* A choice — the clickable box a candidate picks. Nothing but the resting paint box; its padding is
    the interaction's (qti-choice-interaction.css), because a choice's box differs per interaction and
@@ -303,6 +332,18 @@
 @define-mixin drop {
   @mixin paint drop;
   border-style: var(--drop-border-style, dashed);
+}
+
+/* The initial `display: none` moved to `validationMessage` in qti-base — the message is a shadow
+   node, and `Interaction.reportValidity` already owns showing and hiding it with an inline style.
+   What is left here is paint. */
+@define-mixin validation-message {
+  color: var(--qti-fg);
+  background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+  padding: var(--qti-padding-box);
+  border: var(--qti-border-thickness) solid var(--qti-warning);
+  border-radius: var(--qti-border-radius);
+  margin-top: var(--qti-gap);
 }
 
 /*

@@ -220,12 +220,20 @@
    * Keep :state() in the same selector as ::part(). Native nesting after a pseudo-element is not
    * parsed consistently by the browser toolchain.
    */
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  qti-order-interaction :state(drag):state(candidate-correct),
   qti-order-interaction::part(drag):state(candidate-correct) {
-    @mixin candidate-chip var(--qti-correct), var(--qti-correct-light);
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
+  qti-order-interaction :state(drag):state(candidate-incorrect),
   qti-order-interaction::part(drag):state(candidate-incorrect) {
-    @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
