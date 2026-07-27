@@ -774,6 +774,9 @@ importers:
       '@qti-components/elements':
         specifier: workspace:^
         version: link:../qti-elements
+      '@qti-components/extended-text-interaction':
+        specifier: workspace:^
+        version: link:../interactions/extended-text-interaction
       '@qti-components/gap-match-interaction':
         specifier: workspace:^
         version: link:../interactions/gap-match-interaction

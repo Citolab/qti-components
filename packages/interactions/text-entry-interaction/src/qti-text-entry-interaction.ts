@@ -79,42 +79,52 @@ export class QtiTextEntryInteraction extends Interaction {
     return isValid;
   }
 
-  /** Extension hook for optional content rendered beside the input. */
-  protected renderSupplementalContent(): unknown {
-    return nothing;
+  /*
+   * The template in named pieces, so a subclass can recompose it. Override a piece to change what
+   * one part looks like; override `render()` to change the order. See the longer note on the same
+   * pattern in qti-extended-text-interaction.
+   */
+
+  /** The answer-key line, revealed above the field when the correct response is shown. */
+  protected renderAnswer(): unknown {
+    return html`<div part="answer" aria-hidden="true"></div>`;
+  }
+
+  /** The field itself. */
+  protected renderInput(): unknown {
+    return html`<input
+      part="input"
+      name="${this.responseIdentifier}"
+      spellcheck="false"
+      autocomplete="off"
+      @blur="${(_: FocusEvent) => {
+        this.reportValidity();
+      }}"
+      @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
+      @keyup="${this.textChanged}"
+      @change="${this.textChanged}"
+      type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+      placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+      .value="${this.response}"
+      pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+      maxlength=${1000}
+      ?disabled="${this.disabled}"
+      ?readonly="${this.readonly}"
+    />`;
+  }
+
+  /** Hidden until `Interaction.reportValidity` shows it. */
+  protected renderValidationMessage(): unknown {
+    return html`<div id="validation-message" part="message" role="alert" style="display:none;"></div>`;
   }
 
   override render() {
-    return html`
-      <div part="answer" aria-hidden="true"></div>
-      <input
-        part="input"
-        name="${this.responseIdentifier}"
-        spellcheck="false"
-        autocomplete="off"
-        @blur="${(_: FocusEvent) => {
-          this.reportValidity();
-        }}"
-        @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
-        @keyup="${this.textChanged}"
-        @change="${this.textChanged}"
-        type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
-        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        .value="${this.response}"
-        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-        maxlength=${1000}
-        ?disabled="${this.disabled}"
-        ?readonly="${this.readonly}"
-      />
-      ${this.renderSupplementalContent()}
-      <div id="validation-message" part="message" role="alert" style="display:none;"></div>
-    `;
+    return html` ${this.renderAnswer()} ${this.renderInput()} ${this.renderValidationMessage()} `;
   }
 
   protected textChanged(event: Event): void {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
-    this.#setEmptyAttribute(input.value);
     if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
@@ -128,10 +138,6 @@ export class QtiTextEntryInteraction extends Interaction {
 
   override reset(): void {
     this.response = '';
-  }
-
-  #setEmptyAttribute(text: string): void {
-    this.setAttribute('empty', text === '' ? 'true' : 'false');
   }
 }
 

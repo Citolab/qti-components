@@ -61,7 +61,12 @@ export class QtiTextEntryInteractionCorrection extends CandidateCorrectionMixin(
     if (!this.showFullCorrectResponse) this.toggleFullCorrectResponse(show);
   }
 
-  protected override renderSupplementalContent(): unknown {
-    return html`<span part=${this.correctionPart} aria-hidden="true"></span>`;
+  /** The badge goes between the field and the validation message; everything else is the base's. */
+  override render() {
+    return html`
+      ${this.renderAnswer()} ${this.renderInput()}
+      <span part=${this.correctionPart} aria-hidden="true"></span>
+      ${this.renderValidationMessage()}
+    `;
   }
 }

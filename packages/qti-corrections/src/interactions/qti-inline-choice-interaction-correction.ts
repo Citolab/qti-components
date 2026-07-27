@@ -40,7 +40,11 @@ export class QtiInlineChoiceInteractionCorrection extends CandidateCorrectionMix
     this.requestUpdate('correctOption', previous);
   }
 
-  protected override renderSupplementalContent(): unknown {
-    return html`<span part=${this.correctionPart} aria-hidden="true"></span>${this.#correctOption}`;
+  /** Badge and answer-key option both trail the validation message; everything else is the base's. */
+  override render() {
+    return html`
+      ${this.renderTrigger()} ${this.renderMenu()} ${this.renderValidationMessage()}
+      <span part=${this.correctionPart} aria-hidden="true"></span>${this.#correctOption}
+    `;
   }
 }

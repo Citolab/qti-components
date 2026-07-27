@@ -49,6 +49,23 @@
     -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
   }
 
+  /*
+   * The third verdict. correction.styles.ts has always SIZED `correction-partially-correct` beside
+   * its two siblings, but no rule anywhere ever painted it — so a partially-correct badge has been
+   * an invisible 1em gap in every interaction, not just extended-text. This is repo-wide, and the
+   * reason it went unnoticed is that partial credit needs a mapping to arise at all.
+   */
+  ::part(correction-partially-correct) {
+    background-color: var(--qti-partially-correct);
+    mask: var(--qti-partial-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-partial-mask) no-repeat center / contain;
+  }
+
+  ::part(correction-partially-correct)::after {
+    mask: var(--qti-partial-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-partial-mask) no-repeat center / contain;
+  }
+
   /* A cloned interaction presents the answer key rather than a candidate judgement. What is left
      here is the part no interaction owns: any chip, anywhere. The text-entry and inline-choice
      halves moved into their own files — those name one interaction each, so they belong to it. */

@@ -8,6 +8,7 @@
     "@qti-components/base": "workspace:^",
     "@qti-components/choice-interaction": "workspace:^",
     "@qti-components/elements": "workspace:^",
+    "@qti-components/extended-text-interaction": "workspace:^",
     "@qti-components/gap-match-interaction": "workspace:^",
     "@qti-components/graphic-associate-interaction": "workspace:^",
     "@qti-components/graphic-gap-match-interaction": "workspace:^",

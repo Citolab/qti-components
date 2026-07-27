@@ -12,6 +12,7 @@ import {
 import {
   QtiAssociateInteractionCorrection,
   QtiChoiceInteractionCorrection,
+  QtiExtendedTextInteractionCorrection,
   QtiGapMatchInteractionCorrection,
   QtiGraphicAssociateInteractionCorrection,
   QtiGraphicGapMatchInteractionCorrection,
@@ -45,6 +46,7 @@ export const qtiCorrectionElements = [
   { tag: 'qti-assessment-item', ctor: QtiAssessmentItemCorrection },
   { tag: 'qti-associate-interaction', ctor: QtiAssociateInteractionCorrection },
   { tag: 'qti-choice-interaction', ctor: QtiChoiceInteractionCorrection },
+  { tag: 'qti-extended-text-interaction', ctor: QtiExtendedTextInteractionCorrection },
   { tag: 'qti-gap-text', ctor: QtiGapTextCorrection },
   { tag: 'qti-gap-match-interaction', ctor: QtiGapMatchInteractionCorrection },
   { tag: 'qti-graphic-associate-interaction', ctor: QtiGraphicAssociateInteractionCorrection },

@@ -409,16 +409,38 @@ const textCards = [
     `,
     { note: 'normal · resting' }
   ),
+  /*
+   * Extended text is judged from OUTSIDE — free prose has no correct answer to compare against, so
+   * unlike every other interaction it computes no verdict and `show-candidate-correction` does
+   * nothing here. A grader hands it one through `candidate-correction`, and the states, badge and
+   * tint follow from that.
+   */
   card(
-    'Extended text — correction',
+    'Extended text — correct',
+    html`
+      <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="4" candidate-correction="correct">
+        <qti-prompt>Leg uit waarom landen overstappen op een energiemix.</qti-prompt>
+      </qti-extended-text-interaction>
+    `,
+    { note: 'correction · set by the grader' }
+  ),
+  card(
+    'Extended text — partially correct',
     html`
       <qti-extended-text-interaction
         response-identifier="RESPONSE"
         expected-lines="4"
-        response="Zon en wind vullen elkaar aan."
-        show-candidate-correction
-        show-full-correct-response
+        candidate-correction="partially-correct"
       >
+        <qti-prompt>Leg uit waarom landen overstappen op een energiemix.</qti-prompt>
+      </qti-extended-text-interaction>
+    `,
+    { note: 'correction · amber edge, normal text' }
+  ),
+  card(
+    'Extended text — incorrect',
+    html`
+      <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="4" candidate-correction="incorrect">
         <qti-prompt>Leg uit waarom landen overstappen op een energiemix.</qti-prompt>
       </qti-extended-text-interaction>
     `,

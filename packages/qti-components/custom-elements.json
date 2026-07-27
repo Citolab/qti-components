@@ -12885,6 +12885,39 @@
             },
             {
               "kind": "method",
+              "name": "renderPrompt",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "The prompt, above the field."
+            },
+            {
+              "kind": "method",
+              "name": "renderTextarea",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "The field itself."
+            },
+            {
+              "kind": "method",
+              "name": "renderValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "Hidden until `Interaction.reportValidity` shows it."
+            },
+            {
+              "kind": "method",
               "name": "reportValidity",
               "privacy": "public",
               "return": {
@@ -13030,19 +13063,6 @@
               "type": {
                 "text": "saveResponse(value: string | string[], state?: string | null) => void"
               }
-            },
-            {
-              "kind": "method",
-              "name": "setEmptyAttribute",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "text",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
             },
             {
               "kind": "method",
@@ -20043,14 +20063,36 @@
             },
             {
               "kind": "method",
-              "name": "renderSupplementalContent",
+              "name": "renderMenu",
               "privacy": "protected",
               "return": {
                 "type": {
                   "text": "unknown"
                 }
               },
-              "description": "Extension hook for optional content rendered after the validation message."
+              "description": "The popover listbox."
+            },
+            {
+              "kind": "method",
+              "name": "renderTrigger",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "The closed combobox — the box showing the chosen option."
+            },
+            {
+              "kind": "method",
+              "name": "renderValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "Hidden until `Interaction.reportValidity` shows it."
             },
             {
               "kind": "method",
@@ -29041,24 +29083,6 @@
             },
             {
               "kind": "method",
-              "name": "#setEmptyAttribute",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "text",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "clearInlineValidationMessage",
               "privacy": "protected",
               "return": {
@@ -29240,14 +29264,36 @@
             },
             {
               "kind": "method",
-              "name": "renderSupplementalContent",
+              "name": "renderAnswer",
               "privacy": "protected",
               "return": {
                 "type": {
                   "text": "unknown"
                 }
               },
-              "description": "Extension hook for optional content rendered beside the input."
+              "description": "The answer-key line, revealed above the field when the correct response is shown."
+            },
+            {
+              "kind": "method",
+              "name": "renderInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "The field itself."
+            },
+            {
+              "kind": "method",
+              "name": "renderValidationMessage",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "description": "Hidden until `Interaction.reportValidity` shows it."
             },
             {
               "kind": "method",
@@ -34352,9 +34398,9 @@
           "kind": "variable",
           "name": "qtiCorrectionElements",
           "type": {
-            "text": "[\n  { tag: 'item-correct-response-mode', ctor: ItemCorrectResponseMode },\n  { tag: 'item-show-candidate-correction', ctor: ItemShowCandidateCorrection },\n  { tag: 'item-show-correct-response', ctor: ItemShowCorrectResponse },\n  { tag: 'test-show-correct-response', ctor: TestShowCorrectResponse },\n  { tag: 'test-check-item', ctor: TestCheckItemCorrection },\n  { tag: 'test-navigation', ctor: TestNavigationCorrection },\n  { tag: 'qti-assessment-item', ctor: QtiAssessmentItemCorrection },\n  { tag: 'qti-associate-interaction', ctor: QtiAssociateInteractionCorrection },\n  { tag: 'qti-choice-interaction', ctor: QtiChoiceInteractionCorrection },\n  { tag: 'qti-gap-text', ctor: QtiGapTextCorrection },\n  { tag: 'qti-gap-match-interaction', ctor: QtiGapMatchInteractionCorrection },\n  { tag: 'qti-graphic-associate-interaction', ctor: QtiGraphicAssociateInteractionCorrection },\n  { tag: 'qti-graphic-gap-match-interaction', ctor: QtiGraphicGapMatchInteractionCorrection },\n  { tag: 'qti-graphic-order-interaction', ctor: QtiGraphicOrderInteractionCorrection },\n  { tag: 'qti-hotspot-interaction', ctor: QtiHotspotInteractionCorrection },\n  { tag: 'qti-hotspot-choice', ctor: QtiHotspotChoiceCorrection },\n  { tag: 'qti-hottext-interaction', ctor: QtiHottextInteractionCorrection },\n  { tag: 'qti-hottext', ctor: QtiHottextCorrection },\n  { tag: 'qti-inline-choice-interaction', ctor: QtiInlineChoiceInteractionCorrection },\n  { tag: 'qti-item', ctor: QtiItemCorrection },\n  { tag: 'qti-test', ctor: QtiTestCorrection },\n  { tag: 'qti-match-interaction', ctor: QtiMatchInteractionCorrection },\n  { tag: 'qti-order-interaction', ctor: QtiOrderInteractionCorrection },\n  { tag: 'qti-portable-custom-interaction', ctor: QtiPortableCustomInteractionCorrection },\n  { tag: 'qti-select-point-interaction', ctor: QtiSelectPointInteractionCorrection },\n  { tag: 'qti-simple-associable-choice', ctor: QtiSimpleAssociableChoiceCorrection },\n  { tag: 'qti-simple-choice', ctor: QtiSimpleChoiceCorrection },\n  { tag: 'qti-slider-interaction', ctor: QtiSliderInteractionCorrection },\n  { tag: 'qti-text-entry-interaction', ctor: QtiTextEntryInteractionCorrection }\n]"
+            "text": "[\n  { tag: 'item-correct-response-mode', ctor: ItemCorrectResponseMode },\n  { tag: 'item-show-candidate-correction', ctor: ItemShowCandidateCorrection },\n  { tag: 'item-show-correct-response', ctor: ItemShowCorrectResponse },\n  { tag: 'test-show-correct-response', ctor: TestShowCorrectResponse },\n  { tag: 'test-check-item', ctor: TestCheckItemCorrection },\n  { tag: 'test-navigation', ctor: TestNavigationCorrection },\n  { tag: 'qti-assessment-item', ctor: QtiAssessmentItemCorrection },\n  { tag: 'qti-associate-interaction', ctor: QtiAssociateInteractionCorrection },\n  { tag: 'qti-choice-interaction', ctor: QtiChoiceInteractionCorrection },\n  { tag: 'qti-extended-text-interaction', ctor: QtiExtendedTextInteractionCorrection },\n  { tag: 'qti-gap-text', ctor: QtiGapTextCorrection },\n  { tag: 'qti-gap-match-interaction', ctor: QtiGapMatchInteractionCorrection },\n  { tag: 'qti-graphic-associate-interaction', ctor: QtiGraphicAssociateInteractionCorrection },\n  { tag: 'qti-graphic-gap-match-interaction', ctor: QtiGraphicGapMatchInteractionCorrection },\n  { tag: 'qti-graphic-order-interaction', ctor: QtiGraphicOrderInteractionCorrection },\n  { tag: 'qti-hotspot-interaction', ctor: QtiHotspotInteractionCorrection },\n  { tag: 'qti-hotspot-choice', ctor: QtiHotspotChoiceCorrection },\n  { tag: 'qti-hottext-interaction', ctor: QtiHottextInteractionCorrection },\n  { tag: 'qti-hottext', ctor: QtiHottextCorrection },\n  { tag: 'qti-inline-choice-interaction', ctor: QtiInlineChoiceInteractionCorrection },\n  { tag: 'qti-item', ctor: QtiItemCorrection },\n  { tag: 'qti-test', ctor: QtiTestCorrection },\n  { tag: 'qti-match-interaction', ctor: QtiMatchInteractionCorrection },\n  { tag: 'qti-order-interaction', ctor: QtiOrderInteractionCorrection },\n  { tag: 'qti-portable-custom-interaction', ctor: QtiPortableCustomInteractionCorrection },\n  { tag: 'qti-select-point-interaction', ctor: QtiSelectPointInteractionCorrection },\n  { tag: 'qti-simple-associable-choice', ctor: QtiSimpleAssociableChoiceCorrection },\n  { tag: 'qti-simple-choice', ctor: QtiSimpleChoiceCorrection },\n  { tag: 'qti-slider-interaction', ctor: QtiSliderInteractionCorrection },\n  { tag: 'qti-text-entry-interaction', ctor: QtiTextEntryInteractionCorrection }\n]"
           },
-          "default": "[ { tag: 'item-correct-response-mode', ctor: ItemCorrectResponseMode }, { tag: 'item-show-candidate-correction', ctor: ItemShowCandidateCorrection }, { tag: 'item-show-correct-response', ctor: ItemShowCorrectResponse }, { tag: 'test-show-correct-response', ctor: TestShowCorrectResponse }, { tag: 'test-check-item', ctor: TestCheckItemCorrection }, { tag: 'test-navigation', ctor: TestNavigationCorrection }, { tag: 'qti-assessment-item', ctor: QtiAssessmentItemCorrection }, { tag: 'qti-associate-interaction', ctor: QtiAssociateInteractionCorrection }, { tag: 'qti-choice-interaction', ctor: QtiChoiceInteractionCorrection }, { tag: 'qti-gap-text', ctor: QtiGapTextCorrection }, { tag: 'qti-gap-match-interaction', ctor: QtiGapMatchInteractionCorrection }, { tag: 'qti-graphic-associate-interaction', ctor: QtiGraphicAssociateInteractionCorrection }, { tag: 'qti-graphic-gap-match-interaction', ctor: QtiGraphicGapMatchInteractionCorrection }, { tag: 'qti-graphic-order-interaction', ctor: QtiGraphicOrderInteractionCorrection }, { tag: 'qti-hotspot-interaction', ctor: QtiHotspotInteractionCorrection }, { tag: 'qti-hotspot-choice', ctor: QtiHotspotChoiceCorrection }, { tag: 'qti-hottext-interaction', ctor: QtiHottextInteractionCorrection }, { tag: 'qti-hottext', ctor: QtiHottextCorrection }, { tag: 'qti-inline-choice-interaction', ctor: QtiInlineChoiceInteractionCorrection }, { tag: 'qti-item', ctor: QtiItemCorrection }, { tag: 'qti-test', ctor: QtiTestCorrection }, { tag: 'qti-match-interaction', ctor: QtiMatchInteractionCorrection }, { tag: 'qti-order-interaction', ctor: QtiOrderInteractionCorrection }, { tag: 'qti-portable-custom-interaction', ctor: QtiPortableCustomInteractionCorrection }, { tag: 'qti-select-point-interaction', ctor: QtiSelectPointInteractionCorrection }, { tag: 'qti-simple-associable-choice', ctor: QtiSimpleAssociableChoiceCorrection }, { tag: 'qti-simple-choice', ctor: QtiSimpleChoiceCorrection }, { tag: 'qti-slider-interaction', ctor: QtiSliderInteractionCorrection }, { tag: 'qti-text-entry-interaction', ctor: QtiTextEntryInteractionCorrection } ]",
+          "default": "[ { tag: 'item-correct-response-mode', ctor: ItemCorrectResponseMode }, { tag: 'item-show-candidate-correction', ctor: ItemShowCandidateCorrection }, { tag: 'item-show-correct-response', ctor: ItemShowCorrectResponse }, { tag: 'test-show-correct-response', ctor: TestShowCorrectResponse }, { tag: 'test-check-item', ctor: TestCheckItemCorrection }, { tag: 'test-navigation', ctor: TestNavigationCorrection }, { tag: 'qti-assessment-item', ctor: QtiAssessmentItemCorrection }, { tag: 'qti-associate-interaction', ctor: QtiAssociateInteractionCorrection }, { tag: 'qti-choice-interaction', ctor: QtiChoiceInteractionCorrection }, { tag: 'qti-extended-text-interaction', ctor: QtiExtendedTextInteractionCorrection }, { tag: 'qti-gap-text', ctor: QtiGapTextCorrection }, { tag: 'qti-gap-match-interaction', ctor: QtiGapMatchInteractionCorrection }, { tag: 'qti-graphic-associate-interaction', ctor: QtiGraphicAssociateInteractionCorrection }, { tag: 'qti-graphic-gap-match-interaction', ctor: QtiGraphicGapMatchInteractionCorrection }, { tag: 'qti-graphic-order-interaction', ctor: QtiGraphicOrderInteractionCorrection }, { tag: 'qti-hotspot-interaction', ctor: QtiHotspotInteractionCorrection }, { tag: 'qti-hotspot-choice', ctor: QtiHotspotChoiceCorrection }, { tag: 'qti-hottext-interaction', ctor: QtiHottextInteractionCorrection }, { tag: 'qti-hottext', ctor: QtiHottextCorrection }, { tag: 'qti-inline-choice-interaction', ctor: QtiInlineChoiceInteractionCorrection }, { tag: 'qti-item', ctor: QtiItemCorrection }, { tag: 'qti-test', ctor: QtiTestCorrection }, { tag: 'qti-match-interaction', ctor: QtiMatchInteractionCorrection }, { tag: 'qti-order-interaction', ctor: QtiOrderInteractionCorrection }, { tag: 'qti-portable-custom-interaction', ctor: QtiPortableCustomInteractionCorrection }, { tag: 'qti-select-point-interaction', ctor: QtiSelectPointInteractionCorrection }, { tag: 'qti-simple-associable-choice', ctor: QtiSimpleAssociableChoiceCorrection }, { tag: 'qti-simple-choice', ctor: QtiSimpleChoiceCorrection }, { tag: 'qti-slider-interaction', ctor: QtiSliderInteractionCorrection }, { tag: 'qti-text-entry-interaction', ctor: QtiTextEntryInteractionCorrection } ]",
           "description": "Correction constructors keyed by their standard QTI tag names."
         }
       ],

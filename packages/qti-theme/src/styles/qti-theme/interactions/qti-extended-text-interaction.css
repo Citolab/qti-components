@@ -1,34 +1,76 @@
 @layer qti-components.interactions.base {
   qti-extended-text-interaction {
-    &::part(textarea) {
-      @mixin text;
-    }
-  }
-
-  qti-extended-text-interaction {
+    /*
+     * One block, and the ORDER inside it matters.
+     *
+     * These were two separate `::part(textarea)` rules, `@mixin text` first and
+     * `@mixin field-typography` second. Both declare `color`, so the later one won and the textarea's
+     * text was pinned to `--qti-fg` — which meant the paint contract's `color` binding was dead, and
+     * a correction switching --text-color could not recolour a single character. Measured: a
+     * corrected extended-text stayed black.
+     *
+     * `@mixin text` goes last so the binding is the winning declaration. Nothing moves at rest: the
+     * slot is unset, so it falls through to --qti-component-color, which is `inherit` — the same
+     * colour the textarea already had.
+     */
     &::part(textarea) {
       @mixin field-typography;
-      padding: 0.6rem 0.75rem 0.75rem;
+      /*
+       * The left gutter is reserved ALWAYS, graded or not.
+       *
+       * It holds the correction badge, and it is stated here rather than in the corrections layer
+       * because padding is layout: switching it on `:state(candidate-*)` would re-wrap every line of
+       * the candidate's answer at the moment the verdict appears. That is the layout-invariance
+       * contract, and the lint rule enforces it — the old class-based rules broke it and were never
+       * live enough for anyone to notice.
+       *
+       * qti-choice-interaction reserves its answer-key tick the same way, for the same reason: "the
+       * 30px that kept the label clear of the tick is reserved in the base rule, whether or not a
+       * tick ever appears."
+       */
+      padding: 0.6rem 0.75rem 0.75rem 2.4rem;
+
+      @mixin text;
     }
   }
 }
 
+/*
+ * Corrections for the one interaction that cannot judge itself.
+ *
+ * An extended-text response is free prose, so there is no correct answer to compare against and the
+ * component computes no verdict — it extends `Interaction` directly, exactly as
+ * correct-response.mixin.ts prescribes for extended-text, upload and media. The verdict arrives from
+ * OUTSIDE instead (a teacher, a marking service), through qti-extended-text-interaction-correction.ts,
+ * which publishes it as the same `:state(candidate-*)` custom states every other interaction uses.
+ * From here the difference is invisible: these rules are the same shape as text-entry's.
+ *
+ * They were keyed on `.correct`, `.partiallyCorrect` and `.incorrect` until now — plain light-DOM
+ * classes that nothing in the repo ever set, with the camelCase among kebab-case states marking them
+ * as an older API. They never rendered once. The `padding-left` is the part of them that was right
+ * all along: a gutter reserved for a glyph that until now was never drawn.
+ *
+ * The gutter is spacing, not paint, so it stays a direct declaration. The badge that sits in it is
+ * positioned by the component and painted by ::part(correction-*) in qti-corrections.css.
+ */
 @layer qti-components.interactions.corrections {
   qti-extended-text-interaction {
-    &.correct::part(textarea) {
+    &:state(candidate-correct)::part(textarea) {
       @mixin candidate text, var(--qti-correct), var(--qti-correct-light);
-      padding-left: 2.4rem;
     }
 
-    &.partiallyCorrect::part(textarea) {
-      @mixin candidate text, var(--qti-fg), var(--qti-partially-correct-light);
-      border-color: var(--qti-partially-correct);
-      padding-left: 2.4rem;
+    /* Amber throughout — text, edge and wash — exactly like text-entry's partial rule, which is the
+       reference for a field taking a verdict. It read `var(--qti-fg)` for the text until now, so the
+       words stayed the body colour while everything around them went amber; that was carried over
+       verbatim from the dead class-based rules, where it had never rendered and so was never seen to
+       be wrong. With --qti-fg now correctly resolving to `inherit`, it would have been more visibly
+       wrong still. */
+    &:state(candidate-partially-correct)::part(textarea) {
+      @mixin candidate text, var(--qti-partially-correct), var(--qti-partially-correct-light);
     }
 
-    &.incorrect::part(textarea) {
+    &:state(candidate-incorrect)::part(textarea) {
       @mixin candidate text, var(--qti-incorrect), var(--qti-incorrect-light);
-      padding-left: 2.4rem;
     }
   }
 }

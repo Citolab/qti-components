@@ -254,32 +254,6 @@ export const ReadonlyWithInitialValue: Story = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// EMPTY ATTRIBUTE
-// ═══════════════════════════════════════════════════════════════════════════════
-
-export const EmptyAttributeTracking: Story = {
-  name: 'Empty Attribute - Tracking',
-  render: baseTemplate,
-  play: async ({ canvasElement, step }) => {
-    const { interaction, input } = getElements(canvasElement);
-
-    await step('Type text - empty should be false', async () => {
-      input.value = 'text';
-      await fireEvent.keyUp(input, { target: { value: 'text' } });
-      await interaction.updateComplete;
-      expect(interaction.getAttribute('empty')).toBe('false');
-    });
-
-    await step('Clear text - empty should be true', async () => {
-      input.value = '';
-      await fireEvent.keyUp(input, { target: { value: '' } });
-      await interaction.updateComplete;
-      expect(interaction.getAttribute('empty')).toBe('true');
-    });
-  }
-};
-
-// ═══════════════════════════════════════════════════════════════════════════════
 // EVENT HANDLING
 // ═══════════════════════════════════════════════════════════════════════════════
 

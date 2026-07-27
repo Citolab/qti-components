@@ -2,6 +2,7 @@
 // its own `qti-*-interaction-correction.ts` file alongside this one.
 export { QtiAssociateInteractionCorrection } from './qti-associate-interaction-correction';
 export { QtiChoiceInteractionCorrection } from './qti-choice-interaction-correction';
+export { QtiExtendedTextInteractionCorrection } from './qti-extended-text-interaction-correction';
 export { QtiGapMatchInteractionCorrection } from './qti-gap-match-interaction-correction';
 export { QtiGraphicAssociateInteractionCorrection } from './qti-graphic-associate-interaction-correction';
 export { QtiGraphicGapMatchInteractionCorrection } from './qti-graphic-gap-match-interaction-correction';

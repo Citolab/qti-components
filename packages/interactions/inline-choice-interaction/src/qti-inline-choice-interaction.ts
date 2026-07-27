@@ -54,11 +54,6 @@ export class QtiInlineChoiceInteraction extends Interaction {
   @state()
   protected _dropdownOpen = false;
 
-  /** Extension hook for optional content rendered after the validation message. */
-  protected renderSupplementalContent(): unknown {
-    return nothing;
-  }
-
   private _slotObserver: MutationObserver | null = null;
   private readonly _menuId = `qti-inline-choice-menu-${inlineChoiceMenuCounter++}`;
 
@@ -66,7 +61,14 @@ export class QtiInlineChoiceInteraction extends Interaction {
   @property({ attribute: false })
   declare configContext: ConfigContext;
 
-  override render() {
+  /*
+   * The template in named pieces, so a subclass can recompose it. Override a piece to change what
+   * one part looks like; override `render()` to change the order. See the longer note on the same
+   * pattern in qti-extended-text-interaction.
+   */
+
+  /** The closed combobox — the box showing the chosen option. */
+  protected renderTrigger(): unknown {
     const selected = this.#selectedOption();
 
     return html`
@@ -89,6 +91,12 @@ export class QtiInlineChoiceInteraction extends Interaction {
           aria-hidden="true"
         ></span>
       </button>
+    `;
+  }
+
+  /** The popover listbox. */
+  protected renderMenu(): unknown {
+    return html`
       <div
         id="${this._menuId}"
         part="menu"
@@ -108,9 +116,16 @@ export class QtiInlineChoiceInteraction extends Interaction {
         </button>
         <slot @slotchange=${this.#onChoicesSlotChange}></slot>
       </div>
-      <div id="validation-message" part="message" role="alert" style="display:none;"></div>
-      ${this.renderSupplementalContent()}
     `;
+  }
+
+  /** Hidden until `Interaction.reportValidity` shows it. */
+  protected renderValidationMessage(): unknown {
+    return html`<div id="validation-message" part="message" role="alert" style="display:none;"></div>`;
+  }
+
+  override render() {
+    return html` ${this.renderTrigger()} ${this.renderMenu()} ${this.renderValidationMessage()} `;
   }
 
   override async connectedCallback() {

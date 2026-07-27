@@ -112,6 +112,22 @@ const CASES: Array<{ name: string; html: string; carrier: string; painted?: stri
     card: true,
     carrier: '[identifier="H"]',
     html: `<qti-hottext-interaction response-identifier="R"><p>a <qti-hottext identifier="H">word</qti-hottext> here</p></qti-hottext-interaction>`
+  },
+  {
+    /*
+     * Extended text is judged from outside, so its verdict normally arrives as an attribute on the
+     * correction subclass. The state is what the theme keys on either way, so this covers the theme
+     * half exactly like the others; the attribute → state → badge wiring is covered separately in
+     * qti-extended-text-interaction-correction.spec.ts.
+     *
+     * `painted` because the tint lands on the textarea rather than the host: an extended-text
+     * interaction is a box you write in, not a box that is coloured.
+     */
+    name: 'extended-text',
+    card: true,
+    carrier: 'qti-extended-text-interaction',
+    painted: '[part~="textarea"]',
+    html: `<qti-extended-text-interaction response-identifier="R"></qti-extended-text-interaction>`
   }
 ];
 
@@ -131,7 +147,11 @@ describe('candidate correction paint', () => {
       el.internals?.states?.add(state);
       await settle();
 
-      const cs = getComputedStyle(el);
+      // Most interactions are tinted on the host; a few paint an inner part instead.
+      const target = spec.painted ? (el.shadowRoot?.querySelector(spec.painted) as HTMLElement) : el;
+      expect(target, `${spec.name}: expected a painted element at ${spec.painted}`).toBeTruthy();
+
+      const cs = getComputedStyle(target);
       expect(cs.color, `${spec.name} / ${state}: text takes the verdict colour`).toBe(expected);
       expect(cs.borderTopColor, `${spec.name} / ${state}: edge takes the verdict colour`).toBe(expected);
       expect(cs.backgroundColor, `${spec.name} / ${state}: fill is tinted, not left blank`).not.toBe(TRANSPARENT);
