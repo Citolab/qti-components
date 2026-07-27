@@ -360,6 +360,107 @@ export const WithConfigContexEmpty: Story = {
   }
 };
 
+/**
+ * Autosizing is opt-in through `configContext.inlineChoiceAutosize`. With it off (the default) the
+ * trigger keeps the theme's base width and a long option is clipped to it; with it on the component
+ * measures the widest option once and writes the result to `--qti-inline-choice-width` as an inline
+ * style, so the closed trigger is already wide enough for whatever the candidate picks.
+ *
+ * The config is supplied declaratively with `<qti-config-test-provider>` rather than assigned in
+ * `play`, and that matters here: the measurement runs from `connectedCallback`, so a context set
+ * after the element has connected would arrive too late to size the first render.
+ */
+export const AutosizeViaConfigContext: Story = {
+  name: 'Config Wrapper: inlineChoiceAutosize = true',
+  render: () => html`
+    <p>
+      Default (no autosize):
+      <qti-inline-choice-interaction data-testid="plain">
+        <qti-inline-choice identifier="S">Ely</qti-inline-choice>
+        <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </p>
+
+    <qti-config-test-provider .config=${{ inlineChoiceAutosize: true }}>
+      <p>
+        Autosized:
+        <qti-inline-choice-interaction data-testid="autosized">
+          <qti-inline-choice identifier="S">Ely</qti-inline-choice>
+          <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
+        </qti-inline-choice-interaction>
+      </p>
+    </qti-config-test-provider>
+  `,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The interaction measures its widest option and sizes the closed trigger to match, so selecting a long option does not reflow the surrounding text.'
+      }
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const plain = canvas.getByTestId<QtiInlineChoiceInteraction>('plain');
+    const autosized = canvas.getByTestId<QtiInlineChoiceInteraction>('autosized');
+
+    await plain.updateComplete;
+    await autosized.updateComplete;
+
+    await step('Autosized interaction publishes a measured --qti-inline-choice-width', async () => {
+      const measured = autosized.style.getPropertyValue('--qti-inline-choice-width');
+      expect(measured).toMatch(/^\d+(\.\d+)?px$/);
+      expect(parseFloat(measured)).toBeGreaterThan(0);
+    });
+
+    await step('Interaction without the config keeps the width unset', async () => {
+      expect(plain.style.getPropertyValue('--qti-inline-choice-width')).toBe('');
+    });
+
+    await step('Autosizing makes the closed trigger wider than the default', async () => {
+      await waitFor(() => {
+        expect(autosized.getBoundingClientRect().width).toBeGreaterThan(plain.getBoundingClientRect().width);
+      });
+    });
+  }
+};
+
+/**
+ * The documented precedence: a `qti-input-width-*` class already sets `--qti-inline-choice-width`
+ * from CSS, so the component skips measurement entirely and the class wins — even with autosizing
+ * switched on.
+ */
+export const AutosizeYieldsToWidthClass: Story = {
+  name: 'Config Wrapper: inlineChoiceAutosize vs qti-input-width-*',
+  render: () => html`
+    <qti-config-test-provider .config=${{ inlineChoiceAutosize: true }}>
+      <p>
+        Class wins:
+        <qti-inline-choice-interaction class="qti-input-width-5" data-testid="classed">
+          <qti-inline-choice identifier="S">Ely</qti-inline-choice>
+          <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
+        </qti-inline-choice-interaction>
+      </p>
+    </qti-config-test-provider>
+  `,
+  parameters: {
+    docs: {
+      description: {
+        story: 'A qti-input-width-* class takes precedence: measurement is skipped and no inline width is written.'
+      }
+    }
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const classed = canvas.getByTestId<QtiInlineChoiceInteraction>('classed');
+    await classed.updateComplete;
+
+    await step('No inline width is written when a width class is present', async () => {
+      expect(classed.style.getPropertyValue('--qti-inline-choice-width')).toBe('');
+    });
+  }
+};
+
 export const InlineInText: Story = {
   render: args => html`
     <style>
