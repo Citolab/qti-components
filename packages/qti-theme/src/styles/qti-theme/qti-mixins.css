@@ -267,10 +267,9 @@
   @mixin component;
 }
 
-/* A text field is the component box with square corners and a text cursor. */
+/* A text field is the component box text cursor. */
 @define-mixin text {
   @mixin component;
-  --component-border-radius: 0;
   cursor: text;
 }
 

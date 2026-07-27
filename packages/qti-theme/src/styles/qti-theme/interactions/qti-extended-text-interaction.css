@@ -3,18 +3,11 @@
     &::part(textarea) {
       @mixin text;
     }
-    &:focus-within {
-      &::part(textarea) {
-        @mixin foc;
-        @mixin act-bor;
-      }
-    }
   }
 
   qti-extended-text-interaction {
     &::part(textarea) {
       @mixin field-typography;
-      border-radius: var(--qti-textarea-border-radius);
       padding: 0.6rem 0.75rem 0.75rem;
     }
   }

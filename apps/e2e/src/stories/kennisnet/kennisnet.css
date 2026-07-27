@@ -28,6 +28,8 @@
 
     --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
     --qti-border-radius: 0.3rem;
+
+    --qti-fg: #3e144e;
   }
 }
 

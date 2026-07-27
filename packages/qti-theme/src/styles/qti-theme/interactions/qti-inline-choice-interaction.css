@@ -1,11 +1,10 @@
 @layer qti-components.interactions.base {
   qti-inline-choice-interaction {
-    /* ── Host: field appearance ─────────────────────────────────────────────── */
-    margin: var(--qti-inline-margin);
-    color: var(--qti-fg);
-    background-color: var(--qti-bg);
-    border: var(--qti-border);
-    border-radius: var(--qti-field-border-radius);
+    /* ── Host: field appearance, painted through the --component-* contract so a brand can
+       restyle the field the same way it restyles chips/buttons/text-fields. The two field-specific
+       defaults (square-ish field corners, fg text) are set as --component-* so they stay overridable. */
+    @mixin component;
+    --component-color: var(--qti-fg);
 
     /* ── Trigger: transparent inside the field border ───────────────────────── */
     &::part(trigger) {
@@ -46,11 +45,9 @@
       color: inherit;
     }
 
-    /* ── Popover menu ────────────────────────────────────────────────────────── */
+    /* ── Popover menu: the neutral component box (fill + border + radius all default). ── */
     &::part(menu) {
-      background: var(--qti-bg);
-      border: var(--qti-border);
-      border-radius: var(--qti-border-radius);
+      @mixin component;
       padding: calc(var(--qti-padding-vertical) / 2);
     }
 
@@ -108,13 +105,15 @@
       background-color: var(--qti-bg-active);
     }
 
-    /* ── Validation message ──────────────────────────────────────────────────── */
+    /* ── Validation message: a warning box, painted through the contract. Its non-neutral bits
+       (fg text, amber-tinted fill, amber border) are --component-* overrides; width/style/radius
+       come from the defaults. ── */
     &::part(message) {
-      color: var(--qti-fg);
-      background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      @mixin component;
+      --component-color: var(--qti-fg);
+      --component-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      --component-border-color: var(--qti-warning);
       padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-      border: var(--qti-border-thickness) solid var(--qti-warning);
-      border-radius: var(--qti-border-radius);
     }
   }
 }
@@ -123,7 +122,6 @@
   qti-inline-choice-interaction {
     &::part(correct-option) {
       border: var(--qti-border-thickness) solid var(--qti-correct);
-      border-radius: var(--qti-field-border-radius);
       padding: var(--qti-inline-padding);
       color: var(--qti-correct);
     }

@@ -1,53 +1,21 @@
 @layer qti-components.interactions.base {
   qti-text-entry-interaction {
-    &:state(candidate-partially-correct) {
-      &::part(input) {
-        background-color: var(--qti-partially-correct);
-      }
-    }
-    &::part(input) {
-      @mixin text;
-    }
-    &:focus-within {
-      &::part(input) {
-        @mixin foc;
-        @mixin act-bor;
-      }
-    }
-  }
-
-  qti-text-entry-interaction {
-    border: var(--qti-border);
-    border-radius: var(--qti-field-border-radius);
+    @mixin text;
 
     &::part(input) {
       @mixin field-typography;
       border: none;
       background-color: transparent;
     }
-
-    &:state(candidate-partially-correct) {
-      @mixin candidate-tint var(--qti-fg), var(--qti-partially-correct-light);
-      border-color: var(--qti-partially-correct);
-
-      &::part(input) {
-        background-color: transparent;
-      }
-    }
   }
 }
 
 @layer qti-components.interactions.corrections {
   qti-text-entry-interaction {
-    &:state(candidate-correct) {
+    &:state(candidate-partially-correct) {
+      @mixin candidate-tint var(--qti-partially-correct), var(--qti-partially-correct-light);
       &::part(input) {
-        background-color: var(--qti-correct);
-      }
-    }
-
-    &:state(candidate-incorrect) {
-      &::part(input) {
-        background-color: var(--qti-incorrect);
+        background-color: transparent;
       }
     }
 
@@ -71,9 +39,6 @@
   .full-correct-response qti-text-entry-interaction {
     &::part(answer) {
       @mixin answer-check;
-      width: 1rem;
-      height: 1rem;
-      margin-left: 0.4rem;
     }
   }
 }

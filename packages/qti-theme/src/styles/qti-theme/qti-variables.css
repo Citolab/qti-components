@@ -45,12 +45,12 @@
        the order the contract uses them: the bg / fg surface pair, then the border (width, style,
        colour, radius). */
     --qti-bg: white;
-    --qti-fg: #3e144e; /* THE body text colour — the foreground half of the --qti-bg / --qti-fg pair */
+    --qti-fg: var(#aaaaaa); /* THE body text colour — the foreground half of the --qti-bg / --qti-fg pair */
     --qti-hover-bg: #f9fafb;
     --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid;
     --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
-    --qti-border-radius: 0.5rem;
+    --qti-border-radius: 0.2rem;
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
@@ -145,10 +145,6 @@
     --qti-drag-padding: var(--qti-padding-vertical) 0.8em;
 
     --qti-inline-padding: 2px 4px; /* for hottext and inline-choice and gap */
-    --qti-inline-margin: 0; /* for hottext and inline-choice and gap */
-
-    --qti-field-border-radius: 0.25rem;
-    --qti-textarea-border-radius: 0.375rem;
   }
 }
 
