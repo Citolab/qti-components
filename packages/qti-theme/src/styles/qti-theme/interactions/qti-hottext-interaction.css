@@ -1,6 +1,6 @@
 @layer qti-components.interactions.base {
   qti-hottext-interaction {
-    --qti-hottext-selected-padding: calc(var(--qti-padding-vertical) / 2) calc(var(--qti-padding-horizontal) / 2);
+    --qti-hottext-selected-padding: var(--qti-padding-inline);
 
     /* The native radio/checkbox control is never rendered for a hottext — every variant uses custom
        styling. That is unconditional, so it lives in qti-hottext.styles.ts, which hides [part='control']
@@ -146,15 +146,15 @@
 
     border-width: var(--qti-border-thickness);
     border-style: var(--qti-border-style);
-    padding-inline-start: calc(1em + var(--qti-padding-horizontal) / 2);
-    padding-inline-end: calc(var(--qti-padding-horizontal) / 2);
+    padding-inline-start: calc(1em + var(--qti-gap));
+    padding-inline-end: var(--qti-gap);
 
     /* The icon must not become the inline-flex container's first baseline item. */
     &::before {
       @mixin answer-check;
 
       position: absolute;
-      inset-inline-start: calc(var(--qti-padding-horizontal) / 4);
+      inset-inline-start: var(--qti-gap);
       top: 50%;
       translate: 0 -50%;
       display: block;

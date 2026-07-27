@@ -26,10 +26,50 @@
     /* Foreground on a primary fill. */
     --qti-primary-fg: #fff;
 
-    /* ── Rhythm & timing ── */
-    --qti-gap-size: 1rem; /* THE flex/grid gap, used everywhere incl .styles.ts */
-    --qti-padding-vertical: 0.5rem; /* the base spacing unit */
-    --qti-padding-horizontal: 1rem;
+    /* ── Rhythm ──
+     *
+     * --qti-spacing is THE unit, and the only knob here a substrate normally touches. Everything
+     * else in this group is a multiple of it, so retuning the whole theme's rhythm is one value.
+     *
+     * It replaces --qti-padding-vertical (0.5rem) and --qti-padding-horizontal (1rem). Those were
+     * always the unit and twice the unit, and every derived value in the theme was a half, whole
+     * or double of one of them, so the pair carried no information the single token doesn't.
+     *
+     * This is the SPACING axis — distance between and around things. The SIZING axis is separate
+     * and deliberately not derived from it: --qti-form-size (radio/checkbox), --qti-correction-size,
+     * --qti-graphic-order-pin-size, --qti-select-point-marker-size. A control's size tracks its
+     * content and its hit target, not the page's rhythm, so the two scales move independently.
+     *
+     * THE CONTRACT: an interaction reads exactly one of the three composites below, whole. Never
+     * --qti-spacing itself, and never a calc() over one of them — a call site that needs "half of
+     * a gap" is describing a fourth value that does not exist in the vocabulary, and the answer is
+     * to pick the nearest of the three, not to do arithmetic:
+     *
+     *   --qti-padding-box     the block box   (choice, rubric, modal, field, listbox row, cell)
+     *   --qti-padding-inline  the inline box  (hottext, inline-choice trigger, gap)
+     *   --qti-gap             every scalar    (flex/grid gap, margin, offset, inset)
+     *
+     * --qti-spacing is the unit those are cut from, not a value to paint with. It is the only knob
+     * a substrate normally sets; the three move with it.
+     *
+     * --qti-gap doubling as "every scalar" is the load-bearing compromise. Two of the three tokens
+     * are shorthands, so nothing else in the vocabulary can express a bare length — which is why
+     * the theme's old 0.25rem and 0.5rem one-off offsets are now all 1rem. That was chosen over
+     * adding scalar steps: one obvious gap everywhere beats six near-identical spacings nobody can
+     * tell apart. If a specific spot genuinely needs to be tighter, give it a NAMED component token
+     * (like --qti-drag-padding below) rather than reaching back for --qti-spacing.
+     *
+     * --qti-padding-inline was the literal `2px 4px`, which is exactly a quarter and a half of the
+     * unit at a 16px root. Deriving it means it now scales with the rhythm rather than staying
+     * pinned to device pixels — the same reason nothing else here is a literal.
+     *
+     * Widening boxes without touching the vertical rhythm means re-declaring --qti-padding-box,
+     * which is deliberate: that is a different look, not a different unit. */
+    --qti-spacing: 0.5rem;
+    --qti-padding-box: var(--qti-spacing) calc(var(--qti-spacing) * 2);
+    --qti-padding-inline: calc(var(--qti-spacing) / 4) calc(var(--qti-spacing) / 2);
+    --qti-gap: calc(var(--qti-spacing) * 2);
+
     --qti-popover-z-index: 1000;
     --qti-overlay-z-index: 1;
     /* Motion master switch — a unitless multiplier every animation scales by. 1 = normal, 0 = no
@@ -132,19 +172,18 @@
     --qti-hotspot-halo: rgb(255 255 255 / 85%);
 
     /*
-     * A drag's own padding, deliberately not --qti-padding-horizontal.
+     * A drag's own padding, deliberately not --qti-padding-box.
      *
      * `em`, so a drag scales with the text it wraps rather than with the root — a drag is a token
      * around a word, and a word that grows should take its box with it.
      *
-     * It is a token because the two mixins that used to draw a drag disagreed here: `drag` paid
-     * `var(--qti-padding-horizontal)` and the old `chip` paid `0.8em`, and which one you got
-     * depended on the layer the call site happened to sit in. That is the associate bug recorded in
-     * drag-drop.invariance.spec.ts — one drag, two box models, depending on where it was standing.
+     * It is a token because the two mixins that used to draw a drag disagreed here: `drag` paid the
+     * horizontal padding (then --qti-padding-horizontal, now `calc(var(--qti-spacing) * 2)`) and
+     * the old `chip` paid `0.8em`, and which one you got depended on the layer the call site
+     * happened to sit in. That is the associate bug recorded in drag-drop.invariance.spec.ts — one
+     * drag, two box models, depending on where it was standing.
      */
-    --qti-drag-padding: var(--qti-padding-vertical) 0.8em;
-
-    --qti-inline-padding: 2px 4px; /* for hottext and inline-choice and gap */
+    --qti-drag-padding: var(--qti-spacing) 0.8em;
   }
 }
 

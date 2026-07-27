@@ -32,7 +32,10 @@ public/assets/api/test
 .env
 *__screenshots__/
 # VRT baselines are the regression contract — they MUST be committed (override above).
-!apps/e2e/src/stories/__screenshots__/
+# The glob must be `**/`: the kennisnet stories moved into their own folder, so the baselines now
+# live at stories/kennisnet/__screenshots__/, one level deeper than the old un-nested path. A literal
+# `!apps/e2e/src/stories/__screenshots__/` silently stopped matching them and nothing was tracked.
+!apps/e2e/src/stories/**/__screenshots__/
 # Vitest writes actual/diff images here on failure; never commit these.
 .vitest-attachments/
 .eslintcache

@@ -1,7 +1,7 @@
 @layer qti-components.interactions.base {
   qti-associate-interaction {
     & qti-simple-associable-choice {
-      padding: var(--qti-padding-vertical) 0.8em;
+      padding: var(--qti-drag-padding);
       border: var(--qti-border-thickness) solid transparent;
     }
 

@@ -3,6 +3,6 @@ qti-rubric-block {
   border: var(--qti-border-thickness) solid var(--qti-info);
   background-color: color-mix(in srgb, var(--qti-info) 5%, white);
   border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  padding: var(--qti-padding-box);
   margin-top: 0.7rem;
 }

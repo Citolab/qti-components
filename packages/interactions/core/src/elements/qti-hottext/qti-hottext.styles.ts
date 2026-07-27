@@ -11,7 +11,7 @@ export default [
       display: inline-flex;
       align-items: center;
       position: relative;
-      padding: var(--qti-inline-padding, 1px 4px);
+      padding: var(--qti-padding-inline, 1px 4px);
     }
 
     /*

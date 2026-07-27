@@ -11,6 +11,6 @@
   border: var(--qti-border-thickness) solid var(--qti-info);
   background-color: var(--qti-bg);
   border-radius: var(--qti-border-radius);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+  padding: var(--qti-padding-box);
   margin-top: 1rem;
 }

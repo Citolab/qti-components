@@ -63,10 +63,10 @@
     }
 
     &::part(drops) {
-      gap: var(--qti-padding-vertical);
+      gap: var(--qti-gap);
     }
     &::part(drags) {
-      gap: var(--qti-padding-vertical);
+      gap: var(--qti-gap);
     }
     &::part(drop) {
       @mixin drop;

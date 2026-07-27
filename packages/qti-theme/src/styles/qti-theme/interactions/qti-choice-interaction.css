@@ -6,7 +6,7 @@
     --qti-choice-label-display: inline;
 
     & qti-simple-choice {
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       width: fit-content;
       cursor: pointer;
     }

@@ -8,7 +8,7 @@ export class QtiModalFeedback extends QtiFeedback {
       background: var(--qti-bg);
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
       border-radius: var(--qti-border-radius);
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       position: fixed;
       top: 50%;
@@ -21,7 +21,7 @@ export class QtiModalFeedback extends QtiFeedback {
 
     .button {
       border-radius: var(--qti-border-radius);
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       background-color: var(--qti-bg-active);
       border: var(--qti-border-active);
       cursor: pointer;
@@ -51,7 +51,7 @@ export class QtiModalFeedback extends QtiFeedback {
     return html`
       <dialog class="qti-dialog" part="feedback" ?open="${this.showStatus === 'on'}">
         <slot></slot>
-        <div style="margin-top: var(--qti-gap-size); text-align: center;">
+        <div style="margin-top: var(--qti-gap); text-align: center;">
           <button class="button close-button" @click="${this.closeFeedback}">Close</button>
         </div>
       </dialog>

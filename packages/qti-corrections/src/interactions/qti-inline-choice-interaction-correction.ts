@@ -14,9 +14,9 @@ export class QtiInlineChoiceInteractionCorrection extends CandidateCorrectionMix
       correctionPart,
       css`
         :host {
-          --qti-inline-choice-correct-option-margin: calc(var(--qti-padding-horizontal) / 4);
-          --qti-inline-choice-correction-gap-inline-start: calc(var(--qti-padding-horizontal) / 4);
-          --qti-inline-choice-correction-gap-inline-end: calc(var(--qti-padding-horizontal) / 2);
+          --qti-inline-choice-correct-option-margin: var(--qti-gap);
+          --qti-inline-choice-correction-gap-inline-start: var(--qti-gap);
+          --qti-inline-choice-correction-gap-inline-end: var(--qti-gap);
         }
         [part~='correction'] {
           margin-left: var(--qti-inline-choice-correction-gap-inline-start);

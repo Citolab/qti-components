@@ -16,7 +16,7 @@ const own = css`
     vertical-align: baseline;
     position: relative;
     --qti-inline-choice-width: 0;
-    --qti-inline-choice-trigger-gap: calc(var(--qti-gap-size) / 2);
+    --qti-inline-choice-trigger-gap: calc(var(--qti-gap) / 2);
     --qti-inline-choice-overlay-z-index: var(--qti-overlay-z-index);
     --qti-inline-choice-popover-z-index: var(--qti-popover-z-index);
     --qti-inline-choice-motion-duration-fast: var(--qti-motion-duration-fast);

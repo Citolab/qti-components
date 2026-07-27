@@ -23,8 +23,7 @@
     --qti-error: #df0000; /* red */
     --qti-info: #007ac3; /* blue — the answer key */
 
-    --qti-padding-vertical: 0.5rem; /* the base spacing unit */
-    --qti-padding-horizontal: 1rem;
+    --qti-spacing: 0.5rem; /* THE spacing unit — boxes derive from it, see --qti-padding-box */
 
     --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
     --qti-border-radius: 0.3rem;

@@ -33,7 +33,7 @@
     /* The bank and the target grid are laid out in qti-match-interaction.styles.ts. Only the gaps
        are still set here — gap is spacing. */
     & qti-simple-match-set:first-of-type {
-      gap: var(--qti-gap-size);
+      gap: var(--qti-gap);
       & qti-simple-associable-choice {
         @mixin drag;
         &[dragging] {
@@ -48,7 +48,7 @@
       }
     }
     & qti-simple-match-set:last-of-type {
-      gap: var(--qti-gap-size);
+      gap: var(--qti-gap);
       & > qti-simple-associable-choice {
         & img {
           max-width: 100%;
@@ -74,8 +74,8 @@
           &:focus {
             @mixin foc;
           }
-          margin-top: var(--qti-padding-vertical);
-          gap: var(--qti-padding-vertical);
+          margin-top: var(--qti-gap);
+          gap: var(--qti-gap);
         }
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;

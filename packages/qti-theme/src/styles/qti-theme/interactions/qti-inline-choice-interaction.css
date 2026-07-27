@@ -8,7 +8,7 @@
 
     /* ── Trigger: transparent inside the field border ───────────────────────── */
     &::part(trigger) {
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       background: transparent;
       border: none;
       border-radius: inherit;
@@ -48,13 +48,13 @@
     /* ── Popover menu: the neutral component box (fill + border + radius all default). ── */
     &::part(menu) {
       @mixin component;
-      padding: calc(var(--qti-padding-vertical) / 2);
+      padding: var(--qti-padding-inline);
     }
 
     /* ── Option rows ─────────────────────────────────────────────────────────── */
     &::part(option) {
-      min-height: calc(var(--qti-form-size) * 2 + (var(--qti-padding-vertical) / 2));
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      min-height: calc(var(--qti-form-size) * 2);
+      padding: var(--qti-padding-box);
       border: 0;
       border-radius: calc(var(--qti-border-radius) - (var(--qti-border-thickness) * 2));
       background: transparent;
@@ -79,9 +79,9 @@
        qti-inline-choice.styles.ts. */
     & qti-inline-choice {
       width: 100%;
-      min-height: calc(var(--qti-form-size) * 2 + (var(--qti-padding-vertical) / 2));
+      min-height: calc(var(--qti-form-size) * 2);
       box-sizing: border-box;
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       border: 0;
       border-radius: calc(var(--qti-border-radius) - (var(--qti-border-thickness) * 2));
       background: transparent;
@@ -113,7 +113,7 @@
       --component-color: var(--qti-fg);
       --component-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
       --component-border-color: var(--qti-warning);
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
     }
   }
 }
@@ -122,7 +122,7 @@
   qti-inline-choice-interaction {
     &::part(correct-option) {
       border: var(--qti-border-thickness) solid var(--qti-correct);
-      padding: var(--qti-inline-padding);
+      padding: var(--qti-padding-inline);
       color: var(--qti-correct);
     }
 

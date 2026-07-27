@@ -26,7 +26,7 @@ export class QtiTextEntryInteractionCorrection extends CandidateCorrectionMixin(
         position-anchor: --text-entry-host;
         position-area: top span-right;
         margin-bottom: 0.25rem;
-        padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+        padding: var(--qti-padding-box);
         background-color: var(--qti-bg);
         white-space: nowrap;
       }

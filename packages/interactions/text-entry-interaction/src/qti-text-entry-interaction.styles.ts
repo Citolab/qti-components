@@ -45,7 +45,7 @@ export default [
     }
 
     [part='input'] {
-      padding: calc(var(--qti-padding-vertical) / 2) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
     }
 
     :host(.qti-input-width-1) {

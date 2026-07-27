@@ -1,7 +1,7 @@
 @layer qti-components.interactions.base {
   /* `display: block` lives in qti-prompt.styles.ts, which already declares it on :host. */
   qti-prompt {
-    margin: var(--qti-padding-vertical) 0;
+    margin: var(--qti-gap) 0;
     width: 100%;
   }
 }
