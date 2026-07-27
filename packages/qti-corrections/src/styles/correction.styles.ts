@@ -41,7 +41,7 @@ export const correctionPart = css`
     box-sizing: border-box;
     width: var(--qti-correction-size, 1em);
     height: var(--qti-correction-size, 1em);
-    margin-left: var(--qti-correction-gap, 0.4em);
+    margin-left: var(--qti-glyph-gap, 0.5em);
 
     pointer-events: none;
   }

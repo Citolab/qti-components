@@ -132,10 +132,6 @@
       background: none;
     }
   }
-
-  qti-match-interaction .correct-option {
-    margin: 0 0.5rem;
-  }
 }
 
 @layer qti-components.interactions.states {

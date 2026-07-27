@@ -143,11 +143,6 @@
     @mixin candidate-chip var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
-  qti-gap-match-interaction .correct-option {
-    @mixin answer;
-    border: var(--qti-border-thickness) solid var(--qti-answer-border) !important;
-  }
-
   /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
      qti-gap-match-interaction.styles.ts. */
 }

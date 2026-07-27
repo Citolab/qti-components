@@ -161,6 +161,21 @@
   :root,
   :host {
     --qti-form-size: 1rem; /* radio / checkbox */
+
+    /* The gap between a masked glyph and the text it sits beside — the drag-handle grip before a
+       label, the correction badge after one. `em`, because a glyph is sized off the text it
+       annotates (see --qti-correction-size, --qti-grip-mask), so its gap has to scale with the same
+       text rather than with the root.
+       Deliberately NOT --qti-gap: that token is the page's rhythm at 1rem, an order of magnitude too
+       wide for a glyph sitting inside a line. This is the "named component token" escape hatch the
+       rhythm block above sanctions, and it is ONE token rather than two because the grip's 0.5em and
+       the badge's 0.4em were the same measurement written twice.
+       0.5em is the grip's old value, so the grip is untouched and the badge moved out by 0.1em. That
+       is not cosmetic in the VRT corpus: the badge is inline, so a tenth of an em reflows the line it
+       sits on, and 10 of 17 kennisnet snapshots shifted (up to 2.9% of pixels). Bisected the other
+       way, 0.4em holds the badge still and moves 5 drag/order snapshots instead — there is no value
+       that is neutral for both, which is exactly why the duplication was worth collapsing. */
+    --qti-glyph-gap: 0.5em;
     --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
 
     /* Hotspot selection ring (qti-hotspot-interaction.css). Resting stroke width — :state(checked)

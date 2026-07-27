@@ -11,20 +11,6 @@
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 
-  span.correct-option {
-    @mixin answer;
-    border: var(--qti-border-thickness) solid var(--qti-answer-border);
-  }
-
-  span.correct-option::after {
-    @mixin answer-check;
-    display: inline-block;
-    vertical-align: middle;
-    width: 1em;
-    height: 1em;
-    margin-left: 0.4em;
-  }
-
   /*
    * The candidate-correction badge, `part="correction"` on every corrected element.
    *
