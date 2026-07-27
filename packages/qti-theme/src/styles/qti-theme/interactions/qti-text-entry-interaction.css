@@ -4,6 +4,7 @@
 
     &::part(input) {
       @mixin field-typography;
+      appearance: none;
       border: none;
       background-color: transparent;
     }
@@ -14,25 +15,14 @@
   qti-text-entry-interaction {
     &:state(candidate-partially-correct) {
       @mixin candidate-tint var(--qti-partially-correct), var(--qti-partially-correct-light);
-      &::part(input) {
-        background-color: transparent;
-      }
     }
 
     &:state(candidate-correct) {
       @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
-
-      &::part(input) {
-        background-color: transparent;
-      }
     }
 
     &:state(candidate-incorrect) {
       @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
-
-      &::part(input) {
-        background-color: transparent;
-      }
     }
   }
 
