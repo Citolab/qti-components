@@ -1,3 +1,37 @@
+/* This interaction's chip vocabulary — the bank chip, the placed chip, and the floating clone. One
+   such block per drag-drop interaction, opt-in; graphic-gap-match deliberately declares none. See
+   qti-states.css. Kept in the `global` layer, where these rules used to live, so cascade position is
+   unchanged.
+
+   The clone is matched by [data-drag-interaction] rather than by ancestry because it is a SIBLING of
+   the interaction, not a descendant: createDragClone appends it to the interaction's ROOT (the
+   item's shadow root), which is the same tree — so the theme can reach it — but not the same
+   subtree. The attribute is also what tells one interaction's chip in flight from another's, which
+   is how graphic-gap-match stays out without anyone writing an exclusion.
+
+   Its grip hangs off ::part(control)::before, the same place the resting chip's does, so a chip does
+   not move its handle when you pick it up. That the part is reachable at all is new: while the clone
+   sat on document.body it was in a different tree from the adopted stylesheet, and nothing — no
+   part, no attribute — could style it.
+
+   This interaction is the one that needed the global rule most: every `@mixin drag` further down
+   targets `::part(drag)`, the PLACED chip, so the light-DOM bank chip drew its fill, radius, cursor
+   and text colour from the removed rule and nothing else. Deleting that rule without this block
+   turned the associate bank chips transparent, square and un-grabbable — measured, not guessed. */
+@layer qti-components.global {
+  qti-associate-interaction :state(drag),
+  [data-drag-clone][data-drag-interaction='qti-associate-interaction'] {
+    @mixin drag;
+  }
+
+  qti-associate-interaction :state(drag)::part(control)::before,
+  qti-associate-interaction::part(drag-control)::before,
+  qti-associate-interaction ::part(drag-control)::before,
+  [data-drag-clone][data-drag-interaction='qti-associate-interaction']::part(control)::before {
+    @mixin grip;
+  }
+}
+
 @layer qti-components.interactions.base {
   qti-associate-interaction {
     & qti-simple-associable-choice {

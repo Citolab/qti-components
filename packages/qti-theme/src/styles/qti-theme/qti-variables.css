@@ -80,18 +80,51 @@
     --qti-motion-duration-fast: calc(150ms * var(--qti-motion));
 
     /* ── The component surface ──
-       Every token @mixin component falls back to when a component (chip, field, button, choice) sets
-       no --component-* of its own. Grouped so a component's whole resting look reads in one place, in
-       the order the contract uses them: the bg / fg surface pair, then the border (width, style,
-       colour, radius). */
+       The theme's base surface and border. Read by the paint contract below, and — separately — by
+       ~30 rules that draw a box WITHOUT going through it (tables, the modal, hotspot rings, the
+       slider track). Those two readerships are why this group and the --qti-component-* group below
+       are not one group: this is "the theme's surface colour", that is "what a component paints when
+       it says nothing", and only the second is the paint contract's business. */
     --qti-bg: white;
     --qti-fg: var(#aaaaaa); /* THE body text colour — the foreground half of the --qti-bg / --qti-fg pair */
-    --qti-hover-bg: #f9fafb;
     --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid;
     --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
     --qti-border-radius: 0.2rem;
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+
+    /* ── The paint contract's resting look ──
+     *
+     * One token per PAINT property, and the whole of what a role paints when it sets nothing. These
+     * used to be written inline in the mixin, as the second half of `var(--component-x, var(--qti-y))`
+     * — the fallbacks were the resting look, but you had to read the mixin to find out what it was.
+     * They are tokens now, so the resting box reads in one place and a substrate can retune it here
+     * (value first) without touching a mixin.
+     *
+     * `@mixin paint $role` in qti-mixins.css binds each property to exactly one of these, behind a
+     * per-role override SLOT: `var(--drag-background-color, var(--qti-component-background-color))`.
+     * Two tiers, and they are different kinds of name on purpose —
+     *   --qti-component-*  a TOKEN. Declared here, has a value, applies to every role at once.
+     *   --drag-* / --drop-*  a SLOT. Declared nowhere; only ever read with this fallback. Setting one
+     *                        repaints that role alone, so a drop can no longer leak its fill into a
+     *                        chip standing in it (custom properties inherit — the old single
+     *                        --component-* namespace meant every nested component shared one value).
+     *
+     * `color: inherit` is the resting rule for text, not a colour: a component's text is whatever the
+     * text around it is. It reaches `color` through the same two-tier chain as everything else, and
+     * lands on the inherited colour either way — the keyword substitutes, and if a browser rejects a
+     * CSS-wide keyword out of var() it is invalid at computed-value time, which for an inherited
+     * property is also the inherited value. */
+    --qti-component-background-color: var(--qti-bg);
+    --qti-component-background-image: none;
+    --qti-component-border-width: var(--qti-border-thickness);
+    --qti-component-border-style: var(--qti-border-style);
+    --qti-component-border-color: var(--qti-border-color);
+    --qti-component-border-radius: var(--qti-border-radius);
+    --qti-component-box-shadow: none;
+    --qti-component-color: inherit;
+    --qti-component-opacity: 1;
+    --qti-component-filter: none;
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
        dependency. One vocabulary, kept together even though --qti-times-mask is read only from
@@ -126,15 +159,6 @@
      *     fight and costs no layout. The theme also still says `:focus` 24 times against
      *     `:focus-visible` 10, so most rings show on mouse click too. Once it is an outline on
      *     :focus-visible, a width and a colour are not worth tokenising.
-     *
-     * Gone already: --qti-disabled-bg and --qti-disabled-color. They were named as a global
-     * disabled vocabulary but no interaction ever read them — the theme's disabled treatment is
-     * `@mixin dis`, which is `cursor: not-allowed` and nothing else. Their only reader in the repo
-     * was one button in qti-modal-feedback, and the two values now sit there literally.
-     *
-     * Gone already: --qti-secondary-shadow. A single reader (order-interaction's placed drag) and a
-     * near-duplicate of --qti-placeholder-shadow; the box-shadow line was dropped with it.
-     *
      * The four --qti-light-* and --qti-dark-* tokens that used to sit here are now
      * --qti-selections-*, in the interactions.states block below. They are not a page-level light
      * and dark theme, which is what the old names suggested and why they were mistaken for dead.

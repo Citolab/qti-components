@@ -20,16 +20,16 @@
 }
 
 /*
- * The chip form of candidate-tint: it paints the correction THROUGH the --component-* contract
- * instead of as direct properties, so a corrected chip stays part of the same paint system as every
- * other chip. Only for drag chips — the choices and text fields that also correct have no component
- * binding, so they keep `@mixin candidate-tint` (direct). Same computed result as candidate-tint.
+ * The chip form of candidate-tint: it paints the correction THROUGH the drag role's slots instead of
+ * as direct properties, so a corrected chip stays part of the same paint system as every other chip.
+ * Only for drag chips — the choices and text fields that also correct have no paint binding, so they
+ * keep `@mixin candidate-tint` (direct). Same computed result as candidate-tint.
  */
 @define-mixin candidate-chip $color, $background {
-  --component-background-color: $background;
-  --component-color: $color;
-  --component-border-color: $color;
-  --component-box-shadow: none;
+  --drag-background-color: $background;
+  --drag-color: $color;
+  --drag-border-color: $color;
+  --drag-box-shadow: none;
 }
 
 @define-mixin answer {
@@ -39,37 +39,49 @@
 }
 
 /*
- * THE generic paint contract. Every visual component is, at rest, a bordered box on the theme's
- * surface. This mixin binds each PAINT property to a --component-* variable exactly once, so a
- * state — or a theme — repaints by SWITCHING a variable, never by re-declaring the property.
- * Selectors choose state; variables describe appearance; this block renders it.
+ * THE paint contract. Every visual component is, at rest, a bordered box on the theme's surface.
+ * This mixin binds each PAINT property to a variable exactly once, so a state — or a theme —
+ * repaints by SWITCHING a variable, never by re-declaring the property. Selectors choose state;
+ * variables describe appearance; this block renders it.
  *
- * The fallbacks ARE the resting look: the surfaces & border tokens (a white surface, the theme
- * border, no shadow). A component that overrides nothing looks like a plain bordered box.
+ * $role is what the thing IS — `drag`, `drop`, `button`, `text`, `field`, `menu`, `message`. Nothing
+ * calls this mixin directly: each role below calls it once with its own name, and that is the only
+ * place a role name is written. Every property then reads a two-tier chain:
  *
- * Only paint lives here. box-sizing / padding / margin are STRUCTURAL and stay on the component
- * (see `drag`) — a state must never switch them or the layout-invariance contract breaks. For the
- * same reason border-WIDTH and -radius are bound but must be treated as constant: a state may
- * switch --component-border-color, never --component-border-width.
+ *     var(--$(role)-background-color, var(--qti-component-background-color))
+ *          ^ per-role SLOT, declared nowhere      ^ TOKEN, declared in qti-variables.css
+ *
+ * The role in the slot name is the point. It replaces a single shared --component-* namespace, and
+ * custom properties INHERIT: under one namespace a drop that set --component-background-color
+ * repainted every chip standing inside it, and --component-box-shadow set on a drop mid-drag leaked
+ * its elevation onto nested chips (the bug the `no @mixin dragging on the drop` note in
+ * qti-match-interaction.css records). A chip reads --drag-*, its drop reads --drop-*, so the values
+ * still inherit but no longer collide, and `border-style` no longer has to be set as a direct
+ * property to stay off the chips (see `drop`).
+ *
+ * Only paint lives here. box-sizing / padding / margin are STRUCTURAL and stay on the role (see
+ * `drag`) — a state must never switch them or the layout-invariance contract breaks. For the same
+ * reason border-WIDTH and -radius are bound but must be treated as constant: a state may switch
+ * --drag-border-color, never --drag-border-width.
  *
  * Deliberately NOT bound yet (they need their own VRT-checked step): `outline` (touches focus
  * rings) and a MULTI-SLOT box-shadow (so an element's resting lift, in-flight elevation and focus
  * ring compose instead of the last one winning — the documented four-rule box-shadow contention).
  */
-@define-mixin component {
-  background-color: var(--component-background-color, var(--qti-bg));
-  background-image: var(--component-background-image, none);
+@define-mixin paint $role {
+  background-color: var(--$(role)-background-color, var(--qti-component-background-color));
+  background-image: var(--$(role)-background-image, var(--qti-component-background-image));
 
-  border-width: var(--component-border-width, var(--qti-border-thickness));
-  border-style: var(--component-border-style, var(--qti-border-style));
-  border-color: var(--component-border-color, var(--qti-border-color));
-  border-radius: var(--component-border-radius, var(--qti-border-radius));
+  border-width: var(--$(role)-border-width, var(--qti-component-border-width));
+  border-style: var(--$(role)-border-style, var(--qti-component-border-style));
+  border-color: var(--$(role)-border-color, var(--qti-component-border-color));
+  border-radius: var(--$(role)-border-radius, var(--qti-component-border-radius));
 
-  box-shadow: var(--component-box-shadow, none);
+  box-shadow: var(--$(role)-box-shadow, var(--qti-component-box-shadow));
 
-  color: var(--component-color, inherit);
-  opacity: var(--component-opacity, 1);
-  filter: var(--component-filter, none);
+  color: var(--$(role)-color, var(--qti-component-color));
+  opacity: var(--$(role)-opacity, var(--qti-component-opacity));
+  filter: var(--$(role)-filter, var(--qti-component-filter));
 }
 
 /*
@@ -97,14 +109,14 @@
   padding: var(--qti-drag-padding);
   cursor: grab;
 
-  /* Paint via the generic contract, nothing more — @mixin component's fallbacks already make a
-     neutral bordered box (white surface, theme border, no shadow). The chip sets NO --component-*
-     of its own, and that is load-bearing: if it did (e.g. `--component-background-color: white`),
-     that declaration would ride the interaction's HIGH-specificity chip selector
+  /* Paint via the contract, nothing more — the --qti-component-* tokens already make a neutral
+     bordered box (white surface, theme border, no shadow). The chip sets NO --drag-* of its own,
+     and that is load-bearing: if it did (e.g. `--drag-background-color: white`), that declaration
+     would ride the interaction's HIGH-specificity chip selector
      (`qti-gap-match-interaction qti-gap::part(drag)`) and out-specify a brand overlay's bare
      `qti-gap::part(drag)`, so the brand could never win. With nothing set here, the overlay's
-     --component-* is the only declaration and wins with no specificity/layer contest. */
-  @mixin component;
+     --drag-* is the only declaration and wins with no specificity/layer contest. */
+  @mixin paint drag;
 }
 
 /*
@@ -123,8 +135,8 @@
      when an overlay is on), so a brand can restyle the hole via a `:state(placeholder)` overlay
      with no specificity contest. The one thing a placeholder always does, in every brand, is hide
      its text; the default hole is then just the resting chip (white + border) with its text gone. */
-  --component-color: transparent;
-  --component-opacity: 1;
+  --drag-color: transparent;
+  --drag-opacity: 1;
 }
 
 /*
@@ -200,7 +212,7 @@
    is the control). Only the border COLOUR differs between the two, never the geometry. */
 @define-mixin check {
   @mixin button;
-  --component-border-color: transparent;
+  --button-border-color: transparent;
   gap: 0.5rem;
   outline: none;
   cursor: pointer;
@@ -261,26 +273,58 @@
   cursor: not-allowed;
 }
 
-/* A button is just the component box with padding — @mixin component already gives it the white
-   surface, the theme border and the radius, all switchable via --component-*. */
+/* A choice — the clickable box a candidate picks. Nothing but the resting paint box; its padding is
+   the interaction's (qti-choice-interaction.css), because a choice's box differs per interaction and
+   a chip's does not. */
 @define-mixin button {
-  @mixin component;
+  @mixin paint button;
 }
 
-/* A text field is the component box text cursor. */
+/* A text field: the paint box, plus the cursor that says you can type in it. */
 @define-mixin text {
-  @mixin component;
+  @mixin paint text;
   cursor: text;
 }
 
-/* A drop target is the component box with a DASHED edge — the one thing that distinguishes it from
-   any other component. `border-style` is set DIRECTLY, not via `--component-border-style`: that is a
-   custom property and CUSTOM PROPERTIES INHERIT, so any chip placed inside the drop would inherit the
-   dashed edge (it did — a chip in a drop went dashed). A direct `border-style` does not inherit.
-   Colour / width / radius / fill stay themeable through @mixin component. */
+/*
+ * A drop target: the paint box with a DASHED edge, the one thing that distinguishes it from every
+ * other role.
+ *
+ * The re-declaration is deliberate. `@mixin paint drop` has just bound `border-style` to
+ * `var(--drop-border-style, var(--qti-component-border-style))` — solid, like everything else — and
+ * this overrides it with the same slot in front, so `dashed` is the drop's DEFAULT rather than a
+ * value welded shut: a brand still switches the edge with --drop-border-style.
+ *
+ * It could not be expressed as a variable at all under the old shared namespace. `border-style` was
+ * a direct property precisely because setting --component-border-style would have inherited the
+ * dashed edge onto any chip standing in the drop (it did — a chip in a drop went dashed). Now that
+ * the chip reads --drag-border-style, the drop's value inherits past it harmlessly.
+ */
 @define-mixin drop {
-  @mixin component;
-  border-style: dashed;
+  @mixin paint drop;
+  border-style: var(--drop-border-style, dashed);
+}
+
+/*
+ * The three roles qti-inline-choice-interaction is built from. They are separate roles rather than
+ * one, because they nest: the menu and the message live in the field's shadow root, so under a
+ * shared namespace the field's own paint inherited into both and a brand could not restyle the
+ * field without restyling its popover.
+ *
+ * `field`   the closed combobox — the box a candidate reads the chosen option in.
+ * `menu`    the popover the options are listed in.
+ * `message` the validation box. Its warning colouring is the interaction's, not the role's.
+ */
+@define-mixin field {
+  @mixin paint field;
+}
+
+@define-mixin menu {
+  @mixin paint menu;
+}
+
+@define-mixin message {
+  @mixin paint message;
 }
 
 /*
@@ -292,7 +336,7 @@
 @define-mixin dragging {
   pointer-events: none;
   rotate: -2deg;
-  --component-box-shadow: 0 8px 12px rgb(0 0 0 / 20%), 0 4px 8px rgb(0 0 0 / 10%);
+  --drag-box-shadow: 0 8px 12px rgb(0 0 0 / 20%), 0 4px 8px rgb(0 0 0 / 10%);
 }
 
 /*
@@ -306,9 +350,9 @@
  * and by the resting state for a finger; nothing is communicated by hover alone.
  *
  * A background darken, not a lift: it costs no layout (paint only, never reflows the bank), and it
- * reads the chip's own `--component-background-color`, so it tracks whatever the brand painted the
+ * reads the chip's own `--drag-background-color`, so it tracks whatever the brand painted the
  * chip — primary under Kennisnet, white otherwise. `background-color` is a DIRECT property (not
- * `--component-background-color`): it overrides the @mixin component binding on `:hover`, does not
+ * `--drag-background-color`): it overrides the `@mixin paint drag` binding on `:hover`, does not
  * self-reference the var it reads, and — being a real property — never inherits into children.
  *
  * It replaces `hov`, an empty mixin invoked 21 times, applied to drags, drop targets, textareas,
@@ -317,6 +361,10 @@
  */
 @define-mixin drag-hover {
   @media (hover: hover) {
-    background-color: color-mix(in srgb, var(--component-background-color, var(--qti-bg)) 92%, black);
+    background-color: color-mix(
+      in srgb,
+      var(--drag-background-color, var(--qti-component-background-color)) 92%,
+      black
+    );
   }
 }

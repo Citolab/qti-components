@@ -972,12 +972,30 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       clone.removeAttribute('qti-draggable');
       clone.removeAttribute('tabindex');
       clone.setAttribute('data-drag-clone', 'true');
-      // The clone is appended to document.body, so no ancestor selector can reach it and it inherits
-      // nothing from the interaction it came from. It carries the interaction's name instead, which
-      // is the only way a theme can tell a graphic-gap-match chip in flight from any other chip.
+      // Which interaction this chip came from, for theme rules that need to tell one in flight from
+      // another (graphic-gap-match chips take no card styling). An attribute rather than an ancestor
+      // selector because the clone is a sibling of the interaction, not a descendant.
       clone.setAttribute('data-drag-interaction', this.tagName.toLowerCase());
 
-      document.body.appendChild(clone);
+      // Into the INTERACTION's root, not document.body.
+      //
+      // A stylesheet can only see its own tree. item-container adopts item.css into its shadow root
+      // (item-container.ts), so a clone parked on document.body sat in a tree the theme could not
+      // reach: every `[data-drag-clone]` rule was inert, and the chip's grip — a ::before, and so
+      // the one thing the computed-style copy above cannot carry — went missing the moment you
+      // picked a chip up. Measured: with the theme in a shadow root, a body clone reports
+      // `content: none` for its grip while the chip it was cloned from reports the glyph. It only
+      // ever looked right in Storybook, whose preview.ts also injects item.css at document level.
+      //
+      // `this.getRootNode()`, deliberately, not `element.getRootNode()`. A bank chip's root is the
+      // item's shadow root either way, but a PLACED chip being re-dragged lives in its gap's or its
+      // hotspot's own shadow root, and cloning it there would append the clone inside the very
+      // element it is being dragged out of. The interaction's root is the same node for both.
+      //
+      // `position: fixed` is unaffected — verified it still lands on the viewport, and nothing in
+      // the item chain sets transform/filter/contain to create a containing block.
+      const root = this.getRootNode() as ShadowRoot | Document;
+      (root instanceof Document ? root.body : root).appendChild(clone);
       return clone;
     }
 

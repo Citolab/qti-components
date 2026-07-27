@@ -87,10 +87,6 @@
       background-color: white;
     }
 
-    &::part(input-cell):hover {
-      background-color: var(--qti-hover-bg);
-    }
-
     &::part(control checked) {
       @mixin control-selected var(--qti-primary);
     }

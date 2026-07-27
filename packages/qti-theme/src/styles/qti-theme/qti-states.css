@@ -6,6 +6,18 @@
  * into each interaction's stylesheet.
  *
  * Per-interaction states (`checked`, `radio`, `dragzone-active`, …) stay in their own files.
+ *
+ * The chip vocabulary used to live here too — one unscoped rule giving `@mixin drag` and `@mixin
+ * grip` to every `:state(drag)` element and every floating clone. It is now declared once per
+ * drag-drop interaction, in that interaction's own file (gap-match, order, associate, match), still
+ * in this `global` layer so the cascade is unchanged.
+ *
+ * The move is what removed the exclusions. A universal claim ("every drag is a chip") needed a
+ * carve-out for graphic-gap-match, whose chips are photographs sitting on a picture and must take
+ * no card styling at all — written twice here as
+ * `:where(:not(qti-graphic-gap-match-interaction *, [data-drag-interaction='…']))`, and mirrored a
+ * third and fourth time in the Kennisnet overlay. Declared per interaction the rule is an opt-in:
+ * graphic-gap-match simply never states one, and there is no exception to write down anywhere.
  */
 @layer qti-components.global {
   ::part(message) {
@@ -26,23 +38,4 @@
     outline-offset: 0.25rem;
   }
 
-  /* One chip vocabulary across the light-DOM bank, a placed drag and the
-     floating clone. Graphic gap-match is deliberately excluded: a filled
-     card would cover the image beneath its hotspot. */
-  :state(drag):where(
-      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
-    ),
-  [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])) {
-    @mixin drag;
-  }
-
-  /* The shared drag handle. Placed image hotspots are excluded for the same
-     reason as the filled chip above. */
-  :state(drag):where(
-      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
-    )::part(control)::before,
-  :where(:not(qti-associable-hotspot))::part(drag-control)::before,
-  [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction']))::before {
-    @mixin grip;
-  }
 }

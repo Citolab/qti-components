@@ -1,10 +1,12 @@
 @layer qti-components.interactions.base {
   qti-inline-choice-interaction {
-    /* ── Host: field appearance, painted through the --component-* contract so a brand can
-       restyle the field the same way it restyles chips/buttons/text-fields. The two field-specific
-       defaults (square-ish field corners, fg text) are set as --component-* so they stay overridable. */
-    @mixin component;
-    --component-color: var(--qti-fg);
+    /* ── Host: the closed combobox, painted through the paint contract so a brand can restyle the
+       field the same way it restyles chips/buttons/text-fields. Its one field-specific default (fg
+       text, rather than the contract's `inherit`) is set as --field-* so it stays overridable — and
+       being the field's own slot, it no longer inherits into the menu and message below. Those two
+       still land on the same colour: they inherit the field's computed `color`. */
+    @mixin field;
+    --field-color: var(--qti-fg);
 
     /* ── Trigger: transparent inside the field border ───────────────────────── */
     &::part(trigger) {
@@ -20,10 +22,6 @@
     &::part(trigger):focus-visible {
       box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
       outline: none;
-    }
-
-    &:not(:state(readonly)):not([readonly])::part(trigger):hover {
-      /* background-color: var(--qti-hover-bg); */
     }
 
     &:state(disabled)::part(trigger),
@@ -45,9 +43,9 @@
       color: inherit;
     }
 
-    /* ── Popover menu: the neutral component box (fill + border + radius all default). ── */
+    /* ── Popover menu: the neutral paint box (fill + border + radius all default). ── */
     &::part(menu) {
-      @mixin component;
+      @mixin menu;
       padding: var(--qti-padding-inline);
     }
 
@@ -59,10 +57,6 @@
       border-radius: calc(var(--qti-border-radius) - (var(--qti-border-thickness) * 2));
       background: transparent;
       cursor: pointer;
-    }
-
-    &::part(option):hover {
-      background-color: var(--qti-hover-bg);
     }
 
     &::part(option):focus-visible {
@@ -92,10 +86,6 @@
       text-overflow: ellipsis;
     }
 
-    & qti-inline-choice:hover {
-      background-color: var(--qti-hover-bg);
-    }
-
     & qti-inline-choice:focus-visible {
       box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
       outline: none;
@@ -106,13 +96,13 @@
     }
 
     /* ── Validation message: a warning box, painted through the contract. Its non-neutral bits
-       (fg text, amber-tinted fill, amber border) are --component-* overrides; width/style/radius
+       (fg text, amber-tinted fill, amber border) are --message-* overrides; width/style/radius
        come from the defaults. ── */
     &::part(message) {
-      @mixin component;
-      --component-color: var(--qti-fg);
-      --component-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
-      --component-border-color: var(--qti-warning);
+      @mixin message;
+      --message-color: var(--qti-fg);
+      --message-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      --message-border-color: var(--qti-warning);
       padding: var(--qti-padding-box);
     }
   }

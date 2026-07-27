@@ -3,7 +3,8 @@
  * it needs no scoping class — it only applies where it is adopted, and it is adopted nowhere else.
  * Explicit chip selectors (not tokens) keep the internal structure visible: a chip is `:state(drag)`
  * on the bank, `::part(drag)` on a placed clone, `[data-drag-clone]` on the body clone. Each block
- * only switches `--component-*`; nothing is redeclared.
+ * only switches `--drag-*` — the drag role's paint slots — and nothing is redeclared. A role's slots
+ * repaint that role alone, so none of this reaches the drop targets the chips land in.
  *
  * A RESTING-look override sits in `brand` (above base, below states, so functional states still win).
  * A STATE override (the placeholder) sits in `states`; the base placeholder sets no fill / border /
@@ -33,39 +34,40 @@
 }
 
 @layer qti-components.interactions.brand {
-  /* The chip: primary fill, white text, a coloured lift, no border. */
-  :state(drag):where(
-      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
-    ),
-  [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])),
+  /* The chip: primary fill, white text, a coloured lift, no border.
+
+     No graphic-gap-match carve-out. It used to mirror the one in qti-states.css, and is unnecessary
+     twice over: a ggm chip never opts into `@mixin drag`, so it reads no --drag-* slot, and the
+     floating clone is style-frozen inline at pickup (createDragClone copies the source's whole
+     computed style, custom properties included) so a rule cannot reach it either. Both measured. */
+  :state(drag),
+  [data-drag-clone],
   qti-gap::part(drag),
   qti-associate-interaction::part(drag),
   qti-simple-associable-choice::part(drag) {
-    --component-background-color: var(--qti-primary);
-    --component-color: var(--qti-primary-fg);
-    --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
-    --component-border-color: transparent;
+    --drag-background-color: var(--qti-primary);
+    --drag-color: var(--qti-primary-fg);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --drag-border-color: transparent;
   }
 
   /* Order's placed chip is INVERTED — a light chip (white fill, dark text, neutral border) against
      the primary bank, so a dropped answer reads as settled. Kennisnet-specific: in the base theme a
      placed order chip is just the neutral chip. */
   qti-order-interaction::part(drag) {
-    --component-background-color: white;
-    --component-color: var(--qti-fg);
-    --component-border-color: var(--qti-border-color);
-    --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --drag-background-color: white;
+    --drag-color: var(--qti-fg);
+    --drag-border-color: var(--qti-border-color);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
   }
 }
 
 @layer qti-components.interactions.states {
   /* The placeholder: a tint fill + inset shadow, no border (the base default is a plain bordered
      white box). Corrections, a layer higher, keep winning. */
-  :state(placeholder):where(
-      :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
-    ) {
-    --component-background-color: var(--qti-placeholder-bg);
-    --component-border-color: transparent;
-    --component-box-shadow: inset var(--qti-placeholder-shadow);
+  :state(placeholder) {
+    --drag-background-color: var(--qti-placeholder-bg);
+    --drag-border-color: transparent;
+    --drag-box-shadow: inset var(--qti-placeholder-shadow);
   }
 }

@@ -116,26 +116,22 @@ export const ItemWithKennisnetOverlay: Story = {
               qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
 
             @layer qti-components.interactions.brand {
-              :state(drag):where(
-                  :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
-                ),
-              [data-drag-clone]:where(:not([data-drag-interaction='qti-graphic-gap-match-interaction'])),
+              :state(drag),
+              [data-drag-clone],
               qti-gap::part(drag),
               qti-associate-interaction::part(drag),
               qti-simple-associable-choice::part(drag) {
-                --component-background-color: var(--qti-primary);
-                --component-color: var(--qti-primary-fg);
-                --component-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
-                --component-border-color: transparent;
+                --drag-background-color: var(--qti-primary);
+                --drag-color: var(--qti-primary-fg);
+                --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+                --drag-border-color: transparent;
               }
             }
             @layer qti-components.interactions.states {
-              :state(placeholder):where(
-                  :not(qti-graphic-gap-match-interaction *, [data-drag-interaction='qti-graphic-gap-match-interaction'])
-                ) {
-                --component-background-color: var(--qti-placeholder-bg);
-                --component-border-color: transparent;
-                --component-box-shadow: inset var(--qti-placeholder-shadow);
+              :state(placeholder) {
+                --drag-background-color: var(--qti-placeholder-bg);
+                --drag-border-color: transparent;
+                --drag-box-shadow: inset var(--qti-placeholder-shadow);
               }
             }
           </style>
