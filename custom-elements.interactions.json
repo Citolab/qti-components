@@ -1,0 +1,510 @@
+{
+  "schemaVersion": "2.1.0",
+  "elements": [
+    {
+      "tagName": "qti-choice-interaction",
+      "description": "A single-response or multiple-response choice interaction.",
+      "module": "packages/interactions/choice-interaction/src/qti-choice-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "max-choices",
+          "type": "number",
+          "default": "1",
+          "description": "Maximum selectable choices. `1` is a single-response item; `0` means unlimited and makes it a multiple-response item."
+        },
+        {
+          "name": "class",
+          "type": "'qti-orientation-horizontal'|'qti-orientation-vertical'|'qti-choices-stacking-1'|'qti-choices-stacking-2'|'qti-choices-stacking-3'|'qti-choices-stacking-4'|'qti-choices-stacking-5'|'qti-choices-stacking-6'|'qti-labels-none'|'qti-labels-decimal'|'qti-labels-lower-alpha'|'qti-labels-upper-alpha'|'qti-labels-suffix-none'|'qti-labels-suffix-period'|'qti-labels-suffix-parenthesis'|'qti-input-control-hidden'",
+          "values": [
+            "qti-orientation-horizontal",
+            "qti-orientation-vertical",
+            "qti-choices-stacking-1",
+            "qti-choices-stacking-2",
+            "qti-choices-stacking-3",
+            "qti-choices-stacking-4",
+            "qti-choices-stacking-5",
+            "qti-choices-stacking-6",
+            "qti-labels-none",
+            "qti-labels-decimal",
+            "qti-labels-lower-alpha",
+            "qti-labels-upper-alpha",
+            "qti-labels-suffix-none",
+            "qti-labels-suffix-period",
+            "qti-labels-suffix-parenthesis",
+            "qti-input-control-hidden"
+          ],
+          "description": "QTI shared presentation vocabulary. Space-separated; takes precedence over `orientation`."
+        },
+        {
+          "name": "correct-response",
+          "type": "identifier | identifier[]",
+          "description": "Answer key. `identifier` of each correct `qti-simple-choice`, comma-separated. One value for a single-response item (`choice3`), several for a multiple-response one (`choice1,choice2,choice4`). Order is not significant."
+        }
+      ],
+      "slots": [
+        {
+          "name": "prompt",
+          "description": "The prompt shown above the choices."
+        },
+        {
+          "name": "(default)",
+          "description": "Default slot for `qti-simple-choice` elements."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-extended-text-interaction",
+      "description": "A multi-line text-entry interaction.",
+      "module": "packages/interactions/extended-text-interaction/src/qti-extended-text-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "expected-length",
+          "type": "number",
+          "description": "Hint at the expected answer length in characters; sets the textarea's `maxlength`. Also the last-resort row count, used only when neither a `qti-height-lines-*` class nor `expected-lines` is present."
+        },
+        {
+          "name": "pattern-mask",
+          "type": "string",
+          "description": "Regular expression the value must match to be valid."
+        },
+        {
+          "name": "placeholder-text",
+          "type": "string",
+          "description": "Placeholder shown while the textarea is empty."
+        },
+        {
+          "name": "data-patternmask-message",
+          "type": "string",
+          "description": "Custom validation message shown when `pattern-mask` fails. Part of the QTI shared interaction vocabulary."
+        },
+        {
+          "name": "class",
+          "type": "'qti-height-lines-3'|'qti-height-lines-6'|'qti-height-lines-15'",
+          "values": [
+            "qti-height-lines-3",
+            "qti-height-lines-6",
+            "qti-height-lines-15"
+          ],
+          "description": "QTI shared presentation vocabulary controlling the rendered height. Outranks both `expected-lines` and `expected-length`."
+        },
+        {
+          "name": "expected-lines",
+          "type": "number",
+          "description": "Expected number of lines of response, and the rendered row count unless a `qti-height-lines-*` class is present."
+        },
+        {
+          "name": "format",
+          "type": "'plain'|'preformatted'|'xhtml'",
+          "values": [
+            "plain",
+            "preformatted",
+            "xhtml"
+          ],
+          "default": "plain",
+          "description": "How the response is presented. `preformatted` renders the field monospaced; `xhtml` is accepted but downgraded to plain, because the field is a textarea with no rich-text editor behind it."
+        },
+        {
+          "name": "correct-response",
+          "type": "string",
+          "description": "Model answer, NOT a machine-scorable key. Free prose cannot be compared to an expected string, so nothing in the runtime reads this: the component omits `CorrectResponseMixin` and takes its verdict from outside (a teacher, a marking service, or a model). Write one exemplary answer that demonstrates what full credit looks like, dense with the specific facts, terms and reasoning steps a response must contain — that content is what a rubric is generated from downstream. Do not phrase it as instructions to the candidate, and do not expect an exact-match comparison against it."
+        }
+      ],
+      "slots": [
+        {
+          "name": "prompt",
+          "description": "The prompt shown above the textarea."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-gap",
+      "description": "A gap in the prose, and the first drop target to render its own chips. The interaction owns placement and publishes it on `dragDropContext`; this element subscribes and renders what it holds. Nothing appends into it. That inverts the old flow, where `handleDrop` did `cloneNode` + `appendChild` and the response was recovered afterwards by reading the DOM back out — which is why placement and the response could ever disagree at all. The chips land in this shadow root rather than in the light DOM, so a theme reaches them as `::part(drag)` — a bare `::part()` matches in any shadow root — instead of by tag. The gap's own `:state(filled)` says whether it holds anything.",
+      "module": "packages/interactions/core/src/elements/qti-gap/qti-gap.js",
+      "attributes": [
+        {
+          "name": "identifier",
+          "required": true,
+          "type": "string",
+          "description": "Value recorded as the gap side of the response pair."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-gap-match-interaction",
+      "description": "Drag-and-drop gap-match interaction: candidates drag choices into gap targets.",
+      "module": "packages/interactions/gap-match-interaction/src/qti-gap-match-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "class",
+          "type": "'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'",
+          "values": [
+            "qti-choices-top",
+            "qti-choices-bottom",
+            "qti-choices-left",
+            "qti-choices-right"
+          ],
+          "description": "QTI shared presentation vocabulary positioning the gap-choices container."
+        },
+        {
+          "name": "auto-size-dropzones",
+          "type": "boolean",
+          "default": "false",
+          "description": "Extension, not QTI. Sizes every gap to the widest chip so placement does not reflow the prose."
+        },
+        {
+          "name": "disable-animations",
+          "type": "boolean",
+          "default": "false",
+          "description": "Extension, not QTI. Disables the FLIP move animation."
+        },
+        {
+          "name": "correct-response",
+          "type": "directedPair[]",
+          "description": "Answer key. One `gaptext gap` pair per filled gap, space inside the pair and comma between pairs (`ht_zuur gap_low,ht_basisch gap_high`). The `qti-gap-text` identifier comes first and the `qti-gap` identifier second; reversing them scores nothing."
+        }
+      ],
+      "slots": [
+        {
+          "name": "prompt",
+          "description": "The prompt shown above the interaction."
+        },
+        {
+          "name": "drags",
+          "description": "The draggable choice sources."
+        },
+        {
+          "name": "(default)",
+          "description": "Default slot for the drop targets (gaps)."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-gap-text",
+      "description": "A draggable text token that fills a `qti-gap` inside `qti-gap-match-interaction`.",
+      "module": "packages/interactions/core/src/elements/qti-gap-text/qti-gap-text.js",
+      "attributes": [
+        {
+          "name": "identifier",
+          "required": true,
+          "type": "string",
+          "description": "Value recorded in the response pair when this token is placed into a gap."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-hottext",
+      "description": "A selectable span of text inside `qti-hottext-interaction`.",
+      "module": "packages/interactions/core/src/elements/qti-hottext/qti-hottext.js",
+      "attributes": [
+        {
+          "name": "identifier",
+          "required": true,
+          "type": "string",
+          "description": "Value recorded in the response when this span is selected."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-hottext-interaction",
+      "description": "Hottext interaction: candidates select highlighted words within a text block.",
+      "module": "packages/interactions/hottext-interaction/src/qti-hottext-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "class",
+          "type": "'qti-unselected-hidden'",
+          "description": "QTI shared presentation vocabulary. `qti-unselected-hidden` leaves the selectable words visually indistinguishable from the surrounding prose until they are selected."
+        },
+        {
+          "name": "correct-response",
+          "type": "identifier | identifier[]",
+          "description": "Answer key. `identifier` of each correct `qti-hottext`, comma-separated (`ht_door` or `ht_door,ht_langs`). Order is not significant."
+        }
+      ],
+      "slots": [
+        {
+          "name": "(default)",
+          "description": "Default slot for the mixed content and `qti-hottext` choices."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-inline-choice",
+      "description": "An option in the dropdown of `qti-inline-choice-interaction`.",
+      "module": "packages/interactions/core/src/elements/qti-inline-choice/qti-inline-choice.js",
+      "attributes": [
+        {
+          "name": "identifier",
+          "required": true,
+          "type": "string",
+          "description": "Value recorded in the response when this option is selected."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-inline-choice-interaction",
+      "description": "Inline choice interaction: dropdown selector rendered inline with surrounding text.",
+      "module": "packages/interactions/inline-choice-interaction/src/qti-inline-choice-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "data-prompt",
+          "type": "string",
+          "description": "Placeholder shown before a choice is picked. Falls back to the item configuration's `inlineChoicePrompt`, then to `select`."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether a choice must be selected for the response to be valid. Written as `required=\"true\"` / `required=\"false\"`; a bare `required` is accepted too."
+        },
+        {
+          "name": "correct-response",
+          "type": "identifier",
+          "description": "Answer key. `identifier` of the single correct `qti-inline-choice` (`choice_hoger`)."
+        }
+      ],
+      "slots": [
+        {
+          "name": "(default)",
+          "description": "Default slot for `qti-inline-choice` options."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-match-interaction",
+      "description": "Match interaction: candidates pair items from two sets, either as drag-and-drop or as a tabular grid.",
+      "module": "packages/interactions/match-interaction/src/qti-match-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "class",
+          "type": "'qti-match-tabular'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'",
+          "values": [
+            "qti-match-tabular",
+            "qti-choices-top",
+            "qti-choices-bottom",
+            "qti-choices-left",
+            "qti-choices-right"
+          ],
+          "description": "QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid instead of drag-and-drop; the `qti-choices-*` values position the source set."
+        },
+        {
+          "name": "auto-size-dropzones",
+          "type": "boolean",
+          "default": "false",
+          "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout."
+        },
+        {
+          "name": "disable-animations",
+          "type": "boolean",
+          "default": "false",
+          "description": "Extension, not QTI. Disables the FLIP move animation."
+        },
+        {
+          "name": "correct-response",
+          "type": "directedPair[]",
+          "description": "Answer key. One `source target` pair per association, space inside the pair and comma between pairs (`left_vermogen right_watt,left_druk right_pascal`). `source` is an identifier from the FIRST `qti-simple-match-set`, `target` from the second — the direction matters. A target whose `match-max` is greater than 1 appears in several pairs (`enzym biologie,mitochondrion biologie`)."
+        }
+      ],
+      "slots": [
+        {
+          "name": "prompt",
+          "description": "The prompt shown above the interaction."
+        },
+        {
+          "name": "match-cols",
+          "description": "Column headers (tabular mode)."
+        },
+        {
+          "name": "match-rows",
+          "description": "Row headers (tabular mode)."
+        },
+        {
+          "name": "(default)",
+          "description": "Default slot for the two match sets (drag-and-drop mode)."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-order-interaction",
+      "description": "Order interaction: candidates arrange choices into a target sequence.",
+      "module": "packages/interactions/order-interaction/src/qti-order-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "orientation",
+          "type": "'horizontal'|'vertical'",
+          "values": [
+            "horizontal",
+            "vertical"
+          ],
+          "default": "vertical",
+          "description": "Layout direction of the drop sequence. Unlike on `qti-choice-interaction`, QTI does not deprecate this for order."
+        },
+        {
+          "name": "auto-size-dropzones",
+          "type": "boolean",
+          "default": "false",
+          "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout."
+        },
+        {
+          "name": "disable-animations",
+          "type": "boolean",
+          "default": "false",
+          "description": "Extension, not QTI. Disables the FLIP move animation."
+        },
+        {
+          "name": "correct-response",
+          "type": "identifier[]",
+          "description": "Answer key. `identifier` of every `qti-simple-choice` in the one correct sequence, comma-separated (`step_hypothese,step_data,step_conclusies`). Order IS the answer here — unlike every other interaction, reordering these values changes what is correct."
+        }
+      ],
+      "slots": [
+        {
+          "name": "prompt",
+          "description": "The prompt shown above the interaction."
+        },
+        {
+          "name": "drags",
+          "description": "The draggable choice sources."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-select-point-interaction",
+      "description": "Select-point interaction: candidates place points onto a background image.",
+      "module": "packages/interactions/select-point-interaction/src/qti-select-point-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable, which must have base-type `point`."
+        },
+        {
+          "name": "area-mappings",
+          "type": "string",
+          "description": "Extension, not QTI. JSON array of `{shape, coords, mappedValue?, defaultValue?}` entries used when no `qti-response-declaration` supplies an `qti-area-mapping`."
+        },
+        {
+          "name": "correct-response",
+          "type": "point | point[]",
+          "description": "Answer key. `x y` integer coordinates in the background image's own pixel space, space inside the point and comma between points (`100 150` or `100 150,220 340`). Most point items score by region rather than by exact pixel — prefer a `qti-area-mapping` in the `qti-response-declaration`, or the `area-mappings` attribute, over this."
+        }
+      ],
+      "slots": [
+        {
+          "name": "prompt",
+          "description": "The prompt shown above the image."
+        },
+        {
+          "name": "(default)",
+          "description": "Default slot for the base image."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-simple-associable-choice",
+      "description": "A choice in one of the two match sets of `qti-match-interaction`, or in `qti-associate-interaction`.",
+      "module": "packages/interactions/core/src/elements/qti-simple-associable-choice/qti-simple-associable-choice.js",
+      "attributes": [
+        {
+          "name": "identifier",
+          "required": true,
+          "type": "string",
+          "description": "Value recorded in the response pair when this choice participates in an association."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-simple-choice",
+      "description": "A choice, used by `qti-choice-interaction` and `qti-order-interaction`. The `control` part is one box whose *role* is carried by state, not by its name: a radio circle under `:state(radio)`, a checkbox square under `:state(checkbox)`, and a drag grip when the choice is draggable. Style it as `qti-simple-choice::part(control)`.",
+      "module": "packages/interactions/core/src/elements/qti-simple-choice/qti-simple-choice.js",
+      "attributes": [
+        {
+          "name": "identifier",
+          "required": true,
+          "type": "string",
+          "description": "Value recorded in the response when this choice is selected, or its position when used for ordering."
+        }
+      ]
+    },
+    {
+      "tagName": "qti-text-entry-interaction",
+      "description": "Text-entry interaction: single-line inline text input.",
+      "module": "packages/interactions/text-entry-interaction/src/qti-text-entry-interaction.js",
+      "attributes": [
+        {
+          "name": "response-identifier",
+          "required": true,
+          "type": "string",
+          "description": "Identifier of the bound response variable."
+        },
+        {
+          "name": "expected-length",
+          "type": "number",
+          "description": "Hint at the expected answer length; drives the rendered field width and the input's `maxlength`."
+        },
+        {
+          "name": "pattern-mask",
+          "type": "string",
+          "description": "Regular expression the value must match to be valid."
+        },
+        {
+          "name": "placeholder-text",
+          "type": "string",
+          "description": "Placeholder shown while the field is empty."
+        },
+        {
+          "name": "data-patternmask-message",
+          "type": "string",
+          "description": "Custom validation message shown when `pattern-mask` fails. Part of the QTI shared interaction vocabulary."
+        },
+        {
+          "name": "correct-response",
+          "type": "string",
+          "description": "Answer key. The single expected string (`refractie`). Matching is exact unless the response processing template folds case. A value containing a comma cannot be expressed: the codec has no escape and would read it as two answers — use a mapping in the `qti-response-declaration` for multiple accepted answers."
+        }
+      ]
+    }
+  ]
+}

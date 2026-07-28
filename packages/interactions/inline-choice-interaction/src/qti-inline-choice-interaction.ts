@@ -2,6 +2,7 @@ import { html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
+import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 
@@ -23,6 +24,18 @@ let inlineChoiceMenuCounter = 0;
 
 /**
  * Inline choice interaction: dropdown selector rendered inline with surrounding text.
+ *
+ * @customElement qti-inline-choice-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {string} data-prompt - Placeholder shown before a choice is picked. Falls back to
+ *   the item configuration's `inlineChoicePrompt`, then to `select`.
+ * @attr {boolean} [shuffle=false] - Requests option shuffling. Applied by the transform
+ *   pipeline (`qti-transformers`), not by this element.
+ * @attr {boolean} [required=false] - Whether a choice must be selected for the response to be
+ *   valid. Written as `required="true"` / `required="false"`; a bare `required` is accepted too.
+ * @attr {number} [min-choices=0] - Equivalent spelling of `required`: `1` demands an answer.
+ *   Absent from the QTI attribute table for this element but used by the conformance suite.
  *
  * @slot - Default slot for `qti-inline-choice` options.
  *
@@ -60,6 +73,58 @@ export class QtiInlineChoiceInteraction extends Interaction {
   @consume({ context: configContext, subscribe: true })
   @property({ attribute: false })
   declare configContext: ConfigContext;
+
+  /**
+   * Placeholder shown in the closed combobox before a choice is picked.
+   *
+   * Declared rather than read straight off `dataset` so it reaches the custom elements
+   * manifest, the generated types and the Storybook controls — and so that changing it
+   * re-renders, which reading `dataset` at render time never did.
+   *
+   * Falls back to the item configuration's `inlineChoicePrompt`, then to `select`.
+   */
+  @property({ type: String, attribute: 'data-prompt' }) dataPrompt: string;
+
+  @watch('dataPrompt', { waitUntilFirstUpdate: true })
+  protected _handleDataPromptChange = () => {
+    this.#updateOptions();
+  };
+
+  /**
+   * Whether a choice must be selected for the response to be valid. QTI defaults this to
+   * false, so an untouched dropdown is a valid empty response unless an author opts in.
+   *
+   * QTI writes `required="true"` / `required="false"` rather than using HTML's bare-attribute
+   * boolean, so `required="false"` must read as false — which Lit's default Boolean converter
+   * would get backwards, since it only tests for the attribute's presence.
+   */
+  @property({
+    type: Boolean,
+    reflect: true,
+    converter: {
+      // A bare `required` is accepted too, so HTML-style authoring still behaves sensibly.
+      fromAttribute: (value: string | null) => value === 'true' || value === '',
+      toAttribute: (value: boolean) => (value ? 'true' : null)
+    }
+  })
+  required = false;
+
+  /**
+   * Minimum selections for a valid response — in practice 0 or 1, since the dropdown holds one.
+   *
+   * Not in the QTI 3 Implementation Guide's attribute table for this element, which offers only
+   * `required`. It is in the conformance suite: `Advanced/Q12-inline-choice/inline-choice-sv-3`
+   * expresses "must answer" as `min-choices="1"`, and pairs it with `data-min-selections-message`.
+   * Authors reach for it because every sibling interaction takes it, so it is honoured here as an
+   * equivalent spelling of `required`.
+   */
+  @property({ type: Number, attribute: 'min-choices' }) minChoices = 0;
+
+  @watch(['required', 'minChoices'], { waitUntilFirstUpdate: true })
+  protected _handleRequiredChange = () => {
+    this.validate();
+    this.reportValidity();
+  };
 
   /*
    * The template in named pieces, so a subclass can recompose it. Override a piece to change what
@@ -174,7 +239,7 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   #updateOptions() {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
-    const prompt = this.dataset.prompt || this.configContext?.inlineChoicePrompt || 'select';
+    const prompt = this.dataPrompt || this.configContext?.inlineChoicePrompt || 'select';
 
     // Pending value from `response="…"` attribute set before slotted options existed
     // takes precedence over any current selection.
@@ -253,7 +318,15 @@ export class QtiInlineChoiceInteraction extends Interaction {
 
   public validate(): boolean {
     const selectedOption = this.options.find(option => option.selected);
-    const isValid = selectedOption ? selectedOption.value !== '' : false;
+    const hasSelection = selectedOption ? selectedOption.value !== '' : false;
+
+    // An empty response only invalidates when the author asked for one, spelled either way.
+    // Before `required` existed this returned `hasSelection` outright, which made every
+    // untouched dropdown invalid — the behaviour of a permanently-required field, and out of
+    // step with `ChoicesMixin`, where an empty response is valid while `min-choices` is 0.
+    const answerDemanded = this.required || this.minChoices >= 1;
+    const isValid = hasSelection || !answerDemanded;
+
     const validityMessage = this.dataset.minChoicesMessage || 'Please select an option.';
     this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true });
     return isValid;

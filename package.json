@@ -38,7 +38,7 @@
     "tsc": "tsc --noEmit",
     "clean": "pnpm -r run clean",
     "cem": "run-s cem:qti cem:core",
-    "cem:core": "cem analyze --config cem.config.mjs",
+    "cem:core": "custom-elements-manifest analyze --config cem.config.mjs",
     "cem:qti": "pnpm --filter @qti-components/interactions run cem:qti",
     "build": "pnpm -r run build",
     "attw": "env NPM_CONFIG_CACHE=/tmp/qti-components-npm-cache pnpm -r run attw",
@@ -50,7 +50,7 @@
     "build-storybook": "pnpm run cem && storybook build",
     "storybook:dev": "storybook dev -p 6006 --no-open",
     "storybook:stackblitz": "pnpm run storybook:dev",
-    "cem:storybook:watch": "cem analyze --watch --config cem.config.mjs",
+    "cem:storybook:watch": "custom-elements-manifest analyze --watch --config cem.config.mjs",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
     "chromatic": "node chromatic-runner.cjs",
     "madge": "madge packages/**/src --extensions ts,tsx,js --circular --ts-config tsconfig.json",
@@ -72,7 +72,8 @@
     "ci:publish:workspace": "PNPM_GIT_CHECKS=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
     "ci:publish:umbrella": "PNPM_GIT_CHECKS=false pnpm --filter \"./packages/qti-components\" run publish",
     "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella",
-    "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\""
+    "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\"",
+    "cem:interactions": "cem generate && node tools/build/cem-interactions-mcp.mjs custom-elements.interactions.raw.json custom-elements.interactions.json"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
@@ -90,6 +91,7 @@
     "@eslint/js": "^9.39.2",
     "@manypkg/cli": "^0.25.1",
     "@open-wc/lit-helpers": "^0.7.0",
+    "@pwrs/cem": "^0.11.0",
     "@storybook/addon-a11y": "^10.5.4",
     "@storybook/addon-docs": "^10.5.4",
     "@storybook/addon-links": "^10.5.4",

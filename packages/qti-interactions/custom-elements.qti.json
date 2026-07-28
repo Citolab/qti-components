@@ -17,6 +17,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "QTI shared presentation vocabulary. Space-separated; takes precedence over `orientation`.",
               "fieldName": "class"
             },
             {
@@ -25,6 +26,7 @@
                 "text": "number"
               },
               "default": "1",
+              "description": "Maximum selectable choices. `1` is a single-response item; `0` means unlimited and makes it a multiple-response item.",
               "fieldName": "maxChoices"
             },
             {
@@ -33,6 +35,7 @@
                 "text": "number"
               },
               "default": "0",
+              "description": "Minimum selectable choices for a valid response.",
               "fieldName": "minChoices"
             },
             {
@@ -41,6 +44,7 @@
                 "text": "Orientation"
               },
               "default": "'vertical'",
+              "description": "Deprecated by QTI in favour of the `qti-orientation-*` class vocabulary.",
               "fieldName": "orientation"
             },
             {
@@ -50,6 +54,21 @@
               },
               "default": "''",
               "fieldName": "response"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Identifier of the bound response variable."
+            },
+            {
+              "name": "shuffle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests choice shuffling. Applied by the transform pipeline (`qti-transformers`), not by this element."
             }
           ]
         }
@@ -86,174 +105,7 @@
           "kind": "class",
           "name": "QtiGapText",
           "tagName": "qti-gap-text",
-          "attributes": [
-            {
-              "name": "aria-disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "aria-readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "identifier",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "identifier"
-            },
-            {
-              "name": "tabindex",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "tabindex"
-            }
-          ]
-        }
-      ],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/interactions/core/src/elements/qti-gap/qti-gap.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "QtiGap",
-          "tagName": "qti-gap",
-          "description": "A gap in the prose, and the first drop target to render its own chips.\n\nThe interaction owns placement and publishes it on `dragDropContext`; this element subscribes and\nrenders what it holds. Nothing appends into it. That inverts the old flow, where `handleDrop` did\n`cloneNode` + `appendChild` and the response was recovered afterwards by reading the DOM back\nout — which is why placement and the response could ever disagree at all.\n\nThe chips land in this shadow root rather than in the light DOM, so a theme reaches them as\n`::part(drag)` — a bare `::part()` matches in any shadow root — instead of by tag. The gap's own\n`:state(filled)` says whether it holds anything.",
-          "attributes": [
-            {
-              "name": "identifier",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "identifier"
-            },
-            {
-              "name": "tabindex",
-              "type": {
-                "text": "number | undefined"
-              },
-              "default": "0",
-              "fieldName": "tabindex"
-            }
-          ]
-        }
-      ],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/interactions/core/src/elements/qti-hottext/qti-hottext.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "QtiHottext",
-          "tagName": "qti-hottext",
-          "attributes": [
-            {
-              "name": "aria-disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "aria-readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "identifier",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "identifier"
-            },
-            {
-              "name": "tabindex",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "tabIndex"
-            }
-          ]
-        }
-      ],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/interactions/core/src/elements/qti-inline-choice/qti-inline-choice.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "QtiInlineChoice",
-          "tagName": "qti-inline-choice",
-          "attributes": [
-            {
-              "name": "aria-disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "aria-readonly",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "readonly"
-            },
-            {
-              "name": "identifier",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "identifier"
-            },
-            {
-              "name": "tabindex",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "tabIndex"
-            }
-          ]
-        }
-      ],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/interactions/core/src/elements/qti-simple-associable-choice/qti-simple-associable-choice.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "name": "QtiSimpleAssociableChoice",
-          "tagName": "qti-simple-associable-choice",
+          "description": "A draggable text token that fills a `qti-gap` inside `qti-gap-match-interaction`.",
           "attributes": [
             {
               "name": "aria-disabled",
@@ -277,6 +129,298 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Pins this token in place when the interaction is shuffled."
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Required. Value recorded in the response pair when this token is placed into a gap.",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "match-max",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many gaps this token may fill; `0` means unlimited. Read from the DOM by the drag-drop mixin."
+            },
+            {
+              "name": "match-min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Minimum gaps this token must fill."
+            },
+            {
+              "name": "show-hide",
+              "type": {
+                "text": "'show'|'hide'"
+              },
+              "default": "show",
+              "description": "Not implemented. How `template-identifier` controls visibility."
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a template variable controlling this token's visibility."
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-gap/qti-gap.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiGap",
+          "tagName": "qti-gap",
+          "description": "A gap in the prose, and the first drop target to render its own chips.\n\nThe interaction owns placement and publishes it on `dragDropContext`; this element subscribes and\nrenders what it holds. Nothing appends into it. That inverts the old flow, where `handleDrop` did\n`cloneNode` + `appendChild` and the response was recovered afterwards by reading the DOM back\nout — which is why placement and the response could ever disagree at all.\n\nThe chips land in this shadow root rather than in the light DOM, so a theme reaches them as\n`::part(drag)` — a bare `::part()` matches in any shadow root — instead of by tag. The gap's own\n`:state(filled)` says whether it holds anything.",
+          "attributes": [
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Value recorded as the gap side of the response pair.",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "match-max",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How many tokens this gap can hold; `0` means unlimited. Read from the DOM by the drag-drop mixin."
+            },
+            {
+              "name": "match-min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Minimum tokens this gap must hold."
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Not implemented. Whether this gap must be filled for the response to be valid."
+            },
+            {
+              "name": "show-hide",
+              "type": {
+                "text": "'show'|'hide'"
+              },
+              "default": "show",
+              "description": "Not implemented. How `template-identifier` controls visibility."
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "0",
+              "fieldName": "tabindex"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a template variable controlling this gap's visibility."
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-hottext/qti-hottext.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiHottext",
+          "tagName": "qti-hottext",
+          "description": "A selectable span of text inside `qti-hottext-interaction`.",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Required. Value recorded in the response when this span is selected.",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "show-hide",
+              "type": {
+                "text": "'show'|'hide'"
+              },
+              "default": "show",
+              "description": "Not implemented. How `template-identifier` controls visibility."
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a template variable controlling this span's visibility."
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-inline-choice/qti-inline-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiInlineChoice",
+          "tagName": "qti-inline-choice",
+          "description": "An option in the dropdown of `qti-inline-choice-interaction`.",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pins this option in place when the interaction is shuffled."
+            },
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Required. Value recorded in the response when this option is selected.",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "show-hide",
+              "type": {
+                "text": "'show'|'hide'"
+              },
+              "default": "show",
+              "description": "Not implemented. How `template-identifier` controls visibility."
+            },
+            {
+              "name": "tabindex",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "tabIndex"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a template variable controlling this option's visibility."
+            }
+          ]
+        }
+      ],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/elements/qti-simple-associable-choice/qti-simple-associable-choice.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "QtiSimpleAssociableChoice",
+          "tagName": "qti-simple-associable-choice",
+          "description": "A choice in one of the two match sets of `qti-match-interaction`, or in\n`qti-associate-interaction`.",
+          "attributes": [
+            {
+              "name": "aria-disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "aria-readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "fixed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Pins this choice in place when the enclosing interaction is shuffled.",
               "fieldName": "fixed"
             },
             {
@@ -285,6 +429,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "Required. Value recorded in the response pair when this choice participates in an association.",
               "fieldName": "identifier"
             },
             {
@@ -306,12 +451,27 @@
               "fieldName": "matchMin"
             },
             {
+              "name": "show-hide",
+              "type": {
+                "text": "'show'|'hide'"
+              },
+              "default": "show",
+              "description": "Not implemented. How `template-identifier` controls visibility."
+            },
+            {
               "name": "tabindex",
               "type": {
                 "text": "number"
               },
               "default": "0",
               "fieldName": "tabIndex"
+            },
+            {
+              "name": "template-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a template variable controlling this choice's visibility."
             }
           ]
         }
@@ -350,6 +510,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Pins this choice in place when the enclosing interaction is shuffled.",
               "fieldName": "fixed"
             },
             {
@@ -358,6 +519,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "Required. Value recorded in the response when this choice is selected, or its position when used for ordering.",
               "fieldName": "identifier"
             },
             {
@@ -366,6 +528,7 @@
                 "text": "string | null"
               },
               "default": "'show'",
+              "description": "How `template-identifier` controls visibility.",
               "fieldName": "showHide"
             },
             {
@@ -382,6 +545,7 @@
                 "text": "string | null"
               },
               "default": "null",
+              "description": "Identifier of a template variable controlling this choice's visibility.",
               "fieldName": "templateIdentifier"
             }
           ]
@@ -400,10 +564,19 @@
           "description": "A multi-line text-entry interaction.",
           "attributes": [
             {
+              "name": "base",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "description": "Not implemented. Numeric base used when recording the value."
+            },
+            {
               "name": "class",
               "type": {
                 "text": "string"
               },
+              "description": "QTI shared presentation vocabulary controlling the rendered height. Outranks both `expected-lines` and `expected-length`.",
               "fieldName": "classNames"
             },
             {
@@ -411,6 +584,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "Custom validation message shown when `pattern-mask` fails. Part of the QTI shared interaction vocabulary.",
               "fieldName": "dataPatternmaskMessage"
             },
             {
@@ -422,10 +596,42 @@
               "fieldName": "expectedLength"
             },
             {
+              "name": "expected-lines",
+              "type": {
+                "text": "number"
+              },
+              "description": "QTI's own hint at the response height. Outranked by `qti-height-lines-*`; see `#resolveRows`.",
+              "fieldName": "expectedLines"
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "'plain' | 'preformatted' | 'xhtml'"
+              },
+              "default": "'plain'",
+              "description": "How the response text is presented. Reflected so themes can key off\n`:host([format='preformatted'])`.\n\n`xhtml` is accepted and recorded but renders as `plain`: the field is a `<textarea>`, and\nthere is no rich-text editor behind it. Downgrading loudly beats either refusing valid QTI\nor pretending to support formatting the candidate cannot actually produce.",
+              "fieldName": "format"
+            },
+            {
+              "name": "max-strings",
+              "type": {
+                "text": "number"
+              },
+              "description": "Not implemented. Maximum number of separate string responses. QTI defines these for a multi-string response — several bound variables, one field each. This element renders a single textarea bound to one variable, so there is nothing for the bounds to count: reading them as a word or paragraph limit would invent a rule QTI does not state. Implement alongside multi-string rendering, not before it."
+            },
+            {
+              "name": "min-strings",
+              "type": {
+                "text": "number"
+              },
+              "description": "Not implemented. See `max-strings`."
+            },
+            {
               "name": "pattern-mask",
               "type": {
                 "text": "string"
               },
+              "description": "Regular expression the value must match to be valid.",
               "fieldName": "patternMask"
             },
             {
@@ -435,6 +641,28 @@
               },
               "description": "text appearing in the extended-text-interaction if it is empty",
               "fieldName": "placeholderText"
+            },
+            {
+              "name": "response",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "fieldName": "response"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Identifier of the bound response variable."
+            },
+            {
+              "name": "string-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a second, string-typed response variable that also receives the raw entry."
             }
           ]
         }
@@ -452,11 +680,19 @@
           "description": "Hottext interaction: candidates select highlighted words within a text block.",
           "attributes": [
             {
+              "name": "class",
+              "type": {
+                "text": "'qti-unselected-hidden'"
+              },
+              "description": "QTI shared presentation vocabulary. `qti-unselected-hidden` leaves the selectable words visually indistinguishable from the surrounding prose until they are selected."
+            },
+            {
               "name": "max-choices",
               "type": {
                 "text": "number"
               },
               "default": "1",
+              "description": "Maximum selectable hottexts; `0` means unlimited.",
               "fieldName": "maxChoices"
             },
             {
@@ -465,6 +701,7 @@
                 "text": "number"
               },
               "default": "0",
+              "description": "Minimum selectable hottexts for a valid response.",
               "fieldName": "minChoices"
             },
             {
@@ -474,6 +711,13 @@
               },
               "default": "''",
               "fieldName": "response"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Identifier of the bound response variable."
             }
           ]
         }
@@ -495,7 +739,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "true",
+              "default": "false",
+              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout.",
               "fieldName": "autoSizeDropzones"
             },
             {
@@ -504,6 +749,7 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid instead of drag-and-drop; the `qti-choices-*` values position the source set.",
               "fieldName": "class"
             },
             {
@@ -511,6 +757,8 @@
               "type": {
                 "text": "boolean"
               },
+              "default": "false",
+              "description": "Extension, not QTI. Disables the FLIP move animation.",
               "fieldName": "disableAnimations"
             },
             {
@@ -518,6 +766,8 @@
               "type": {
                 "text": "number"
               },
+              "default": "0",
+              "description": "Maximum pairings across the whole interaction; `0` means unlimited. QTI's own default is `1`; this element defaults to unlimited because a literal `1` breaks any multi-pair match item. See plans/interaction-attribute-spec-conformance.md.",
               "fieldName": "maxAssociations"
             },
             {
@@ -526,6 +776,7 @@
                 "text": "number"
               },
               "default": "1",
+              "description": "Minimum pairings for a valid response.",
               "fieldName": "minAssociations"
             },
             {
@@ -541,7 +792,16 @@
                 "text": "string"
               },
               "default": "''",
+              "description": "Required. Identifier of the bound response variable.",
               "fieldName": "responseIdentifier"
+            },
+            {
+              "name": "shuffle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests shuffling of both match sets. Applied by the transform pipeline (`qti-transformers`), not by this element."
             }
           ]
         }
@@ -559,12 +819,74 @@
           "description": "Order interaction: candidates arrange choices into a target sequence.",
           "attributes": [
             {
+              "name": "auto-size-dropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout."
+            },
+            {
+              "name": "disable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Extension, not QTI. Disables the FLIP move animation."
+            },
+            {
+              "name": "max-associations",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Non-QTI vocabulary inherited from the drag-drop mixin; currently the only way to set the upper bound. QTI spells this `max-choices`."
+            },
+            {
+              "name": "max-choices",
+              "type": {
+                "text": "number"
+              },
+              "description": "Not implemented. The QTI-correct spelling of the upper bound. See plans/interaction-attribute-spec-conformance.md."
+            },
+            {
+              "name": "min-associations",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Non-QTI vocabulary inherited from the drag-drop mixin; currently the only way to set the lower bound. QTI spells this `min-choices`."
+            },
+            {
+              "name": "min-choices",
+              "type": {
+                "text": "number"
+              },
+              "description": "Not implemented. The QTI-correct spelling of the lower bound. See plans/interaction-attribute-spec-conformance.md."
+            },
+            {
               "name": "orientation",
               "type": {
                 "text": "'horizontal' | 'vertical'"
               },
+              "default": "vertical",
               "description": "orientation of choices",
               "fieldName": "orientation"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Identifier of the bound response variable."
+            },
+            {
+              "name": "shuffle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Requests choice shuffling. Applied by the transform pipeline (`qti-transformers`), not by this element."
             }
           ]
         }
@@ -582,10 +904,19 @@
           "description": "Text-entry interaction: single-line inline text input.",
           "attributes": [
             {
+              "name": "base",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "description": "Not implemented. Numeric base used when recording the value."
+            },
+            {
               "name": "data-patternmask-message",
               "type": {
                 "text": "string"
               },
+              "description": "Custom validation message shown when `pattern-mask` fails. Part of the QTI shared interaction vocabulary.",
               "fieldName": "dataPatternmaskMessage"
             },
             {
@@ -593,13 +924,22 @@
               "type": {
                 "text": "number"
               },
+              "description": "Hint at the expected answer length; drives the rendered field width and the input's `maxlength`.",
               "fieldName": "expectedLength"
+            },
+            {
+              "name": "format",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. QTI types this as a bare normalized string here rather than as the `plain | preformatted | xhtml` vocabulary it defines for extended-text, and a single-line input has no formatting to render: it can show neither preserved line breaks nor markup. The field is always plain text, so this is not planned either."
             },
             {
               "name": "pattern-mask",
               "type": {
                 "text": "string"
               },
+              "description": "Regular expression the value must match to be valid.",
               "fieldName": "patternMask"
             },
             {
@@ -607,6 +947,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "Placeholder shown while the field is empty.",
               "fieldName": "placeholderText"
             },
             {
@@ -616,6 +957,20 @@
               },
               "default": "null",
               "fieldName": "response"
+            },
+            {
+              "name": "response-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Identifier of the bound response variable."
+            },
+            {
+              "name": "string-identifier",
+              "type": {
+                "text": "string"
+              },
+              "description": "Not implemented. Identifier of a second, string-typed response variable that also receives the raw entry."
             }
           ]
         }

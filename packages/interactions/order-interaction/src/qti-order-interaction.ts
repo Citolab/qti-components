@@ -17,6 +17,26 @@ const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[par
 /**
  * Order interaction: candidates arrange choices into a target sequence.
  *
+ * @customElement qti-order-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {'horizontal'|'vertical'} [orientation=vertical] - Layout direction of the drop
+ *   sequence. Unlike on `qti-choice-interaction`, QTI does not deprecate this for order.
+ * @attr {boolean} [shuffle=false] - Requests choice shuffling. Applied by the transform
+ *   pipeline (`qti-transformers`), not by this element.
+ * @attr {number} [min-associations=1] - Non-QTI vocabulary inherited from the drag-drop
+ *   mixin; currently the only way to set the lower bound. QTI spells this `min-choices`.
+ * @attr {number} [max-associations=0] - Non-QTI vocabulary inherited from the drag-drop
+ *   mixin; currently the only way to set the upper bound. QTI spells this `max-choices`.
+ * @attr {number} min-choices - Not implemented. The QTI-correct spelling of the lower bound.
+ *   See plans/interaction-attribute-spec-conformance.md.
+ * @attr {number} max-choices - Not implemented. The QTI-correct spelling of the upper bound.
+ *   See plans/interaction-attribute-spec-conformance.md.
+ * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
+ *   the widest chip so placement does not reflow the layout.
+ * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
+ *   animation.
+ *
  * @slot prompt - The prompt shown above the interaction.
  * @slot drags - The draggable choice sources.
  *

@@ -15,6 +15,16 @@ import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
 /**
  * Select-point interaction: candidates place points onto a background image.
  *
+ * @customElement qti-select-point-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable,
+ *   which must have base-type `point`.
+ * @attr {number} [max-choices=0] - Maximum points the candidate may place; `0` means unlimited.
+ * @attr {number} [min-choices=0] - Minimum points for a valid response.
+ * @attr {string} area-mappings - Extension, not QTI. JSON array of
+ *   `{shape, coords, mappedValue?, defaultValue?}` entries used when no
+ *   `qti-response-declaration` supplies an `qti-area-mapping`.
+ *
  * @slot prompt - The prompt shown above the image.
  * @slot - Default slot for the base image.
  *

@@ -9,8 +9,26 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+
 /**
  * Text-entry interaction: single-line inline text input.
+ *
+ * @customElement qti-text-entry-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {number} expected-length - Hint at the expected answer length; drives the rendered
+ *   field width and the input's `maxlength`.
+ * @attr {string} pattern-mask - Regular expression the value must match to be valid.
+ * @attr {string} placeholder-text - Placeholder shown while the field is empty.
+ * @attr {string} data-patternmask-message - Custom validation message shown when
+ *   `pattern-mask` fails. Part of the QTI shared interaction vocabulary.
+ * @attr {number} [base=10] - Not implemented. Numeric base used when recording the value.
+ * @attr {string} string-identifier - Not implemented. Identifier of a second, string-typed
+ *   response variable that also receives the raw entry.
+ * @attr {string} format - Not implemented. QTI types this as a bare normalized string here rather
+ *   than as the `plain | preformatted | xhtml` vocabulary it defines for extended-text, and a
+ *   single-line input has no formatting to render: it can show neither preserved line breaks nor
+ *   markup. The field is always plain text, so this is not planned either.
  *
  * @csspart input - The text input element.
  * @csspart correct - Overlay shown when displaying the correct response.

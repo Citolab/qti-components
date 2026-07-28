@@ -343,6 +343,23 @@ const choiceCards = [
 
 /* ── Text ────────────────────────────────────────────────────────────────────────────────────── */
 
+/*
+ * `format="preformatted"` exists on extended-text only — a single-line input has no formatting to
+ * render, so text-entry does not take the attribute at all.
+ *
+ * Indented across several lines on purpose: a textarea already preserves whitespace, so what the
+ * format adds on top is the monospace grid that makes that indentation line up. A single-line
+ * sample would show the letterforms but not the alignment. The paint itself lives in the theme,
+ * not the component: the base rule sets `font-family: inherit` through `::part(textarea)`, and a
+ * document `::part()` rule beats any shadow-root rule, so `:host([format=…])` could never win.
+ *
+ * Bound as an ATTRIBUTE, not `.response=`. The bench decorator serializes the rendered template
+ * through `innerHTML` so the elements upgrade against the scoped registry, and that round trip
+ * keeps attributes and drops properties — a property binding here would silently render empty.
+ * Newlines survive inside an attribute value.
+ */
+const preformattedAnswer = ['function som(a, b) {', '    return a + b;', '}', '', 'som(2, 3);'].join('\n');
+
 const textCards = [
   card(
     'Text entry — answered',
@@ -401,6 +418,20 @@ const textCards = [
     { note: 'normal' }
   ),
   card(
+    'Extended text — preformatted',
+    html`
+      <qti-extended-text-interaction
+        response-identifier="RESPONSE"
+        expected-lines="5"
+        format="preformatted"
+        response="${preformattedAnswer}"
+      >
+        <qti-prompt>Schrijf een functie die twee getallen optelt.</qti-prompt>
+      </qti-extended-text-interaction>
+    `,
+    { note: 'normal · format="preformatted" · monospace + tab-size' }
+  ),
+  card(
     'Extended text — empty',
     html`
       <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="4">
@@ -418,7 +449,12 @@ const textCards = [
   card(
     'Extended text — correct',
     html`
-      <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="4" candidate-correction="correct">
+      <qti-extended-text-interaction
+        response-identifier="RESPONSE"
+        expected-lines="4"
+        candidate-correction="correct"
+        response="Een mix van bronnen is betrouwbaarder omdat zon en wind elkaar aanvullen."
+      >
         <qti-prompt>Leg uit waarom landen overstappen op een energiemix.</qti-prompt>
       </qti-extended-text-interaction>
     `,
@@ -431,6 +467,7 @@ const textCards = [
         response-identifier="RESPONSE"
         expected-lines="4"
         candidate-correction="partially-correct"
+        response="Zon en wind vullen elkaar aan."
       >
         <qti-prompt>Leg uit waarom landen overstappen op een energiemix.</qti-prompt>
       </qti-extended-text-interaction>
@@ -440,7 +477,12 @@ const textCards = [
   card(
     'Extended text — incorrect',
     html`
-      <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="4" candidate-correction="incorrect">
+      <qti-extended-text-interaction
+        response-identifier="RESPONSE"
+        expected-lines="4"
+        candidate-correction="incorrect"
+        response="Omdat kolen op zijn."
+      >
         <qti-prompt>Leg uit waarom landen overstappen op een energiemix.</qti-prompt>
       </qti-extended-text-interaction>
     `,

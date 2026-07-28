@@ -51,3 +51,6 @@ tools/playwright/
 .playwright-mcp/
 packages/qti-components/tsup.config.bundled_z3j43jv4ey.mjs
 .opencode
+
+# @pwrs/cem intermediate output (filtered into custom-elements.interactions.json)
+custom-elements.interactions.raw.json

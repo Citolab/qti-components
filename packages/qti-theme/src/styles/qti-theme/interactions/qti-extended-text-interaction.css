@@ -37,6 +37,21 @@
 
       @mixin text;
     }
+
+    /*
+     * format="preformatted". Painted here rather than in the component's shadow root, because
+     * `field-typography` above sets `font-family: inherit` through `::part()` — a document rule,
+     * which beats any shadow-root rule no matter its specificity. A `:host([format=...])` rule
+     * inside the component would simply never win once this theme is loaded.
+     *
+     * A textarea already preserves whitespace, so what preformatted adds is the monospace grid
+     * that makes the preserved indentation legible. Typography only — the box does not move, so
+     * the layout-invariance contract holds.
+     */
+    &[format='preformatted']::part(textarea) {
+      font-family: monospace;
+      tab-size: 2;
+    }
   }
 }
 

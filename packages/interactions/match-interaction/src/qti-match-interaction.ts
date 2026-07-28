@@ -18,6 +18,23 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
 /**
  * Match interaction: candidates pair items from two sets, either as drag-and-drop or as a tabular grid.
  *
+ * @customElement qti-match-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {number} [max-associations=0] - Maximum pairings across the whole interaction; `0`
+ *   means unlimited. QTI's own default is `1`; this element defaults to unlimited because a
+ *   literal `1` breaks any multi-pair match item. See plans/interaction-attribute-spec-conformance.md.
+ * @attr {number} [min-associations=1] - Minimum pairings for a valid response.
+ * @attr {boolean} [shuffle=false] - Requests shuffling of both match sets. Applied by the
+ *   transform pipeline (`qti-transformers`), not by this element.
+ * @attr {'qti-match-tabular'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
+ *   QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid
+ *   instead of drag-and-drop; the `qti-choices-*` values position the source set.
+ * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
+ *   the widest chip so placement does not reflow the layout.
+ * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
+ *   animation.
+ *
  * @slot prompt - The prompt shown above the interaction.
  * @slot match-cols - Column headers (tabular mode).
  * @slot match-rows - Row headers (tabular mode).

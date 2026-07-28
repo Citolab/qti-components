@@ -13,6 +13,16 @@ import type { CSSResultGroup } from 'lit';
  * circle under `:state(radio)`, a checkbox square under `:state(checkbox)`, and a drag grip
  * when the choice is draggable. Style it as `qti-simple-choice::part(control)`.
  *
+ * @customElement qti-simple-choice
+ *
+ * @attr {string} identifier - Required. Value recorded in the response when this choice is
+ *   selected, or its position when used for ordering.
+ * @attr {boolean} [fixed=false] - Pins this choice in place when the enclosing interaction is
+ *   shuffled.
+ * @attr {string} template-identifier - Identifier of a template variable controlling this
+ *   choice's visibility.
+ * @attr {'show'|'hide'} [show-hide=show] - How `template-identifier` controls visibility.
+ *
  * @csspart control - The box before the label (radio / checkbox / drag grip).
  * @csspart control-mark - The mark inside the box (inner dot / checkmark).
  * @csspart label - The default slot holding the choice content.

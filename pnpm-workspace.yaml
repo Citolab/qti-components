@@ -4,6 +4,7 @@ packages:
   - packages/interactions/*
 
 onlyBuiltDependencies:
+  - '@pwrs/cem'
   - '@swc/core'
   - esbuild
   - msw
