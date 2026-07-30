@@ -9,7 +9,7 @@ const styles: CSSResultGroup = css`
    * this file declared never took effect.
    */
   :host {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
