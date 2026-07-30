@@ -46,7 +46,8 @@
         var(--qti-prose-table-border-color, var(--qti-border-color, #c6cad0));
       padding: var(--qti-prose-table-cell-padding, 0.25rem 0.5rem);
       text-align: left;
-      vertical-align: top;
+      /* No vertical-align here: that is layout, and the theme does not do layout (CONTRACT.md §7,
+         enforced by qti/no-layout-in-theme). Cells keep the UA default. */
     }
 
     :scope th {

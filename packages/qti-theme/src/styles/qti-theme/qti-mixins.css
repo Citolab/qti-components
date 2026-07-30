@@ -211,15 +211,15 @@
  * one behavioural difference is the improvement: the fill now tracks the theme's surface instead of
  * being pinned to the literal `white`.
  *
- * Size stays a DIRECT property, deliberately. --qti-form-size is the control's box, and the
+ * Size stays a DIRECT property, deliberately. --qti-control-size is the control's box, and the
  * layout-invariance contract says a state may repaint a control but must never resize it, so this is
  * not a paint slot. Centring the mark is the component's job — qti-simple-choice.styles.ts already
  * flex-centres [part='control'].
  */
 @define-mixin radio {
   @mixin paint radio;
-  width: var(--qti-form-size);
-  height: var(--qti-form-size);
+  width: var(--qti-control-size);
+  height: var(--qti-control-size);
   /* Round. Re-declared with the slot in FRONT of the default, the same shape as the drop's dashed
      edge, so a brand can square a radio off without having to out-specify this rule. */
   border-radius: var(--radio-border-radius, 100%);
@@ -227,14 +227,25 @@
 
 @define-mixin checkbox {
   @mixin paint checkbox;
-  width: var(--qti-form-size);
-  height: var(--qti-form-size);
+  width: var(--qti-control-size);
+  height: var(--qti-control-size);
 }
 
-/* The mark inside a control at rest — the box the tick or dot is drawn into. Structural. */
+/*
+ * The mark inside a control at rest — the box the tick or dot is drawn into. Structural.
+ *
+ * A FRACTION of the control, not a px subtraction. `calc(size - 6px)` only holds its proportion at
+ * one size: override --qti-control-size to 12px and the mark is 6px (50%) instead of 10px (62.5%),
+ * and at 6px it disappears. The ratio is what the design is; the subtraction was that ratio frozen
+ * at 16px. 0.625 reproduces today's 10px exactly, so nothing moves.
+ *
+ * A percentage would resolve against the control's CONTENT box, which is the border-box minus its
+ * border — so it would silently shrink by the border width and change with it. Multiplying the token
+ * keeps the mark proportional to the control's outer size, which is the size anyone reasons about.
+ */
 @define-mixin mark-size {
-  width: calc(var(--qti-form-size) - 6px);
-  height: calc(var(--qti-form-size) - 6px);
+  width: calc(var(--qti-control-size) * 0.625);
+  height: calc(var(--qti-control-size) * 0.625);
 }
 
 /* A choice with its native control shown (radio/checkbox visible) is the button component with its
@@ -258,8 +269,9 @@
  * usually want --checkbox-mark-color with it. `white` is the resting value, not a fixed one.
  */
 @define-mixin radio-checked {
-  width: calc(var(--qti-form-size) - 8px);
-  height: calc(var(--qti-form-size) - 8px);
+  /* 0.5 reproduces today's 8px at the default 1rem — see mark-size for why this is a fraction. */
+  width: calc(var(--qti-control-size) * 0.5);
+  height: calc(var(--qti-control-size) * 0.5);
   background-color: var(--radio-mark-color, white);
   border-radius: 100%;
 }

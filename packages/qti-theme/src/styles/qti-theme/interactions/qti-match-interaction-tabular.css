@@ -93,8 +93,8 @@
 
     &::part(control-mark radio checked) {
       background-color: white;
-      width: calc(var(--qti-form-size) - 8px);
-      height: calc(var(--qti-form-size) - 8px);
+      width: calc(var(--qti-control-size) * 0.5);
+      height: calc(var(--qti-control-size) * 0.5);
     }
 
     &::part(control-mark checkbox checked) {

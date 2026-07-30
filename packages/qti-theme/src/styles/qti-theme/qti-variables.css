@@ -36,7 +36,7 @@
      * or double of one of them, so the pair carried no information the single token doesn't.
      *
      * This is the SPACING axis — distance between and around things. The SIZING axis is separate
-     * and deliberately not derived from it: --qti-form-size (radio/checkbox), --qti-correction-size,
+     * and deliberately not derived from it: --qti-control-size (radio/checkbox), --qti-correction-size,
      * --qti-graphic-order-pin-size, --qti-select-point-marker-size. A control's size tracks its
      * content and its hit target, not the page's rhythm, so the two scales move independently.
      *
@@ -211,7 +211,27 @@
 @layer qti-components.interactions.base {
   :root,
   :host {
-    --qti-form-size: 1rem; /* radio / checkbox */
+    /*
+     * The radio/checkbox box. Named for what it is — every other name around it already says
+     * "control": part="control", part="control-mark", the control-selected mixin. "form" was the odd
+     * one out and needed a comment to say which form thing it meant.
+     *
+     * `em`, so a control is sized by the text it belongs to. A radio labels its choice; when that
+     * choice's text is set larger or smaller the control should follow, which `rem` cannot do — it
+     * is pinned to the root regardless of the type around it. Same reasoning, and the same value, as
+     * --qti-correction-size above: "em keeps a badge sized by the text it annotates". It is also
+     * what the SIZING note at the top of this file already claims for these tokens — that a
+     * control's size tracks its content rather than the page's rhythm.
+     *
+     * Costs nothing to adopt: every control host in the interactions renders at the root size today
+     * (measured across choice, tabular match and hottext), so 1em and 1rem compute identically and
+     * no baseline moves. It simply starts behaving when someone scales type.
+     *
+     * The one thing to watch is the hit target in deliberately small text, where the control now
+     * shrinks with it. Nothing in the theme sets a smaller size yet, so a floor would be a magic
+     * number guarding a case that does not exist; add `max()` here if a real one turns up.
+     */
+    --qti-control-size: 1em;
 
     /* The correction badge's box. Named in two comments above and read by correction.styles.ts, but
        never actually declared until now — every badge has been running on that file's `1em`

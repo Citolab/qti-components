@@ -15,7 +15,7 @@ export class QtiTextEntryInteractionCorrection extends CandidateCorrectionMixin(
        * The trailing inset only — size and leading gap come from the shared sheet.
        *
        * This block used to also set position: static; translate: none (dead: nothing positions this
-       * badge) and size it with --qti-form-size, the radio/checkbox token — 1rem, absolute, where
+       * badge) and size it with --qti-control-size, the radio/checkbox token — 1rem, absolute, where
        * every other badge is 1em and scales with the text it annotates. The two agreed only while the
        * item's font-size happened to equal the root's.
        *

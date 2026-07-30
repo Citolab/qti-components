@@ -51,7 +51,6 @@
 
     /* ── Option rows ─────────────────────────────────────────────────────────── */
     &::part(option) {
-      min-height: calc(var(--qti-form-size) * 2);
       padding: var(--qti-padding-box);
       border: 0;
       border-radius: calc(var(--qti-border-radius) - (var(--qti-border-thickness) * 2));
@@ -73,7 +72,6 @@
        qti-inline-choice.styles.ts. */
     & qti-inline-choice {
       width: 100%;
-      min-height: calc(var(--qti-form-size) * 2);
       box-sizing: border-box;
       padding: var(--qti-padding-box);
       border: 0;
