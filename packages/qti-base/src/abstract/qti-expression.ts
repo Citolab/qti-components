@@ -1,9 +1,10 @@
 import { consume } from '@lit/context';
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, unsafeCSS } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { itemContext } from '../context/item.context';
 import { qtiContext } from '../context/qti.context';
+import expressionCss from './qti-expression.css?inline';
 
 import type { ItemContext } from '../context/types/item.types';
 import type { QtiContext, QtiContextType } from '../context/qti.context';
@@ -20,11 +21,9 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
   @state()
   protected result: any;
 
-  // hide the slot with css
+  // Keep stylesheet in a dedicated CSS file so DevTools can show source-file provenance.
   static override styles = css`
-    slot {
-      display: none;
-    }
+    ${unsafeCSS(expressionCss)}
   `;
 
   override render() {

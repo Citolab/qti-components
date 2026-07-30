@@ -1,0 +1,43 @@
+@layer qti-components.global {
+  :root,
+  :host {
+    --qti-primary: #581d70;
+    --qti-success: #2b830e;
+    --qti-warning: #ffa700;
+    --qti-error: #df0000;
+    --qti-info: #007ac3;
+
+    --qti-spacing: 0.5rem;
+    --qti-border-thickness: 1px;
+    --qti-border-radius: 0.3rem;
+    --qti-fg: #3e144e;
+  }
+}
+
+@layer qti-components.interactions.brand {
+  :state(drag),
+  [data-drag-clone],
+  qti-gap::part(drag),
+  qti-associate-interaction::part(drag),
+  qti-simple-associable-choice::part(drag) {
+    --drag-background-color: var(--qti-primary);
+    --drag-color: var(--qti-primary-fg);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --drag-border-color: transparent;
+  }
+
+  qti-order-interaction::part(drag) {
+    --drag-background-color: white;
+    --drag-color: var(--qti-fg);
+    --drag-border-color: var(--qti-border-color);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  }
+}
+
+@layer qti-components.interactions.states {
+  :state(placeholder) {
+    --drag-background-color: var(--qti-placeholder-bg);
+    --drag-border-color: transparent;
+    --drag-box-shadow: inset var(--qti-placeholder-shadow);
+  }
+}

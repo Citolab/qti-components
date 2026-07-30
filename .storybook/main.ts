@@ -36,6 +36,11 @@ const config: StorybookConfig = {
             titlePrefix: 'E2E'
           },
           {
+            directory: '../apps/e2e/stories',
+            files: '**/*.stories.*',
+            titlePrefix: 'E2E'
+          },
+          {
             directory: '../docs',
             files: '**/*.stories.*',
             titlePrefix: 'Docs'
@@ -88,6 +93,14 @@ const config: StorybookConfig = {
     return {
       ...config,
       plugins: [...(config.plugins || []), tsconfigPaths()],
+      css: {
+        ...(config.css || {}),
+        devSourcemap: true
+      },
+      build: {
+        ...(config.build || {}),
+        sourcemap: true
+      },
       resolve: {
         ...config.resolve
       }

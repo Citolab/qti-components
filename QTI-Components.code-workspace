@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../QTI-Editor"
 		}
 	],
 	"settings": {
