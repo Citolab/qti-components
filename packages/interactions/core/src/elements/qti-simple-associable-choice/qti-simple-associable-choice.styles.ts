@@ -29,8 +29,15 @@ export default [
      * So the drop-target rules key on [qti-droppable], the attribute the interaction stamps on the
      * elements it actually tracks as droppables. Keying on the *absence* of a chip marker instead
      * (:not(:state(drag))) swept up every tabular header cell and gave each one a 4rem minimum.
+     *
+     * :state(droppable) is the same opt-in by another route, for hosts that cannot write the
+     * attribute. The editor is one: it renders these choices inside a ProseMirror document, whose
+     * mutation observer reverts any attribute outside the schema — and the revert re-triggers the
+     * observer that wrote it, which hard-freezes the tab. ElementInternals states are invisible to
+     * that observer. Positive opt-in either way, so neither form sweeps up tabular headers.
      */
-    :host([qti-droppable]) {
+    :host([qti-droppable]),
+    :host(:state(droppable)) {
       min-height: var(--qti-drop-min-height, 4rem);
       min-width: var(--qti-drop-min-width, 0);
       /*
@@ -44,7 +51,8 @@ export default [
       justify-content: space-between;
     }
 
-    :host([qti-droppable]) [part~='drop'] {
+    :host([qti-droppable]) [part~='drop'],
+    :host(:state(droppable)) [part~='drop'] {
       /*
        * Match's dropzones are NOT auto-sized from the chips: a match target is a category, and
        * should look able to hold several answers rather than hugging the widest one. The floor is a
@@ -64,7 +72,8 @@ export default [
     }
 
     /* The label sits against the drop region below it. */
-    :host([qti-droppable]) [part~='label'] {
+    :host([qti-droppable]) [part~='label'],
+    :host(:state(droppable)) [part~='label'] {
       align-content: flex-end;
     }
 
