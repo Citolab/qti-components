@@ -1,4 +1,4 @@
-@scope (qti-item-body) {
+@scope (qti-item-body, .ProseMirror) {
   :scope,
   :scope * {
     box-sizing: border-box;
@@ -21,5 +21,21 @@
   img:not([width]) {
     max-width: 100%;
     height: auto;
+  }
+
+  /* Normalize author markup paragraphs across QTI containers:
+     - If a paragraph is the only child, remove all margins.
+     - In qti-simple-choice with multiple paragraphs, trim only outer margins
+       so inner paragraph spacing remains intact. */
+  :scope :where(*):not(p) > p:only-child {
+    margin: 0;
+  }
+
+  :scope qti-simple-choice > p:first-child {
+    margin-top: 0;
+  }
+
+  :scope qti-simple-choice > p:last-child {
+    margin-bottom: 0;
   }
 }

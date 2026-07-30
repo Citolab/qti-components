@@ -40,7 +40,8 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null",
+    "build": "tsc --paths null && pnpm run build:assets",
+    "build:assets": "mkdir -p dist/abstract && cp src/abstract/qti-expression.css dist/abstract/qti-expression.css",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
