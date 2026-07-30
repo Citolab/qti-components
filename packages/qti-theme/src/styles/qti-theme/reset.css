@@ -23,19 +23,21 @@
     height: auto;
   }
 
-  /* Normalize author markup paragraphs across QTI containers:
+  /* Normalize author markup paragraphs only in text-bearing QTI elements:
      - If a paragraph is the only child, remove all margins.
-     - In qti-simple-choice with multiple paragraphs, trim only outer margins
-       so inner paragraph spacing remains intact. */
-  :scope :where(*):not(p) > p:only-child {
+     - Keep this explicit allowlist to avoid resetting arbitrary wrapper markup. */
+  :scope
+    :is(
+      qti-prompt,
+      qti-simple-choice,
+      qti-associable-choice,
+      qti-simple-associable-choice,
+      qti-gap,
+      qti-gap-text,
+      qti-inline-choice,
+      qti-hottext
+    )
+    > p:only-of-type {
     margin: 0;
-  }
-
-  :scope qti-simple-choice > p:first-child {
-    margin-top: 0;
-  }
-
-  :scope qti-simple-choice > p:last-child {
-    margin-bottom: 0;
   }
 }

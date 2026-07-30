@@ -3,6 +3,8 @@
 	qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
 
 @import url('./reset.css') layer(qti-components.reset);
+/* Plain HTML author markup (tables, lists, rules). Sibling to reset.css, same @scope. */
+@import url('./prose.css');
 @import url('./qti-variables.css');
 @import url('./qti-mixins.css');
 @import url('./qti-interactions.css');
