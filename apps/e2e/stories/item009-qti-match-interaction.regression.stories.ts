@@ -2,6 +2,7 @@ import { html } from 'lit';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
+import { regressionLayout } from './regression-layout';
 import sourceXML from './fixtures/ITEM009.xml?raw';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -10,7 +11,8 @@ import './kennisnet.css';
 
 const meta: Meta = {
   title: 'QTI Kennisnet/Regression',
-  tags: ['no-tests']
+  tags: ['no-tests'],
+  decorators: [regressionLayout]
 };
 
 export default meta;

@@ -41,3 +41,49 @@
     --drag-box-shadow: inset var(--qti-placeholder-shadow);
   }
 }
+
+/*
+ * Regression story scaffolding.
+ *
+ * Deliberately unlayered: this is story chrome, not part of the item paint contract, and it must
+ * win over item.css without having to pick a layer position.
+ *
+ * `--regression-item-width` is the shared measure. The item renders at exactly this width in BOTH
+ * repos so a qti-components story and a qti-editor story can be compared side by side. This file is
+ * kept byte-identical in qti-components/apps/e2e/stories/kennisnet.css and
+ * qti-editor/apps/e2e/stories/kennisnet.css — change the value in both or the comparison is void.
+ *
+ * `.regression-layout` is only used by qti-editor (qti-components has no attributes panel); it is
+ * defined here anyway so the two files stay identical.
+ */
+:root {
+  --regression-item-width: 800px;
+  --regression-panel-width: 320px;
+}
+
+.regression-item {
+  max-width: var(--regression-item-width);
+}
+
+.regression-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+/*
+ * The panel <aside> is FIRST in the DOM on purpose: its `ref` callback has to capture the element
+ * before the editor's `ref` runs and mounts against it. `order` puts it back on the right visually,
+ * so DOM order stays load-bearing and paint order stays what was asked for.
+ */
+.regression-layout > .regression-item {
+  order: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.regression-layout > .regression-panel {
+  order: 1;
+  flex: 0 0 auto;
+  width: var(--regression-panel-width);
+}

@@ -2,7 +2,8 @@ import { html } from 'lit';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import sourceXML from './fixtures/ITEM008.xml?raw';
+import { regressionLayout } from './regression-layout';
+import sourceXML from './fixtures/ITEM006.xml?raw';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -10,13 +11,14 @@ import './kennisnet.css';
 
 const meta: Meta = {
   title: 'QTI Kennisnet/Regression',
-  tags: ['no-tests']
+  tags: ['no-tests'],
+  decorators: [regressionLayout]
 };
 
 export default meta;
 type Story = StoryObj;
 
-export const RoundtripItem008: Story = {
+export const RoundtripItem006: Story = {
   render: (_args, context) => {
     const item = context.loaded.itemHtmlDoc.firstElementChild;
     return html`${item}`;
