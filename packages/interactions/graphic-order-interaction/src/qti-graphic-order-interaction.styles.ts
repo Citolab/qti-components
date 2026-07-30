@@ -8,6 +8,8 @@ export default [
   css`
     /* The order pins are anchored outside their hotspot's box. */
     :host {
+      /* The box this element already had. See the note in qti-match-interaction.styles.ts. */
+      display: block;
       overflow: visible;
     }
 

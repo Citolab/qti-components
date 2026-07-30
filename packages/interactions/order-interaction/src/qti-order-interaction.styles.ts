@@ -24,6 +24,11 @@ export default [
   validationMessage,
   dropRegion,
   css`
+    /* The box this element already had. See the note in qti-match-interaction.styles.ts. */
+    :host {
+      display: block;
+    }
+
     [part='drags'] {
       display: flex;
       align-items: flex-start;

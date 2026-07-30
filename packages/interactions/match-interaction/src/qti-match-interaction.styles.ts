@@ -8,6 +8,18 @@ export default [
   boxSizing,
   validationMessage,
   css`
+    /*
+     * A custom element is inline unless it says otherwise, and this one never did. Its shadow content
+     * is block-level, so block-in-inline generated the anonymous block boxes and it looked correct —
+     * but an inline box whose children are all block has no background area of its own, so the host
+     * could not be painted, outlined or given a radius by anything downstream. Declaring the box the
+     * element already had is layout-neutral: measured on ITEM009, the element rect and the following
+     * sibling's position are identical to the pixel with and without this.
+     */
+    :host {
+      display: block;
+    }
+
     slot:not([hidden]) {
       /* slot where the */
       display: flex;
