@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM010"
+                     title="Matrixvraag"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="directedPair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>evenaar juist</qti-value>
+            <qti-value>helium juist</qti-value>
+            <qti-value>pluto onjuist</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0">
+            <qti-map-entry map-key="evenaar juist" mapped-value="1"/>
+            <qti-map-entry map-key="helium juist" mapped-value="1"/>
+            <qti-map-entry map-key="pluto onjuist" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col10">
+                <p>Geef voor elk van de onderstaande stellingen aan of ze juist of onjuist zijn.</p>
+                <qti-match-interaction response-identifier="RESPONSE" class="qti-match-tabular">
+                    <qti-simple-match-set>
+                        <qti-simple-associable-choice identifier="evenaar" match-max="1">De evenaar loopt door drie continenten</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="helium" match-max="1">Helium is lichter dan lucht</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="pluto" match-max="1">Pluto wordt officieel beschouwd als een planeet</qti-simple-associable-choice>
+                    </qti-simple-match-set>
+                    <qti-simple-match-set>
+                        <qti-simple-associable-choice identifier="juist" match-max="3">Juist</qti-simple-associable-choice>
+                        <qti-simple-associable-choice identifier="onjuist" match-max="3">Onjuist</qti-simple-associable-choice>
+                    </qti-simple-match-set>
+                </qti-match-interaction>
+            </div>
+            <div class="qti-layout-col2">
+                <img src="resources/question-marks.png" alt="Vragen" width="130" />
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <table>
+                    <thead>
+                    <tr><th>Stelling</th><th>Antwoord</th><th>Toelichting</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>Evenaar door drie continenten</td><td>Juist</td><td>Zuid-Amerika, Afrika, Azië</td></tr>
+                    <tr><td>Helium is lichter dan lucht</td><td>Juist</td><td>Helium heeft een lagere dichtheid dan lucht</td></tr>
+                    <tr><td>Pluto officieel planeet</td><td>Onjuist</td><td>Pluto is sinds 2006 geclassificeerd als dwergplaneet</td></tr>
+                    </tbody>
+                </table>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

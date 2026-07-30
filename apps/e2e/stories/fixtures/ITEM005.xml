@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM005"
+                     title="Open tekstvraag"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="string" cardinality="single"/>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <img src="resources/solarpark-wind-park.jpg" alt="Wereldkaart" width="100%" />
+
+            <p>
+                Leg in 3–5 zinnen uit waarom veel landen overstappen op een mix van zonne- en windenergie in plaats van op één enkele bron te vertrouwen.
+            </p>
+            <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="5"/>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Beoordelingscriteria (controle):</p>
+                <ul>
+                    <li>Antwoord noemt minstens twee rationale factoren (bijv. variatie in opbrengst, leveringszekerheid, kosten, netstabiliteit).</li>
+                    <li>Toelichting waarom mix betrouwbaarder is.</li>
+                    <li>Begrijpelijke argumentatie.</li>
+                </ul>
+                <p>Opmerking: handmatige beoordeling vereist; automatische scoring is niet geconfigureerd.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+</qti-assessment-item>

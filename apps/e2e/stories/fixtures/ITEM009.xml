@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM009"
+                     title="Sleepvraag – meerdere antwoorden per categorie"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="directedPair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>enzym biologie</qti-value>
+            <qti-value>mitochondrion biologie</qti-value>
+            <qti-value>isotoop scheikunde</qti-value>
+            <qti-value>katalysator scheikunde</qti-value>
+            <qti-value>molmassa scheikunde</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0">
+            <qti-map-entry map-key="enzym biologie" mapped-value="1"/>
+            <qti-map-entry map-key="mitochondrion biologie" mapped-value="1"/>
+            <qti-map-entry map-key="isotoop scheikunde" mapped-value="1"/>
+            <qti-map-entry map-key="katalysator scheikunde" mapped-value="1"/>
+            <qti-map-entry map-key="molmassa scheikunde" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>5</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <p>Sleep de onderstaande begrippen naar het juiste vak: <strong>Biologie</strong> of <strong>Scheikunde</strong>.</p>
+            <qti-match-interaction response-identifier="RESPONSE">
+                <qti-simple-match-set>
+                    <qti-simple-associable-choice identifier="enzym" match-max="1">enzym</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="isotoop" match-max="1">isotoop</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="katalysator" match-max="1">katalysator</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="mitochondrion" match-max="1">mitochondrion</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="molmassa" match-max="1">molmassa</qti-simple-associable-choice>
+                </qti-simple-match-set>
+                <qti-simple-match-set>
+                    <qti-simple-associable-choice identifier="biologie" match-max="5">Biologie</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="scheikunde" match-max="5">Scheikunde</qti-simple-associable-choice>
+                </qti-simple-match-set>
+            </qti-match-interaction>
+
+            <img src="resources/physics-chemistry.png" alt="Natuur- en scheikunde" />
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Biologie: enzym, mitochondrion</li>
+                    <li>Scheikunde: isotoop, katalysator, molmassa</li>
+                </ul>
+                <p>Toelichting: een katalysator komt ook in biologie voor, maar als algemeen begrip past het primair bij chemie.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

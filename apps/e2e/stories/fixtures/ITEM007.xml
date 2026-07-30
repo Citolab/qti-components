@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM007"
+                     title="Sleepvraag - opties boven"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="directedPair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>left_vermogen right_watt</qti-value>
+            <qti-value>left_druk right_pascal</qti-value>
+            <qti-value>left_frequentie right_hertz</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0">
+            <qti-map-entry map-key="left_vermogen right_watt" mapped-value="1"/>
+            <qti-map-entry map-key="left_druk right_pascal" mapped-value="1"/>
+            <qti-map-entry map-key="left_frequentie right_hertz" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <p>Koppel het natuurkundige verschijnsel aan de juiste eenheid:</p>
+            <qti-match-interaction response-identifier="RESPONSE">
+                <qti-simple-match-set>
+                    <qti-simple-associable-choice identifier="left_vermogen" match-max="1">Vermogen</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="left_druk" match-max="1">Druk</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="left_frequentie" match-max="1">Frequentie</qti-simple-associable-choice>
+                </qti-simple-match-set>
+                <qti-simple-match-set>
+                    <qti-simple-associable-choice identifier="right_watt" match-max="1">watt (W)</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="right_pascal" match-max="1">pascal (Pa)</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="right_hertz" match-max="1">hertz (Hz)</qti-simple-associable-choice>
+                </qti-simple-match-set>
+            </qti-match-interaction>
+
+            <img src="resources/icons-physics.png" alt="Eenheden" />
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Vermogen → watt (W)</li>
+                    <li>Druk → pascal (Pa)</li>
+                    <li>Frequentie → hertz (Hz)</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>
