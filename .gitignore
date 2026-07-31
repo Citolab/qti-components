@@ -54,3 +54,7 @@ packages/qti-components/tsup.config.bundled_z3j43jv4ey.mjs
 
 # @pwrs/cem intermediate output (filtered into custom-elements.interactions.json)
 custom-elements.interactions.raw.json
+
+# Personal VS Code workspace file. Was tracked; untracked deliberately, since it holds one
+# developer's folder layout and settings rather than anything the project needs.
+QTI-Components.code-workspace
