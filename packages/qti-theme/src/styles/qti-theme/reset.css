@@ -18,9 +18,13 @@
     font: inherit;
   }
 
-  img:not([width]) {
+  img {
     max-width: 100%;
     height: auto;
+  }
+
+  [response-identifier] img {
+    max-width: none;
   }
 
   /* Normalize author markup paragraphs only in text-bearing QTI elements:

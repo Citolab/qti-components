@@ -7,6 +7,8 @@ export default [
   css`
     :host {
       display: block;
+      margin: var(--qti-gap) 0;
+      width: 100%;
     }
   `
 ];
