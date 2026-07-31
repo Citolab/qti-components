@@ -5,6 +5,7 @@ import { consume } from '@lit/context';
 import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
+import { MenuAutoSizeMixin } from '@qti-components/interactions-core/mixins/menu-auto-size';
 
 import styles from './qti-inline-choice-interaction.styles.js';
 
@@ -47,7 +48,7 @@ let inlineChoiceMenuCounter = 0;
  * @csspart option-content - The content wrapper inside each option.
  * @csspart correct-option - Overlay shown when displaying the correct response.
  */
-export class QtiInlineChoiceInteraction extends Interaction {
+export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   constructor() {
     super();
     this.internals.role = 'listbox';
@@ -198,12 +199,13 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this.#updateOptions();
     this.#startSlotObserver();
 
-    // Simple width estimation - no recalculation needed
+    // First measurement, once the trigger and menu exist to be measured. After this the mixin's
+    // ResizeObserver keeps the width current on its own.
     await this.updateComplete;
 
     if (!this.isConnected) return;
 
-    this.#estimateOptimalWidth();
+    this.updateMenuWidth();
   }
 
   override disconnectedCallback() {
@@ -268,52 +270,34 @@ export class QtiInlineChoiceInteraction extends Interaction {
     this._pendingResponse = undefined;
     this.#syncSlottedChoices();
 
-    // Simple width estimation based on content length
-    this.#estimateOptimalWidth();
+    this.updateMenuWidth();
   }
 
-  #estimateOptimalWidth() {
-    // Autosizing is opt-in via configContext.inlineChoiceAutosize (default: off).
-    if (!this.configContext?.inlineChoiceAutosize) return;
+  /**
+   * Autosizing is opt-in through `configContext.inlineChoiceAutosize`, and an explicit
+   * `qti-input-width-*` class always wins.
+   *
+   * That second check has to live here rather than in CSS: the measurement is written as an inline
+   * style on the trigger, and the width classes set the same property on `:host`, so the cascade
+   * would hand it to the measurement every time. Not writing at all is what makes the class win.
+   */
+  public override shouldAutoSizeMenu(): boolean {
+    if (!this.configContext?.inlineChoiceAutosize) return false;
+    return !Array.from(this.classList).some(c => c.startsWith('qti-input-width-'));
+  }
 
-    // If a qti-input-width-* class is present, CSS already sets --qti-inline-choice-width;
-    // let the class win and skip measurement entirely.
-    if (Array.from(this.classList).some(c => c.startsWith('qti-input-width-'))) return;
-
-    const menu = this.#menuElement();
-    const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
-
-    if (!menu || !trigger || !this.isConnected) return;
-
-    // Find dropdown icon element inside the trigger
-    const dropdownIcon = trigger.querySelector<HTMLElement>('span[part~="dropdown-icon"]');
-    const iconWidth = dropdownIcon ? dropdownIcon.getBoundingClientRect().width : 0;
-
-    // Save current popover state and style
-    const wasOpen = menu.matches(':popover-open');
-    const prevVisibility = menu.style.visibility;
-    const prevDisplay = menu.style.display;
-
-    // Open the menu invisibly for measurement
-    if (!wasOpen) {
-      menu.style.visibility = 'hidden';
-      menu.style.display = 'block';
-      menu.showPopover();
-    }
-
-    // Measure width
-    const rectWidth = menu.getBoundingClientRect().width;
-    const widthPx = Math.max(rectWidth, menu.scrollWidth);
-
-    // Restore menu state and style
-    if (!wasOpen) {
-      menu.hidePopover();
-      menu.style.visibility = prevVisibility;
-      menu.style.display = prevDisplay;
-    }
-
-    // Set via CSS variable so theming layers can still override it.
-    this.style.setProperty('--qti-inline-choice-width', `${widthPx + iconWidth}px`);
+  /**
+   * The chevron sits in the trigger and not in the menu, so the menu never measures it.
+   *
+   * `offsetWidth`, NOT `getBoundingClientRect().width`: the icon rotates when the menu opens, and a
+   * client rect reports the TRANSFORMED box — so a chevron caught mid-rotation measures wider than
+   * it is, and the trigger grew and shrank by a few pixels on every open. offsetWidth is the layout
+   * box and ignores the transform. (Same trap the drag-drop clone code documents for a chip picked
+   * up mid-animation.)
+   */
+  public override menuAutoSizeExtraWidth(): number {
+    const icon = this.renderRoot.querySelector<HTMLElement>('span[part~="dropdown-icon"]');
+    return icon?.offsetWidth ?? 0;
   }
 
   public validate(): boolean {
@@ -409,6 +393,13 @@ export class QtiInlineChoiceInteraction extends Interaction {
     if (this._dropdownOpen !== open) {
       this._dropdownOpen = open;
     }
+    // Published as a custom state so the theme can paint the open control — it squares the corners
+    // where the trigger meets the menu. `_dropdownOpen` is a Lit @state and reaches no selector; a
+    // custom state is the same opt-in the theme already uses for :state(disabled) / :state(readonly)
+    // on this element. Not an attribute: a host whose mutation observer polices attributes (the
+    // ProseMirror editor) cannot take one.
+    if (open) this._internals.states.add('open');
+    else this._internals.states.delete('open');
   };
 
   #onCustomMenuKeyDown = (event: KeyboardEvent) => {

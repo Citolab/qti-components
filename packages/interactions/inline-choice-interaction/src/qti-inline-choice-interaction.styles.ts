@@ -11,15 +11,36 @@ const own = css`
        set by autosizing JS (inlineChoiceAutosize) → trigger matches widest option
   */
   :host {
+    /*
+     * The menu anchors to the HOST, not to the trigger inside it.
+     *
+     * The host is the box that paints the field border (@mixin field in the theme); the trigger is
+     * transparent and border-less and therefore sits one border-width in on every side. Anchoring to
+     * the trigger lined the menu up with that inner box, so the open control was 1px narrower than
+     * the closed one on each side — measured: host 96.38→465.80, menu 97.38→464.80. Anchoring to the
+     * host lines the menu up with the edge you can actually see.
+     */
+    anchor-name: --qti-inline-choice-anchor;
+
     display: inline-flex;
     align-items: center;
     vertical-align: baseline;
     position: relative;
     --qti-inline-choice-width: 0;
-    --qti-inline-choice-trigger-gap: calc(var(--qti-gap) / 2);
-    --qti-inline-choice-overlay-z-index: var(--qti-overlay-z-index);
-    --qti-inline-choice-popover-z-index: var(--qti-popover-z-index);
-    --qti-inline-choice-motion-duration-fast: var(--qti-motion-duration-fast);
+    /*
+     * Four component-local tokens used to sit here and all four are gone.
+     *
+     * Three were pure aliases — --qti-inline-choice-overlay-z-index, -popover-z-index and
+     * -motion-duration-fast each held nothing but var() of the global token of the same meaning,
+     * were read exactly once, and were reachable from nowhere else. A second name for one value is
+     * not an override surface; a theme retunes --qti-overlay-z-index and every reader follows.
+     *
+     * The fourth, --qti-inline-choice-trigger-gap, was calc(var(--qti-gap) / 2) — the arithmetic
+     * the spacing vocabulary explicitly rules out: "a call site that needs half of a gap is
+     * describing a fourth value that does not exist in the vocabulary, and the answer is to pick the
+     * nearest of the three, not to do arithmetic" (qti-variables.css). The nearest is --qti-gap,
+     * which is what the trigger spends now.
+     */
   }
 
   /* ── QTI mandatory input-width shared vocabulary (16 values) ─────────────── */
@@ -77,11 +98,10 @@ const own = css`
     display: inline-grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    column-gap: var(--qti-inline-choice-trigger-gap);
+    column-gap: var(--qti-glyph-gap);
     box-sizing: border-box;
     min-width: var(--qti-inline-choice-width);
     vertical-align: baseline;
-    anchor-name: --qti-inline-choice-trigger;
   }
 
   [part='value'] {
@@ -104,7 +124,7 @@ const own = css`
     background-color: currentColor;
     mask: var(--qti-chevron-mask) no-repeat center / contain;
     -webkit-mask: var(--qti-chevron-mask) no-repeat center / contain;
-    transition: transform var(--qti-inline-choice-motion-duration-fast) ease;
+    transition: transform var(--qti-motion-duration-fast) ease;
     transform-origin: center;
   }
 
@@ -114,10 +134,10 @@ const own = css`
 
   /* ── Popover menu — anchor positioning only, all paint in the theme ──────── */
   [part='menu'] {
-    position-anchor: --qti-inline-choice-trigger;
+    position-anchor: --qti-inline-choice-anchor;
     inset: auto;
     margin: 0;
-    z-index: var(--qti-inline-choice-popover-z-index);
+    z-index: var(--qti-popover-z-index);
     top: anchor(bottom);
     left: anchor(left);
     min-width: anchor-size(width);
@@ -163,7 +183,7 @@ const own = css`
     position: absolute;
     inset-block-start: 100%;
     inset-inline-start: 0;
-    z-index: var(--qti-inline-choice-overlay-z-index);
+    z-index: var(--qti-overlay-z-index);
     white-space: nowrap;
   }
 `;

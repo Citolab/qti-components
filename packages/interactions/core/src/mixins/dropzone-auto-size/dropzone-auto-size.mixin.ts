@@ -79,6 +79,8 @@ export const DropzoneAutoSizeMixin = <T extends Constructor<LitElement>>(
 
     #resizeObserver: ResizeObserver | null = null;
     #observed = new Set<Element>();
+    #contentObserver: MutationObserver | null = null;
+    #pendingFrame = 0;
     /**
      * The last values written, so a measurement that changed nothing writes nothing.
      *
@@ -128,6 +130,46 @@ export const DropzoneAutoSizeMixin = <T extends Constructor<LitElement>>(
       });
 
       this.#observeDraggables(draggables);
+      this.#observeContent();
+    }
+
+    /**
+     * Re-measure when the CHIPS THEMSELVES change — one added, removed, or its text edited.
+     *
+     * The ResizeObserver below cannot see any of that. It only knows the chips it was handed on the
+     * last pass, so a chip that did not exist then is not observed, and nothing brings it to
+     * attention. In a delivered item that barely matters — the set is fixed by the markup. In an
+     * editor it is the normal case: an author adds a drag by pressing Enter, and types into it.
+     *
+     * `characterData` and `subtree` as well as `childList`, so editing the text of an existing chip
+     * counts and not only adding one.
+     *
+     * This cannot feed itself: it observes the light DOM under this element, and the measurements
+     * are written to `dropzonePropertyTarget()` — the host's own style in the runtime, a shadow node
+     * in the editor. A MutationObserver does not cross into a shadow root, and a host's `style`
+     * attribute is not in its own observed subtree.
+     *
+     * Coalesced to one measurement per frame: both observers can fire for the same edit, and a
+     * measurement forces layout.
+     *
+     * Caveat worth knowing: this measures whatever `collectAutoSizeTargets()` returns. The drag-drop
+     * stack overrides that with its cached lists, which a bare DOM insertion does not refresh — so
+     * there a brand-new chip is measured on the next pass that re-caches, not on this one. A host
+     * using the default, query-based implementation (the editor) always sees the current DOM.
+     */
+    #observeContent(): void {
+      if (typeof MutationObserver === 'undefined' || this.#contentObserver) return;
+
+      this.#contentObserver = new MutationObserver(() => this.#scheduleMeasure());
+      this.#contentObserver.observe(this, { childList: true, subtree: true, characterData: true });
+    }
+
+    #scheduleMeasure(): void {
+      if (this.#pendingFrame) return;
+      this.#pendingFrame = requestAnimationFrame(() => {
+        this.#pendingFrame = 0;
+        this.updateMinDimensionsForDropZones();
+      });
     }
 
     /**
@@ -137,7 +179,7 @@ export const DropzoneAutoSizeMixin = <T extends Constructor<LitElement>>(
     #observeDraggables(draggables: HTMLElement[]): void {
       if (typeof ResizeObserver === 'undefined') return;
 
-      this.#resizeObserver ??= new ResizeObserver(() => this.updateMinDimensionsForDropZones());
+      this.#resizeObserver ??= new ResizeObserver(() => this.#scheduleMeasure());
 
       const next = new Set<Element>(draggables);
       for (const el of this.#observed) {
@@ -153,6 +195,10 @@ export const DropzoneAutoSizeMixin = <T extends Constructor<LitElement>>(
       this.#resizeObserver?.disconnect();
       this.#resizeObserver = null;
       this.#observed.clear();
+      this.#contentObserver?.disconnect();
+      this.#contentObserver = null;
+      if (this.#pendingFrame) cancelAnimationFrame(this.#pendingFrame);
+      this.#pendingFrame = 0;
       // Not the written values: a re-connected element re-measures anyway, and clearing them would
       // only make the first pass after a move write properties that are already correct.
       super.disconnectedCallback();

@@ -363,8 +363,11 @@ export const WithConfigContexEmpty: Story = {
 /**
  * Autosizing is opt-in through `configContext.inlineChoiceAutosize`. With it off (the default) the
  * trigger keeps the theme's base width and a long option is clipped to it; with it on the component
- * measures the widest option once and writes the result to `--qti-inline-choice-width` as an inline
- * style, so the closed trigger is already wide enough for whatever the candidate picks.
+ * measures the widest option and writes the result to `--qti-inline-choice-width` as an inline style
+ * ON THE TRIGGER, inside the shadow root, so the closed trigger is already wide enough for whatever
+ * the candidate picks. The property is written there rather than on the host so the same mixin works
+ * in a ProseMirror document, where an attribute on a light-DOM node is reverted — see
+ * MenuAutoSizeMixin.
  *
  * The config is supplied declaratively with `<qti-config-test-provider>` rather than assigned in
  * `play`, and that matters here: the measurement runs from `connectedCallback`, so a context set
@@ -407,13 +410,21 @@ export const AutosizeViaConfigContext: Story = {
     await plain.updateComplete;
     await autosized.updateComplete;
 
+    // The measured width lands on the trigger in the shadow root, not on the host.
+    const triggerOf = (el: QtiInlineChoiceInteraction) =>
+      el.shadowRoot?.querySelector<HTMLElement>('button[part="trigger"]');
+
     await step('Autosized interaction publishes a measured --qti-inline-choice-width', async () => {
-      const measured = autosized.style.getPropertyValue('--qti-inline-choice-width');
-      expect(measured).toMatch(/^\d+(\.\d+)?px$/);
-      expect(parseFloat(measured)).toBeGreaterThan(0);
+      await waitFor(() => {
+        const measured = triggerOf(autosized)?.style.getPropertyValue('--qti-inline-choice-width') ?? '';
+        expect(measured).toMatch(/^\d+(\.\d+)?px$/);
+        expect(parseFloat(measured)).toBeGreaterThan(0);
+      });
     });
 
     await step('Interaction without the config keeps the width unset', async () => {
+      expect(triggerOf(plain)?.style.getPropertyValue('--qti-inline-choice-width') ?? '').toBe('');
+      // and nothing is written to the host either, by anyone
       expect(plain.style.getPropertyValue('--qti-inline-choice-width')).toBe('');
     });
 
@@ -456,6 +467,11 @@ export const AutosizeYieldsToWidthClass: Story = {
     await classed.updateComplete;
 
     await step('No inline width is written when a width class is present', async () => {
+      // On the trigger, which is where a measurement would land and where it would out-rank the
+      // :host(.qti-input-width-5) rule if one were ever written. Skipping the measurement is what
+      // makes the class win; see QtiInlineChoiceInteraction.shouldAutoSizeMenu.
+      const trigger = classed.shadowRoot?.querySelector<HTMLElement>('button[part="trigger"]');
+      expect(trigger?.style.getPropertyValue('--qti-inline-choice-width') ?? '').toBe('');
       expect(classed.style.getPropertyValue('--qti-inline-choice-width')).toBe('');
     });
   }
