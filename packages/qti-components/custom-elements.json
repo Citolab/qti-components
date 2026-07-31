@@ -1314,7 +1314,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -5194,6 +5195,22 @@
             "name": "*",
             "module": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/interactions/core/src/mixins/dropzone-auto-size"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/interactions/core/src/mixins/menu-auto-size"
+          }
         }
       ]
     },
@@ -6888,16 +6905,6 @@
               "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties."
             },
             {
-              "kind": "field",
-              "name": "autoSizeDropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "attribute": "auto-size-dropzones"
-            },
-            {
               "kind": "method",
               "name": "checkAllMaxAssociations",
               "privacy": "private",
@@ -6945,13 +6952,10 @@
               ]
             },
             {
-              "kind": "field",
-              "name": "configuration",
-              "type": {
-                "text": "InteractionConfiguration"
-              },
-              "privacy": "protected",
-              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }"
+              "kind": "method",
+              "name": "collectAutoSizeTargets",
+              "privacy": "public",
+              "description": "Measure what the drag-drop machinery already tracks, rather than re-querying.\n\n`cacheInteractiveElements()` resolves the same three selectors and then adds what a plain\nquery cannot see — drag clones, and chips registered through `context-request` from a shadow\nroot one level deeper. Re-querying would give the auto-sizer a smaller set than the one the\ndrops are actually built from, so the widest chip could be missed."
             },
             {
               "kind": "field",
@@ -7008,7 +7012,8 @@
                     "text": "HTMLElement"
                   }
                 }
-              ]
+              ],
+              "description": "Is this drop target full?\n\n`match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:\nthe value is per-target (\"match-max on the characters … is 1 because each character can be in\nonly one play but it is 4 on the plays … because each play could contain all the characters\",\nQTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it\nout: \"Non-negative integer, 0 means unlimited\").\n\nThe `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on\n`qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that\nomits a required attribute, chosen as 1 because a drop that takes one chip is the least\nsurprising reading of \"unspecified\". Same for the NaN guard."
             },
             {
               "kind": "method",
@@ -7482,16 +7487,6 @@
             },
             {
               "kind": "method",
-              "name": "updateMinDimensionsForDropZones",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
               "name": "validate",
               "privacy": "public",
               "return": {
@@ -7510,14 +7505,6 @@
             }
           ],
           "attributes": [
-            {
-              "name": "auto-size-dropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "autoSizeDropzones"
-            },
             {
               "name": "disable-animations",
               "type": {
@@ -8195,6 +8182,30 @@
         },
         {
           "kind": "js",
+          "name": "DropzoneAutoSize",
+          "declaration": {
+            "name": "DropzoneAutoSize",
+            "module": "../dropzone-auto-size/dropzone-auto-size.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropzoneAutoSizeMixin",
+          "declaration": {
+            "name": "DropzoneAutoSizeMixin",
+            "module": "../dropzone-auto-size/dropzone-auto-size.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropzoneAutoSizeTargets",
+          "declaration": {
+            "name": "DropzoneAutoSizeTargets",
+            "module": "../dropzone-auto-size/dropzone-auto-size.mixin"
+          }
+        },
+        {
+          "kind": "js",
           "name": "finalizeSortableDrop",
           "declaration": {
             "name": "finalizeSortableDrop",
@@ -8813,14 +8824,14 @@
               }
             },
             {
-              "name": "hostWindow",
-              "default": "typeof window !== 'undefined' ? window : null",
+              "name": "options",
+              "default": "{}",
               "type": {
-                "text": "Window | null"
+                "text": "{\n    hostWindow?: Window | null;\n    /**\n     * Called with the measurement before anything is written; return false to skip the write.\n     * `DropzoneAutoSizeMixin` uses it to suppress a no-op write, which is what keeps its\n     * `ResizeObserver` from feeding itself.\n     */\n    hasChanged?: (measured: { height: number; width: number }) => boolean;\n  }"
               }
             }
           ],
-          "description": "Measure the chips and publish the result as custom properties on the interaction host.\n\nJavaScript owns the *measurement*; CSS owns the *properties*. Each droppable's stylesheet\nreads `min-height: var(--qti-dropzone-min-height, 0)` etc., so nothing is written to\n`element.style` and a theme can override any of them by setting the variable.\n\nThis also removes a precedence trap: when both `min-width` and `width` were written inline,\n`min-width` silently won, discarding an authored `data-choices-container-width`."
+          "description": "Measure the chips and publish the result as custom properties on the interaction host.\n\nJavaScript owns the *measurement*; CSS owns the *properties*. Each droppable's stylesheet\nreads `min-height: var(--qti-dropzone-min-height, 0)` etc., so nothing is written to\n`element.style` and a theme can override any of them by setting the variable.\n\nThis also removes a precedence trap: when both `min-width` and `width` were written inline,\n`min-width` silently won, discarding an authored `data-choices-container-width`.\n\nMeasurement only — no scheduling and no `this`. `DropzoneAutoSizeMixin` owns when this runs.\n\nA branch that wrote an inline `grid-template-columns` on the drops' container when the droppables\nwere `qti-simple-associable-choice` was deleted. It fired only for match, which had auto-sizing\noff, so it never ran; turning match's measurement on would have woken it, and it overrode\n`--qti-match-target-min-width` — the one responsive breakpoint `qti-match-interaction.styles.ts`\ndeliberately owns. It was also the one write here that could not work in the editor, where that\nparent is a ProseMirror-managed node."
         },
         {
           "kind": "function",
@@ -11440,6 +11451,454 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/interactions/core/src/mixins/dropzone-auto-size/dropzone-auto-size.mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Publishes `--qti-dropzone-min-height` / `--qti-dropzone-min-width` from the measured chips, and\nkeeps them up to date as the chips change size.\n\n── Why this is a mixin of its own ───────────────────────────────────────────────────────────\n\nIt used to be two members of `DragDropSlottedMixin`, reachable only by inheriting the whole\ndrag-drop stack. The editor needs exactly this and none of the rest: it renders the same\nelements, imports the same stylesheets — so its drops already read\n`min-height: var(--qti-dropzone-min-height, 0)` — but it does its own drag handling inside a\nProseMirror document. Splitting the measurement out means both sides run the same code instead of\nthe editor growing a parallel copy that drifts.\n\n── When it runs ─────────────────────────────────────────────────────────────────────────────\n\nOn mount, and then whenever a chip changes size. The second half is new: the only trigger used to\nbe `connectedCallback → setupDragDrop → afterCache`, so a chip that changed size after first paint\nnever re-measured and its drop stayed the wrong size. That bites an author typing into a chip in\nthe editor, and it bites a delivered item too — a late-loading image or a web-font swap does the\nsame thing.\n\nA `ResizeObserver` over the chips is the trigger, because it catches all three causes (text\nreflow, image load, font swap) in one mechanism. A `MutationObserver` would need\n`characterData: true` and would still miss the image. The dead legacy mixin at\n`mixins/drag-drop/drag-drop-interaction-mixin.ts` used both and still caught neither reliably.\n\n── Where the properties land ────────────────────────────────────────────────────────────────\n\nOn `dropzonePropertyTarget()`, which defaults to the host. Custom properties inherit down the flat\ntree, so any element that is an ancestor of the drops works — and the editor needs that, because\nwriting `style` on a ProseMirror-managed host is reverted by its mutation observer, and the revert\nre-triggers the observer that wrote it. There it returns a node inside the shadow root instead,\nwhich a mutation observer on the document cannot see.",
+          "name": "DropzoneAutoSizeMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#contentObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lastWritten",
+              "privacy": "private",
+              "type": {
+                "text": "{ height: number; width: number } | null"
+              },
+              "default": "null",
+              "description": "The last values written, so a measurement that changed nothing writes nothing.\n\nWithout this the observer feeds itself: setting a min-height changes layout, layout change\nfires the observer, and the browser reports `ResizeObserver loop limit exceeded`. The editor\nhas a note about a chatty observer causing exactly this in tabular match."
+            },
+            {
+              "kind": "method",
+              "name": "#observeContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-measure when the CHIPS THEMSELVES change — one added, removed, or its text edited.\n\nThe ResizeObserver below cannot see any of that. It only knows the chips it was handed on the\nlast pass, so a chip that did not exist then is not observed, and nothing brings it to\nattention. In a delivered item that barely matters — the set is fixed by the markup. In an\neditor it is the normal case: an author adds a drag by pressing Enter, and types into it.\n\n`characterData` and `subtree` as well as `childList`, so editing the text of an existing chip\ncounts and not only adding one.\n\nThis cannot feed itself: it observes the light DOM under this element, and the measurements\nare written to `dropzonePropertyTarget()` — the host's own style in the runtime, a shadow node\nin the editor. A MutationObserver does not cross into a shadow root, and a host's `style`\nattribute is not in its own observed subtree.\n\nCoalesced to one measurement per frame: both observers can fire for the same edit, and a\nmeasurement forces layout.\n\nCaveat worth knowing: this measures whatever `collectAutoSizeTargets()` returns. The drag-drop\nstack overrides that with its cached lists, which a bare DOM insertion does not refresh — so\nthere a brand-new chip is measured on the next pass that re-caches, not on this one. A host\nusing the default, query-based implementation (the editor) always sees the current DOM."
+            },
+            {
+              "kind": "field",
+              "name": "#observed",
+              "privacy": "private",
+              "default": "new Set<Element>()"
+            },
+            {
+              "kind": "method",
+              "name": "#observeDraggables",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "draggables",
+                  "type": {
+                    "text": "HTMLElement[]"
+                  }
+                }
+              ],
+              "description": "Watch the chips, not the drops. A drop's size is downstream of a chip's, so observing drops\nwould be observing this mixin's own output — the loop the `#lastWritten` guard also defends."
+            },
+            {
+              "kind": "field",
+              "name": "#pendingFrame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#resizeObserver",
+              "privacy": "private",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleMeasure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "auto-size-dropzones"
+            },
+            {
+              "kind": "method",
+              "name": "collectAutoSizeTargets",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "DropzoneAutoSizeTargets"
+                }
+              },
+              "description": "The elements to measure. Overridden by a host that already tracks them — the drag-drop stack\ncaches these on every `cacheInteractiveElements()`, and re-querying would be a second, slightly\ndifferent answer to the same question."
+            },
+            {
+              "kind": "method",
+              "name": "dropzonePropertyTarget",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              },
+              "description": "Where the measured custom properties are written. The host, unless a subclass says otherwise —\nsee the note on ProseMirror in this file's header."
+            },
+            {
+              "kind": "method",
+              "name": "updateMinDimensionsForDropZones",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "auto-size-dropzones",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "autoSizeDropzones"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "draggablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "droppablesSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "dragContainersSelector",
+              "default": "'slot[part=\"drags\"]'"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DropzoneAutoSizeMixin",
+          "declaration": {
+            "name": "DropzoneAutoSizeMixin",
+            "module": "packages/interactions/core/src/mixins/dropzone-auto-size/dropzone-auto-size.mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/mixins/dropzone-auto-size/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DropzoneAutoSize",
+          "declaration": {
+            "name": "DropzoneAutoSize",
+            "module": "./dropzone-auto-size.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropzoneAutoSizeMixin",
+          "declaration": {
+            "name": "DropzoneAutoSizeMixin",
+            "module": "./dropzone-auto-size.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DropzoneAutoSizeTargets",
+          "declaration": {
+            "name": "DropzoneAutoSizeTargets",
+            "module": "./dropzone-auto-size.mixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/mixins/menu-auto-size/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MenuAutoSize",
+          "declaration": {
+            "name": "MenuAutoSize",
+            "module": "./menu-auto-size.mixin"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MenuAutoSizeMixin",
+          "declaration": {
+            "name": "MenuAutoSizeMixin",
+            "module": "./menu-auto-size.mixin"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts",
+      "declarations": [
+        {
+          "kind": "mixin",
+          "description": "Sizes a closed combobox to the widest thing in its menu.\n\nA dropdown that is only as wide as the option currently showing jumps every time the candidate\npicks a longer one, and in running prose that reflows the sentence around it. Measuring the menu\nonce and giving the trigger that width as a floor makes the control a constant box.\n\n── Why this is a mixin ──────────────────────────────────────────────────────────────────────\n\nSame reason as `DropzoneAutoSizeMixin`, which this deliberately mirrors: the editor renders the\nsame control and wants the same behaviour, but does its own everything-else. It used to be two\nprivate methods on `qti-inline-choice-interaction`, so the editor's copy was commented out and\nrotting (`#estimateOptimalWidth`, disabled because it wrote to the host — see below).\n\n── Where the width is written ───────────────────────────────────────────────────────────────\n\nOn `menuAutoSizePropertyTarget()`, which defaults to the trigger INSIDE THE SHADOW ROOT — not on\nthe host, which is what the runtime used to do (`this.style.setProperty(...)`).\n\nThat is the whole reason the editor could not reuse it. `style` is an attribute, ProseMirror's\nmutation observer reverts any attribute its schema does not know, and the revert re-triggers the\nobserver that wrote it — a loop that hard-freezes the tab. A node inside a shadow root is\ninvisible to that observer, because MutationObserver does not cross shadow boundaries.\n\nWriting on the trigger rather than the host also happens to be the more honest target: the trigger\nis the element whose `min-width` reads the property. Nothing inherits it that should not.\n\n── Precedence ───────────────────────────────────────────────────────────────────────────────\n\nAn inline style on the trigger outranks the `:host(.qti-input-width-*)` rules that also set this\nproperty, so cascade order alone would let a measurement beat an author's explicit width class.\nIt does not, because the gate is in JS: `shouldAutoSizeMenu()` returns false when such a class is\npresent, and nothing is written at all. Keep that check there — do not try to express it in CSS.\n\n── When it re-measures ──────────────────────────────────────────────────────────────────────\n\nOn demand (the options changed), and whenever the menu changes size WHILE OPEN, via a\n`ResizeObserver`. Open is the condition that matters: a popover is `display: none` when closed, so\nthe observer also fires with a 0x0 box on every open and close, and acting on those would both\nwrite nonsense and feed itself. Reading only while open means the measurement pass below — which\nopens the menu invisibly — cannot loop: the one observation it provokes reports the size that was\njust written, and the changed-value guard drops it.",
+          "name": "MenuAutoSizeMixin",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#contentObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lastWritten",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Last width written, so an unchanged measurement writes nothing. See the observer note above."
+            },
+            {
+              "kind": "method",
+              "name": "#measure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "The width of the WIDEST ROW, plus whatever box the menu wraps around it. Opens the menu\ninvisibly if it is closed, because a closed popover has no layout to measure.\n\nPer row, deliberately, and NOT `width: max-content` on the menu as a whole. That was tried and\nis wrong here: the option rows are inline-level (`display: inline-flex`, see\nqti-inline-choice.styles.ts), so a max-content menu lays them all out ON ONE LINE and its\nintrinsic width becomes the SUM of every option. Measured on a two-option control: rows of\n53.33 and 283.91 gave a menu of 343.42 instead of 283.91, so the trigger came out ~60px too\nwide with a hole between the value and the chevron — and it would grow with every option\nadded. A row is only ever as wide as itself, so the max over rows is the number wanted.\n\nMeasuring rows rather than the menu box also removes the feedback loop for free. The menu is\nanchor-positioned with `min-width: anchor-size(width)`, i.e. never narrower than the trigger,\nso reading the MENU and writing the result back to the trigger is a cycle that grows by\n`menuAutoSizeExtraWidth()` on every pass — visibly, on every open, forever. A row does not\nread the trigger, so nothing here can feed itself."
+            },
+            {
+              "kind": "method",
+              "name": "#observeContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-measure when the OPTIONS themselves change — a row added, removed, or its text edited.\n\nThe ResizeObserver below cannot see any of that, because it only reads while the menu is open\nand a closed popover is `display: none`: no box, no resize, no signal. That is fine in the\nruntime, whose own slot observer rebuilds the options and calls updateMenuWidth() as part of\nit — and useless in an editor, where an author adds a row by pressing Enter with the menu shut.\nRelying on the host to remember is what left the editor's previous attempt at this dead.\n\n`characterData` as well as `childList`, so typing inside an existing option counts too, and\n`subtree` because an option's text is a descendant, not a child.\n\nCoalesced to one measurement per frame. Both observers can fire for the same edit, and a\nmeasurement forces layout — the write is already idempotent via #lastWritten, this keeps the\nreads down too."
+            },
+            {
+              "kind": "field",
+              "name": "#observedMenu",
+              "privacy": "private",
+              "type": {
+                "text": "Element | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#observeMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "menu",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#pendingFrame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#resizeObserver",
+              "privacy": "private",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleMeasure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "menuAutoSizeExtraWidth",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "Anything the trigger shows beside the option text, which the menu does not have and therefore\ndoes not contribute to the measurement — the dropdown chevron, in the shipped control."
+            },
+            {
+              "kind": "method",
+              "name": "menuAutoSizePropertyTarget",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "Where the measured width is written. Inside the shadow root — see the header."
+            },
+            {
+              "kind": "method",
+              "name": "menuAutoSizeRows",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "description": "The menu's rows, which is what actually gets measured — one at a time.\n\nFlat tree, so a `<slot>` is replaced by the elements assigned to it: in the shipped control the\nprompt is rendered in the shadow root and the author's options are slotted light DOM, and both\nare rows of the same list."
+            },
+            {
+              "kind": "method",
+              "name": "shouldAutoSizeMenu",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Opt in. Off by default, so mixing this in changes nothing until the host says so.\n\nThe host is also where the \"an explicit width class wins\" check belongs — see Precedence."
+            },
+            {
+              "kind": "method",
+              "name": "updateMenuWidth",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "withMenuMeasurable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "T"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "measure",
+                  "type": {
+                    "text": "() => T"
+                  }
+                }
+              ],
+              "description": "Make the rows measurable, run `measure`, and put everything back.\n\nA hook, because hosts hide their menu differently and a measurement needs layout. The default\ncovers the shipped control, whose menu is always in the DOM as a popover: open it invisibly if\nit is closed. A host that renders the menu ONLY while open — the editor does exactly that, so\nthere is no element to open — overrides this to reveal whatever it hides instead.\n\nSynchronous, deliberately: the browser does not paint between the reveal and the restore, so\nnothing flickers however the host implements it."
+            }
+          ],
+          "parameters": [
+            {
+              "name": "superClass",
+              "type": {
+                "text": "T"
+              }
+            },
+            {
+              "name": "menuSelector",
+              "default": "\"[part='menu']\""
+            },
+            {
+              "name": "triggerSelector",
+              "default": "\"[part='trigger']\""
+            },
+            {
+              "name": "customProperty",
+              "default": "'--qti-inline-choice-width'"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MenuAutoSizeMixin",
+          "declaration": {
+            "name": "MenuAutoSizeMixin",
+            "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/interactions/core/src/mixins/vocabulary/vocabulary-mixin.ts",
       "declarations": [
         {
@@ -11956,7 +12415,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12907,7 +13367,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14161,20 +14622,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "autoSizeDropzones",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true",
-              "attribute": "auto-size-dropzones",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "checkAllMaxAssociations",
               "privacy": "private",
@@ -14271,28 +14718,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "collectAutoSizeTargets",
+              "privacy": "public",
+              "description": "Measure what the drag-drop machinery already tracks, rather than re-querying.\n\n`cacheInteractiveElements()` resolves the same three selectors and then adds what a plain\nquery cannot see — drag clones, and chips registered through `context-request` from a shadow\nroot one level deeper. Re-querying would give the auto-sizer a smaller set than the one the\ndrops are actually built from, so the widest chip could be missed.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "collectAutoSizeTargets() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "configuration",
-              "type": {
-                "text": "InteractionConfiguration"
-              },
-              "privacy": "protected",
-              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -14373,6 +14821,7 @@
                   }
                 }
               ],
+              "description": "Is this drop target full?\n\n`match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:\nthe value is per-target (\"match-max on the characters … is 1 because each character can be in\nonly one play but it is 4 on the plays … because each play could contain all the characters\",\nQTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it\nout: \"Non-negative integer, 0 means unlimited\").\n\nThe `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on\n`qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that\nomits a required attribute, chosen as 1 because a drop that takes one chip is the least\nsurprising reading of \"unspecified\". Same for the NaN guard.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -15332,20 +15781,6 @@
             },
             {
               "kind": "method",
-              "name": "updateMinDimensionsForDropZones",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -15391,17 +15826,12 @@
           ],
           "attributes": [
             {
-              "name": "auto-size-dropzones",
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
-              "fieldName": "autoSizeDropzones",
-              "description": "Extension, not QTI. Sizes every gap to the widest chip so placement does not reflow the prose.",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
+              "description": "Extension, not QTI. Sizes every gap to the widest chip so placement does not reflow the prose. On by default: a gap is a slot, and a slot that is already the size of the chip it will hold does not resize when one lands in it.",
+              "name": "auto-size-dropzones",
+              "default": "true"
             },
             {
               "type": {
@@ -15827,7 +16257,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17456,7 +17887,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -18421,7 +18853,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -19319,7 +19752,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20069,6 +20503,19 @@
             },
             {
               "kind": "field",
+              "name": "#contentObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#didLogDisableAfterIfMaxChoicesReachedDeprecation",
               "privacy": "private",
               "type": {
@@ -20079,11 +20526,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "#estimateOptimalWidth",
-              "privacy": "private"
             },
             {
               "kind": "method",
@@ -20119,6 +20561,35 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastWritten",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "description": "Last width written, so an unchanged measurement writes nothing. See the observer note above.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#measure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "The width of the WIDEST ROW, plus whatever box the menu wraps around it. Opens the menu\ninvisibly if it is closed, because a closed popover has no layout to measure.\n\nPer row, deliberately, and NOT `width: max-content` on the menu as a whole. That was tried and\nis wrong here: the option rows are inline-level (`display: inline-flex`, see\nqti-inline-choice.styles.ts), so a max-content menu lays them all out ON ONE LINE and its\nintrinsic width becomes the SUM of every option. Measured on a two-option control: rows of\n53.33 and 283.91 gave a menu of 343.42 instead of 283.91, so the trigger came out ~60px too\nwide with a hole between the value and the chevron — and it would grow with every option\nadded. A row is only ever as wide as itself, so the max over rows is the number wanted.\n\nMeasuring rows rather than the menu box also removes the feedback loop for free. The menu is\nanchor-positioned with `min-width: anchor-size(width)`, i.e. never narrower than the trigger,\nso reading the MENU and writing the result back to the trigger is a cycle that grows by\n`menuAutoSizeExtraWidth()` on every pass — visibly, on every open, forever. A row does not\nread the trigger, so nothing here can feed itself.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#menuElement",
               "privacy": "private",
@@ -20126,6 +20597,56 @@
                 "type": {
                   "text": "HTMLElement | null"
                 }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#observeContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-measure when the OPTIONS themselves change — a row added, removed, or its text edited.\n\nThe ResizeObserver below cannot see any of that, because it only reads while the menu is open\nand a closed popover is `display: none`: no box, no resize, no signal. That is fine in the\nruntime, whose own slot observer rebuilds the options and calls updateMenuWidth() as part of\nit — and useless in an editor, where an author adds a row by pressing Enter with the menu shut.\nRelying on the host to remember is what left the editor's previous attempt at this dead.\n\n`characterData` as well as `childList`, so typing inside an existing option counts too, and\n`subtree` because an option's text is a descendant, not a child.\n\nCoalesced to one measurement per frame. Both observers can fire for the same edit, and a\nmeasurement forces layout — the write is already idempotent via #lastWritten, this keeps the\nreads down too.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#observedMenu",
+              "privacy": "private",
+              "type": {
+                "text": "Element | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#observeMenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "menu",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
               }
             },
             {
@@ -20157,6 +20678,46 @@
               "kind": "field",
               "name": "#onTriggerClick",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#pendingFrame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resizeObserver",
+              "privacy": "private",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleMeasure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              }
             },
             {
               "kind": "method",
@@ -20234,7 +20795,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20329,6 +20891,60 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "menuAutoSizeExtraWidth",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "description": "The chevron sits in the trigger and not in the menu, so the menu never measures it.\n\n`offsetWidth`, NOT `getBoundingClientRect().width`: the icon rotates when the menu opens, and a\nclient rect reports the TRANSFORMED box — so a chevron caught mid-rotation measures wider than\nit is, and the trigger grew and shrank by a few pixels on every open. offsetWidth is the layout\nbox and ignores the transform. (Same trap the drag-drop clone code documents for a chip picked\nup mid-animation.)",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              },
+              "type": {
+                "text": "menuAutoSizeExtraWidth() => number"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "menuAutoSizePropertyTarget",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "Where the measured width is written. Inside the shadow root — see the header.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              },
+              "type": {
+                "text": "menuAutoSizePropertyTarget() => HTMLElement | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "menuAutoSizeRows",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "description": "The menu's rows, which is what actually gets measured — one at a time.\n\nFlat tree, so a `<slot>` is replaced by the elements assigned to it: in the shipped control the\nprompt is rendered in the shadow root and the author's options are slotted light DOM, and both\nare rows of the same list.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              },
+              "type": {
+                "text": "menuAutoSizeRows() => HTMLElement[]"
               }
             },
             {
@@ -20630,6 +21246,24 @@
             },
             {
               "kind": "method",
+              "name": "shouldAutoSizeMenu",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Autosizing is opt-in through `configContext.inlineChoiceAutosize`, and an explicit\n`qti-input-width-*` class always wins.\n\nThat second check has to live here rather than in CSS: the measurement is written as an inline\nstyle on the trigger, and the width classes set the same property on `:host`, so the cascade\nwould hand it to the measurement every time. Not writing at all is what makes the class win.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              },
+              "type": {
+                "text": "shouldAutoSizeMenu() => boolean"
+              }
+            },
+            {
+              "kind": "method",
               "name": "updateInlineValidationMessage",
               "privacy": "protected",
               "return": {
@@ -20640,6 +21274,23 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateMenuWidth",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              },
+              "type": {
+                "text": "updateMenuWidth() => void"
               }
             },
             {
@@ -20684,6 +21335,32 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "withMenuMeasurable",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "T"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "measure",
+                  "type": {
+                    "text": "() => T"
+                  }
+                }
+              ],
+              "description": "Make the rows measurable, run `measure`, and put everything back.\n\nA hook, because hosts hide their menu differently and a measurement needs layout. The default\ncovers the shipped control, whose menu is always in the DOM as a popover: open it invisibly if\nit is closed. A host that renders the menu ONLY while open — the editor does exactly that, so\nthere is no element to open — overrides this to reveal whatever it hides instead.\n\nSynchronous, deliberately: the browser does not paint between the reveal and the restore, so\nnothing flickers however the host implements it.",
+              "inheritedFrom": {
+                "name": "MenuAutoSizeMixin",
+                "module": "packages/interactions/core/src/mixins/menu-auto-size/menu-auto-size.mixin.ts"
+              },
+              "type": {
+                "text": "withMenuMeasurable(measure: () => T) => T"
               }
             }
           ],
@@ -20772,6 +21449,12 @@
               "description": "Requests option shuffling. Applied by the transform pipeline (`qti-transformers`), not by this element.",
               "name": "shuffle",
               "default": "false"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "MenuAutoSizeMixin",
+              "package": "@qti-components/interactions-core/mixins/menu-auto-size"
             }
           ],
           "superclass": {
@@ -21458,12 +22141,7 @@
               },
               "privacy": "public",
               "default": "false",
-              "attribute": "auto-size-dropzones",
-              "description": "Match targets are categories, not slots. They should look able to hold several answers, so they\ntake the vendor floor (`--qti-drop-min-height`) rather than the size of the widest chip.",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
+              "description": "Match targets are categories, not slots. They should look able to hold several answers, so they\ntake a flat floor (the `--qti-dropzone-min-height` fallback) rather than the size of the widest chip.\n\nThis is a property of the INTERACTION, not of an individual target. A `match-max=\"1\"` target is\nstill a category that happens to take one answer, and it sits in a grid beside targets that take\nseveral — sizing each one to its own contents would make that grid ragged. So the whole\ninteraction opts out, and the per-target `match-max` decides nothing about size here.\n\nThe interactions where a drop IS a slot — gap-match, order, associate — keep measurement on, and\ntheir drops are exactly the widest chip plus the inset."
             },
             {
               "kind": "method",
@@ -21571,28 +22249,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "collectAutoSizeTargets",
+              "privacy": "public",
+              "description": "Measure what the drag-drop machinery already tracks, rather than re-querying.\n\n`cacheInteractiveElements()` resolves the same three selectors and then adds what a plain\nquery cannot see — drag clones, and chips registered through `context-request` from a shadow\nroot one level deeper. Re-querying would give the auto-sizer a smaller set than the one the\ndrops are actually built from, so the widest chip could be missed.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              },
+              "type": {
+                "text": "collectAutoSizeTargets() => void"
+              }
+            },
+            {
               "kind": "field",
               "name": "configContext",
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "configuration",
-              "type": {
-                "text": "InteractionConfiguration"
-              },
-              "privacy": "protected",
-              "default": "{ copyStylesDragClone: true, dragCanBePlacedBack: true, dragOnClick: false }",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
               }
             },
             {
@@ -21673,6 +22352,7 @@
                   }
                 }
               ],
+              "description": "Is this drop target full?\n\n`match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:\nthe value is per-target (\"match-max on the characters … is 1 because each character can be in\nonly one play but it is 4 on the plays … because each play could contain all the characters\",\nQTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it\nout: \"Non-negative integer, 0 means unlimited\").\n\nThe `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on\n`qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that\nomits a required attribute, chosen as 1 because a drop that takes one chip is the least\nsurprising reading of \"unspecified\". Same for the NaN guard.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -22692,20 +23372,6 @@
             },
             {
               "kind": "method",
-              "name": "updateMinDimensionsForDropZones",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "validate",
               "return": {
                 "type": {
@@ -22751,17 +23417,12 @@
           ],
           "attributes": [
             {
-              "name": "auto-size-dropzones",
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
-              "fieldName": "autoSizeDropzones",
-              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout.",
-              "inheritedFrom": {
-                "name": "DragDropSlottedMixin",
-                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
-              }
+              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout. The mixin default is `true`; this interaction is the one that overrides it to `false`, because a match target is a category card rather than a socket (see the field below and DROP-SIZING.md §1).",
+              "name": "auto-size-dropzones",
+              "default": "false"
             },
             {
               "type": {
@@ -23097,7 +23758,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24256,9 +24918,9 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout.",
+              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout. On by default: an order slot is a socket cut to one chip, and both axes are measured (see DROP-SIZING.md).",
               "name": "auto-size-dropzones",
-              "default": "false"
+              "default": "true"
             },
             {
               "type": {
@@ -24864,7 +25526,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26282,7 +26945,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28000,7 +28664,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28848,7 +29513,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -29554,7 +30220,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -30369,7 +31036,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected",
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing.",
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -30909,7 +31577,8 @@
               "type": {
                 "text": "ConfigContext"
               },
-              "privacy": "protected"
+              "privacy": "public",
+              "description": "Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted\n`qti-config-test-provider` wrapper.\n\n**Public so it can be assigned directly, which is the development-time route.** An interaction\nhas to work standalone, and in a story or a spec there is usually no provider above it — so\nsetting the field is all that is needed:\n\n    orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };\n\nWith no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a\nprovider DOES exist it re-emits on its next update and wins, because `@consume` writes this same\nfield. There is no merging — set the value on the provider in that case, or wrap the one\ninteraction in `qti-config-test-provider`, which is the sanctioned way to scope config to a\nsubtree.\n\nIt was `protected`, which fooled nobody: every caller reached it anyway through an\n`as any` / `as { configContext?: … }` cast. Public says what was already true and removes the\ncasts, rather than pretending at an encapsulation the type system was the only thing enforcing."
             },
             {
               "kind": "field",

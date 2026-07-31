@@ -53,6 +53,14 @@
       "types": "./dist/mixins/drag-drop-observables/index.d.ts",
       "import": "./dist/mixins/drag-drop-observables/index.js"
     },
+    "./mixins/dropzone-auto-size": {
+      "types": "./dist/mixins/dropzone-auto-size/index.d.ts",
+      "import": "./dist/mixins/dropzone-auto-size/index.js"
+    },
+    "./mixins/menu-auto-size": {
+      "types": "./dist/mixins/menu-auto-size/index.d.ts",
+      "import": "./dist/mixins/menu-auto-size/index.js"
+    },
     "./elements/*": {
       "types": "./dist/elements/*/index.d.ts",
       "import": "./dist/elements/*/index.js"
