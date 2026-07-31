@@ -369,9 +369,10 @@ export const WithConfigContexEmpty: Story = {
  * in a ProseMirror document, where an attribute on a light-DOM node is reverted — see
  * MenuAutoSizeMixin.
  *
- * The config is supplied declaratively with `<qti-config-test-provider>` rather than assigned in
- * `play`, and that matters here: the measurement runs from `connectedCallback`, so a context set
- * after the element has connected would arrive too late to size the first render.
+ * The config is bound declaratively as a property in the template rather than assigned in `play`,
+ * and that matters here: the measurement runs from `connectedCallback`, so a context set after the
+ * element has connected would arrive too late to size the first render. A lit-html property binding
+ * is committed on the detached template clone, before the fragment is inserted, so it lands first.
  */
 export const AutosizeViaConfigContext: Story = {
   name: 'Config Wrapper: inlineChoiceAutosize = true',
@@ -384,15 +385,13 @@ export const AutosizeViaConfigContext: Story = {
       </qti-inline-choice-interaction>
     </p>
 
-    <qti-config-test-provider .config=${{ inlineChoiceAutosize: true }}>
-      <p>
-        Autosized:
-        <qti-inline-choice-interaction data-testid="autosized">
-          <qti-inline-choice identifier="S">Ely</qti-inline-choice>
-          <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
-        </qti-inline-choice-interaction>
-      </p>
-    </qti-config-test-provider>
+    <p>
+      Autosized:
+      <qti-inline-choice-interaction data-testid="autosized" .configContext=${{ inlineChoiceAutosize: true }}>
+        <qti-inline-choice identifier="S">Ely</qti-inline-choice>
+        <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </p>
   `,
   parameters: {
     docs: {
@@ -444,15 +443,17 @@ export const AutosizeViaConfigContext: Story = {
 export const AutosizeYieldsToWidthClass: Story = {
   name: 'Config Wrapper: inlineChoiceAutosize vs qti-input-width-*',
   render: () => html`
-    <qti-config-test-provider .config=${{ inlineChoiceAutosize: true }}>
-      <p>
-        Class wins:
-        <qti-inline-choice-interaction class="qti-input-width-5" data-testid="classed">
-          <qti-inline-choice identifier="S">Ely</qti-inline-choice>
-          <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
-        </qti-inline-choice-interaction>
-      </p>
-    </qti-config-test-provider>
+    <p>
+      Class wins:
+      <qti-inline-choice-interaction
+        class="qti-input-width-5"
+        data-testid="classed"
+        .configContext=${{ inlineChoiceAutosize: true }}
+      >
+        <qti-inline-choice identifier="S">Ely</qti-inline-choice>
+        <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </p>
   `,
   parameters: {
     docs: {

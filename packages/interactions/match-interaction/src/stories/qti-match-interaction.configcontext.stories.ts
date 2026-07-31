@@ -22,18 +22,21 @@ const settle = async (interaction: QtiMatchInteraction) => {
 };
 
 const baseTemplate = (disableAfterMaxReached: boolean) => html`
-  <qti-config-test-provider .config=${{ disableAfterMaxReached }}>
-    <qti-match-interaction data-testid="interaction" response-identifier="RESPONSE" max-associations="1">
-      <qti-simple-match-set>
-        <qti-simple-associable-choice identifier="A" match-max="0">Alpha</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="B" match-max="0">Beta</qti-simple-associable-choice>
-      </qti-simple-match-set>
-      <qti-simple-match-set>
-        <qti-simple-associable-choice identifier="T1" match-max="2">Target 1</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="T2" match-max="2">Target 2</qti-simple-associable-choice>
-      </qti-simple-match-set>
-    </qti-match-interaction>
-  </qti-config-test-provider>
+  <qti-match-interaction
+    data-testid="interaction"
+    response-identifier="RESPONSE"
+    max-associations="1"
+    .configContext=${{ disableAfterMaxReached }}
+  >
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="A" match-max="0">Alpha</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="B" match-max="0">Beta</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="T1" match-max="2">Target 1</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T2" match-max="2">Target 2</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
 `;
 
 const getTargets = (canvasElement: HTMLElement) => {

@@ -16,12 +16,18 @@ export type ValidationDisplayMode = 'inline' | 'native' | 'both' | 'none';
  *
  *        orderInteraction.configContext = { allowReorder: false };
  *
+ *    or, in a lit-html template, as a property binding — which lands before `connectedCallback`:
+ *
+ *        html`<qti-order-interaction .configContext=${{ allowReorder: false }}>…`
+ *
  *    An interaction has to work standalone, so in a story or a spec there is usually no provider
  *    above it, and then nothing ever overwrites what you set. Where a provider DOES exist it wins on
  *    its next emit, because `@consume` writes that same field.
  *
- * 3. **Around a subtree**, with the slotted `qti-config-test-provider` wrapper — when you want one
- *    configuration for several interactions but not for the whole item.
+ *    A `qti-config-test-provider` element used to exist for scoping config to a subtree. It is gone:
+ *    it was test-only yet registered itself into every consumer's element registry via an unguarded
+ *    `@customElement`, which threw whenever two copies of this package ended up in one module graph.
+ *    Bind the property on each interaction instead, or provide from `qti-item`.
  *
  * There is no merging at any level: @lit/context resolves to the nearest provider and that object
  * replaces the ancestor's wholesale. A deeper provider therefore has to restate anything from above

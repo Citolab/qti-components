@@ -173,18 +173,17 @@ export const ChoicesContainerWidthAttribute: Story = {
 export const MaxSelectionsMessageAttribute: Story = {
   name: 'Attribute: data-max-selections-message is used for max validation text',
   render: () => html`
-    <qti-config-test-provider .config=${{ disableAfterMaxReached: false }}>
-      <qti-order-interaction
-        data-testid="interaction"
-        response-identifier="RESPONSE"
-        max-associations="1"
-        data-max-selections-message="No more than one choice allowed"
-      >
-        <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
-        <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
-        <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
-      </qti-order-interaction>
-    </qti-config-test-provider>
+    <qti-order-interaction
+      data-testid="interaction"
+      response-identifier="RESPONSE"
+      max-associations="1"
+      data-max-selections-message="No more than one choice allowed"
+      .configContext=${{ disableAfterMaxReached: false }}
+    >
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

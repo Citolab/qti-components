@@ -33,13 +33,16 @@ const getElements = (canvasElement: HTMLElement) => {
 export const DisableAfterMaxReachedEnabledViaConfigProvider: Story = {
   name: 'Config Wrapper: disableAfterMaxReached = true',
   render: () => html`
-    <qti-config-test-provider .config=${{ disableAfterMaxReached: true }}>
-      <qti-choice-interaction name="RESPONSE" max-choices="2" data-testid="interaction">
-        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-      </qti-choice-interaction>
-    </qti-config-test-provider>
+    <qti-choice-interaction
+      name="RESPONSE"
+      max-choices="2"
+      data-testid="interaction"
+      .configContext=${{ disableAfterMaxReached: true }}
+    >
+      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+    </qti-choice-interaction>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -60,13 +63,16 @@ export const DisableAfterMaxReachedEnabledViaConfigProvider: Story = {
 export const DisableAfterMaxReachedDisabledViaConfigProvider: Story = {
   name: 'Config Wrapper: disableAfterMaxReached = false',
   render: () => html`
-    <qti-config-test-provider .config=${{ disableAfterMaxReached: false }}>
-      <qti-choice-interaction name="RESPONSE" max-choices="2" data-testid="interaction">
-        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
-        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
-        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
-      </qti-choice-interaction>
-    </qti-config-test-provider>
+    <qti-choice-interaction
+      name="RESPONSE"
+      max-choices="2"
+      data-testid="interaction"
+      .configContext=${{ disableAfterMaxReached: false }}
+    >
+      <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+    </qti-choice-interaction>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

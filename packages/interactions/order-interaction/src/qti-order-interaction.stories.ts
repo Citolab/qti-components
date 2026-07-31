@@ -1010,13 +1010,16 @@ export const InSlotReorderingPartial: Story = {
 export const InSlotReorderingDisabled: Story = {
   name: 'Behavior: allowReorder=false blocks sortable swap for slot-origin drag',
   render: () => html`
-    <qti-config-test-provider .config=${{ allowReorder: false }}>
-      <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
-        <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
-        <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
-        <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
-      </qti-order-interaction>
-    </qti-config-test-provider>
+    <qti-order-interaction
+      data-testid="order-interaction"
+      response-identifier="RESPONSE"
+      orientation="horizontal"
+      .configContext=${{ allowReorder: false }}
+    >
+      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
+      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
+      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
+    </qti-order-interaction>
   `,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
