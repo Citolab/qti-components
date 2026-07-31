@@ -60,7 +60,22 @@ export default [
     :host(:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:first-of-type) {
       display: flex;
       flex-wrap: wrap;
+
+      /*
+       * Two different properties, and the bank needs both.
+       *
+       * align-items packs a chip to the top of ITS OWN line. align-content packs the LINES to the
+       * top of the container, and was missing — so it took the initial normal, which for a
+       * multi-line flex container behaves as stretch.
+       *
+       * That only shows once the bank wraps AND is taller than its content, which is exactly the
+       * side-by-side arrangement: the bank and the target grid are flex siblings, so the bank is
+       * stretched to the grid's height. Measured on ITEM008 at 740px, where the bank wraps to two
+       * lines: container 272px tall for 37px chips, the two lines stretched to 136px each, and the
+       * second row of chips floating 144px below the first instead of 53px.
+       */
       align-items: flex-start;
+      align-content: flex-start;
     }
 
     :host(:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:last-of-type) {
