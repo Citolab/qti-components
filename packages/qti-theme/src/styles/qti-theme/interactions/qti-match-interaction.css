@@ -137,7 +137,7 @@
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice {
     /* The label's `align-content` and the drop's `flex-grow` are the target card's own box, and live
-       in qti-simple-associable-choice.styles.ts under :host([qti-droppable]). `box-sizing` went with
+       in qti-simple-associable-choice.styles.ts under :host(:state(droppable)). `box-sizing` went with
        them: border-box is already the reset, and content-box is what dropRegion sets. */
     &::part(label) {
       border: var(--qti-border);
@@ -153,6 +153,7 @@
       border-top-right-radius: 0;
       background: none;
     }
+
   }
 }
 

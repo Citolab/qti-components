@@ -19,7 +19,7 @@ class TestBase {
   disconnectedCallback(): void {}
 }
 
-const Core = DragDropCoreMixin(TestBase as any, '[qti-draggable="true"]', '[qti-droppable="true"]');
+const Core = DragDropCoreMixin(TestBase as any, '[qti-draggable="true"]', `[part~='drop']`);
 
 class TestCoreElement extends Core {
   dropCalls: Array<{ draggable: HTMLElement; droppable: HTMLElement }> = [];

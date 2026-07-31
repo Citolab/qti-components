@@ -65,7 +65,7 @@ export default [
 
     :host(:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:last-of-type) {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(var(--qti-match-target-min-width, 150px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(var(--qti-dropzone-min-width, 150px), 1fr));
     }
 
     /* An answer key shows the answer, not the bank you would have dragged it from. The attribute is

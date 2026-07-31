@@ -119,6 +119,26 @@
   padding: var(--qti-drag-padding);
   cursor: grab;
 
+  /*
+   * A chip is as wide as the drop it belongs in — the SAME token the drop reserves with.
+   *
+   * That one shared name is what makes a drag and its drop the same size without any arithmetic
+   * relating them: the interaction measures the widest chip, publishes it once, and both the chip
+   * and the slot read it. See DROP-SIZING.md.
+   *
+   * It applies in the bank as well as in the drop, which is the point: the chip already has the
+   * width before it is dropped, so nothing changes size at the moment of landing. That keeps "a chip
+   * is the same chip wherever it lives" true (drag-drop.invariance.spec.ts) and keeps the return
+   * animation from ending in a snap. A `width: 100%` on the placed chip gives the same still image
+   * and breaks both — it is what order used to do, and why order was the one entry in
+   * CHIP_BOX_KNOWN_BAD.
+   *
+   * min-width, not width, so a chip whose own text is wider than the widest measured chip still
+   * fits. Falls back to 0 where nothing is measured (match, whose targets are cards, not slots), so
+   * those chips keep their natural width with no rule needed to say so.
+   */
+  min-width: var(--qti-dropzone-min-width, 0);
+
   /* Paint via the contract, nothing more — the --qti-component-* tokens already make a neutral
      bordered box (white surface, theme border, no shadow). The chip sets NO --drag-* of its own,
      and that is load-bearing: if it did (e.g. `--drag-background-color: white`), that declaration

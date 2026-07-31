@@ -31,7 +31,9 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  *   QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid
  *   instead of drag-and-drop; the `qti-choices-*` values position the source set.
  * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
- *   the widest chip so placement does not reflow the layout.
+ *   the widest chip so placement does not reflow the layout. The mixin default is `true`; this
+ *   interaction is the one that overrides it to `false`, because a match target is a category card
+ *   rather than a socket (see the field below and DROP-SIZING.md §1).
  * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
  *   animation.
  *
@@ -68,7 +70,15 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
 
   /**
    * Match targets are categories, not slots. They should look able to hold several answers, so they
-   * take the vendor floor (`--qti-drop-min-height`) rather than the size of the widest chip.
+   * take a flat floor (the `--qti-dropzone-min-height` fallback) rather than the size of the widest chip.
+   *
+   * This is a property of the INTERACTION, not of an individual target. A `match-max="1"` target is
+   * still a category that happens to take one answer, and it sits in a grid beside targets that take
+   * several — sizing each one to its own contents would make that grid ragged. So the whole
+   * interaction opts out, and the per-target `match-max` decides nothing about size here.
+   *
+   * The interactions where a drop IS a slot — gap-match, order, associate — keep measurement on, and
+   * their drops are exactly the widest chip plus the inset.
    */
   public override autoSizeDropzones = false;
 

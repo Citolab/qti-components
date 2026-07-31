@@ -226,24 +226,27 @@ const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: ()
 ];
 
 /**
- * Known violations, recorded rather than deleted. `test.fails` inverts the assertion: these must
- * keep failing, and the day one starts passing the suite goes red and tells you to remove it here.
+ * Interactions excluded from an assertion, recorded rather than deleted.
  *
- *   order      NOT a box-model mismatch — the placed chip's own padding/border/font-weight already
- *              match the bank's. The residual 2px is layout coupling: the placed chip stretches to
- *              fill its drop slot (a `width` a hair off the bank chip's natural two-line wrap).
- *              The dropzone-resize violation used to live here too, but the drop now reserves its
- *              own outer box correctly; the remaining failure is the placed chip stretching to the
- *              slot rather than keeping the bank chip's natural footprint.
+ * BOTH ARE EMPTY, and keeping them is the point: an exclusion here is a bug someone decided to live
+ * with, so the empty set is the statement that none are outstanding. Add a name only with the reason
+ * written down, the way the two below were.
  *
- * `associate` used to live here — its placed chip drew `16px` padding from the base `@apply drag`
- * while the bank chip drew `0.8em` from the `:state(drag)` block, and nothing keyed the placed chip
- * (`qti-associate-interaction::part(drag)`) to the same `0.8em`. It was fixed by hand, per selector.
+ * `order` used to be excluded from the chip-box assertion. Not a box-model mismatch — the placed
+ * chip's padding, border and font-weight already matched the bank's — but layout coupling: the theme
+ * gave a placed chip `width: 100%`, so it stretched to its drop slot. Small in this fixture, and
+ * 55px → 666px in a real vertical order item. Fixed by inverting the relationship: the slot is now
+ * sized from the chip (`justify-self: start` plus the measured `min-width`, qti-order-interaction
+ * .styles.ts), and the chip takes `--qti-dropzone-min-width` in the bank as well, so it already has
+ * its width before it is dropped. See DROP-SIZING.md §5.
  *
- * The class of bug is gone now: `drag` and `chip` were merged into one `chip` mixin whose padding is
- * `--qti-drag-padding`, so there is no longer a second box model for a selector to miss.
+ * `associate` used to be excluded too — its placed chip drew `16px` padding from the base
+ * `@apply drag` while the bank chip drew `0.8em` from the `:state(drag)` block, and nothing keyed
+ * the placed chip (`qti-associate-interaction::part(drag)`) to the same `0.8em`. That class of bug
+ * is gone: `drag` and `chip` were merged into one mixin whose padding is `--qti-drag-padding`, so
+ * there is no longer a second box model for a selector to miss.
  */
-const CHIP_BOX_KNOWN_BAD = new Set(['order']);
+const CHIP_BOX_KNOWN_BAD = new Set<string>();
 const DROPZONE_KNOWN_BAD = new Set<string>();
 
 const chipCases = INTERACTIONS.map(i => [i.name, i] as const);

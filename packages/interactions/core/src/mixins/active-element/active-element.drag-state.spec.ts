@@ -22,7 +22,7 @@ const settle = async () => {
 };
 
 const hasDrag = (el: Element | null) => !!el && (el as Stateful).internals.states.has('drag');
-const hasDrop = (el: Element | null) => !!el && (el as Stateful).internals.states.has('drop');
+const hasDrop = (el: Element | null) => !!el && (el as Stateful).internals.states.has('droppable');
 
 describe(':state(drag) from draggablesSelector', () => {
   test('order-interaction: every qti-simple-choice is a drag, and takes no ARIA role', async () => {

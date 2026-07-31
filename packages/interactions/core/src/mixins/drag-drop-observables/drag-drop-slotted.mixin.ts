@@ -9,11 +9,11 @@ import {
   findInventoryItems,
   getMatchMaxValue,
   hasDragChipState,
-  applyDropzoneAutoSizing,
   setDropFilled,
   setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
+import { DropzoneAutoSizeMixin } from '../dropzone-auto-size/dropzone-auto-size.mixin';
 import {
   animateFlip,
   captureMultipleFlipStates,
@@ -28,47 +28,42 @@ import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
 import type { Interaction, RegisteredInteraction } from '@qti-components/base';
 import type { DragDropState } from '../../context/drag-drop.context';
 import type { DragDropCore } from './drag-drop-core.mixin';
+import type { DropzoneAutoSize } from '../dropzone-auto-size/dropzone-auto-size.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-export type DragDropSlotted = DragDropCore & {
-  minAssociations: number;
-  maxAssociations: number;
-  disableAnimations: boolean;
-  enableFlipAnimations: boolean;
-  autoSizeDropzones: boolean;
-  validate(): boolean;
-  reportValidity(): boolean;
-  reset(): void;
-  saveResponse(value?: string | string[]): void;
-  shouldTreatBlockedMaxAsInvalid(): boolean;
-  shouldReturnToInventoryOnInventoryDrop(): boolean;
+export type DragDropSlotted = DragDropCore &
+  DropzoneAutoSize & {
+    minAssociations: number;
+    maxAssociations: number;
+    disableAnimations: boolean;
+    enableFlipAnimations: boolean;
+    validate(): boolean;
+    reportValidity(): boolean;
+    reset(): void;
+    saveResponse(value?: string | string[]): void;
+    shouldTreatBlockedMaxAsInvalid(): boolean;
+    shouldReturnToInventoryOnInventoryDrop(): boolean;
 
-  /** Placement, published on `dragDropContext`. An interaction that renders its own drop targets
-   *  reads `nodesByTarget` straight out of it. */
-  _dragDrop: Readonly<DragDropState>;
-  /** The chips a target holds — from the placement map, or the DOM, depending on the target. */
-  chipsIn(droppable: HTMLElement): HTMLElement[];
-  isDeclarativeTarget(el: HTMLElement | null | undefined): boolean;
+    /** Placement, published on `dragDropContext`. An interaction that renders its own drop targets
+     *  reads `nodesByTarget` straight out of it. */
+    _dragDrop: Readonly<DragDropState>;
+    /** The chips a target holds — from the placement map, or the DOM, depending on the target. */
+    chipsIn(droppable: HTMLElement): HTMLElement[];
+    isDeclarativeTarget(el: HTMLElement | null | undefined): boolean;
 
-  /** Republish placement on `dragDropContext` and re-render the targets that read it. */
-  syncDragDropState(): void;
+    /** Republish placement on `dragDropContext` and re-render the targets that read it. */
+    syncDragDropState(): void;
 
-  /**
-   * How many associations exist, for `min-associations` / `max-associations`.
-   *
-   * The default counts placed chips, which is one-to-one with associations only when a chip *is*
-   * an association — a gap holding one chip, a match target holding one chip. Associate pairs two
-   * chips per association and overrides this. Declared here so it can be.
-   */
-  totalAssociationsFromState(): number;
-};
-
-interface InteractionConfiguration {
-  copyStylesDragClone: boolean;
-  dragCanBePlacedBack: boolean;
-  dragOnClick: boolean;
-}
+    /**
+     * How many associations exist, for `min-associations` / `max-associations`.
+     *
+     * The default counts placed chips, which is one-to-one with associations only when a chip *is*
+     * an association — a gap holding one chip, a match target holding one chip. Associate pairs two
+     * chips per association and overrides this. Declared here so it can be.
+     */
+    totalAssociationsFromState(): number;
+  };
 
 export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   superClass: T,
@@ -77,9 +72,18 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   dragContainersSelector = 'slot[part="drags"]',
   collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCornersWithInventoryPriority'
 ) => {
+  /*
+   * Measurement is layered UNDER the drag-drop stack, not inside it, so the editor can take it
+   * without the rest — it renders the same elements and imports the same stylesheets, but does its
+   * own drag handling inside a ProseMirror document. Same selectors, so both layers agree on what a
+   * chip is; `collectAutoSizeTargets` below then hands it the already-cached lists rather than
+   * letting it re-query.
+   */
+  const AutoSized = DropzoneAutoSizeMixin(superClass, draggablesSelector, droppablesSelector, dragContainersSelector);
+
   // Use 'closestCorners' by default for associate interactions (better for multiple drop zones)
   const Core = DragDropCoreMixin(
-    superClass,
+    AutoSized,
     draggablesSelector,
     droppablesSelector,
     dragContainersSelector,
@@ -87,11 +91,17 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   );
 
   abstract class DragDropSlottedElement extends Core implements RegisteredInteraction {
-    @property({ attribute: false, type: Object }) protected configuration: InteractionConfiguration = {
-      copyStylesDragClone: true,
-      dragCanBePlacedBack: true,
-      dragOnClick: false
-    };
+    /*
+     * A `configuration` object used to sit here — { copyStylesDragClone, dragCanBePlacedBack,
+     * dragOnClick } — and configured nothing. Nothing in the repo ever assigned it; `dragOnClick`
+     * had no reader at all, `copyStylesDragClone` only one in the dead legacy mixin (the live
+     * `createDragClone` copies computed styles unconditionally), and `dragCanBePlacedBack` gated the
+     * branch below on a value that was always true. It was also unreachable by design —
+     * `attribute: false` AND `protected` — so no author or host could have set it either.
+     *
+     * If any of the three is ever wanted for real, it should come back as an attribute (like
+     * `auto-size-dropzones`) or through `configContext`, not as a private object nobody can reach.
+     */
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
 
     private _maxAssociations = 0;
@@ -305,16 +315,21 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       return this._enableFlipAnimations && motionEnabled(this as unknown as Element);
     }
 
-    @property({ type: Boolean, attribute: 'auto-size-dropzones' })
     /**
-     * Size the dropzones from the chips they will hold.
+     * Measure what the drag-drop machinery already tracks, rather than re-querying.
      *
-     * On by default: a drop that is already as big as the largest chip does not resize when one
-     * lands in it. `qti-match-interaction` turns it off — a match target is a category, and should
-     * look like it can hold several answers rather than hugging the widest one. With it off, a
-     * dropzone falls back to the vendor floor, `--qti-drop-min-height` / `--qti-drop-min-width`.
+     * `cacheInteractiveElements()` resolves the same three selectors and then adds what a plain
+     * query cannot see — drag clones, and chips registered through `context-request` from a shadow
+     * root one level deeper. Re-querying would give the auto-sizer a smaller set than the one the
+     * drops are actually built from, so the widest chip could be missed.
      */
-    public autoSizeDropzones = true;
+    public override collectAutoSizeTargets() {
+      return {
+        draggables: this.trackedDraggables,
+        droppables: this.trackedDroppables,
+        dragContainers: this.trackedDragContainers
+      };
+    }
 
     /**
      * Set via the `response="…"` attribute before the drag/drop machinery has
@@ -497,12 +512,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // Legacy compatibility:
       // If drag started from a dropzone and ended on host/background (no collision target),
       // interpret this as "return to inventory".
-      if (
-        sourceDroppable &&
-        droppedOutsideKnownZones &&
-        inventoryReturnTarget &&
-        this.configuration.dragCanBePlacedBack !== false
-      ) {
+      if (sourceDroppable && droppedOutsideKnownZones && inventoryReturnTarget) {
         this.dropDraggableInDroppable(dragSource, inventoryReturnTarget);
       }
       // If drag started from a dropzone and the drop is invalid, restore only this
@@ -537,13 +547,6 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this._dropBlockedDueToMax = attemptedDisabledTarget && maxReached;
       this.validate();
       this.reportValidity();
-    }
-
-    private updateMinDimensionsForDropZones(): void {
-      if (!this.autoSizeDropzones) return;
-      if (this.trackedDraggables.length === 0) return;
-
-      applyDropzoneAutoSizing(this, this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
     }
 
     /**

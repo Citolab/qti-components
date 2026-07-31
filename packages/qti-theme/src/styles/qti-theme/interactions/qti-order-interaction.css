@@ -67,7 +67,16 @@
     }
     /* The drag's box — flex, centred, clipped — is in qti-order-interaction.styles.ts. */
     &::part(drag) {
-      width: 100%;
+      /*
+       * No `width: 100%`. It stretched a placed chip to its slot, which is why order was the one
+       * entry in CHIP_BOX_KNOWN_BAD ("the placed chip stretches to fill its drop slot") — a 55px
+       * chip in the bank became 666px once dropped. The slot is now sized from the chip instead of
+       * the other way round (qti-order-interaction.styles.ts), so there is nothing left to fill.
+       *
+       * Every chip now takes --qti-dropzone-min-width instead (see `@mixin drag`), the same name the
+       * slot reserves with — so chip and slot are the same size by construction, in the bank as well
+       * as in the drop, and nothing changes size at the moment of landing.
+       */
       text-overflow: ellipsis;
     }
     /*
@@ -119,8 +128,12 @@
       border-radius: var(--qti-border-radius);
     }
 
+    /* No `height: 100%` here. The drop is a grid item, so `align-self: stretch` already fills the
+       row — and because dropRegion makes it content-box, a percentage height made its border-box
+       overhang the row by the border (42px row, 44px drop), which the drop's padding then doubled.
+       It also defeated `:has(qti-simple-choice) [part~='drop'] { align-self: flex-start }` in
+       qti-order-interaction.styles.ts. */
     &::part(drop) {
-      height: 100%;
       border: var(--qti-drop-border, var(--qti-border-thickness) dashed var(--qti-border-color));
       border-radius: var(--qti-border-radius);
       background-color: transparent;

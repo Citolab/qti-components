@@ -283,18 +283,47 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       for (const el of this.#statefulRoleElements) {
         if (currentStateful.has(el)) continue;
         el.internals.states.delete('drag');
-        el.internals.states.delete('drop');
+        el.internals.states.delete('droppable');
       }
 
-      // Drag-drop ownership of drag/drop role states.
+      /*
+       * Drag-drop ownership of the drag/droppable role states.
+       *
+       * `droppable` is the drop-side twin of `qti-draggable`, and it is the ONLY marker. Three of
+       * the five drop targets are light-DOM elements authored in the item body (`qti-gap`,
+       * `qti-associable-hotspot`, `qti-simple-associable-choice`), so no part can name them — a part
+       * only exists inside the shadow tree that declares it — and a stylesheet needs some way to say
+       * "this element is a drop target, whichever interaction it belongs to".
+       *
+       * It used to be said twice: this state, spelled `drop`, plus a `qti-droppable="true"`
+       * attribute stamped on `trackedDroppables` just below. Two spellings meant every drop-side
+       * rule was written twice, and they did not even agree — the attribute reached elements this
+       * loop skips (see the two notes below). The attribute is gone; a host that cannot write
+       * attributes uses the state, which is what the editor already did. ElementInternals states are
+       * invisible to a mutation observer, which is why that host can use it: ProseMirror reverts any
+       * attribute outside its schema, and the revert re-triggers the observer that wrote it.
+       *
+       * Two consequences of the state being the survivor, both deliberate:
+       *
+       *   - `currentStateful` is filtered by `hasStates`, so order's and associate's shadow
+       *     `<div part="drop">` get nothing — `attachInternals()` throws on a plain div. Those two
+       *     are reachable as `::part(drop)` from their own interaction, which is the hook they
+       *     actually use; the attribute on them was never read by anything.
+       *   - `isDrop` is `!isDrag && …`, so an element that is somehow both is a drag only. The
+       *     attribute was unconditional. No shipped interaction has an element in both sets.
+       *
+       * Gated on `isDragDropEnabled()` through `effectiveDroppableSet`: match-interaction's tabular
+       * mode is a radio grid, and its `qti-simple-associable-choice` elements are row and column
+       * headers, not drop targets. They must not reserve a dropzone's worth of space.
+       */
       for (const el of currentStateful) {
         const isDrag = dragRoleSet.has(el);
         const isDrop = !isDrag && effectiveDroppableSet.has(el);
         if (isDrag) el.internals.states.add('drag');
         else el.internals.states.delete('drag');
 
-        if (isDrop) el.internals.states.add('drop');
-        else el.internals.states.delete('drop');
+        if (isDrop) el.internals.states.add('droppable');
+        else el.internals.states.delete('droppable');
       }
 
       this.#statefulRoleElements = currentStateful;
@@ -322,21 +351,6 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
             draggable.removeAttribute('tabindex');
           }
         }
-      });
-
-      // The drop-side twin of `qti-draggable`. Three of the five drop targets are light-DOM
-      // elements authored in the item body (`qti-gap`, `qti-associable-hotspot`,
-      // `qti-simple-associable-choice`), so no part can name them — a part only exists inside the
-      // shadow tree that declares it. An attribute is the only hook a theme can use to say "every
-      // drop target, whichever interaction this is".
-      //
-      // Gated on `isDragDropEnabled()`: match-interaction's tabular mode is a radio grid, and its
-      // `qti-simple-associable-choice` elements are row and column headers, not drop targets. They
-      // must not reserve a dropzone's worth of space.
-      const droppableAttribute = dragDropEnabled;
-      this.trackedDroppables.forEach(droppable => {
-        if (droppableAttribute) droppable.setAttribute('qti-droppable', 'true');
-        else droppable.removeAttribute('qti-droppable');
       });
     }
 
@@ -1102,7 +1116,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       for (const el of this.#statefulRoleElements) {
         if (!hasStates(el)) continue;
         el.internals.states.delete('drag');
-        el.internals.states.delete('drop');
+        el.internals.states.delete('droppable');
       }
       this.#statefulRoleElements.clear();
 

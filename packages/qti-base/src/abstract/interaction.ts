@@ -21,8 +21,28 @@ export abstract class Interaction extends LitElement implements ValidatableInter
   @consume({ context: itemContext, subscribe: true })
   private _context: ItemContext;
 
+  /**
+   * Delivery configuration, from the nearest provider — `qti-test`, `qti-item`, or the slotted
+   * `qti-config-test-provider` wrapper.
+   *
+   * **Public so it can be assigned directly, which is the development-time route.** An interaction
+   * has to work standalone, and in a story or a spec there is usually no provider above it — so
+   * setting the field is all that is needed:
+   *
+   *     orderInteraction.configContext = { allowReorder: false, validationDisplayMode: 'none' };
+   *
+   * With no provider, nothing ever overwrites it. That is the whole contract, and its limit: where a
+   * provider DOES exist it re-emits on its next update and wins, because `@consume` writes this same
+   * field. There is no merging — set the value on the provider in that case, or wrap the one
+   * interaction in `qti-config-test-provider`, which is the sanctioned way to scope config to a
+   * subtree.
+   *
+   * It was `protected`, which fooled nobody: every caller reached it anyway through an
+   * `as any` / `as { configContext?: … }` cast. Public says what was already true and removes the
+   * casts, rather than pretending at an encapsulation the type system was the only thing enforcing.
+   */
   @consume({ context: configContext, subscribe: true })
-  protected configContext: ConfigContext;
+  public configContext: ConfigContext;
 
   #didLogDisableAfterIfMaxChoicesReachedDeprecation = false;
 

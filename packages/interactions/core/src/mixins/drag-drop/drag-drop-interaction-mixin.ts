@@ -303,6 +303,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       if (dropContainer) {
         // Calculate the correct width of grid columns by adding the defined padding to the maximum width
+        //
+        // DEAD, like the rest of this mixin — every import of DragDropInteractionMixin is commented
+        // out; the live path is DropzoneAutoSizeMixin. Left as-is rather than repaired, but noted
+        // because `--qti-dropzone-padding` no longer exists: drops carry no inset (see
+        // drop-region.styles.ts), so this var() has no fallback and the whole calc() would be invalid
+        // if anything ever ran it.
         dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px,${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding))), 1fr))`;
       }
 

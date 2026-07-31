@@ -290,7 +290,37 @@
        way, 0.4em holds the badge still and moves 5 drag/order snapshots instead — there is no value
        that is neutral for both, which is exactly why the duplication was worth collapsing. */
     --qti-glyph-gap: 0.5em;
-    --qti-dropzone-padding: 0.5rem; /* read by the drag-drop autosize JS (drag-drop.utils.ts) */
+    /*
+     * Drop sizing — TWO names, and neither is declared here.
+     *
+     *   --qti-dropzone-min-height  a drop's minimum height
+     *   --qti-dropzone-min-width   a drop's minimum width — AND a chip's, read by `@mixin drag`,
+     *                              which is what makes a chip and its slot the same size without any
+     *                              rule relating the two
+     *
+     * Both are written at runtime: DropzoneAutoSizeMixin measures the widest and tallest chip and
+     * publishes them on the interaction. A drop that is not measured falls back, and that is how
+     * match's category cards get a flat floor without a token of their own.
+     *
+     * The split is by INTERACTION, not by a drop's `match-max`. A drop is either a slot — gap-match,
+     * order, associate, where one chip is the whole point — or a card, as in match, where a target
+     * collects answers and sits in a grid beside targets that take a different number.
+     *
+     * Everything else that used to be a token here is a plain declaration on the one rule that wants
+     * it, because `::part(drop)` already reaches every drop from the document and a custom property
+     * in between adds a name without adding reach. Six names went that way:
+     *
+     *   --qti-drop-min-height, --qti-drop-min-width, --qti-match-target-min-width,
+     *   --qti-drag-min-width  collapsed into the two above. --qti-drop-min-width was the worst of
+     *                         them: it meant the grid-track floor in order and a drop's own
+     *                         min-width in the match target — one name, two unrelated jobs.
+     *   --qti-dropzone-padding, --qti-drop-gap  deleted outright. A slot needs no inset at all (its
+     *                         reservation is already the chip's border-box, so nothing is squeezed
+     *                         and nothing shows), and the one drop that wants room — match's card —
+     *                         declares padding and gap on its own rule.
+     *
+     * See DROP-SIZING.md.
+     */
 
     /* Hotspot selection ring (qti-hotspot-interaction.css). Resting stroke width — :state(checked)
        and the correction states double it. The halo is the near-white outline either side of the

@@ -32,8 +32,9 @@ const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[par
  *   See plans/interaction-attribute-spec-conformance.md.
  * @attr {number} max-choices - Not implemented. The QTI-correct spelling of the upper bound.
  *   See plans/interaction-attribute-spec-conformance.md.
- * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
- *   the widest chip so placement does not reflow the layout.
+ * @attr {boolean} [auto-size-dropzones=true] - Extension, not QTI. Sizes every drop target to
+ *   the widest chip so placement does not reflow the layout. On by default: an order slot is a
+ *   socket cut to one chip, and both axes are measured (see DROP-SIZING.md).
  * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
  *   animation.
  *

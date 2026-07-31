@@ -254,14 +254,32 @@ export function collectResponseData(droppables: HTMLElement[], draggablesSelecto
  *
  * This also removes a precedence trap: when both `min-width` and `width` were written inline,
  * `min-width` silently won, discarding an authored `data-choices-container-width`.
+ *
+ * Measurement only — no scheduling and no `this`. `DropzoneAutoSizeMixin` owns when this runs.
+ *
+ * A branch that wrote an inline `grid-template-columns` on the drops' container when the droppables
+ * were `qti-simple-associable-choice` was deleted. It fired only for match, which had auto-sizing
+ * off, so it never ran; turning match's measurement on would have woken it, and it overrode
+ * `--qti-match-target-min-width` — the one responsive breakpoint `qti-match-interaction.styles.ts`
+ * deliberately owns. It was also the one write here that could not work in the editor, where that
+ * parent is a ProseMirror-managed node.
  */
 export function applyDropzoneAutoSizing(
   host: HTMLElement,
   draggables: HTMLElement[],
   droppables: HTMLElement[],
   dragContainers: HTMLElement[],
-  hostWindow: Window | null = typeof window !== 'undefined' ? window : null
+  options: {
+    hostWindow?: Window | null;
+    /**
+     * Called with the measurement before anything is written; return false to skip the write.
+     * `DropzoneAutoSizeMixin` uses it to suppress a no-op write, which is what keeps its
+     * `ResizeObserver` from feeding itself.
+     */
+    hasChanged?: (measured: { height: number; width: number }) => boolean;
+  } = {}
 ): void {
+  const hostWindow = options.hostWindow ?? (typeof window !== 'undefined' ? window : null);
   if (!draggables.length || !droppables.length || !hostWindow) return;
 
   let maxDraggableHeight = 0;
@@ -273,28 +291,14 @@ export function applyDropzoneAutoSizing(
     maxDraggableWidth = Math.max(maxDraggableWidth, rect.width);
   });
 
-  const dropContainer: HTMLElement | null = droppables[0].parentElement;
+  if (options.hasChanged?.({ height: maxDraggableHeight, width: maxDraggableWidth }) === false) return;
 
-  const isGridLayout = droppables[0].tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE';
-  const isGapElement = droppables[0].tagName === 'QTI-GAP';
-
-  if (isGridLayout && dropContainer) {
-    let maxWidth: number;
-
-    if (dropContainer.clientWidth > 0) {
-      const styles = hostWindow.getComputedStyle(dropContainer);
-      const paddingLeft = parseFloat(styles.paddingLeft);
-      const paddingRight = parseFloat(styles.paddingRight);
-      maxWidth = dropContainer.clientWidth - paddingLeft - paddingRight;
-    } else {
-      maxWidth = Math.min(hostWindow.innerWidth * 0.8, 600);
-    }
-
-    dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px, ${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding, 0.5rem))), 1fr))`;
-  }
-
-  // Measured values go on the host as custom properties; each droppable's own stylesheet reads
-  // them. A theme overrides by setting the same variable on the droppable, which is closer.
+  // Measured values go on `host` as custom properties; each droppable's own stylesheet reads them.
+  // A theme overrides by setting the same variable on the droppable, which is closer.
+  //
+  // `host` is not necessarily the interaction: custom properties inherit down the flat tree, so any
+  // ancestor of the drops will do, and a host whose own attributes are policed (the editor, under
+  // ProseMirror) passes a node inside its shadow root instead.
   //
   // Both axes, for every dropzone. `--qti-dropzone-min-width` used to reach only gaps and the
   // match grid, so order's and associate's drops were tall enough for the largest chip but not

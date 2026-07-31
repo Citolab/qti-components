@@ -23,8 +23,9 @@ import type { CSSResultGroup } from 'lit';
  *   by the transform pipeline (`qti-transformers`), not by this element.
  * @attr {'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
  *   QTI shared presentation vocabulary positioning the gap-choices container.
- * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every gap to the
- *   widest chip so placement does not reflow the prose.
+ * @attr {boolean} [auto-size-dropzones=true] - Extension, not QTI. Sizes every gap to the
+ *   widest chip so placement does not reflow the prose. On by default: a gap is a slot, and a slot
+ *   that is already the size of the chip it will hold does not resize when one lands in it.
  * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
  *   animation.
  *

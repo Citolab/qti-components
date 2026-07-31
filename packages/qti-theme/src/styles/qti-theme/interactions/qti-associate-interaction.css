@@ -87,6 +87,13 @@
     }
     /* `display: grid` lives in qti-associate-interaction.styles.ts, which already declares it on
        [part~='drop'] alongside the drop's min-height/min-width. */
+    /* A filled drop hides its dashed edge — see the note in qti-gap-match-interaction.css. Every
+       associate drop holds exactly one chip (the div never carries match-max), so no capacity guard
+       is needed here. Colour only: the width stays, or the row shifts when a chip lands. */
+    &::part(filled) {
+      --drop-border-color: transparent;
+    }
+
     &::part(drop) {
       @mixin drop;
     }

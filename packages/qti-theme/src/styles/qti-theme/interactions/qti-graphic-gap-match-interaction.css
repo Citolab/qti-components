@@ -83,14 +83,23 @@
       &:not(:empty) {
         border-color: var(--qti-border) !important;
       }
-      &:empty::after {
-        padding: var(--qti-padding-md) var(--qti-padding-lg);
-        content: '\0000a0';
-      }
-      &:not(:empty) {
-        padding: 0;
-        width: auto;
-      }
+      /*
+       * Two rules were deleted here, both unreachable, both about padding:
+       *
+       *   &:empty::after  { padding: var(--qti-padding-md) var(--qti-padding-lg); content: '\0000a0' }
+       *   &:not(:empty)   { padding: 0; width: auto }
+       *
+       * `--qti-padding-md` / `--qti-padding-lg` are defined nowhere in the repo, so the first was
+       * invalid at computed-value time and paid no padding. It could not have rendered regardless:
+       * a hotspot renders its chips into `<div part="drop">` in its own shadow root and has no
+       * `<slot>`, so the host is always `:empty` to a selector AND its `::after` — light-tree
+       * content — is never assigned anywhere. The nbsp was not holding an empty hotspot open;
+       * --qti-dropzone-min-* on the host is. By the same reasoning `:not(:empty)` never matches.
+       *
+       * They are named here rather than silently dropped because they read like the hotspot's
+       * padding story, and the next person to give drops an inset should know there isn't one.
+       */
+
       /* `flex: 1` left with the rest of the drop's layout; dropRegion in qti-base gives a hosted
          chip `flex: 0 0 auto`, which is the invariance rule this was quietly fighting. */
       &:not(:empty) > * {

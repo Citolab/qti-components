@@ -64,6 +64,26 @@
     }
     & qti-gap {
       @mixin drop;
+
+      /*
+       * A filled gap hides its dashed edge, exactly as a filled order slot does
+       * (qti-order-interaction.css, `::part(filled)`).
+       *
+       * The dashed edge says "something goes here". Once something does, it is only a second frame
+       * drawn a pixel outside the chip's own border — two nested outlines around one word, which is
+       * what the drop inset made visible: before it, the two borders sat on top of each other and
+       * the duplication did not show.
+       *
+       * Transparent rather than `none`, and the width is untouched: `@mixin paint drop` binds
+       * border-width and border-color to separate slots, so switching only the colour keeps the
+       * gap's box identical empty or filled. `border-style: none` would collapse the width and move
+       * every word on the line the instant a chip landed — the exact reflow qti-gap.styles.ts and
+       * drag-drop.invariance.spec.ts exist to prevent.
+       */
+      &:state(filled):is(:not([match-max]), [match-max='1']) {
+        --drop-border-color: transparent;
+      }
+
       &[disabled] {
         cursor: not-allowed;
         /* `:not(:empty)` tested light-DOM children; the gap renders its chips into its own shadow

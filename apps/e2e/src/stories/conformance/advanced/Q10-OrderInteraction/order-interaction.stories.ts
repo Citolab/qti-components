@@ -203,8 +203,10 @@ export const Q10_L1_D9: Story = {
     const { assessmentItem, orderInteraction } = getElements(canvasElement);
     await orderInteraction.updateComplete;
 
-    (orderInteraction as any).configContext = {
-      ...((orderInteraction as any).configContext || {}),
+    // Set straight on the interaction: there is no config provider above it in this story, so
+    // nothing overwrites it. See Interaction.configContext.
+    orderInteraction.configContext = {
+      ...(orderInteraction.configContext ?? {}),
       validationDisplayMode: 'none'
     };
 

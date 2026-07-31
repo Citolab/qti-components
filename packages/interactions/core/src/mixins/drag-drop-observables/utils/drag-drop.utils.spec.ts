@@ -110,7 +110,7 @@ describe('drag-drop.utils', () => {
     expect(collectResponseData([droppable], '.drag')).toEqual(['item1 drop1']);
   });
 
-  it('applyDropzoneAutoSizing sets min sizes and grid columns for grid layouts', () => {
+  it('applyDropzoneAutoSizing publishes min sizes on the host and writes nothing else', () => {
     const draggableA = makeElement({ left: 0, top: 0, width: 40, height: 30 });
     const draggableB = makeElement({ left: 0, top: 0, width: 50, height: 40 });
 
@@ -133,7 +133,7 @@ describe('drag-drop.utils', () => {
 
     const host = document.createElement('div');
 
-    applyDropzoneAutoSizing(host, [draggableA, draggableB], [droppable], [dragContainer], hostWindow);
+    applyDropzoneAutoSizing(host, [draggableA, draggableB], [droppable], [dragContainer], { hostWindow });
 
     // Measurements are published as custom properties on the interaction host; each droppable's
     // own stylesheet reads them. Nothing is written to a droppable's style attribute any more.
@@ -143,6 +143,22 @@ describe('drag-drop.utils', () => {
     expect(slot.getAttribute('style')).toBeNull();
 
     expect(dragContainer.style.minHeight).toBe('var(--qti-drag-container-min-height, 40px)');
-    expect(dropContainer.style.gridTemplateColumns).toContain('minmax');
+
+    // The drops' own container is not touched either. This used to get an inline
+    // `grid-template-columns` when the droppables were qti-simple-associable-choice, which
+    // overrode --qti-match-target-min-width — the one responsive breakpoint match's stylesheet
+    // deliberately owns — and could not run in the editor, where that parent is a ProseMirror node.
+    expect(dropContainer.getAttribute('style')).toBeNull();
+  });
+
+  it('applyDropzoneAutoSizing skips the write when hasChanged says nothing moved', () => {
+    const draggable = makeElement({ left: 0, top: 0, width: 40, height: 30 });
+    const droppable = makeElement();
+    const host = document.createElement('div');
+    const hostWindow = { innerWidth: 1024, getComputedStyle: () => ({}) } as unknown as Window;
+
+    applyDropzoneAutoSizing(host, [draggable], [droppable], [], { hostWindow, hasChanged: () => false });
+
+    expect(host.getAttribute('style')).toBeNull();
   });
 });

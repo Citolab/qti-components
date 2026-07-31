@@ -28,11 +28,26 @@ export const dropRegion = css`
      * lands in it. Order's drop did exactly that: 64px empty, 66px full, for a 1px border.
      */
     box-sizing: content-box;
+
+    /*
+     * No padding, and no token for one.
+     *
+     * A drop reserves --qti-dropzone-min-*, which is the chip's BORDER-box, as this region's CONTENT
+     * area — so the chip already fits exactly, with nothing to spare and nothing squeezed. An inset
+     * on top would only make the drop bigger than the thing it holds.
+     *
+     * There was a 1px one, to make the drop read as a frame a hair outside the chip. It never painted:
+     * an EMPTY slot has nothing inside the inset to separate from, and a FILLED one hides its edge
+     * (DROP-SIZING.md §4), so both states spent 2px on an invisible ring. The one drop that genuinely
+     * wants breathing room — match's category card — declares padding on its own rule, which a
+     * theme reaches with ::part(drop). A token in between bought nothing.
+     */
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: var(--qti-drop-gap, 0);
+    /* No gap either: 0 is the flex initial value, so the declaration only existed to host a token.
+       A drop that wants space between chips sets gap on its own rule. */
     /* Containing block for anything a theme draws over the drop. Was 'position: relative' in the
        theme's 'drop' mixin, which put a document stylesheet in charge of a shadow node's position. */
     position: relative;

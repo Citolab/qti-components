@@ -40,7 +40,7 @@ export default [
       flex: 1;
       display: grid;
       grid-auto-flow: row;
-      grid-template-columns: repeat(auto-fit, minmax(var(--qti-drop-min-width, 120px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(var(--qti-dropzone-min-width, 120px), 1fr));
       gap: 0.5rem;
     }
 
@@ -73,6 +73,22 @@ export default [
       display: block;
       flex: 1;
       min-height: var(--qti-dropzone-min-height, 0);
+
+      /*
+       * Both axes, not just the height.
+       *
+       * The width was measured and published all along and then thrown away: the drop is a grid item
+       * and stretched to its track, which is 1fr, so a slot in the vertical layout came out 669px
+       * wide for a 149px chip. justify-self: start stops the stretch and the measured minimum then
+       * decides, so a slot is exactly as wide as the widest chip — the same rule the height has
+       * always followed.
+       *
+       * The grid is untouched: the tracks still lay the slots out and still wrap in the horizontal
+       * layout. Only the slot inside the track stops filling it.
+       */
+      min-width: var(--qti-dropzone-min-width, 0);
+      justify-self: start;
+
       /* A chip's drop shadow hangs outside its column. */
       overflow: visible;
     }
@@ -123,6 +139,33 @@ export default [
       grid-area: message;
       width: 100%;
       justify-self: start;
+    }
+
+    /*
+     * A horizontal order question needs the whole width, so the bank goes above the slots.
+     *
+     * Declining this used to be deliberate — "wiring orientation to [the qti-choices-* classes] is a
+     * behaviour change, not a move" — and side by side worked only because a slot could be narrower
+     * than the chip standing in it: the theme gave a placed chip width: 100%, so a 218px chip was
+     * squeezed into a 184px track and three of them fitted in half the width. That squeeze is gone
+     * (DROP-SIZING.md §5), and without it "van links naar rechts" collapsed to a single column,
+     * because 384px cannot hold two 218px chips.
+     *
+     * Measured on ITEM013: side by side gives the slots 384px and one 384px track; stacked gives them
+     * 800px and three 256px tracks, each wider than the chip. Vertical is untouched — one column is
+     * what it wants, and the split suits it.
+     *
+     * Deliberately BEFORE the qti-choices-* rules below, not after. Those tie on specificity, so
+     * source order decides: an author who writes qti-choices-left still gets it, and this is only the
+     * default for an orientation that has no such class.
+     */
+    :host([orientation='horizontal']) [part='container'],
+    :host(.qti-orientation-horizontal) [part='container'] {
+      grid-template-areas:
+        'drags'
+        'drops'
+        'message';
+      grid-template-columns: minmax(0, 1fr);
     }
 
     :host(.qti-choices-top) [part='container'] {

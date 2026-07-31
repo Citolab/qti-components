@@ -174,3 +174,12 @@ The theme still decides; the box model stays with the component. The same patter
   `CorrectResponseMixin`; the theme cannot see it, because `.full-correct-response` is on the wrapper
   *around* the interaction and only a document selector reaches that.
 - the native radio/checkbox under `.qti-input-control-hidden`, via `--qti-control-display`.
+
+---
+
+## 8. See also
+
+- **`DROP-SIZING.md`** — the drop/drag sizing vocabulary: which four tokens exist, why a drop is
+  either a slot or a card, why the inset is additive, and why a chip never resizes when it lands.
+  It is the worked example of §7's "hand the decision over as a custom property" rule, and of
+  preferring a deeper selector over a new token name.

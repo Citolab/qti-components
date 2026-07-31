@@ -3,7 +3,35 @@ import { createContext } from '@lit/context';
 export type ValidationDisplayMode = 'inline' | 'native' | 'both' | 'none';
 
 /**
- * Configuration context for QTI components. Provides runtime options for assessment item and interaction behavior.
+ * Configuration context for QTI components. Provides runtime options for assessment item and
+ * interaction behavior.
+ *
+ * ── Three ways to set it, in the order you should reach for them ─────────────────────────────
+ *
+ * 1. **On a provider**, for real delivery. `qti-test` and `qti-item` both provide it, so setting
+ *    `item.configContext = {…}` configures every interaction inside.
+ *
+ * 2. **On one interaction, directly** — the development-time route, and the reason
+ *    `Interaction.configContext` is public:
+ *
+ *        orderInteraction.configContext = { allowReorder: false };
+ *
+ *    An interaction has to work standalone, so in a story or a spec there is usually no provider
+ *    above it, and then nothing ever overwrites what you set. Where a provider DOES exist it wins on
+ *    its next emit, because `@consume` writes that same field.
+ *
+ * 3. **Around a subtree**, with the slotted `qti-config-test-provider` wrapper — when you want one
+ *    configuration for several interactions but not for the whole item.
+ *
+ * There is no merging at any level: @lit/context resolves to the nearest provider and that object
+ * replaces the ancestor's wholesale. A deeper provider therefore has to restate anything from above
+ * that it still wants.
+ *
+ * Note what is NOT here. Options an item author chooses per question are attributes on the
+ * interaction (`auto-size-dropzones`, `max-associations`, `disable-animations`); options only a
+ * developer chooses are mixin factory arguments or method overrides. This context is for what a
+ * delivery environment decides across items. `interactionContext` and `dragDropContext` are neither
+ * — they publish derived state (what a choice IS, what a drop HOLDS), never configuration.
  */
 export interface ConfigContext {
   /**

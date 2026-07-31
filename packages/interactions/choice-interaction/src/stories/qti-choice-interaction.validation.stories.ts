@@ -7,6 +7,7 @@ import { Test } from '../qti-choice-interaction.stories';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 import type { QtiChoiceInteraction } from '../qti-choice-interaction';
+import type { ConfigContext } from '@qti-components/base';
 
 type Story = StoryObj<QtiChoiceInteraction>;
 
@@ -368,7 +369,7 @@ export const ValidationDisplayModeNative: Story = {
     </qti-item>
   `,
   play: async ({ canvasElement }) => {
-    const item = canvasElement.querySelector('qti-item') as { configContext?: Record<string, unknown> } | null;
+    const item = canvasElement.querySelector('qti-item') as (HTMLElement & { configContext?: ConfigContext }) | null;
     const interaction = canvasElement.querySelector('qti-choice-interaction') as QtiChoiceInteraction;
 
     expect(item).toBeTruthy();
@@ -414,7 +415,7 @@ export const ValidationDisplayModeBoth: Story = {
     </qti-item>
   `,
   play: async ({ canvasElement }) => {
-    const item = canvasElement.querySelector('qti-item') as { configContext?: Record<string, unknown> } | null;
+    const item = canvasElement.querySelector('qti-item') as (HTMLElement & { configContext?: ConfigContext }) | null;
     const interaction = canvasElement.querySelector('qti-choice-interaction') as QtiChoiceInteraction;
 
     expect(item).toBeTruthy();

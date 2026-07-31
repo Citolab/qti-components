@@ -76,7 +76,7 @@ describe('an occupied drop target says so', () => {
     expect((drop.getAttribute('part') ?? '').split(/\s+/), 'and `drop` survives').toContain('drop');
   });
 
-  test('every drop target is hookable as [qti-droppable], light DOM or shadow', async () => {
+  test('every light-DOM drop target is hookable as :state(droppable)', async () => {
     document.body.innerHTML = `
       <qti-gap-match-interaction response-identifier="R">
         <qti-gap-text identifier="winter" match-max="1">winter</qti-gap-text>
@@ -87,7 +87,11 @@ describe('an occupied drop target says so', () => {
     const gaps = Array.from(document.querySelectorAll('qti-gap'));
     expect(gaps).toHaveLength(2);
     // `qti-gap` is authored in the item body, so no part can name it — a part only exists inside
-    // the shadow tree that declares it. The attribute is the theme's only cross-interaction hook.
-    expect(gaps.every(g => g.getAttribute('qti-droppable') === 'true')).toBe(true);
+    // the shadow tree that declares it. The state is the only cross-interaction hook, and it is a
+    // state rather than an attribute so a host whose mutation observer reverts unknown attributes
+    // (ProseMirror, in the editor) can carry the same marker.
+    expect(
+      gaps.every(g => (g as HTMLElement & { internals: ElementInternals }).internals.states.has('droppable'))
+    ).toBe(true);
   });
 });

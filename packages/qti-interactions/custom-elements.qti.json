@@ -740,8 +740,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout.",
-              "fieldName": "autoSizeDropzones"
+              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout. The mixin default is `true`; this interaction is the one that overrides it to `false`, because a match target is a category card rather than a socket (see the field below and DROP-SIZING.md §1)."
             },
             {
               "name": "class",
@@ -823,8 +822,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
-              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout."
+              "default": "true",
+              "description": "Extension, not QTI. Sizes every drop target to the widest chip so placement does not reflow the layout. On by default: an order slot is a socket cut to one chip, and both axes are measured (see DROP-SIZING.md)."
             },
             {
               "name": "disable-animations",
