@@ -285,11 +285,29 @@ export function applyDropzoneAutoSizing(
   let maxDraggableHeight = 0;
   let maxDraggableWidth = 0;
 
+  /*
+   * Measure each chip at its INTRINSIC width, with any minimum this pass previously gave it
+   * neutralised — otherwise the measurement reads its own output and the result is a one-way ratchet.
+   *
+   * `@mixin drag` gives a chip `min-width: var(--qti-dropzone-min-width)`, which is what makes a chip
+   * and its slot the same size. It also means that once the widest chip has set the reservation,
+   * every chip is at least that wide — so shortening the longest one can never bring the number back
+   * down. Measured: a chip edited from 191px of text back to 106px left the reservation at 191px
+   * forever, and with it every chip and every drop.
+   *
+   * Growing was never the problem; not being able to shrink was. Nothing paints between the
+   * neutralise and the restore, so this is invisible.
+   */
+  const restore = draggables.map(d => d.style.minWidth);
+  draggables.forEach(d => (d.style.minWidth = '0'));
+
   draggables.forEach(draggable => {
     const rect = draggable.getBoundingClientRect();
     maxDraggableHeight = Math.max(maxDraggableHeight, rect.height);
     maxDraggableWidth = Math.max(maxDraggableWidth, rect.width);
   });
+
+  draggables.forEach((d, i) => (d.style.minWidth = restore[i]));
 
   if (options.hasChanged?.({ height: maxDraggableHeight, width: maxDraggableWidth }) === false) return;
 
