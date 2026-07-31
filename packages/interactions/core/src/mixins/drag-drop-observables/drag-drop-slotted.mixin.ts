@@ -280,6 +280,20 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       return Object.values(this._dragDrop.countByTarget).reduce((total, count) => total + count, 0);
     }
 
+    /**
+     * Is this drop target full?
+     *
+     * `match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:
+     * the value is per-target ("match-max on the characters … is 1 because each character can be in
+     * only one play but it is 4 on the plays … because each play could contain all the characters",
+     * QTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it
+     * out: "Non-negative integer, 0 means unlimited").
+     *
+     * The `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on
+     * `qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that
+     * omits a required attribute, chosen as 1 because a drop that takes one chip is the least
+     * surprising reading of "unspecified". Same for the NaN guard.
+     */
     protected droppableAtCapacityFromState(droppable: HTMLElement): boolean {
       const parsed = parseInt(droppable.getAttribute('match-max') || '1', 10);
       const matchMax = Number.isNaN(parsed) ? 1 : parsed;

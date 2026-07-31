@@ -142,10 +142,23 @@ export default [
     }
 
     /*
-     * A horizontal order question needs the whole width, so the bank goes above the slots.
+     * The PLATFORM DEFAULT for container positioning, when the orientation is horizontal.
      *
-     * Declining this used to be deliberate — "wiring orientation to [the qti-choices-* classes] is a
-     * behaviour change, not a move" — and side by side worked only because a slot could be narrower
+     * Read that carefully, because the two things are separate axes in QTI 3 and this rule does not
+     * merge them. Vocabulary §1.2.9.3 defines qti-choices-* as where the choices container sits
+     * relative to the order-target container; orientation is how items flow WITHIN a container.
+     * They compose: §1.2.9.2 Figure 73 is orientation="vertical" class="qti-choices-left" and
+     * renders two COLUMNS SIDE BY SIDE — vertical does not stack the containers, and horizontal does
+     * not imply that it should.
+     *
+     * What makes this rule legitimate is that §1.2.9.3 declines to specify the positioning at all
+     * when no class is given: "In the absence of choices | order target container positioning,
+     * delivery systems should render platform defaults." That default is ours, and for a horizontal
+     * flow the useful one is stacked, because a row needs the width. An author who wants something
+     * else says so with qti-choices-*, which is exactly what the spec provides it for — and those
+     * rules below still win (see the source-order note).
+     *
+     * Side by side used to work here anyway, but only because a slot could be narrower
      * than the chip standing in it: the theme gave a placed chip width: 100%, so a 218px chip was
      * squeezed into a 184px track and three of them fitted in half the width. That squeeze is gone
      * (DROP-SIZING.md §5), and without it "van links naar rechts" collapsed to a single column,

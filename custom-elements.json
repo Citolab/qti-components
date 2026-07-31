@@ -6996,7 +6996,8 @@
                     "text": "HTMLElement"
                   }
                 }
-              ]
+              ],
+              "description": "Is this drop target full?\n\n`match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:\nthe value is per-target (\"match-max on the characters … is 1 because each character can be in\nonly one play but it is 4 on the plays … because each play could contain all the characters\",\nQTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it\nout: \"Non-negative integer, 0 means unlimited\").\n\nThe `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on\n`qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that\nomits a required attribute, chosen as 1 because a drop that takes one chip is the least\nsurprising reading of \"unspecified\". Same for the NaN guard."
             },
             {
               "kind": "method",
@@ -14530,6 +14531,7 @@
                   }
                 }
               ],
+              "description": "Is this drop target full?\n\n`match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:\nthe value is per-target (\"match-max on the characters … is 1 because each character can be in\nonly one play but it is 4 on the plays … because each play could contain all the characters\",\nQTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it\nout: \"Non-negative integer, 0 means unlimited\").\n\nThe `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on\n`qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that\nomits a required attribute, chosen as 1 because a drop that takes one chip is the least\nsurprising reading of \"unspecified\". Same for the NaN guard.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -21812,6 +21814,7 @@
                   }
                 }
               ],
+              "description": "Is this drop target full?\n\n`match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:\nthe value is per-target (\"match-max on the characters … is 1 because each character can be in\nonly one play but it is 4 on the plays … because each play could contain all the characters\",\nQTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it\nout: \"Non-negative integer, 0 means unlimited\").\n\nThe `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on\n`qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that\nomits a required attribute, chosen as 1 because a drop that takes one chip is the least\nsurprising reading of \"unspecified\". Same for the NaN guard.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
