@@ -38,7 +38,18 @@ export default [
      * attribute that used to accompany it is gone. Positive opt-in, so tabular headers are untouched.
      */
     :host(:state(droppable)) {
-      min-height: var(--qti-dropzone-min-height, 4rem);
+      /*
+       * The CARD token, not the slot one. This element is a droppable only in match, and match
+       * publishes no measurement — so reading --qti-dropzone-min-height here meant reading a name
+       * whose whole purpose is to carry a measurement that never arrives, and relying on the 4rem
+       * fallback to be the real value. That held only while the slot name stayed undeclared: the
+       * moment it was declared at 3rem the fallback became unreachable and every card silently lost
+       * 16px, with no rule mentioning cards anywhere in the diff.
+       *
+       * The width stays on the slot name. It is still 0 when unmeasured — a card is as wide as its
+       * grid track gives it, and the track has its own floor (--qti-drop-track-min-width).
+       */
+      min-height: var(--qti-drop-card-min-height, 4rem);
       min-width: var(--qti-dropzone-min-width, 0);
 
       /*
@@ -55,10 +66,10 @@ export default [
     :host(:state(droppable)) [part~='drop'] {
       /*
        * Match's dropzones are NOT auto-sized from the chips: a match target is a category, and
-       * should look able to hold several answers rather than hugging the widest one. The 4rem is a
-       * fallback, not a token of its own: qti-match-interaction publishes no measurement, so the same
-       * --qti-dropzone-min-height every other drop reserves with simply has nothing in it here, and a
-       * theme retunes the card by setting that one name on the interaction.
+       * should look able to hold several answers rather than hugging the widest one. So this reads
+       * the card's OWN token rather than the measured one — qti-match-interaction publishes no
+       * measurement, and a name that exists to carry one is the wrong place to keep a constant.
+       * A theme retunes every card by setting --qti-drop-card-min-height.
        *
        * Deliberately NOT conditional on this target's own match-max. Whether a drop is a category or
        * a slot is a property of the interaction, not of one target: a match-max="1" target is still a
@@ -66,7 +77,7 @@ export default [
        * several. Sizing each to its own contents would make that grid ragged. qti-match-interaction
        * turns measurement off for the whole interaction for the same reason.
        */
-      min-height: var(--qti-dropzone-min-height, 4rem);
+      min-height: var(--qti-drop-card-min-height, 4rem);
 
       /*
        * A card has room in it, so its contents sit inside a margin rather than against the edge, and

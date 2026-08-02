@@ -408,10 +408,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override afterCache(): void {
-      // Order matters: auto-sizing writes `min-width` from the widest chip, and `min-width`
-      // beats `width`. The author's configured width must therefore be applied last, and clear
-      // that min-width. Otherwise `data-choices-container-width` is silently discarded whenever
-      // a theme makes chips wider than the authored gap.
+      // Order no longer matters between these two. Auto-sizing used to write a `min-width` from the
+      // widest chip that the configured width then had to run after and clear — `min-width` beats
+      // `width` — which made a re-measurement enough to silently discard
+      // `data-choices-container-width` again. `autoSizeDropzoneWidth` now suppresses that write at
+      // the source, so there is nothing to undo and nothing to sequence.
       this.updateMinDimensionsForDropZones();
       this.applyConfiguredChoicesContainerWidth();
       if (this._pendingResponse !== undefined) {
@@ -422,21 +423,26 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     /**
-     * `data-choices-container-width` is an explicit authoring instruction, so it wins over the
-     * auto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it
-     * from the widest chip and `min-width` takes precedence over `width`, so a theme with roomy
-     * chips would otherwise silently widen the gap past the authored value.
+     * `data-choices-container-width` is an explicit authoring instruction, so the measured width
+     * must not compete with it: auto-sizing derives that width from the widest chip and `min-width`
+     * takes precedence over `width`, so a theme with roomy chips would silently widen the gap past
+     * the authored value.
      *
-     * Published as custom properties on the host rather than written to each droppable's
-     * `style` attribute — the droppables' stylesheets own the actual properties.
+     * Suppressing the measurement is how that is expressed — see `autoSizeDropzoneWidth`. The
+     * height is still measured; only the axis the author has spoken for is given up.
      */
+    public override get autoSizeDropzoneWidth(): boolean {
+      return !this.dataset.choicesContainerWidth;
+    }
     private applyConfiguredChoicesContainerWidth(): void {
       const configuredWidth = this.dataset.choicesContainerWidth;
       if (!configuredWidth) return;
 
-      // Zeroing the measured min-width is the fix: min-width beats width, so the auto-sizing
-      // measurement would otherwise silently widen the dropzone past the authored value.
-      this.style.setProperty('--qti-dropzone-min-width', '0');
+      // Nothing to undo here: `autoSizeDropzoneWidth` is false whenever this attribute is set (see
+      // the getter below), so the measurement never published a width in the first place. This used
+      // to zero `--qti-dropzone-min-width` on the host instead, which only worked while it ran
+      // strictly after the pass AND while the pass wrote to exactly one element — two facts that
+      // stopped being true when the mixin gained re-measurement and a second write target.
 
       // `width` stays an inline style, deliberately. `qti-associable-hotspot` already carries an
       // inline width derived from its `coords`, and an authored container width must override

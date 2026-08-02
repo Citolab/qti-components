@@ -1,5 +1,5 @@
 /**
- * Stylelint exists here for one rule.
+ * Stylelint exists here for invariants no other check in this repo can see.
  *
  * `qti/no-layout-in-transient-state` enforces the invariant that a transient state may repaint an
  * element but never resize or move it. Breaking it produces bugs no other check in this repo can
@@ -48,9 +48,21 @@ export default {
        * while this one does the reverse.
        */
       files: ['packages/qti-theme/src/styles/qti-theme/**/*.css'],
-      plugins: ['./tools/stylelint/no-layout-in-theme.mjs'],
+      plugins: ['./tools/stylelint/no-layout-in-theme.mjs', './tools/stylelint/no-declared-measured-token.mjs'],
       rules: {
-        'qti/no-layout-in-theme': true
+        'qti/no-layout-in-theme': true,
+        /*
+         * The measured drop-sizing tokens must not be given values at :root/:host. Declaring them
+         * makes every `var(--name, N)` fallback in the component stylesheets unreachable, which
+         * deletes the "nothing measured this" branch everywhere at once — and turns "the mixin
+         * declined to publish a width" from "no floor" into "the theme's floor". Both failure modes
+         * shipped together once; see DROP-SIZING.md §2 and the rule's own header.
+         *
+         * Scoped to the theme because that is the only place a global root is written. A component's
+         * .styles.ts declares on :host, which is its own element and the sanctioned way to own an
+         * axis (qti-match-interaction sets --qti-drop-track-min-width that way).
+         */
+        'qti/no-declared-measured-token': true
       }
     }
   ],

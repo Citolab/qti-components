@@ -10,9 +10,11 @@ export default [
    * A drop target. The interaction measures its chips and publishes the result as custom
    * properties on its own host; the actual CSS properties live here, not in a style attribute.
    *
-   * --qti-dropzone-width is only set when the item authors data-choices-container-width, and
-   * it arrives with --qti-dropzone-min-width: 0 — otherwise the measured min-width would win
-   * over the authored width, since min-width beats width.
+   * An authored data-choices-container-width takes the width axis: autoSizeDropzoneWidth goes
+   * false and the mixin never publishes --qti-dropzone-min-width at all, so the fallback below
+   * applies and the authored inline width is free to win. That works only because the token is
+   * never declared globally — min-width beats width, so a declared floor would silently outrank
+   * the author. See DROP-SIZING.md §2 and tools/stylelint/no-declared-measured-token.js.
    */
     /*
      * A gap sits in a line of prose, so it is inline-flex and rides the text baseline. All four of

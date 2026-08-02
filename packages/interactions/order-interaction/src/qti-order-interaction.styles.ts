@@ -40,7 +40,23 @@ export default [
       flex: 1;
       display: grid;
       grid-auto-flow: row;
-      grid-template-columns: repeat(auto-fit, minmax(var(--qti-dropzone-min-width, 120px), 1fr));
+      /*
+       * A column floor and a drop's own min-width are two jobs, and this asks for both by name
+       * rather than letting one token mean both. --qti-drop-track-min-width is the policy: a column
+       * stays usable however narrow the chips are. --qti-dropzone-min-width is the measurement: a
+       * column is never narrower than the chip it holds. max() of the two is what the grid wants,
+       * and the 0px fallback is what makes this correct for an interaction that never measures.
+       *
+       * One name did both until --qti-drop-min-width was deleted for exactly that (it meant the
+       * track floor here and a drop's own min-width in the match target). Folding the track back
+       * onto --qti-dropzone-min-width brought the conflation back: a theme setting it to give
+       * unmeasured drops a floor also set every column, and a code path that stopped publishing a
+       * measured width stopped meaning "no floor".
+       */
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(max(var(--qti-drop-track-min-width, 120px), var(--qti-dropzone-min-width, 0px)), 1fr)
+      );
       gap: 0.5rem;
     }
 

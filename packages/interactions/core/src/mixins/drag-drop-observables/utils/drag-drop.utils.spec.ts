@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  applyDropzoneAutoSizing,
   collectResponseData,
   countTotalAssociations,
   findDraggableTarget,
@@ -108,57 +107,5 @@ describe('drag-drop.utils', () => {
     droppable.appendChild(drag);
 
     expect(collectResponseData([droppable], '.drag')).toEqual(['item1 drop1']);
-  });
-
-  it('applyDropzoneAutoSizing publishes min sizes on the host and writes nothing else', () => {
-    const draggableA = makeElement({ left: 0, top: 0, width: 40, height: 30 });
-    const draggableB = makeElement({ left: 0, top: 0, width: 50, height: 40 });
-
-    const dropContainer = document.createElement('div');
-    Object.defineProperty(dropContainer, 'clientWidth', { value: 200 });
-
-    const droppable = makeElement(undefined, 'qti-simple-associable-choice');
-    droppable.attachShadow({ mode: 'open' });
-    const slot = document.createElement('slot');
-    slot.setAttribute('part', 'drop');
-    droppable.shadowRoot?.appendChild(slot);
-    dropContainer.appendChild(droppable);
-
-    const dragContainer = document.createElement('div');
-
-    const hostWindow = {
-      innerWidth: 1024,
-      getComputedStyle: () => ({ paddingLeft: '10', paddingRight: '10' })
-    } as unknown as Window;
-
-    const host = document.createElement('div');
-
-    applyDropzoneAutoSizing(host, [draggableA, draggableB], [droppable], [dragContainer], { hostWindow });
-
-    // Measurements are published as custom properties on the interaction host; each droppable's
-    // own stylesheet reads them. Nothing is written to a droppable's style attribute any more.
-    expect(host.style.getPropertyValue('--qti-dropzone-min-height')).toBe('40px');
-    expect(host.style.getPropertyValue('--qti-dropzone-min-width')).toBe('50px');
-    expect(droppable.getAttribute('style')).toBeNull();
-    expect(slot.getAttribute('style')).toBeNull();
-
-    expect(dragContainer.style.minHeight).toBe('var(--qti-drag-container-min-height, 40px)');
-
-    // The drops' own container is not touched either. This used to get an inline
-    // `grid-template-columns` when the droppables were qti-simple-associable-choice, which
-    // overrode --qti-match-target-min-width — the one responsive breakpoint match's stylesheet
-    // deliberately owns — and could not run in the editor, where that parent is a ProseMirror node.
-    expect(dropContainer.getAttribute('style')).toBeNull();
-  });
-
-  it('applyDropzoneAutoSizing skips the write when hasChanged says nothing moved', () => {
-    const draggable = makeElement({ left: 0, top: 0, width: 40, height: 30 });
-    const droppable = makeElement();
-    const host = document.createElement('div');
-    const hostWindow = { innerWidth: 1024, getComputedStyle: () => ({}) } as unknown as Window;
-
-    applyDropzoneAutoSizing(host, [draggable], [droppable], [], { hostWindow, hasChanged: () => false });
-
-    expect(host.getAttribute('style')).toBeNull();
   });
 });

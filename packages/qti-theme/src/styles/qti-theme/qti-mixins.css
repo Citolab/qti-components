@@ -134,10 +134,15 @@
    * CHIP_BOX_KNOWN_BAD.
    *
    * min-width, not width, so a chip whose own text is wider than the widest measured chip still
-   * fits. Falls back to 0 where nothing is measured (match, whose targets are cards, not slots), so
+   * fits. Defaults to 0 where nothing is measured (match, whose targets are cards, not slots), so
    * those chips keep their natural width with no rule needed to say so.
+   *
+   * --qti-drag-min-width, not --qti-dropzone-min-width: the mixin writes the same measured value to
+   * both, so a chip and its slot still match, but the two need OPPOSITE defaults when nothing is
+   * measured — a chip must stay at its natural width, while a drops-grid track must not collapse.
+   * See the note on both names in qti-variables.css.
    */
-  min-width: var(--qti-dropzone-min-width, 0);
+  min-width: var(--qti-drag-min-width, 0);
 
   /* Paint via the contract, nothing more — the --qti-component-* tokens already make a neutral
      bordered box (white surface, theme border, no shadow). The chip sets NO --drag-* of its own,

@@ -272,9 +272,7 @@
      * Reserved unconditionally, graded or not — padding is layout, and switching it on a verdict
      * would re-wrap the candidate's answer at the moment they are marked.
      */
-    --qti-correction-gutter: calc(
-      var(--qti-correction-inset) + var(--qti-correction-size) + var(--qti-glyph-gap)
-    );
+    --qti-correction-gutter: calc(var(--qti-correction-inset) + var(--qti-correction-size) + var(--qti-glyph-gap));
 
     /* The gap between a masked glyph and the text it sits beside — the drag-handle grip before a
        label, the correction badge after one. `em`, because a glyph is sized off the text it
@@ -291,29 +289,60 @@
        that is neutral for both, which is exactly why the duplication was worth collapsing. */
     --qti-glyph-gap: 0.5em;
     /*
-     * Drop sizing — TWO names, and neither is declared here.
+     * ── Drop sizing ─────────────────────────────────────────────────────────────────────────────
      *
-     *   --qti-dropzone-min-height  a drop's minimum height
-     *   --qti-dropzone-min-width   a drop's minimum width — AND a chip's, read by `@mixin drag`,
-     *                              which is what makes a chip and its slot the same size without any
-     *                              rule relating the two
+     * Four names, one job each, and — the load-bearing part — TWO OF THEM ARE DELIBERATELY NOT
+     * DECLARED HERE:
      *
-     * Both are written at runtime: DropzoneAutoSizeMixin measures the widest and tallest chip and
-     * publishes them on the interaction. A drop that is not measured falls back, and that is how
-     * match's category cards get a flat floor without a token of their own.
+     *   --qti-dropzone-min-height / -min-width   MEASURED. The box a drop reserves for one chip.
+     *   --qti-drag-min-width       MEASURED. A chip's own floor — the mixin writes it the same value
+     *                              as the drop's, which is what keeps a chip and its slot the same
+     *                              size without a rule relating the two. Unmeasured it is 0, from
+     *                              the fallback in `@mixin drag`, so a chip keeps its natural width.
+     *   --qti-drop-card-min-height a category card: match's targets, which collect several answers.
+     *   --qti-drop-track-min-width the floor of a drops-grid COLUMN. Not a drop's own width.
      *
-     * The split is by INTERACTION, not by a drop's `match-max`. A drop is either a slot — gap-match,
-     * order, associate, where one chip is the whole point — or a card, as in match, where a target
-     * collects answers and sits in a grid beside targets that take a different number.
+     * Only the last two are declared below. The measured three are written at runtime and never
+     * declared anywhere — see the paragraph under this list, and no-declared-measured-token.mjs.
+     *
+     * WHY THE MEASURED PAIR MUST STAY UNDECLARED. Every consumer reads them as
+     * `var(--qti-dropzone-min-*, N)`, where N is what that drop is worth when nothing measured it.
+     * Declaring them here makes every one of those fallbacks unreachable — the inherited value
+     * always substitutes — so the whole "unmeasured" branch silently disappears, and code that
+     * DECLINES to publish a measurement (see `autoSizeDropzoneWidth`, which is how an authored
+     * `data-choices-container-width` takes the width axis) no longer means "no floor", it means
+     * "whatever is declared here". That is not hypothetical: declaring them at 3rem/8rem gave a
+     * graphic-gap-match hotspot a 128px min-width that beat its authored 100px `width`, and shrank
+     * match's cards from 4rem to 3rem without any rule mentioning cards. Both were one commit.
+     *
+     * If you want to size drops by hand with no mixin involved, set the two names on the
+     * interaction — closer than :root, which is where an owner of an axis is supposed to speak.
+     * `tools/stylelint/no-declared-measured-token.js` enforces the rule so this cannot come back.
+     *
+     * WHY A CHIP AND A DROP HAVE SEPARATE WIDTHS, when the measurement gives them the same value:
+     * their unmeasured defaults differ. A chip with no measurement keeps its natural width, so 0.
+     * A drop with no measurement is at its consumer's fallback. `@mixin drag` reads
+     * --qti-drag-min-width; everything else reads --qti-dropzone-min-width.
+     *
+     * WHY THE CARD IS SEPARATE: match publishes no measurement at all, so a card sized off
+     * --qti-dropzone-min-height depends entirely on a fallback literal — fragile, as above. Whether
+     * a drop is a slot or a card is a property of the INTERACTION, not of a drop's own `match-max`:
+     * a match-max="1" target is still a category that happens to take one answer, and it sits in a
+     * grid beside targets that take several.
+     *
+     * WHY THE TRACK IS SEPARATE: a column floor and a drop's own min-width are unrelated jobs that
+     * happened to want the same number in order. --qti-drop-min-width already died of exactly that
+     * conflation (it meant the track floor in order and a drop's min-width in the match target),
+     * and folding the track back into --qti-dropzone-min-width reintroduced it. A track that must
+     * also fit a measured chip asks for both by hand:
+     *     minmax(max(var(--qti-drop-track-min-width), var(--qti-dropzone-min-width, 0px)), 1fr)
      *
      * Everything else that used to be a token here is a plain declaration on the one rule that wants
      * it, because `::part(drop)` already reaches every drop from the document and a custom property
-     * in between adds a name without adding reach. Six names went that way:
+     * in between adds a name without adding reach:
      *
-     *   --qti-drop-min-height, --qti-drop-min-width, --qti-match-target-min-width,
-     *   --qti-drag-min-width  collapsed into the two above. --qti-drop-min-width was the worst of
-     *                         them: it meant the grid-track floor in order and a drop's own
-     *                         min-width in the match target — one name, two unrelated jobs.
+     *   --qti-drop-min-height, --qti-drop-min-width, --qti-match-target-min-width  collapsed into
+     *                         the names above.
      *   --qti-dropzone-padding, --qti-drop-gap  deleted outright. A slot needs no inset at all (its
      *                         reservation is already the chip's border-box, so nothing is squeezed
      *                         and nothing shows), and the one drop that wants room — match's card —
@@ -321,6 +350,8 @@
      *
      * See DROP-SIZING.md.
      */
+    --qti-drop-card-min-height: 4rem;
+    --qti-drop-track-min-width: 7.5rem;
 
     /* Hotspot selection ring (qti-hotspot-interaction.css). Resting stroke width — :state(checked)
        and the correction states double it. The halo is the near-white outline either side of the

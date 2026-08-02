@@ -7,6 +7,10 @@ Sibling to `CONTRACT.md`, which governs the theme as a whole; this file governs 
 it. Read §7 of that file first — it is why sizing may be expressed as tokens at all, and why layout
 (`display`, `flex`, `grid`) may not be set from the theme.
 
+For the other half of the picture — how per-interaction variation is expressed in the *mixins*, and
+why no amount of mixin configurability substitutes for §2 below — see
+`packages/interactions/core/src/mixins/drag-drop-observables/CONFIGURABILITY.md`.
+
 ---
 
 ## 1. A drop is either a slot or a card
@@ -34,22 +38,41 @@ than a slot.
 
 ---
 
-## 2. Two tokens, and no third
+## 2. Five tokens, two of which must never be declared
 
 ```
+MEASURED — written at runtime by DropzoneAutoSizeMixin, never declared anywhere
 --qti-dropzone-min-height   a drop's minimum height
---qti-dropzone-min-width    a drop's minimum width — AND a chip's
+--qti-dropzone-min-width    a drop's minimum width
+--qti-drag-min-width        a chip's own floor; the mixin writes it the same measured width
+
+DECLARED — constants, in qti-variables.css
+--qti-drop-card-min-height  a category card: match's targets, which collect several answers
+--qti-drop-track-min-width  the floor of a drops-grid COLUMN; not a drop's own width
 ```
 
-The `min-*` pair is **written at runtime**, not declared: `DropzoneAutoSizeMixin` measures the widest
-and tallest chip and publishes both on the interaction. Nothing in `qti-variables.css` assigns them.
-A drop that is not measured therefore falls back, and that is how a card gets its flat floor without
-a token of its own.
+The measured trio is **written at runtime**, not declared: `DropzoneAutoSizeMixin` measures the
+widest and tallest chip and publishes them. **Nothing in `qti-variables.css` assigns them, and a
+stylelint rule enforces that** — `qti/no-declared-measured-token`. A drop that is not measured
+therefore falls back to the literal in its own `var()`, and that fallback is a real branch, not
+decoration.
 
-`--qti-dropzone-min-width` being read by **both** the drop and the chip (`@mixin drag`) is the load
-bearing part. One shared name is what makes a chip and its slot the same size, with no rule relating
-the two and no arithmetic. It also means "uniform chips" is not a feature with a switch — it is what
-falls out of an interaction measuring at all.
+> **Why the lint rule exists.** The measured pair was once given declared defaults
+> (`3rem` / `8rem`) so an implementer had "knobs". Two things broke silently and neither was
+> obvious from the diff. Every `var(--qti-dropzone-min-*, N)` fallback in the seven component
+> stylesheets became unreachable, so the unmeasured branch vanished — match's cards read
+> `var(--qti-dropzone-min-height, 4rem)` and quietly shrank to `3rem`. And "the mixin declined to
+> publish a width" — which is how an authored `data-choices-container-width` takes the width axis,
+> see `autoSizeDropzoneWidth` — stopped meaning "no floor" and started meaning `8rem`, so a
+> graphic-gap-match hotspot got a 128px `min-width` that beat its authored 100px `width`. To size
+> drops by hand, set the two names **on the interaction**: an owner of an axis speaks closer than
+> `:root`, and the mixin never writes there.
+
+`--qti-drag-min-width` exists so a chip and a drop can have **different unmeasured defaults** while
+sharing one measured value. A chip with nothing measured keeps its natural width (`0`); a drop is
+worth whatever its own fallback says. The mixin writing both is what makes a chip and its slot the
+same size, with no rule relating the two and no arithmetic — so "uniform chips" is not a feature
+with a switch, it is what falls out of an interaction measuring at all.
 
 ### When a place needs a different value, declare it there
 
@@ -65,23 +88,37 @@ of the card treatment is two declarations on the rule that wants them:
 }
 ```
 
-Reserve a token for what a document selector genuinely **cannot** reach (CONTRACT.md §7). The two
-that survive qualify: they are measurements only the interaction can take.
-
-Six names were removed for failing that test.
+Reserve a token for what a document selector genuinely **cannot** reach (CONTRACT.md §7), or for a
+constant that more than one interaction has to agree on. The measured trio qualifies on the first
+count; the card and track floors on the second.
 
 | removed | now |
 |---|---|
-| `--qti-drop-min-height` | `--qti-dropzone-min-height`, with the card's `4rem` as its fallback |
-| `--qti-drop-min-width` | `--qti-dropzone-min-width` |
-| `--qti-match-target-min-width` | `--qti-dropzone-min-width`, fallback `150px` |
-| `--qti-drag-min-width` | `--qti-dropzone-min-width` |
+| `--qti-drop-min-height` | `--qti-drop-card-min-height` (card) / `--qti-dropzone-min-height` (slot) |
+| `--qti-drop-min-width` | `--qti-drop-track-min-width` (track) / `--qti-dropzone-min-width` (drop) |
+| `--qti-match-target-min-width` | `--qti-drop-track-min-width`, set to `150px` on match's `:host` |
 | `--qti-dropzone-padding` | gone — see §3 |
 | `--qti-drop-gap` | gone — `0` is the flex initial value, so the declaration only existed to host a token |
 
 `--qti-drop-min-width` is the cautionary tale: it meant *the grid-track floor* in order (`120px`) and
 *a drop's own min-width* in the match target (`0`). One name, two unrelated jobs, and a theme setting
 it hit both.
+
+**It came back once.** Collapsing the track floor onto `--qti-dropzone-min-width` reintroduced
+exactly that pairing, and it broke in exactly the predicted way the moment something declared the
+token. The two jobs are separate names again, and a track that must also fit a measured chip asks
+for both by hand rather than hoping one name means both:
+
+```css
+/* qti-order-interaction.styles.ts, qti-match-interaction.styles.ts */
+grid-template-columns: repeat(
+  auto-fit,
+  minmax(max(var(--qti-drop-track-min-width, 120px), var(--qti-dropzone-min-width, 0px)), 1fr)
+);
+```
+
+The `0px` on the measured term is what makes this correct for an interaction that never measures:
+match publishes nothing, so the max() falls to the policy floor, which is what a card grid wants.
 
 ---
 

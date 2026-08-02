@@ -6901,8 +6901,17 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzoneWidth",
+              "type": {
+                "text": "boolean"
               },
-              "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties."
+              "privacy": "public",
+              "description": "`data-choices-container-width` is an explicit authoring instruction, so the measured width\nmust not compete with it: auto-sizing derives that width from the widest chip and `min-width`\ntakes precedence over `width`, so a theme with roomy chips would silently widen the gap past\nthe authored value.\n\nSuppressing the measurement is how that is expressed — see `autoSizeDropzoneWidth`. The\nheight is still measured; only the axis the author has spoken for is given up.",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -8792,49 +8801,6 @@
       "declarations": [
         {
           "kind": "function",
-          "name": "applyDropzoneAutoSizing",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "parameters": [
-            {
-              "name": "host",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "name": "draggables",
-              "type": {
-                "text": "HTMLElement[]"
-              }
-            },
-            {
-              "name": "droppables",
-              "type": {
-                "text": "HTMLElement[]"
-              }
-            },
-            {
-              "name": "dragContainers",
-              "type": {
-                "text": "HTMLElement[]"
-              }
-            },
-            {
-              "name": "options",
-              "default": "{}",
-              "type": {
-                "text": "{\n    hostWindow?: Window | null;\n    /**\n     * Called with the measurement before anything is written; return false to skip the write.\n     * `DropzoneAutoSizeMixin` uses it to suppress a no-op write, which is what keeps its\n     * `ResizeObserver` from feeding itself.\n     */\n    hasChanged?: (measured: { height: number; width: number }) => boolean;\n  }"
-              }
-            }
-          ],
-          "description": "Measure the chips and publish the result as custom properties on the interaction host.\n\nJavaScript owns the *measurement*; CSS owns the *properties*. Each droppable's stylesheet\nreads `min-height: var(--qti-dropzone-min-height, 0)` etc., so nothing is written to\n`element.style` and a theme can override any of them by setting the variable.\n\nThis also removes a precedence trap: when both `min-width` and `width` were written inline,\n`min-width` silently won, discarding an authored `data-choices-container-width`.\n\nMeasurement only — no scheduling and no `this`. `DropzoneAutoSizeMixin` owns when this runs.\n\nA branch that wrote an inline `grid-template-columns` on the drops' container when the droppables\nwere `qti-simple-associable-choice` was deleted. It fired only for match, which had auto-sizing\noff, so it never ran; turning match's measurement on would have woken it, and it overrode\n`--qti-match-target-min-width` — the one responsive breakpoint `qti-match-interaction.styles.ts`\ndeliberately owns. It was also the one write here that could not work in the editor, where that\nparent is a ProseMirror-managed node."
-        },
-        {
-          "kind": "function",
           "name": "clearDragChipStates",
           "return": {
             "type": {
@@ -9153,14 +9119,6 @@
         }
       ],
       "exports": [
-        {
-          "kind": "js",
-          "name": "applyDropzoneAutoSizing",
-          "declaration": {
-            "name": "applyDropzoneAutoSizing",
-            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-drop.utils.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "clearDragChipStates",
@@ -11454,6 +11412,49 @@
       "path": "packages/interactions/core/src/mixins/dropzone-auto-size/dropzone-auto-size.mixin.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "applyDropzoneAutoSizing",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "draggables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "droppables",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "dragContainers",
+              "type": {
+                "text": "HTMLElement[]"
+              }
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "{\n    hostWindow?: Window | null;\n    /**\n     * Called with the measurement before anything is written; return false to skip the write. The\n     * mixin uses it to suppress a no-op write, which is what keeps its `ResizeObserver` from feeding\n     * itself.\n     */\n    hasChanged?: (measured: { height: number; width: number }) => boolean;\n    /**\n     * Publish the measured width. False when something else owns that axis — an authored\n     * `data-choices-container-width` — in which case the height is still measured and published and\n     * the width is simply never written.\n     *\n     * Not writing is deliberate, and replaces a \"write then undo\" arrangement that had the caller\n     * zero the property afterwards. That only held while this ran exactly once and wrote to exactly\n     * one element; re-measurement and a second write target each broke it independently.\n     */\n    publishWidth?: boolean;\n  }"
+              }
+            }
+          ],
+          "description": "Measure the chips and publish the result as `--qti-dropzone-min-height` / `--qti-dropzone-min-width`.\n\nLives here rather than in `drag-drop.utils` because this mixin is its only caller, and because\nkeeping it here is what makes the mixin an abstraction rather than a wiring layer: EVERYTHING that\nknows how a dropzone gets its size is in this file, and the rest of the library knows only the two\ncustom properties. Drop the mixin from an interaction and its drops fall back to the theme's\ndeclared defaults — see the note on both names in qti-variables.css — so nothing breaks and an\nauthor can set the two properties by hand to size the drops themselves.\n\nJavaScript owns the *measurement*; CSS owns the *properties*. Each droppable's stylesheet reads\n`min-height: var(--qti-dropzone-min-height)`, so nothing is written to a droppable's `style` and a\ntheme overrides by setting the variable closer.\n\nThat also removes a precedence trap: when both `min-width` and `width` were written inline,\n`min-width` silently won, discarding an authored `data-choices-container-width`.\n\nExported for its spec only — the folder's `index.ts` names just the mixin, so this does not reach\nthe package's public surface."
+        },
+        {
           "kind": "mixin",
           "description": "Publishes `--qti-dropzone-min-height` / `--qti-dropzone-min-width` from the measured chips, and\nkeeps them up to date as the chips change size.\n\n── Why this is a mixin of its own ───────────────────────────────────────────────────────────\n\nIt used to be two members of `DragDropSlottedMixin`, reachable only by inheriting the whole\ndrag-drop stack. The editor needs exactly this and none of the rest: it renders the same\nelements, imports the same stylesheets — so its drops already read\n`min-height: var(--qti-dropzone-min-height, 0)` — but it does its own drag handling inside a\nProseMirror document. Splitting the measurement out means both sides run the same code instead of\nthe editor growing a parallel copy that drifts.\n\n── When it runs ─────────────────────────────────────────────────────────────────────────────\n\nOn mount, and then whenever a chip changes size. The second half is new: the only trigger used to\nbe `connectedCallback → setupDragDrop → afterCache`, so a chip that changed size after first paint\nnever re-measured and its drop stayed the wrong size. That bites an author typing into a chip in\nthe editor, and it bites a delivered item too — a late-loading image or a web-font swap does the\nsame thing.\n\nA `ResizeObserver` over the chips is the trigger, because it catches all three causes (text\nreflow, image load, font swap) in one mechanism. A `MutationObserver` would need\n`characterData: true` and would still miss the image. The dead legacy mixin at\n`mixins/drag-drop/drag-drop-interaction-mixin.ts` used both and still caught neither reliably.\n\n── Where the properties land ────────────────────────────────────────────────────────────────\n\nOn `dropzonePropertyTarget()`, which defaults to the host. Custom properties inherit down the flat\ntree, so any element that is an ancestor of the drops works — and the editor needs that, because\nwriting `style` on a ProseMirror-managed host is reverted by its mutation observer, and the revert\nre-triggers the observer that wrote it. There it returns a node inside the shadow root instead,\nwhich a mutation observer on the document cannot see.",
           "name": "DropzoneAutoSizeMixin",
@@ -11552,6 +11553,16 @@
               "attribute": "auto-size-dropzones"
             },
             {
+              "kind": "field",
+              "name": "autoSizeDropzoneWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "Size the dropzones' WIDTH from the chips. Separate from `autoSizeDropzones` because the two\naxes can have different owners: `data-choices-container-width` is an explicit authoring\ninstruction about width alone, and the height should still be measured under it.\n\nA subclass that overrides this to false gets no `--qti-dropzone-min-width` written at all —\nrather than one written and then zeroed by whoever runs next. That distinction is the point.\nThe old arrangement held only while this pass ran exactly once, and wrote to exactly one\nelement; re-measurement broke the first assumption and publishing on the drag containers\nbroke the second, each time by silently discarding the authored width.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "collectAutoSizeTargets",
               "privacy": "public",
@@ -11621,6 +11632,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "applyDropzoneAutoSizing",
+          "declaration": {
+            "name": "applyDropzoneAutoSizing",
+            "module": "packages/interactions/core/src/mixins/dropzone-auto-size/dropzone-auto-size.mixin.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "DropzoneAutoSizeMixin",
@@ -14615,7 +14634,20 @@
                   "text": "void"
                 }
               },
-              "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties.",
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzoneWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "`data-choices-container-width` is an explicit authoring instruction, so the measured width\nmust not compete with it: auto-sizing derives that width from the widest chip and `min-width`\ntakes precedence over `width`, so a theme with roomy chips would silently widen the gap past\nthe authored value.\n\nSuppressing the measurement is how that is expressed — see `autoSizeDropzoneWidth`. The\nheight is still measured; only the axis the author has spoken for is given up.",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -22127,7 +22159,6 @@
                   "text": "void"
                 }
               },
-              "description": "`data-choices-container-width` is an explicit authoring instruction, so it wins over the\nauto-sizing pass. Zeroing `--qti-dropzone-min-width` is the point: auto-sizing derives it\nfrom the widest chip and `min-width` takes precedence over `width`, so a theme with roomy\nchips would otherwise silently widen the gap past the authored value.\n\nPublished as custom properties on the host rather than written to each droppable's\n`style` attribute — the droppables' stylesheets own the actual properties.",
               "inheritedFrom": {
                 "name": "DragDropSlottedMixin",
                 "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
@@ -22142,6 +22173,20 @@
               "privacy": "public",
               "default": "false",
               "description": "Match targets are categories, not slots. They should look able to hold several answers, so they\ntake a flat floor (the `--qti-dropzone-min-height` fallback) rather than the size of the widest chip.\n\nThis is a property of the INTERACTION, not of an individual target. A `match-max=\"1\"` target is\nstill a category that happens to take one answer, and it sits in a grid beside targets that take\nseveral — sizing each one to its own contents would make that grid ragged. So the whole\ninteraction opts out, and the per-target `match-max` decides nothing about size here.\n\nThe interactions where a drop IS a slot — gap-match, order, associate — keep measurement on, and\ntheir drops are exactly the widest chip plus the inset."
+            },
+            {
+              "kind": "field",
+              "name": "autoSizeDropzoneWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "description": "`data-choices-container-width` is an explicit authoring instruction, so the measured width\nmust not compete with it: auto-sizing derives that width from the widest chip and `min-width`\ntakes precedence over `width`, so a theme with roomy chips would silently widen the gap past\nthe authored value.\n\nSuppressing the measurement is how that is expressed — see `autoSizeDropzoneWidth`. The\nheight is still measured; only the axis the author has spoken for is given up.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "DragDropSlottedMixin",
+                "module": "packages/interactions/core/src/mixins/drag-drop-observables/drag-drop-slotted.mixin.ts"
+              }
             },
             {
               "kind": "method",

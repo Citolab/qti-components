@@ -18,6 +18,15 @@ export default [
      */
     :host {
       display: block;
+
+      /*
+       * Match's columns are wider than the shared default, because each one is a category card
+       * rather than a slot holding one chip. This was the 150px fallback inside the grid rule
+       * below; a fallback could hold it only while nothing declared the token, so it is a real
+       * declaration now. On :host, so it survives with or without the theme — and so a theme can
+       * still retune it from the document, which outranks :host for the element it matches.
+       */
+      --qti-drop-track-min-width: 150px;
     }
 
     slot:not([hidden]) {
@@ -80,7 +89,17 @@ export default [
 
     :host(:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:last-of-type) {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(var(--qti-dropzone-min-width, 150px), 1fr));
+      /*
+       * The track floor by name — see the same rule in qti-order-interaction.styles.ts. Match sets
+       * it wider than the shared default below, because a category card has to look able to hold
+       * several answers. The measured term is still in the max() and still resolves to 0px here:
+       * this interaction sets autoSizeDropzones = false, so nothing ever publishes it. Written out
+       * anyway so the two grids read identically and neither has to be understood as the special one.
+       */
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(max(var(--qti-drop-track-min-width, 150px), var(--qti-dropzone-min-width, 0px)), 1fr)
+      );
     }
 
     /* An answer key shows the answer, not the bank you would have dragged it from. The attribute is
