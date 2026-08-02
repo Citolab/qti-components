@@ -75,13 +75,6 @@
     "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\"",
     "cem:interactions": "cem generate && node tools/build/cem-interactions-mcp.mjs custom-elements.interactions.raw.json custom-elements.interactions.json"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs}": [
-      "prettier --write",
-      "eslint --fix",
-      "vitest related --run --passWithNoTests"
-    ]
-  },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
     "@chromatic-com/storybook": "^5.2.1",

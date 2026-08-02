@@ -11,9 +11,17 @@ pnpm run test:vrt
 # One tier, same on every branch. Fast by design — heavier verification
 # (attw, madge, publint, full test suite) is the CI gate's job, not the commit's.
 #
-# lint-staged runs on STAGED files only: prettier --write, eslint --fix,
-# and `vitest related` — the "minimal tests" for what you touched.
-npx lint-staged --allow-empty --quiet
+# lint-staged runs on STAGED files only — prettier, eslint, stylelint, and one
+# `vitest run --changed` for the whole commit. See .lintstagedrc.mjs; the comment
+# there explains why the test call has to stay inside lint-staged rather than move
+# up here, and why it is `--changed` rather than `related`.
+#
+# --hide-unstaged is load-bearing, not a tidiness flag. By default lint-staged hides only
+# PARTIALLY staged files, so a fully unstaged edit stays in the working tree and
+# `vitest --changed` picks it up — which means an unstaged fix can make a staged bug pass and
+# the commit goes out green. With this flag every unstaged change is stashed for the run, so
+# "changed" and "staged" are the same set. Restorable either way: git stash list.
+npx lint-staged --allow-empty --quiet --hide-unstaged
 
 # Keep the committed custom-elements.json manifests in sync with source.
 # `cem` (analyzer) is much cheaper than a full `pnpm run build`.
