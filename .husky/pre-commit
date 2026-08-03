@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+# Not in CI. Everything below gates a HUMAN commit; none of it has a subject when the committer is
+# a robot. The release workflow commits the changesets version bump itself, and that commit would
+# otherwise fire this hook — running a browser VRT pass in a job that installs no Playwright
+# browsers and has no reason to.
+#
+# The same omission was not hypothetical in qti-editor: it failed a release outright, which then
+# published nothing while main sat several merges ahead of npm. Guarding both hooks the same way.
+if [ -n "$CI" ]; then
+  exit 0
+fi
+
 # Visual-regression gate, first. The committed VRT baselines must still match, so a stray visual
 # change can't slip through unnoticed. Compare-only (never --update): a browser run of a handful of
 # stories, a few seconds. If this fails on an INTENTIONAL visual change, refresh the baselines with
