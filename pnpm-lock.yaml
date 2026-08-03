@@ -36,9 +36,6 @@ importers:
       '@open-wc/lit-helpers':
         specifier: ^0.7.0
         version: 0.7.0(lit@3.3.2)
-      '@pwrs/cem':
-        specifier: ^0.11.0
-        version: 0.11.0
       '@storybook/addon-a11y':
         specifier: ^10.5.4
         version: 10.5.4(storybook@10.5.4(@types/react@19.2.2)(prettier@3.5.3)(react@19.2.4))
@@ -2386,41 +2383,6 @@ packages:
   '@puppeteer/browsers@2.3.0':
     resolution: {integrity: sha512-ioXoq9gPxkss4MYhD+SFaU9p1IHFUX0ILAWFPyjGaBdjLsYAlZw6j1iLA0N/m12uVHLFDfSYNF7EQccjinIMDA==}
     engines: {node: '>=18'}
-    hasBin: true
-
-  '@pwrs/cem-darwin-arm64@0.11.0':
-    resolution: {integrity: sha512-5NFxI53+EiEO0zZ/tC6YVGpd9YNWjVjR2A/WuOtdXFc3xXgMj2ylvNnpEQhnhVkp2DPhTvsXCgs5h3Ig8P5xpQ==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@pwrs/cem-darwin-x64@0.11.0':
-    resolution: {integrity: sha512-kENUWHwEqloVMnh3qr4JA263akX4yFKSdj/Ngi++jrYA3od14EGoUaB9ItnbOPC3KJoa1ilXeYBQmmQe+9l/gA==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@pwrs/cem-linux-arm64@0.11.0':
-    resolution: {integrity: sha512-U9AGlNYU0DqaBxusBKG/dk42jyYmc/VI0k7mFk+5tUGYjg2ry2fYhCtfcc1N3sGrOayiA4KusB6wNp6gykEk6A==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@pwrs/cem-linux-x64@0.11.0':
-    resolution: {integrity: sha512-M+sdsqYCyQS+OmnAelXk+la7jtAC+ynqo0WTAaGgwk61EmKPCGLM6vE3D+i/OdtI7y2YyyEEokx1vGoF86Xivg==}
-    cpu: [x64]
-    os: [linux]
-
-  '@pwrs/cem-win32-arm64@0.11.0':
-    resolution: {integrity: sha512-4IWOm+OhMlyfQxzED7a3aZOCdp8yydwdzguhz2jAHOWY4+1aqVJgxViImu9Jap5iCSX9iYTTB+z7jcfw1Kge5A==}
-    cpu: [arm64]
-    os: [win32]
-
-  '@pwrs/cem-win32-x64@0.11.0':
-    resolution: {integrity: sha512-QBdaWeRZrCSnRvuoLy3b0fFDzABZveBzQafJ1Dq1HqFIz8ZRZ4k7uavTKi35Mp6LhG2i0FzpglKZH/+sis3wTg==}
-    cpu: [x64]
-    os: [win32]
-
-  '@pwrs/cem@0.11.0':
-    resolution: {integrity: sha512-RYevS96tl61JWAtgo/2qksLd+CRfhCKj6b2fuEgjBpKWNDrVsr6JvX+xNNYgXBf+g2xQLgfdgaZvRNakDswzAQ==}
-    engines: {node: '>=22.0.0'}
     hasBin: true
 
   '@rollup/rollup-android-arm-eabi@4.57.1':
@@ -8685,33 +8647,6 @@ snapshots:
       - react-native-b4a
       - supports-color
     optional: true
-
-  '@pwrs/cem-darwin-arm64@0.11.0':
-    optional: true
-
-  '@pwrs/cem-darwin-x64@0.11.0':
-    optional: true
-
-  '@pwrs/cem-linux-arm64@0.11.0':
-    optional: true
-
-  '@pwrs/cem-linux-x64@0.11.0':
-    optional: true
-
-  '@pwrs/cem-win32-arm64@0.11.0':
-    optional: true
-
-  '@pwrs/cem-win32-x64@0.11.0':
-    optional: true
-
-  '@pwrs/cem@0.11.0':
-    optionalDependencies:
-      '@pwrs/cem-darwin-arm64': 0.11.0
-      '@pwrs/cem-darwin-x64': 0.11.0
-      '@pwrs/cem-linux-arm64': 0.11.0
-      '@pwrs/cem-linux-x64': 0.11.0
-      '@pwrs/cem-win32-arm64': 0.11.0
-      '@pwrs/cem-win32-x64': 0.11.0
 
   '@rollup/rollup-android-arm-eabi@4.57.1':
     optional: true

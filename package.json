@@ -72,8 +72,7 @@
     "ci:publish:workspace": "PNPM_GIT_CHECKS=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
     "ci:publish:umbrella": "PNPM_GIT_CHECKS=false pnpm --filter \"./packages/qti-components\" run publish",
     "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella",
-    "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\"",
-    "cem:interactions": "cem generate && node tools/build/cem-interactions-mcp.mjs custom-elements.interactions.raw.json custom-elements.interactions.json"
+    "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\""
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
@@ -84,7 +83,6 @@
     "@eslint/js": "^9.39.2",
     "@manypkg/cli": "^0.25.1",
     "@open-wc/lit-helpers": "^0.7.0",
-    "@pwrs/cem": "^0.11.0",
     "@storybook/addon-a11y": "^10.5.4",
     "@storybook/addon-docs": "^10.5.4",
     "@storybook/addon-links": "^10.5.4",
