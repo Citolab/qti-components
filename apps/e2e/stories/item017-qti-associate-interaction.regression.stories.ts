@@ -9,9 +9,15 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 import './kennisnet.css';
 
-// ITEM017's fixture renders through `qti-match-interaction`; the `associate` filename mirrors
-// the qti-editor story name (its ProseMirror model is the associate descriptor) so both repos stay
-// on one regression filename per item — see docs/regression-item-alignment-playbook.md in qti-editor.
+// ITEM017's fixture renders through `qti-match-interaction` — "Sleepvraag – afbeeldingen koppelen".
+// This is MATCH coverage, not associate, despite the filename.
+//
+// The `associate` in the name mirrored qti-editor's item017 story, under the one-filename-per-item
+// rule in docs/regression-item-alignment-playbook.md. That counterpart is gone: qti-editor's ITEM017
+// was a different item ("Koppelvraag - stripduo's", a real qti-associate-interaction) and was
+// removed with the rest of the editor's associate support. So the name now mirrors nothing. Left as
+// it is rather than renamed, to keep the associate removal from churning an unrelated story id —
+// rename it when the alignment playbook is next revisited.
 
 const meta: Meta = {
   title: 'QTI Kennisnet/Regression',

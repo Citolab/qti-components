@@ -943,43 +943,6 @@ const dragCards = [
       </qti-match-interaction>
     `,
     { note: 'correction', width: 'wide' }
-  ),
-  card(
-    'Associate',
-    html`
-      <qti-associate-interaction response-identifier="RESPONSE" max-associations="3" response="A P,C M">
-        <qti-prompt>Combineer elke tegenspeler met zijn rivaal.</qti-prompt>
-        <qti-simple-associable-choice identifier="A" match-max="1">Antonio</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="M" match-max="1">Montague</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
-      </qti-associate-interaction>
-    `,
-    { note: 'normal', width: 'wide' }
-  ),
-  card(
-    'Associate — correction',
-    html`
-      <qti-associate-interaction
-        response-identifier="RESPONSE"
-        max-associations="3"
-        response="A M,C P,D L"
-        correct-response="A P,C M,D L"
-        show-candidate-correction
-        show-full-correct-response
-      >
-        <qti-prompt>Combineer elke tegenspeler met zijn rivaal.</qti-prompt>
-        <qti-simple-associable-choice identifier="A" match-max="1">Antonio</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="M" match-max="1">Montague</qti-simple-associable-choice>
-        <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
-      </qti-associate-interaction>
-    `,
-    { note: 'correction', width: 'wide' }
   )
 ];
 
