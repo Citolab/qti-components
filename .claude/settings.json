@@ -1,0 +1,30 @@
+{
+    "attribution": {
+        "commit": "",
+        "pr": ""
+    },
+    "permissions": {
+        "allow": [
+            "Bash(gh api:*)",
+            "WebFetch(domain:www.imsglobal.org)",
+            "mcp__chrome-devtools__get_console_message",
+            "mcp__chrome-devtools__evaluate_script",
+            "mcp__chrome-devtools__navigate_page",
+            "mcp__chrome-devtools__take_screenshot",
+            "mcp__chrome-devtools__list_console_messages",
+            "mcp__chrome-devtools__list_network_requests",
+            "mcp__chrome-devtools__take_snapshot",
+            "mcp__chrome-devtools__click"
+        ],
+        "deny": [
+            "Read(.env*)",
+            "Edit(.env*)",
+            "Bash(cat *.env*)",
+            "Bash(head *.env*)",
+            "Bash(tail *.env*)",
+            "Bash(less *.env*)",
+            "Bash(more *.env*)",
+            "Bash(grep . *.env*)"
+        ]
+    }
+}
