@@ -35,8 +35,11 @@ export default [
     [name='prompt'] {
       width: 100%;
     }
+    /* Wraps, for the reason spelled out on associate's identical bank: nowrap does not overflow, it
+       shrinks, and a squeezed chip is worse than a second line. */
     [name='drags'] {
       display: flex;
+      flex-wrap: wrap;
       align-items: flex-start;
       flex: 1;
       border: 2px solid transparent;

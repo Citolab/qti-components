@@ -121,6 +121,17 @@ describe('drag chip vocabulary', () => {
       expect(cs.cursor, 'a chip advertises that it can be picked up').toBe('grab');
       expect(cs.backgroundColor, 'a chip has an opaque fill, not the page behind it').not.toBe('rgba(0, 0, 0, 0)');
       expect(parseFloat(cs.borderTopWidth), 'a chip has a border').toBeGreaterThan(0);
+      /*
+       * And the border is VISIBLE, not merely reserved. Width alone passed while associate set
+       * `--drag-border-color: transparent` on its bank chip: the 1px box was there, the colour was
+       * not, and on the neutral theme — white fill, white page — the chip disappeared into the page,
+       * leaving bare text with a grip. It read as correct under a brand, where the fill draws the
+       * shape and the border is genuinely redundant, which is why every VRT baseline (all
+       * kennisnet) stayed green through it.
+       */
+      expect(cs.borderTopColor, 'and that border is visible, not a reserved-but-transparent edge').not.toBe(
+        'rgba(0, 0, 0, 0)'
+      );
       expect(parseFloat(cs.borderTopLeftRadius), 'a chip has rounded corners').toBeGreaterThan(0);
       expect(parseFloat(cs.paddingLeft), 'a chip has padding').toBeGreaterThan(0);
 

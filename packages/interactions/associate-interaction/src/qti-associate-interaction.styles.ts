@@ -20,8 +20,13 @@ export default [
     :host {
       display: block; /* necessary to calculate scaling position */
     }
+    /* The bank WRAPS. Without flex-wrap the row is nowrap, and a flex item's default flex-shrink: 1
+       then compresses the chips instead of moving them down: a bank of six squeezed the last chip
+       until only its grip was left, at no width the author could see coming. A chip is a fixed
+       thing, so the only place the overflow can go is the next line. */
     slot[part~='drags'] {
       display: flex;
+      flex-wrap: wrap;
       align-items: flex-start;
       flex: 1;
       border: 2px solid transparent;

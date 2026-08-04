@@ -34,21 +34,23 @@
 
 @layer qti-components.interactions.base {
   qti-associate-interaction {
+    /*
+     * NO `--drag-border-color: transparent` here, and that absence is the rule.
+     *
+     * It used to say transparent, on the reasoning that the bank chip's border should be INVISIBLE
+     * rather than absent — same box as a placed chip, only the colour differs, so a chip does not
+     * resize when it lands. The box argument is sound and unaffected either way: `@mixin drag` sets
+     * border-WIDTH, so the 1px is reserved whatever the colour is.
+     *
+     * What it missed is that the neutral theme has no fill to fall back on. A bank chip is
+     * --qti-component-background-color (white) on a white page, so zeroing the only edge it had left
+     * bare text with a grip — no chip at all. It read as correct only under a brand, where the fill
+     * draws the shape and the border is genuinely redundant (kennisnet sets its own transparent).
+     * Associate was the only interaction doing this; match, order and gap-match all let the bank
+     * chip take --qti-component-border-color, and now so does this one.
+     */
     & qti-simple-associable-choice {
       padding: var(--qti-drag-padding);
-      /*
-       * The bank chip's border is INVISIBLE, not absent: same box as a placed chip, only the colour
-       * differs, so a chip does not resize when it lands.
-       *
-       * Through the SLOT, not a `border` shorthand. A direct declaration here (interactions.base)
-       * outranks the paint binding that draws the chip (global layer), so nothing switching
-       * --drag-border-color could ever recolour this edge — and a correction is exactly that. It only
-       * worked before because the shared corrections rule declared `border-color` directly too, and
-       * won by layer. Spraying that rule into this file turned the correction into a slot switch, and
-       * this line silently ate it: a corrected associate chip lost its green border and went
-       * transparent. Caught by the computed-style diff, not by eye.
-       */
-      --drag-border-color: transparent;
     }
 
     &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
