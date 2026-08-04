@@ -225,7 +225,7 @@ export class QtiExtendedTextInteraction extends Interaction {
    * overrides `render()` and calls the pieces where it wants them — which is the point: an extension
    * point that only lets you APPEND has already decided the layout on the subclass's behalf, and the
    * subclass is usually the one that knows better. The correction variant in
-   * @qti-components/qti-corrections puts its badge between the field and the validation message;
+   * @qti-components/corrections puts its badge between the field and the validation message;
    * something else may want it above the prompt, or may want to drop a piece entirely.
    *
    * Override a piece to change what one part looks like; override `render()` to change the order.

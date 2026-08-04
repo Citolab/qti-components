@@ -15,7 +15,7 @@ import type { ResponseVariable } from '../lib/variables';
 
 /**
  * Shared QTI interaction base. Formative correction behavior is supplied by the
- * `@qti-components/qti-corrections` package.
+ * `@qti-components/corrections` package.
  */
 export abstract class Interaction extends LitElement implements ValidatableInteraction {
   @consume({ context: itemContext, subscribe: true })

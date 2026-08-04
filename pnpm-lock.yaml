@@ -735,6 +735,9 @@ importers:
       '@qti-components/base':
         specifier: workspace:^
         version: link:../qti-base
+      '@qti-components/corrections':
+        specifier: workspace:^
+        version: link:../qti-corrections
       '@qti-components/elements':
         specifier: workspace:^
         version: link:../qti-elements

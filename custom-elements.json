@@ -31569,7 +31569,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Shared QTI interaction base. Formative correction behavior is supplied by the\n`@qti-components/qti-corrections` package.",
+          "description": "Shared QTI interaction base. Formative correction behavior is supplied by the\n`@qti-components/corrections` package.",
           "name": "Interaction",
           "members": [
             {

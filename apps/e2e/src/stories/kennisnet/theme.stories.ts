@@ -5,7 +5,7 @@ import { qtiContentElements } from '@qti-components/elements/elements';
 import { qtiInteractionElements } from '@qti-components/interactions/elements';
 import { qtiItemElements } from '@qti-components/item/elements';
 import { qtiProcessingElements } from '@qti-components/processing/elements';
-import { qtiCorrectionElements } from '@qti-components/qti-corrections/elements';
+import { qtiCorrectionElements } from '@qti-components/corrections/elements';
 import { qtiTestElements } from '@qti-components/test/elements';
 
 import itemCss from '../../../../../packages/qti-theme/src/item.css?inline';

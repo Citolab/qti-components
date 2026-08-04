@@ -6,6 +6,7 @@ export * from '@qti-components/transformers';
 export * from '@qti-components/loader';
 export * from '@qti-components/base';
 export * from '@qti-components/processing';
+export * from '@qti-components/corrections';
 
 // Import version from package.json
 // import packageJson from '../package.json' with { type: 'json' };
