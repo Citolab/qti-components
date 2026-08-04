@@ -1,107 +1,13 @@
-import { html, nothing, render } from 'lit';
+import { html } from 'lit';
 
-import { qtiBaseElements } from '@qti-components/base/elements';
-import { qtiContentElements } from '@qti-components/elements/elements';
-import { qtiInteractionElements } from '@qti-components/interactions/elements';
-import { qtiItemElements } from '@qti-components/item/elements';
-import { qtiProcessingElements } from '@qti-components/processing/elements';
-// The qti-corrections package only exports the correction interactions themselves — building a
-// registry from them is the implementor's job, done right here.
-import { qtiCorrectionElements } from '@qti-components/qti-corrections/elements';
-import { qtiTestElements } from '@qti-components/test/elements';
+import { withCorrection } from './with-correction';
 
-// The raw theme stylesheet is a build-time asset (the theme package only exports its index).
-
-import itemCss from '../../../../../packages/qti-theme/src/item.css?inline';
-// The Kennisnet brand overlay lives with this story now (no longer bundled into the theme).
-import kennisnetCss from './kennisnet.css?inline';
-
-import type { Decorator, Meta, StoryObj } from '@storybook/web-components-vite';
-
-/**
- * Registration lives here, on the implementor side. qti-corrections only ships the correction
- * interactions (`qtiCorrectionElements`, keyed by their standard QTI tag); wiring them into a scoped
- * custom element registry (https://developer.chrome.com/blog/scoped-registries) is this file's job.
- *
- * Inside a shadow root created with this registry, `qti-choice-interaction` &co resolve to their
- * `…Correction` variants instead of the standard classes registered globally, so
- * `show-candidate-correction` / `show-full-correct-response` actually paint — and the mapping stays
- * local to these stories.
- *
- * A scoped registry has NO global fallback: it must define every tag the items render. So the full
- * set of standard QTI manifests is merged in, with the correction variants overriding by tag.
- */
-const correctionRegistry = (() => {
-  const registry = new CustomElementRegistry();
-  const overrides = new Map<string, CustomElementConstructor>(
-    qtiCorrectionElements.map(({ tag, ctor }) => [tag, ctor])
-  );
-  const everyElement = [
-    ...qtiBaseElements,
-    ...qtiProcessingElements,
-    ...qtiContentElements,
-    ...qtiItemElements,
-    ...qtiTestElements,
-    ...qtiInteractionElements,
-    ...qtiCorrectionElements
-  ];
-  for (const { tag, ctor } of everyElement) {
-    if (!registry.get(tag)) registry.define(tag, overrides.get(tag) ?? ctor);
-  }
-  return registry;
-})();
-
-/**
- * Parsed once — every story's shadow root adopts both sheets. item.css declares the full `@layer`
- * order; kennisnet.css only adds rules to the already-declared `brand` / `states` layers, so it is
- * adopted after item.css.
- */
-const itemSheet = new CSSStyleSheet();
-itemSheet.replaceSync(itemCss);
-const kennisnetSheet = new CSSStyleSheet();
-kennisnetSheet.replaceSync(kennisnetCss);
-
-/**
- * Render each item into a shadow root backed by the scoped correction registry, in the Kennisnet
- * brand.
- *
- * The markup is assigned via `innerHTML` so the browser upgrades its custom elements against the
- * scoped registry (lit's `render()` binds elements to the global registry at creation time, which
- * would ignore the scoped mapping); the lit template is serialized to a string first.
- *
- * `item.css` and the Kennisnet brand overlay (`kennisnet.css`) are both adopted into the shadow,
- * because a document sheet can't cross the boundary. The overlay carries no scoping class — being
- * adopted into this shadow (and nowhere else) is what scopes it — so its rules reach every chip
- * here, including the corrections chips that live in this shadow.
- */
-const withKennisnetCorrection: Decorator = story => {
-  const scratch = document.createElement('div');
-  render(story() as Parameters<typeof render>[0], scratch);
-  const markup = scratch.innerHTML;
-  render(nothing, scratch);
-
-  const host = document.createElement('div');
-  const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry });
-  shadow.adoptedStyleSheets = [itemSheet, kennisnetSheet];
-
-  // Wrapped in a container `<div>` on purpose: `show-full-correct-response` inserts its clone through
-  // `interaction.parentElement`, which is null for a direct child of a shadow root. Real items always
-  // nest the interaction inside `qti-item-body`.
-  shadow.innerHTML = `<div>${markup}</div>`;
-
-  for (const container of shadow.querySelectorAll<HTMLElement & { customElementRegistry: CustomElementRegistry }>(
-    'item-container, test-container'
-  )) {
-    container.customElementRegistry = correctionRegistry;
-  }
-
-  return host;
-};
+import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
   title: 'Kennisnet',
   tags: ['autodocs', 'no-tests', 'vrt'],
-  decorators: [withKennisnetCorrection],
+  decorators: [withCorrection],
   parameters: {
     layout: 'fullscreen',
     viewport: {

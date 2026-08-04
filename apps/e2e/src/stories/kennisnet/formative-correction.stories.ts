@@ -1,6 +1,8 @@
 import { html } from 'lit';
 import { waitFor } from 'storybook/test';
 
+import { withCorrection } from './with-correction';
+
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 type Story = StoryObj;
@@ -38,6 +40,7 @@ type QtiTestElement = HTMLElement & {
 
 type AssessmentItemElement = HTMLElement & {
   processResponse(countNumAttempts?: boolean, reportValidityAfterScoring?: boolean): boolean;
+  showCandidateCorrection?(show: boolean): void;
   variables: {
     identifier: string;
     value: string | string[] | null;
@@ -79,6 +82,7 @@ const assessmentXML = `<?xml version="1.0" encoding="UTF-8"?>
 
 const meta: Meta = {
   title: 'kennisnet/formative correction',
+  decorators: [withCorrection],
   parameters: {
     layout: 'fullscreen'
   }
@@ -271,13 +275,7 @@ const checkCurrentItem = async (root: HTMLElement): Promise<void> => {
     return score;
   });
 
-  root.querySelector('test-navigation')?.dispatchEvent(
-    new CustomEvent('test-show-candidate-correction', {
-      bubbles: true,
-      composed: true,
-      detail: true
-    })
-  );
+  assessmentItem.showCandidateCorrection?.(true);
 
   updateControls(root);
 };
