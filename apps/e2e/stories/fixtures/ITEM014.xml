@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
-                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
-                     identifier="ITEM014"
-                     title="Volgordevraag (verticaal)"
-                     time-dependent="false">
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+    identifier="ITEM014"
+    title="Volgordevraag (verticaal)"
+    time-dependent="false">
     <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="ordered">
         <qti-correct-response>
             <qti-value>num_1</qti-value>
@@ -13,7 +13,8 @@
         </qti-correct-response>
     </qti-response-declaration>
 
-    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single"
+        normal-minimum="0" normal-maximum="1">
         <qti-default-value>
             <qti-value>0</qti-value>
         </qti-default-value>
@@ -26,7 +27,8 @@
 
     <qti-item-body>
         <p>Sorteer de volgende getallen van klein naar groot:</p>
-        <qti-order-interaction response-identifier="RESPONSE" shuffle="false" orientation="vertical">
+        <qti-order-interaction response-identifier="RESPONSE" shuffle="false"
+            class="qti-orientation-vertical">
             <qti-simple-choice identifier="num_sqrt2">√2 (≈ 1,414)</qti-simple-choice>
             <qti-simple-choice identifier="num_1">1</qti-simple-choice>
             <qti-simple-choice identifier="num_pi">π (≈ 3,14159)</qti-simple-choice>
@@ -45,8 +47,8 @@
         <qti-response-condition>
             <qti-response-if>
                 <qti-match>
-                    <qti-variable identifier="RESPONSE"/>
-                    <qti-correct identifier="RESPONSE"/>
+                    <qti-variable identifier="RESPONSE" />
+                    <qti-correct identifier="RESPONSE" />
                 </qti-match>
                 <qti-set-outcome-value identifier="SCORE">
                     <qti-base-value base-type="float">1</qti-base-value>
