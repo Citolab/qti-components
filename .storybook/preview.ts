@@ -35,65 +35,6 @@ import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
 
-declare global {
-  interface Window {
-    __qtiInspectStyles?: (target: string | Element) => unknown;
-  }
-}
-
-if (typeof window !== 'undefined' && !window.__qtiInspectStyles) {
-  window.__qtiInspectStyles = (target: string | Element) => {
-    const host = typeof target === 'string' ? document.querySelector(target) : target;
-    if (!host) {
-      console.warn('[qti styles] target not found', target);
-      return null;
-    }
-
-    const roots: Array<{ label: string; root: Document | ShadowRoot }> = [{ label: 'document', root: document }];
-    if ((host as Element).shadowRoot) {
-      roots.push({
-        label: `${(host as Element).tagName.toLowerCase()}#shadowRoot`,
-        root: (host as Element).shadowRoot!
-      });
-    }
-
-    const report = roots.map(({ label, root }) => {
-      const linksOrStyles = Array.from(root.querySelectorAll('link[rel="stylesheet"], style')).map((node, idx) => {
-        if (node instanceof HTMLLinkElement) {
-          return { index: idx, kind: 'link', href: node.href };
-        }
-        return {
-          index: idx,
-          kind: 'style',
-          preview: (node.textContent || '').trim().slice(0, 120)
-        };
-      });
-
-      const adopted = (root as ShadowRoot).adoptedStyleSheets
-        ? Array.from((root as ShadowRoot).adoptedStyleSheets).map((sheet, idx) => ({
-            index: idx,
-            kind: 'adoptedStyleSheet',
-            href: (sheet as CSSStyleSheet & { href?: string }).href ?? null,
-            rules: sheet.cssRules.length
-          }))
-        : [];
-
-      return { label, linksOrStyles, adopted };
-    });
-
-    console.log('[qti styles] report for', host);
-    for (const section of report) {
-      console.group(section.label);
-      if (section.linksOrStyles.length > 0) console.table(section.linksOrStyles);
-      if (section.adopted.length > 0) console.table(section.adopted);
-      if (section.linksOrStyles.length === 0 && section.adopted.length === 0) console.log('No styles found');
-      console.groupEnd();
-    }
-
-    return report;
-  };
-}
-
 export const loaders = [mswLoader];
 
 export const customViewports = {

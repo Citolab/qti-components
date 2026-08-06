@@ -93,14 +93,6 @@ const config: StorybookConfig = {
     return {
       ...config,
       plugins: [...(config.plugins || []), tsconfigPaths()],
-      css: {
-        ...(config.css || {}),
-        devSourcemap: true
-      },
-      build: {
-        ...(config.build || {}),
-        sourcemap: true
-      },
       resolve: {
         ...config.resolve
       }
