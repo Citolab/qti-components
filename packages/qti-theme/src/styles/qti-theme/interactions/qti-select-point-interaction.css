@@ -1,6 +1,19 @@
 @layer qti-components.interactions.base {
   qti-select-point-interaction {
-    color: var(--qti-primary);
+    /*
+     * Paint the marker through its own variable, not through `color`.
+     *
+     * This used to be `color: var(--qti-primary)` on the host, because the marker's mask is filled
+     * with `var(--qti-select-point-marker-color, currentColor)`. But `color` inherits, so it also
+     * repainted everything else inside the interaction — most visibly the `qti-prompt`, which turned
+     * the question text primary-coloured for no reason.
+     *
+     * `--qti-select-point-marker-color` is the seam the component already publishes, and the one the
+     * corrections mixin writes to. Setting it here rather than `color` leaves the prompt inheriting
+     * ordinary body text, and corrections still win: they set the same variable on the point element
+     * itself (`[part~='correct']`), which is deeper than this host declaration.
+     */
+    --qti-select-point-marker-color: var(--qti-primary);
 
     &::part(point) {
       &:focus {
@@ -12,12 +25,14 @@
 
 @layer qti-components.interactions.corrections {
   qti-select-point-interaction {
+    /* Same knob as the resting colour above — these set `color` before, which stopped reaching the
+       marker once it was no longer painted with `currentColor`. */
     &::part(correct) {
-      color: var(--qti-correct);
+      --qti-select-point-marker-color: var(--qti-correct);
     }
 
     &::part(incorrect) {
-      color: var(--qti-incorrect);
+      --qti-select-point-marker-color: var(--qti-incorrect);
     }
   }
 }
