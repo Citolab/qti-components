@@ -244,10 +244,17 @@ export class QtiInlineChoiceInteraction extends Interaction {
       return;
     }
 
+    // Render a copy: a DOM node can only live in one place, so binding the option's
+    // own nodes here would move them out of the trigger's `part="value"` — blanking
+    // the candidate's answer whenever it happens to be the correct option.
+    const content = Array.isArray(correctOptionData.content)
+      ? correctOptionData.content.map(node => node.cloneNode(true))
+      : correctOptionData.content;
+
     this.correctOption = html`<span
       part="correct-option"
       style="border:1px solid var(--qti-correct); border-radius:4px; padding: 2px 4px; margin: 4px; display:inline-block"
-      >${correctOptionData.content}</span
+      >${content}</span
     >`;
   }
 
