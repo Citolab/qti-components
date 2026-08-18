@@ -1,9 +1,37 @@
+import type { BaseType, Cardinality } from '@qti-components/base';
+
 /**
  * Shared status values for PCI lifecycle callbacks.
  *
  * Matches the status vocabulary used in IMS QTI 3 PCI documentation.
  */
 export type PciInteractionStatus = 'interacting' | 'suspended' | 'closed' | 'solution' | 'review';
+
+/**
+ * Correct response of a response declaration, mirroring `qti-correct-response`.
+ *
+ * `value` holds the authored `qti-value` content: a single value for `single`
+ * cardinality, an array of values for every other cardinality.
+ */
+export interface PciCorrectResponse {
+  value: string | string[];
+}
+
+/**
+ * Response declaration passed into the `getInstance` configuration so a PCI can
+ * render a correct response itself when the item is in `solution` status.
+ *
+ * Mirrors `qti-response-declaration` with camelCased names. Every field is
+ * optional, a delivery engine passes as much or as little as it has, and
+ * `correctResponse` is absent when the response variable has none.
+ *
+ * See https://github.com/1EdTech/qti-project-management/issues/210
+ */
+export interface PciResponseDeclaration {
+  baseType?: BaseType;
+  cardinality?: Cardinality;
+  correctResponse?: PciCorrectResponse;
+}
 
 /**
  * Payload passed to `onready` once a PCI reports it is ready.
@@ -37,6 +65,7 @@ export interface ConfigProperties<T> {
   contextVariables: Record<string, unknown>; // Follows structure in Appendix C
   boundTo: unknown; // Follows structure in Appendix C
   responseIdentifier: string; // Unique within interaction scope
+  responseDeclaration?: PciResponseDeclaration; // Optional, carries the correct response when the item declares one
 
   onready: (payload: PciReadyPayload) => void; // Callback for when PCI is fully constructed and ready
   ondone?: (payload: PciDonePayload) => void; // Optional callback when candidate finishes interaction

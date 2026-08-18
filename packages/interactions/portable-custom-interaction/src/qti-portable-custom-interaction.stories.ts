@@ -48,6 +48,18 @@ type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
  * - `<properties>` element: raw properties markup forwarded to PCI.
  * - `data-*` attributes: forwarded as PCI `properties` values.
  *   advanced RequireJS configuration controls.
+ * - `status`: item lifecycle status handed to the PCI, defaults to `interacting`.
+ *
+ * ### Correct Response
+ * The `getInstance` configuration carries an optional `responseDeclaration` (camelCased
+ * `qti-response-declaration`, with `baseType`, `cardinality` and `correctResponse`), so a PCI
+ * can render the correct response itself when it is constructed with `status: 'solution'`:
+ * ```js
+ * getInstance(dom, { responseIdentifier: 'RESPONSE', status: 'solution',
+ *   responseDeclaration: { baseType: 'identifier', cardinality: 'single', correctResponse: { value: 'A' } }
+ * }, state)
+ * ```
+ * See https://github.com/1EdTech/qti-project-management/issues/210
  *
  * ### Implementation Guide Coverage (this component)
  * - Implemented: host element contract, response/state bridge, `data-*` to properties,
@@ -620,6 +632,19 @@ export const VerhoudingenShowCorrectResponse = {
 
       await waitFor(
         () => {
+          // The PCI is constructed in solution status and gets the correct response
+          // through its configuration: https://github.com/1EdTech/qti-project-management/issues/210
+          const pciConfig = (viewer.querySelector('iframe')?.contentWindow as any)?.PCIManager?.pciConfig;
+          expect(pciConfig?.status).toBe('solution');
+          expect(pciConfig?.responseDeclaration).toEqual({
+            baseType: 'string',
+            cardinality: 'single',
+            correctResponse: {
+              value:
+                '[{"color":"blue","percentage":12.5},{"color":"green","percentage":12.5},{"color":"red","percentage":75}]'
+            }
+          });
+
           const cloneHtml = deepIframeHtml(viewer.querySelector('iframe'));
           // The correct response is 75% red, 12.5% blue and 12.5% green; an
           // unanswered interaction paints every square white instead.

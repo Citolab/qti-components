@@ -8,7 +8,13 @@ import styles from './qti-portable-custom-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
-import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
+import type {
+  PciInteractionStatus,
+  PciResponseDeclaration,
+  QtiRecordItem,
+  QtiVariableJSON,
+  ResponseVariableType
+} from './interface';
 
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
@@ -51,6 +57,51 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   @property({ type: Boolean, attribute: 'data-use-default-paths' })
   useDefaultPaths = false;
+
+  /**
+   * Item lifecycle status handed to the PCI in its `getInstance` configuration.
+   * A delivery engine sets `solution` to let a PCI render the correct response.
+   */
+  @property({ type: String, attribute: 'status' })
+  status: PciInteractionStatus = 'interacting';
+
+  #responseDeclaration: PciResponseDeclaration | null = null;
+
+  /**
+   * Response declaration passed into the PCI configuration, so a PCI can render
+   * the correct response itself instead of having it pushed in as a response.
+   *
+   * Derived from the item context, unless a host sets it explicitly - the
+   * correct response viewer does, since it has no response declaration of its own.
+   *
+   * See https://github.com/1EdTech/qti-project-management/issues/210
+   */
+  set responseDeclaration(declaration: PciResponseDeclaration | null) {
+    this.#responseDeclaration = declaration;
+  }
+
+  get responseDeclaration(): PciResponseDeclaration | null {
+    if (this.#responseDeclaration) {
+      return this.#responseDeclaration;
+    }
+
+    const variable = this.responseVariable;
+    if (!variable) {
+      return null;
+    }
+
+    const declaration: PciResponseDeclaration = {
+      baseType: variable.baseType,
+      cardinality: variable.cardinality
+    };
+
+    const correctResponse = variable.correctResponse;
+    if (correctResponse !== null && correctResponse !== undefined && correctResponse !== '') {
+      declaration.correctResponse = { value: correctResponse };
+    }
+
+    return declaration;
+  }
 
   @state()
   private _errorMessage: string = null;
@@ -764,6 +815,8 @@ export class QtiPortableCustomInteraction extends Interaction {
       dataAttributes: { ...this.dataset },
       interactionModules: this.#getInteractionModules(),
       boundTo: storedState ? null : this.boundTo,
+      responseDeclaration: this.responseDeclaration,
+      status: this.status,
       state: storedState
     };
 
@@ -993,6 +1046,7 @@ export class QtiPortableCustomInteraction extends Interaction {
             // PCI Manager for iframe implementation
             window.PCIManager = {
               pciInstance: null,
+              pciConfig: null,
               container: null,
               markupEl: null,
               propertiesEl: null,
@@ -1218,7 +1272,9 @@ export class QtiPortableCustomInteraction extends Interaction {
                           );
                         },
                         responseIdentifier: config.responseIdentifier,
-                        boundTo: config.boundTo
+                        boundTo: config.boundTo,
+                        responseDeclaration: config.responseDeclaration || undefined,
+                        status: config.status || 'interacting'
                       };
 
                       if (pciInstance.getInstance) {
@@ -1234,6 +1290,9 @@ export class QtiPortableCustomInteraction extends Interaction {
                             restoredState = config.state;
                           }
                         }
+                        // Keep the configuration around next to the instance, it carries the
+                        // status and response declaration this PCI was constructed with.
+                        this.pciConfig = pciConfig;
                         pciInstance.getInstance(dom, pciConfig, restoredState || undefined);
                       } else {
                         this.notifyError('Loaded PCI module has no getInstance().');
@@ -1851,7 +1910,19 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Store the correct response value
     const correctResponseValue = responseVariable.correctResponse;
 
+    // Hand the correct response to the viewer the standard way as well: a PCI that
+    // implements the solution use case reads it from its getInstance configuration.
+    // See https://github.com/1EdTech/qti-project-management/issues/210
+    correctResponseViewer.status = 'solution';
+    correctResponseViewer.responseDeclaration = {
+      baseType: responseVariable.baseType,
+      cardinality: responseVariable.cardinality,
+      correctResponse: { value: correctResponseValue }
+    };
+
     // Push the correct response into the viewer's iframe as soon as it is ready.
+    // Kept next to the responseDeclaration above for PCIs that do not implement
+    // the solution use case: they only know how to render a bound response.
     // Note: overriding connectedCallback on the instance has no effect, custom
     // element reactions are looked up on the prototype when the element is defined.
     const applyCorrectResponse = () => {
