@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="Examples-shuffled-sections"
+  title="Examples (shuffled sections)"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+  <qti-test-part identifier="test-part-1" navigation-mode="nonlinear" submission-mode="individual">
+
+    <qti-assessment-section identifier="info-start" title="start" visible="true">
+      <qti-assessment-item-ref identifier="ITM-info_start" href="items/info_start.xml"
+        category="info" />
+    </qti-assessment-section>
+
+    <!--
+      The three items wrapped in "keep-together-block" stay together and in this
+      authored order, while the four loose item refs shuffle around the block.
+      The subsection carries no keep-together attribute on purpose: QTI 3.0
+      defaults it to true, so wrapping a run of items is all that is needed.
+      Add fixed="true" to the subsection to pin the block to its authored slot.
+    -->
+    <qti-assessment-section identifier="basic" title="1. Basic Level" visible="true">
+
+      <qti-ordering shuffle="true" />
+
+      <qti-rubric-block use="instructions" view="candidate">
+        <qti-content-body>
+          <h2>1. Basic Level</h2>
+        </qti-content-body>
+      </qti-rubric-block>
+
+      <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
+
+      <qti-assessment-section identifier="keep-together-block">
+        <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml" />
+        <qti-assessment-item-ref identifier="ITM-choice_multiple" href="items/choice_multiple.xml" />
+        <qti-assessment-item-ref identifier="ITM-extended_text" href="items/extended_text.xml" />
+      </qti-assessment-section>
+
+      <qti-assessment-item-ref identifier="ITM-math" href="items/math.xml" />
+      <qti-assessment-item-ref identifier="ITM-order" href="items/order.xml" />
+      <qti-assessment-item-ref identifier="ITM-slider" href="items/slider.xml" />
+    </qti-assessment-section>
+
+    <!-- No qti-ordering: this section keeps its authored order untouched. -->
+    <qti-assessment-section identifier="advanced" title="2. Advanced Level" visible="true">
+
+      <qti-rubric-block use="instructions" view="candidate">
+        <qti-content-body>
+          <h2>2. Advanced Level</h2>
+        </qti-content-body>
+      </qti-rubric-block>
+
+      <qti-assessment-item-ref identifier="ITM-gap_match" href="items/gap_match.xml" />
+      <qti-assessment-item-ref identifier="ITM-inline_choice" href="items/inline_choice.xml" />
+      <qti-assessment-item-ref identifier="ITM-match" href="items/match.xml" />
+    </qti-assessment-section>
+
+    <qti-assessment-section identifier="info-end" title="end" visible="true">
+      <qti-assessment-item-ref identifier="ITM-info_end" href="items/info_end.xml" category="info" />
+    </qti-assessment-section>
+
+  </qti-test-part>
+</qti-assessment-test>

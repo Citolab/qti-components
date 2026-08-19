@@ -14,10 +14,18 @@ const attrIsTrue = (el: Element, ...names: string[]): boolean =>
     return v === 'true' || v === '1';
   });
 
+const attrIsFalse = (el: Element, ...names: string[]): boolean =>
+  names.some(n => {
+    const v = (el.getAttribute(n) ?? '').trim().toLowerCase();
+    return v === 'false' || v === '0';
+  });
+
+const isOrdering = (el: Element): boolean => isLocal(el, 'qti-ordering', 'ordering');
+
+const isSelection = (el: Element): boolean => isLocal(el, 'qti-selection', 'selection');
+
 const shuffleOrderingElements = (section: Element): Element[] =>
-  Array.from(section.children).filter(
-    child => isLocal(child, 'qti-ordering', 'ordering') && attrIsTrue(child, 'shuffle')
-  );
+  Array.from(section.children).filter(child => isOrdering(child) && attrIsTrue(child, 'shuffle'));
 
 const rngFor = (seed: string | number, key: string) => createSeededRandom(`${seed}:${key}`);
 
@@ -25,20 +33,65 @@ const rngFor = (seed: string | number, key: string) => createSeededRandom(`${see
 type Unit = { nodes: Element[]; fixed: boolean };
 
 /**
+ * The item refs of a subsection, in document order, plus the element children
+ * that consuming the wrapper would discard.
+ *
+ * Descendant subsections are collected transitively: `orderSection` returns
+ * early for a section without <qti-ordering>, so a wrapper nested inside a
+ * non-shuffling subsection is never consumed there and has to be gathered here.
+ */
+function collectItemRefsDeep(section: Element): { itemRefs: Element[]; dropped: string[] } {
+  const itemRefs: Element[] = [];
+  const dropped: string[] = [];
+
+  const walk = (el: Element): void => {
+    for (const child of Array.from(el.children)) {
+      if (isItemRef(child)) {
+        itemRefs.push(child);
+      } else if (isSection(child)) {
+        walk(child);
+      } else if (!isOrdering(child) && !isSelection(child)) {
+        // Ordering/selection directives are transform config; anything else
+        // (a rubric block, say) is authored content that the lift loses.
+        dropped.push(child.localName);
+      }
+    }
+  };
+  walk(section);
+
+  return { itemRefs, dropped };
+}
+
+function warnDroppedChildren(section: Element, dropped: string[]): void {
+  if (dropped.length === 0) return;
+  const identifier = section.getAttribute('identifier') ?? '(no identifier)';
+  console.warn(
+    `[qtiTransformTest] Subsection "${identifier}" is consumed by section ordering; ` +
+      `discarding its ${[...new Set(dropped)].join(', ')}.`
+  );
+}
+
+/**
  * Seed-deterministic QTI section shuffling.
  *
  * Reorders the children of every <qti-assessment-section> that carries a
- * <qti-ordering shuffle="true">, following QTI 3.0 selection/ordering rules:
+ * <qti-ordering shuffle="true">, following QTI 3.0 ordering rules:
  *
- *  - Depth-first: a child section orders its own children before the parent
+ *  - Depth-first: a subsection orders its own children before the parent
  *    reorders it.
  *  - Item refs with fixed="true" stay in their authored position; the other
  *    units shuffle around them.
- *  - A child section with keep-together="true" OR visible="true" moves as a
- *    single block (its items stay grouped and internally ordered).
- *  - A child section with keep-together="false" AND visible="false" is
- *    dissolved: its (already internally ordered) item refs are poured into the
- *    parent pool and interleaved with the parent's own units.
+ *  - A subsection is a grouping device, not a delivered section: its item refs
+ *    are lifted into the parent and the wrapper is consumed, just as the
+ *    <qti-ordering> directive itself is. Nothing nested survives into the DOM,
+ *    so the player only ever sees the authored top-level sections.
+ *  - By default (QTI 3.0 defaults keep-together to true) a subsection travels as
+ *    one unit: its items stay contiguous and keep their authored order, while
+ *    the parent's remaining items shuffle around the block. Add fixed="true" to
+ *    pin the block itself to its authored slot.
+ *  - Only an explicit keep-together="false" dissolves a subsection: its
+ *    (already internally ordered) item refs are poured into the parent pool and
+ *    interleaved with the parent's own units.
  *
  * The same `seed` always produces the same order, so a restarted session keeps
  * its sequence. Each section draws from its own PRNG stream (seed + section id)
@@ -67,41 +120,44 @@ function orderSection(section: Element, seed: string | number): void {
       units.push({ nodes: [child], fixed: attrIsTrue(child, 'fixed') });
       toDetach.push(child);
     } else if (isSection(child)) {
-      const asBlock = attrIsTrue(child, 'keep-together', 'keeptogether') || attrIsTrue(child, 'visible');
-      if (asBlock) {
-        // Stays grouped, internal order already applied by recursion.
-        units.push({ nodes: [child], fixed: attrIsTrue(child, 'fixed') });
-        toDetach.push(child);
-      } else {
-        // Dissolve: promote its ordered selectable children as individual units.
-        for (const inner of Array.from(child.children)) {
-          if (isItemRef(inner) || isSection(inner)) {
-            units.push({ nodes: [inner], fixed: attrIsTrue(inner, 'fixed') });
-          }
+      // Internal order is already settled: the depth-first pass above shuffled
+      // this subsection if it carried its own <qti-ordering shuffle="true">, and
+      // left the authored order alone otherwise.
+      const { itemRefs, dropped } = collectItemRefsDeep(child);
+      warnDroppedChildren(child, dropped);
+
+      if (attrIsFalse(child, 'keep-together', 'keeptogether')) {
+        // Explicitly dissolved: the items join the parent pool individually and
+        // interleave with the parent's own items.
+        for (const itemRef of itemRefs) {
+          units.push({ nodes: [itemRef], fixed: attrIsTrue(itemRef, 'fixed') });
         }
-        toDetach.push(child); // the wrapper section disappears
+      } else if (itemRefs.length > 0) {
+        // One multi-node unit, so the items stay contiguous and keep their order
+        // wherever the block lands.
+        units.push({ nodes: itemRefs, fixed: attrIsTrue(child, 'fixed') });
       }
+
+      toDetach.push(child); // the grouping wrapper is consumed
     }
   }
 
-  if (units.length <= 1) {
-    for (const orderingEl of orderingEls) {
-      orderingEl.remove();
-    }
-    return;
-  }
+  // Where the reordered units go back in: after the last node we took out, so
+  // any trailing structural children (a rubric block, say) keep their position.
+  // Captured before detaching, and never itself a detached node.
+  const anchor = toDetach.length > 0 ? toDetach[toDetach.length - 1].nextSibling : null;
 
   const sectionKey = section.getAttribute('identifier') ?? '';
+  // A no-op for 0 or 1 movable units, but the re-insertion below still has to
+  // run so consumed wrappers are lifted rather than left in the DOM.
   const ordered = shuffleKeepingFixed(units, rngFor(seed, sectionKey));
 
-  // Detach movable nodes (and dissolved wrappers) from the DOM, then re-append
-  // the reordered units after whatever config children remain.
   for (const el of toDetach) {
     el.remove();
   }
   for (const unit of ordered) {
     for (const node of unit.nodes) {
-      section.appendChild(node);
+      section.insertBefore(node, anchor);
     }
   }
 
@@ -109,6 +165,11 @@ function orderSection(section: Element, seed: string | number): void {
   for (const orderingEl of orderingEls) {
     orderingEl.remove();
   }
+}
+
+/** Whether anything in `doc` asks to be shuffled at all. */
+export function hasShuffleOrdering(doc: XMLDocument): boolean {
+  return Array.from(doc.getElementsByTagName('*')).some(el => isOrdering(el) && attrIsTrue(el, 'shuffle'));
 }
 
 /**
@@ -120,9 +181,14 @@ export function shuffleSectionsOrdering(doc: XMLDocument, seed: string | number)
   // Kick off recursion only for top-level sections; orderSection handles nesting
   // depth-first, so descendants are not double-processed.
   for (const section of sections) {
+    // The snapshot above can contain wrappers that an ancestor has since
+    // consumed. A detached element has no parentNode; a document element still
+    // has one (the document), so this does not skip a section-rooted document.
+    if (!section.parentNode) continue;
+
     const parent = section.parentElement;
-    if (!parent || !isSection(parent)) {
-      orderSection(section, seed);
-    }
+    if (parent && isSection(parent)) continue;
+
+    orderSection(section, seed);
   }
 }

@@ -80,7 +80,8 @@ export class TestContainer extends LitElement {
   protected handleTestXMLChange() {
     if (!this.testXML) return;
     try {
-      this.testDoc = qtiTransformTest().parse(this.testXML).htmlDoc();
+      const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
+      this.testDoc = qtiTransformTest().parse(this.testXML).shuffleOrdering(explicitSeed).htmlDoc();
     } catch (error) {
       console.error('Error parsing XML:', error);
     }

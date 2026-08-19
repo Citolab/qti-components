@@ -11,7 +11,7 @@
 
 import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
 import { itemsFromTest } from './test/items';
-import { shuffleSectionsOrdering } from './test/shuffle-sections';
+import { hasShuffleOrdering, shuffleSectionsOrdering } from './test/shuffle-sections';
 
 export type transformTestApi = {
   load: (uri: string, signal?: AbortSignal) => Promise<transformTestApi>;
@@ -61,6 +61,12 @@ export const qtiTransformTest = (): transformTestApi => {
       return api;
     },
     shuffleOrdering(seed?: string | number | null) {
+      // No section asks to be shuffled: leave the test alone, and stay quiet
+      // about a missing seed that would never have been used.
+      if (!hasShuffleOrdering(xmlFragment)) {
+        return api;
+      }
+
       const normalizedSeed = typeof seed === 'string' ? seed.trim() : seed;
 
       if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
