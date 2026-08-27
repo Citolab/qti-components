@@ -644,7 +644,6 @@ export const VerhoudingenShowCorrectResponse = {
                 '[{"color":"blue","percentage":12.5},{"color":"green","percentage":12.5},{"color":"red","percentage":75}]'
             }
           });
-
           const cloneHtml = deepIframeHtml(viewer.querySelector('iframe'));
           // The correct response is 75% red, 12.5% blue and 12.5% green; an
           // unanswered interaction paints every square white instead.
