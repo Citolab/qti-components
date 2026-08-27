@@ -1,9 +1,16 @@
 import { isSupported, apply } from 'observable-polyfill/fn';
 
 import { detectCollision, findDraggableTarget } from './utils/drag-drop.utils';
+import {
+  IDENTITY_FIXED_FRAME,
+  measureFixedFrame,
+  resolveDragCloneHost,
+  toFrameCoordinates
+} from './utils/drag-clone-host';
 
 import type { Interaction } from '@qti-components/base';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
+import type { FixedFrame } from './utils/drag-clone-host';
 
 if (!isSupported()) apply();
 
@@ -69,6 +76,8 @@ interface DragState {
   activationTimeout?: number;
   touchCleanup?: () => void;
   lastTargetChangeTime?: number;
+  /** Last pointer position, so the clone can be repositioned after it is re-hosted mid-drag. */
+  lastCoordinates?: { x: number; y: number };
 }
 
 type DragEventSource = 'pointer' | 'mouse' | 'touch';
@@ -101,6 +110,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       sourceDroppable: null,
       inputType: null
     };
+
+    /** Coordinate space of the current clone's host; identity while the host is `document.body`. */
+    private cloneFrame: FixedFrame = IDENTITY_FIXED_FRAME;
 
     private subscriptions: Array<{ unsubscribe: () => void }> = [];
     private dragSubscriptions: Array<{ unsubscribe: () => void }> = [];
@@ -480,6 +492,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       this.updateClonePosition(startX, startY);
       this.activateAllDroppables();
+      this.watchDragCloneHost();
       this.setupMoveObservables(inputType, eventSource);
     }
 
@@ -745,9 +758,15 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         clone.style.setProperty(property, computedStyles.getPropertyValue(property));
       }
 
+      // The clone cannot live in `document.body` unconditionally: while the page is in fullscreen
+      // the browser paints only the fullscreen element's subtree, so a clone in the body is invisible.
+      const host = resolveDragCloneHost(element.isConnected ? element : this);
+      this.cloneFrame = measureFixedFrame(host);
+
       clone.style.position = 'fixed';
-      clone.style.width = `${rect.width}px`;
-      clone.style.height = `${rect.height}px`;
+      // `rect` is in viewport pixels; the host may lay its children out in a scaled space.
+      clone.style.width = `${rect.width / this.cloneFrame.scale.x}px`;
+      clone.style.height = `${rect.height / this.cloneFrame.scale.y}px`;
       clone.style.zIndex = '9999';
       clone.style.pointerEvents = 'none'; // Critical: never capture events
       clone.style.touchAction = 'none'; // Prevent touch interactions
@@ -758,19 +777,56 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       clone.removeAttribute('tabindex');
       clone.setAttribute('data-drag-clone', 'true');
 
-      document.body.appendChild(clone);
+      host.appendChild(clone);
       return clone;
     }
 
     protected updateClonePosition(clientX: number, clientY: number): void {
+      this.dragState.lastCoordinates = { x: clientX, y: clientY };
+
       if (!this.dragState.dragClone) return;
 
+      // `startOffset` is in viewport pixels, so the target position is resolved there and only then
+      // converted into the host's space.
       const { startOffset } = this.dragState;
-      const x = clientX - startOffset.x;
-      const y = clientY - startOffset.y;
+      const { x, y } = toFrameCoordinates(this.cloneFrame, clientX - startOffset.x, clientY - startOffset.y);
 
       this.dragState.dragClone.style.left = `${x}px`;
       this.dragState.dragClone.style.top = `${y}px`;
+    }
+
+    /**
+     * Keeps the clone in a host the browser still paints when the page enters or leaves fullscreen
+     * mid-drag - otherwise it is stranded in a container that is no longer rendered. Re-parenting
+     * reconnects the clone's custom elements, which is why it only happens on an actual change.
+     */
+    private watchDragCloneHost(): void {
+      const ownerDocument = this.ownerDocument ?? document;
+
+      const rehost = () => {
+        const { dragClone, dragSource, lastCoordinates } = this.dragState;
+        if (!dragClone) return;
+
+        const anchor = dragSource?.isConnected ? dragSource : this;
+        const host = resolveDragCloneHost(anchor);
+        if (host === dragClone.parentNode) return;
+
+        host.appendChild(dragClone);
+        this.cloneFrame = measureFixedFrame(host);
+        if (lastCoordinates) {
+          this.updateClonePosition(lastCoordinates.x, lastCoordinates.y);
+        }
+      };
+
+      ownerDocument.addEventListener('fullscreenchange', rehost);
+      ownerDocument.addEventListener('webkitfullscreenchange', rehost);
+
+      this.dragSubscriptions.push({
+        unsubscribe: () => {
+          ownerDocument.removeEventListener('fullscreenchange', rehost);
+          ownerDocument.removeEventListener('webkitfullscreenchange', rehost);
+        }
+      });
     }
 
     protected activateAllDroppables(): void {
@@ -817,6 +873,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         }
       });
       this.dragSubscriptions = [];
+      this.cloneFrame = IDENTITY_FIXED_FRAME;
 
       this.dragState = {
         dragging: false,

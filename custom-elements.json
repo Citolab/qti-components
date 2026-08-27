@@ -4605,6 +4605,16 @@
             },
             {
               "kind": "field",
+              "name": "cloneFrame",
+              "type": {
+                "text": "FixedFrame"
+              },
+              "privacy": "private",
+              "default": "IDENTITY_FIXED_FRAME",
+              "description": "Coordinate space of the current clone's host; identity while the host is `document.body`."
+            },
+            {
+              "kind": "field",
               "name": "collisionDetectionAlgorithm",
               "type": {
                 "text": "CollisionDetectionAlgorithm"
@@ -4972,6 +4982,17 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "watchDragCloneHost",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Keeps the clone in a host the browser still paints when the page enters or leaves fullscreen\nmid-drag - otherwise it is stranded in a container that is no longer rendered. Re-parenting\nreconnects the clone's custom elements, which is why it only happens on an actual change."
             }
           ],
           "parameters": [
@@ -7200,6 +7221,121 @@
           "declaration": {
             "name": "rectangleIntersectionCollision",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/collision.utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "IDENTITY_FIXED_FRAME",
+          "type": {
+            "text": "FixedFrame"
+          },
+          "default": "{ origin: { x: 0, y: 0 }, scale: { x: 1, y: 1 } }",
+          "description": "Viewport coordinates, no scaling: the frame of a clone hosted by `document.body`."
+        },
+        {
+          "kind": "function",
+          "name": "measureFixedFrame",
+          "return": {
+            "type": {
+              "text": "FixedFrame"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "DragCloneHost"
+              }
+            }
+          ],
+          "description": "Measures the frame a `position: fixed` child of `host` is laid out in, using a throwaway probe so\nthe clone's own `transform` / `rotate` cannot skew the reading. Costs one layout per drag start."
+        },
+        {
+          "kind": "function",
+          "name": "resolveDragCloneHost",
+          "return": {
+            "type": {
+              "text": "DragCloneHost"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dragSource",
+              "type": {
+                "text": "Node"
+              }
+            }
+          ],
+          "description": "Resolves the host for a clone of `dragSource`: the fullscreen element if there is one, else body."
+        },
+        {
+          "kind": "function",
+          "name": "toFrameCoordinates",
+          "return": {
+            "type": {
+              "text": "{ x: number; y: number }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "frame",
+              "type": {
+                "text": "FixedFrame"
+              }
+            },
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Converts a viewport coordinate into the host's fixed-positioning space."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IDENTITY_FIXED_FRAME",
+          "declaration": {
+            "name": "IDENTITY_FIXED_FRAME",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "measureFixedFrame",
+          "declaration": {
+            "name": "measureFixedFrame",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveDragCloneHost",
+          "declaration": {
+            "name": "resolveDragCloneHost",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toFrameCoordinates",
+          "declaration": {
+            "name": "toFrameCoordinates",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
           }
         }
       ]
