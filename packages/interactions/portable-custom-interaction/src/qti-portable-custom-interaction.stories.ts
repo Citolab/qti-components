@@ -514,6 +514,142 @@ export const VerhoudingenRestoreResponse = {
   }
 };
 
+/**
+ * The PCI renders inside an iframe and paints into shadow roots, so collect both
+ * to be able to assert on what a candidate actually sees.
+ */
+const deepIframeHtml = (iframe: HTMLIFrameElement | null): string => {
+  const doc = iframe?.contentDocument;
+  if (!doc) return '';
+  const collectShadowHtml = (root: ParentNode): string[] =>
+    Array.from(root.querySelectorAll('*')).flatMap(node =>
+      node.shadowRoot ? [node.shadowRoot.innerHTML, ...collectShadowHtml(node.shadowRoot)] : []
+    );
+  return [doc.body.innerHTML, ...collectShadowHtml(doc)].join('\n');
+};
+
+export const VerhoudingenShowCorrectResponse = {
+  render: () => {
+    const qti = `<qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+      identifier="i67a0dfca446508820f6286cf78feea"
+      title="verhoudingen"
+      label="verhoudingen"
+      xml:lang="en-US"
+      adaptive="false"
+      time-dependent="false"
+      tool-name="TAO"
+      tool-version="3.4.0-sprint121"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+        <qti-correct-response>
+          <qti-value>[{&quot;color&quot;:&quot;blue&quot;,&quot;percentage&quot;:12.5},{&quot;color&quot;:&quot;green&quot;,&quot;percentage&quot;:12.5},{&quot;color&quot;:&quot;red&quot;,&quot;percentage&quot;:75}]</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+      <qti-item-body>
+        <div class="grid-row">
+          <div class="col-12">
+            <qti-portable-custom-interaction-test
+              custom-interaction-type-identifier="colorProportions"
+              data-version="1.0.1"
+              data-colors="red, blue, green"
+              data-width="400"
+              data-height="400"
+              data-base-url="/assets/qti-portable-interaction/verhoudingen/"
+              module="colorProportions"
+              response-identifier="RESPONSE"
+            >
+              <qti-interaction-modules>
+                <qti-interaction-module
+                  id="colorProportions"
+                  primary-path="/interaction/runtime/js/index.js"
+                ></qti-interaction-module>
+              </qti-interaction-modules>
+              <qti-interaction-markup>
+                <div class="pciInteraction">
+                  <div class="prompt"></div>
+                  <ul class="pci"></ul>
+                </div>
+              </qti-interaction-markup>
+            </qti-portable-custom-interaction-test>
+          </div>
+        </div>
+      </qti-item-body>
+    </qti-assessment-item>`;
+    return html`
+      <qti-item>
+        <item-container .itemXML=${qti}></item-container>
+      </qti-item>
+    `;
+  },
+  play: async ({ canvasElement, step }) => {
+    const qtiItem = canvasElement.querySelector('qti-item') as QtiItem;
+
+    const assessmentItem = await waitFor(
+      () => {
+        if (!qtiItem?.children.length) throw new Error('qtiItem has no children');
+        const item = qtiItem.children[0].shadowRoot.querySelector('qti-assessment-item') as QtiAssessmentItem;
+        if (!item) throw new Error('assessmentItem is not defined');
+        if (!item.querySelector('qti-portable-custom-interaction-test')) throw new Error('interaction not rendered');
+        return item;
+      },
+      { timeout: 10000, interval: 500 }
+    );
+
+    await step('show the correct response', async () => {
+      assessmentItem.showCorrectResponse(true);
+
+      const viewer = await waitFor(
+        () => {
+          const container = assessmentItem.querySelector('[id^="correct-response-container-"]');
+          if (!container) throw new Error('correct response container not found');
+          const el = container.querySelector('qti-portable-custom-interaction');
+          if (!el) throw new Error('correct response viewer not found');
+          return el as QtiPortableCustomInteraction;
+        },
+        { timeout: 10000, interval: 500 }
+      );
+
+      // Only the viewer's own iframe: the runtime generated children of the original
+      // interaction - its iframe and the review overlay - must not be cloned along.
+      expect(viewer.querySelectorAll('iframe')).toHaveLength(1);
+      expect(viewer.querySelector('.pci-interaction-overlay')).toBeNull();
+
+      await waitFor(
+        () => {
+          const cloneHtml = deepIframeHtml(viewer.querySelector('iframe'));
+          // The correct response is 75% red, 12.5% blue and 12.5% green; an
+          // unanswered interaction paints every square white instead.
+          expect(cloneHtml).toContain('fill="red"');
+          expect(cloneHtml).toContain('fill="blue"');
+          expect(cloneHtml).toContain('fill="green"');
+        },
+        { timeout: 10000, interval: 500 }
+      );
+    });
+
+    await step('hide the correct response', async () => {
+      // The viewer used to register itself as a real interaction on the item, which
+      // made this throw: Cannot read properties of undefined (reading 'cardinality')
+      assessmentItem.showCorrectResponse(false);
+
+      await waitFor(
+        () => {
+          expect(assessmentItem.querySelector('[id^="correct-response-container-"]')).toBeNull();
+          expect(assessmentItem.querySelector('.pci-interaction-overlay')).toBeNull();
+        },
+        { timeout: 10000, interval: 500 }
+      );
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
 // Base story function that accepts itemName as parameter
 const createPciConformanceStory = (itemName: string): Story => ({
   args: {
