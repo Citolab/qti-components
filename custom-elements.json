@@ -5831,6 +5831,16 @@
             },
             {
               "kind": "field",
+              "name": "cloneFrame",
+              "type": {
+                "text": "FixedFrame"
+              },
+              "privacy": "private",
+              "default": "IDENTITY_FIXED_FRAME",
+              "description": "Coordinate space of the current clone's host; identity while nothing above it scales."
+            },
+            {
+              "kind": "field",
               "name": "collisionDetectionAlgorithm",
               "type": {
                 "text": "CollisionDetectionAlgorithm"
@@ -5872,6 +5882,17 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "dragCloneRoot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DragCloneHost | null"
+                }
+              },
+              "description": "The interaction's own tree, and the clone's preferred home.\n\nA stylesheet can only see its own tree. item-container adopts item.css into its shadow root\n(item-container.ts), so a clone parked on document.body sat in a tree the theme could not\nreach: every `[data-drag-clone]` rule was inert, and the chip's grip — a ::before, and so the\none thing a computed-style copy cannot carry — went missing the moment you picked a chip up.\nMeasured: with the theme in a shadow root, a body clone reports `content: none` for its grip\nwhile the chip it was cloned from reports the glyph. It only ever looked right in Storybook,\nwhose preview.ts also injects item.css at document level.\n\nNull when that tree is the document, which leaves the choice of `document.body` to the\nresolver: a document-level clone gains nothing from being hosted anywhere in particular."
             },
             {
               "kind": "field",
@@ -6264,6 +6285,17 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "watchDragCloneHost",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Keeps the clone in a host the browser still paints when the page enters or leaves fullscreen\nmid-drag — otherwise it is stranded in a container that is no longer rendered. Re-parenting\nreconnects the clone's custom elements, which is why it only happens on an actual change."
             }
           ],
           "parameters": [
@@ -8791,6 +8823,128 @@
           "declaration": {
             "name": "rectangleIntersectionCollision",
             "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/collision.utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "IDENTITY_FIXED_FRAME",
+          "type": {
+            "text": "FixedFrame"
+          },
+          "default": "{ origin: { x: 0, y: 0 }, scale: { x: 1, y: 1 } }",
+          "description": "Viewport coordinates, no scaling: the frame of a clone hosted by `document.body`."
+        },
+        {
+          "kind": "function",
+          "name": "measureFixedFrame",
+          "return": {
+            "type": {
+              "text": "FixedFrame"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "DragCloneHost"
+              }
+            }
+          ],
+          "description": "Measures the frame a `position: fixed` child of `host` is laid out in, using a throwaway probe so\nthe clone's own `transform` / `rotate` cannot skew the reading. Costs one layout per drag start."
+        },
+        {
+          "kind": "function",
+          "name": "resolveDragCloneHost",
+          "return": {
+            "type": {
+              "text": "DragCloneHost"
+            }
+          },
+          "parameters": [
+            {
+              "name": "dragSource",
+              "type": {
+                "text": "Node"
+              }
+            },
+            {
+              "name": "preferredHost",
+              "optional": true,
+              "type": {
+                "text": "DragCloneHost | null"
+              }
+            }
+          ],
+          "description": "Resolves the host for a clone of `dragSource`: `preferredHost` while the browser still paints it,\nthe fullscreen element when it does not, and `document.body` when there is no preferred host."
+        },
+        {
+          "kind": "function",
+          "name": "toFrameCoordinates",
+          "return": {
+            "type": {
+              "text": "{ x: number; y: number }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "frame",
+              "type": {
+                "text": "FixedFrame"
+              }
+            },
+            {
+              "name": "x",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "y",
+              "type": {
+                "text": "number"
+              }
+            }
+          ],
+          "description": "Converts a viewport coordinate into the host's fixed-positioning space."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IDENTITY_FIXED_FRAME",
+          "declaration": {
+            "name": "IDENTITY_FIXED_FRAME",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "measureFixedFrame",
+          "declaration": {
+            "name": "measureFixedFrame",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveDragCloneHost",
+          "declaration": {
+            "name": "resolveDragCloneHost",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toFrameCoordinates",
+          "declaration": {
+            "name": "toFrameCoordinates",
+            "module": "packages/interactions/core/src/mixins/drag-drop-observables/utils/drag-clone-host.ts"
           }
         }
       ]

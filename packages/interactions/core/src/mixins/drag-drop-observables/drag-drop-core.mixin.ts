@@ -12,9 +12,16 @@ import {
   setDragChipState,
   setDropFlag
 } from './utils/drag-drop.utils';
+import {
+  IDENTITY_FIXED_FRAME,
+  measureFixedFrame,
+  resolveDragCloneHost,
+  toFrameCoordinates
+} from './utils/drag-clone-host';
 
 import type { Interaction } from '@qti-components/base';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
+import type { DragCloneHost, FixedFrame } from './utils/drag-clone-host';
 
 if (!isSupported()) apply();
 
@@ -83,6 +90,8 @@ interface DragState {
   touchCleanup?: () => void;
   lastTargetChangeTime?: number;
   returnAnchorItems?: HTMLElement[];
+  /** Last pointer position, so the clone can be repositioned after it is re-hosted mid-drag. */
+  lastCoordinates?: { x: number; y: number };
 }
 
 type DragEventSource = 'pointer' | 'mouse' | 'touch';
@@ -121,6 +130,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       inputType: null,
       returnAnchorItems: []
     };
+
+    /** Coordinate space of the current clone's host; identity while nothing above it scales. */
+    private cloneFrame: FixedFrame = IDENTITY_FIXED_FRAME;
 
     private subscriptions: Array<{ unsubscribe: () => void }> = [];
     private dragSubscriptions: Array<{ unsubscribe: () => void }> = [];
@@ -694,6 +706,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       this.updateClonePosition(startX, startY);
       this.activateAllDroppables();
+      this.watchDragCloneHost();
       this.setupMoveObservables(inputType, eventSource);
     }
 
@@ -974,9 +987,22 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         clone.style.setProperty(property, computedStyles.getPropertyValue(property));
       }
 
+      // Where the clone can live: the interaction's root while the browser paints it, the
+      // fullscreen element when it does not. See utils/drag-clone-host.ts for why each is needed —
+      // the root carries the theme, the fullscreen element carries the paint — and why the tree the
+      // chip was dragged out of is never a candidate.
+      //
+      // `this.getRootNode()`, deliberately, not `element.getRootNode()`. A bank chip's root is the
+      // item's shadow root either way, but a PLACED chip being re-dragged lives in its gap's or its
+      // hotspot's own shadow root, and cloning it there would append the clone inside the very
+      // element it is being dragged out of. The interaction's root is the same node for both.
+      const host = resolveDragCloneHost(element.isConnected ? element : this, this.dragCloneRoot());
+      this.cloneFrame = measureFixedFrame(host);
+
       clone.style.position = 'fixed';
-      clone.style.width = `${rect.width}px`;
-      clone.style.height = `${rect.height}px`;
+      // `rect` is in viewport pixels; the host may lay its fixed children out in a scaled space.
+      clone.style.width = `${rect.width / this.cloneFrame.scale.x}px`;
+      clone.style.height = `${rect.height / this.cloneFrame.scale.y}px`;
       clone.style.zIndex = '9999';
       clone.style.pointerEvents = 'none'; // Critical: never capture events
       clone.style.touchAction = 'none'; // Prevent touch interactions
@@ -991,37 +1017,75 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       // selector because the clone is a sibling of the interaction, not a descendant.
       clone.setAttribute('data-drag-interaction', this.tagName.toLowerCase());
 
-      // Into the INTERACTION's root, not document.body.
-      //
-      // A stylesheet can only see its own tree. item-container adopts item.css into its shadow root
-      // (item-container.ts), so a clone parked on document.body sat in a tree the theme could not
-      // reach: every `[data-drag-clone]` rule was inert, and the chip's grip — a ::before, and so
-      // the one thing the computed-style copy above cannot carry — went missing the moment you
-      // picked a chip up. Measured: with the theme in a shadow root, a body clone reports
-      // `content: none` for its grip while the chip it was cloned from reports the glyph. It only
-      // ever looked right in Storybook, whose preview.ts also injects item.css at document level.
-      //
-      // `this.getRootNode()`, deliberately, not `element.getRootNode()`. A bank chip's root is the
-      // item's shadow root either way, but a PLACED chip being re-dragged lives in its gap's or its
-      // hotspot's own shadow root, and cloning it there would append the clone inside the very
-      // element it is being dragged out of. The interaction's root is the same node for both.
-      //
-      // `position: fixed` is unaffected — verified it still lands on the viewport, and nothing in
-      // the item chain sets transform/filter/contain to create a containing block.
-      const root = this.getRootNode() as ShadowRoot | Document;
-      (root instanceof Document ? root.body : root).appendChild(clone);
+      host.appendChild(clone);
       return clone;
     }
 
+    /**
+     * The interaction's own tree, and the clone's preferred home.
+     *
+     * A stylesheet can only see its own tree. item-container adopts item.css into its shadow root
+     * (item-container.ts), so a clone parked on document.body sat in a tree the theme could not
+     * reach: every `[data-drag-clone]` rule was inert, and the chip's grip — a ::before, and so the
+     * one thing a computed-style copy cannot carry — went missing the moment you picked a chip up.
+     * Measured: with the theme in a shadow root, a body clone reports `content: none` for its grip
+     * while the chip it was cloned from reports the glyph. It only ever looked right in Storybook,
+     * whose preview.ts also injects item.css at document level.
+     *
+     * Null when that tree is the document, which leaves the choice of `document.body` to the
+     * resolver: a document-level clone gains nothing from being hosted anywhere in particular.
+     */
+    private dragCloneRoot(): DragCloneHost | null {
+      const root = this.getRootNode();
+      return root instanceof ShadowRoot ? root : null;
+    }
+
     protected updateClonePosition(clientX: number, clientY: number): void {
+      this.dragState.lastCoordinates = { x: clientX, y: clientY };
+
       if (!this.dragState.dragClone) return;
 
+      // `startOffset` is in viewport pixels, so the target position is resolved there and only then
+      // converted into the host's space.
       const { startOffset } = this.dragState;
-      const x = clientX - startOffset.x;
-      const y = clientY - startOffset.y;
+      const { x, y } = toFrameCoordinates(this.cloneFrame, clientX - startOffset.x, clientY - startOffset.y);
 
       this.dragState.dragClone.style.left = `${x}px`;
       this.dragState.dragClone.style.top = `${y}px`;
+    }
+
+    /**
+     * Keeps the clone in a host the browser still paints when the page enters or leaves fullscreen
+     * mid-drag — otherwise it is stranded in a container that is no longer rendered. Re-parenting
+     * reconnects the clone's custom elements, which is why it only happens on an actual change.
+     */
+    private watchDragCloneHost(): void {
+      const ownerDocument = this.ownerDocument ?? document;
+
+      const rehost = () => {
+        const { dragClone, dragSource, lastCoordinates } = this.dragState;
+        if (!dragClone) return;
+
+        const anchor = dragSource?.isConnected ? dragSource : this;
+        const host = resolveDragCloneHost(anchor, this.dragCloneRoot());
+        if (host === dragClone.parentNode) return;
+
+        host.appendChild(dragClone);
+        this.cloneFrame = measureFixedFrame(host);
+        if (lastCoordinates) {
+          this.updateClonePosition(lastCoordinates.x, lastCoordinates.y);
+        }
+      };
+
+      ownerDocument.addEventListener('fullscreenchange', rehost);
+      ownerDocument.addEventListener('webkitfullscreenchange', rehost);
+
+      this.dragSubscriptions.push({
+        unsubscribe: () => {
+          ownerDocument.removeEventListener('fullscreenchange', rehost);
+          ownerDocument.removeEventListener('webkitfullscreenchange', rehost);
+        }
+      });
     }
 
     protected activateAllDroppables(): void {
@@ -1072,6 +1136,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         }
       });
       this.dragSubscriptions = [];
+      this.cloneFrame = IDENTITY_FIXED_FRAME;
 
       this.dragState = {
         dragging: false,

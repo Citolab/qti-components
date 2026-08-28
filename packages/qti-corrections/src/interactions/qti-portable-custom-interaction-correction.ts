@@ -38,35 +38,44 @@ export class QtiPortableCustomInteractionCorrection extends CandidateCorrectionM
     Object.assign(label.style, { fontWeight: 'bold', marginBottom: '10px', color: 'green' });
     container.append(label);
 
+    // `cloneNode(false)`, not `document.createElement`: a shallow clone is created in the same
+    // custom element registry as this element, so the viewer is still upgraded when the item was
+    // rendered into a scoped registry. It carries the attributes over and none of the children.
     const viewer = this.cloneNode(false) as QtiPortableCustomInteractionCorrection;
-    for (const attribute of Array.from(this.attributes)) {
-      if (attribute.name !== 'id' && attribute.name !== 'response-identifier') {
-        viewer.setAttribute(attribute.name, attribute.value);
-      }
-    }
+    // Two elements in one tree cannot share an id, and the flags would have the viewer show a
+    // correction of its own.
+    viewer.removeAttribute('id');
     viewer.removeAttribute('show-correct-response');
     viewer.removeAttribute('show-full-correct-response');
     viewer.removeAttribute('show-candidate-correction');
     viewer.isFullCorrectResponse = true;
     const originalResponseId = this.responseIdentifier;
     viewer.responseIdentifier = `${originalResponseId}-correct`;
-    for (const child of Array.from(this.children)) viewer.append(child.cloneNode(true));
+
+    // Only the authored light DOM — modules, markup, properties, stylesheets. The runtime's own
+    // children must not come along: the PCI appends its iframe to itself, and the `disable()` above
+    // has just added the review overlay. A cloned iframe never loads, so the viewer would paint a
+    // dead frame above the live one.
+    for (const child of Array.from(this.children)) {
+      if (child.tagName.startsWith('QTI-')) viewer.append(child.cloneNode(true));
+    }
 
     const correctResponse = this.correctResponse as string | string[];
     const cardinality: Cardinality =
       responseVariable?.cardinality ?? (Array.isArray(correctResponse) ? 'multiple' : 'single');
     const baseType: BaseType = responseVariable?.baseType ?? 'string';
-    const connectedCallback = viewer.connectedCallback;
-    viewer.connectedCallback = function () {
-      connectedCallback.call(this);
-      const apply = () => {
-        const value = this.responseVariablesToQtiVariableJSON(correctResponse, cardinality, baseType);
-        this.sendMessageToIframe('setBoundTo', { [originalResponseId]: value });
-        this.sendMessageToIframe('setState', { state: 'review' });
-      };
-      if (this._iframeLoaded) apply();
-      else this.addEventListener('qti-portable-custom-interaction-loaded', apply, { once: true });
-    };
+    // Pushed once the viewer's own iframe has finished its handshake. Listened for rather than
+    // hooked into `connectedCallback`: custom element reactions are looked up on the prototype when
+    // the element is defined, so an instance-level override of it is never read.
+    viewer.addEventListener(
+      'qti-portable-custom-interaction-loaded',
+      () => {
+        const value = viewer.responseVariablesToQtiVariableJSON(correctResponse, cardinality, baseType);
+        viewer.sendMessageToIframe('setBoundTo', { [originalResponseId]: value });
+        viewer.sendMessageToIframe('setState', { state: 'review' });
+      },
+      { once: true }
+    );
     viewer.style.pointerEvents = 'none';
     container.append(viewer);
     this.after(container);
