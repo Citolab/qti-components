@@ -2,7 +2,6 @@ import { html } from 'lit';
 import { expect } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { http, HttpResponse, delay } from 'msw';
-import { mswLoader } from 'msw-storybook-addon';
 
 import { type QtiAssessmentItemRef } from '@qti-components/test';
 
@@ -14,8 +13,7 @@ import TextEntry from './fixtures/qti-conformance/Basic/T4-T7/items/text-entry.x
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta = {
-  component: 'qti-assessment-stimulus-ref',
-  loaders: [mswLoader]
+  component: 'qti-assessment-stimulus-ref'
 } satisfies Meta<any>;
 
 export default meta;

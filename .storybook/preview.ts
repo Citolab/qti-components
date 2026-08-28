@@ -4,16 +4,19 @@ import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import { expect } from 'storybook/test';
 import { withThemeByClassName } from '@storybook/addon-themes';
-import { initialize, mswLoader } from 'msw-storybook-addon';
+import { mswLoader } from 'msw-storybook-addon/csf3';
 
 /*
- * Initializes MSW
- * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
- * to learn how to customize it
+ * Initializes MSW. Since msw-storybook-addon v3 there is no `initialize()`; the worker is created
+ * lazily by a setup function handed to `mswLoader`.
+ * See https://github.com/mswjs/msw-storybook-addon/blob/main/MIGRATION.md#from-2xx-to-3xx
  */
-initialize({
-  onUnhandledRequest: 'bypass'
-});
+const mswSetup = async () => {
+  const { setupWorker } = await import('msw/browser');
+  const worker = setupWorker();
+  await worker.start({ quiet: true, onUnhandledRequest: 'bypass' });
+  return worker;
+};
 /*
  * Shared CSS reset for every style substrate. modern-normalize = normalize + the universal
  * `box-sizing: border-box` rule that Bootstrap Reboot, Tailwind Preflight and every modern reset
@@ -35,7 +38,7 @@ import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
 
-export const loaders = [mswLoader];
+export const loaders = [mswLoader(mswSetup)];
 
 export const customViewports = {
   default: {

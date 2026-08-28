@@ -2,7 +2,6 @@ import { fireEvent } from 'storybook/test';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { http, HttpResponse, delay } from 'msw';
-import { mswLoader } from 'msw-storybook-addon';
 
 import '../../../../.storybook/utilities.css';
 
@@ -11,7 +10,6 @@ type Story = StoryObj;
 const meta: Meta = {
   component: 'test-integration',
   tags: ['skip-test'],
-  loaders: [mswLoader],
   render: () => {
     return html` <qti-test>
       <style>

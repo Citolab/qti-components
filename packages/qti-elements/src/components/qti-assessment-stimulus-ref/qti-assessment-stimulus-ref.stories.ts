@@ -2,7 +2,6 @@ import { html } from 'lit';
 import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 import { http, HttpResponse, delay } from 'msw';
-import { mswLoader } from 'msw-storybook-addon';
 
 import UnbeleivableNight from './fixtures/unbelievableNight.xml?raw';
 import itemWithStimulusWithoutPlacement from './fixtures/itemWithStimulusWithoutPlacement.xml?raw';
