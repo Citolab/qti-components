@@ -1,8 +1,5 @@
-import { expect } from 'vitest';
+import { beforeAll, expect } from 'vitest';
 import { commands, page, server } from 'vitest/browser';
-import { setProjectAnnotations } from '@storybook/web-components-vite';
-
-import * as previewAnnotations from './preview';
 
 /**
  * Visual-regression (VRT) capture project.
@@ -209,15 +206,52 @@ const vrtAnnotations = {
   }
 };
 
-const existingAnnotations = setProjectAnnotations(previewAnnotations as any);
-const existingAfterEach = existingAnnotations.afterEach;
+/*
+ * Chain the capture onto whatever project annotations are already composed.
+ *
+ * This file used to apply the project annotations itself, from ./preview. Since Storybook
+ * 10.3 (PR #34025) `@storybook/addon-vitest` provisions them automatically, from a virtual
+ * module that composes ./preview AND the addon annotations — a11y and friends — which the
+ * hand-rolled call did not include. The addon decides by reading each configDir setup file
+ * and looking for the name of that setter as a plain substring; finding it, it steps aside so
+ * the annotations are not applied twice. So the call had to go, and the name with it —
+ * mentioning it even in a comment is enough to make the addon stand down again. Keeping it
+ * meant opting out of the better-composed set and printing an info box on every run.
+ *
+ * Patching the global rather than composing through the API is not new coupling: the previous
+ * code overwrote `globalProjectAnnotations` here too — the setter merely populated it first.
+ *
+ * The patch runs in `beforeAll`, NOT at module scope. The addon applies the annotations from
+ * the top level of its own setup file, and this file is imported BEFORE that one, so at module
+ * scope the global is still undefined — measured, not assumed: reading it there threw. Every
+ * setup module is imported before any hook runs, so by `beforeAll` it is populated whichever
+ * order the files loaded in.
+ *
+ * The guard is the point of the exercise. If this ever stops finding the annotations the
+ * capture below never runs, and all 17 stories pass without comparing a single pixel. VRT that
+ * passes by not looking is the one failure this suite must never have, so it throws rather
+ * than degrades.
+ */
+beforeAll(() => {
+  const existingAnnotations = (globalThis as any).globalProjectAnnotations;
 
-(globalThis as any).globalProjectAnnotations = {
-  ...existingAnnotations,
-  async afterEach(context: { id: string; canvasElement: HTMLElement }) {
-    if (typeof existingAfterEach === 'function') {
-      await existingAfterEach(context);
-    }
-    await vrtAnnotations.afterEach(context);
+  if (!existingAnnotations) {
+    throw new Error(
+      'VRT setup: globalProjectAnnotations is not set. @storybook/addon-vitest should have ' +
+        'applied project annotations before hooks run. Without them the capture afterEach ' +
+        'below would never run and the suite would pass without comparing anything.'
+    );
   }
-};
+
+  const existingAfterEach = existingAnnotations.afterEach;
+
+  (globalThis as any).globalProjectAnnotations = {
+    ...existingAnnotations,
+    async afterEach(context: { id: string; canvasElement: HTMLElement }) {
+      if (typeof existingAfterEach === 'function') {
+        await existingAfterEach(context);
+      }
+      await vrtAnnotations.afterEach(context);
+    }
+  };
+});
