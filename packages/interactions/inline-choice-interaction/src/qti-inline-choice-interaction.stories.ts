@@ -446,7 +446,7 @@ export const AutosizeYieldsToWidthClass: Story = {
     <p>
       Class wins:
       <qti-inline-choice-interaction
-        class="qti-input-width-5"
+        class="qti-input-width-6"
         data-testid="classed"
         .configContext=${{ inlineChoiceAutosize: true }}
       >
@@ -469,7 +469,7 @@ export const AutosizeYieldsToWidthClass: Story = {
 
     await step('No inline width is written when a width class is present', async () => {
       // On the trigger, which is where a measurement would land and where it would out-rank the
-      // :host(.qti-input-width-5) rule if one were ever written. Skipping the measurement is what
+      // :host(.qti-input-width-6) rule if one were ever written. Skipping the measurement is what
       // makes the class win; see QtiInlineChoiceInteraction.shouldAutoSizeMenu.
       const trigger = classed.shadowRoot?.querySelector<HTMLElement>('button[part="trigger"]');
       expect(trigger?.style.getPropertyValue('--qti-inline-choice-width') ?? '').toBe('');

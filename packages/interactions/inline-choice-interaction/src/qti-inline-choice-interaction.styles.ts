@@ -43,7 +43,7 @@ const own = css`
      */
   }
 
-  /* ── QTI mandatory input-width shared vocabulary (16 values) ─────────────── */
+  /* ── QTI mandatory input-width shared vocabulary (15 values) ─────────────── */
   :host(.qti-input-width-1) {
     --qti-inline-choice-width: 1ch;
   }
@@ -55,9 +55,6 @@ const own = css`
   }
   :host(.qti-input-width-4) {
     --qti-inline-choice-width: 4ch;
-  }
-  :host(.qti-input-width-5) {
-    --qti-inline-choice-width: 5ch;
   }
   :host(.qti-input-width-6) {
     --qti-inline-choice-width: 6ch;

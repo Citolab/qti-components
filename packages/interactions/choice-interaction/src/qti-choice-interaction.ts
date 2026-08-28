@@ -25,7 +25,7 @@ export type Orientation = 'horizontal' | 'vertical' | undefined;
  *   the `qti-orientation-*` class vocabulary.
  * @attr {boolean} [shuffle=false] - Requests choice shuffling. Applied by the transform
  *   pipeline (`qti-transformers`), not by this element.
- * @attr {'qti-orientation-horizontal'|'qti-orientation-vertical'|'qti-choices-stacking-1'|'qti-choices-stacking-2'|'qti-choices-stacking-3'|'qti-choices-stacking-4'|'qti-choices-stacking-5'|'qti-choices-stacking-6'|'qti-labels-none'|'qti-labels-decimal'|'qti-labels-lower-alpha'|'qti-labels-upper-alpha'|'qti-labels-suffix-none'|'qti-labels-suffix-period'|'qti-labels-suffix-parenthesis'|'qti-input-control-hidden'} class - QTI shared presentation vocabulary. Space-separated; takes precedence over `orientation`.
+ * @attr {'qti-orientation-horizontal'|'qti-orientation-vertical'|'qti-choices-stacking-1'|'qti-choices-stacking-2'|'qti-choices-stacking-3'|'qti-choices-stacking-4'|'qti-choices-stacking-5'|'qti-labels-none'|'qti-labels-decimal'|'qti-labels-lower-alpha'|'qti-labels-upper-alpha'|'qti-labels-suffix-none'|'qti-labels-suffix-period'|'qti-labels-suffix-parenthesis'|'qti-input-control-hidden'} class - QTI shared presentation vocabulary. Space-separated; takes precedence over `orientation`.
  *
  * @slot prompt - The prompt shown above the choices.
  * @slot - Default slot for `qti-simple-choice` elements.

@@ -36,9 +36,6 @@ export default [
     :host(.qti-choices-stacking-5) {
       --stacking-count: 5;
     }
-    :host(.qti-choices-stacking-6) {
-      --stacking-count: 6;
-    }
 
     /* Default slot item layout */
     ::slotted(qti-simple-choice) {
