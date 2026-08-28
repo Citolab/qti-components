@@ -1759,7 +1759,7 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Store the correct response or clear it based on the show parameter
     this.correctResponse = show
       ? responseVariable?.correctResponse
-      : responseVariable.cardinality === 'single'
+      : responseVariable?.cardinality === 'single'
         ? ''
         : [];
 
@@ -1813,9 +1813,17 @@ export class QtiPortableCustomInteraction extends Interaction {
       'qti-portable-custom-interaction'
     ) as QtiPortableCustomInteraction;
 
-    // Copy all attributes from the original PCI
+    // Copy all attributes from the original PCI, except the ones that identify it
+    // or would make the clone show its own correct response / correction states
+    const skippedAttributes = [
+      'id',
+      'response-identifier',
+      'show-correct-response',
+      'show-full-correct-response',
+      'show-candidate-correction'
+    ];
     Array.from(this.attributes).forEach(attr => {
-      if (attr.name !== 'id' && attr.name !== 'response-identifier') {
+      if (!skippedAttributes.includes(attr.name)) {
         correctResponseViewer.setAttribute(attr.name, attr.value);
       }
     });
@@ -1824,40 +1832,44 @@ export class QtiPortableCustomInteraction extends Interaction {
     const originalResponseId = this.responseIdentifier;
     correctResponseViewer.responseIdentifier = `${originalResponseId}-correct`;
 
-    // Copy any light DOM content from the original PCI
-    // This includes markup and properties
-    Array.from(this.children).forEach(child => {
-      const clonedChild = child.cloneNode(true);
-      correctResponseViewer.appendChild(clonedChild);
-    });
+    // Mark as a correct-response clone so it does not register itself as a real
+    // interaction on the assessment item (it has no response declaration of its own).
+    // Must be set after the response identifier, since the setter derives from it.
+    correctResponseViewer.isFullCorrectResponse = true;
+
+    // Copy the authored light DOM content from the original PCI (modules, markup,
+    // properties and stylesheets). Runtime generated children - the iframe, its
+    // styles and the disabled overlay - must not be copied: a cloned iframe never
+    // loads and would render as a broken frame above the actual interaction.
+    Array.from(this.children)
+      .filter(child => child.tagName.startsWith('QTI-'))
+      .forEach(child => {
+        const clonedChild = child.cloneNode(true);
+        correctResponseViewer.appendChild(clonedChild);
+      });
 
     // Store the correct response value
     const correctResponseValue = responseVariable.correctResponse;
 
-    // Ensure the correct-response viewer is initialized and then configured in the iframe
-    const originalConnectedCallback = correctResponseViewer.connectedCallback;
-    correctResponseViewer.connectedCallback = function () {
-      originalConnectedCallback.call(this);
+    // Push the correct response into the viewer's iframe as soon as it is ready.
+    // Note: overriding connectedCallback on the instance has no effect, custom
+    // element reactions are looked up on the prototype when the element is defined.
+    const applyCorrectResponse = () => {
+      const qtiVariableJSON = correctResponseViewer.responseVariablesToQtiVariableJSON(
+        correctResponseValue,
+        responseVariable.cardinality,
+        responseVariable.baseType
+      );
 
-      const applyCorrectResponse = () => {
-        const qtiVariableJSON = this.responseVariablesToQtiVariableJSON(
-          correctResponseValue,
-          responseVariable.cardinality,
-          responseVariable.baseType
-        );
-
-        this.sendMessageToIframe('setBoundTo', {
-          [originalResponseId]: qtiVariableJSON
-        });
-        this.sendMessageToIframe('setState', { state: 'review' });
-      };
-
-      if (this._iframeLoaded) {
-        applyCorrectResponse();
-      } else {
-        this.addEventListener('qti-portable-custom-interaction-loaded', applyCorrectResponse, { once: true });
-      }
+      correctResponseViewer.sendMessageToIframe('setBoundTo', {
+        [originalResponseId]: qtiVariableJSON
+      });
+      correctResponseViewer.sendMessageToIframe('setState', { state: 'review' });
     };
+
+    correctResponseViewer.addEventListener('qti-portable-custom-interaction-loaded', applyCorrectResponse, {
+      once: true
+    });
 
     // Make sure the viewer is not interactive
     correctResponseViewer.style.pointerEvents = 'none';
