@@ -40,3 +40,11 @@ pnpm run cem
 git add \
   custom-elements.json \
   packages/qti-interactions/custom-elements.qti.json
+
+# No qti- name that 1EdTech does not define. Whole-repo rather than staged-file, because it is
+# a membership test against a fixed set and costs about a second — and because it reads the
+# custom-elements manifest for tag names, so it has to come AFTER the `cem` step above or it
+# would judge a stale manifest. lint-staged cannot host it for the same reason: it is not
+# file-scoped. Also runs in CI via `lint` (see ci:push-quality); here for the fast feedback,
+# at the moment someone mints the name rather than a push later.
+pnpm run lint:vocab
