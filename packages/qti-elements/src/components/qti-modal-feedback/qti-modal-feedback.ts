@@ -4,7 +4,7 @@ import { QtiFeedback } from '@qti-components/base';
 
 export class QtiModalFeedback extends QtiFeedback {
   static override styles = css`
-    .qti-dialog {
+    .cito-dialog {
       background: var(--qti-bg);
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
       border-radius: var(--qti-border-radius);
@@ -45,7 +45,7 @@ export class QtiModalFeedback extends QtiFeedback {
 
   override render() {
     return html`
-      <dialog class="qti-dialog" part="feedback" ?open="${this.showStatus === 'on'}">
+      <dialog class="cito-dialog" part="feedback" ?open="${this.showStatus === 'on'}">
         <slot></slot>
         <div style="margin-top: var(--qti-gap); text-align: center;">
           <button class="button close-button" @click="${this.closeFeedback}">Close</button>

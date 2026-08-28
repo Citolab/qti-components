@@ -17840,7 +17840,7 @@
               },
               "static": true,
               "readonly": true,
-              "default": "'qti-graphic-order-marker'"
+              "default": "'cito-graphic-order-marker'"
             },
             {
               "kind": "field",

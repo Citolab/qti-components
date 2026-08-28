@@ -22,7 +22,7 @@ type HotspotChoice = Choice & { order: number };
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
 
-  static readonly #LOCATOR_CLASS = 'qti-graphic-order-marker';
+  static readonly #LOCATOR_CLASS = 'cito-graphic-order-marker';
 
   protected choiceOrdering: boolean;
 
@@ -108,7 +108,7 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
       marker.style.setProperty('position-anchor', anchorName);
       marker.style.setProperty('--qti-graphic-order-pin-color', this.resolvePinColor(choice));
       if (choice.getAttribute('shape') === 'poly') {
-        marker.classList.add('qti-graphic-order-marker--poly');
+        marker.classList.add('cito-graphic-order-marker--poly');
       }
       marker.setAttribute('aria-hidden', 'true');
       marker.textContent = String(choice.order);

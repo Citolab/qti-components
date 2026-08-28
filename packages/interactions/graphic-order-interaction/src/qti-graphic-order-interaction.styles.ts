@@ -28,7 +28,7 @@ export default [
      * live. 'position-anchor' is repeated as a declaration because the JS writes the per-hotspot
      * anchor name inline; this is the property's home, the inline style is its value.
      */
-    ::slotted(.qti-graphic-order-marker) {
+    ::slotted(.cito-graphic-order-marker) {
       position: absolute;
       left: anchor(center);
       top: anchor(center);

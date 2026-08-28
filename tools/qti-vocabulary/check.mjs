@@ -8,7 +8,8 @@
  * that the shared vocabulary is "maintained outside of the QTI specification (schema)".
  * So 1EdTech can add `qti-dialog` tomorrow, with its own meaning, without a schema version
  * bump and without any signal reaching us. Every name we mint inside the prefix is a bet
- * that they never mint the same one.
+ * that they never mint the same one. That example is not hypothetical: `qti-dialog` is a name
+ * this repo did hold, on the modal-feedback element, until it was renamed to `cito-dialog`.
  *
  * Nothing else catches it. Stylelint only globs `*.{css,scss}` (see `lint:css`), and about
  * half these selectors live in `css``  `` blocks inside `.styles.ts` — which is exactly
@@ -43,17 +44,29 @@ const root = join(here, '..', '..');
  * Names we mint inside the `qti-` prefix on purpose, each with the reason it is worth the
  * collision risk. Adding a line here is the deliberate act this check exists to force —
  * it should be an argued exception, not a reflex.
+ *
+ * Every entry must be a name this check actually flags. An entry for something it cannot see
+ * is worse than none: the list reads as the complete set of accepted exceptions, so a name
+ * that is here for decoration implies a coverage this check does not have. Verify with
+ * `const ALLOWLIST = {}` — whatever the run reports is the whole real list.
+ *
+ * Two surfaces are deliberately unscanned, and names living only there must NOT be listed:
+ *
+ *   public/assets/**   Authored QTI content and the stylesheets items pull in via
+ *                      `qti-stylesheet`. Not ours to rename — see `qti-input-width-5`, where
+ *                      the class is 1EdTech's own conformance content and the omission is in
+ *                      their published vocabulary, not in the fixture.
+ *   `<style>` inside an html`` template. Only stories do this, to demo layout. Checked: the
+ *                      two shipped files that build a `<style>` element only inject
+ *                      author-supplied CSS at runtime (qti-stylesheet, PCI) and declare no
+ *                      qti- names of their own.
  */
 const ALLOWLIST = {
-  'qti-item': 'Delivery-engine item container, not QTI content. Public API; rename is cross-repo (QTI-Editor).',
-  'qti-test': 'Delivery-engine test container, not QTI content. Public API; rename is cross-repo (QTI-Editor).',
-  'qti-portable-custom-interaction-test': 'Test-only element, never shipped in content.',
-  'qti-base-stimulus': 'Internal layout hook for the stimulus pane.',
-  'qti-shared-stimulus': 'Internal layout hook for the shared-stimulus pane; present in 4 fixture XMLs.',
-  'qti-dialog': 'Internal modal-feedback hook.',
-  'qti-theme-kennisnet': 'Brand scope class for the kennisnet theme.',
-  'qti-graphic-order-marker': 'Internal marker element for graphic-order hotspots.',
-  'qti-graphic-order-marker--poly': 'Polygon variant of the above.'
+  'qti-item':
+    'Delivery-engine item container, not QTI content. Public API; rename is cross-repo (QTI-Editor, 9 files).',
+  'qti-test':
+    'Delivery-engine test container, not QTI content. Public API; rename is cross-repo (QTI-Editor, 2 files).',
+  'qti-portable-custom-interaction-test': 'Test-only element, never shipped in content.'
 };
 
 const reserved = JSON.parse(readFileSync(join(here, 'reserved.json'), 'utf8'));
