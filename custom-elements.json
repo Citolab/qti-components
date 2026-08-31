@@ -20021,15 +20021,6 @@
             },
             {
               "kind": "field",
-              "name": "_iframeObjectUrl",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -20221,6 +20212,26 @@
               "name": "#processPendingMessages",
               "privacy": "private",
               "description": "IFRAME MODE: Process pending messages"
+            },
+            {
+              "kind": "field",
+              "name": "#responseDeclaration",
+              "privacy": "private",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#responseDeclarationForStatus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PciResponseDeclaration | null"
+                }
+              },
+              "description": "The declaration as it goes into the PCI configuration.\n\n`correctResponse` is withheld unless the item is actually showing a solution. A PCI is\nthird-party code running in an iframe, and there is no reason for it to hold the answer key\nwhile the candidate is still working - the use case this field exists for only applies once\nthe status says the correct response is being shown.\n\nThe filter sits here rather than in the `responseDeclaration` getter so it also covers a\ndeclaration a host set explicitly, not just the one derived from the item context."
             },
             {
               "kind": "method",
@@ -20794,6 +20805,14 @@
             },
             {
               "kind": "field",
+              "name": "responseDeclaration",
+              "description": "Response declaration passed into the PCI configuration, so a PCI can render\nthe correct response itself instead of having it pushed in as a response.\n\nDerived from the item context, unless a host sets it explicitly - the\ncorrect response viewer does, since it has no response declaration of its own.\n\nSee https://github.com/1EdTech/qti-project-management/issues/210",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              }
+            },
+            {
+              "kind": "field",
               "name": "responseIdentifier",
               "type": {
                 "text": "string"
@@ -20942,6 +20961,19 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "attribute": "data-status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
               }
             },
             {
@@ -21163,6 +21195,18 @@
               },
               "default": "''",
               "fieldName": "requireShimJson"
+            },
+            {
+              "name": "data-status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "fieldName": "status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
+              }
             },
             {
               "name": "data-use-default-paths",
@@ -21399,19 +21443,6 @@
                 "text": "string | null"
               },
               "privacy": "protected",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_iframeObjectUrl",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "private",
               "default": "null",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -21688,6 +21719,34 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#responseDeclaration",
+              "privacy": "private",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#responseDeclarationForStatus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PciResponseDeclaration | null"
+                }
+              },
+              "description": "The declaration as it goes into the PCI configuration.\n\n`correctResponse` is withheld unless the item is actually showing a solution. A PCI is\nthird-party code running in an iframe, and there is no reason for it to hold the answer key\nwhile the candidate is still working - the use case this field exists for only applies once\nthe status says the correct response is being shown.\n\nThe filter sits here rather than in the `responseDeclaration` getter so it also covers a\ndeclaration a host set explicitly, not just the one derived from the item context.",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -22583,6 +22642,18 @@
             },
             {
               "kind": "field",
+              "name": "responseDeclaration",
+              "description": "Response declaration passed into the PCI configuration, so a PCI can render\nthe correct response itself instead of having it pushed in as a response.\n\nDerived from the item context, unless a host sets it explicitly - the\ncorrect response viewer does, since it has no response declaration of its own.\n\nSee https://github.com/1EdTech/qti-project-management/issues/210",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "responseIdentifier",
               "type": {
                 "text": "string"
@@ -22760,6 +22831,23 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "attribute": "data-status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -23011,6 +23099,22 @@
               },
               "default": "''",
               "fieldName": "requireShimJson",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "name": "data-status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "fieldName": "status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"

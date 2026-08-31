@@ -8,6 +8,7 @@ import { qtiTransformItem } from '@qti-components/transformers';
 import type { ItemContainer, QtiItem } from '@qti-components/item';
 import type { ModuleResolutionConfig } from '@qti-components/transformers';
 import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
+import type { QtiPortableCustomInteractionTest } from './qti-portable-custom-test-interaction';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
@@ -514,6 +515,142 @@ export const VerhoudingenRestoreResponse = {
   }
 };
 
+/**
+ * The PCI renders inside an iframe and paints into shadow roots, so collect both
+ * to be able to assert on what a candidate actually sees.
+ */
+const deepIframeHtml = (iframe: HTMLIFrameElement | null): string => {
+  const doc = iframe?.contentDocument;
+  if (!doc) return '';
+  const collectShadowHtml = (root: ParentNode): string[] =>
+    Array.from(root.querySelectorAll('*')).flatMap(node =>
+      node.shadowRoot ? [node.shadowRoot.innerHTML, ...collectShadowHtml(node.shadowRoot)] : []
+    );
+  return [doc.body.innerHTML, ...collectShadowHtml(doc)].join('\n');
+};
+
+export const VerhoudingenShowCorrectResponse = {
+  render: () => {
+    const qti = `<qti-assessment-item
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+      identifier="i67a0dfca446508820f6286cf78feea"
+      title="verhoudingen"
+      label="verhoudingen"
+      xml:lang="en-US"
+      adaptive="false"
+      time-dependent="false"
+      tool-name="TAO"
+      tool-version="3.4.0-sprint121"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+        <qti-correct-response>
+          <qti-value>[{&quot;color&quot;:&quot;blue&quot;,&quot;percentage&quot;:12.5},{&quot;color&quot;:&quot;green&quot;,&quot;percentage&quot;:12.5},{&quot;color&quot;:&quot;red&quot;,&quot;percentage&quot;:75}]</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float"></qti-outcome-declaration>
+      <qti-item-body>
+        <div class="grid-row">
+          <div class="col-12">
+            <qti-portable-custom-interaction-test
+              custom-interaction-type-identifier="colorProportions"
+              data-version="1.0.1"
+              data-colors="red, blue, green"
+              data-width="400"
+              data-height="400"
+              data-base-url="/assets/qti-portable-interaction/verhoudingen/"
+              module="colorProportions"
+              response-identifier="RESPONSE"
+            >
+              <qti-interaction-modules>
+                <qti-interaction-module
+                  id="colorProportions"
+                  primary-path="/interaction/runtime/js/index.js"
+                ></qti-interaction-module>
+              </qti-interaction-modules>
+              <qti-interaction-markup>
+                <div class="pciInteraction">
+                  <div class="prompt"></div>
+                  <ul class="pci"></ul>
+                </div>
+              </qti-interaction-markup>
+            </qti-portable-custom-interaction-test>
+          </div>
+        </div>
+      </qti-item-body>
+    </qti-assessment-item>`;
+    return html`
+      <qti-item>
+        <item-container .itemXML=${qti}></item-container>
+      </qti-item>
+    `;
+  },
+  play: async ({ canvasElement, step }) => {
+    const qtiItem = canvasElement.querySelector('qti-item') as QtiItem;
+
+    const assessmentItem = await waitFor(
+      () => {
+        if (!qtiItem?.children.length) throw new Error('qtiItem has no children');
+        const item = qtiItem.children[0].shadowRoot.querySelector('qti-assessment-item') as QtiAssessmentItem;
+        if (!item) throw new Error('assessmentItem is not defined');
+        if (!item.querySelector('qti-portable-custom-interaction-test')) throw new Error('interaction not rendered');
+        return item;
+      },
+      { timeout: 10000, interval: 500 }
+    );
+
+    await step('show the correct response', async () => {
+      assessmentItem.showCorrectResponse(true);
+
+      const viewer = await waitFor(
+        () => {
+          const container = assessmentItem.querySelector('[id^="correct-response-container-"]');
+          if (!container) throw new Error('correct response container not found');
+          const el = container.querySelector('qti-portable-custom-interaction');
+          if (!el) throw new Error('correct response viewer not found');
+          return el as QtiPortableCustomInteraction;
+        },
+        { timeout: 10000, interval: 500 }
+      );
+
+      // Only the viewer's own iframe: the runtime generated children of the original
+      // interaction - its iframe and the review overlay - must not be cloned along.
+      expect(viewer.querySelectorAll('iframe')).toHaveLength(1);
+      expect(viewer.querySelector('.pci-interaction-overlay')).toBeNull();
+
+      await waitFor(
+        () => {
+          const cloneHtml = deepIframeHtml(viewer.querySelector('iframe'));
+          // The correct response is 75% red, 12.5% blue and 12.5% green; an
+          // unanswered interaction paints every square white instead.
+          expect(cloneHtml).toContain('fill="red"');
+          expect(cloneHtml).toContain('fill="blue"');
+          expect(cloneHtml).toContain('fill="green"');
+        },
+        { timeout: 10000, interval: 500 }
+      );
+    });
+
+    await step('hide the correct response', async () => {
+      // The viewer used to register itself as a real interaction on the item, which
+      // made this throw: Cannot read properties of undefined (reading 'cardinality')
+      assessmentItem.showCorrectResponse(false);
+
+      await waitFor(
+        () => {
+          expect(assessmentItem.querySelector('[id^="correct-response-container-"]')).toBeNull();
+          expect(assessmentItem.querySelector('.pci-interaction-overlay')).toBeNull();
+        },
+        { timeout: 10000, interval: 500 }
+      );
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
 // Base story function that accepts itemName as parameter
 const createPciConformanceStory = (itemName: string): Story => ({
   args: {
@@ -591,3 +728,187 @@ export const PciConformance3: Story = createPciConformanceStory('item-3');
 export const PciConformance4: Story = createPciConformanceStory('item-4');
 export const PciConformance5: Story = createPciConformanceStory('item-5');
 export const PciConformance6: Story = createPciConformanceStory('item-6');
+
+/**
+ * Regression guard for how the PCI iframe document is created.
+ *
+ * The iframe must be built with `srcdoc`, never a `blob:` or `data:` URL. Those give the frame a
+ * document URL that is out of scope for any http(s) Service Worker registration, so a player that
+ * serves package resources through a Service Worker (CacheStorage, virtual paths) silently loses
+ * every request made from inside the interaction - module scripts, images, media, stylesheets.
+ *
+ * `<base href>` must point at `data-base-url`, so relative URLs in the interaction markup resolve
+ * against the item's directory rather than the site root. Both are invisible until a real package
+ * is loaded, which is why they are asserted here directly.
+ */
+export const IframeIsServiceWorkerReachable: Story = {
+  render: () =>
+    html` <qti-portable-custom-interaction-test
+      response-identifier="RESPONSE"
+      module="pci-getallen"
+      custom-interaction-type-identifier="getallenFormule"
+      data-base-url="/assets/qti-portable-interaction/baking_soda"
+    >
+      <qti-interaction-modules>
+        <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+      </qti-interaction-modules>
+      <qti-interaction-markup></qti-interaction-markup>
+    </qti-portable-custom-interaction-test>`,
+  play: async ({ canvasElement, step }) => {
+    const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await new Promise(resolve => {
+      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => resolve(true));
+    });
+
+    const iframe = pciElement.querySelector('iframe');
+    const itemBase = `${window.location.origin}/assets/qti-portable-interaction/baking_soda/`;
+
+    await step('iframe uses srcdoc, not an opaque blob:/data: document', async () => {
+      expect(iframe.getAttribute('srcdoc')).toBeTruthy();
+      // An empty `src` is what keeps the frame inside the page's Service Worker scope.
+      expect(iframe.getAttribute('src')).toBeNull();
+      await waitFor(() => expect(iframe.contentWindow.location.href).not.toMatch(/^(blob:|data:)/));
+    });
+
+    await step('document stays same-origin, so the page can reach into it', async () => {
+      // A blob:/data: document would make `contentDocument` unreachable or same-origin-by-accident;
+      // reading it at all is part of what the fix guarantees.
+      expect(iframe.contentDocument).toBeTruthy();
+      expect(iframe.contentWindow.origin).toBe(window.location.origin);
+    });
+
+    await step('<base href> is the item directory, not the site root', async () => {
+      await waitFor(() => expect(iframe.contentDocument.baseURI).toBe(itemBase));
+      // `data-base-url` has no trailing slash here: without normalising it, the last segment counts
+      // as a filename and `baking_soda.svg` would resolve one directory too high.
+      expect(new URL('baking_soda.svg', iframe.contentDocument.baseURI).href).toBe(`${itemBase}baking_soda.svg`);
+    });
+
+    await step('a relative request from inside the iframe reaches the item directory', async () => {
+      // The end-to-end check: same-origin frame + correct base means a bare relative URL resolves
+      // and actually fetches. Under a blob: URL this throws, and under the old base it 404s.
+      const response = await iframe.contentWindow.fetch('baking_soda.svg');
+      expect(response.ok).toBe(true);
+      expect(new URL(response.url).pathname).toBe('/assets/qti-portable-interaction/baking_soda/baking_soda.svg');
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
+/**
+ * The correct response must not reach a PCI while the candidate is still working.
+ *
+ * A PCI is third-party code in an iframe, and `responseDeclaration` exists so it can render the
+ * correct response once the item is *showing* one. Handing it the answer key at `interacting`
+ * would widen a leak that today stays inside our own DOM. `correctResponse` is therefore only
+ * sent when `status` is `solution` or `review`; `baseType` and `cardinality` always go through.
+ *
+ * Also covers an empty `<qti-correct-response>` on a non-single cardinality, which yields `[]`
+ * from the response variable and must read as "no correct response" rather than an empty one.
+ */
+export const CorrectResponseWithheldWhileInteracting: Story = {
+  render: () =>
+    html`<qti-assessment-item
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      adaptive="false"
+      time-dependent="false"
+      identifier="pci-correct-response-gating"
+      title="PCI correct response gating"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+        <qti-correct-response>
+          <qti-value>42</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-response-declaration identifier="RESPONSE_EMPTY" cardinality="multiple" base-type="identifier">
+        <qti-correct-response></qti-correct-response>
+      </qti-response-declaration>
+      <qti-item-body>
+        <qti-portable-custom-interaction-test
+          response-identifier="RESPONSE"
+          module="pci-getallen"
+          custom-interaction-type-identifier="getallenFormule"
+          data-base-url="/assets/qti-portable-interaction/baking_soda"
+        >
+          <qti-interaction-modules>
+            <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+          </qti-interaction-modules>
+          <qti-interaction-markup></qti-interaction-markup>
+        </qti-portable-custom-interaction-test>
+        <qti-portable-custom-interaction-test
+          response-identifier="RESPONSE_EMPTY"
+          module="pci-getallen"
+          custom-interaction-type-identifier="getallenFormule"
+          data-base-url="/assets/qti-portable-interaction/baking_soda"
+        >
+          <qti-interaction-modules>
+            <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+          </qti-interaction-modules>
+          <qti-interaction-markup></qti-interaction-markup>
+        </qti-portable-custom-interaction-test>
+      </qti-item-body>
+    </qti-assessment-item>`,
+  play: async ({ canvasElement, step }) => {
+    const [withCorrect, withEmptyCorrect] = Array.from(
+      canvasElement.querySelectorAll('qti-portable-custom-interaction-test')
+    ) as QtiPortableCustomInteractionTest[];
+
+    const configOf = (el: QtiPortableCustomInteractionTest) =>
+      (el.querySelector('iframe')?.contentWindow as any)?.PCIManager?.pciConfig;
+
+    await Promise.all(
+      [withCorrect, withEmptyCorrect].map(
+        el =>
+          new Promise(resolve =>
+            el.addEventListener('qti-portable-custom-interaction-loaded', () => resolve(true), { once: true })
+          )
+      )
+    );
+
+    await step('interacting: declaration goes through, correct response does not', async () => {
+      await waitFor(
+        () => {
+          const config = configOf(withCorrect);
+          expect(config?.status).toBe('interacting');
+          // The shape the PCI needs to interpret responses is still there...
+          expect(config?.responseDeclaration).toEqual({ baseType: 'string', cardinality: 'single' });
+          // ...but the answer key is not.
+          expect(config?.responseDeclaration?.correctResponse).toBeUndefined();
+        },
+        { timeout: 10000, interval: 250 }
+      );
+    });
+
+    await step('an empty qti-correct-response is not reported as a correct response', async () => {
+      // `multiple` cardinality yields [] for an empty element, which must not become
+      // correctResponse: { value: [] }.
+      expect(withEmptyCorrect.responseDeclaration).toEqual({
+        baseType: 'identifier',
+        cardinality: 'multiple'
+      });
+    });
+
+    await step('solution: the correct response is handed over', async () => {
+      withCorrect.status = 'solution';
+      await withCorrect.recreateIframe();
+
+      await waitFor(
+        () => {
+          const config = configOf(withCorrect);
+          expect(config?.status).toBe('solution');
+          expect(config?.responseDeclaration).toEqual({
+            baseType: 'string',
+            cardinality: 'single',
+            correctResponse: { value: '42' }
+          });
+        },
+        { timeout: 10000, interval: 250 }
+      );
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
