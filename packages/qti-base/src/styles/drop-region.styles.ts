@@ -8,14 +8,32 @@ import { css } from 'lit';
  * once dropped — and a container that centres or stretches it makes the drop the one place where
  * that stops being true. That is felt as the chip jumping the instant it lands.
  *
- * `flex: 0 0 auto` on the children says "intrinsic size, no growing, no shrinking".
+ * `flex: 0 1 auto` on the children says "intrinsic size, no growing, shrink if you must".
  * `align-items: flex-start` stops the cross axis stretching them, which is the flex default and
  * the reason a chip in a tall dropzone used to grow to fill it.
+ *
+ * The shrink half used to be 0 as well, on the reading that a drop must not resize a chip. It does
+ * not say that. `flex-shrink: 0` does not preserve the chip's size, it preserves the chip's
+ * UNCONSTRAINED max-content size — and those are the same number only while the bank is wide enough
+ * to give the chip its full width. Once the bank is narrower, the bank chip (`flex: 0 1 auto`, like
+ * any flex item) shrinks and wraps, the placed chip does not, and the two disagree.
+ *
+ * Measured on the order fixture, bank vs placed: 209x36 / 209x36 at a 480px interaction, but
+ * 204x55 / 209x36 at 440px and 154x55 / 209x36 at 340px — the placed chip a fixed 209px wide,
+ * overflowing a drop that had correctly reserved 156px for it. It reached CI as a font difference:
+ * the same label measures ~227px under the Linux fonts, which puts 480px on the wrong side of the
+ * boundary too.
+ *
+ * Shrinking cannot make a placed chip smaller than the reservation, because the reservation IS the
+ * measured chip (`--qti-dropzone-min-*`, applied to this region's content box). So the floor a
+ * shrink stops at is the chip's own size, which is the rule above, not an exception to it.
+ * `flex-grow: 0` is what actually prevents the stretch this block cares about, and it is untouched.
  *
  * A container that wants a *minimum* size still declares one (see `--qti-dropzone-min-*`). That
  * sizes the container, never its contents.
  *
- * Verified by drag-drop.invariance.spec.ts: "a chip is the same chip wherever it lives".
+ * Verified by drag-drop.invariance.spec.ts: "a chip is the same chip wherever it lives" — including
+ * the narrow-bank order fixture, which is there because the wide one passes either way.
  */
 export const dropRegion = css`
   [part~='drop'] {
@@ -54,7 +72,7 @@ export const dropRegion = css`
   }
 
   [part~='drop'] > * {
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     align-self: flex-start;
   }
 `;
