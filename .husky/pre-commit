@@ -32,6 +32,31 @@ pnpm run test:vrt
 # `vitest --changed` picks it up — which means an unstaged fix can make a staged bug pass and
 # the commit goes out green. With this flag every unstaged change is stashed for the run, so
 # "changed" and "staged" are the same set. Restorable either way: git stash list.
+#
+# The stash that isolates the staged set also clears the markers of an in-progress merge —
+# .git/MERGE_HEAD and friends — out from under the commit being made. git then refuses the commit
+# with "could not open '.git/MERGE_HEAD'", and, worse, the conflict resolution it was about to
+# record is now an ORDINARY commit: main no longer recorded as merged, so the next `git merge main`
+# replays every conflict that was just resolved by hand. Back the markers up and put back whatever
+# went missing. Via a trap, so a failing gate below still leaves the merge resumable rather than
+# stranding a half-finished one.
+git_dir="$(git rev-parse --absolute-git-dir)"
+merge_state_backup="$(mktemp -d)"
+for marker in MERGE_HEAD MERGE_MODE MERGE_MSG; do
+  if [ -f "$git_dir/$marker" ]; then
+    cp "$git_dir/$marker" "$merge_state_backup/$marker"
+  fi
+done
+restore_merge_state() {
+  for marker in MERGE_HEAD MERGE_MODE MERGE_MSG; do
+    if [ -f "$merge_state_backup/$marker" ] && [ ! -f "$git_dir/$marker" ]; then
+      cp "$merge_state_backup/$marker" "$git_dir/$marker"
+    fi
+  done
+  rm -rf "$merge_state_backup"
+}
+trap restore_merge_state EXIT
+
 npx lint-staged --allow-empty --quiet --hide-unstaged
 
 # Keep the committed custom-elements.json manifests in sync with source.
