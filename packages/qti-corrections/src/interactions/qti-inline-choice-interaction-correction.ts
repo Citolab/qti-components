@@ -1,4 +1,4 @@
-import { css, html, nothing } from 'lit';
+import { css, html } from 'lit';
 
 import { QtiInlineChoiceInteraction } from '@qti-components/inline-choice-interaction/elements';
 
@@ -6,17 +6,11 @@ import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
 import { correctionPart } from '../styles/correction.styles';
 
 export class QtiInlineChoiceInteractionCorrection extends CandidateCorrectionMixin(QtiInlineChoiceInteraction) {
-  #correctOption: unknown = nothing;
-
   static override get styles() {
     return [
       QtiInlineChoiceInteraction.styles,
       correctionPart,
       css`
-        :host {
-          --qti-inline-choice-correct-option-margin: var(--qti-gap);
-        }
-
         /*
          * Only the TRAILING inset — the leading gap is the shared --qti-glyph-gap, like every other
          * badge. This used to set both margins to --qti-gap (1rem), twice everyone else's 0.5em, on
@@ -32,30 +26,49 @@ export class QtiInlineChoiceInteractionCorrection extends CandidateCorrectionMix
         [part~='correction'] {
           margin-inline-end: var(--qti-correction-inset);
         }
-
-        [part='correct-option'] {
-          display: inline-block;
-          margin: 0 var(--qti-inline-choice-correct-option-margin);
-        }
       `
     ];
   }
 
+  /**
+   * Internal mode defers to the full correct response, exactly as text-entry does.
+   *
+   * There is no room beside a dropdown for an answer key: the interaction sits inside a line of
+   * running text, so a marker next to the field competes with the sentence around it, and when the
+   * candidate happened to pick the correct option it printed the same word twice. The full variant
+   * puts the key in a `div.full-correct-response-inline` after the field instead — one already-themed
+   * presentation for both inline interactions rather than a second one only these two use.
+   *
+   * `super` is deliberately not called: its `show-correct-response` host state paints the dashed
+   * outline in qti-states.css, and this element is no longer the thing presenting the key — the
+   * wrapper beside it is. Leaving the state off keeps internal mode looking identical to an item
+   * authored with `show-full-correct-response`.
+   *
+   * The guard stops the two entry points rendering two wrappers: `showFullCorrectResponse` has its
+   * own watcher, so with both flags set this would otherwise run a second time.
+   */
   public override toggleInternalCorrectResponse(show: boolean): void {
-    super.toggleInternalCorrectResponse(show);
-    const response = this.correctResponse;
-    const correctIdentifier = Array.isArray(response) ? response[0] : response;
-    const option = show && correctIdentifier ? this.options.find(item => item.value === correctIdentifier) : undefined;
-    const previous = this.#correctOption;
-    this.#correctOption = option ? html`<span part="correct-option">${option.content}</span>` : nothing;
-    this.requestUpdate('correctOption', previous);
+    if (!this.showFullCorrectResponse) this.toggleFullCorrectResponse(show);
   }
 
-  /** Badge and answer-key option both trail the validation message; everything else is the base's. */
+  /**
+   * The key is shown whether or not the candidate was right.
+   *
+   * The base withholds it from a correct candidate, on the reasoning that their answer already is
+   * the key. That reasoning does not survive contact with this element: asking for the correct
+   * response and being shown nothing is indistinguishable from the feature being broken, and it is
+   * the only inline interaction where the answer and the key are the same short phrase, so there is
+   * no visual clue either. Show it, and let the correctness badge say who was right.
+   */
+  public override get withholdsFullCorrectResponseWhenCorrect(): boolean {
+    return false;
+  }
+
+  /** The badge trails the validation message; everything else is the base's. */
   override render() {
     return html`
       ${this.renderTrigger()} ${this.renderMenu()} ${this.renderValidationMessage()}
-      <span part=${this.correctionPart} aria-hidden="true"></span>${this.#correctOption}
+      <span part=${this.correctionPart} aria-hidden="true"></span>
     `;
   }
 }

@@ -29,10 +29,13 @@
    * Set on the interaction host by `Interaction.toggleInternalCorrectResponse`.
    *
    * Reaches the host wherever that base implementation runs, which is more than it looks: besides
-   * `qti-extended-text-interaction`, both `ChoiceCorrectionMixin` and every per-interaction override
-   * except the drag-drop mixin call `super`, so choice, hottext, select-point, slider, graphic-order
-   * and the rest set the host state AND mark their individual choices with
-   * `correct-response` / `incorrect-response`. Only the drag-drop mixin replaces it outright.
+   * `qti-extended-text-interaction`, both `ChoiceCorrectionMixin` and most per-interaction overrides
+   * call `super`, so choice, hottext, select-point, slider, graphic-order and the rest set the host
+   * state AND mark their individual choices with `correct-response` / `incorrect-response`.
+   *
+   * Three do not, and so never paint this outline: the drag-drop mixin replaces the implementation
+   * outright, and the two inline interactions — text-entry and inline-choice — hand internal mode to
+   * the full correct response, which presents the key in a sibling wrapper rather than on the host.
    *
    * The outline went unseen on hottext until its host stopped being an inline box (see the note in
    * qti-match-interaction.styles.ts) — an inline box whose children are all block has no area to
@@ -43,5 +46,4 @@
     outline: var(--qti-border-thickness) dashed var(--qti-correct);
     outline-offset: 0.25rem;
   }
-
 }

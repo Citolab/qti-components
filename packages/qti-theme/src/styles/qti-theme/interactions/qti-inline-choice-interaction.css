@@ -166,12 +166,6 @@
   }
 
   qti-inline-choice-interaction {
-    &::part(correct-option) {
-      border: var(--qti-border-thickness) solid var(--qti-correct);
-      padding: var(--qti-padding-inline);
-      color: var(--qti-correct);
-    }
-
     &:state(candidate-correct) {
       @mixin candidate field, var(--qti-correct), var(--qti-correct-light);
 

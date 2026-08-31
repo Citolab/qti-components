@@ -46,7 +46,6 @@ let inlineChoiceMenuCounter = 0;
  * @csspart menu - The popover element containing the option list.
  * @csspart option - Each option button; also carries `option-prompt` and `option-selected` variants.
  * @csspart option-content - The content wrapper inside each option.
- * @csspart correct-option - Overlay shown when displaying the correct response.
  */
 export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   constructor() {

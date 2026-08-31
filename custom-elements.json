@@ -20560,10 +20560,6 @@
           "name": "QtiInlineChoiceInteraction",
           "cssParts": [
             {
-              "description": "Overlay shown when displaying the correct response.",
-              "name": "correct-option"
-            },
-            {
               "description": "The chevron icon inside the trigger; also carries `dropdown-icon-open` when open.",
               "name": "dropdown-icon"
             },

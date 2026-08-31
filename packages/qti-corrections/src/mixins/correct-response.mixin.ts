@@ -197,21 +197,34 @@ export const CorrectResponseMixin = <T extends AbstractConstructor<Interaction>>
       }
     }
 
+    /**
+     * Whether the full correct response is withheld from a candidate who is already correct.
+     *
+     * Withheld by default, unless the item configures `fullCorrectResponseOnlyWhenIncorrect: false`
+     * — the behaviour `show-full-correct-response` has always had, on the reasoning that a correct
+     * answer already *is* the key.
+     *
+     * An interaction that routes its internal mode here overrides this to false: there, the caller
+     * asked to show the correct response, and silently showing nothing is worse than showing the
+     * candidate the answer they already gave.
+     */
+    protected get withholdsFullCorrectResponseWhenCorrect(): boolean {
+      return (this.configContext as CorrectionConfig | undefined)?.fullCorrectResponseOnlyWhenIncorrect !== false;
+    }
+
     protected async toggleFullCorrectResponse(show: boolean): Promise<void> {
       const nextSibling = this.nextSibling;
       const nextSiblingIsFullCorrectResponse =
         nextSibling instanceof HTMLDivElement && nextSibling?.classList.contains('full-correct-response');
 
       const correctResponse = this.correctResponse;
-      const correctionConfig = this.configContext as CorrectionConfig | undefined;
 
       if (!correctResponse) {
         return;
       }
 
       const showFullCorrectResponse =
-        show &&
-        (correctionConfig?.fullCorrectResponseOnlyWhenIncorrect === false || this.correctness !== Correctness.Correct);
+        show && (!this.withholdsFullCorrectResponseWhenCorrect || this.correctness !== Correctness.Correct);
 
       if (!showFullCorrectResponse) {
         if (!nextSiblingIsFullCorrectResponse) {
@@ -303,4 +316,6 @@ export interface CorrectResponseInterface {
   toggleInternalCorrectResponse(show: boolean): void;
   /** Protected at runtime. */
   toggleFullCorrectResponse(show: boolean): Promise<void>;
+  /** Protected at runtime; declared here so a subclass can `override` it. */
+  readonly withholdsFullCorrectResponseWhenCorrect: boolean;
 }
