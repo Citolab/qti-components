@@ -37,7 +37,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
   protected _iframeMessageOrigin: string | null = null;
-  private _iframeObjectUrl: string | null = null;
 
   // This implementation always renders inside an iframe.
   static override styles: CSSResultGroup = [
@@ -632,10 +631,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('message', this.handleIframeMessage);
-    if (this._iframeObjectUrl) {
-      URL.revokeObjectURL(this._iframeObjectUrl);
-      this._iframeObjectUrl = null;
-    }
   }
 
   /**
@@ -781,10 +776,6 @@ export class QtiPortableCustomInteraction extends Interaction {
    * IFRAME MODE: Create iframe element
    */
   protected createIframe() {
-    if (this._iframeObjectUrl) {
-      URL.revokeObjectURL(this._iframeObjectUrl);
-      this._iframeObjectUrl = null;
-    }
     this.iframe = document.createElement('iframe');
     this.iframe.id = `pci-iframe-${this.responseIdentifier}`;
     this.iframe.setAttribute('title', 'QTI PCI Iframe');
@@ -798,10 +789,6 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Handle iframe load event
     this.iframe.onload = () => {
       this._iframeLoaded = true;
-      if (this._iframeObjectUrl) {
-        URL.revokeObjectURL(this._iframeObjectUrl);
-        this._iframeObjectUrl = null;
-      }
       this.#addMarkupToIframe();
       // Send initialization data to iframe
       this.#sendIframeInitData();
@@ -814,15 +801,14 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Generate iframe HTML content with all required scripts
     const iframeContent = this.generateIframeContent();
 
-    // Prefer a same-origin blob URL to avoid postMessage target-origin mismatches (e.g. in Storybook).
-    try {
-      const blob = new Blob([iframeContent], { type: 'text/html' });
-      this._iframeObjectUrl = URL.createObjectURL(blob);
-      this.iframe.src = this._iframeObjectUrl;
-    } catch {
-      const encodedContent = encodeURIComponent(iframeContent);
-      this.iframe.src = `data:text/html;charset=utf-8,${encodedContent}`;
-    }
+    // Use `srcdoc` rather than a `blob:` (or `data:`) URL. Both of those give the iframe document
+    // a URL that is out of scope for any http(s) Service Worker registration, so a player that
+    // serves package resources through a Service Worker (CacheStorage, virtual paths) would see
+    // every request made from inside the PCI - module scripts, images, media, stylesheets, fetches -
+    // bypass it and hit the network instead. An `srcdoc` frame inherits this document's URL and
+    // stays controlled by the same Service Worker. It is same-origin either way, and messages are
+    // posted with a `'*'` target origin, so nothing about postMessage changes.
+    this.iframe.srcdoc = iframeContent;
 
     // Append iframe to component
     this.appendChild(this.iframe);
@@ -937,6 +923,16 @@ export class QtiPortableCustomInteraction extends Interaction {
         ? `${window.location.origin}${this.dataset.baseUrl}`
         : this.dataset.baseUrl
       : '';
+    // `data-base-url` names the directory the item was loaded from, so it is also the base every
+    // relative URL inside the interaction should resolve against - the markup's `src`/`href`, the
+    // stylesheets, and whatever the PCI module resolves itself. Anchoring `<base>` at the site
+    // origin instead would send `../assets/x.png` to `/assets/x.png`. Normalise to a trailing
+    // slash: without one the last segment counts as a filename and gets dropped.
+    const iframeBaseHref = iframeBaseUrl
+      ? iframeBaseUrl.endsWith('/')
+        ? iframeBaseUrl
+        : `${iframeBaseUrl}/`
+      : `${window.location.origin}/`;
     const forwardConsole = this.dataset.forwardConsole === 'true';
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const defaultComponentsCdnUrl = isLocalhost
@@ -962,7 +958,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         <head>
           <meta charset="utf-8" />
           <title>QTI PCI Container</title>
-          <base href="${window.location.origin}" />
+          <base href="${iframeBaseHref}" />
           <script type="module">
             import '${componentsCdnUrl}';
           </script>

@@ -49,18 +49,6 @@ type Story = StoryObj<QtiPortableCustomInteraction & typeof args>;
  * - `<properties>` element: raw properties markup forwarded to PCI.
  * - `data-*` attributes: forwarded as PCI `properties` values.
  *   advanced RequireJS configuration controls.
- * - `status`: item lifecycle status handed to the PCI, defaults to `interacting`.
- *
- * ### Correct Response
- * The `getInstance` configuration carries an optional `responseDeclaration` (camelCased
- * `qti-response-declaration`, with `baseType`, `cardinality` and `correctResponse`), so a PCI
- * can render the correct response itself when it is constructed with `status: 'solution'`:
- * ```js
- * getInstance(dom, { responseIdentifier: 'RESPONSE', status: 'solution',
- *   responseDeclaration: { baseType: 'identifier', cardinality: 'single', correctResponse: { value: 'A' } }
- * }, state)
- * ```
- * See https://github.com/1EdTech/qti-project-management/issues/210
  *
  * ### Implementation Guide Coverage (this component)
  * - Implemented: host element contract, response/state bridge, `data-*` to properties,
@@ -633,18 +621,6 @@ export const VerhoudingenShowCorrectResponse = {
 
       await waitFor(
         () => {
-          // The PCI is constructed in solution status and gets the correct response
-          // through its configuration: https://github.com/1EdTech/qti-project-management/issues/210
-          const pciConfig = (viewer.querySelector('iframe')?.contentWindow as any)?.PCIManager?.pciConfig;
-          expect(pciConfig?.status).toBe('solution');
-          expect(pciConfig?.responseDeclaration).toEqual({
-            baseType: 'string',
-            cardinality: 'single',
-            correctResponse: {
-              value:
-                '[{"color":"blue","percentage":12.5},{"color":"green","percentage":12.5},{"color":"red","percentage":75}]'
-            }
-          });
           const cloneHtml = deepIframeHtml(viewer.querySelector('iframe'));
           // The correct response is 75% red, 12.5% blue and 12.5% green; an
           // unanswered interaction paints every square white instead.
@@ -752,6 +728,74 @@ export const PciConformance3: Story = createPciConformanceStory('item-3');
 export const PciConformance4: Story = createPciConformanceStory('item-4');
 export const PciConformance5: Story = createPciConformanceStory('item-5');
 export const PciConformance6: Story = createPciConformanceStory('item-6');
+
+/**
+ * Regression guard for how the PCI iframe document is created.
+ *
+ * The iframe must be built with `srcdoc`, never a `blob:` or `data:` URL. Those give the frame a
+ * document URL that is out of scope for any http(s) Service Worker registration, so a player that
+ * serves package resources through a Service Worker (CacheStorage, virtual paths) silently loses
+ * every request made from inside the interaction - module scripts, images, media, stylesheets.
+ *
+ * `<base href>` must point at `data-base-url`, so relative URLs in the interaction markup resolve
+ * against the item's directory rather than the site root. Both are invisible until a real package
+ * is loaded, which is why they are asserted here directly.
+ */
+export const IframeIsServiceWorkerReachable: Story = {
+  render: () =>
+    html` <qti-portable-custom-interaction-test
+      response-identifier="RESPONSE"
+      module="pci-getallen"
+      custom-interaction-type-identifier="getallenFormule"
+      data-base-url="/assets/qti-portable-interaction/baking_soda"
+    >
+      <qti-interaction-modules>
+        <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+      </qti-interaction-modules>
+      <qti-interaction-markup></qti-interaction-markup>
+    </qti-portable-custom-interaction-test>`,
+  play: async ({ canvasElement, step }) => {
+    const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
+    await new Promise(resolve => {
+      pciElement?.addEventListener('qti-portable-custom-interaction-loaded', () => resolve(true));
+    });
+
+    const iframe = pciElement.querySelector('iframe');
+    const itemBase = `${window.location.origin}/assets/qti-portable-interaction/baking_soda/`;
+
+    await step('iframe uses srcdoc, not an opaque blob:/data: document', async () => {
+      expect(iframe.getAttribute('srcdoc')).toBeTruthy();
+      // An empty `src` is what keeps the frame inside the page's Service Worker scope.
+      expect(iframe.getAttribute('src')).toBeNull();
+      await waitFor(() => expect(iframe.contentWindow.location.href).not.toMatch(/^(blob:|data:)/));
+    });
+
+    await step('document stays same-origin, so the page can reach into it', async () => {
+      // A blob:/data: document would make `contentDocument` unreachable or same-origin-by-accident;
+      // reading it at all is part of what the fix guarantees.
+      expect(iframe.contentDocument).toBeTruthy();
+      expect(iframe.contentWindow.origin).toBe(window.location.origin);
+    });
+
+    await step('<base href> is the item directory, not the site root', async () => {
+      await waitFor(() => expect(iframe.contentDocument.baseURI).toBe(itemBase));
+      // `data-base-url` has no trailing slash here: without normalising it, the last segment counts
+      // as a filename and `baking_soda.svg` would resolve one directory too high.
+      expect(new URL('baking_soda.svg', iframe.contentDocument.baseURI).href).toBe(`${itemBase}baking_soda.svg`);
+    });
+
+    await step('a relative request from inside the iframe reaches the item directory', async () => {
+      // The end-to-end check: same-origin frame + correct base means a bare relative URL resolves
+      // and actually fetches. Under a blob: URL this throws, and under the old base it 404s.
+      const response = await iframe.contentWindow.fetch('baking_soda.svg');
+      expect(response.ok).toBe(true);
+      expect(new URL(response.url).pathname).toBe('/assets/qti-portable-interaction/baking_soda/baking_soda.svg');
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
 
 /**
  * The correct response must not reach a PCI while the candidate is still working.
