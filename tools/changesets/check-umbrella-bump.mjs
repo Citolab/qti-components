@@ -49,19 +49,37 @@
  * actually bit: a patch-only release leaves the umbrella on its published version, and
  * publish-if-needed skips it.
  *
- * The release plan comes from `changeset status --output`, so this file holds the policy and
- * nothing else — no changeset parsing, no workspace globbing, no guess at what is
- * publishable. Private packages, `ignore`, pre-mode and dependent bumps are already
- * resolved by Changesets itself.
+ * The release plan comes from Changesets' own `getReleasePlan`, so this file holds the policy
+ * and nothing else — no changeset parsing, no workspace globbing, no guess at what is
+ * publishable. Private packages, `ignore`, pre-mode and dependent bumps are already resolved
+ * by Changesets itself.
+ *
+ * Why the programmatic API and not the `changeset status --output` CLI, which is what the rest
+ * of the release scripts shell out to: `status` resolves its optional `--since` to
+ * `config.baseBranch` and runs `git merge-base main HEAD`. A PR checkout has no local `main`,
+ * only `origin/main`, so the command exits non-zero — this check failed that way on its own
+ * first CI run. And `--since` is not the fix: it is passed through to `readChangesets`, which
+ * then returns only the changesets added since that ref. On `main` at release time that is a
+ * PARTIAL plan, which for a guard is worse than no guard. `getReleasePlan` touches git at all
+ * only when handed a `sinceRef`, and it is deliberately not handed one here. Its plan was
+ * checked release-for-release against `changeset status --output` from CLI v3.0.1, the version
+ * CI resolves: identical. (CLI v2 differs on one private app, `@qti-components/e2e`, which it
+ * patch-bumps as a dependent where v3 leaves it `none`. Private packages are never published,
+ * so they cannot be the reason the umbrella needs a release; `none` is filtered out below, and
+ * if a future version reports one as a real bump the worst case is a spurious demand for an
+ * umbrella patch.)
  *
  * Usage:  node tools/changesets/check-umbrella-bump.mjs [release-plan.json]
  *         (wired up as `pnpm run changeset:check-umbrella`, and as a step in ci.yml's
  *         changeset-check job and release.yml)
  */
-import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { getReleasePlan } from '@changesets/get-release-plan';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = join(here, '..', '..');
 
 const UMBRELLA = '@citolab/qti-components';
 
@@ -73,30 +91,12 @@ const rank = bump => BUMPS.indexOf(bump);
 /** Changesets' own release plan: what `changeset version` is about to do. */
 function releasePlan() {
   const given = process.argv[2];
-  if (given) {
-    return JSON.parse(readFileSync(given, 'utf8'));
-  }
 
-  const dir = mkdtempSync(join(tmpdir(), 'qti-release-plan-'));
-  const output = join(dir, 'plan.json');
-
-  try {
-    const status = spawnSync('pnpm', ['dlx', '@changesets/cli', 'status', `--output=${output}`], {
-      stdio: ['ignore', 'ignore', 'inherit']
-    });
-
-    if (status.status !== 0) {
-      console.error('❌ Could not read the release plan: `changeset status` failed.');
-      process.exit(status.status ?? 1);
-    }
-
-    return JSON.parse(readFileSync(output, 'utf8'));
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
-  }
+  // A plan on disk, for testing the policy against a fixture without a workspace.
+  return given ? JSON.parse(readFileSync(given, 'utf8')) : getReleasePlan(root);
 }
 
-const releases = releasePlan().releases.filter(release => release.type !== 'none');
+const releases = (await releasePlan()).releases.filter(release => release.type !== 'none');
 
 const umbrella = releases.find(release => release.name === UMBRELLA);
 const others = releases.filter(release => release.name !== UMBRELLA);
