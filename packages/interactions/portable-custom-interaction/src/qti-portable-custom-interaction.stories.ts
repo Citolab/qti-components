@@ -8,6 +8,7 @@ import { qtiTransformItem } from '@qti-components/transformers';
 import type { ItemContainer, QtiItem } from '@qti-components/item';
 import type { ModuleResolutionConfig } from '@qti-components/transformers';
 import type { QtiPortableCustomInteraction } from './qti-portable-custom-interaction';
+import type { QtiPortableCustomInteractionTest } from './qti-portable-custom-test-interaction';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
@@ -751,3 +752,119 @@ export const PciConformance3: Story = createPciConformanceStory('item-3');
 export const PciConformance4: Story = createPciConformanceStory('item-4');
 export const PciConformance5: Story = createPciConformanceStory('item-5');
 export const PciConformance6: Story = createPciConformanceStory('item-6');
+
+/**
+ * The correct response must not reach a PCI while the candidate is still working.
+ *
+ * A PCI is third-party code in an iframe, and `responseDeclaration` exists so it can render the
+ * correct response once the item is *showing* one. Handing it the answer key at `interacting`
+ * would widen a leak that today stays inside our own DOM. `correctResponse` is therefore only
+ * sent when `status` is `solution` or `review`; `baseType` and `cardinality` always go through.
+ *
+ * Also covers an empty `<qti-correct-response>` on a non-single cardinality, which yields `[]`
+ * from the response variable and must read as "no correct response" rather than an empty one.
+ */
+export const CorrectResponseWithheldWhileInteracting: Story = {
+  render: () =>
+    html`<qti-assessment-item
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      adaptive="false"
+      time-dependent="false"
+      identifier="pci-correct-response-gating"
+      title="PCI correct response gating"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string">
+        <qti-correct-response>
+          <qti-value>42</qti-value>
+        </qti-correct-response>
+      </qti-response-declaration>
+      <qti-response-declaration identifier="RESPONSE_EMPTY" cardinality="multiple" base-type="identifier">
+        <qti-correct-response></qti-correct-response>
+      </qti-response-declaration>
+      <qti-item-body>
+        <qti-portable-custom-interaction-test
+          response-identifier="RESPONSE"
+          module="pci-getallen"
+          custom-interaction-type-identifier="getallenFormule"
+          data-base-url="/assets/qti-portable-interaction/baking_soda"
+        >
+          <qti-interaction-modules>
+            <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+          </qti-interaction-modules>
+          <qti-interaction-markup></qti-interaction-markup>
+        </qti-portable-custom-interaction-test>
+        <qti-portable-custom-interaction-test
+          response-identifier="RESPONSE_EMPTY"
+          module="pci-getallen"
+          custom-interaction-type-identifier="getallenFormule"
+          data-base-url="/assets/qti-portable-interaction/baking_soda"
+        >
+          <qti-interaction-modules>
+            <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+          </qti-interaction-modules>
+          <qti-interaction-markup></qti-interaction-markup>
+        </qti-portable-custom-interaction-test>
+      </qti-item-body>
+    </qti-assessment-item>`,
+  play: async ({ canvasElement, step }) => {
+    const [withCorrect, withEmptyCorrect] = Array.from(
+      canvasElement.querySelectorAll('qti-portable-custom-interaction-test')
+    ) as QtiPortableCustomInteractionTest[];
+
+    const configOf = (el: QtiPortableCustomInteractionTest) =>
+      (el.querySelector('iframe')?.contentWindow as any)?.PCIManager?.pciConfig;
+
+    await Promise.all(
+      [withCorrect, withEmptyCorrect].map(
+        el =>
+          new Promise(resolve =>
+            el.addEventListener('qti-portable-custom-interaction-loaded', () => resolve(true), { once: true })
+          )
+      )
+    );
+
+    await step('interacting: declaration goes through, correct response does not', async () => {
+      await waitFor(
+        () => {
+          const config = configOf(withCorrect);
+          expect(config?.status).toBe('interacting');
+          // The shape the PCI needs to interpret responses is still there...
+          expect(config?.responseDeclaration).toEqual({ baseType: 'string', cardinality: 'single' });
+          // ...but the answer key is not.
+          expect(config?.responseDeclaration?.correctResponse).toBeUndefined();
+        },
+        { timeout: 10000, interval: 250 }
+      );
+    });
+
+    await step('an empty qti-correct-response is not reported as a correct response', async () => {
+      // `multiple` cardinality yields [] for an empty element, which must not become
+      // correctResponse: { value: [] }.
+      expect(withEmptyCorrect.responseDeclaration).toEqual({
+        baseType: 'identifier',
+        cardinality: 'multiple'
+      });
+    });
+
+    await step('solution: the correct response is handed over', async () => {
+      withCorrect.status = 'solution';
+      await withCorrect.recreateIframe();
+
+      await waitFor(
+        () => {
+          const config = configOf(withCorrect);
+          expect(config?.status).toBe('solution');
+          expect(config?.responseDeclaration).toEqual({
+            baseType: 'string',
+            cardinality: 'single',
+            correctResponse: { value: '42' }
+          });
+        },
+        { timeout: 10000, interval: 250 }
+      );
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};

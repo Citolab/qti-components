@@ -16,6 +16,20 @@ import type {
   ResponseVariableType
 } from './interface';
 
+/** Statuses in which the item is showing the correct response, so a PCI may legitimately see it. */
+const STATUSES_SHOWING_CORRECT_RESPONSE: PciInteractionStatus[] = ['solution', 'review'];
+
+/**
+ * Whether a response variable actually declares a correct response.
+ *
+ * Non-single cardinality yields `[]` for an empty `<qti-correct-response>`, which is "no correct
+ * response" and must not be reported as one.
+ */
+function hasCorrectResponseValue(value: string | string[] | null | undefined): boolean {
+  if (value === null || value === undefined) return false;
+  return Array.isArray(value) ? value.length > 0 : value !== '';
+}
+
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
 
@@ -62,7 +76,7 @@ export class QtiPortableCustomInteraction extends Interaction {
    * Item lifecycle status handed to the PCI in its `getInstance` configuration.
    * A delivery engine sets `solution` to let a PCI render the correct response.
    */
-  @property({ type: String, attribute: 'status' })
+  @property({ type: String, attribute: 'data-status' })
   status: PciInteractionStatus = 'interacting';
 
   #responseDeclaration: PciResponseDeclaration | null = null;
@@ -96,11 +110,35 @@ export class QtiPortableCustomInteraction extends Interaction {
     };
 
     const correctResponse = variable.correctResponse;
-    if (correctResponse !== null && correctResponse !== undefined && correctResponse !== '') {
+    if (hasCorrectResponseValue(correctResponse)) {
       declaration.correctResponse = { value: correctResponse };
     }
 
     return declaration;
+  }
+
+  /**
+   * The declaration as it goes into the PCI configuration.
+   *
+   * `correctResponse` is withheld unless the item is actually showing a solution. A PCI is
+   * third-party code running in an iframe, and there is no reason for it to hold the answer key
+   * while the candidate is still working - the use case this field exists for only applies once
+   * the status says the correct response is being shown.
+   *
+   * The filter sits here rather than in the `responseDeclaration` getter so it also covers a
+   * declaration a host set explicitly, not just the one derived from the item context.
+   */
+  #responseDeclarationForStatus(): PciResponseDeclaration | null {
+    const declaration = this.responseDeclaration;
+    if (!declaration?.correctResponse) {
+      return declaration;
+    }
+    if (STATUSES_SHOWING_CORRECT_RESPONSE.includes(this.status)) {
+      return declaration;
+    }
+
+    const { correctResponse: _withheld, ...rest } = declaration;
+    return rest;
   }
 
   @state()
@@ -815,7 +853,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       dataAttributes: { ...this.dataset },
       interactionModules: this.#getInteractionModules(),
       boundTo: storedState ? null : this.boundTo,
-      responseDeclaration: this.responseDeclaration,
+      responseDeclaration: this.#responseDeclarationForStatus(),
       status: this.status,
       state: storedState
     };

@@ -25,6 +25,10 @@ export interface PciCorrectResponse {
  * optional, a delivery engine passes as much or as little as it has, and
  * `correctResponse` is absent when the response variable has none.
  *
+ * `correctResponse` is also withheld while the candidate is still working: it is
+ * only sent when `status` is `solution` or `review`, so a PCI never holds the
+ * answer key during `interacting`.
+ *
  * See https://github.com/1EdTech/qti-project-management/issues/210
  */
 export interface PciResponseDeclaration {
@@ -65,7 +69,7 @@ export interface ConfigProperties<T> {
   contextVariables: Record<string, unknown>; // Follows structure in Appendix C
   boundTo: unknown; // Follows structure in Appendix C
   responseIdentifier: string; // Unique within interaction scope
-  responseDeclaration?: PciResponseDeclaration; // Optional, carries the correct response when the item declares one
+  responseDeclaration?: PciResponseDeclaration; // Optional; carries correctResponse only when status is solution/review
 
   onready: (payload: PciReadyPayload) => void; // Callback for when PCI is fully constructed and ready
   ondone?: (payload: PciDonePayload) => void; // Optional callback when candidate finishes interaction
