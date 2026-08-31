@@ -96,3 +96,9 @@ jobs:
             echo "⚠️ No changeset found. If this PR changes published package behavior, a maintainer will add one before merging."
             echo "You can optionally add one yourself with: pnpm run changeset"
           fi
+
+      # Hard failure, unlike the advisory step above: an unbumped umbrella is not a stale
+      # version number, it is a package that never gets published at all. See the header of
+      # tools/changesets/check-umbrella-bump.mjs.
+      - name: Check the umbrella is bumped with the workspace
+        run: pnpm run changeset:check-umbrella

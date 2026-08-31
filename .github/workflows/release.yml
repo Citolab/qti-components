@@ -51,6 +51,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      # Runs for dry-run and for real: this is the point where a missing umbrella bump turns
+      # into a release that silently skips publishing @citolab/qti-components.
+      - name: Check the umbrella is bumped with the workspace
+        run: pnpm run changeset:check-umbrella
+
       - name: Dry-run release status
         if: ${{ inputs.dry_run }}
         run: |

@@ -67,6 +67,7 @@
     "changeset:status": "pnpm dlx @changesets/cli status",
     "changeset:version": "pnpm dlx @changesets/cli version",
     "changeset:publish": "pnpm dlx @changesets/cli publish",
+    "changeset:check-umbrella": "node tools/changesets/check-umbrella-bump.mjs",
     "ci:release:changesets:dry": "pnpm run changeset:status",
     "ci:release:changesets": "pnpm run changeset:version && pnpm run build && pnpm run changeset:publish",
     "ci:publish:workspace": "PNPM_GIT_CHECKS=false pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" run publish",
@@ -77,6 +78,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
+    "@changesets/get-release-plan": "^5.0.0",
     "@chromatic-com/storybook": "^5.3.0",
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
