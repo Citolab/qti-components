@@ -20087,6 +20087,15 @@
               "description": "IFRAME MODE: Process pending messages"
             },
             {
+              "kind": "field",
+              "name": "#responseDeclaration",
+              "privacy": "private",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              },
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "#sendIframeInitData",
               "privacy": "private",
@@ -20658,6 +20667,14 @@
             },
             {
               "kind": "field",
+              "name": "responseDeclaration",
+              "description": "Response declaration passed into the PCI configuration, so a PCI can render\nthe correct response itself instead of having it pushed in as a response.\n\nDerived from the item context, unless a host sets it explicitly - the\ncorrect response viewer does, since it has no response declaration of its own.\n\nSee https://github.com/1EdTech/qti-project-management/issues/210",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              }
+            },
+            {
+              "kind": "field",
               "name": "responseIdentifier",
               "type": {
                 "text": "string"
@@ -20806,6 +20823,19 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "attribute": "status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
               }
             },
             {
@@ -21123,6 +21153,18 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "fieldName": "status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
               }
             }
           ],
@@ -21552,6 +21594,19 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#responseDeclaration",
+              "privacy": "private",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
             },
             {
               "kind": "method",
@@ -22447,6 +22502,18 @@
             },
             {
               "kind": "field",
+              "name": "responseDeclaration",
+              "description": "Response declaration passed into the PCI configuration, so a PCI can render\nthe correct response itself instead of having it pushed in as a response.\n\nDerived from the item context, unless a host sets it explicitly - the\ncorrect response viewer does, since it has no response declaration of its own.\n\nSee https://github.com/1EdTech/qti-project-management/issues/210",
+              "type": {
+                "text": "PciResponseDeclaration | null"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "responseIdentifier",
               "type": {
                 "text": "string"
@@ -22624,6 +22691,23 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "attribute": "status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
               }
             },
             {
@@ -22983,6 +23067,22 @@
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
+              }
+            },
+            {
+              "name": "status",
+              "type": {
+                "text": "PciInteractionStatus"
+              },
+              "default": "'interacting'",
+              "description": "Item lifecycle status handed to the PCI in its `getInstance` configuration.\nA delivery engine sets `solution` to let a PCI render the correct response.",
+              "fieldName": "status",
+              "parsedType": {
+                "text": "'interacting' | 'suspended' | 'closed' | 'solution' | 'review'"
+              },
+              "inheritedFrom": {
+                "name": "QtiPortableCustomInteraction",
+                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
               }
             }
           ],
