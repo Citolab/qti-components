@@ -87,8 +87,6 @@ export class QtiTestVariablesExpression implements QtiExpressionBase<number> {
   }
 }
 
-customElements.define('qti-test-variables', QtiTestVariables);
-
 declare global {
   interface HTMLElementTagNameMap {
     'qti-test-variables': QtiTestVariables;

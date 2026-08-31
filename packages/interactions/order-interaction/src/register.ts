@@ -1,2 +1,7 @@
-import { QtiOrderInteraction } from './qti-order-interaction';
-customElements.define('qti-order-interaction', QtiOrderInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

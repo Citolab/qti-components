@@ -8,7 +8,9 @@ import drag from '../../../../tools/testing/drag';
 import type { QtiAssociateInteraction } from './qti-associate-interaction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-associate-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-associate-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiAssociateInteraction & typeof args>;
 
@@ -59,7 +61,7 @@ const settle = async (interaction: QtiAssociateInteraction) => {
 
 const getDropZone = (interaction: QtiAssociateInteraction, identifier: string) => {
   // No semantic role/test-id exists for these internal drop zones.
-  return interaction.shadowRoot?.querySelector(`.dl[identifier="${identifier}"]`) as HTMLElement;
+  return interaction.shadowRoot?.querySelector(`[part~='drop'][identifier="${identifier}"]`) as HTMLElement;
 };
 
 export const Test: Story = {

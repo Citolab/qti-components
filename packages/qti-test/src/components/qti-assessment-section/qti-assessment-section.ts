@@ -55,10 +55,6 @@ export class QtiAssessmentSection extends LitElement {
   }
 }
 
-if (!customElements.get('qti-assessment-section')) {
-  customElements.define('qti-assessment-section', QtiAssessmentSection);
-}
-
 declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-section': QtiAssessmentSection;

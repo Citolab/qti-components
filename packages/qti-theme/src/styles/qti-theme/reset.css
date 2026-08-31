@@ -1,0 +1,47 @@
+@scope (qti-item-body, .ProseMirror) {
+  :scope,
+  :scope * {
+    box-sizing: border-box;
+  }
+
+  :scope *::before,
+  :scope *::after {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    appearance: none;
+    color: inherit;
+    font: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  [response-identifier] img {
+    max-width: none;
+  }
+
+  /* Normalize author markup paragraphs only in text-bearing QTI elements:
+     - If a paragraph is the only child, remove all margins.
+     - Keep this explicit allowlist to avoid resetting arbitrary wrapper markup. */
+  :scope
+    :is(
+      qti-prompt,
+      qti-simple-choice,
+      qti-associable-choice,
+      qti-simple-associable-choice,
+      qti-gap,
+      qti-gap-text,
+      qti-inline-choice,
+      qti-hottext
+    )
+    > p:only-of-type {
+    margin: 0;
+  }
+}

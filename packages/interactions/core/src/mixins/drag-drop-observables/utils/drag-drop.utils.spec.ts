@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  applyDropzoneAutoSizing,
   collectResponseData,
   countTotalAssociations,
   findDraggableTarget,
@@ -108,35 +107,5 @@ describe('drag-drop.utils', () => {
     droppable.appendChild(drag);
 
     expect(collectResponseData([droppable], '.drag')).toEqual(['item1 drop1']);
-  });
-
-  it('applyDropzoneAutoSizing sets min sizes and grid columns for grid layouts', () => {
-    const draggableA = makeElement({ left: 0, top: 0, width: 40, height: 30 });
-    const draggableB = makeElement({ left: 0, top: 0, width: 50, height: 40 });
-
-    const dropContainer = document.createElement('div');
-    Object.defineProperty(dropContainer, 'clientWidth', { value: 200 });
-
-    const droppable = makeElement(undefined, 'qti-simple-associable-choice');
-    droppable.attachShadow({ mode: 'open' });
-    const slot = document.createElement('slot');
-    slot.setAttribute('part', 'dropslot');
-    droppable.shadowRoot?.appendChild(slot);
-    dropContainer.appendChild(droppable);
-
-    const dragContainer = document.createElement('div');
-
-    const hostWindow = {
-      innerWidth: 1024,
-      getComputedStyle: () => ({ paddingLeft: '10', paddingRight: '10' })
-    } as unknown as Window;
-
-    applyDropzoneAutoSizing([draggableA, draggableB], [droppable], [dragContainer], hostWindow);
-
-    expect(droppable.style.minHeight).toBe('var(--qti-dropzone-min-height, 40px)');
-    expect(droppable.style.minWidth).toBe('50px');
-    expect(slot.style.minHeight).toBe('var(--qti-dropzone-min-height, 40px)');
-    expect(dragContainer.style.minHeight).toBe('var(--qti-drag-container-min-height, 40px)');
-    expect(dropContainer.style.gridTemplateColumns).toContain('minmax');
   });
 });

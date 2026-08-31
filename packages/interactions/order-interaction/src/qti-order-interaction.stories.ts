@@ -11,7 +11,7 @@ import type { QtiOrderInteraction } from './qti-order-interaction';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 
 const getDropZone = (interaction: QtiOrderInteraction, index: number) =>
-  interaction.shadowRoot?.querySelector(`drop-list[identifier="droplist${index}"]`) as HTMLElement;
+  interaction.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${index}"]`) as HTMLElement;
 
 type DragOptions = {
   to?: Element | { x: number; y: number };
@@ -109,7 +109,9 @@ const dragAndWait = async (
   await settleInteraction(interaction);
 };
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-order-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiOrderInteraction & typeof args>;
 
@@ -136,7 +138,7 @@ const meta: Meta<QtiOrderInteraction & { class: InputType }> = {
       handles: events
     }
   },
-  tags: ['autodocs', 'no-tests']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 
@@ -198,7 +200,7 @@ export const Test: Story = {
         const expectedResponse = ['DriverA', 'DriverB', 'DriverC'];
         expect(interaction.response).toEqual(expectedResponse.join(','));
         expect(receivedEvent.detail.response).toEqual(expectedResponse);
-        expect(drops[0]).toHaveTextContent('Rubens Barrichello');
+        expect((await within(drops[0]).findAllByShadowText('Rubens Barrichello')).length).toBeGreaterThan(0);
       });
       await step('reset interaction', async () => {
         interaction.reset();
@@ -209,15 +211,15 @@ export const Test: Story = {
       });
       await step('set value of interaction', async () => {
         interaction.response = ['DriverA', 'DriverB', 'DriverC'];
-        expect(drops[0]).toHaveTextContent('Rubens Barrichello');
+        expect((await within(drops[0]).findAllByShadowText('Rubens Barrichello')).length).toBeGreaterThan(0);
       });
       await step('disabled', async () => {
         interaction.disabled = true;
-        expect(drops[0]).toHaveTextContent('Rubens Barrichello');
+        expect((await within(drops[0]).findAllByShadowText('Rubens Barrichello')).length).toBeGreaterThan(0);
       });
       await step('readonly', async () => {
         interaction.readonly = true;
-        expect(drops[0]).toHaveTextContent('Rubens Barrichello');
+        expect((await within(drops[0]).findAllByShadowText('Rubens Barrichello')).length).toBeGreaterThan(0);
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback);
@@ -248,7 +250,7 @@ export const DragOffCenter: Story = {
 
     await step('Drag 20px off-center from dropzone still lands in it', async () => {
       await drag(choiceA, { to: drops[0], duration: 300, offset: { x: 20, y: 0 } });
-      expect(drops[0]).toHaveTextContent('Choice A');
+      expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
     });
   }
 };
@@ -276,9 +278,9 @@ export const MicroDragNoEffect: Story = {
 
     await step('Move 2px (Manhattan distance 4 < threshold 5) — no drop occurs', async () => {
       await drag(choiceA, { delta: { x: 2, y: 2 }, steps: 1, duration: 50 });
-      expect(drops[0]).not.toHaveTextContent('Choice A');
-      expect(drops[1]).not.toHaveTextContent('Choice A');
-      expect(drops[2]).not.toHaveTextContent('Choice A');
+      expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
+      expect(within(drops[1]).queryAllByShadowText('Choice A')).toHaveLength(0);
+      expect(within(drops[2]).queryAllByShadowText('Choice A')).toHaveLength(0);
     });
   }
 };
@@ -306,14 +308,14 @@ export const DragAndReturn: Story = {
 
     await step('Drag Choice A to dropzone 0', async () => {
       await dragAndWait(interaction, choiceA, { to: drops[0] });
-      expect(drops[0]).toHaveTextContent('Choice A');
+      expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
     });
 
     await step('Drag Choice A back from dropzone 0 to source area', async () => {
       const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
       // Drag the placed clone back toward choiceA's position in the source slot
       await dragAndWait(interaction, placedA, { to: choiceA });
-      expect(drops[0]).not.toHaveTextContent('Choice A');
+      expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
     });
   }
 };
@@ -346,9 +348,9 @@ export const PartialOrder: Story = {
       await step('Place A and B, leave C in source', async () => {
         await drag(choiceA, { to: drops[0], duration: 300 });
         await drag(choiceB, { to: drops[1], duration: 300 });
-        expect(drops[0]).toHaveTextContent('Choice A');
-        expect(drops[1]).toHaveTextContent('Choice B');
-        expect(drops[2]).not.toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect(within(drops[2]).queryAllByShadowText('Choice C')).toHaveLength(0);
       });
 
       await step('Response event carries partial array with empty string for unplaced slot', async () => {
@@ -388,14 +390,14 @@ export const MoveToAnotherSlot: Story = {
     try {
       await step('Drag A to slot 0', async () => {
         await dragAndWait(interaction, choiceA, { to: drops[0] });
-        expect(drops[0]).toHaveTextContent('Choice A');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
       });
 
       await step('Pick up A from slot 0 and drop in slot 2', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: drops[2] });
-        expect(drops[0]).not.toHaveTextContent('Choice A');
-        expect(drops[2]).toHaveTextContent('Choice A');
+        expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
       });
 
       await step('Response reflects new slot assignment', async () => {
@@ -433,13 +435,13 @@ export const DropInSameSlot: Story = {
     try {
       await step('Drag A to slot 0', async () => {
         await dragAndWait(interaction, choiceA, { to: drops[0] });
-        expect(drops[0]).toHaveTextContent('Choice A');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
       });
 
       await step('Pick up A from slot 0 and drop back in slot 0', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: drops[0] });
-        expect(drops[0]).toHaveTextContent('Choice A');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
         // Exactly one copy of A — no duplicates
         expect(getDropZone(interaction, 0).querySelectorAll('[identifier="A"]').length).toBe(1);
       });
@@ -480,19 +482,19 @@ export const InventoryRoundTrip: Story = {
     try {
       await step('Drag A to slot 0', async () => {
         await dragAndWait(interaction, choiceA, { to: drops[0] });
-        expect(drops[0]).toHaveTextContent('Choice A');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
       });
 
       await step('Drag A back from slot 0 to inventory', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: choiceA });
-        expect(drops[0]).not.toHaveTextContent('Choice A');
+        expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
       });
 
       await step('Drag A from inventory to slot 2', async () => {
         await dragAndWait(interaction, choiceA, { to: drops[2] });
-        expect(drops[0]).not.toHaveTextContent('Choice A');
-        expect(drops[2]).toHaveTextContent('Choice A');
+        expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
       });
 
       await step('Response reflects final slot assignment', async () => {
@@ -541,21 +543,21 @@ export const FullReorderSequence: Story = {
       await step('Return A from slot 0 to inventory', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: choiceA });
-        expect(drops[0]).not.toHaveTextContent('Choice A');
+        expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
       });
 
       await step('Return B from slot 1 to inventory', async () => {
         const placedB = getDropZone(interaction, 1).querySelector('[identifier="B"]') as HTMLElement;
         await dragAndWait(interaction, placedB, { to: choiceB });
-        expect(drops[1]).not.toHaveTextContent('Choice B');
+        expect(within(drops[1]).queryAllByShadowText('Choice B')).toHaveLength(0);
       });
 
       await step('Re-place B in slot 0 and A in slot 1 (swap positions)', async () => {
         await dragAndWait(interaction, choiceB, { to: drops[0] });
         await dragAndWait(interaction, choiceA, { to: drops[1] });
-        expect(drops[0]).toHaveTextContent('Choice B');
-        expect(drops[1]).toHaveTextContent('Choice A');
-        expect(drops[2]).toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
       });
 
       await step('Final response is B, A, C', async () => {
@@ -629,7 +631,7 @@ export const DisabledBlocksDrag: Story = {
 
     await step('Attempt drag while disabled does not place choice', async () => {
       await drag(choiceA, { to: drops[0], duration: 300 });
-      expect(drops[0]).not.toHaveTextContent('Choice A');
+      expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
       expect(interaction.response).toEqual(',,');
     });
   }
@@ -662,7 +664,7 @@ export const ReadonlyBlocksDrag: Story = {
 
     await step('Attempt drag while readonly does not place choice', async () => {
       await drag(choiceA, { to: drops[0], duration: 300 });
-      expect(drops[0]).not.toHaveTextContent('Choice A');
+      expect(within(drops[0]).queryAllByShadowText('Choice A')).toHaveLength(0);
       expect(interaction.response).toEqual(',,');
     });
   }
@@ -697,12 +699,12 @@ export const MaxAssociationsEnforced: Story = {
 
     await step('Place first choice', async () => {
       await drag(choiceA, { to: drops[0], duration: 300 });
-      expect(drops[0]).toHaveTextContent('Choice A');
+      expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
     });
 
     await step('Second placement is blocked by max-associations', async () => {
       await drag(choiceB, { to: drops[1], duration: 300 });
-      expect(drops[1]).not.toHaveTextContent('Choice B');
+      expect(within(drops[1]).queryAllByShadowText('Choice B')).toHaveLength(0);
       expect(interaction.response).toEqual('A,,');
     });
 
@@ -735,51 +737,10 @@ export const ResponseSetterWithEmptyPlaceholders: Story = {
 
     await step('Set response with middle slot empty', async () => {
       interaction.response = ['A', '', 'C'];
-      expect(drops[0]).toHaveTextContent('Choice A');
-      expect(drops[1]).not.toHaveTextContent('Choice B');
-      expect(drops[2]).toHaveTextContent('Choice C');
+      expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+      expect(within(drops[1]).queryAllByShadowText('Choice B')).toHaveLength(0);
+      expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
       expect(interaction.response).toEqual('A,,C');
-    });
-  }
-};
-
-/**
- * Order interaction custom correct response rendering should show and hide annotations.
- */
-export const ToggleCorrectResponseRendersLabels: Story = {
-  name: 'Correct response: toggle renders order labels',
-  render: () => html`
-    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
-      <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
-      <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
-      <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
-    </qti-order-interaction>
-  `,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const interaction = canvas.getByTestId<QtiOrderInteraction>('order-interaction');
-    await interaction.updateComplete;
-
-    Object.defineProperty(interaction, 'responseVariable', {
-      configurable: true,
-      value: {
-        correctResponse: ['A droplist0', 'B droplist1', 'C droplist2']
-      }
-    });
-
-    await step('Show custom correct-response labels', async () => {
-      interaction.toggleCorrectResponse(true);
-      const labels = interaction.shadowRoot?.querySelectorAll('.correct-option') ?? [];
-      expect(labels.length).toBe(3);
-      expect(labels[0]).toHaveTextContent('Choice A');
-      expect(labels[1]).toHaveTextContent('Choice B');
-      expect(labels[2]).toHaveTextContent('Choice C');
-    });
-
-    await step('Hide labels again', async () => {
-      interaction.toggleCorrectResponse(false);
-      const labels = interaction.shadowRoot?.querySelectorAll('.correct-option') ?? [];
-      expect(labels.length).toBe(0);
     });
   }
 };
@@ -824,7 +785,7 @@ export const TouchDragPath: Story = {
       dispatchTouchSequence(choiceA, 'touchstart', [start], [start]);
       dispatchTouchSequence(document, 'touchmove', [end], [end]);
       dispatchTouchSequence(document, 'touchend', [], [end]);
-      expect(drop0).toHaveTextContent('Choice A');
+      expect((await within(drop0).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
       expect(interaction.response).toEqual('A,,');
     });
   }
@@ -857,9 +818,9 @@ export const VerticalBasicPlacement: Story = {
         await dragAndWait(interaction, choiceA, { to: drops[0] });
         await dragAndWait(interaction, choiceB, { to: drops[1] });
         await dragAndWait(interaction, choiceC, { to: drops[2] });
-        expect(drops[0]).toHaveTextContent('Choice A');
-        expect(drops[1]).toHaveTextContent('Choice B');
-        expect(drops[2]).toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
       });
 
       await step('Response reflects vertical placement order', async () => {
@@ -905,9 +866,9 @@ export const VerticalInSlotReordering: Story = {
       await step('Drag placed A from slot0 onto occupied slot1 to sortable-swap', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: drops[1] });
-        expect(drops[0]).toHaveTextContent('Choice B');
-        expect(drops[1]).toHaveTextContent('Choice A');
-        expect(drops[2]).toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
       });
 
       await step('Response reflects vertical sortable swap', async () => {
@@ -960,9 +921,9 @@ export const InSlotReordering: Story = {
         await dragAndWait(interaction, choiceA, { to: drops[0] });
         await dragAndWait(interaction, choiceB, { to: drops[1] });
         await dragAndWait(interaction, choiceC, { to: drops[2] });
-        expect(drops[0]).toHaveTextContent('Choice A');
-        expect(drops[1]).toHaveTextContent('Choice B');
-        expect(drops[2]).toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
       });
 
       await step('Baseline response reflects positions', async () => {
@@ -973,9 +934,9 @@ export const InSlotReordering: Story = {
       await step('Drag placed A from slot0 onto occupied slot1 to trigger sortable swap', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: drops[1] });
-        expect(drops[0]).toHaveTextContent('Choice B');
-        expect(drops[1]).toHaveTextContent('Choice A');
-        expect(drops[2]).toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
       });
 
       await step('Response updates after sortable swap', async () => {
@@ -1018,9 +979,9 @@ export const InSlotReorderingPartial: Story = {
       await step('Place only A and B; keep C in inventory', async () => {
         await dragAndWait(interaction, choiceA, { to: drops[0] });
         await dragAndWait(interaction, choiceB, { to: drops[1] });
-        expect(drops[0]).toHaveTextContent('Choice A');
-        expect(drops[1]).toHaveTextContent('Choice B');
-        expect(drops[2]).not.toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect(within(drops[2]).queryAllByShadowText('Choice C')).toHaveLength(0);
       });
 
       await step('Partial baseline response contains empty last slot', async () => {
@@ -1031,9 +992,9 @@ export const InSlotReorderingPartial: Story = {
       await step('Swap A and B by dragging placed A onto occupied slot1', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await dragAndWait(interaction, placedA, { to: drops[1] });
-        expect(drops[0]).toHaveTextContent('Choice B');
-        expect(drops[1]).toHaveTextContent('Choice A');
-        expect(drops[2]).not.toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect(within(drops[2]).queryAllByShadowText('Choice C')).toHaveLength(0);
       });
 
       await step('Response reflects sortable swap with unfilled trailing slot', async () => {
@@ -1049,7 +1010,12 @@ export const InSlotReorderingPartial: Story = {
 export const InSlotReorderingDisabled: Story = {
   name: 'Behavior: allowReorder=false blocks sortable swap for slot-origin drag',
   render: () => html`
-    <qti-order-interaction data-testid="order-interaction" response-identifier="RESPONSE" orientation="horizontal">
+    <qti-order-interaction
+      data-testid="order-interaction"
+      response-identifier="RESPONSE"
+      orientation="horizontal"
+      .configContext=${{ allowReorder: false }}
+    >
       <qti-simple-choice identifier="A">Choice A</qti-simple-choice>
       <qti-simple-choice identifier="B">Choice B</qti-simple-choice>
       <qti-simple-choice identifier="C">Choice C</qti-simple-choice>
@@ -1078,17 +1044,16 @@ export const InSlotReorderingDisabled: Story = {
         expect(callback.mock.calls.at(-1)?.[0].detail.response).toEqual(['A', 'B', 'C']);
       });
 
-      await step('Disable sortable mode and attempt occupied-slot reorder', async () => {
-        interaction.allowReorder = false;
+      await step('Attempt an occupied-slot reorder (blocked: allowReorder=false via config provider)', async () => {
         const placedA = getDropZone(interaction, 0).querySelector('[identifier="A"]') as HTMLElement;
         await drag(placedA, { to: drops[1], steps: 30, duration: 350 });
         await settleInteraction(interaction);
       });
 
       await step('Order remains unchanged when allowReorder is false', async () => {
-        expect(drops[0]).toHaveTextContent('Choice A');
-        expect(drops[1]).toHaveTextContent('Choice B');
-        expect(drops[2]).toHaveTextContent('Choice C');
+        expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
+        expect((await within(drops[1]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+        expect((await within(drops[2]).findAllByShadowText('Choice C')).length).toBeGreaterThan(0);
         expect(interaction.response).toEqual('A,B,C');
       });
     } finally {

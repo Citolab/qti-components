@@ -1,5 +1,4 @@
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 import { consume } from '@lit/context';
 
@@ -11,7 +10,7 @@ import type { TemplateFunction } from '@heximal/templates';
 /**
  * @deprecated test-paging-buttons-stamp is deprecated and will be removed in the future.
  */
-@customElement('test-paging-buttons-stamp')
+
 export class TestPagingButtonsStamp extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   private computedContext: ComputedContext;

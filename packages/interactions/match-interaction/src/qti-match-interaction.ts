@@ -9,20 +9,78 @@ import {
 
 // import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
+import tabularStyles from './qti-match-interaction-tabular.styles';
 
 import type { ResponseVariable } from '@qti-components/base';
-import type { CSSResultGroup } from 'lit';
+import type { CSSResultGroup, PropertyValues } from 'lit';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-core/elements/qti-simple-associable-choice';
-const SlottedBase = DragDropSlottedMixin(
-  Interaction,
-  'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
-  'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
-  'qti-simple-match-set:first-of-type'
-);
+/**
+ * Match interaction: candidates pair items from two sets, either as drag-and-drop or as a tabular grid.
+ *
+ * @customElement qti-match-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {number} [max-associations=0] - Maximum pairings across the whole interaction; `0`
+ *   means unlimited. QTI's own default is `1`; this element defaults to unlimited because a
+ *   literal `1` breaks any multi-pair match item. See plans/interaction-attribute-spec-conformance.md.
+ * @attr {number} [min-associations=1] - Minimum pairings for a valid response.
+ * @attr {boolean} [shuffle=false] - Requests shuffling of both match sets. Applied by the
+ *   transform pipeline (`qti-transformers`), not by this element.
+ * @attr {'qti-match-tabular'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
+ *   QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid
+ *   instead of drag-and-drop; the `qti-choices-*` values position the source set.
+ * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
+ *   the widest chip so placement does not reflow the layout. The mixin default is `true`; this
+ *   interaction is the one that overrides it to `false`, because a match target is a category card
+ *   rather than a socket (see the field below and DROP-SIZING.md §1).
+ * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
+ *   animation.
+ *
+ * @slot prompt - The prompt shown above the interaction.
+ * @slot match-cols - Column headers (tabular mode).
+ * @slot match-rows - Row headers (tabular mode).
+ * @slot - Default slot for the two match sets (drag-and-drop mode).
+ *
+ * @csspart grid - The tabular grid container.
+ * @csspart corner - The top-left corner cell of the grid.
+ * @csspart cols-wrap - Wrapper row for the column headers.
+ * @csspart c-header - The column header slot wrapper.
+ * @csspart rows-wrap - Wrapper column for the row headers.
+ * @csspart r-header - The row header slot wrapper.
+ * @csspart checkbox-grid - The interactive cell grid area.
+ * @csspart input-cell - Each cell's label element.
+ * @csspart control - The visible checkbox/radio box (tabular mode). Also carries the variant
+ *   tokens `radio` | `checkbox`, `checked`, and `correct` | `incorrect` — e.g.
+ *   `::part(control radio checked correct)`. These mirror the custom-state vocabulary; the cells
+ *   are plain spans in the shadow root, so they cannot carry real `:state()`.
+ * @csspart control-mark - The inner mark element; carries the same variant tokens as `control`.
+ * @csspart message - Live validation message region (role="alert").
+ */
+export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
+  DragDropSlottedMixin(
+    Interaction,
+    'qti-simple-match-set:first-of-type qti-simple-associable-choice, qti-simple-match-set:last-of-type > qti-simple-associable-choice > qti-simple-associable-choice',
+    'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
+    'qti-simple-match-set:first-of-type'
+  ),
+  '[qti-draggable="true"]'
+) {
+  static override styles: CSSResultGroup = [styles, tabularStyles];
 
-export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
-  static override styles: CSSResultGroup = styles;
+  /**
+   * Match targets are categories, not slots. They should look able to hold several answers, so they
+   * take a flat floor (the `--qti-dropzone-min-height` fallback) rather than the size of the widest chip.
+   *
+   * This is a property of the INTERACTION, not of an individual target. A `match-max="1"` target is
+   * still a category that happens to take one answer, and it sits in a grid beside targets that take
+   * several — sizing each one to its own contents would make that grid ragged. So the whole
+   * interaction opts out, and the per-target `match-max` decides nothing about size here.
+   *
+   * The interactions where a drop IS a slot — gap-match, order, associate — keep measurement on, and
+   * their drops are exactly the widest chip plus the inset.
+   */
+  public override autoSizeDropzones = false;
 
   protected sourceChoices: QtiSimpleAssociableChoice[];
   protected targetChoices: QtiSimpleAssociableChoice[];
@@ -41,9 +99,29 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
     else this._response = val;
   }
 
-  @property({ type: String, attribute: 'response-identifier' }) override responseIdentifier: string = '';
+  // Tabular mode is a pure radio/checkbox grid — drag-drop has no role there, so the choices
+  // must not advertise themselves as draggable either. Suppresses `:state(drag)` on them.
+  public override isDragDropEnabled(): boolean {
+    return !this.classList.contains('qti-match-tabular');
+  }
 
-  @state() protected correctOptions: { source: string; target: string }[] = null;
+  // Tabular mode is a pure radio/checkbox grid — drag-drop has no role there.
+  // Short-circuit drag initiation so no clone is created and no shadow/lightdom
+  // state can diverge from this._response.
+  public override initiateDrag(...args: any[]): void {
+    if (this.classList.contains('qti-match-tabular')) return;
+    (super.initiateDrag as (...a: any[]) => void)(...args);
+  }
+
+  // Skip the drag-drop auto-sizing pass in tabular mode — it would write
+  // inline min-width/min-height onto each choice that forces the grid columns
+  // to the draggable's natural width.
+  public override afterCache(): void {
+    if (this.classList.contains('qti-match-tabular')) return;
+    super.afterCache();
+  }
+
+  @property({ type: String, attribute: 'response-identifier' }) override responseIdentifier: string = '';
 
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
@@ -54,7 +132,46 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
       this.querySelectorAll('qti-simple-match-set:last-of-type qti-simple-associable-choice')
     );
 
-    this.response = [];
+    this.syncTabularSlotting();
+  }
+
+  protected override willUpdate(changed: PropertyValues): void {
+    super.willUpdate?.(changed);
+    if (changed.has('class')) this.syncTabularSlotting();
+  }
+
+  private syncTabularSlotting(): void {
+    const isTabular = this.classList.contains('qti-match-tabular');
+    const sets = this.querySelectorAll(':scope > qti-simple-match-set');
+    const sourceSet = sets[0] as HTMLElement | undefined;
+    const targetSet = sets[1] as HTMLElement | undefined;
+
+    const stripSizing = (c: QtiSimpleAssociableChoice) => {
+      c.style.removeProperty('min-width');
+      c.style.removeProperty('min-height');
+      c.style.removeProperty('--qti-dropzone-min-height');
+    };
+    if (isTabular) {
+      sourceSet?.setAttribute('slot', 'match-rows');
+      targetSet?.setAttribute('slot', 'match-cols');
+      // Choices flow into the subgrid wrappers via DOM order — no per-choice
+      // grid-row/grid-column writes required. --qti-match-rows/-cols are set
+      // inline on [part='grid'] from render() so the editor (which can't write
+      // to host style under ProseMirror) shares the same mechanism.
+      this.sourceChoices?.forEach(c => {
+        stripSizing(c);
+        c.setAttribute('role', 'rowheader');
+      });
+      this.targetChoices?.forEach(c => {
+        stripSizing(c);
+        c.setAttribute('role', 'columnheader');
+      });
+    } else {
+      sourceSet?.removeAttribute('slot');
+      targetSet?.removeAttribute('slot');
+      this.sourceChoices?.forEach(c => c.removeAttribute('role'));
+      this.targetChoices?.forEach(c => c.removeAttribute('role'));
+    }
   }
 
   protected handleRadioClick = (e: { target: HTMLInputElement }) => {
@@ -110,183 +227,86 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(SlottedBas
     }
   }
 
-  #getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
-    if (!responseVariable.correctResponse) {
-      return [];
-    }
-    const correctResponse = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
-
-    const matches: { source: string; target: string }[] = [];
-    if (correctResponse) {
-      correctResponse.forEach(x => {
-        const split = x.split(' ');
-        matches.push({ source: split[0], target: split[1] });
-      });
-    }
-    return matches;
-  }
-
-  public override toggleInternalCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable?.correctResponse) {
-      // Remove all previously added correct responses
-      this.querySelectorAll('.correct-option').forEach(el => el.remove());
-      return;
-    }
-    const matches = this.#getMatches(responseVariable);
-
-    if (!this.class.split(' ').includes('qti-match-tabular')) {
-      if (show) {
-        // Clear old correct options first
-        this.querySelectorAll('.correct-option').forEach(el => el.remove());
-
-        this.targetChoices.forEach(targetChoice => {
-          const targetId = targetChoice.getAttribute('identifier');
-          const match = matches.find(m => m.target === targetId);
-
-          if (match?.source) {
-            const sourceChoice = this.querySelector(`qti-simple-associable-choice[identifier="${match.source}"]`);
-            const nodes = Array.from(sourceChoice?.childNodes || []).map(n => n.cloneNode(true));
-
-            if (nodes.length > 0 && !targetChoice.previousElementSibling?.classList.contains('correct-option')) {
-              const textSpan = document.createElement('span');
-              textSpan.classList.add('correct-option');
-              nodes.forEach(node => textSpan.appendChild(node));
-
-              // Style the span
-              textSpan.style.border = '1px solid var(--qti-correct)';
-              textSpan.style.borderRadius = '4px';
-              textSpan.style.padding = '2px 4px';
-              textSpan.style.display = 'inline-block';
-
-              // Insert before the target choice
-              targetChoice.insertAdjacentElement('beforebegin', textSpan);
-            }
-          }
-        });
-      } else {
-        this.correctOptions = null;
-      }
-    } else {
-      if (show) {
-        this.correctOptions = matches || [];
-      } else {
-        this.correctOptions = null;
-      }
-    }
-  }
-
-  public override toggleCandidateCorrection(show: boolean) {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable?.correctResponse) {
-      return;
-    }
-    const matches = this.#getMatches(responseVariable);
-
-    this.targetChoices.forEach(targetChoice => {
-      const targetId = targetChoice.getAttribute('identifier');
-      const targetMatches = matches.filter(m => m.target === targetId);
-
-      const selectedChoices = targetChoice.querySelectorAll(`qti-simple-associable-choice`);
-
-      selectedChoices.forEach(selectedChoice => {
-        selectedChoice.internals.states.delete('candidate-correct');
-        selectedChoice.internals.states.delete('candidate-incorrect');
-
-        if (!show) {
-          return;
-        }
-
-        const isCorrect = targetMatches.find(m => m.source === selectedChoice.identifier)?.source !== undefined;
-        if (isCorrect) {
-          selectedChoice.internals.states.add('candidate-correct');
-        } else {
-          selectedChoice.internals.states.add('candidate-incorrect');
-        }
-      });
-    });
+  /** Extension hook for packages that add visual state tokens to tabular cells. */
+  protected getCellStateVariant(_value: string, _checked: boolean): string {
+    return '';
   }
 
   override render() {
     const isTabular = this.class.split(' ').includes('qti-match-tabular');
-    const hasCorrectResponse = this.correctOptions !== null;
     return html`
       <slot name="prompt"></slot>
       <slot ?hidden=${isTabular}></slot>
 
       ${isTabular
         ? html`
-            <table part="table">
-              <tr part="r-header">
-                <td></td>
-                ${this.targetChoices.map(
-                  col => html`<th part="r-header">${Array.from(col.childNodes).map(n => n.cloneNode(true))}</th>`
-                )}
-              </tr>
-
-              ${this.sourceChoices.map(
-                row =>
-                  html`<tr part="row">
-                    <td part="c-header">${Array.from(row.childNodes).map(n => n.cloneNode(true))}</td>
-                    ${this.targetChoices.map(col => {
-                      const rowId = row.getAttribute('identifier');
-                      const colId = col.getAttribute('identifier');
-                      const value = `${rowId} ${colId}`;
-                      const selectedInRowCount =
-                        (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
-                      const checked = this.response?.includes(value) || false;
-                      const type = row.matchMax === 1 ? 'radio' : 'checkbox';
-                      const isCorrect = !!this.correctOptions?.find(
-                        option => option.source === rowId && option.target === colId
-                      );
-                      const part =
-                        type === 'radio'
-                          ? `rb ${checked ? 'rb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'rb-correct' : 'rb-incorrect') : ''}`
-                          : `cb ${checked ? 'cb-checked' : ''} ${hasCorrectResponse ? (isCorrect ? 'cb-correct' : 'cb-incorrect') : ''}`;
-
-                      // disable if match max is greater than 1 and max is reached
-                      const disable =
-                        this.correctOptions?.length > 0
-                          ? true
-                          : row.matchMax === 1
+            <div
+              part="grid"
+              role="grid"
+              style="--qti-match-rows: ${this.sourceChoices.length}; --qti-match-cols: ${this.targetChoices.length};"
+            >
+              <div part="corner"></div>
+              <div part="cols-wrap" role="row"><slot name="match-cols" part="c-header"></slot></div>
+              <div part="rows-wrap"><slot name="match-rows" part="r-header"></slot></div>
+              <div part="checkbox-grid">
+                ${this.sourceChoices.map(
+                  (row, r) => html`
+                    <div role="row" style="display: contents;">
+                      ${this.targetChoices.map((col, c) => {
+                        const rowId = row.getAttribute('identifier');
+                        const colId = col.getAttribute('identifier');
+                        const value = `${rowId} ${colId}`;
+                        const selectedInRowCount =
+                          (this.response || []).filter(v => v.split(' ')[0] === rowId).length || 0;
+                        const checked = this.response?.includes(value) || false;
+                        const type = row.matchMax === 1 ? 'radio' : 'checkbox';
+                        /*
+                         * The cells are plain spans in this interaction's shadow root, so they
+                         * have no ElementInternals and cannot carry `:state()` — and
+                         * `::part(x):state(y)` requires the state to live on the part's own
+                         * element. Multi-token parts are the correct mechanism here. The tokens
+                         * deliberately reuse the state vocabulary (`radio`, `checkbox`,
+                         * `checked`, `correct`, `incorrect`) so a themer reads the same words
+                         * everywhere.
+                         *
+                         */
+                        const stateVariant = this.getCellStateVariant(value, checked);
+                        const checkedMarker = checked ? 'checked' : '';
+                        const controlPart = `control ${type} ${checkedMarker} ${stateVariant}`.trim();
+                        const controlMarkPart = `control-mark ${type} ${checkedMarker} ${stateVariant}`.trim();
+                        const disable =
+                          row.matchMax === 1
                             ? false
                             : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
-                      return html`<td part="input-cell">
-                        <div
-                          class="input-container"
-                          style="position: relative; width: 24px; height: 24px; margin: 0 auto;"
-                        >
-                          <input
-                            type=${type}
-                            part=${part}
-                            name=${rowId}
-                            value=${value}
-                            .disabled=${disable}
-                            @change=${(e: { target: any }) => this.handleRadioChange(e)}
-                            @click=${(e: { target: HTMLInputElement }) =>
-                              row.matchMax === 1 ? this.handleRadioClick(e) : null}
-                          />
-                          ${type === 'checkbox' && checked
-                            ? html`
-                                <svg
-                                  part="checkmark"
-                                  viewBox="0 0 24 24"
-                                  style="position: absolute; width: 20px; height: 20px; top: 2px; left: 2px; pointer-events: none;"
-                                >
-                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white" />
-                                </svg>
-                              `
-                            : ''}
-                        </div>
-                      </td>`;
-                    })}
-                  </tr>`
-              )}
-            </table>
+                        return html`
+                          <label
+                            part="input-cell"
+                            role="gridcell"
+                            style="grid-row: ${r + 1}; grid-column: ${c +
+                            1}; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                          >
+                            <input
+                              type=${type}
+                              hidden
+                              name=${rowId}
+                              value=${value}
+                              .checked=${checked}
+                              .disabled=${disable}
+                              @change=${(e: { target: any }) => this.handleRadioChange(e)}
+                              @click=${(e: { target: HTMLInputElement }) =>
+                                row.matchMax === 1 ? this.handleRadioClick(e) : null}
+                            />
+                            <span part=${controlPart} role=${type} aria-checked=${checked ? 'true' : 'false'}>
+                              <span part=${controlMarkPart}></span>
+                            </span>
+                          </label>
+                        `;
+                      })}
+                    </div>
+                  `
+                )}
+              </div>
+            </div>
           `
         : nothing}
 

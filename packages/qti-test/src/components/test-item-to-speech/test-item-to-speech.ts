@@ -1,6 +1,6 @@
 import { html, LitElement, css } from 'lit';
 import { consume, provide, createContext } from '@lit/context';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 
 import { sessionContext } from '@qti-components/base';
 
@@ -103,7 +103,7 @@ abstract class TtsButtonBase extends LitElement {
  * @cssstate playing - Speech is playing
  * @cssstate paused  - Speech is paused
  */
-@customElement('test-item-to-speech')
+
 export class TestItemToSpeech extends LitElement {
   @property({ type: String }) language = 'nl-NL';
 
@@ -468,7 +468,7 @@ export class TestItemToSpeech extends LitElement {
  * @cssstate idle / playing / paused
  * @csspart button
  */
-@customElement('test-tts-play')
+
 export class TestTtsPlay extends TtsButtonBase {
   #toggle() {
     if (!this._tts) return;
@@ -492,7 +492,7 @@ export class TestTtsPlay extends TtsButtonBase {
  * @cssstate idle / playing / paused
  * @csspart button
  */
-@customElement('test-tts-pause')
+
 export class TestTtsPause extends TtsButtonBase {
   override render() {
     return html`
@@ -508,7 +508,7 @@ export class TestTtsPause extends TtsButtonBase {
  * @cssstate idle / playing / paused
  * @csspart button
  */
-@customElement('test-tts-resume')
+
 export class TestTtsResume extends TtsButtonBase {
   override render() {
     return html`
@@ -524,7 +524,7 @@ export class TestTtsResume extends TtsButtonBase {
  * @cssstate idle / playing / paused
  * @csspart button
  */
-@customElement('test-tts-stop')
+
 export class TestTtsStop extends TtsButtonBase {
   override render() {
     return html`
@@ -541,7 +541,7 @@ export class TestTtsStop extends TtsButtonBase {
  * @cssstate idle / playing / paused
  * @csspart button
  */
-@customElement('test-tts-prev')
+
 export class TestTtsPrev extends TtsButtonBase {
   override render() {
     const atStart = (this._tts?.currentElementIndex ?? 0) === 0;
@@ -560,7 +560,7 @@ export class TestTtsPrev extends TtsButtonBase {
  * @cssstate idle / playing / paused
  * @csspart button
  */
-@customElement('test-tts-next')
+
 export class TestTtsNext extends TtsButtonBase {
   override render() {
     const atEnd =

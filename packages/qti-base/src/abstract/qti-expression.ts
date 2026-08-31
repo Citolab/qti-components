@@ -2,12 +2,12 @@ import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { itemContext } from '../context/qti-assessment-item.context';
+import { itemContext } from '../context/item.context';
 import { qtiContext } from '../context/qti.context';
 
+import type { ItemContext } from '../context/types/item.types';
 import type { QtiContext, QtiContextType } from '../context/qti.context';
 import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
-import type { ItemContext } from '../context/item.context';
 
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;
@@ -20,7 +20,28 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
   @state()
   protected result: any;
 
-  // hide the slot with css
+  /*
+   * Written here rather than imported from a .css file, and that is a packaging constraint rather
+   * than a style preference.
+   *
+   * The rule used to live in qti-expression.css, imported with Vite's inline-stylesheet query so
+   * DevTools could show source-file provenance. That query is a VITE specifier, and tsc copies it
+   * verbatim into dist — so the published package shipped an import only a Vite-based consumer
+   * could resolve. Every other consumer broke on it: plain Node, tsx, any non-Vite bundler. It was
+   * the single such specifier reachable from this package, and it took down QTI-Editor's schema
+   * check, which loads the components under tsx to build the real ProseMirror schema
+   * (ERR_UNKNOWN_FILE_EXTENSION on a file that has nothing to do with schemas).
+   *
+   * A `build:assets` step used to copy the .css into dist beside it. That went too — it existed
+   * only to give the unresolvable import something to point at.
+   *
+   * Two lines of CSS are not worth a dist that only one bundler can consume. If this ever grows
+   * into a real stylesheet, give it a `.styles.ts` exporting a `css` template — the house pattern
+   * everywhere else in this repo — rather than reintroducing a bundler-specific import.
+   *
+   * The element renders a debug <pre> of its computed result plus a <slot>; hiding the slot is all
+   * the styling it has ever had.
+   */
   static override styles = css`
     slot {
       display: none;

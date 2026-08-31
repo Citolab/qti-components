@@ -11,7 +11,7 @@ const meta: Meta = {
   argTypes: {
     scoreBackend: { control: { type: 'boolean' } },
     packages: {
-      options: ['kennisnet-1', 'kennisnet-2'],
+      options: ['kennisnet'],
       control: { type: 'radio' }
     },
     itemIndex: { control: { type: 'number' } }
@@ -19,7 +19,7 @@ const meta: Meta = {
   args: {
     scoreBackend: false,
     serverLocation: 'http://localhost:3000/api',
-    packages: 'kennisnet-1',
+    packages: 'kennisnet',
     itemIndex: 0
   },
   parameters: {

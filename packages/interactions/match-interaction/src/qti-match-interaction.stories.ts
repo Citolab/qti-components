@@ -1,7 +1,11 @@
 import { action } from 'storybook/actions';
 import { html } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
-import { expect, fn, waitFor, within } from 'storybook/test';
+import { expect, fn, waitFor } from 'storybook/test';
+// Dropped chips are rendered into the drop target's shadow root, so the light-DOM `within`
+// from storybook/test can't see them. shadow-dom-testing-library's `within` (getByShadowText …)
+// and deepQuerySelector(All) pierce shadow roots to find where a chip landed.
+import { within, deepQuerySelector, deepQuerySelectorAll } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import drag from '../../../../tools/testing/drag';
@@ -11,7 +15,9 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { InputType } from 'storybook/internal/types';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-match-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiMatchInteraction & typeof args>;
 
@@ -40,7 +46,7 @@ const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier'
       handles: events
     }
   },
-  tags: ['autodocs', 'no-tests']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 
@@ -308,9 +314,9 @@ export const Test: Story = {
     const canvas = within(canvasElement);
 
     // Retrieve interaction, source, and target elements from the canvas
-    const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction');
-    const dragC = canvas.getByText('Capulet');
-    const dropM = canvas.getByText('A Midsummer-Nights');
+    const interaction = canvas.getByShadowTestId<QtiMatchInteraction>('match-interaction');
+    const dragC = canvas.getByShadowText('Capulet');
+    const dropM = canvas.getByShadowText('A Midsummer-Nights');
 
     // // Define the interaction response event handler to capture the response
     const interactionResponse = fn(() => {
@@ -359,12 +365,12 @@ export const Test2: Story = {
     const canvas = within(canvasElement);
 
     // Retrieve interaction, source, and target elements from the canvas
-    const dragC = canvas.getByText('Capulet');
-    const dragD = canvas.getByText('Demetrius');
-    const dragL = canvas.getByText('Lysander');
+    const dragC = canvas.getByShadowText('Capulet');
+    const dragD = canvas.getByShadowText('Demetrius');
+    const dragL = canvas.getByShadowText('Lysander');
 
-    const dropM = canvas.getByText('A Midsummer-Nights');
-    const dropR = canvas.getByText('Romeo and Juliet');
+    const dropM = canvas.getByShadowText('A Midsummer-Nights');
+    const dropR = canvas.getByShadowText('Romeo and Juliet');
 
     // // Define the interaction response event handler to capture the response
     const interactionResponse = fn(() => {
@@ -407,19 +413,19 @@ export const DragMultiple: Story = {
     interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
 
     try {
-      const french = canvas.getByText('French');
-      const dutch = canvas.getByText('Dutch');
-      const paris = canvas.getByText('Paris');
-      const amsterdam = canvas.getByText('Amsterdam');
+      const french = canvas.getByShadowText('French');
+      const dutch = canvas.getByShadowText('Dutch');
+      const paris = canvas.getByShadowText('Paris');
+      const amsterdam = canvas.getByShadowText('Amsterdam');
 
       await step('Drag French to Paris', async () => {
         await drag(french, { to: paris, duration: 400 });
-        expect(paris).toHaveTextContent('French');
+        expect(within(paris).queryAllByShadowText('French').length).toBeGreaterThan(0);
       });
 
       await step('Drag Dutch to Amsterdam and emit directed-pair response', async () => {
         await drag(dutch, { to: amsterdam, duration: 400 });
-        expect(amsterdam).toHaveTextContent('Dutch');
+        expect(within(amsterdam).queryAllByShadowText('Dutch').length).toBeGreaterThan(0);
         expect(onResponse).toHaveBeenCalled();
         const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
         expect(lastResponse).toContain('french paris');
@@ -440,19 +446,19 @@ export const DragMultiple2: Story = {
     interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
 
     try {
-      const endothermic = canvas.getByText('Endothermic');
-      const liveYoung = canvas.getByText('Bear Live Young');
-      const birds = canvas.getByText('Birds');
-      const mammals = canvas.getByText('Mammals');
+      const endothermic = canvas.getByShadowText('Endothermic');
+      const liveYoung = canvas.getByShadowText('Bear Live Young');
+      const birds = canvas.getByShadowText('Birds');
+      const mammals = canvas.getByShadowText('Mammals');
 
       await step('Drag Endothermic to Birds', async () => {
         await drag(endothermic, { to: birds, duration: 400 });
-        expect(birds).toHaveTextContent('Endothermic');
+        expect(within(birds).queryAllByShadowText('Endothermic').length).toBeGreaterThan(0);
       });
 
       await step('Drag Bear Live Young to Mammals and verify response pairs', async () => {
         await drag(liveYoung, { to: mammals, duration: 400 });
-        expect(mammals).toHaveTextContent('Bear Live Young');
+        expect(within(mammals).queryAllByShadowText('Bear Live Young').length).toBeGreaterThan(0);
         const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
         expect(lastResponse).toContain('r2 h1');
         expect(lastResponse).toContain('r4 h3');
@@ -472,19 +478,19 @@ export const OptionsRight: Story = {
     interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
 
     try {
-      const berlin = canvas.getByText('Berlijn');
-      const amsterdamCity = canvas.getByText('Amsterdam');
-      const germany = canvas.getByText('Duitsland');
-      const netherlands = canvas.getByText('Nederland');
+      const berlin = canvas.getByShadowText('Berlijn');
+      const amsterdamCity = canvas.getByShadowText('Amsterdam');
+      const germany = canvas.getByShadowText('Duitsland');
+      const netherlands = canvas.getByShadowText('Nederland');
 
       await step('Drag Berlijn to Duitsland', async () => {
         await drag(berlin, { to: germany, duration: 400 });
-        expect(germany).toHaveTextContent('Berlijn');
+        expect(within(germany).queryAllByShadowText('Berlijn').length).toBeGreaterThan(0);
       });
 
       await step('Drag Amsterdam to Nederland and verify directional identifiers', async () => {
         await drag(amsterdamCity, { to: netherlands, duration: 400 });
-        expect(netherlands).toHaveTextContent('Amsterdam');
+        expect(within(netherlands).queryAllByShadowText('Amsterdam').length).toBeGreaterThan(0);
         const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
         expect(lastResponse).toContain('A1 B1');
         expect(lastResponse).toContain('A2 B2');
@@ -504,12 +510,12 @@ export const ManyOptions: Story = {
     interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
 
     try {
-      const ribosomes = canvas.getByText('ribosomen');
-      const proteinSynthesis = canvas.getByText('aanmaak van eiwitten');
+      const ribosomes = canvas.getByShadowText('ribosomen');
+      const proteinSynthesis = canvas.getByShadowText('aanmaak van eiwitten');
 
       await step('Drag ribosomen to aanmaak van eiwitten', async () => {
         await drag(ribosomes, { to: proteinSynthesis, duration: 400 });
-        expect(proteinSynthesis).toHaveTextContent('ribosomen');
+        expect(within(proteinSynthesis).queryAllByShadowText('ribosomen').length).toBeGreaterThan(0);
         const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
         expect(lastResponse).toContain('A2 B2');
       });
@@ -528,13 +534,13 @@ export const WithImages: Story = {
     interaction.addEventListener('qti-interaction-response', onResponse as EventListener);
 
     try {
-      const ernie = canvas.getByText('Ernie');
+      const ernie = canvas.getByShadowText('Ernie');
       const imageTargets = canvas.getAllByAltText('afbeelding');
       const firstTarget = imageTargets[0].closest('qti-simple-associable-choice') as HTMLElement;
 
       await step('Drag Ernie to first image target', async () => {
         await drag(ernie, { to: firstTarget, duration: 400 });
-        expect(firstTarget).toHaveTextContent('Ernie');
+        expect(within(firstTarget).queryAllByShadowText('Ernie').length).toBeGreaterThan(0);
         const lastResponse = onResponse.mock.calls.at(-1)?.[0]?.detail.response || [];
         expect(lastResponse).toContain('A1 B1');
       });
@@ -549,33 +555,33 @@ export const DuplicateDropIsolationRegression: Story = {
   render: () => duplicateDropRegressionTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const interaction = canvas.getByTestId<QtiMatchInteraction>('match-interaction-duplicates');
+    const interaction = canvas.getByShadowTestId<QtiMatchInteraction>('match-interaction-duplicates');
     await interaction.updateComplete;
 
-    const alpha = canvas.getByText('Alpha');
-    const beta = canvas.getByText('Beta');
-    const target1 = canvas.getByText('Target 1');
-    const target2 = canvas.getByText('Target 2');
-    const target3 = canvas.getByText('Target 3');
+    const alpha = canvas.getByShadowText('Alpha');
+    const beta = canvas.getByShadowText('Beta');
+    const target1 = canvas.getByShadowText('Target 1');
+    const target2 = canvas.getByShadowText('Target 2');
+    const target3 = canvas.getByShadowText('Target 3');
 
     await step('Place Alpha on two different targets (duplicate allowed from inventory)', async () => {
       await drag(alpha, { to: target1, duration: 350 });
       await drag(alpha, { to: target2, duration: 350 });
 
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target2).toHaveTextContent('Alpha');
+      expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target2).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
     });
 
     await step('Fill third target with Beta while Alpha remains in Targets 1 and 2', async () => {
       await drag(beta, { to: target3, duration: 350 });
-      expect(target3).toHaveTextContent('Beta');
+      expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
     });
 
     await step(
       'Moving Alpha from Target 2 into occupied Target 3 preserves unrelated Alpha and swaps local occupants',
       async () => {
         const alphaInTarget2 = await waitFor(() => {
-          const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+          const dropped = deepQuerySelector(target2, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
           expect(dropped).not.toBeNull();
           return dropped as HTMLElement;
         });
@@ -585,9 +591,9 @@ export const DuplicateDropIsolationRegression: Story = {
         // - Target 1 keeps its Alpha (unrelated placement remains)
         // - Target 2 receives Beta from the occupied target as part of swap flow
         // - Target 3 receives the dragged Alpha
-        expect(target1).toHaveTextContent('Alpha');
-        expect(target2).toHaveTextContent('Beta');
-        expect(target3).toHaveTextContent('Alpha');
+        expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+        expect(within(target2).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
+        expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
       }
     );
   }
@@ -598,35 +604,35 @@ export const SortableAppendWhenTargetAllowsMultiple: Story = {
   render: () => sortableAppendWhenTargetAllowsMultipleTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alpha = canvas.getByText('Alpha');
-    const beta = canvas.getByText('Beta');
-    const target1 = canvas.getByText('Target 1');
-    const target2 = canvas.getByText('Target 2');
-    const target3 = canvas.getByText('Target 3');
+    const alpha = canvas.getByShadowText('Alpha');
+    const beta = canvas.getByShadowText('Beta');
+    const target1 = canvas.getByShadowText('Target 1');
+    const target2 = canvas.getByShadowText('Target 2');
+    const target3 = canvas.getByShadowText('Target 3');
 
     await step('Place Alpha in Targets 1 and 2, and Beta in Target 3', async () => {
       await drag(alpha, { to: target1, duration: 350 });
       await drag(alpha, { to: target2, duration: 350 });
       await drag(beta, { to: target3, duration: 350 });
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target2).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Beta');
+      expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target2).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
     });
 
     await step('Move Alpha from Target 2 onto occupied Target 3 (match-max=2)', async () => {
       const alphaInTarget2 = await waitFor(() => {
-        const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        const dropped = deepQuerySelector(target2, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
         expect(dropped).not.toBeNull();
         return dropped as HTMLElement;
       });
       await drag(alphaInTarget2, { to: target3, duration: 350 });
 
       // Target 3 allows multiple, so Alpha should be added rather than swapping out Beta.
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target2).not.toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Beta');
-      expect(target3).toHaveTextContent('Alpha');
-      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+      expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target2).queryAllByShadowText('Alpha').length).toBe(0);
+      expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
     });
   }
 };
@@ -636,41 +642,41 @@ export const SortableRespectsPerTargetMatchMax: Story = {
   render: () => sortableAppendWhenTargetAllowsMultipleTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alpha = canvas.getByText('Alpha');
-    const beta = canvas.getByText('Beta');
-    const target1 = canvas.getByText('Target 1');
-    const target2 = canvas.getByText('Target 2');
-    const target3 = canvas.getByText('Target 3');
+    const alpha = canvas.getByShadowText('Alpha');
+    const beta = canvas.getByShadowText('Beta');
+    const target1 = canvas.getByShadowText('Target 1');
+    const target2 = canvas.getByShadowText('Target 2');
+    const target3 = canvas.getByShadowText('Target 3');
 
     await step('Fill Target 3 to its match-max=2 capacity', async () => {
       await drag(alpha, { to: target1, duration: 350 });
       await drag(alpha, { to: target3, duration: 350 });
       await drag(beta, { to: target3, duration: 350 });
 
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Beta');
-      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+      expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
+      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
     });
 
     await step(
       'Move Alpha from Target 1 onto full Target 3; drop should be blocked by per-target match-max',
       async () => {
         const alphaInTarget1 = await waitFor(() => {
-          const dropped = target1.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+          const dropped = deepQuerySelector(target1, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
           expect(dropped).not.toBeNull();
           return dropped as HTMLElement;
         });
         await drag(alphaInTarget1, { to: target3, duration: 350 });
 
         // Target 3 remains at capacity with original two items.
-        expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
-        expect(target3).toHaveTextContent('Alpha');
-        expect(target3).toHaveTextContent('Beta');
+        expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
+        expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+        expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
 
         // Source retains Alpha because move to full multi-capacity target is invalid.
-        expect(target1).toHaveTextContent('Alpha');
-        expect(target2).not.toHaveTextContent('Alpha');
+        expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+        expect(within(target2).queryAllByShadowText('Alpha').length).toBe(0);
       }
     );
   }
@@ -681,11 +687,11 @@ export const SortableAppendWhenTargetIsUnlimited: Story = {
   render: () => sortableAppendWhenTargetUnlimitedTemplate,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const alpha = canvas.getByText('Alpha');
-    const beta = canvas.getByText('Beta');
-    const target1 = canvas.getByText('Target 1');
-    const target2 = canvas.getByText('Target 2');
-    const target3 = canvas.getByText('Target 3');
+    const alpha = canvas.getByShadowText('Alpha');
+    const beta = canvas.getByShadowText('Beta');
+    const target1 = canvas.getByShadowText('Target 1');
+    const target2 = canvas.getByShadowText('Target 2');
+    const target3 = canvas.getByShadowText('Target 3');
 
     await step('Place Alpha in Targets 1 and 2, then fill Target 3 with Alpha and Beta', async () => {
       await drag(alpha, { to: target1, duration: 350 });
@@ -693,25 +699,25 @@ export const SortableAppendWhenTargetIsUnlimited: Story = {
       await drag(alpha, { to: target3, duration: 350 });
       await drag(beta, { to: target3, duration: 350 });
 
-      expect(target1).toHaveTextContent('Alpha');
-      expect(target2).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Beta');
-      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(2);
+      expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target2).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
+      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
     });
 
     await step('Move Alpha from Target 2 onto occupied unlimited Target 3; item should append', async () => {
       const alphaInTarget2 = await waitFor(() => {
-        const dropped = target2.querySelector('[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        const dropped = deepQuerySelector(target2, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
         expect(dropped).not.toBeNull();
         return dropped as HTMLElement;
       });
       await drag(alphaInTarget2, { to: target3, duration: 350 });
 
-      expect(target2).not.toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Alpha');
-      expect(target3).toHaveTextContent('Beta');
-      expect(target3.querySelectorAll('[qti-draggable="true"]').length).toBe(3);
+      expect(within(target2).queryAllByShadowText('Alpha').length).toBe(0);
+      expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
+      expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
+      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(3);
     });
   }
 };

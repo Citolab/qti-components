@@ -54,5 +54,3 @@ export class QtiDurationGte extends QtiExpression<boolean | null> {
     return value;
   }
 }
-
-customElements.define('qti-duration-gte', QtiDurationGte);

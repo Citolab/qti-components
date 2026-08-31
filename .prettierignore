@@ -10,3 +10,6 @@ tsconfig.json
 public/assets
 LICENSE.md
 QTI-Components.code-workspace
+
+# Justfile uses tab-indented recipe bodies; prettier strips them
+Justfile

@@ -1,2 +1,7 @@
-import { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
-customElements.define('qti-graphic-associate-interaction', QtiGraphicAssociateInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

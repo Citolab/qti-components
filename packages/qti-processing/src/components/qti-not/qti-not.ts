@@ -21,5 +21,3 @@ export class QtiNot extends QtiExpression<boolean> {
     return !result;
   }
 }
-
-customElements.define('qti-not', QtiNot);

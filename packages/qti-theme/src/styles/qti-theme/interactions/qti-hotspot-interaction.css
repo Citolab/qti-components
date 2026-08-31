@@ -1,78 +1,171 @@
-@layer qti-components {
-  qti-hotspot-interaction {
-    & qti-hotspot-choice {
-      &[shape='circle'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &:state(--checked),
-        &[aria-checked='true'] {
-          @apply act-bor;
-        }
-        &:state(--readonly),
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &:state(--disabled),
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-      &[shape='rect'] {
-        @apply spot;
-        &:focus {
-          @apply foc;
-        }
-        &:state(--checked),
-        &[aria-checked='true'] {
-          @apply act-bor;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-      &[shape='poly'] {
-        &:hover::after {
-          content: '';
-          width: 100%;
-          height: 100%;
-          background: repeating-linear-gradient(
-            45deg,
-            var(--qti-border-active),
-            var(--qti-border-active) 5px,
-            transparent 5px,
-            transparent 10px
-          );
-          display: block;
-        }
-        &:state(--checked)::after,
-        &[aria-checked='true']::after {
-          content: '';
-          width: 100%;
-          height: 100%;
-          background: repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 5px,
-            var(--qti-border-active) 5px,
-            var(--qti-border-active) 10px
-          );
-          display: block;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-    }
+/*
+ * A hotspot is indicated by a RING, not a fill — matching QTI 3's own figures (Impl-Guide Fig
+ * 54/55) and its shared-vocab wording ("selection lines and fills", the line being the ring).
+ *
+ * The ring is drawn on the INSIDE of the shape, two ways, because the shapes are two kinds of box:
+ *
+ *   circle / ellipse / rect   an inset `box-shadow` — it follows `border-radius`, sits inside the
+ *                             element edge, and never changes the footprint or the hit area.
+ *
+ *   poly                      a `clip-path` box has no border-box edge for a shadow or border to
+ *                             paint on, so the outline comes from an SVG stroke used as a `mask`,
+ *                             published per-hotspot by positionShapes (hotspot.ts) as
+ *                             --qti-shape-outline. clip-path stays ON (it is the click hit-area) and
+ *                             the mask layers over it, so the stroke's outer half is clipped and a
+ *                             clean inner-edge ring remains — the same inner edge the box shapes get.
+ *
+ * Colour and weight are one vocabulary across both:
+ *   --qti-hotspot-ring-color   the ring colour. Unset by default (neutral); set by the selections
+ *                              classes and the correction states below.
+ *   --qti-hotspot-ring-width   resting stroke width; :state(checked) doubles it.
+ *   --qti-hotspot-halo         a near-white outline either side of the ring, so it stays legible on
+ *                              any photograph — the spec's "suitable contrast against a background".
+ *
+ * This replaces the previous fill treatment and the `@mixin spot` era entirely.
+ */
+@layer qti-components.interactions.base {
+  qti-hotspot-interaction qti-hotspot-choice {
+    /* Resting: a faint neutral ring, so the regions are discoverable before any interaction. */
+    --hs-ring: color-mix(in srgb, var(--qti-hotspot-ring-color, var(--qti-border-color)) 60%, transparent);
+    --hs-width: var(--qti-hotspot-ring-width, 2px);
+    --hs-halo: var(--qti-hotspot-halo, rgb(255 255 255 / 85%));
+
+    background-color: transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  /* Box shapes: the ring is an inset shadow, with a halo just inside it and 1px just outside. */
+  qti-hotspot-interaction qti-hotspot-choice:not([shape='poly']) {
+    box-shadow:
+      inset 0 0 0 var(--hs-width) var(--hs-ring),
+      inset 0 0 0 calc(var(--hs-width) + 1px) var(--hs-halo),
+      0 0 0 1px var(--hs-halo);
+  }
+
+  /*
+   * Poly: the ring is the published outline, coloured by `background-color` and clipped to the
+   * inside by the clip-path positionShapes leaves in place. The masked stroke has an alpha edge, so
+   * its halo comes from `drop-shadow` tracing that edge — no second mask or pseudo-element, and it
+   * follows the ring on both sides. (Box shapes can't do this: their ring is a box-shadow, so a
+   * drop-shadow would trace the whole box, not the ring — hence the inset-shadow halo above.)
+   */
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly'] {
+    background-color: var(--hs-ring);
+    mask: var(--qti-shape-outline) center / 100% 100% no-repeat;
+    -webkit-mask: var(--qti-shape-outline) center / 100% 100% no-repeat;
+    filter: drop-shadow(0 0 1px var(--hs-halo)) drop-shadow(0 0 1px var(--hs-halo));
+  }
+
+  /* Hover strengthens the resting ring rather than filling the shape. */
+  qti-hotspot-interaction qti-hotspot-choice:hover {
+    --hs-ring: color-mix(in srgb, var(--qti-hotspot-ring-color, var(--qti-border-active)) 90%, transparent);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:focus-visible {
+    outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+    outline-offset: 2px;
+  }
+}
+
+@layer qti-components.interactions.states {
+  /*
+   * Selected: a bold, saturated ring — the Fig-54 weight jump. Same var, so poly and box shapes
+   * move together; poly additionally swaps to the bold outline mask.
+   */
+  qti-hotspot-interaction qti-hotspot-choice:state(checked) {
+    --hs-ring: var(--qti-hotspot-ring-color, var(--qti-selected-bg));
+    --hs-width: calc(var(--qti-hotspot-ring-width, 2px) * 2);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(checked) {
+    mask-image: var(--qti-shape-outline-bold);
+    -webkit-mask-image: var(--qti-shape-outline-bold);
+  }
+
+  /*
+   * Selections theming — QTI 3 shared interaction vocabulary, Appendix B.1 / vocab §1.2.5.1.
+   *
+   * The image under a hotspot is one the theme has never seen, so the item author picks the
+   * contrast. Per the spec, the class names describe the SELECTION colour:
+   *   qti-selections-light  → a light selection, for a dark background image
+   *   qti-selections-dark   → a dark selection, for a light background image
+   * Both just set the one ring-colour var; the -border token is the line colour, matching how
+   * graphic-gap-match already spends these tokens.
+   */
+  qti-hotspot-interaction.qti-selections-light qti-hotspot-choice {
+    --qti-hotspot-ring-color: var(--qti-selections-light-border);
+  }
+
+  qti-hotspot-interaction.qti-selections-dark qti-hotspot-choice {
+    --qti-hotspot-ring-color: var(--qti-selections-dark-border);
+  }
+
+  /*
+   * qti-unselected-hidden — vocab §1.2.5.1: selections "visually hidden until focused or selected".
+   *
+   * Blank the ring and its halo while a hotspot is neither selected nor keyboard-focused. Both
+   * halves matter: the picture reads cleanly, and a *focused* hotspot returns, which is the only
+   * thing that keeps the interaction operable from a keyboard — drop `:not(:focus-visible)` and
+   * tabbing through an item shows nothing.
+   *
+   * In `states` so it outranks the base ring and the `:hover` strengthen: hover must NOT reveal, or
+   * sweeping the pointer hands back the answer regions one at a time.
+   */
+  qti-hotspot-interaction.qti-unselected-hidden qti-hotspot-choice:not(:state(checked)):not(:focus-visible) {
+    --hs-ring: transparent;
+    --hs-halo: transparent;
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(disabled),
+  qti-hotspot-interaction qti-hotspot-choice:state(readonly) {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  /*
+   * Correction and answer-key views recolour the same ring — one var, so circle and poly stay in
+   * step. Answer-key first, so a candidate's own judgement wins when both are present.
+   */
+  qti-hotspot-interaction qti-hotspot-choice:state(correct-response) {
+    --qti-hotspot-ring-color: var(--qti-answer-border);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(candidate-correct) {
+    --qti-hotspot-ring-color: var(--qti-correct);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice:state(candidate-incorrect) {
+    --qti-hotspot-ring-color: var(--qti-incorrect);
+  }
+
+  .full-correct-response qti-hotspot-interaction qti-hotspot-choice:state(checked) {
+    --qti-hotspot-ring-color: var(--qti-answer-border);
+  }
+
+  /*
+   * A correction or answer-key ring reads at full strength and bold weight, whether or not the
+   * candidate selected that hotspot — an unselected correct answer still needs to be seen. (A
+   * candidate-* hotspot is usually also :state(checked) and would be bold anyway; correct-response
+   * on an unselected region is the case this covers.)
+   */
+  qti-hotspot-interaction qti-hotspot-choice:state(correct-response),
+  qti-hotspot-interaction qti-hotspot-choice:state(candidate-correct),
+  qti-hotspot-interaction qti-hotspot-choice:state(candidate-incorrect),
+  .full-correct-response qti-hotspot-interaction qti-hotspot-choice:state(checked) {
+    --hs-ring: var(--qti-hotspot-ring-color);
+    --hs-width: calc(var(--qti-hotspot-ring-width, 2px) * 2);
+  }
+
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(correct-response),
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(candidate-correct),
+  qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(candidate-incorrect),
+  .full-correct-response qti-hotspot-interaction qti-hotspot-choice[shape='poly']:state(checked) {
+    mask-image: var(--qti-shape-outline-bold);
+    -webkit-mask-image: var(--qti-shape-outline-bold);
   }
 }

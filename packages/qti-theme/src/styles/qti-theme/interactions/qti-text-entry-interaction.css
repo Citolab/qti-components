@@ -1,30 +1,42 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-text-entry-interaction {
-    &:state(candidate-correct) {
-      &::part(input) {
-        background-color: var(--qti-correct);
-      }
-    }
-    &:state(candidate-partially-correct) {
-      &::part(input) {
-        background-color: var(--qti-partially-correct);
-      }
-    }
-    &:state(candidate-incorrect) {
-      &::part(input) {
-        background-color: var(--qti-incorrect);
-      }
-    }
+    @mixin text;
+
     &::part(input) {
-      @apply text;
+      @mixin field-typography;
+      appearance: none;
+      border: none;
+      background-color: transparent;
     }
-    &:hover {
-      @apply hov;
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-text-entry-interaction {
+    &:state(candidate-partially-correct) {
+      @mixin candidate text, var(--qti-partially-correct), var(--qti-partially-correct-light);
     }
-    &:focus-within {
-      &::part(input) {
-        @apply foc act-bor;
-      }
+
+    &:state(candidate-correct) {
+      @mixin candidate text, var(--qti-correct), var(--qti-correct-light);
+    }
+
+    &:state(candidate-incorrect) {
+      @mixin candidate text, var(--qti-incorrect), var(--qti-incorrect-light);
+    }
+  }
+
+  /* The answer key, moved here from the shared qti-corrections.css: it names this interaction, so
+     this file owns it. */
+  .full-correct-response qti-text-entry-interaction {
+    @mixin answer;
+
+    &::part(input) {
+      color: var(--qti-answer-fg);
+    }
+
+    &::part(answer) {
+      @mixin answer-check;
     }
   }
 }

@@ -200,5 +200,3 @@ export class QtiMathOperator extends QtiExpression<number | null> {
     }
   }
 }
-
-customElements.define('qti-math-operator', QtiMathOperator);

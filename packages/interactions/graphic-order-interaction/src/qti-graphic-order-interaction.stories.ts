@@ -4,7 +4,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import type { QtiGraphicOrderInteraction } from './qti-graphic-order-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-order-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-graphic-order-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiGraphicOrderInteraction & typeof args>;
 

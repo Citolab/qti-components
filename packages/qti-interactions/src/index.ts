@@ -1,5 +1,7 @@
 import './register-all';
 
+export * from './elements';
+
 export * from '@qti-components/associate-interaction';
 export * from '@qti-components/choice-interaction';
 export * from '@qti-components/custom-interaction';

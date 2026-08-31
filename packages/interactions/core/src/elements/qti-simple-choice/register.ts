@@ -1,2 +1,7 @@
-import { QtiSimpleChoice } from './qti-simple-choice';
-customElements.define('qti-simple-choice', QtiSimpleChoice);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

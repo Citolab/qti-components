@@ -1,2 +1,7 @@
-import { QtiSelectPointInteraction } from './qti-select-point-interaction';
-customElements.define('qti-select-point-interaction', QtiSelectPointInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

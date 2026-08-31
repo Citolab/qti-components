@@ -1,6 +1,6 @@
 import { provide } from '@lit/context';
 import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 
 import { configContext } from '@qti-components/base';
 
@@ -59,7 +59,7 @@ import type { IQtiTest } from '../../types/iqti-test';
  * And you can use the `test-prev` and `test-next` elements to navigate through the test.
  *
  */
-@customElement('qti-test')
+
 export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBaseMixin(LitElement)))) {
   // TODO: Properly implement IQtiTest interface
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {

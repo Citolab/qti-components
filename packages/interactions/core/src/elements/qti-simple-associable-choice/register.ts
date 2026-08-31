@@ -1,2 +1,7 @@
-import { QtiSimpleAssociableChoice } from './qti-simple-associable-choice';
-customElements.define('qti-simple-associable-choice', QtiSimpleAssociableChoice);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

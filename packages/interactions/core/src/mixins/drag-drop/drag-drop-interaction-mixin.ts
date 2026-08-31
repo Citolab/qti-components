@@ -2,9 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { liveQuery, watch } from '@qti-components/utilities';
 
-import { FlippablesMixin } from './flippables-mixin';
-
-import type { Interaction, IInteraction } from '@qti-components/base';
+import type { Interaction } from '@qti-components/base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
@@ -33,11 +31,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
   droppablesSelector: string,
   dragContainersSelector: string
 ) => {
-  abstract class DragDropInteractionElement extends FlippablesMixin(
-    superClass,
-    droppablesSelector,
-    draggablesSelector
-  ) {
+  abstract class DragDropInteractionElement extends superClass {
     // protected draggables = new Map<HTMLElement, { parent: HTMLElement; index: number }>();
     private observer: MutationObserver | null = null;
     private droppableObsever: MutationObserver | null = null;
@@ -261,17 +255,17 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
     private activateDroppable(droppable: HTMLElement): void {
       if (this.dragContainers.includes(droppable)) {
-        this._internals.states.add('--dragzone-active');
+        this._internals.states.add('dragzone-active');
         droppable.setAttribute('active', '');
       } else {
-        this._internals.states.delete('--dragzone-active');
+        this._internals.states.delete('dragzone-active');
         droppable.setAttribute('active', '');
       }
     }
 
     private deactivateDroppable(droppable: HTMLElement, makeDragzoneActive = true): void {
       if (makeDragzoneActive) {
-        this._internals.states.add('--dragzone-active');
+        this._internals.states.add('dragzone-active');
       }
       droppable.removeAttribute('active');
     }
@@ -309,6 +303,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
 
       if (dropContainer) {
         // Calculate the correct width of grid columns by adding the defined padding to the maximum width
+        //
+        // DEAD, like the rest of this mixin — every import of DragDropInteractionMixin is commented
+        // out; the live path is DropzoneAutoSizeMixin. Left as-is rather than repaired, but noted
+        // because `--qti-dropzone-padding` no longer exists: drops carry no inset (see
+        // drop-region.styles.ts), so this var() has no fallback and the whole calc() would be invalid
+        // if anything ever ran it.
         dropContainer.style.gridTemplateColumns = `repeat(auto-fit, minmax(calc(min(${maxWidth}px,${maxDraggableWidth}px + 2 * var(--qti-dropzone-padding))), 1fr))`;
       }
 
@@ -319,7 +319,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
         droppable.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
         droppable.style.minWidth = `${maxDraggableWidth}px`;
 
-        const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part="dropslot"]');
+        const dropSlot: HTMLElement = droppable.shadowRoot?.querySelector('slot[part~="drop"]');
         if (dropSlot) {
           dropSlot.style.minHeight = `var(--qti-dropzone-min-height, ${maxDraggableHeight}px)`;
         }
@@ -371,11 +371,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private activateDragLocation(): void {
-      this._internals.states.add('--dragzone-enabled');
+      this._internals.states.add('dragzone-enabled');
     }
 
     private deactivateDragLocation(): void {
-      this._internals.states.delete('--dragzone-enabled');
+      this._internals.states.delete('dragzone-enabled');
     }
 
     private deactivateDroppables(): void {
@@ -489,11 +489,11 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       if (this.isDragging || this.isDraggable || this.dragClone) {
         this.resetDragState();
       }
-      this._internals.states.delete('--dragzone-active');
+      this._internals.states.delete('dragzone-active');
       this.checkAllMaxAssociations();
 
-      this._internals.states.delete('--dragzone-enabled');
-      this._internals.states.delete('--dragzone-active');
+      this._internals.states.delete('dragzone-enabled');
+      this._internals.states.delete('dragzone-active');
       this.deactivateDragLocation();
       this.deactivateDroppables();
       this.draggables.forEach(d => {
@@ -525,23 +525,12 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           `You haven't selected enough associations. Minimum required is ${this.minAssociations}.`;
       }
       const lastElementChild = this.lastElementChild as HTMLElement;
-      // Use null for the third argument if no specific anchor is needed
-      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, lastElementChild);
+      this.setInteractionValidity(isValid, validityMessage, lastElementChild, { suppressInline: true });
       return isValid;
     }
 
     override reportValidity(): boolean {
-      const validationMessageElement = this.shadowRoot.querySelector('#validation-message') as HTMLElement;
-      if (validationMessageElement) {
-        if (!this._internals.validity.valid) {
-          validationMessageElement.textContent = this._internals.validationMessage;
-          validationMessageElement.style.setProperty('display', 'block', 'important');
-        } else {
-          validationMessageElement.textContent = '';
-          validationMessageElement.style.display = 'none';
-        }
-      }
-      return this._internals.validity.valid;
+      return super.reportValidity();
     }
 
     private checkMaxAssociations(droppable: HTMLElement): boolean {
@@ -876,7 +865,7 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
 
     private getDropzoneRect(el: HTMLElement): DOMRect {
-      const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part="dropslot"]');
+      const slot = el.shadowRoot?.querySelector<HTMLElement>('slot[part~="drop"]');
       return (slot ?? el).getBoundingClientRect();
     }
 
@@ -969,8 +958,8 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
       this.dragSource = e.currentTarget;
       this.isDraggable = true;
 
-      this._internals.states.add('--dragzone-enabled');
-      this._internals.states.add('--dragzone-active');
+      this._internals.states.add('dragzone-enabled');
+      this._internals.states.add('dragzone-active');
 
       this.activateDragLocation();
       this.activateDroppables(this.dragSource);
@@ -1072,5 +1061,5 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
     }
   }
 
-  return DragDropInteractionElement as Constructor<IInteraction> & T;
+  return DragDropInteractionElement as Constructor<Interaction> & T;
 };

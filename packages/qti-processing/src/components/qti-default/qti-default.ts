@@ -80,5 +80,3 @@ export class QtiDefault extends QtiExpression<any> {
     return variable.defaultValue || null;
   }
 }
-
-customElements.define('qti-default', QtiDefault);

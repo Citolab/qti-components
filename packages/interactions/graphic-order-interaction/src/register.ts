@@ -1,2 +1,7 @@
-import { QtiGraphicOrderInteraction } from './qti-graphic-order-interaction';
-customElements.define('qti-graphic-order-interaction', QtiGraphicOrderInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

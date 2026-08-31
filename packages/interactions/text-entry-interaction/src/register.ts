@@ -1,2 +1,7 @@
-import { QtiTextEntryInteraction } from './qti-text-entry-interaction';
-customElements.define('qti-text-entry-interaction', QtiTextEntryInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

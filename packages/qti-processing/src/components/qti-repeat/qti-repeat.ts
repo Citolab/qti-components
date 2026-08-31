@@ -116,5 +116,3 @@ export class QtiRepeat extends QtiExpression<ResponseVariable[]> {
     } as ResponseVariable;
   }
 }
-
-customElements.define('qti-repeat', QtiRepeat);

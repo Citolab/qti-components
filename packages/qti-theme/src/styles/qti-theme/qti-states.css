@@ -1,0 +1,49 @@
+/*
+ * Cross-interaction custom states.
+ *
+ * These states are set by the base `Interaction` class rather than by any one interaction,
+ * so they mean the same thing everywhere and are styled once here instead of being copied
+ * into each interaction's stylesheet.
+ *
+ * Per-interaction states (`checked`, `radio`, `dragzone-active`, …) stay in their own files.
+ *
+ * The chip vocabulary used to live here too — one unscoped rule giving `@mixin drag` and `@mixin
+ * grip` to every `:state(drag)` element and every floating clone. It is now declared once per
+ * drag-drop interaction, in that interaction's own file (gap-match, order, associate, match), still
+ * in this `global` layer so the cascade is unchanged.
+ *
+ * The move is what removed the exclusions. A universal claim ("every drag is a chip") needed a
+ * carve-out for graphic-gap-match, whose chips are photographs sitting on a picture and must take
+ * no card styling at all — written twice here as
+ * `:where(:not(qti-graphic-gap-match-interaction *, [data-drag-interaction='…']))`, and mirrored a
+ * third and fourth time in the Kennisnet overlay. Declared per interaction the rule is an opt-in:
+ * graphic-gap-match simply never states one, and there is no exception to write down anywhere.
+ */
+@layer qti-components.global {
+  ::part(message) {
+    @mixin validation-message;
+  }
+
+  /*
+   * The interaction is presenting the answer key rather than the candidate's own response.
+   * Set on the interaction host by `Interaction.toggleInternalCorrectResponse`.
+   *
+   * Reaches the host wherever that base implementation runs, which is more than it looks: besides
+   * `qti-extended-text-interaction`, both `ChoiceCorrectionMixin` and most per-interaction overrides
+   * call `super`, so choice, hottext, select-point, slider, graphic-order and the rest set the host
+   * state AND mark their individual choices with `correct-response` / `incorrect-response`.
+   *
+   * Three do not, and so never paint this outline: the drag-drop mixin replaces the implementation
+   * outright, and the two inline interactions — text-entry and inline-choice — hand internal mode to
+   * the full correct response, which presents the key in a sibling wrapper rather than on the host.
+   *
+   * The outline went unseen on hottext until its host stopped being an inline box (see the note in
+   * qti-match-interaction.styles.ts) — an inline box whose children are all block has no area to
+   * paint. If the double indication ever reads as too much, the fix is here or in the mixin, not
+   * a display value.
+   */
+  :state(show-correct-response) {
+    outline: var(--qti-border-thickness) dashed var(--qti-correct);
+    outline-offset: 0.25rem;
+  }
+}

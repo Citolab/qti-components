@@ -24,19 +24,12 @@ qti-assessment-item-ref:not(:has(qti-assessment-item)) {
 }
 
 div.full-correct-response {
-  border: 1px solid #39a7c0;
-  background-color: #d9e8ee;
 }
 
 div.full-correct-response-block {
   display: block;
-  margin-top: var(--qti-padding-vertical);
-  padding: 0.5rem;
 }
 
 div.full-correct-response-inline {
   display: inline-block;
-  margin-left: var(--qti-padding-horizontal);
-  margin-right: var(--qti-padding-horizontal);
-  padding: 0.2rem;
 }

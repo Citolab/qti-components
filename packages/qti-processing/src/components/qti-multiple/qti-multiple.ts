@@ -27,5 +27,3 @@ export class QtiMultiple extends QtiExpression<VariableDeclaration<string | stri
     return variables;
   }
 }
-
-customElements.define('qti-multiple', QtiMultiple);

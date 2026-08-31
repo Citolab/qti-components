@@ -2,6 +2,16 @@
 
 This document describes the drag-drop mixin system used across QTI interactions.
 
+> **See also**
+> - [CONFIGURABILITY.md](./CONFIGURABILITY.md) — how per-interaction variation is expressed today
+>   (nine mechanisms), where QTI leaks into the generic machinery, and what a configurable,
+>   QTI-agnostic shape would look like. A design note; nothing in it is implemented.
+> - [../../../../../qti-theme/DROP-SIZING.md](../../../../../qti-theme/DROP-SIZING.md) — who owns a
+>   drop's size, and why the measured tokens must never be declared.
+>
+> **Note on `DragDropSortableMixin` below**: it is exported but has zero production call sites. Order
+> uses `DragDropSlottedMixin` + `DragDropSlottedSortableMixin` like the other four.
+
 ## Overview
 
 The drag-drop system provides a flexible, reusable way to implement drag-and-drop functionality across different QTI interaction types. It consists of four core mixins:

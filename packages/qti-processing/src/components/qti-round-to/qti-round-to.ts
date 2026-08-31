@@ -123,5 +123,3 @@ export class QtiRoundTo extends QtiExpression<number | null> {
     return Math.round(value * multiplier) / multiplier;
   }
 }
-
-customElements.define('qti-round-to', QtiRoundTo);

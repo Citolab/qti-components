@@ -1,8 +1,9 @@
 const xml = String.raw;
 
-import { afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, vi } from 'vitest';
 
 import { qtiTransformItem } from '../src/qti-transform-item';
+import { resetMissingSeedWarning } from '../src/shared/missing-seed-warning';
 
 const choiceItem = (choices: string) => xml`
   <qti-assessment-item identifier="ITM-1" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">
@@ -31,6 +32,12 @@ const orderUnseeded = (xmlStr: string): string[] => {
     .filter(e => e.localName === 'qti-simple-choice')
     .map(e => e.getAttribute('identifier') ?? '');
 };
+
+// The missing-seed warning fires once per session, so without this reset the first unseeded
+// test in this file consumes it and every later warning assertion sees zero calls.
+beforeEach(() => {
+  resetMissingSeedWarning();
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -99,6 +106,13 @@ describe('shuffleInteractions (no seed)', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     orderUnseeded(FIVE);
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('deterministic fallback seed'));
+  });
+
+  it('warns only once per session', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    orderUnseeded(FIVE);
+    orderUnseeded(FIVE);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
   });
 
   it('does not use Math.random when a seed is supplied', () => {

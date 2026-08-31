@@ -19,6 +19,7 @@ import { extendElementName, extendElementsWithClass } from './item/extend';
 import { pciHooks } from './item/pci-hooks';
 import { shuffleInteractions } from './item/shuffle-interactions';
 import { stripStyleSheets } from './item/stylesheets';
+import { warnMissingSeed } from './shared/missing-seed-warning';
 import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
 
 export type { ModuleResolutionConfig };
@@ -42,7 +43,7 @@ export type transformItemApi = {
   stripStyleSheets: () => transformItemApi;
   html: () => string;
   xml: () => string;
-  htmlDoc: () => DocumentFragment;
+  htmlDoc: (registry?: CustomElementRegistry) => DocumentFragment;
   xmlDoc: () => XMLDocument;
 };
 
@@ -89,9 +90,7 @@ export const qtiTransformItem = () => {
 
       if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
         const fallbackSeed = xmlUri || 'default-item-seed';
-        console.warn(
-          `[qtiTransformItem] No QTI_CONTEXT.seed provided; using "${fallbackSeed}" as deterministic fallback seed.`
-        );
+        warnMissingSeed('qtiTransformItem', fallbackSeed);
         shuffleInteractions(xmlFragment, fallbackSeed);
         return api;
       }
@@ -137,11 +136,11 @@ export const qtiTransformItem = () => {
     xml(): string {
       return new XMLSerializer().serializeToString(xmlFragment);
     },
-    htmlDoc() {
+    htmlDoc(registry?: CustomElementRegistry) {
       if (xmlUri !== null) {
         setLocation(xmlFragment, xmlUri.substring(0, xmlUri.lastIndexOf('/')));
       }
-      return toHTML(xmlFragment);
+      return toHTML(xmlFragment, registry);
     },
     xmlDoc(): XMLDocument {
       return xmlFragment; // new XMLSerializer().serializeToString(xmlFragment);

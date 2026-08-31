@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM003"
+                     title="Tekstvraag – hoofdletterongevoelig"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="string" cardinality="single">
+        <qti-correct-response>
+            <qti-value>refractie</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="breking" mapped-value="1" case-sensitive="false"/>
+            <qti-map-entry map-key="refractie" mapped-value="1" case-sensitive="false"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col4">
+                <img src="resources/refraction.jpeg" alt="Licht" width="250" />
+            </div>
+            <div class="qti-layout-col8">
+                <p>
+                    Hoe heet het verschijnsel dat licht van richting verandert wanneer het een andere stof binnengaat, zoals van lucht naar water?
+                </p>
+                <qti-text-entry-interaction response-identifier="RESPONSE" expected-length="20"/>
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Goede antwoorden: "breking" of "refractie" (hoofdletterongevoelig).</li>
+                    <li>"refractie" is de officiële term; "breking" wordt ook goed gerekend.</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

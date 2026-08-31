@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { property, query } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
@@ -6,11 +6,23 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-slider-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+/**
+ * Slider interaction: candidates pick a numeric value along a rail.
+ *
+ * @slot prompt - The prompt shown above the slider.
+ *
+ * @csspart slider - The slider root element.
+ * @csspart bounds - The min/max bounds label wrapper.
+ * @csspart ticks - The tick marks along the rail.
+ * @csspart rail - The rail element the knob slides along.
+ * @csspart knob - The draggable knob.
+ * @csspart value - The current value display (used twice in the layout).
+ * @csspart knob-correct - Ghost knob shown at the correct response position.
+ */
 export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
   #value = 0;
-  #correctResponseNumber: number | null = null;
 
   @query('#rail') private _rail!: HTMLElement;
 
@@ -24,40 +36,30 @@ export class QtiSliderInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.#updateValue(this.min); // Set initial value
+    // Only seed with `min` if no explicit response was set via attribute/property.
+    if (!this.hasAttribute('response')) {
+      this.#updateValue(this.min);
+    }
     this.setAttribute('tabindex', '0');
     this.setAttribute('role', 'slider');
   }
 
+  @property({ attribute: 'response', reflect: false, noAccessor: true })
   get response(): string {
     return this.#value.toString();
   }
 
-  set response(val: string) {
-    const newValue = parseInt(val, 10);
+  set response(val: string | null) {
+    if (val === null || val === '') return;
+    const newValue = parseFloat(val);
     if (!isNaN(newValue)) {
       this.#updateValue(newValue);
     }
   }
 
-  public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!responseVariable?.correctResponse) return;
-
-    if (show) {
-      this._correctResponse = responseVariable.correctResponse.toString();
-      const nr = parseFloat(responseVariable.correctResponse.toString());
-      if (!isNaN(nr)) {
-        this.#correctResponseNumber = nr;
-        const valuePercentage = ((this.#correctResponseNumber - this.min) / (this.max - this.min)) * 100;
-        this.style.setProperty('--value-percentage-correct', `${valuePercentage}%`);
-      } else {
-        this.#correctResponseNumber = null;
-      }
-    } else {
-      this.#correctResponseNumber = null;
-    }
-    this.requestUpdate();
+  /** Extension hook for optional content rendered on the slider rail. */
+  protected renderRailSupplement(): unknown {
+    return nothing;
   }
 
   #updateValue(newValue: number) {
@@ -89,13 +91,7 @@ export class QtiSliderInteraction extends Interaction {
             <div id="value" part="value">${this.response}</div>
           </div>
 
-          ${this.#correctResponseNumber !== null
-            ? html`
-                <div id="knob-correct" part="knob-correct">
-                  <div id="value" part="value">${this.#correctResponseNumber}</div>
-                </div>
-              `
-            : null}
+          ${this.renderRailSupplement()}
         </div>
       </div>
     `;

@@ -1,9 +1,7 @@
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { QtiFeedback } from '@qti-components/base';
 
-@customElement('qti-feedback-block')
 export class QtiFeedbackBlock extends QtiFeedback {
   static override styles = css`
     :host {

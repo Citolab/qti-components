@@ -8,6 +8,12 @@ import styles from './qti-hotspot-interaction.styles';
 
 import type { QtiHotspotChoice } from '@qti-components/interactions-core/elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
+/**
+ * Hotspot interaction: candidates select one or more hotspots on an image.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot - Default slot for the image and hotspot choices.
+ */
 export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
 
@@ -15,6 +21,7 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
     return html`
       <slot name="prompt"></slot>
       <slot></slot>
+      <div part="message" role="alert" id="validation-message"></div>
     `;
   }
 

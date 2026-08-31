@@ -41,5 +41,3 @@ export class QtiContains extends QtiConditionExpression {
     return false;
   }
 }
-
-customElements.define('qti-contains', QtiContains);

@@ -1,71 +1,43 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-graphic-associate-interaction {
-    &::part(message) {
-      @apply validation-message;
-    }
-    position: relative;
-    display: block;
+    /*
+     * qti-associable-hotspot does not use ActiveElementMixin, so it carries no
+     * checked/disabled/readonly custom states. Selection and correction are drawn as
+     * ::part(line) / ::part(point) instead. Give it a `part="drag"` and the
+     * ActiveElementMixin states before adding state-dependent rules here.
+     */
     & qti-associable-hotspot {
+      /* `[shape='square']` used to be in this selector. It is not a QTI shape — the spec has
+         circle, default, ellipse, poly and rect — positionShapes has no branch for it, and no item
+         in the repo sets it. */
       &[shape='circle'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
+        background-color: transparent;
         &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-      &[shape='square'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
+          @mixin foc;
         }
       }
     }
-    &.qti-selections-light {
-      &:state(--dragzone-active)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-        border-color: var(--qti-light-border-active);
-      }
-      &:state(--dragzone-enabled)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-      }
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-graphic-associate-interaction {
+
+
+    /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
+       that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
+       item in this repo ever set it on a graphic-associate interaction. What was here overrode the neutral
+       drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
+    &:state(dragzone-active)::part(drags) {
+      /* Direct properties, not slots: ::part(drags) is a bare slot container with no paint role of
+         its own (the other interactions paint it with `@mixin dropping`, also direct), so there is
+         no --<role>-* to switch. Inlined from `@mixin act`. */
+      border-color: var(--qti-border-active);
+      background-color: var(--qti-bg-active);
     }
-    &.qti-selections-dark {
-      &:state(--dragzone-active)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-        border-color: var(--qti-dark-border-active);
-      }
-      &:state(--dragzone-enabled)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-      }
-    }
-    &:state(--dragzone-active)::part(drags) {
-      @apply act;
-    }
-    &:state(--dragzone-enabled)::part(drags) {
-      @apply dropping;
+
+    &:state(dragzone-enabled)::part(drags) {
+      @mixin dropping;
     }
   }
 }

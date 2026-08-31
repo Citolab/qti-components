@@ -7,6 +7,7 @@ import { Test } from '../qti-choice-interaction.stories';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
 import type { QtiChoiceInteraction } from '../qti-choice-interaction';
+import type { ConfigContext } from '@qti-components/base';
 
 type Story = StoryObj<QtiChoiceInteraction>;
 
@@ -22,7 +23,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
   title: '02 Choice Interaction/Validation',
-  tags: ['validation', 'specific']
+  tags: ['validation', 'specific', 'iol']
 };
 export default meta;
 
@@ -346,5 +347,97 @@ export const ValidationStateTransition: Story = {
       await fireEvent.click(choices.C); // Deselect
       expect(interaction.validate()).toBe(true);
     });
+  }
+};
+
+export const ValidationDisplayModeNative: Story = {
+  name: 'Validation Display Mode - Native',
+  render: () => html`
+    <qti-item data-testid="item">
+      <qti-choice-interaction
+        name="RESPONSE"
+        response-identifier="RESPONSE"
+        min-choices="2"
+        max-choices="4"
+        data-testid="interaction"
+      >
+        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item>
+  `,
+  play: async ({ canvasElement }) => {
+    const item = canvasElement.querySelector('qti-item') as (HTMLElement & { configContext?: ConfigContext }) | null;
+    const interaction = canvasElement.querySelector('qti-choice-interaction') as QtiChoiceInteraction;
+
+    expect(item).toBeTruthy();
+    expect(interaction).toBeTruthy();
+
+    if (item) {
+      item.configContext = {
+        ...(item.configContext || {}),
+        validationDisplayMode: 'native'
+      };
+    }
+
+    const nativeSpy = globalThis.vi.spyOn(interaction.internals, 'reportValidity');
+
+    interaction.validate();
+    interaction.reportValidity();
+
+    const messageEl = interaction.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
+    expect(nativeSpy).toHaveBeenCalledTimes(1);
+    expect(messageEl?.textContent || '').toBe('');
+    expect(messageEl?.style.display || '').toBe('none');
+
+    nativeSpy.mockRestore();
+  }
+};
+
+export const ValidationDisplayModeBoth: Story = {
+  name: 'Validation Display Mode - Both',
+  render: () => html`
+    <qti-item data-testid="item">
+      <qti-choice-interaction
+        name="RESPONSE"
+        response-identifier="RESPONSE"
+        min-choices="2"
+        max-choices="4"
+        data-testid="interaction"
+      >
+        <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+        <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+        <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+        <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item>
+  `,
+  play: async ({ canvasElement }) => {
+    const item = canvasElement.querySelector('qti-item') as (HTMLElement & { configContext?: ConfigContext }) | null;
+    const interaction = canvasElement.querySelector('qti-choice-interaction') as QtiChoiceInteraction;
+
+    expect(item).toBeTruthy();
+    expect(interaction).toBeTruthy();
+
+    if (item) {
+      item.configContext = {
+        ...(item.configContext || {}),
+        validationDisplayMode: 'both'
+      };
+    }
+
+    const nativeSpy = globalThis.vi.spyOn(interaction.internals, 'reportValidity');
+
+    interaction.validate();
+    interaction.reportValidity();
+
+    const messageEl = interaction.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
+    expect(nativeSpy).toHaveBeenCalledTimes(1);
+    expect(messageEl?.textContent || '').toContain('at least 2');
+    expect(messageEl?.style.display || '').toBe('block');
+
+    nativeSpy.mockRestore();
   }
 };

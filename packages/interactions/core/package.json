@@ -30,7 +30,9 @@
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "publish": "node ../../../tools/publish-if-needed.mjs"
+    "publish": "node ../../../tools/publish-if-needed.mjs",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",
@@ -51,6 +53,14 @@
       "types": "./dist/mixins/drag-drop-observables/index.d.ts",
       "import": "./dist/mixins/drag-drop-observables/index.js"
     },
+    "./mixins/dropzone-auto-size": {
+      "types": "./dist/mixins/dropzone-auto-size/index.d.ts",
+      "import": "./dist/mixins/dropzone-auto-size/index.js"
+    },
+    "./mixins/menu-auto-size": {
+      "types": "./dist/mixins/menu-auto-size/index.d.ts",
+      "import": "./dist/mixins/menu-auto-size/index.js"
+    },
     "./elements/*": {
       "types": "./dist/elements/*/index.d.ts",
       "import": "./dist/elements/*/index.js"
@@ -67,7 +77,11 @@
       "types": "./dist/internal/*.d.ts",
       "import": "./dist/internal/*.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    }
   },
   "repository": {
     "type": "git",

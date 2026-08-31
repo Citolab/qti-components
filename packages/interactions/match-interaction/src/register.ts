@@ -1,2 +1,7 @@
-import { QtiMatchInteraction } from './qti-match-interaction';
-customElements.define('qti-match-interaction', QtiMatchInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

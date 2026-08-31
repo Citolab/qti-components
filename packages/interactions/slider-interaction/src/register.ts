@@ -1,2 +1,7 @@
-import { QtiSliderInteraction } from './qti-slider-interaction';
-customElements.define('qti-slider-interaction', QtiSliderInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

@@ -73,10 +73,6 @@ export class QtiAssessmentItemRef extends LitElement {
   }
 }
 
-if (!customElements.get('qti-assessment-item-ref')) {
-  customElements.define('qti-assessment-item-ref', QtiAssessmentItemRef);
-}
-
 declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-item-ref': QtiAssessmentItemRef;

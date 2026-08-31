@@ -8,7 +8,9 @@ import { spreadArgs } from '@qti-components/utilities';
 
 import type { QtiChoiceInteraction, QtiSimpleChoice } from '@qti-components/interactions';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
 
@@ -26,7 +28,7 @@ const meta: Meta<QtiChoiceInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 

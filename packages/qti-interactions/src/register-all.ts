@@ -1,22 +1,7 @@
-import '@qti-components/interactions-core/register';
-import '@qti-components/associate-interaction/register';
-import '@qti-components/choice-interaction/register';
-import '@qti-components/custom-interaction/register';
-import '@qti-components/end-attempt-interaction/register';
-import '@qti-components/extended-text-interaction/register';
-import '@qti-components/gap-match-interaction/register';
-import '@qti-components/graphic-associate-interaction/register';
-import '@qti-components/graphic-gap-match-interaction/register';
-import '@qti-components/graphic-order-interaction/register';
-import '@qti-components/hotspot-interaction/register';
-import '@qti-components/hottext-interaction/register';
-import '@qti-components/inline-choice-interaction/register';
-import '@qti-components/match-interaction/register';
-import '@qti-components/media-interaction/register';
-import '@qti-components/order-interaction/register';
-import '@qti-components/portable-custom-interaction/register';
-import '@qti-components/position-object-interaction/register';
-import '@qti-components/select-point-interaction/register';
-import '@qti-components/slider-interaction/register';
-import '@qti-components/text-entry-interaction/register';
-import '@qti-components/upload-interaction/register';
+import { qtiInteractionElements } from './elements';
+
+for (const { tag, ctor } of qtiInteractionElements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

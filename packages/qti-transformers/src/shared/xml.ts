@@ -25,7 +25,7 @@ export function parseXML(xmlDocument: string) {
 }
 
 // Function to strip unsupported namespaces (qti) from the nodes sent to the browser
-function stripNamespaces(node: Node, doc: Document): Node {
+function stripNamespaces(node: Node, doc: Document, registry?: CustomElementRegistry): Node {
   if (node.nodeType === Node.ELEMENT_NODE) {
     const el = node as Element;
     let newEl: Element;
@@ -35,7 +35,9 @@ function stripNamespaces(node: Node, doc: Document): Node {
       el.namespaceURI.startsWith('http://www.imsglobal.org/xsd/qti/') ||
       el.namespaceURI.startsWith('http://www.imsglobal.org/xsd/imsqti')
     ) {
-      newEl = doc.createElement(el.localName);
+      newEl = registry
+        ? doc.createElement(el.localName, { customElementRegistry: registry })
+        : doc.createElement(el.localName);
     } else {
       newEl = doc.createElementNS(el.namespaceURI, el.tagName);
     }
@@ -45,17 +47,17 @@ function stripNamespaces(node: Node, doc: Document): Node {
       newEl.setAttribute(attr.localName, attr.value);
     }
     for (let i = 0; i < el.childNodes.length; i++) {
-      newEl.appendChild(stripNamespaces(el.childNodes[i], doc));
+      newEl.appendChild(stripNamespaces(el.childNodes[i], doc, registry));
     }
     return newEl;
   }
   return node.cloneNode(false);
 }
 
-export function toHTML(xmlFragment: Document): DocumentFragment {
+export function toHTML(xmlFragment: Document, registry?: CustomElementRegistry): DocumentFragment {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < xmlFragment.childNodes.length; i++) {
-    fragment.appendChild(stripNamespaces(xmlFragment.childNodes[i], document));
+    fragment.appendChild(stripNamespaces(xmlFragment.childNodes[i], document, registry));
   }
   return fragment;
 }

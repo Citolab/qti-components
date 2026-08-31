@@ -45,5 +45,3 @@ export class QtiPatternMatch extends QtiExpression<boolean | null> {
     }
   }
 }
-
-customElements.define('qti-pattern-match', QtiPatternMatch);

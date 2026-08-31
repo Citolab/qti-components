@@ -1,72 +1,185 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-graphic-order-interaction {
-    &::part(message) {
-      @apply validation-message;
-    }
+    --qti-graphic-order-pin-size: calc(var(--qti-select-point-marker-size, 1.5rem) * 1.2);
+    --qti-graphic-order-pin-anchor: -100%;
+    --qti-graphic-order-pin-fill: var(--qti-background, #fff);
+    --qti-graphic-order-pin-number-size: calc(var(--qti-graphic-order-pin-size) * 0.5);
+    --qti-graphic-order-pin-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M192 500C145 434 106 386 77 344C49 305 32 272 32 224C32 135.6 103.6 64 192 64s160 71.6 160 160c0 48-17 81-45 120c-29 42-68 90-115 156z' fill='white' stroke='currentColor' stroke-width='28' stroke-linejoin='round'/%3E%3C/svg%3E");
+
     & qti-hotspot-choice {
       width: 100%;
       height: 100%;
-      background-color: rgb(128 128 128 / 30%);
+      background-color: color-mix(in srgb, var(--qti-border-color) 18%, transparent);
       padding: 0;
-      &:hover {
-        background-color: rgb(128 128 128 / 70%);
+      cursor: pointer;
+      transition:
+        background-color var(--qti-motion-duration-fast, 0.15s) ease,
+        border-color var(--qti-motion-duration-fast, 0.15s) ease;
+
+      &[shape='circle'] {
+        min-width: calc(var(--qti-graphic-order-pin-size) * 0.6);
+        min-height: calc(var(--qti-graphic-order-pin-size) * 0.6);
       }
-      &:focus {
-        background-color: rgb(128 128 128 / 70%);
+
+      &[shape='poly'] {
+        background-color: color-mix(in srgb, var(--qti-border-color) 18%, transparent);
+        box-shadow: none;
       }
-      &:state(--checked),
-      &[aria-checked='true'] {
-        background-color: rgb(128 128 128 / 70%);
+
+      &[shape='circle']:hover,
+      &[shape='rect']:hover,
+      &[shape='ellipse']:hover {
+        background-color: color-mix(in srgb, var(--qti-border-active) 12%, transparent);
       }
-      &[aria-readonly='true'] {
-        @apply rdo;
+
+      &[shape='poly']:hover {
+        background-color: color-mix(in srgb, var(--qti-border-active) 20%, transparent);
+        box-shadow: none;
       }
-      &[aria-disabled='true'] {
-        @apply dis;
+
+      &[shape='circle']:focus-visible,
+      &[shape='rect']:focus-visible,
+      &[shape='ellipse']:focus-visible {
+        outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+        outline-offset: 2px;
       }
+
+      &[shape='poly']:focus-visible {
+        outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+        outline-offset: 2px;
+      }
+
       &[aria-ordervalue] {
-        display: grid;
-        place-content: center;
+        border: 0 !important;
+        box-shadow: none;
+        background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
       }
-      &[aria-ordervalue]::after {
-        content: attr(aria-ordervalue) !important;
+
+      &[aria-ordervalue]:hover,
+      &[aria-ordervalue]:focus-visible {
+        border-color: transparent !important;
       }
-      &[aria-ordercorrectvalue] {
-        display: grid;
-        place-content: center;
-      }
-      &[aria-ordercorrectvalue][aria-ordervalue]::after {
+      &[aria-ordercorrectvalue][aria-ordervalue]:not([shape='circle'])::after {
         content: 'C=' attr(aria-ordercorrectvalue) '  R=' attr(aria-ordervalue) !important;
         color: var(--qti-correct);
       }
-      &[aria-ordercorrectvalue]:not([aria-ordervalue])::after {
+      &[aria-ordercorrectvalue]:not([aria-ordervalue]):not([shape='circle'])::after {
         content: 'C=' attr(aria-ordercorrectvalue) !important;
         color: var(--qti-correct);
       }
     }
-    &.qti-selections-light {
-      &:state(--dragzone-active)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-        border-color: var(--qti-light-border-active);
+
+    /* The pin's face. Where it sits — absolute, anchored to its hotspot, above the image — is
+       placement, and lives in qti-graphic-order-interaction.styles.ts as ::slotted(). */
+    & .cito-graphic-order-marker {
+      width: var(--qti-graphic-order-pin-size);
+      height: var(--qti-graphic-order-pin-size);
+      padding-top: calc(var(--qti-graphic-order-pin-size) * 0.2);
+      font-weight: 700;
+      font-size: var(--qti-graphic-order-pin-number-size);
+      line-height: 1;
+      color: var(--qti-graphic-order-pin-color, var(--qti-selected-bg));
+      text-shadow: 0 0 1px var(--qti-graphic-order-pin-fill);
+      background: var(--qti-graphic-order-pin-svg) no-repeat center / contain;
+      pointer-events: none;
+    }
+
+    & .cito-graphic-order-marker--poly {
+      width: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.72);
+      height: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.72);
+      font-size: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.45);
+      padding-top: calc(var(--qti-select-point-marker-size, 1.5rem) * 0.14);
+    }
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-graphic-order-interaction {
+    & qti-hotspot-choice {
+      &:state(readonly) {
+        cursor: pointer;
       }
-      &:state(--dragzone-enabled)::part(drags) {
-        background-color: var(--qti-light-bg-active);
+
+      &:state(disabled) {
+        cursor: not-allowed;
+      }
+
+      &[shape='circle']:state(checked),
+      &[shape='rect']:state(checked),
+      &[shape='ellipse']:state(checked) {
+        background-color: color-mix(in srgb, var(--qti-selected-bg) 35%, transparent);
+      }
+
+      &[shape='poly']:state(checked) {
+        background-color: color-mix(in srgb, var(--qti-selected-bg) 40%, transparent);
+        box-shadow: none;
+      }
+
+      &[aria-ordervalue]:state(checked),
+      &[aria-ordervalue] {
+        border-color: transparent !important;
       }
     }
-    &.qti-selections-dark {
-      &:state(--dragzone-active)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-        border-color: var(--qti-dark-border-active);
-      }
-      &:state(--dragzone-enabled)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-      }
+
+    /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
+       that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
+       item in this repo ever set it on a graphic-order interaction. What was here overrode the neutral
+       drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
+    &:state(dragzone-active)::part(drags) {
+      /* Direct properties, not slots: ::part(drags) is a bare slot container with no paint role of
+         its own (the other interactions paint it with `@mixin dropping`, also direct), so there is
+         no --<role>-* to switch. Inlined from `@mixin act`. */
+      border-color: var(--qti-border-active);
+      background-color: var(--qti-bg-active);
     }
-    &:state(--dragzone-active)::part(drags) {
-      @apply act;
+
+    &:state(dragzone-enabled)::part(drags) {
+      @mixin dropping;
     }
-    &:state(--dragzone-enabled)::part(drags) {
-      @apply dropping;
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-graphic-order-interaction {
+    & qti-hotspot-choice {
+      &[shape='circle']:state(correct-response),
+      &[shape='rect']:state(correct-response),
+      &[shape='ellipse']:state(correct-response) {
+        background-color: color-mix(in srgb, var(--qti-answer-bg) 75%, transparent);
+      }
+
+      &[shape='poly']:state(correct-response) {
+        background-color: color-mix(in srgb, var(--qti-answer-bg) 80%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:state(candidate-correct),
+      &[shape='rect']:state(candidate-correct),
+      &[shape='ellipse']:state(candidate-correct) {
+        background-color: color-mix(in srgb, var(--qti-correct) 35%, transparent);
+      }
+
+      &[shape='poly']:state(candidate-correct) {
+        background-color: color-mix(in srgb, var(--qti-correct) 40%, transparent);
+        box-shadow: none;
+      }
+
+      &[shape='circle']:state(candidate-incorrect),
+      &[shape='rect']:state(candidate-incorrect),
+      &[shape='ellipse']:state(candidate-incorrect) {
+        background-color: color-mix(in srgb, var(--qti-incorrect) 35%, transparent);
+      }
+
+      &[shape='poly']:state(candidate-incorrect) {
+        background-color: color-mix(in srgb, var(--qti-incorrect) 40%, transparent);
+        box-shadow: none;
+      }
+
+      &[aria-ordervalue]:state(correct-response),
+      &[aria-ordervalue]:state(candidate-correct),
+      &[aria-ordervalue]:state(candidate-incorrect) {
+        border-color: transparent !important;
+      }
     }
   }
 }

@@ -1,10 +1,8 @@
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { QtiFeedback } from '@qti-components/base';
 
-@customElement('qti-feedback-inline')
 export class QtiFeedbackInline extends QtiFeedback {
   static override styles = css`
     .on {

@@ -1,5 +1,5 @@
 import { html, LitElement, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 import { consume } from '@lit/context';
 
@@ -16,7 +16,7 @@ import type { TemplateFunction } from '@heximal/templates';
  * @customElement
  * @extends {LitElement}
  */
-@customElement('test-stamp')
+
 export class TestStamp extends LitElement {
   /**
    * Indicates whether the component is in debug mode.

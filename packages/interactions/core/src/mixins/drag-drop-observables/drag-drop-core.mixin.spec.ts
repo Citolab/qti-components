@@ -8,6 +8,11 @@ class TestBase {
   updateComplete = Promise.resolve();
   ownerDocument: Document = document;
   shadowRoot: ShadowRoot | null = null;
+  tagName = 'QTI-TEST-INTERACTION';
+  /** Stands in for the interaction's tree; tests that care about clone hosting override it. */
+  getRootNode(): Node {
+    return document;
+  }
   _internals = {
     states: {
       add: vi.fn(),
@@ -19,7 +24,7 @@ class TestBase {
   disconnectedCallback(): void {}
 }
 
-const Core = DragDropCoreMixin(TestBase as any, '[qti-draggable="true"]', '[qti-droppable="true"]');
+const Core = DragDropCoreMixin(TestBase as any, '[qti-draggable="true"]', `[part~='drop']`);
 
 class TestCoreElement extends Core {
   dropCalls: Array<{ draggable: HTMLElement; droppable: HTMLElement }> = [];
@@ -105,7 +110,7 @@ describe('DragDropCoreMixin - drag clone hosting', () => {
     });
   };
 
-  const dragSourceIn = (parent: HTMLElement): HTMLElement => {
+  const dragSourceIn = (parent: HTMLElement | ShadowRoot): HTMLElement => {
     const source = parent.appendChild(document.createElement('div'));
     source.style.cssText = 'position:absolute;left:0;top:0;width:60px;height:20px;margin:0;';
     return source;
@@ -125,7 +130,33 @@ describe('DragDropCoreMixin - drag clone hosting', () => {
     expect(clone.parentNode).toBe(document.body);
   });
 
-  it('appends the clone to the fullscreen element, which is the only subtree the browser paints', () => {
+  it("appends the clone to the interaction's root, the only tree the theme's rules can reach", () => {
+    const element = new TestCoreElement() as any;
+    const shadowHost = mount(document.createElement('div'));
+    const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+    element.getRootNode = () => shadowRoot;
+    const source = dragSourceIn(shadowRoot);
+
+    const clone = element.createDragClone(source, source.getBoundingClientRect());
+
+    expect(clone.parentNode).toBe(shadowRoot);
+  });
+
+  it("keeps the interaction's root as host while the fullscreen element still paints it", () => {
+    const element = new TestCoreElement() as any;
+    const fullscreenRoot = mount(document.createElement('div'));
+    const shadowHost = fullscreenRoot.appendChild(document.createElement('div'));
+    const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+    element.getRootNode = () => shadowRoot;
+    const source = dragSourceIn(shadowRoot);
+    fakeFullscreen(fullscreenRoot);
+
+    const clone = element.createDragClone(source, source.getBoundingClientRect());
+
+    expect(clone.parentNode).toBe(shadowRoot);
+  });
+
+  it('appends the clone to the fullscreen element when that is the only subtree the browser paints', () => {
     const element = new TestCoreElement() as any;
     const fullscreenRoot = mount(document.createElement('div'));
     const source = dragSourceIn(fullscreenRoot);

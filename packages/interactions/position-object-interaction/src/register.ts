@@ -1,5 +1,7 @@
-import { QtiPositionObjectInteraction } from './qti-position-object-interaction';
-import { QtiPositionObjectStage } from './qti-position-object-stage';
+import { elements } from './elements';
 
-customElements.define('qti-position-object-interaction', QtiPositionObjectInteraction);
-customElements.define('qti-position-object-stage', QtiPositionObjectStage);
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

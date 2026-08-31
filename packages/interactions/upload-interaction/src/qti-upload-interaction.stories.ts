@@ -4,7 +4,9 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiUploadInteraction } from './qti-upload-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-upload-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-upload-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiUploadInteraction & typeof args>;
 

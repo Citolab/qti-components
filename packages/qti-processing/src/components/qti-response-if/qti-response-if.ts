@@ -18,5 +18,3 @@ export class QtiResponseIf extends QtiResponseElse {
     return result;
   }
 }
-
-customElements.define('qti-response-if', QtiResponseIf);

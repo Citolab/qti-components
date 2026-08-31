@@ -1,6 +1,6 @@
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { until } from 'lit/directives/until.js';
 
 import { qtiContext } from '@qti-components/base';
@@ -25,8 +25,12 @@ import type { QtiContext } from '@qti-components/base';
  * </qti-test>
  * ```
  */
-@customElement('test-container')
+
 export class TestContainer extends LitElement {
+  /** Scoped registry used by the test shadow root. Must be set before connection. */
+  @property({ attribute: false })
+  customElementRegistry: CustomElementRegistry | null = null;
+
   /** URL of the item to load */
   @property({ type: String, attribute: 'test-url' })
   testURL: string = null;
@@ -47,6 +51,21 @@ export class TestContainer extends LitElement {
 
   /** Template content if provided */
   #templateContent: unknown = null;
+  #resolvedCustomElementRegistry: CustomElementRegistry | null = null;
+
+  protected override createRenderRoot(): HTMLElement | DocumentFragment {
+    const registry = this.customElementRegistry;
+
+    this.#resolvedCustomElementRegistry = registry;
+
+    return (
+      this.shadowRoot ??
+      this.attachShadow({
+        ...(this.constructor as typeof TestContainer).shadowRootOptions,
+        ...(registry ? { customElementRegistry: registry } : {})
+      })
+    );
+  }
 
   /** Callback function to transform the test after loading */
   // @property({ type: Function }) postLoadTestTransformCallback: PostLoadTestTransformCallback | null = null;
@@ -61,7 +80,7 @@ export class TestContainer extends LitElement {
       const qtiTest = this.closest('qti-test') as any; // Type assertion to access mixin properties
       if (qtiTest?.postLoadTestTransformCallback) {
         // Create a temporary document to get the test element reference
-        const tempDoc = api.htmlDoc();
+        const tempDoc = api.htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
         const testElement = tempDoc.querySelector('qti-assessment-test') as any;
 
         if (testElement) {
@@ -70,7 +89,7 @@ export class TestContainer extends LitElement {
         }
       }
 
-      this.testDoc = api.htmlDoc();
+      this.testDoc = api.htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
     } catch (error) {
       console.error('Error loading or parsing XML:', error);
     }
@@ -81,7 +100,10 @@ export class TestContainer extends LitElement {
     if (!this.testXML) return;
     try {
       const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
-      this.testDoc = qtiTransformTest().parse(this.testXML).shuffleOrdering(explicitSeed).htmlDoc();
+      this.testDoc = qtiTransformTest()
+        .parse(this.testXML)
+        .shuffleOrdering(explicitSeed)
+        .htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
     } catch (error) {
       console.error('Error parsing XML:', error);
     }

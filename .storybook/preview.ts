@@ -1,29 +1,44 @@
 import { setCustomElementsManifest } from '@storybook/web-components-vite';
-import { setStorybookHelpersConfig, type Options } from '@wc-toolkit/storybook-helpers';
+import { setStorybookHelpersConfig, type StorybookHelpersOptions } from '@wc-toolkit/storybook-helpers';
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import { expect } from 'storybook/test';
 import { withThemeByClassName } from '@storybook/addon-themes';
-import { initialize, mswLoader } from 'msw-storybook-addon';
+import { mswLoader } from 'msw-storybook-addon/csf3';
 
 /*
- * Initializes MSW
- * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
- * to learn how to customize it
+ * Initializes MSW. Since msw-storybook-addon v3 there is no `initialize()`; the worker is created
+ * lazily by a setup function handed to `mswLoader`.
+ * See https://github.com/mswjs/msw-storybook-addon/blob/main/MIGRATION.md#from-2xx-to-3xx
  */
-initialize({
-  onUnhandledRequest: 'bypass'
-});
+const mswSetup = async () => {
+  const { setupWorker } = await import('msw/browser');
+  const worker = setupWorker();
+  await worker.start({ quiet: true, onUnhandledRequest: 'bypass' });
+  return worker;
+};
+/*
+ * Shared CSS reset for every style substrate. modern-normalize = normalize + the universal
+ * `box-sizing: border-box` rule that Bootstrap Reboot, Tailwind Preflight and every modern reset
+ * agree on. Imported from the local dependency, not a CDN.
+ *
+ * It resets browser inconsistencies only. The *opinions* — paragraph/heading/list margins, body
+ * typography — belong to whichever theme wants them (see kennisnet/_reboot.scss).
+ */
+import 'modern-normalize/modern-normalize.css';
+import '../packages/qti-theme/src/item.css';
+// The single QTI theme, inlined into the preview document so every story is themed. This replaces
+// the old multi-substrate switcher (one theme now — see the theme-architecture pivot); a story that
+// scopes its own brand adopts its stylesheets into its own shadow instead (see kennisnet.stories.ts).
 import customElements from '../custom-elements.json';
 import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedRelativeTo';
+import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
+import { webComponentInspectDecorator, webComponentInspectGlobalTypes } from './extensions/webcomponent-inspect';
+import '../packages/qti-components/src';
 
 import type { Preview } from '@storybook/web-components-vite';
 
-import '../packages/qti-theme/src/item.css';
-
-import '../packages/qti-components/src';
-
-export const loaders = [mswLoader];
+export const loaders = [mswLoader(mswSetup)];
 
 export const customViewports = {
   default: {
@@ -46,10 +61,17 @@ export const customViewports = {
       width: '1257px',
       height: '598px'
     }
+  },
+  vrtBaseline: {
+    name: 'VRT baseline',
+    styles: {
+      width: '960px',
+      height: '900px'
+    }
   }
 };
 
-const options: Options = {
+const options: StorybookHelpersOptions = {
   /** hides the `arg ref` label on each control */
   hideArgRef: true,
   /** sets the custom type reference in the Custom Elements Manifest */
@@ -57,7 +79,8 @@ const options: Options = {
   /** Adds a <script> tag where a `component` variable will reference the story's component */
   setComponentVariable: false,
   /** renders default values for attributes and CSS properties */
-  renderDefaultValues: false
+  renderDefaultValues: false,
+  categoryOrder: ['attributes', 'properties', 'slots', 'cssParts', 'cssStates', 'cssProps', 'events', 'methods']
 };
 
 setStorybookHelpersConfig(options);
@@ -68,13 +91,21 @@ setCustomElementsManifest(customElements);
 
 const preview: Preview = {
   decorators: [
+    /*
+     * One class-based theme axis. `withThemeByClassName` applies the theme class to <html>. `light`
+     * is the neutral default (a chip is a bordered box); `dark` is its dark counterpart. The
+     * Kennisnet brand is NOT a global theme here — it is a brand overlay adopted straight into the
+     * item shadow by its own story (apps/e2e/src/stories/kennisnet/kennisnet.stories.ts).
+     */
     withThemeByClassName({
       themes: {
         light: 'light-theme',
         dark: 'dark-theme'
       },
       defaultTheme: 'light'
-    })
+    }),
+    baselineOverlayDecorator,
+    webComponentInspectDecorator
   ],
 
   parameters: {
@@ -111,6 +142,11 @@ const preview: Preview = {
       // 'off' - skip a11y checks entirely
       test: 'todo'
     }
+  },
+
+  globalTypes: {
+    ...baselineOverlayGlobalTypes,
+    ...webComponentInspectGlobalTypes
   },
 
   tags: ['!autodocs']

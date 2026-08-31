@@ -1,0 +1,89 @@
+@layer qti-components.global {
+  :root,
+  :host {
+    --qti-primary: #581d70;
+    --qti-success: #2b830e;
+    --qti-warning: #ffa700;
+    --qti-error: #df0000;
+    --qti-info: #007ac3;
+
+    --qti-spacing: 0.5rem;
+    --qti-border-thickness: 1px;
+    --qti-border-radius: 0.3rem;
+    --qti-fg: #3e144e;
+  }
+}
+
+@layer qti-components.interactions.brand {
+  :state(drag),
+  [data-drag-clone],
+  qti-gap::part(drag),
+  qti-associate-interaction::part(drag),
+  qti-simple-associable-choice::part(drag) {
+    --drag-background-color: var(--qti-primary);
+    --drag-color: var(--qti-primary-fg);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --drag-border-color: transparent;
+  }
+
+  qti-order-interaction::part(drag) {
+    --drag-background-color: white;
+    --drag-color: var(--qti-fg);
+    --drag-border-color: var(--qti-border-color);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  }
+}
+
+@layer qti-components.interactions.states {
+  :state(placeholder) {
+    --drag-background-color: var(--qti-placeholder-bg);
+    --drag-border-color: transparent;
+    --drag-box-shadow: inset var(--qti-placeholder-shadow);
+  }
+}
+
+/*
+ * Regression story scaffolding.
+ *
+ * Deliberately unlayered: this is story chrome, not part of the item paint contract, and it must
+ * win over item.css without having to pick a layer position.
+ *
+ * `--regression-item-width` is the shared measure. The item renders at exactly this width in BOTH
+ * repos so a qti-components story and a qti-editor story can be compared side by side. This file is
+ * kept byte-identical in qti-components/apps/e2e/stories/kennisnet.css and
+ * qti-editor/apps/e2e/stories/kennisnet.css — change the value in both or the comparison is void.
+ *
+ * `.regression-layout` is only used by qti-editor (qti-components has no attributes panel); it is
+ * defined here anyway so the two files stay identical.
+ */
+:root {
+  --regression-item-width: 800px;
+  --regression-panel-width: 320px;
+}
+
+.regression-item {
+  max-width: var(--regression-item-width);
+}
+
+.regression-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+/*
+ * The panel <aside> is FIRST in the DOM on purpose: its `ref` callback has to capture the element
+ * before the editor's `ref` runs and mounts against it. `order` puts it back on the right visually,
+ * so DOM order stays load-bearing and paint order stays what was asked for.
+ */
+.regression-layout > .regression-item {
+  order: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.regression-layout > .regression-panel {
+  order: 1;
+  flex: 0 0 auto;
+  width: var(--regression-panel-width);
+}

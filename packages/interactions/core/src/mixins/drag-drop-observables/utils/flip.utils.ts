@@ -44,6 +44,17 @@ export function captureFlipState(element: Element): FlipState {
 }
 
 /**
+ * A chip's last on-screen position, as a FLIP "first" state.
+ *
+ * The drag clone is `position: fixed` and is destroyed the moment the pointer is released, so the
+ * only record of where the chip was is the rect taken just before it goes. Handing that rect to
+ * `animateFlip` as the "first" state is what lets a chip fly home rather than blink home.
+ */
+export function flipStateFromRect(rect: DOMRect): FlipState {
+  return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+}
+
+/**
  * Capture FLIP states for multiple elements
  */
 export function captureMultipleFlipStates(elements: Element[]): Map<Element, FlipState> {
@@ -75,6 +86,37 @@ export function calculateInversion(
 }
 
 /**
+ * The interaction's motion budget: the computed `--qti-motion` custom property — a unitless
+ * multiplier, default 1 — forced to 0 when the OS requests reduced motion. `0` means "no motion":
+ * FLIP is skipped entirely. A positive value scales the configured FLIP duration, so a theme (or a
+ * PNP profile) can slow motion down (`0.5`) or switch it off (`0`) from CSS, the single source of
+ * truth the drag-drop engine reads. `--qti-motion` inherits from the interaction down to the items
+ * it animates, so reading it off any animated element is representative.
+ *
+ * Every FLIP path funnels through `animateFlip`, so gating here covers slotted, slotted-sortable,
+ * sortable reorder and return animations in one place.
+ */
+export function resolveMotionScale(element: Element | null | undefined): number {
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    return 0;
+  }
+  if (!element) return 1;
+  const raw = getComputedStyle(element).getPropertyValue('--qti-motion').trim();
+  if (raw === '') return 1; // token absent (e.g. theme CSS not loaded) → motion on
+  const n = Number.parseFloat(raw);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+/** Whether FLIP should run for this element, honouring `--qti-motion` and `prefers-reduced-motion`. */
+export function motionEnabled(element: Element | null | undefined): boolean {
+  return resolveMotionScale(element) > 0;
+}
+
+/**
  * Animate a single element using FLIP technique
  */
 export function animateFlip(
@@ -82,6 +124,9 @@ export function animateFlip(
   first: FlipState,
   options: FlipAnimationOptions = {}
 ): Animation | null {
+  const motionScale = resolveMotionScale(element);
+  if (motionScale <= 0) return null; // --qti-motion: 0 or reduced-motion → snap, no animation
+
   const last = captureFlipState(element);
   const { deltaX, deltaY, deltaW, deltaH } = calculateInversion(first, last);
 
@@ -103,7 +148,7 @@ export function animateFlip(
       }
     ],
     {
-      duration,
+      duration: duration * motionScale, // scaled by --qti-motion (1 = configured speed)
       easing,
       fill
     }

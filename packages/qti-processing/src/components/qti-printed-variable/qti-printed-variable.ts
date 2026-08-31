@@ -25,5 +25,3 @@ export class QtiPrintedVariable extends LitElement {
     return result;
   }
 }
-
-customElements.define('qti-printed-variable', QtiPrintedVariable);

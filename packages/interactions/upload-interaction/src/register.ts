@@ -1,2 +1,7 @@
-import { QtiUploadInteraction } from './qti-upload-interaction';
-customElements.define('qti-upload-interaction', QtiUploadInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

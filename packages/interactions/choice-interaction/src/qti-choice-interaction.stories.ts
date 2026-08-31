@@ -11,7 +11,7 @@ import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements
 import type { QtiChoiceInteraction } from './qti-choice-interaction';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-choice-interaction', {
-  // excludeCategories: ['cssParts', 'cssProps', 'cssStates', 'events', 'properties', 'slots', 'methods']
+  excludeCategories: ['methods', 'events', 'properties']
 });
 
 type Story = StoryObj<QtiChoiceInteraction & typeof args>;
@@ -34,7 +34,7 @@ const meta: Meta<
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 
@@ -147,22 +147,6 @@ export const Disabled: Story = {
 export const Readonly: Story = {
   render: Test.render,
   args: { readonly: true }
-};
-
-export const CorrectResponse: Story = {
-  render: Test.render,
-  args: {
-    orientation: 'vertical',
-    class: ['qti-input-control-hidden', 'qti-choices-stacking-2'].join(' '),
-    'min-choices': 1,
-    'max-choices': 2
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const choiceInteraction = canvas.getByTestId<QtiChoiceInteraction>('interaction');
-    choiceInteraction.correctResponse = ['A', 'B'];
-    // choiceInteraction.toggleCorrectResponse();
-  }
 };
 
 const formTemplate = (args, context) => html`

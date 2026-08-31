@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-@customElement('qti-test-part')
+import { property } from 'lit/decorators.js';
+
 export class QtiTestPart extends LitElement {
   @property({ type: String }) identifier: string = '';
   override get title(): string {
@@ -35,10 +35,6 @@ export class QtiTestPart extends LitElement {
   override render() {
     return html` <slot></slot>`;
   }
-}
-
-if (!customElements.get('qti-test-part')) {
-  customElements.define('qti-test-part', QtiTestPart);
 }
 
 declare global {

@@ -5,7 +5,9 @@ import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-declare class TestViewInterface {}
+declare class TestViewInterface {
+  updateAssessmentItemView(assessmentItem: QtiAssessmentItem, view: View): void;
+}
 
 export const TestViewMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
   abstract class TestViewClass extends superClass implements TestViewInterface {
@@ -47,16 +49,17 @@ export const TestViewMixin = <T extends Constructor<TestBaseInterface>>(superCla
         );
         const assessmentItem = assessmentItemRef?.assessmentItem;
 
-        if (assessmentItem) {
-          assessmentItem.showCorrectResponse(this.sessionContext.view === 'scorer');
-        }
+        if (assessmentItem) this.updateAssessmentItemView(assessmentItem, this.sessionContext.view);
       }
     }
 
     // Event handler for connected QTI assessment items
     private _setCorrectResponseVisibility(assessmentItem: QtiAssessmentItem): void {
-      assessmentItem.showCorrectResponse(this.sessionContext.view === 'scorer');
+      this.updateAssessmentItemView(assessmentItem, this.sessionContext.view);
     }
+
+    /** Extension point for packages that add view-dependent assessment presentation. */
+    public updateAssessmentItemView(_assessmentItem: QtiAssessmentItem, _view: View): void {}
   }
 
   return TestViewClass as Constructor<TestViewInterface> & T;

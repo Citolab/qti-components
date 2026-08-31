@@ -41,5 +41,3 @@ export class QtiSumExpression implements QtiExpressionBase<number> {
     return values.reduce((a, b) => a + b, 0);
   }
 }
-
-customElements.define('qti-sum', QtiSum);

@@ -1,13 +1,13 @@
 import { provide } from '@lit/context';
 import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 
 import { computedItemContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 import { qtiContext } from '@qti-components/base';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
-import type { ConfigContext, CorrectResponseMode } from '@qti-components/base';
+import type { ConfigContext } from '@qti-components/base';
 import type { QtiContext } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 import type { VariableDeclaration } from '@qti-components/base';
@@ -25,12 +25,12 @@ import type { ComputedItemContext } from '@qti-components/base';
  * </qti-item>
  * ```
  */
-@customElement('qti-item')
+
 export class QtiItem extends LitElement {
   @state()
   @provide({ context: computedItemContext })
   public computedContext: ComputedItemContext;
-  #qtiAssessmentItem?: QtiAssessmentItem;
+  protected assessmentItem?: QtiAssessmentItem;
 
   @state()
   @provide({ context: configContext })
@@ -54,17 +54,10 @@ export class QtiItem extends LitElement {
   #onItemContextChanged = this.#handleItemContextChanged.bind(this);
   #onAssessmentItemConnected = this.#handleAssessmentItemConnected.bind(this);
 
-  #onHandleShowCorrectResponse = this.#handleShowCorrectResponse.bind(this);
-  #onHandleShowCandidateCorrection = this.#handleShowCandidateCorrection.bind(this);
-  #onHandleSwitchCorrectResponseMode = this.#handleSwitchCorrectResponseMode.bind(this);
-
   constructor() {
     super();
     this.addEventListener('qti-item-context-updated', this.#onItemContextChanged);
     this.addEventListener('qti-assessment-item-connected', this.#onAssessmentItemConnected);
-    this.addEventListener('item-show-correct-response', this.#onHandleShowCorrectResponse);
-    this.addEventListener('item-show-candidate-correction', this.#onHandleShowCandidateCorrection);
-    this.addEventListener('item-switch-correct-response-mode', this.#onHandleSwitchCorrectResponseMode);
   }
 
   #handleItemContextChanged(e: CustomEvent<{ itemContext: ItemContext }>) {
@@ -73,40 +66,17 @@ export class QtiItem extends LitElement {
 
   #handleAssessmentItemConnected(e: CustomEvent<QtiAssessmentItem>) {
     const fullVariables = (e.detail as any)._context.variables;
-    this.#qtiAssessmentItem = e.detail;
+    this.assessmentItem = e.detail;
     this.computedContext =
-      this.computedContext?.identifier === this.#qtiAssessmentItem.identifier
-        ? { ...this.computedContext, title: this.#qtiAssessmentItem.title }
+      this.computedContext?.identifier === this.assessmentItem.identifier
+        ? { ...this.computedContext, title: this.assessmentItem.title }
         : ({
-            identifier: this.#qtiAssessmentItem.identifier,
-            title: this.#qtiAssessmentItem.title,
-            adaptive: this.#qtiAssessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
-            variables: fullVariables,
-            correctResponseMode: 'internal'
+            identifier: this.assessmentItem.identifier,
+            title: this.assessmentItem.title,
+            adaptive: this.assessmentItem.getAttribute('adaptive')?.toLowerCase() === 'true' || false,
+            variables: fullVariables
           } as ComputedItemContext);
-    this.#updateItemVariablesInTestContext(this.#qtiAssessmentItem.identifier, fullVariables || []);
-  }
-
-  #handleShowCorrectResponse(e: CustomEvent<boolean>) {
-    if (this.#qtiAssessmentItem) {
-      this.#qtiAssessmentItem.showCorrectResponse(e.detail);
-    }
-  }
-
-  #handleShowCandidateCorrection(e: CustomEvent<boolean>) {
-    if (this.#qtiAssessmentItem) {
-      this.#qtiAssessmentItem.showCandidateCorrection(e.detail);
-    }
-  }
-
-  #handleSwitchCorrectResponseMode(e: CustomEvent<CorrectResponseMode>) {
-    // Switch off the correct response first
-    this.#handleShowCorrectResponse(new CustomEvent('item-show-correct-response', { detail: false, bubbles: true }));
-
-    this.configContext = {
-      ...this.configContext,
-      correctResponseMode: e.detail
-    };
+    this.#updateItemVariablesInTestContext(this.assessmentItem.identifier, fullVariables || []);
   }
 
   #updateItemVariablesInTestContext(

@@ -107,10 +107,6 @@
     margin-left: 93.6170212766%;
   }
 
-  .qti-layout-offset12 {
-    margin-left: 102.1276595745%;
-  }
-
   @media (width <= 767px) {
     [class*='qti-layout-col'] {
       width: 100%;

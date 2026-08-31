@@ -30,6 +30,9 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
 ) => {
   abstract class DragDropSlottedSortableElement extends superClass {
     #sourceSlot: HTMLElement | null = null;
+    // The drop target a drag originated from (null for bank/inventory-origin drags). Set at
+    // initiateDrag while the chip is still in place; read by allowDrop to block reorders.
+    #dragOriginDroppable: HTMLElement | null = null;
     #sortableContext: SortableDragContext = createSortableDragContext();
     #shiftState: ShiftState = {
       hoveredSlot: null,
@@ -37,7 +40,16 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
     };
     #temporarilyEnabledSlots = new Set<HTMLElement>();
 
-    public allowReorder = true;
+    // Reordering placed chips is on by default. Resolved from the `allowReorder` config-context
+    // value (see resolveAllowReorder), with an explicit property assignment taking precedence — so
+    // `interaction.allowReorder = false` still works, and a config provider can set it globally.
+    #allowReorderExplicit?: boolean;
+    set allowReorder(value: boolean) {
+      this.#allowReorderExplicit = value;
+    }
+    get allowReorder(): boolean {
+      return this.#allowReorderExplicit ?? this.resolveAllowReorder({ defaultWhenUnset: true });
+    }
     public sortablePlaceholderConfig: PlaceholderConfig = {};
     public sortableAnimationConfig: FlipAnimationOptions = {
       duration: 150,
@@ -120,6 +132,19 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
         return;
       }
 
+      // A declarative target renders its chips from `dragDropContext`. Moving its nodes here as a
+      // hover preview would be undone by the next render, and the swap it was standing in for is
+      // done properly at drop time over the placement map. So: no preview, just the hover state.
+      //
+      // Use the shared declarative-target predicate from DragDropSlottedMixin so both declarative
+      // forms are covered (property-based custom elements and attribute-based targets like
+      // `data-declarative-drops` in order-interaction).
+      if (this.isDeclarativeTarget(targetSlot)) {
+        if (this.#sortableContext.placeholder?.parentElement) this.#sortableContext.placeholder.remove();
+        this.#shiftState.hoveredSlot = targetSlot;
+        return;
+      }
+
       const itemsToAnimate = [targetItem];
       const flipStates = captureMultipleFlipStates(itemsToAnimate);
 
@@ -176,6 +201,10 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
       this.#resetShiftState();
 
       const containingDroppable = this.findContainingDroppable(dragElement);
+      // Record the origin drop target now, while the chip is still in place — allowDrop needs it to
+      // block a reorder, and by drop time the chip has been lifted out. Captured for every drag,
+      // independent of allowReorder (which only gates the sortable preview below).
+      this.#dragOriginDroppable = containingDroppable;
 
       if (containingDroppable && this.allowReorder) {
         this.#sourceSlot = containingDroppable;
@@ -256,6 +285,19 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
     }
 
     public override allowDrop(draggable: HTMLElement, droppable: HTMLElement): boolean {
+      // Reordering disabled: a chip already placed in a *drop target* may not move to a different
+      // target. The origin is captured at initiateDrag (#dragOriginDroppable) because by now the chip
+      // has been lifted out of its slot. Bank/inventory-origin drags (origin is a drag container, or
+      // null) are initial placements, not reorders, so they pass through untouched.
+      if (
+        !this.allowReorder &&
+        this.#dragOriginDroppable &&
+        !this.trackedDragContainers.includes(this.#dragOriginDroppable) &&
+        droppable !== this.#dragOriginDroppable &&
+        this.trackedDroppables.includes(droppable)
+      ) {
+        return false;
+      }
       if (this.isDraggingFromSlot && this.trackedDroppables.includes(droppable)) {
         if (!this.#slotAllowsMultiple(droppable)) {
           return true;

@@ -9,6 +9,7 @@ import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestNavigation } from '../components/test-navigation/test-navigation';
+import type { TestContainer } from '../components/test-container/test-container';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -488,7 +489,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
           return null;
         }
 
-        return { itemRef, doc: transformer.htmlDoc() };
+        return { itemRef, doc: transformer.htmlDoc(this._customElementRegistry()) };
       } catch (error) {
         if (error.name === 'AbortError') {
           console.info(`Item load for ${itemRef.identifier} was aborted`);
@@ -501,7 +502,13 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private async _loadStimulus(href: string): Promise<DocumentFragment | null> {
       const transformer = await qtiTransformItem().load(href, this._activeController?.signal);
-      return transformer.htmlDoc();
+      return transformer.htmlDoc(this._customElementRegistry());
+    }
+
+    private _customElementRegistry(): CustomElementRegistry | undefined {
+      const container = this.querySelector<TestContainer>('test-container');
+      if (!container) return undefined;
+      return container.customElementRegistry ?? undefined;
     }
 
     // ===========================================

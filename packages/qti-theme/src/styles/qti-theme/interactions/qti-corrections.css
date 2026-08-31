@@ -1,0 +1,69 @@
+/*
+ * What is LEFT here is what the base class owns.
+ *
+ * The chip corrections that used to head this file are gone, into the five drag interactions. They
+ * were one unscoped `:state(drag)` rule claiming every interaction at once — the same shape the chip
+ * vocabulary had in qti-states.css, moved for the same reason: an interaction's rules belong in that
+ * interaction's file, and a shared rule is only honest when no interaction can own it.
+ *
+ * The rules below pass that test. `part="correction"` is stamped by the correction machinery on every
+ * corrected element, whichever interaction it belongs to, so no single file could own the badge; the
+ * same goes for the `.full-correct-response` answer-key presentation, which is a property of the
+ * cloned item rather than of any interaction. Spraying those would be four rules copied N times with
+ * nothing gained and one of them eventually missed.
+ *
+ * Two things died in the move, both measured rather than reasoned:
+ *   - `[data-drag-clone]:state(candidate-*)` matched nothing, ever. cloneNode does not copy
+ *     ElementInternals, so a floating clone carries no custom states at all.
+ *   - a pair of `--drag-background-color` rules in gap-match and match asked for a SOLID fill that
+ *     never rendered, because the shared rule declared `background-color` directly and outranked the
+ *     binding that reads them. Deleted with the rule that was hiding them.
+ */
+@layer qti-components.interactions.corrections {
+  /*
+   * The candidate-correction badge, `part="correction"` on every corrected element.
+   *
+   * A token list, so `::part(correction-correct)` reaches the badge in the drag bank, on the
+   * floating clone, and inside a drop target's shadow root — a token survives `exportparts`,
+   * where a chained `::part()` would not.
+   */
+  ::part(correction-correct) {
+    background-color: var(--qti-correct);
+    mask: var(--qti-check-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-check-mask) no-repeat center / contain;
+  }
+
+  ::part(correction-incorrect) {
+    background-color: var(--qti-incorrect);
+    mask: var(--qti-times-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
+  }
+
+
+
+  /*
+   * The third verdict. correction.styles.ts has always SIZED `correction-partially-correct` beside
+   * its two siblings, but no rule anywhere ever painted it — so a partially-correct badge has been
+   * an invisible 1em gap in every interaction, not just extended-text. This is repo-wide, and the
+   * reason it went unnoticed is that partial credit needs a mapping to arise at all.
+   */
+  ::part(correction-partially-correct) {
+    background-color: var(--qti-partially-correct);
+    mask: var(--qti-partial-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-partial-mask) no-repeat center / contain;
+  }
+
+
+  /* A cloned interaction presents the answer key rather than a candidate judgement. What is left
+     here is the part no interaction owns: any chip, anywhere. The text-entry and inline-choice
+     halves moved into their own files — those name one interaction each, so they belong to it. */
+  .full-correct-response :state(drag),
+  .full-correct-response ::part(drag) {
+    @mixin answer;
+  }
+
+  .full-correct-response :state(drag)::part(control)::before,
+  .full-correct-response ::part(drag-control)::before {
+    @mixin answer-check;
+  }
+}

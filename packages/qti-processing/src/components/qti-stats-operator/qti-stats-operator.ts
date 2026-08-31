@@ -76,5 +76,3 @@ export class QtiStatsOperator extends QtiExpression<number | null> {
     return values;
   }
 }
-
-customElements.define('qti-stats-operator', QtiStatsOperator);

@@ -1,11 +1,12 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "outDir": "./dist",
         "moduleResolution": "bundler",
     },
     "include": [
-        "src/index.ts"
+        "src/index.ts",
+        "src/**/*.d.ts"
     ],
     "exclude": [
         "**/*.spec.ts",

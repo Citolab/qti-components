@@ -1,0 +1,73 @@
+/*
+ * Kennisnet brand overlay. Adopted directly into each item's shadow root by kennisnet.stories.ts, so
+ * it needs no scoping class — it only applies where it is adopted, and it is adopted nowhere else.
+ * Explicit chip selectors (not tokens) keep the internal structure visible: a chip is `:state(drag)`
+ * on the bank, `::part(drag)` on a placed clone, `[data-drag-clone]` on the body clone. Each block
+ * only switches `--drag-*` — the drag role's paint slots — and nothing is redeclared. A role's slots
+ * repaint that role alone, so none of this reaches the drop targets the chips land in.
+ *
+ * A RESTING-look override sits in `brand` (above base, below states, so functional states still win).
+ * A STATE override (the placeholder) sits in `states`; the base placeholder sets no fill / border /
+ * shadow of its own (see `@mixin drag-placeholder`), so this restyles the hole with no specificity
+ * contest. border-COLOR goes transparent, never the width, so switching brands can't move a chip or
+ * reflow a bank (layout-invariance). The `@layer` order is declared by item.css, adopted alongside
+ * this sheet in the same shadow.
+ */
+
+@layer qti-components.global {
+  :root,
+  :host {
+    /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
+    --qti-primary: #581d70; /* purple — chips, selection, active border */
+    --qti-success: #2b830e; /* green */
+    --qti-warning: #ffa700; /* amber */
+    --qti-error: #df0000; /* red */
+    --qti-info: #007ac3; /* blue — the answer key */
+
+    --qti-spacing: 0.5rem; /* THE spacing unit — boxes derive from it, see --qti-padding-box */
+
+    --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
+    --qti-border-radius: 0.3rem;
+
+    --qti-fg: #3e144e;
+  }
+}
+
+@layer qti-components.interactions.brand {
+  /* The chip: primary fill, white text, a coloured lift, no border.
+
+     No graphic-gap-match carve-out. It used to mirror the one in qti-states.css, and is unnecessary
+     twice over: a ggm chip never opts into `@mixin drag`, so it reads no --drag-* slot, and the
+     floating clone is style-frozen inline at pickup (createDragClone copies the source's whole
+     computed style, custom properties included) so a rule cannot reach it either. Both measured. */
+  :state(drag),
+  [data-drag-clone],
+  qti-gap::part(drag),
+  qti-associate-interaction::part(drag),
+  qti-simple-associable-choice::part(drag) {
+    --drag-background-color: var(--qti-primary);
+    --drag-color: var(--qti-primary-fg);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+    --drag-border-color: transparent;
+  }
+
+  /* Order's placed chip is INVERTED — a light chip (white fill, dark text, neutral border) against
+     the primary bank, so a dropped answer reads as settled. Kennisnet-specific: in the base theme a
+     placed order chip is just the neutral chip. */
+  qti-order-interaction::part(drag) {
+    --drag-background-color: white;
+    --drag-color: var(--qti-fg);
+    --drag-border-color: var(--qti-border-color);
+    --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+  }
+}
+
+@layer qti-components.interactions.states {
+  /* The placeholder: a tint fill + inset shadow, no border (the base default is a plain bordered
+     white box). Corrections, a layer higher, keep winning. */
+  :state(placeholder) {
+    --drag-background-color: var(--qti-placeholder-bg);
+    --drag-border-color: transparent;
+    --drag-box-shadow: inset var(--qti-placeholder-shadow);
+  }
+}

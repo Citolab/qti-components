@@ -31,5 +31,8 @@
     "type": "git",
     "url": "git+https://github.com/Citolab/qti-components.git",
     "directory": "packages/qti-theme"
+  },
+  "devDependencies": {
+    "sass": "^1.101.0"
   }
 }

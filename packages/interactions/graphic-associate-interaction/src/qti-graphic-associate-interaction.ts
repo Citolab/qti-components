@@ -1,9 +1,9 @@
-import { html, svg } from 'lit';
-import { queryAssignedElements, state } from 'lit/decorators.js';
+import { html, nothing, svg } from 'lit';
+import { property, queryAssignedElements, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import { Interaction } from '@qti-components/base';
+import { Interaction, responseAttributeConverter } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
 import styles from './qti-graphic-associate-interaction.styles';
@@ -11,6 +11,17 @@ import styles from './qti-graphic-associate-interaction.styles';
 import type { QtiAssociableHotspot } from '@qti-components/interactions-core/elements/qti-associable-hotspot';
 import type { QtiHotspotChoice } from '@qti-components/interactions-core/elements/qti-hotspot-choice';
 import type { CSSResultGroup } from 'lit';
+/**
+ * Graphic associate interaction: candidates connect points/hotspots on an image with lines.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot - Default slot for hotspot choices layered over the image.
+ *
+ * @csspart line - Each line drawn by the candidate.
+ * @csspart correct-line - Each line displayed as part of the correct response.
+ * @csspart point - Each in-progress endpoint indicator.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiGraphicAssociateInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
@@ -18,7 +29,6 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   #startPoint: HTMLElement | null = null;
   #endPoint: HTMLElement | null = null;
 
-  @state() private _correctLines: string[] = [];
   @state() private startCoord: { x: number; y: number };
   @state() private mouseCoord: { x: number; y: number };
   @queryAssignedElements({ selector: 'img' }) grImage: any[];
@@ -33,18 +43,23 @@ export class QtiGraphicAssociateInteraction extends Interaction {
 
   override reset(): void {
     this._response = [];
-    this._correctLines = [];
   }
 
   validate(): boolean {
     return this.#getResponseArray().length > 0;
   }
 
-  set response(val) {
+  @property({
+    attribute: 'response',
+    reflect: false,
+    noAccessor: true,
+    converter: responseAttributeConverter({ emptyAs: [] })
+  })
+  set response(val: string | string[] | null) {
     this._response = this.#normalizeResponse(val);
   }
 
-  get response() {
+  get response(): string[] | null {
     return this._response;
   }
 
@@ -57,20 +72,9 @@ export class QtiGraphicAssociateInteraction extends Interaction {
     return this.#normalizeResponse(this._response);
   }
 
-  public override toggleInternalCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!show || !responseVariable) {
-      this._correctLines = [];
-      return;
-    }
-    if (!responseVariable.correctResponse) {
-      console.error('No correct response found for this interaction.');
-      return;
-    }
-    const correctResponses = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
-    this._correctLines = correctResponses;
+  /** Extension hook for optional SVG lines rendered above the candidate response. */
+  protected renderSupplementalLines(): unknown {
+    return nothing;
   }
 
   override render() {
@@ -101,22 +105,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
               />
             `
           )}
-          ${repeat(
-            this._correctLines || [],
-            line => line,
-            (line, _index) => svg`
-              <line
-                part="correct-line"
-                x1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.left)}
-                y1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`).style.top)}
-                x2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.left)}
-                y2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`).style.top)}
-                stroke="var(--qti-correct)"
-                stroke-width="3"
-                stroke-dasharray="5,5"
-              />
-            `
-          )}
+          ${this.renderSupplementalLines()}
           ${this.#startPoint &&
           svg`<line
             part="point"
@@ -143,6 +132,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
   }
 
   override firstUpdated(): void {
+    super.firstUpdated();
     this.#hotspots = this.querySelectorAll('qti-associable-hotspot');
 
     this.addEventListener('mousemove', event => {

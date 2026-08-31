@@ -7,50 +7,26 @@ import { ChoicesMixin } from '@qti-components/interactions-core/mixins/choices/c
 import styles from './qti-hottext-interaction.styles';
 
 import type { CSSResultGroup, PropertyValues } from 'lit';
+/**
+ * Hottext interaction: candidates select highlighted words within a text block.
+ *
+ * @customElement qti-hottext-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {number} [max-choices=1] - Maximum selectable hottexts; `0` means unlimited.
+ * @attr {number} [min-choices=0] - Minimum selectable hottexts for a valid response.
+ * @attr {'qti-unselected-hidden'} class - QTI shared presentation vocabulary.
+ *   `qti-unselected-hidden` leaves the selectable words visually indistinguishable from the
+ *   surrounding prose until they are selected.
+ *
+ * @slot - Default slot for the mixed content and `qti-hottext` choices.
+ *
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
   static override styles: CSSResultGroup = styles;
-
-  @property({ type: String, reflect: true })
-  class = '';
-
-  // NOTE: there is no way to get the variant with radiobuttons or checkboxes
-  // as the QTI standard does not define a way to specify this.
-  // The default is to not show any radio or checkbox buttons just like amp-up does.
-  // If they should be shown in the future, we should make a configuration option for it.
-  get #classObject() {
-    const classes: { [key: string]: boolean } = {
-      'qti-input-control-hidden': true
-    };
-
-    if (this.class) {
-      this.class.split(' ').forEach(className => {
-        if (className.trim()) {
-          classes[className.trim()] = true;
-        }
-      });
-    }
-
-    return classes;
-  }
 
   override render = () =>
     html`<slot></slot>
       <div part="message" role="alert" id="validation-message"></div>`;
-
-  override connectedCallback() {
-    super.connectedCallback();
-    this.#updateHostClasses();
-  }
-
-  override updated(_changedProperties: PropertyValues) {
-    super.updated(_changedProperties);
-    this.#updateHostClasses();
-  }
-
-  #updateHostClasses() {
-    // Clear existing classes and apply merged ones
-    const classString = Object.keys(this.#classObject).join(' ');
-
-    this.className = classString;
-  }
 }

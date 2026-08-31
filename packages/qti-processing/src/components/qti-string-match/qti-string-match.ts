@@ -30,5 +30,3 @@ export class QtiStringMatch extends QtiExpression<boolean> {
     return null;
   }
 }
-
-customElements.define('qti-string-match', QtiStringMatch);

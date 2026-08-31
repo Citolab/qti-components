@@ -1,86 +1,165 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-hottext-interaction {
-    &::part(message) {
-      @apply validation-message;
-    }
+    --qti-hottext-selected-padding: var(--qti-padding-inline);
+
+    /* The native radio/checkbox control is never rendered for a hottext — every variant uses custom
+       styling. That is unconditional, so it lives in qti-hottext.styles.ts, which hides [part='control']
+       outright. It used to be repeated here three times, once per variant, under an unconditional rule
+       that had already hidden it. */
+    /*
+     * The selected padding, reserved unselected.
+     *
+     * :state(checked) used to swap 'var(--qti-border-thickness) 0' for the padding above, so
+     * clicking a word grew it and reflowed the sentence around it — every following word moved, and
+     * on a wrapping line so did the paragraph. That is the 'checked' entry the .stylelintrc.mjs
+     * comment describes.
+     *
+     * Reserving it here is the same move as the 'border: 2px solid transparent' that holds a drop
+     * target's active border: pay the space once, up front, so the state has only to repaint. Every
+     * hottext is now the size a selected one used to be, which is also a larger target to click.
+     */
     qti-hottext {
-      display: inline-flex;
-      align-items: center;
-      @apply check;
-      &:hover {
-        @apply hov;
+      padding: var(--qti-hottext-selected-padding);
+    }
+
+    &.qti-input-control-hidden {
+      qti-hottext {
+        border: var(--qti-border);
+        border-radius: var(--qti-border-radius);
+
+        background: var(--qti-bg);
+
+
+        &:focus {
+          @mixin foc;
+        }
       }
-      &:focus {
-        @apply foc;
+    }
+
+    &.qti-unselected-hidden {
+      qti-hottext {
+        border: 0;
+        border-radius: var(--qti-border-radius);
+        background-color: transparent;
+        outline: none;
+        cursor: pointer;
+
+
+        &:focus {
+          @mixin foc;
+        }
       }
-      &::part(cha) {
-        @apply check-size;
+    }
+
+    &:not(.qti-input-control-hidden, .qti-unselected-hidden) {
+      qti-hottext {
+        border: var(--qti-border);
+        border-radius: var(--qti-border-radius);
+
+
+        &:focus {
+          @mixin foc;
+        }
       }
-      &:state(radio)::part(ch) {
-        @apply check-radio;
+    }
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-hottext-interaction {
+    &.qti-input-control-hidden qti-hottext {
+      &:state(checked) {
+        border-color: var(--qti-border-active);
+        background-color: var(--qti-selected-bg);
+        color: var(--qti-selected-color);
       }
-      &:state(radio):state(--checked)::part(cha) {
-        @apply check-radio-checked;
+
+      &:state(readonly) {
+        cursor: pointer;
       }
-      &:state(checkbox)::part(ch) {
-        @apply check-checkbox;
+
+      &:state(disabled) {
+        cursor: not-allowed;
       }
-      &:state(checkbox):state(--checked)::part(cha) {
-        @apply check-checkbox-checked;
+    }
+
+    &.qti-unselected-hidden qti-hottext,
+    &:not(.qti-input-control-hidden, .qti-unselected-hidden) qti-hottext {
+      &:state(checked) {
+        background-color: var(--qti-selected-bg);
+        color: var(--qti-selected-color);
       }
+
+      &:state(readonly) {
+        cursor: pointer;
+      }
+
+      &:state(disabled) {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-hottext-interaction {
+    qti-hottext {
       &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
           content: '\02714';
-          color: #16a34a;
+          color: var(--qti-correct);
         }
       }
     }
-    &.qti-input-control-hidden {
-      qti-hottext {
-        @apply button;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &::part(ch) {
-          display: none;
-        }
-        &:state(--checked) {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
+
+    &.qti-input-control-hidden qti-hottext {
+      &:state(candidate-correct) {
+        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+      }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
       }
     }
-    &.qti-unselected-hidden {
-      qti-hottext {
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        cursor: pointer;
-        &::part(ch) {
-          display: none;
-        }
-        &:state(--checked) {
-          background-color: var(--qti-bg-active);
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
+
+    &.qti-unselected-hidden qti-hottext,
+    &:not(.qti-input-control-hidden, .qti-unselected-hidden) qti-hottext {
+      &:state(candidate-correct) {
+        @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
+        box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-correct);
       }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
+        box-shadow: inset 0 0 0 var(--qti-border-thickness) var(--qti-incorrect);
+      }
+    }
+  }
+
+  .full-correct-response qti-hottext-interaction.qti-input-control-hidden qti-hottext:state(checked),
+  .full-correct-response qti-hottext-interaction.qti-unselected-hidden qti-hottext:state(checked),
+  .full-correct-response
+    qti-hottext-interaction:not(.qti-input-control-hidden, .qti-unselected-hidden)
+    qti-hottext:state(checked) {
+    @mixin answer;
+
+    border-width: var(--qti-border-thickness);
+    border-style: var(--qti-border-style);
+    padding-inline-start: calc(1em + var(--qti-gap));
+    padding-inline-end: var(--qti-gap);
+
+    /* The icon must not become the inline-flex container's first baseline item. */
+    &::before {
+      @mixin answer-check;
+
+      position: absolute;
+      inset-inline-start: var(--qti-gap);
+      top: 50%;
+      translate: 0 -50%;
+      display: block;
+      width: 1em;
+      height: 1em;
     }
   }
 }

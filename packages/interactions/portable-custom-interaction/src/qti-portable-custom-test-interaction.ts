@@ -9,6 +9,24 @@ import type { ItemContext } from '@qti-components/base';
 export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteraction {
   #recreatingIframe = false;
 
+  /** Wait until the PCI has completed its iframe handshake, even if it became ready before the test started. */
+  public async waitForReady(timeout = 5000): Promise<void> {
+    if (this._interactionReady) return;
+
+    await new Promise<void>((resolve, reject) => {
+      const loadHandler = () => {
+        window.clearTimeout(timeoutId);
+        resolve();
+      };
+      const timeoutId = window.setTimeout(() => {
+        this.removeEventListener('qti-portable-custom-interaction-loaded', loadHandler);
+        reject(new Error(`Portable custom interaction did not become ready within ${timeout}ms`));
+      }, timeout);
+
+      this.addEventListener('qti-portable-custom-interaction-loaded', loadHandler, { once: true });
+    });
+  }
+
   /**
    * Gets the HTML content of the iframe for testing purposes
    * @returns Promise that resolves with the HTML content string
@@ -78,21 +96,7 @@ export class QtiPortableCustomInteractionTest extends QtiPortableCustomInteracti
       // Create a new iframe
       this.createIframe();
 
-      // Wait for iframe to load
-      return new Promise<void>(resolve => {
-        const loadHandler = () => {
-          this.removeEventListener('qti-portable-custom-interaction-loaded', loadHandler);
-          resolve();
-        };
-
-        this.addEventListener('qti-portable-custom-interaction-loaded', loadHandler);
-
-        // Add timeout to avoid hanging if the event never fires
-        setTimeout(() => {
-          this.removeEventListener('qti-portable-custom-interaction-loaded', loadHandler);
-          resolve();
-        }, 5000);
-      });
+      await this.waitForReady();
     } finally {
       this.#recreatingIframe = false;
     }

@@ -46,5 +46,3 @@ export class QtiContainerSize extends QtiExpression<number> {
     return variable.value.length;
   }
 }
-
-customElements.define('qti-container-size', QtiContainerSize);

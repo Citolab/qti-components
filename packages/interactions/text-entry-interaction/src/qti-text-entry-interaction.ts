@@ -1,14 +1,38 @@
 import { html, nothing } from 'lit';
-import { property, query, state } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { createRef } from 'lit/directives/ref.js';
 
 import { watch } from '@qti-components/utilities';
-import { Correctness, Interaction } from '@qti-components/base';
+import { Interaction } from '@qti-components/base';
 
 import styles from './qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+
+/**
+ * Text-entry interaction: single-line inline text input.
+ *
+ * @customElement qti-text-entry-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {number} expected-length - Hint at the expected answer length; drives the rendered
+ *   field width and the input's `maxlength`.
+ * @attr {string} pattern-mask - Regular expression the value must match to be valid.
+ * @attr {string} placeholder-text - Placeholder shown while the field is empty.
+ * @attr {string} data-patternmask-message - Custom validation message shown when
+ *   `pattern-mask` fails. Part of the QTI shared interaction vocabulary.
+ * @attr {number} [base=10] - Not implemented. Numeric base used when recording the value.
+ * @attr {string} string-identifier - Not implemented. Identifier of a second, string-typed
+ *   response variable that also receives the raw entry.
+ * @attr {string} format - Not implemented. QTI types this as a bare normalized string here rather
+ *   than as the `plain | preformatted | xhtml` vocabulary it defines for extended-text, and a
+ *   single-line input has no formatting to render: it can show neither preserved line breaks nor
+ *   markup. The field is always plain text, so this is not planned either.
+ *
+ * @csspart input - The text input element.
+ * @csspart correct - Overlay shown when displaying the correct response.
+ */
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
   inputRef = createRef<HTMLInputElement>();
@@ -21,15 +45,13 @@ export class QtiTextEntryInteraction extends Interaction {
 
   @property({ type: String, attribute: 'data-patternmask-message' }) dataPatternmaskMessage: string;
 
-  @state()
+  @property({ type: String, attribute: 'response', reflect: false })
   response: string | null = null;
 
   @query('input') private _input!: HTMLInputElement;
 
   @watch('response', { waitUntilFirstUpdate: true })
   protected _handleValueChange = () => {
-    // const formData = new FormData();
-    // formData.append(this.responseIdentifier, this.response);
     this._internals.setFormValue(this.value);
     this.validate();
   };
@@ -41,129 +63,86 @@ export class QtiTextEntryInteraction extends Interaction {
     this.response = val || null;
   }
 
-  override get correctness(): Readonly<Correctness | null> {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable) {
-      return null;
-    }
-
-    if (responseVariable.value === null) {
-      return Correctness.Incorrect;
-    }
-
-    if (responseVariable.mapping) {
-      const maxScore = responseVariable.mapping.mapEntries.reduce<number>(
-        (currentMax, mapEntry) => Math.max(mapEntry.mappedValue, currentMax),
-        0
-      );
-      for (const mapEntry of responseVariable.mapping.mapEntries) {
-        let mapAnswer = mapEntry.mapKey;
-        let responseAnswer = responseVariable.value as string;
-        if (!mapEntry.caseSensitive) {
-          mapAnswer = mapAnswer.toLowerCase();
-          responseAnswer = responseAnswer.toLowerCase();
-        }
-        if (mapAnswer === responseAnswer) {
-          if (mapEntry.mappedValue === maxScore) {
-            return Correctness.Correct;
-          }
-          if (mapEntry.mappedValue <= (responseVariable.mapping.defaultValue || 0)) {
-            return Correctness.Incorrect;
-          }
-          return Correctness.PartiallyCorrect;
-        }
-      }
-    }
-
-    // Fallback to the correct response
-
-    return responseVariable.correctResponse === responseVariable.value ? Correctness.Correct : Correctness.Incorrect;
-  }
-
   override get isInline(): boolean {
     return true;
   }
 
   public override validate(): boolean {
     if (!this._input) return false;
+    let validityMessage = '';
+    let isValid = false;
+
     if (this.patternMask && this.dataPatternmaskMessage) {
       // Clear any custom error if the this._input is valid
-      this._internals.setValidity({});
       this._input.setCustomValidity(''); // Clear the custom message
-      const isValid = this._input.checkValidity();
+      isValid = this._input.checkValidity();
       if (!isValid) {
         // Set custom error if invalid
-        this._internals.setValidity({ customError: true }, this.dataPatternmaskMessage);
+        validityMessage = this.dataPatternmaskMessage;
         this._input.setCustomValidity(this.dataPatternmaskMessage); // Set custom message only if invalid
       }
     } else {
-      const isValid = this._input.checkValidity();
-      this._internals.setValidity(isValid ? {} : { customError: false });
+      isValid = this._input.checkValidity();
     }
-    return this.response !== '' && this._input.checkValidity();
+
+    if (isValid && this.response === '') {
+      isValid = false;
+    }
+
+    if (!isValid && !validityMessage) {
+      validityMessage = this._input.validationMessage || 'Invalid value.';
+    }
+
+    this.setInteractionValidity(isValid, validityMessage, this._input, { suppressInline: true });
+    return isValid;
   }
 
-  public override toggleInternalCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
+  /*
+   * The template in named pieces, so a subclass can recompose it. Override a piece to change what
+   * one part looks like; override `render()` to change the order. See the longer note on the same
+   * pattern in qti-extended-text-interaction.
+   */
 
-    if (show && responseVariable?.correctResponse) {
-      const text = responseVariable.correctResponse.toString();
-      this._correctResponse = text;
-      //   if (text) {
-      //     if (!this._input.nextElementSibling?.classList.contains('correct-option')) {
-      //       const textSpan = document.createElement('span');
-      //       textSpan.classList.add('correct-option');
-      //       textSpan.textContent = text;
+  /** The answer-key line, revealed above the field when the correct response is shown. */
+  protected renderAnswer(): unknown {
+    return html`<div part="answer" aria-hidden="true"></div>`;
+  }
 
-      //       // Apply styles
-      //       textSpan.style.border = '1px solid var(--qti-correct)';
-      //       textSpan.style.borderRadius = '4px';
-      //       textSpan.style.padding = '2px 4px';
-      //       textSpan.style.margin = '4px';
-      //       textSpan.style.display = 'inline-block';
+  /** The field itself. */
+  protected renderInput(): unknown {
+    return html`<input
+      part="input"
+      name="${this.responseIdentifier}"
+      spellcheck="false"
+      autocomplete="off"
+      @blur="${(_: FocusEvent) => {
+        this.reportValidity();
+      }}"
+      @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
+      @keyup="${this.textChanged}"
+      @change="${this.textChanged}"
+      type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
+      placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
+      .value="${this.response}"
+      pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
+      maxlength=${1000}
+      ?disabled="${this.disabled}"
+      ?readonly="${this.readonly}"
+    />`;
+  }
 
-      //       this._input.insertAdjacentElement('afterend', textSpan);
-      //     }
-      //   } else if (this._input.nextElementSibling?.classList.contains('correct-option')) {
-      //     this._input.nextElementSibling?.remove();
-      //   }
-    } else {
-      // this._input.nextElementSibling?.remove();
-      this._correctResponse = null;
-    }
+  /** Hidden until `Interaction.reportValidity` shows it. */
+  protected renderValidationMessage(): unknown {
+    return html`<div id="validation-message" part="message" role="alert" style="display:none;"></div>`;
   }
 
   override render() {
-    return html`
-      <input
-        part="input"
-        name="${this.responseIdentifier}"
-        spellcheck="false"
-        autocomplete="off"
-        @blur="${(_: FocusEvent) => {
-          this.reportValidity();
-        }}"
-        @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
-        @keyup="${this.textChanged}"
-        @change="${this.textChanged}"
-        type="${this.patternMask == '[0-9]*' ? 'number' : 'text'}"
-        placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
-        .value="${this.response}"
-        pattern="${ifDefined(this.patternMask ? this.patternMask : undefined)}"
-        maxlength=${1000}
-        ?disabled="${this.disabled}"
-        ?readonly="${this.readonly}"
-      />
-      ${this._correctResponse ? html`<div part="correct">${this._correctResponse}</div>` : nothing}
-    `;
+    return html` ${this.renderAnswer()} ${this.renderInput()} ${this.renderValidationMessage()} `;
   }
-  // ${this._correctResponse ? html`<div popover part="correct">${this._correctResponse}</div>` : nothing}
 
   protected textChanged(event: Event): void {
     if (this.disabled || this.readonly) return;
     const input = event.target as HTMLInputElement;
-    this.#setEmptyAttribute(input.value);
     if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
@@ -171,23 +150,12 @@ export class QtiTextEntryInteraction extends Interaction {
   }
 
   override reportValidity(): boolean {
-    const input = this.shadowRoot.querySelector('input');
-    if (!input) return false;
-
-    // Run the validate function to ensure the custom validity state is up to date
-    const isValid = this.validate();
-    if (!isValid) {
-      input.reportValidity();
-    }
-    return isValid;
+    this.validate();
+    return super.reportValidity();
   }
 
   override reset(): void {
     this.response = '';
-  }
-
-  #setEmptyAttribute(text: string): void {
-    this.setAttribute('empty', text === '' ? 'true' : 'false');
   }
 }
 

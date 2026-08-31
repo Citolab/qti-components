@@ -1,16 +1,39 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
+import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
-import { ScoringHelper } from '@qti-components/base';
+import { parseResponseAttribute, serializeResponseAttribute } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
 import styles from './qti-select-point-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
 import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
+/**
+ * Select-point interaction: candidates place points onto a background image.
+ *
+ * @customElement qti-select-point-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable,
+ *   which must have base-type `point`.
+ * @attr {number} [max-choices=0] - Maximum points the candidate may place; `0` means unlimited.
+ * @attr {number} [min-choices=0] - Minimum points for a valid response.
+ * @attr {string} area-mappings - Extension, not QTI. JSON array of
+ *   `{shape, coords, mappedValue?, defaultValue?}` entries used when no
+ *   `qti-response-declaration` supplies an `qti-area-mapping`.
+ *
+ * @slot prompt - The prompt shown above the image.
+ * @slot - Default slot for the base image.
+ *
+ * @csspart point - Each selected point marker.
+ * @cssprop --qti-select-point-icon - Marker mask image (SVG data URL). Should be a solid silhouette for color inheritance.
+ * @cssprop --qti-select-point-marker-size - Marker size.
+ * @cssprop --qti-select-point-marker-anchor - Vertical translate anchor (`-100%` for bottom tip, `-50%` for center).
+ * @cssprop --qti-select-point-marker-color - Marker color; defaults to currentColor so it can be inherited.
+ */
 export class QtiSelectPointInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
@@ -26,13 +49,71 @@ export class QtiSelectPointInteraction extends Interaction {
   })
   public minChoices: number = 0;
 
-  @state() response: string[] | null = null;
+  @property({
+    attribute: 'response',
+    reflect: false,
+    converter: {
+      // Each entry is `"x y"`; the codec splits on commas. Point cardinality
+      // needs an array locally, so wrap a single-string codec output.
+      fromAttribute: (value: string | null) => {
+        const parsed = parseResponseAttribute(value);
+        if (parsed === null) return null;
+        return Array.isArray(parsed) ? parsed : [parsed];
+      },
+      toAttribute: (value: string[] | null) => serializeResponseAttribute(value)
+    }
+  })
+  response: string[] | null = null;
+
+  /**
+   * Standalone area mapping as a JSON string. Mirrors the editor's
+   * `#syncAreaEntriesFromAttribute` codec — each entry has `{shape, coords, mappedValue?, defaultValue?}`
+   * and `shape` must be `'circle'` or `'rect'`. Used when no
+   * `qti-response-declaration` provides `areaMapping`.
+   *
+   * @example
+   * ```html
+   * <qti-select-point-interaction area-mappings='[{"shape":"circle","coords":"191,393,10","mappedValue":1}]'>
+   * ```
+   */
+  @property({ attribute: 'area-mappings' })
+  areaMappings: string | null = null;
 
   @state()
-  private _correctAreas: { shape: string; coords: string }[] = [];
+  private _areaEntries: QtiAreaMapEntry[] = [];
 
-  @state()
-  private _responseCorrection: boolean[] = [];
+  @watch('areaMappings' as never)
+  protected _handleAreaMappingsChange = () => {
+    this.#syncAreaEntriesFromAttribute();
+  };
+
+  #syncAreaEntriesFromAttribute() {
+    try {
+      const raw = JSON.parse(this.areaMappings || '[]');
+      if (!Array.isArray(raw)) {
+        this._areaEntries = [];
+        return;
+      }
+      this._areaEntries = raw
+        .filter(
+          entry => entry && (entry.shape === 'circle' || entry.shape === 'rect') && typeof entry.coords === 'string'
+        )
+        .map(entry => ({
+          shape: entry.shape,
+          coords: String(entry.coords),
+          mappedValue: Number(entry.mappedValue ?? 1),
+          defaultValue: Number(entry.defaultValue ?? 0)
+        }));
+    } catch {
+      this._areaEntries = [];
+    }
+  }
+
+  protected get _effectiveAreaEntries(): QtiAreaMapEntry[] {
+    const fromResponseVariable = (this.responseVariable?.areaMapping as QtiAreaMapping | undefined)?.areaMapEntries;
+    if (fromResponseVariable?.length) return fromResponseVariable;
+    return this._areaEntries;
+  }
 
   // Reference to the image element
   #imgElement: HTMLImageElement | null = null;
@@ -88,7 +169,9 @@ export class QtiSelectPointInteraction extends Interaction {
   };
 
   get responsePoints() {
-    return (this.response || [])
+    const raw = this.response;
+    const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
+    return list
       .filter(point => point)
       .map(point => {
         const [x, y] = point.split(' ').map(Number);
@@ -96,85 +179,41 @@ export class QtiSelectPointInteraction extends Interaction {
       });
   }
 
-  public override toggleCandidateCorrection(show: boolean) {
-    this._responseCorrection = [];
-    if (!show) {
-      return;
-    }
-    this.responsePoints.forEach(point => {
-      const correct = (this.responseVariable.areaMapping as QtiAreaMapping).areaMapEntries.some(correctArea =>
-        ScoringHelper.isPointInArea(
-          `${point.x} ${point.y}`,
-          `${correctArea.shape},${correctArea.coords}`,
-          this.responseVariable.baseType
-        )
-      );
-      this._responseCorrection.push(correct);
-    });
+  /** Extension hook for additional part tokens on a rendered response point. */
+  protected pointPart(_point: string, _index: number): string {
+    return 'point';
   }
 
-  public override toggleCorrectResponse(show: boolean) {
-    const responseVariable = this.responseVariable;
-    if (!show || !responseVariable) {
-      this._correctAreas = [];
-      return;
-    }
-    // Find the area mapping element from the response variable
-    const areaMapping = responseVariable.areaMapping as QtiAreaMapping;
-    let areaMapEntries: QtiAreaMapEntry[] = [];
-    if (!areaMapping || areaMapping.areaMapEntries.length === 0) {
-      if (responseVariable.correctResponse) {
-        const correctResponses = Array.isArray(responseVariable.correctResponse)
-          ? responseVariable.correctResponse
-          : [responseVariable.correctResponse];
-        if (correctResponses.length === 0 || correctResponses.find(r => r.split(' ').length < 2)) {
-          console.error('No valid correct responses found for the response variable.');
-          return null;
-        }
-        console.warn(
-          `No area mapping found for the response variable. Using the correct responses to display the correct response but it probably won't score correct.`
-        );
-        // Create a new area mapping object with the correct responses
-        areaMapEntries = correctResponses.map(r => {
-          const coords = r.split(' ').join(',').concat(',10'); // Add a radius of 10 pixels to the coordinates
-          return { shape: 'circle', coords, defaultValue: 1, mappedValue: 1 };
-        });
-      } else {
-        console.error('No area mapping found for the response variable.');
-        return;
-      }
-    } else {
-      // Get all map entries from the area mapping
-      areaMapEntries = areaMapping.areaMapEntries;
-    }
-    this._correctAreas = areaMapEntries.map(e => ({ coords: e.coords, shape: e.shape }));
+  /** Extension hook for optional layers rendered above the response points. */
+  protected renderSupplementalLayer(): unknown {
+    return nothing;
   }
 
-  override updated(changedProperties: Map<string | number | symbol, unknown>) {
-    super.updated(changedProperties);
+  /** Positions overlay elements that carry `data-coord` and `data-shape`. */
+  protected positionOverlayElements(elements: Iterable<HTMLElement>): void {
     const img = this.#imgElement;
-    if (img && changedProperties.has('_correctAreas') && this._correctAreas.length > 0) {
-      this.#calculateScale();
-      this.shadowRoot.querySelectorAll('div').forEach((el: HTMLElement) => {
-        const coords = el.dataset.coord;
-        const shape = el.dataset.shape;
-        if (coords && shape) {
-          positionShapes(
-            shape,
-            coords.split(',').map(c => +c),
-            img,
-            el
-          );
-        }
-      });
+    if (!img) return;
+    this.#calculateScale();
+    for (const element of elements) {
+      const coords = element.dataset.coord;
+      const shape = element.dataset.shape;
+      if (!coords || !shape) continue;
+      positionShapes(
+        shape,
+        coords.split(',').map(c => +c),
+        img,
+        element
+      );
     }
   }
 
   override render() {
+    const rawResponse = this.response;
+    const responseList = Array.isArray(rawResponse) ? rawResponse : rawResponse ? [rawResponse] : [];
     return html` <slot name="prompt"></slot>
       <point-container>
         ${repeat(
-          (this.response || []).filter(point => point),
+          responseList.filter(point => point),
           point => point,
           (point, index) => {
             const [x, y] = point.split(' ').map(Number);
@@ -182,34 +221,14 @@ export class QtiSelectPointInteraction extends Interaction {
             const leftPercentage = (x / (this.#imageWidthOriginal || 1)) * 100;
             const topPercentage = (y / (this.#imageHeightOriginal || 1)) * 100;
 
-            // Base size is 1rem (16px), scaled proportionally to the image's current size
-            // Base size is 1rem in the original image size
-            const baseSize = 16; // Assuming 1rem = 16px
-            const widthPercentage = (baseSize / (this.#imageWidthOriginal || 1)) * 100;
-            const heightPercentage = (baseSize / (this.#imageHeightOriginal || 1)) * 100;
-
-            let correctionPart = '';
-            if (this._responseCorrection[index] === true) {
-              correctionPart = ' correct';
-            } else if (this._responseCorrection[index] === false) {
-              correctionPart = ' incorrect';
-            }
-
             return html`
               <button
-                part="point${correctionPart}"
+                part=${this.pointPart(point, index)}
                 style=${styleMap({
                   pointerEvents: this.maxChoices === 1 ? 'none' : 'auto',
                   position: 'absolute',
-                  transform: 'translate(-50%, -50%)',
                   left: `${leftPercentage}%`,
-                  top: `${topPercentage}%`,
-                  width: `min(${widthPercentage}%, 1rem)`,
-                  height: `min(${heightPercentage}%, 1rem)`,
-                  minWidth: `min(${widthPercentage}%, 1rem)`,
-                  minHeight: `min(${heightPercentage}%, 1rem)`,
-                  borderRadius: '50%', // Ensures round shape
-                  background: 'red' // Example styling, adjust as needed
+                  top: `${topPercentage}%`
                 })}
                 aria-label="Remove point at ${point}"
                 ?disabled=${this.disabled}
@@ -222,28 +241,37 @@ export class QtiSelectPointInteraction extends Interaction {
             `;
           }
         )}
-        ${repeat(
-          this._correctAreas?.filter(area => area) || [],
-          area => area,
-          (area, i) =>
-            html`<div
-              style=${styleMap({
-                position: 'absolute',
-                pointerEvents: 'none',
-                backgroundColor: 'var(--qti-correct)',
-                opacity: '0.5'
-              })}
-              data-coord="${area.coords}"
-              alt=${`correct-response-${i + 1}`}
-              data-shape="${area.shape}"
-            ></div>`
-        )}
+        ${this.renderSupplementalLayer()}
         <slot></slot>
       </point-container>`;
   }
 
   validate(): boolean {
-    return this.response !== null && this.response.length >= this.minChoices && this.response.length <= this.maxChoices;
+    const selectedCount = this.response?.length ?? 0;
+    const exceedsMax = this.maxChoices !== 0 && Number.isFinite(this.maxChoices) && selectedCount > this.maxChoices;
+    const belowMin = selectedCount < this.minChoices;
+
+    let isValid = true;
+    let validityMessage = '';
+
+    if (exceedsMax) {
+      isValid = false;
+      validityMessage =
+        this.dataset.maxSelectionsMessage ||
+        `Please select no more than ${this.maxChoices} ${this.maxChoices === 1 ? 'point' : 'points'}.`;
+    } else if (belowMin) {
+      isValid = false;
+      validityMessage =
+        this.dataset.minSelectionsMessage ||
+        `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'point' : 'points'}.`;
+    }
+
+    this.setInteractionValidity(isValid, validityMessage, this.#imgElement ?? this, { suppressInline: true });
+    return isValid;
+  }
+
+  public override reportValidity(): boolean {
+    return super.reportValidity();
   }
 
   #calculateScale() {
@@ -261,6 +289,7 @@ export class QtiSelectPointInteraction extends Interaction {
   }
 
   override firstUpdated(): void {
+    super.firstUpdated();
     this.#imgElement = this.querySelector('img');
 
     if (this.#imgElement) {

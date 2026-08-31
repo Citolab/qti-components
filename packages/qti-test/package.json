@@ -23,6 +23,21 @@
   ],
   "license": "GPL-3.0-only",
   "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    },
+    "./register": {
+      "types": "./dist/register.d.ts",
+      "import": "./dist/register.js"
+    },
+    "./*": "./dist/*"
+  },
   "peerDependencies": {
     "@heximal/templates": "^0.1.5",
     "@lit/context": "^1.1.6",
@@ -32,7 +47,9 @@
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "publish": "node ../../tools/publish-if-needed.mjs"
+    "publish": "node ../../tools/publish-if-needed.mjs",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",

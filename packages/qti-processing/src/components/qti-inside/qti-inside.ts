@@ -128,7 +128,7 @@ export class QtiInside extends QtiExpression<boolean | null> {
       return false;
     }
 
-    return ((point.x - centerX) ** 2) / (radiusX ** 2) + ((point.y - centerY) ** 2) / (radiusY ** 2) <= 1;
+    return (point.x - centerX) ** 2 / radiusX ** 2 + (point.y - centerY) ** 2 / radiusY ** 2 <= 1;
   }
 
   #isInsidePolygon(point: Point, coords: number[]): boolean | null {
@@ -146,8 +146,7 @@ export class QtiInside extends QtiExpression<boolean | null> {
       const yj = coords[previous + 1];
 
       const intersects =
-        yi > point.y !== yj > point.y &&
-        point.x < ((xj - xi) * (point.y - yi)) / ((yj - yi) || Number.EPSILON) + xi;
+        yi > point.y !== yj > point.y && point.x < ((xj - xi) * (point.y - yi)) / (yj - yi || Number.EPSILON) + xi;
 
       if (intersects) {
         inside = !inside;
@@ -159,5 +158,3 @@ export class QtiInside extends QtiExpression<boolean | null> {
     return inside;
   }
 }
-
-customElements.define('qti-inside', QtiInside);

@@ -1,10 +1,14 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
+import { expect, userEvent, within } from 'storybook/test';
 
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
+import type { QtiHottext } from '@qti-components/interactions-core';
 import type { QtiHottextInteraction } from './qti-hottext-interaction';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-hottext-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-hottext-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiHottextInteraction & typeof args>;
 
@@ -24,7 +28,7 @@ const meta: Meta<QtiHottextInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 
@@ -62,20 +66,38 @@ export const Hidden = {
 };
 
 export const Multiple: Story = {
-  render: args =>
-    template(
-      args,
-      html`
-        <p>
-          Sponsors of the Olympic Games
-          <qti-hottext-interaction max-choices="2" response-identifier="RESPONSE" class="qti-input-control-hidden">
-            <qti-hottext identifier="A">who bought</qti-hottext> advertising time on United States television
-            <qti-hottext identifier="B">includes</qti-hottext>
-            <qti-hottext identifier="C">at least</qti-hottext> a dozen international firms
-            <qti-hottext identifier="D">whose</qti-hottext> names are familiar to American consumers.
-            <qti-hottext identifier="E">No error.</qti-hottext>
-          </qti-hottext-interaction>
-        </p>
-      `
-    )
+  render: Default.render,
+  args: {
+    'max-choices': 2,
+    'response-identifier': 'RESPONSE',
+    class: ['qti-input-control-hidden'],
+    'data-testid': 'interaction'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const interaction = canvas.getByTestId<QtiHottextInteraction>('interaction');
+    const whoBought = canvas.getByText<QtiHottext>('who bought');
+    const includes = canvas.getByText<QtiHottext>('includes');
+    const atLeast = canvas.getByText<QtiHottext>('at least');
+
+    await step('Select three hottexts', async () => {
+      await userEvent.click(whoBought);
+      await userEvent.click(includes);
+      await userEvent.click(atLeast);
+
+      expect(whoBought.internals.states.has('checked')).toBe(true);
+      expect(includes.internals.states.has('checked')).toBe(true);
+      expect(atLeast.internals.states.has('checked')).toBe(true);
+      expect(interaction.response).toEqual(['A', 'B', 'C']);
+    });
+
+    await step('Deselecting the last hottext preserves the earlier selections', async () => {
+      await userEvent.click(atLeast);
+
+      expect(whoBought.internals.states.has('checked')).toBe(true);
+      expect(includes.internals.states.has('checked')).toBe(true);
+      expect(atLeast.internals.states.has('checked')).toBe(false);
+      expect(interaction.response).toEqual(['A', 'B']);
+    });
+  }
 };

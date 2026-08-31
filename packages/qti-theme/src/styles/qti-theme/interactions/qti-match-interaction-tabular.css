@@ -1,0 +1,141 @@
+@layer qti-components.interactions.base {
+  qti-match-interaction.qti-match-tabular {
+    &::part(corner) {
+      border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(input-cell) {
+      border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+      padding: var(--qti-padding-box);
+      transition: background-color 0.1s ease;
+    }
+    &::part(input-cell):hover {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* Indicator parts mirror qti-choice-interaction / qti-hottext-interaction: `control` is the
+       outer box, `control-mark` the inner indicator.
+
+       The cells are plain spans in this interaction's shadow root, so they have no
+       ElementInternals and cannot carry `:state()` — and `::part(x):state(y)` needs the state on
+       the part's own element. They therefore carry variant *part tokens*, which deliberately
+       reuse the state vocabulary: radio | checkbox, checked, correct | incorrect. */
+    &::part(control radio) {
+      @mixin radio;
+    }
+    &::part(control checkbox) {
+      @mixin checkbox;
+    }
+    &::part(control-mark) {
+      @mixin mark-size;
+    }
+    /* Both `control` and `control-mark` carry the variant tokens, so themes can repaint the
+       outer box and the inner indicator independently. Scope the base inner-fill rules to
+       `control-mark` so the classic dot-in-ring look stays intact; themes wanting the inverted
+       look (outer filled, e.g. Kennisnet) add their own `::part(control checked)` rules. */
+    &::part(control-mark radio checked) {
+      @mixin radio-checked;
+    }
+    &::part(control-mark checkbox checked) {
+      @mixin checkbox-checked;
+    }
+  }
+
+  /* Header cells — the two slotted <qti-simple-match-set>s have display:contents
+     so their child choices act as row/column header cells. Written as a fully-
+     qualified descendant selector (not nested under qti-match-tabular's `&`)
+     because native CSS nesting parses `& <ident>` as compound, not descendant,
+     and the rule wouldn't match. :first-of-type / :last-of-type drive the
+     row vs col differentiation in both runtime (slot attribute set
+     declaratively) and the editor (manual slot assignment, no slot attribute).
+     Drag is disabled in tabular mode; override the mixin's inline cursor:grab. */
+  qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
+    background-color: var(--qti-bg-active);
+    font-weight: 500;
+    padding: var(--qti-padding-box);
+    border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+    cursor: default !important;
+  }
+
+  /* A header cell centres its label. The choice is a light-DOM grandchild of the slotted match-set,
+     so nothing in the interaction's shadow root can select it; these two variables are the hand-off,
+     and qti-simple-associable-choice.styles.ts spends them on its own :host box. */
+  qti-match-interaction.qti-match-tabular qti-simple-match-set {
+    --qti-choice-align-items: center;
+  }
+  qti-match-interaction.qti-match-tabular qti-simple-match-set:last-of-type {
+    --qti-choice-justify-content: center;
+  }
+  qti-match-interaction.qti-match-tabular qti-simple-match-set:last-of-type qti-simple-associable-choice {
+    text-align: center;
+  }
+
+  qti-match-interaction.qti-match-tabular {
+    /* The 1px gap is the grid's own background showing through, which is what draws the cell rules.
+       Clipping it to the rounded corners is layout and lives in qti-match-interaction-tabular.styles.ts. */
+    &::part(grid) {
+      gap: 1px;
+      background-color: var(--qti-border-color);
+      border: var(--qti-border-thickness) solid var(--qti-border-color);
+      border-radius: var(--qti-border-radius);
+    }
+
+    &::part(corner),
+    &::part(input-cell) {
+      border: none;
+      background-color: white;
+    }
+
+    &::part(control checked) {
+      @mixin control-selected var(--qti-primary);
+    }
+
+    &::part(control-mark radio checked) {
+      background-color: white;
+      width: calc(var(--qti-control-size) * 0.5);
+      height: calc(var(--qti-control-size) * 0.5);
+    }
+
+    &::part(control-mark checkbox checked) {
+      background-color: white;
+    }
+  }
+
+  qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
+    border: none;
+    background-color: white;
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-match-interaction.qti-match-tabular {
+    /* Correct / incorrect overlays — border on the outer box, and a matching fill on the inner
+       indicator when checked. */
+    &::part(control correct) {
+      border-color: var(--qti-correct);
+    }
+    &::part(control incorrect) {
+      border-color: var(--qti-incorrect);
+    }
+
+    &::part(control checked correct) {
+      @mixin control-selected var(--qti-correct);
+    }
+
+    &::part(control checked incorrect) {
+      @mixin control-selected var(--qti-incorrect);
+    }
+  }
+
+  .full-correct-response qti-match-interaction.qti-match-tabular {
+    &::part(control checked) {
+      @mixin answer;
+    }
+
+    &::part(control-mark radio checked),
+    &::part(control-mark checkbox checked) {
+      background-color: var(--qti-answer-fg);
+    }
+  }
+}

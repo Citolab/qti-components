@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": [
+      "@types/dom-view-transitions",
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "../tools/storybook/vite-env.d.ts"
+  ]
+}

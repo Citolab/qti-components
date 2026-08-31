@@ -2,7 +2,8 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 
 vi.mock('./flip.utils', () => ({
   captureMultipleFlipStates: vi.fn(() => new Map()),
-  animateMultipleFlips: vi.fn()
+  animateMultipleFlips: vi.fn(),
+  resolveMotionScale: vi.fn(() => 1) // full motion; createDropPlaceholder scales its transition by this
 }));
 
 import { animateMultipleFlips, captureMultipleFlipStates } from './flip.utils';

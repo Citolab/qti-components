@@ -1,31 +1,117 @@
 import { css } from 'lit';
+
+import { boxSizing, validationMessage } from '@qti-components/base';
 // import componentStyles from '../../utilities/styles/component.styles';
 
 /* ${componentStyles} */
-export default css`
-  slot:not([hidden]) {
-    /* slot where the */
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  :host(.qti-choices-top) slot {
-    flex-direction: column;
-  }
-  :host(.qti-choices-bottom) slot {
-    flex-direction: column-reverse;
-  }
-  :host(.qti-choices-left) slot {
-    flex-direction: row;
-  }
-  :host(.qti-choices-right) slot {
-    flex-direction: row-reverse;
-  }
-  slot[name='prompt'] {
-    display: block;
-  }
-  ::slotted(qti-simple-match-set) {
-    /* Make sure the drag and drop container slots have the same width */
-    flex: 1;
-  }
-`;
+export default [
+  boxSizing,
+  validationMessage,
+  css`
+    /*
+     * A custom element is inline unless it says otherwise, and this one never did. Its shadow content
+     * is block-level, so block-in-inline generated the anonymous block boxes and it looked correct —
+     * but an inline box whose children are all block has no background area of its own, so the host
+     * could not be painted, outlined or given a radius by anything downstream. Declaring the box the
+     * element already had is layout-neutral: measured on ITEM009, the element rect and the following
+     * sibling's position are identical to the pixel with and without this.
+     */
+    :host {
+      display: block;
+
+      /*
+       * Match's columns are wider than the shared default, because each one is a category card
+       * rather than a slot holding one chip. This was the 150px fallback inside the grid rule
+       * below; a fallback could hold it only while nothing declared the token, so it is a real
+       * declaration now. On :host, so it survives with or without the theme — and so a theme can
+       * still retune it from the document, which outranks :host for the element it matches.
+       */
+      --qti-drop-track-min-width: 150px;
+    }
+
+    slot:not([hidden]) {
+      /* slot where the */
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    :host(.qti-choices-top) slot {
+      flex-direction: column;
+    }
+    :host(.qti-choices-bottom) slot {
+      flex-direction: column-reverse;
+    }
+    :host(.qti-choices-left) slot {
+      flex-direction: row;
+    }
+    :host(.qti-choices-right) slot {
+      flex-direction: row-reverse;
+    }
+    slot[name='prompt'] {
+      display: block;
+    }
+    ::slotted(qti-simple-match-set) {
+      /* Make sure the drag and drop container slots have the same width */
+      flex: 1;
+    }
+
+    /*
+     * The two match sets, in drag-drop mode. Both are slotted, so ::slotted() reaches them; the
+     * theme used to lay them out by descendant selector from the document.
+     *
+     * First set is the chip bank — a wrapping row. Last set is the target grid, whose track floor is
+     * a token so a theme can decide how wide a category card gets. That floor used to be a bare
+     * '150px' in the theme, the one responsive breakpoint hiding in a stylesheet that is meant to
+     * hold none.
+     *
+     * The gaps stay in the theme: gap is spacing.
+     */
+    :host(:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:first-of-type) {
+      display: flex;
+      flex-wrap: wrap;
+
+      /*
+       * Two different properties, and the bank needs both.
+       *
+       * align-items packs a chip to the top of ITS OWN line. align-content packs the LINES to the
+       * top of the container, and was missing — so it took the initial normal, which for a
+       * multi-line flex container behaves as stretch.
+       *
+       * That only shows once the bank wraps AND is taller than its content, which is exactly the
+       * side-by-side arrangement: the bank and the target grid are flex siblings, so the bank is
+       * stretched to the grid's height. Measured on ITEM008 at 740px, where the bank wraps to two
+       * lines: container 272px tall for 37px chips, the two lines stretched to 136px each, and the
+       * second row of chips floating 144px below the first instead of 53px.
+       */
+      align-items: flex-start;
+      align-content: flex-start;
+    }
+
+    :host(:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:last-of-type) {
+      display: grid;
+      /*
+       * The track floor by name — see the same rule in qti-order-interaction.styles.ts. Match sets
+       * it wider than the shared default below, because a category card has to look able to hold
+       * several answers. The measured term is still in the max() and still resolves to 0px here:
+       * this interaction sets autoSizeDropzones = false, so nothing ever publishes it. Written out
+       * anyway so the two grids read identically and neither has to be understood as the special one.
+       */
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(max(var(--qti-drop-track-min-width, 150px), var(--qti-dropzone-min-width, 0px)), 1fr)
+      );
+    }
+
+    /* An answer key shows the answer, not the bank you would have dragged it from. The attribute is
+       set on the clone by the correct-response mixin; the theme used to do this with a
+       '.full-correct-response' descendant selector, from the document. */
+    :host([answer-key]:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:first-of-type) {
+      display: none;
+    }
+
+    /* Same for a disabled interaction: nothing left to drag, so no bank. */
+    :host(:disabled:not(.qti-match-tabular)) ::slotted(qti-simple-match-set:first-of-type) {
+      display: none;
+    }
+  `
+];

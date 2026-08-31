@@ -1,12 +1,10 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import * as styles from '../styles';
 
 import type { QtiTest } from '../qti-test/qti-test';
 import type { TestContainer } from '../test-container/test-container';
 
-@customElement('test-check-item')
 export class TestCheckItem extends LitElement {
   static override styles = css`
     :host {
@@ -21,12 +19,6 @@ export class TestCheckItem extends LitElement {
     super();
     this.addEventListener('click', () => {
       this.dispatchEvent(new CustomEvent('test-end-attempt', { bubbles: true }));
-      this.dispatchEvent(
-        new CustomEvent('test-show-correct-response', {
-          detail: true,
-          bubbles: true
-        })
-      );
       const qtiTest = this.closest<QtiTest>('qti-test');
       const testContainer = qtiTest.querySelector<TestContainer>('test-container');
 

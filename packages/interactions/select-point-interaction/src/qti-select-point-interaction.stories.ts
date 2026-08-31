@@ -5,7 +5,9 @@ import { expect, fireEvent, fn, waitFor, within } from 'storybook/test';
 import type { QtiSelectPointInteraction } from './qti-select-point-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
-const { events, args, argTypes, template } = getStorybookHelpers('qti-select-point-interaction');
+const { events, args, argTypes, template } = getStorybookHelpers('qti-select-point-interaction', {
+  excludeCategories: ['methods', 'events', 'properties']
+});
 
 type Story = StoryObj<QtiSelectPointInteraction & typeof args>;
 
@@ -25,7 +27,7 @@ const meta: Meta<QtiSelectPointInteraction> = {
       handles: events
     }
   },
-  tags: ['autodocs']
+  tags: ['autodocs', 'iol']
 };
 export default meta;
 

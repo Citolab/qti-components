@@ -1,2 +1,7 @@
-import { QtiExtendedTextInteraction } from './qti-extended-text-interaction';
-customElements.define('qti-extended-text-interaction', QtiExtendedTextInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

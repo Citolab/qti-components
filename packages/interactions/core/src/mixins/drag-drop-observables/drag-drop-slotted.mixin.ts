@@ -1,41 +1,69 @@
 import { property } from 'lit/decorators.js';
+import { provide } from '@lit/context';
 
+import { responseAttributeConverter } from '@qti-components/base';
+
+import { dragDropContext } from '../../context/drag-drop.context';
 import {
-  collectResponseData,
-  countTotalAssociations,
+  clearDragChipStates,
   findInventoryItems,
   getMatchMaxValue,
-  isDroppableAtCapacity,
-  applyDropzoneAutoSizing
+  hasDragChipState,
+  setDropFilled,
+  setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
-import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
+import { DropzoneAutoSizeMixin } from '../dropzone-auto-size/dropzone-auto-size.mixin';
+import {
+  animateFlip,
+  captureMultipleFlipStates,
+  animateMultipleFlips,
+  flipStateFromRect,
+  motionEnabled,
+  type FlipAnimationOptions
+} from './utils/flip.utils';
 
+import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
-import type { Interaction, IInteraction } from '@qti-components/base';
+import type { Interaction, RegisteredInteraction } from '@qti-components/base';
+import type { DragDropState } from '../../context/drag-drop.context';
 import type { DragDropCore } from './drag-drop-core.mixin';
+import type { DropzoneAutoSize } from '../dropzone-auto-size/dropzone-auto-size.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
-export type DragDropSlotted = DragDropCore & {
-  minAssociations: number;
-  maxAssociations: number;
-  disableAnimations: boolean;
-  enableFlipAnimations: boolean;
-  autoSizeDropzones: boolean;
-  validate(): boolean;
-  reportValidity(): boolean;
-  reset(): void;
-  saveResponse(value?: string | string[]): void;
-  shouldTreatBlockedMaxAsInvalid(): boolean;
-  shouldReturnToInventoryOnInventoryDrop(): boolean;
-};
+export type DragDropSlotted = DragDropCore &
+  DropzoneAutoSize & {
+    minAssociations: number;
+    maxAssociations: number;
+    disableAnimations: boolean;
+    enableFlipAnimations: boolean;
+    validate(): boolean;
+    reportValidity(): boolean;
+    reset(): void;
+    saveResponse(value?: string | string[]): void;
+    shouldTreatBlockedMaxAsInvalid(): boolean;
+    shouldReturnToInventoryOnInventoryDrop(): boolean;
 
-interface InteractionConfiguration {
-  copyStylesDragClone: boolean;
-  dragCanBePlacedBack: boolean;
-  dragOnClick: boolean;
-}
+    /** Placement, published on `dragDropContext`. An interaction that renders its own drop targets
+     *  reads `nodesByTarget` straight out of it. */
+    _dragDrop: Readonly<DragDropState>;
+    /** The chips a target holds — from the placement map, or the DOM, depending on the target. */
+    chipsIn(droppable: HTMLElement): HTMLElement[];
+    isDeclarativeTarget(el: HTMLElement | null | undefined): boolean;
+
+    /** Republish placement on `dragDropContext` and re-render the targets that read it. */
+    syncDragDropState(): void;
+
+    /**
+     * How many associations exist, for `min-associations` / `max-associations`.
+     *
+     * The default counts placed chips, which is one-to-one with associations only when a chip *is*
+     * an association — a gap holding one chip, a match target holding one chip. Associate pairs two
+     * chips per association and overrides this. Declared here so it can be.
+     */
+    totalAssociationsFromState(): number;
+  };
 
 export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   superClass: T,
@@ -44,21 +72,36 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   dragContainersSelector = 'slot[part="drags"]',
   collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCornersWithInventoryPriority'
 ) => {
+  /*
+   * Measurement is layered UNDER the drag-drop stack, not inside it, so the editor can take it
+   * without the rest — it renders the same elements and imports the same stylesheets, but does its
+   * own drag handling inside a ProseMirror document. Same selectors, so both layers agree on what a
+   * chip is; `collectAutoSizeTargets` below then hands it the already-cached lists rather than
+   * letting it re-query.
+   */
+  const AutoSized = DropzoneAutoSizeMixin(superClass, draggablesSelector, droppablesSelector, dragContainersSelector);
+
   // Use 'closestCorners' by default for associate interactions (better for multiple drop zones)
   const Core = DragDropCoreMixin(
-    superClass,
+    AutoSized,
     draggablesSelector,
     droppablesSelector,
     dragContainersSelector,
     collisionAlgorithm
   );
 
-  abstract class DragDropSlottedElement extends Core implements IInteraction {
-    @property({ attribute: false, type: Object }) protected configuration: InteractionConfiguration = {
-      copyStylesDragClone: true,
-      dragCanBePlacedBack: true,
-      dragOnClick: false
-    };
+  abstract class DragDropSlottedElement extends Core implements RegisteredInteraction {
+    /*
+     * A `configuration` object used to sit here — { copyStylesDragClone, dragCanBePlacedBack,
+     * dragOnClick } — and configured nothing. Nothing in the repo ever assigned it; `dragOnClick`
+     * had no reader at all, `copyStylesDragClone` only one in the dead legacy mixin (the live
+     * `createDragClone` copies computed styles unconditionally), and `dragCanBePlacedBack` gated the
+     * branch below on a value that was always true. It was also unreachable by design —
+     * `attribute: false` AND `protected` — so no author or host could have set it either.
+     *
+     * If any of the three is ever wanted for real, it should come back as an attribute (like
+     * `auto-size-dropzones`) or through `configContext`, not as a private object nobody can reach.
+     */
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
 
     private _maxAssociations = 0;
@@ -88,6 +131,179 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     protected _response: string[] = [];
 
+    /**
+     * What each drop target holds. Published to the drop targets, which will render themselves
+     * from it once the DOM stops being the source of truth.
+     *
+     * Reassign, never mutate — an in-place change does not notify consumers.
+     */
+    @provide({ context: dragDropContext })
+    public _dragDrop: Readonly<DragDropState> = { dragsByTarget: {}, countByTarget: {}, nodesByTarget: {} };
+
+    /**
+     * The one place that reads placement out of the DOM.
+     *
+     * Replaces nine scattered `querySelectorAll` readbacks (`collectResponseData`,
+     * `countTotalAssociations`, `isDroppableAtCapacity`). The DOM is still authoritative here;
+     * centralising it is what makes inverting that possible without touching nine call sites.
+     */
+    /**
+     * What each declarative drop target holds. The DOM is derived from this, not the other way.
+     *
+     * A target opts in with `acceptsDeclarativeDrops`, consumes `dragDropContext`, and renders
+     * `repeat(nodesByTarget[id])` into its own shadow root. The interaction never appends into it.
+     * Everything else still takes an `appendChild` and is read back by query — the two live side by
+     * side, and `chipsIn` hides which is which.
+     *
+     * Keyed by element, not identifier: the map is short-lived and element identity is exact.
+     */
+    #placement = new WeakMap<HTMLElement, HTMLElement[]>();
+
+    /**
+     * Is this a full *single-capacity* declarative target receiving a chip dragged out of a
+     * different target? Only single-capacity targets swap — the occupant leaves so the incoming chip
+     * can take its place. A multi-capacity target at match-max has no room to give: it must stay
+     * blocked, or a cross-target move would append past its capacity (the per-target match-max is
+     * meaningless otherwise). `allowDrop` uses this to re-permit a target it disabled for capacity.
+     */
+    protected isSwapTarget(droppable: HTMLElement): boolean {
+      const source = this.dragState.sourceDroppable;
+      const parsedMatchMax = parseInt(droppable.getAttribute('match-max') || '1', 10);
+      const isSingleCapacity = (Number.isNaN(parsedMatchMax) ? 1 : parsedMatchMax) === 1;
+      return (
+        isSingleCapacity &&
+        this.isDeclarativeTarget(droppable) &&
+        !!source &&
+        source !== droppable &&
+        this.trackedDroppables.includes(source)
+      );
+    }
+
+    /**
+     * Does this target render its own chips?
+     *
+     * A custom element says so with a property (`qti-gap`, `qti-associable-hotspot`). Order's and
+     * associate's targets are plain `<div part="drop">` in the interaction's own shadow root, and a
+     * div cannot carry a property that survives a Lit re-render — it says so with an attribute, and
+     * the *interaction* renders the chips into it. Same placement map either way.
+     */
+    public isDeclarativeTarget(el: HTMLElement | null | undefined): boolean {
+      if (!el) return false;
+      if ((el as unknown as { acceptsDeclarativeDrops?: boolean }).acceptsDeclarativeDrops === true) return true;
+      return el.hasAttribute('data-declarative-drops');
+    }
+
+    /** The chips a target holds, whichever way it holds them. */
+    public chipsIn(droppable: HTMLElement): HTMLElement[] {
+      if (this.isDeclarativeTarget(droppable)) return [...(this.#placement.get(droppable) ?? [])];
+      return Array.from(droppable.querySelectorAll<HTMLElement>(draggablesSelector));
+    }
+
+    /** The target currently holding this chip, across shadow boundaries. */
+    protected droppableHolding(chip: HTMLElement): HTMLElement | null {
+      return (
+        this.trackedDroppables.find(
+          d => this.chipsIn(d).includes(chip) || d.contains(chip) || !!d.shadowRoot?.contains(chip)
+        ) ?? null
+      );
+    }
+
+    private placeChip(droppable: HTMLElement, chip: HTMLElement): void {
+      this.#placement.set(droppable, [...(this.#placement.get(droppable) ?? []), chip]);
+    }
+
+    public override removeChipFromDroppable(droppable: HTMLElement | null, chip: HTMLElement): void {
+      const target = droppable ?? this.droppableHolding(chip);
+      if (target && this.isDeclarativeTarget(target)) {
+        const remaining = (this.#placement.get(target) ?? []).filter(node => node !== chip);
+        this.#placement.set(target, remaining);
+        if (remaining.length === 0) setDropFilled(target, false);
+        this.syncDragDropState();
+        return;
+      }
+      chip.remove();
+    }
+
+    private clearChips(droppable: HTMLElement): void {
+      if (this.isDeclarativeTarget(droppable)) {
+        this.#placement.set(droppable, []);
+        // Emptying the map is not enough: nothing re-renders until placement is published.
+        this.syncDragDropState();
+      } else {
+        this.chipsIn(droppable).forEach(chip => chip.remove());
+      }
+      setDropFilled(droppable, false);
+    }
+
+    public syncDragDropState(): void {
+      const dragsByTarget: Record<string, string[]> = {};
+      const countByTarget: Record<string, number> = {};
+      const nodesByTarget: Record<string, HTMLElement[]> = {};
+
+      for (const droppable of this.trackedDroppables) {
+        const targetId = droppable.getAttribute('identifier');
+        if (!targetId) continue;
+
+        const bySelector = this.chipsIn(droppable);
+        const byAttribute = this.isDeclarativeTarget(droppable)
+          ? bySelector
+          : Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+
+        // Response uses the structural selector only; capacity uses whichever finds more.
+        // These differ, and collapsing them would silently change matchMax behaviour.
+        dragsByTarget[targetId] = bySelector
+          .map(chip => chip.getAttribute('identifier'))
+          .filter((id): id is string => Boolean(id));
+        countByTarget[targetId] = Math.max(bySelector.length, byAttribute.length);
+        nodesByTarget[targetId] = bySelector;
+      }
+
+      this._dragDrop = { dragsByTarget, countByTarget, nodesByTarget };
+      // Consumers of the context re-render on reassignment. An interaction that renders its own
+      // drop targets is not a consumer of its own context, so it has to be told.
+      this.requestUpdate();
+    }
+
+    /** The response, derived from placement: `"<dragId> <targetId>"` per placed chip. */
+    protected responseFromState(): string[] {
+      this.syncDragDropState();
+      const { dragsByTarget } = this._dragDrop;
+      return this.trackedDroppables.flatMap(droppable => {
+        const targetId = droppable.getAttribute('identifier');
+        if (!targetId) return [];
+        return (dragsByTarget[targetId] ?? []).map(dragId => `${dragId} ${targetId}`);
+      });
+    }
+
+    public totalAssociationsFromState(): number {
+      this.syncDragDropState();
+      return Object.values(this._dragDrop.countByTarget).reduce((total, count) => total + count, 0);
+    }
+
+    /**
+     * Is this drop target full?
+     *
+     * `match-max` on a drop is QTI's own capacity attribute, and the semantics here match the spec:
+     * the value is per-target ("match-max on the characters … is 1 because each character can be in
+     * only one play but it is 4 on the plays … because each play could contain all the characters",
+     * QTI 3 implementation guide §3.2.9), and **0 means unlimited** (§3.2.5's gap table spells it
+     * out: "Non-negative integer, 0 means unlimited").
+     *
+     * The `|| '1'` is NOT a spec default — the spec marks `match-max` **required** on
+     * `qti-simple-associable-choice` and states no default. It is a lenient fallback for markup that
+     * omits a required attribute, chosen as 1 because a drop that takes one chip is the least
+     * surprising reading of "unspecified". Same for the NaN guard.
+     */
+    protected droppableAtCapacityFromState(droppable: HTMLElement): boolean {
+      const parsed = parseInt(droppable.getAttribute('match-max') || '1', 10);
+      const matchMax = Number.isNaN(parsed) ? 1 : parsed;
+      if (matchMax === 0) return false;
+
+      const targetId = droppable.getAttribute('identifier');
+      const current = targetId ? (this._dragDrop.countByTarget[targetId] ?? 0) : 0;
+      return current >= matchMax;
+    }
+
     // Track when a drop was blocked due to max capacity
     private _dropBlockedDueToMax = false;
 
@@ -107,13 +323,41 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       return !this._enableFlipAnimations;
     }
 
+    /* The `disable-animations` attribute AND the theme's motion budget: FLIP runs only when both
+       allow it, so `--qti-motion: 0` / reduced-motion disables it without any consumer code. */
     get enableFlipAnimations(): boolean {
-      return this._enableFlipAnimations;
+      return this._enableFlipAnimations && motionEnabled(this as unknown as Element);
     }
 
-    @property({ type: Boolean, attribute: 'auto-size-dropzones' })
-    public autoSizeDropzones = false;
+    /**
+     * Measure what the drag-drop machinery already tracks, rather than re-querying.
+     *
+     * `cacheInteractiveElements()` resolves the same three selectors and then adds what a plain
+     * query cannot see — drag clones, and chips registered through `context-request` from a shadow
+     * root one level deeper. Re-querying would give the auto-sizer a smaller set than the one the
+     * drops are actually built from, so the widest chip could be missed.
+     */
+    public override collectAutoSizeTargets() {
+      return {
+        draggables: this.trackedDraggables,
+        droppables: this.trackedDroppables,
+        dragContainers: this.trackedDragContainers
+      };
+    }
 
+    /**
+     * Set via the `response="…"` attribute before the drag/drop machinery has
+     * cached its dropzones (`setupDragDrop` awaits the first render). The
+     * `afterCache` extension hook in this mixin applies it once dropzones exist.
+     */
+    private _pendingResponse: string[] | undefined = undefined;
+
+    @property({
+      attribute: 'response',
+      reflect: false,
+      noAccessor: true,
+      converter: responseAttributeConverter({ emptyAs: [] }) as ComplexAttributeConverter<unknown, unknown>
+    })
     get response(): string {
       const getResponse = (this as unknown as { getResponse?: () => unknown }).getResponse;
       const candidate = typeof getResponse === 'function' ? getResponse.call(this) : undefined;
@@ -121,13 +365,19 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         ? candidate
         : (() => {
             this.cacheInteractiveElements();
-            return collectResponseData(this.trackedDroppables, draggablesSelector);
+            return this.responseFromState();
           })();
       return computedResponse.join(',');
     }
 
     set response(value: string | string[]) {
       if (Array.isArray(value)) {
+        // Dropzones haven't been cached yet — defer to `afterCache`.
+        if (!this.trackedDroppables || this.trackedDroppables.length === 0) {
+          this._pendingResponse = value;
+          this._internals.setFormValue(JSON.stringify(value));
+          return;
+        }
         const getValue = (this as unknown as { getValue?: (v: string[]) => unknown }).getValue;
         const normalized = typeof getValue === 'function' ? getValue.call(this, value) : value;
         const responseEntries = Array.isArray(normalized)
@@ -145,7 +395,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           ? candidate
           : (() => {
               this.cacheInteractiveElements();
-              return collectResponseData(this.trackedDroppables, draggablesSelector);
+              return this.responseFromState();
             })();
       } else {
         // Compatibility note:
@@ -158,14 +408,45 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override afterCache(): void {
-      this.applyConfiguredChoicesContainerWidth();
+      // Order no longer matters between these two. Auto-sizing used to write a `min-width` from the
+      // widest chip that the configured width then had to run after and clear — `min-width` beats
+      // `width` — which made a re-measurement enough to silently discard
+      // `data-choices-container-width` again. `autoSizeDropzoneWidth` now suppresses that write at
+      // the source, so there is nothing to undo and nothing to sequence.
       this.updateMinDimensionsForDropZones();
+      this.applyConfiguredChoicesContainerWidth();
+      if (this._pendingResponse !== undefined) {
+        const pending = this._pendingResponse;
+        this._pendingResponse = undefined;
+        this.response = pending;
+      }
     }
 
+    /**
+     * `data-choices-container-width` is an explicit authoring instruction, so the measured width
+     * must not compete with it: auto-sizing derives that width from the widest chip and `min-width`
+     * takes precedence over `width`, so a theme with roomy chips would silently widen the gap past
+     * the authored value.
+     *
+     * Suppressing the measurement is how that is expressed — see `autoSizeDropzoneWidth`. The
+     * height is still measured; only the axis the author has spoken for is given up.
+     */
+    public override get autoSizeDropzoneWidth(): boolean {
+      return !this.dataset.choicesContainerWidth;
+    }
     private applyConfiguredChoicesContainerWidth(): void {
       const configuredWidth = this.dataset.choicesContainerWidth;
       if (!configuredWidth) return;
 
+      // Nothing to undo here: `autoSizeDropzoneWidth` is false whenever this attribute is set (see
+      // the getter below), so the measurement never published a width in the first place. This used
+      // to zero `--qti-dropzone-min-width` on the host instead, which only worked while it ran
+      // strictly after the pass AND while the pass wrote to exactly one element — two facts that
+      // stopped being true when the mixin gained re-measurement and a second write target.
+
+      // `width` stays an inline style, deliberately. `qti-associable-hotspot` already carries an
+      // inline width derived from its `coords`, and an authored container width must override
+      // that — a custom property read from the element's own `:host` rule never could.
       this.trackedDroppables.forEach(droppable => {
         droppable.style.width = `${configuredWidth}px`;
         droppable.style.boxSizing = 'border-box';
@@ -209,6 +490,14 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const isDisabled = droppable.hasAttribute('disabled');
       const isReturningToSource = droppable.hasAttribute('data-drag-source');
 
+      // A full single-capacity target is still droppable when the chip comes from another target:
+      // that is what a swap is. The sortable mixin used to arrange this implicitly, by moving the
+      // occupant's DOM node out during the hover preview so the target stopped being at capacity.
+      // A target that renders from data has no node to move, so the rule is stated outright.
+      if (isDisabled && this.isSwapTarget(droppable)) {
+        return true;
+      }
+
       return isTracked && (!isDisabled || isReturningToSource);
     }
 
@@ -224,16 +513,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         this.updateInventoryBasedOnMatchMax(identifier);
       }
 
-      // After drop, check if we've exceeded max and auto-validate if so
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
-      const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;
-
-      if (exceedsMax) {
-        // Automatically show validation message when max is exceeded
-        this._dropBlockedDueToMax = true;
-        this.validate();
-        this.reportValidity();
-      }
+      // Always refresh configured validity UI after user-driven drop changes.
+      // This ensures inline messages clear immediately when state becomes valid again.
+      this.validate();
+      this.reportValidity();
     }
 
     public override handleInvalidDrop(dragSource: HTMLElement | null): void {
@@ -249,21 +532,25 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // Legacy compatibility:
       // If drag started from a dropzone and ended on host/background (no collision target),
       // interpret this as "return to inventory".
-      if (
-        sourceDroppable &&
-        droppedOutsideKnownZones &&
-        inventoryReturnTarget &&
-        this.configuration.dragCanBePlacedBack !== false
-      ) {
+      if (sourceDroppable && droppedOutsideKnownZones && inventoryReturnTarget) {
         this.dropDraggableInDroppable(dragSource, inventoryReturnTarget);
       }
       // If drag started from a dropzone and the drop is invalid, restore only this
       // dragged instance back to its source droppable.
       else if (sourceDroppable && this.trackedDroppables.includes(sourceDroppable)) {
-        this.dropDraggableInDroppable(dragSource, sourceDroppable);
-      } else if (dragSource.style.opacity === '0') {
+        // Released over nothing, having come from a dropzone: the chip goes back where it was, and
+        // it travels there. The clone is still alive at this point — `handleDragEnd` removes it
+        // only after `handleInvalidDrop` returns — so its rect is the chip's last real position.
+        this.dropDraggableInDroppable(dragSource, sourceDroppable, this.dragState.dragClone?.getBoundingClientRect());
+      } else if (hasDragChipState(dragSource, 'dragging')) {
         // Drag started from inventory: simply restore inventory visual state.
-        this.restoreInventoryItem(dragSource);
+        this.restoreInventoryItem(dragSource, this.dragState.dragClone?.getBoundingClientRect());
+        const identifier = dragSource.getAttribute('identifier');
+        if (identifier) {
+          // If this identifier is already fully placed (match-max reached),
+          // keep the inventory item as a placeholder after invalid release.
+          this.updateInventoryBasedOnMatchMax(identifier);
+        }
         this.cacheInteractiveElements();
         this.checkAllMaxAssociations();
       }
@@ -272,7 +559,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // a disabled non-source target while global max is reached.
       // This avoids showing max-capacity errors for unrelated invalid drops
       // (e.g. dropping outside any known dropzone).
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
       const attemptedDisabledTarget =
         !!currentTarget && currentTarget.hasAttribute('disabled') && !currentTarget.hasAttribute('data-drag-source');
@@ -282,17 +569,30 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this.reportValidity();
     }
 
-    private updateMinDimensionsForDropZones(): void {
-      if (this.trackedDraggables.length === 0) return;
-
-      applyDropzoneAutoSizing(this.trackedDraggables, this.trackedDroppables, this.trackedDragContainers);
+    /**
+     * Fly a chip home from wherever it was last seen on screen.
+     *
+     * `from` is never read off `dragState` in here, and that is deliberate. Two different chips take
+     * this path: the one the user dragged, whose origin is the drag clone, and the occupant a swap
+     * evicted, whose origin is the dropzone it was sitting in. Reading the clone's rect for both
+     * would launch the evicted chip out of the cursor, from a place it had never been.
+     */
+    private animateReturn(element: HTMLElement | undefined, from: DOMRect | undefined): void {
+      if (!element || !from || !this.enableFlipAnimations) return;
+      // A frame late, on purpose. A declarative target's chips are rendered by Lit on a microtask,
+      // so measuring the chip's resting box straight after `placeChip` reads the box it had before
+      // the render. FLIP would then invert against the wrong "last" and the chip would arrive
+      // somewhere other than where it is.
+      requestAnimationFrame(() => {
+        animateFlip(element, flipStateFromRect(from), this.flipAnimationConfig);
+      });
     }
 
-    private restoreInventoryItem(dragSource: HTMLElement): void {
-      dragSource.style.opacity = '1.0';
+    private restoreInventoryItem(dragSource: HTMLElement, from?: DOMRect): void {
+      clearDragChipStates(dragSource);
       dragSource.style.display = '';
       dragSource.style.position = '';
-      dragSource.style.pointerEvents = 'auto';
+      this.animateReturn(dragSource, from);
     }
 
     private placeResponse(response: string): void {
@@ -324,7 +624,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // clears placed clones for that identifier.
         if (!this.dragState.sourceDroppable) {
           if (this.shouldReturnToInventoryOnInventoryDrop()) {
-            this.returnToInventory(draggable);
+            this.returnToInventory(draggable, dragClonePosition);
             this._dropBlockedDueToMax = false;
             this.validate();
             return;
@@ -332,7 +632,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
           // Keep the inventory source item in place for interactions that don't
           // use "drop to inventory clears placed clones" semantics (e.g. gap-match).
-          this.restoreInventoryItem(draggable);
+          this.restoreInventoryItem(draggable, dragClonePosition);
           this.cacheInteractiveElements();
           this.checkAllMaxAssociations();
           this._dropBlockedDueToMax = false;
@@ -341,10 +641,10 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         }
 
         const identifier = draggable.getAttribute('identifier');
-        draggable.remove();
+        this.removeChipFromDroppable(this.droppableHolding(draggable), draggable);
 
         if (identifier) {
-          this.restoreOriginalInInventory(identifier);
+          this.restoreOriginalInInventory(identifier, dragClonePosition);
         }
 
         this.cacheInteractiveElements();
@@ -368,13 +668,34 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       if (!allowsMultiple) {
         const existing =
-          droppable.querySelector(draggablesSelector) || droppable.querySelector('[qti-draggable="true"]');
+          this.chipsIn(droppable)[0] ??
+          (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[qti-draggable="true"]'));
         if (existing) {
           const existingId = existing.getAttribute('identifier');
-          existing.remove();
+          // Where the evicted occupant is standing right now. Taken before it is removed, because
+          // afterwards it has no box to measure — and it is *this* rect it should travel from, not
+          // the dragged chip's clone.
+          const evictedFrom = (existing as HTMLElement).getBoundingClientRect();
+          this.removeChipFromDroppable(droppable, existing as HTMLElement);
 
-          if (existingId) {
-            this.restoreOriginalInInventory(existingId);
+          // A single-capacity target that already holds a chip and receives one *from another
+          // target* swaps them: the occupant takes the dragged chip's vacated place. Dragged from
+          // the inventory instead, the occupant simply goes back to the bank.
+          //
+          // Non-declarative targets get this from the sortable mixin's hover preview, which moves
+          // the occupant's DOM node. A target that renders from data has no node to move.
+          const source = this.dragState.sourceDroppable;
+          const swapInto =
+            this.isDeclarativeTarget(droppable) && source && source !== droppable && this.isDeclarativeTarget(source)
+              ? source
+              : null;
+
+          if (swapInto) {
+            this.placeChip(swapInto, existing as HTMLElement);
+            setDropFilled(swapInto, true);
+            this.animateReturn(existing as HTMLElement, evictedFrom);
+          } else if (existingId) {
+            this.restoreOriginalInInventory(existingId, evictedFrom);
           }
         }
       }
@@ -386,15 +707,38 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       cleanClone.setAttribute('tabindex', '0');
 
       // FLIP: Last - add the new element (this may cause siblings to shift)
-      if (droppable.tagName === 'SLOT') {
+      if (this.isDeclarativeTarget(droppable)) {
+        // A chip inside the target's shadow root is unreachable by tag, attribute or `:state()`
+        // from the document — `::part()` is the only way in, and a bare `::part(drag)` matches in
+        // any shadow root. Without this the chip renders unstyled, which the invariance spec
+        // catches as "a chip is not the same size wherever it lives".
+        cleanClone.setAttribute('part', 'drag');
+        // Parts do not chain: `::part(drag)::part(control)` is inert. The chip forwards its own
+        // inner part up one level, renamed, so a theme can still reach the drag handle as
+        // `::part(drag-control)`. Drawing the grip on the chip host instead would have worked too,
+        // but it moves the glyph for every *other* interaction's chips as well.
+        // `correction*` forwarded under its own name: the theme reaches the badge with a bare
+        // `::part(correction-correct)` whether the chip is in the bank or inside this target.
+        cleanClone.setAttribute(
+          'exportparts',
+          'control: drag-control, label: drag-label, correction, correction-correct, correction-incorrect'
+        );
+        // Cloned once, here — never inside `render()`, which would mint a new node per update and
+        // lose focus, transitions and the chip's own shadow root.
+        this.placeChip(droppable, cleanClone);
+      } else if (droppable.tagName === 'SLOT') {
         cleanClone.setAttribute('slot', droppable.getAttribute('name') || '');
       } else if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
         cleanClone.setAttribute('slot', 'qti-simple-associable-choice');
         droppable.appendChild(cleanClone);
-        droppable.setAttribute('data-has-drop', 'true');
       } else {
         droppable.appendChild(cleanClone);
       }
+
+      // Every drop target says it is occupied, not just the one branch that used to.
+      setDropFilled(droppable, true);
+      // Publish placement so a declarative target re-renders before anything measures it.
+      this.syncDragDropState();
 
       if (flipStates && this.enableFlipAnimations) {
         animateMultipleFlips(flipStates, this.flipAnimationConfig);
@@ -440,53 +784,63 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       this.checkAllMaxAssociations();
     }
 
-    private returnToInventory(element: HTMLElement): void {
+    private returnToInventory(element: HTMLElement, from?: DOMRect): void {
       const identifier = element.getAttribute('identifier');
       if (identifier) {
         // Remove all clones of this item from drop zones
         this.trackedDroppables.forEach(droppable => {
-          const clones = Array.from(droppable.querySelectorAll(`[identifier="${identifier}"][qti-draggable="true"]`));
-          clones.forEach(clone => {
-            clone.remove();
-            if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
-              droppable.removeAttribute('data-has-drop');
-            }
-          });
+          const clones = this.chipsIn(droppable).filter(chip => chip.getAttribute('identifier') === identifier);
+          clones.forEach(clone => this.removeChipFromDroppable(droppable, clone));
+          if (clones.length > 0 && this.chipsIn(droppable).length === 0) {
+            setDropFilled(droppable, false);
+          }
         });
 
-        this.restoreOriginalInInventory(identifier);
+        this.restoreOriginalInInventory(identifier, from);
       }
       this.cacheInteractiveElements();
       this.checkAllMaxAssociations();
     }
 
-    private restoreOriginalInInventory(identifier: string): void {
+    /**
+     * @param from where the chip was last painted on screen. Given one, the restored inventory item
+     * travels back from there instead of blinking into the bank. The bank's *other* chips still
+     * FLIP from their own captured positions, since removing a placeholder can rewrap the row.
+     */
+    private restoreOriginalInInventory(identifier: string, from?: DOMRect): void {
       const inventoryItems = findInventoryItems(this.trackedDragContainers, identifier);
 
-      // FLIP: First - capture positions of all items in inventory containers
-      const allInventoryItems: HTMLElement[] = [];
+      // FLIP: First - capture positions of the items that merely *shift* when the hole closes.
+      //
+      // The returning items themselves are excluded. They are still hidden at this point, so their
+      // rect is 0×0 at the viewport origin, and FLIP read that as their "first" state: the chip
+      // animated in from the top-left corner of the screen at scale(0). It travels from `from`
+      // instead, which is where the user last saw it.
+      const returning = new Set<HTMLElement>(inventoryItems);
+      const shiftingItems: HTMLElement[] = [];
       this.trackedDragContainers.forEach(container => {
-        allInventoryItems.push(...Array.from(container.querySelectorAll<HTMLElement>('[qti-draggable="true"]')));
+        container
+          .querySelectorAll<HTMLElement>('[qti-draggable="true"]')
+          .forEach(item => !returning.has(item) && shiftingItems.push(item));
       });
 
       const flipStates =
-        this.enableFlipAnimations && allInventoryItems.length > 0 ? captureMultipleFlipStates(allInventoryItems) : null;
+        this.enableFlipAnimations && shiftingItems.length > 0 ? captureMultipleFlipStates(shiftingItems) : null;
 
       // FLIP: Last - restore the inventory items (may cause reflow)
       inventoryItems.forEach(item => {
-        item.style.opacity = '1.0';
-        item.style.pointerEvents = 'auto';
+        clearDragChipStates(item);
         item.style.display = '';
         item.style.visibility = 'visible';
-
-        item.style.setProperty('opacity', '1.0', 'important');
-        item.style.setProperty('pointer-events', 'auto', 'important');
       });
 
       // FLIP: Invert & Play - animate items that may have shifted
       if (flipStates && this.enableFlipAnimations) {
         animateMultipleFlips(flipStates, this.flipAnimationConfig);
       }
+
+      // ...and fly the chip itself home, from the dropzone or the cursor it left.
+      inventoryItems.forEach(item => this.animateReturn(item, from));
     }
 
     private updateInventoryBasedOnMatchMax(identifier: string): void {
@@ -495,32 +849,30 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       // Count only items placed in dropzones, not in inventory/drag containers
       const placedInDropzones = this.trackedDroppables.reduce((count, droppable) => {
-        const items = droppable.querySelectorAll(`[identifier="${identifier}"]`);
-        return count + items.length;
+        if (this.isDeclarativeTarget(droppable)) {
+          return count + this.chipsIn(droppable).filter(c => c.getAttribute('identifier') === identifier).length;
+        }
+        return count + droppable.querySelectorAll(`[identifier="${identifier}"]`).length;
       }, 0);
 
+      // This source chip's copies are all placed — it becomes the hole they left behind.
       inventoryItems.forEach(item => {
-        if (matchMax !== 0 && placedInDropzones >= matchMax) {
-          item.style.opacity = '0.0';
-          item.style.pointerEvents = 'none';
-        } else {
-          item.style.opacity = '1.0';
-          item.style.pointerEvents = 'auto';
-        }
+        setDragChipState(item, 'placeholder', matchMax !== 0 && placedInDropzones >= matchMax);
       });
     }
 
     private checkAllMaxAssociations(): void {
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
+      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: true });
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 
       this.trackedDroppables.forEach(droppable => {
         // Don't disable the source droppable during an active drag
         const isDragSource = droppable.hasAttribute('data-drag-source');
-        const isAtCapacity = isDroppableAtCapacity(droppable, draggablesSelector);
+        const isAtCapacity = this.droppableAtCapacityFromState(droppable);
 
-        if ((maxReached || isAtCapacity) && !isDragSource) {
+        if ((isAtCapacity || (disableAtMax && maxReached)) && !isDragSource) {
           droppable.setAttribute('disabled', '');
         } else {
           droppable.removeAttribute('disabled');
@@ -539,7 +891,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           ? [candidate]
           : (() => {
               this.cacheInteractiveElements();
-              return collectResponseData(this.trackedDroppables, draggablesSelector);
+              return this.responseFromState();
             })();
 
       // Persist response state without mutating the DOM tree.
@@ -566,11 +918,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     override reset(save: boolean): void;
     override reset(save = true): void {
       this.trackedDroppables.forEach(droppable => {
-        const items = Array.from(droppable.querySelectorAll(draggablesSelector));
-        items.forEach(item => item.remove());
-        if (droppable.tagName === 'QTI-SIMPLE-ASSOCIABLE-CHOICE') {
-          droppable.removeAttribute('data-has-drop');
-        }
+        this.clearChips(droppable);
       });
 
       this.trackedDraggables.forEach(draggable => {
@@ -592,7 +940,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
     }
 
     public override validate(): boolean {
-      const totalAssociations = countTotalAssociations(this.trackedDroppables, draggablesSelector);
+      const totalAssociations = this.totalAssociationsFromState();
 
       const atMaxCapacity = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
       const exceedsMax = this.maxAssociations > 0 && totalAssociations > this.maxAssociations;
@@ -632,29 +980,13 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       const validityAnchor = this.trackedDroppables[0] ?? this.trackedDraggables[0] ?? this;
-      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, validityAnchor);
+      this.setInteractionValidity(isValid, validityMessage, validityAnchor, { suppressInline: true });
 
       return isValid;
     }
 
     public override reportValidity(): boolean {
-      const isValid = this._internals.reportValidity();
-
-      // Query the validation message element directly in the shadow root
-      // to avoid timing issues with @query decorator
-      const validationMessageElement = this.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
-
-      if (validationMessageElement) {
-        if (!isValid) {
-          validationMessageElement.textContent = this._internals.validationMessage;
-          validationMessageElement.style.setProperty('display', 'block', 'important');
-        } else {
-          validationMessageElement.textContent = '';
-          validationMessageElement.style.display = 'none';
-        }
-      }
-
-      return isValid;
+      return super.reportValidity();
     }
   }
 

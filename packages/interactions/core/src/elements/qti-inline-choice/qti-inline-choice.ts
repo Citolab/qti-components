@@ -6,6 +6,19 @@ import styles from './qti-inline-choice.styles.js';
 
 import type { CSSResultGroup } from 'lit';
 import type { PropertyValues } from 'lit';
+/**
+ * An option in the dropdown of `qti-inline-choice-interaction`.
+ *
+ * @customElement qti-inline-choice
+ *
+ * @attr {string} identifier - Required. Value recorded in the response when this option is
+ *   selected.
+ * @attr {boolean} [fixed=false] - Pins this option in place when the interaction is shuffled.
+ * @attr {string} template-identifier - Not implemented. Identifier of a template variable
+ *   controlling this option's visibility.
+ * @attr {'show'|'hide'} [show-hide=show] - Not implemented. How `template-identifier` controls
+ *   visibility.
+ */
 export class QtiInlineChoice extends ActiveElementMixin(LitElement, 'qti-inline-choice') {
   static override styles: CSSResultGroup = styles;
 

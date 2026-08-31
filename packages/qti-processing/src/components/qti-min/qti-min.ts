@@ -52,5 +52,3 @@ export class QtiMin extends QtiExpression<number | null> {
     return values;
   }
 }
-
-customElements.define('qti-min', QtiMin);

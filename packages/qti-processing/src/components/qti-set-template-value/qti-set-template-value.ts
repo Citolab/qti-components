@@ -98,5 +98,3 @@ export class QtiSetTemplateValueRule<T> implements QtiRuleBase {
     return value;
   }
 }
-
-customElements.define('qti-set-template-value', QtiSetTemplateValue);

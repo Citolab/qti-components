@@ -16,5 +16,6 @@ module.exports = {
   trailingComma: 'none',
   useTabs: false,
   endOfLine: 'lf',
-  plugins: []
+  plugins: [],
+  overrides: []
 };

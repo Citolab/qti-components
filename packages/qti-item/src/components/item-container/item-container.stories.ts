@@ -96,6 +96,52 @@ export const ItemWithTemplate: Story = {
   tags: ['!autodocs']
 };
 
+/**
+ * Proof that the Kennisnet brand can be a CLASSLESS overlay adopted INTO the item shadow (rather
+ * than a `.qti-theme-kennisnet` class on <html>, which can't cross the shadow boundary). The
+ * `<template>` content is rendered inside item-container's shadow, right next to the chips, so
+ * plain `:state(drag)` / `::part(drag)` selectors reach them — no class, no --qti-chip-* tokens.
+ */
+export const ItemWithKennisnetOverlay: Story = {
+  render: () => html`
+    <qti-item>
+      <item-container item-url="assets/qti-test-package/items/gap_match.xml">
+        <template>
+          <style>
+            /* Re-declare the layer order so 'brand' sits above 'base': this style and the adopted
+               item.css are separate sheets in the shadow and do not otherwise share layer order,
+               so 'brand' would land below 'base' and lose. */
+            @layer qti-components.reset, qti-components.global, qti-components.interactions.base,
+              qti-components.interactions.brand, qti-components.interactions.states,
+              qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
+
+            @layer qti-components.interactions.brand {
+              :state(drag),
+              [data-drag-clone],
+              qti-gap::part(drag),
+              qti-associate-interaction::part(drag),
+              qti-simple-associable-choice::part(drag) {
+                --drag-background-color: var(--qti-primary);
+                --drag-color: var(--qti-primary-fg);
+                --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
+                --drag-border-color: transparent;
+              }
+            }
+            @layer qti-components.interactions.states {
+              :state(placeholder) {
+                --drag-background-color: var(--qti-placeholder-bg);
+                --drag-border-color: transparent;
+                --drag-box-shadow: inset var(--qti-placeholder-shadow);
+              }
+            }
+          </style>
+        </template>
+      </item-container>
+    </qti-item>
+  `,
+  tags: ['!autodocs']
+};
+
 export const ItemWithTemplateScale: Story = {
   render: args => {
     return html`

@@ -30,7 +30,9 @@
     "attw": "attw --profile esm-only --pack",
     "build": "tsc --paths null",
     "clean": "rm -rf dist",
-    "publish": "node ../../../tools/publish-if-needed.mjs"
+    "publish": "node ../../../tools/publish-if-needed.mjs",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
   },
   "sideEffects": true,
   "type": "module",
@@ -51,6 +53,10 @@
     "./styles": {
       "types": "./dist/qti-media-interaction.styles.d.ts",
       "import": "./dist/qti-media-interaction.styles.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
     }
   },
   "repository": {

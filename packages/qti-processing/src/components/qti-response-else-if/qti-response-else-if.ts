@@ -7,5 +7,3 @@ export class QtiResponseElseIf extends QtiResponseIf {
     return html`${super.render()}`;
   }
 }
-
-customElements.define('qti-response-else-if', QtiResponseElseIf);

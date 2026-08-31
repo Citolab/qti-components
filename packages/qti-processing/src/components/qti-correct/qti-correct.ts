@@ -25,5 +25,3 @@ export class QtiCorrect extends QtiExpression<string | string[]> {
     }
   }
 }
-
-customElements.define('qti-correct', QtiCorrect);

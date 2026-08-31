@@ -1,12 +1,63 @@
 #!/bin/bash
 set -e
 
-# One tier, same on every branch. Fast by design — heavy verification
+# Not in CI. Everything below gates a HUMAN commit; none of it has a subject when the committer is
+# a robot. The release workflow commits the changesets version bump itself, and that commit would
+# otherwise fire this hook — running a browser VRT pass in a job that installs no Playwright
+# browsers and has no reason to.
+#
+# The same omission was not hypothetical in qti-editor: it failed a release outright, which then
+# published nothing while main sat several merges ahead of npm. Guarding both hooks the same way.
+if [ -n "$CI" ]; then
+  exit 0
+fi
+
+# Visual-regression gate, first. The committed VRT baselines must still match, so a stray visual
+# change can't slip through unnoticed. Compare-only (never --update): a browser run of a handful of
+# stories, a few seconds. If this fails on an INTENTIONAL visual change, refresh the baselines with
+# `pnpm test:vrt:update` and stage them, then commit again.
+echo "→ Checking VRT screenshots…"
+pnpm run test:vrt
+
+# One tier, same on every branch. Fast by design — heavier verification
 # (attw, madge, publint, full test suite) is the CI gate's job, not the commit's.
 #
-# lint-staged runs on STAGED files only: prettier --write, eslint --fix,
-# and `vitest related` — the "minimal tests" for what you touched.
-npx lint-staged --allow-empty --quiet
+# lint-staged runs on STAGED files only — prettier, eslint, stylelint, and one
+# `vitest run --changed` for the whole commit. See .lintstagedrc.mjs; the comment
+# there explains why the test call has to stay inside lint-staged rather than move
+# up here, and why it is `--changed` rather than `related`.
+#
+# --hide-unstaged is load-bearing, not a tidiness flag. By default lint-staged hides only
+# PARTIALLY staged files, so a fully unstaged edit stays in the working tree and
+# `vitest --changed` picks it up — which means an unstaged fix can make a staged bug pass and
+# the commit goes out green. With this flag every unstaged change is stashed for the run, so
+# "changed" and "staged" are the same set. Restorable either way: git stash list.
+#
+# The stash that isolates the staged set also clears the markers of an in-progress merge —
+# .git/MERGE_HEAD and friends — out from under the commit being made. git then refuses the commit
+# with "could not open '.git/MERGE_HEAD'", and, worse, the conflict resolution it was about to
+# record is now an ORDINARY commit: main no longer recorded as merged, so the next `git merge main`
+# replays every conflict that was just resolved by hand. Back the markers up and put back whatever
+# went missing. Via a trap, so a failing gate below still leaves the merge resumable rather than
+# stranding a half-finished one.
+git_dir="$(git rev-parse --absolute-git-dir)"
+merge_state_backup="$(mktemp -d)"
+for marker in MERGE_HEAD MERGE_MODE MERGE_MSG; do
+  if [ -f "$git_dir/$marker" ]; then
+    cp "$git_dir/$marker" "$merge_state_backup/$marker"
+  fi
+done
+restore_merge_state() {
+  for marker in MERGE_HEAD MERGE_MODE MERGE_MSG; do
+    if [ -f "$merge_state_backup/$marker" ] && [ ! -f "$git_dir/$marker" ]; then
+      cp "$merge_state_backup/$marker" "$git_dir/$marker"
+    fi
+  done
+  rm -rf "$merge_state_backup"
+}
+trap restore_merge_state EXIT
+
+npx lint-staged --allow-empty --quiet --hide-unstaged
 
 # Keep the committed custom-elements.json manifests in sync with source.
 # `cem` (analyzer) is much cheaper than a full `pnpm run build`.
@@ -14,3 +65,11 @@ pnpm run cem
 git add \
   custom-elements.json \
   packages/qti-interactions/custom-elements.qti.json
+
+# No qti- name that 1EdTech does not define. Whole-repo rather than staged-file, because it is
+# a membership test against a fixed set and costs about a second — and because it reads the
+# custom-elements manifest for tag names, so it has to come AFTER the `cem` step above or it
+# would judge a stale manifest. lint-staged cannot host it for the same reason: it is not
+# file-scoped. Also runs in CI via `lint` (see ci:push-quality); here for the fast feedback,
+# at the moment someone mints the name rather than a push later.
+pnpm run lint:vocab

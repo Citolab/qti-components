@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@qti-components/base": "workspace:^",
+    "@qti-components/corrections": "workspace:^",
     "@qti-components/elements": "workspace:^",
     "@qti-components/interactions": "workspace:^",
     "@qti-components/item": "workspace:^",
@@ -51,6 +52,10 @@
     "./qti-loader": {
       "types": "./dist/loader.d.ts",
       "import": "./dist/loader.js"
+    },
+    "./corrections": {
+      "types": "./dist/corrections.d.ts",
+      "import": "./dist/corrections.js"
     },
     "./qti-transformers": {
       "types": "./dist/transformers.d.ts",

@@ -72,13 +72,13 @@ export const FeedbackInline: Story = {
             >True
             <!--￼￼￼The feedbackInline elements are each given the same identifier as the corresponding option.-->
             <qti-feedback-inline outcome-identifier="FEEDBACK" identifier="true" show-hide="show">
-              — <strong>That's correct</strong></qti-feedback-inline
+              — <span>That's correct</span></qti-feedback-inline
             >
           </qti-simple-choice>
           <qti-simple-choice identifier="false" fixed="true"
             >False
             <qti-feedback-inline outcome-identifier="FEEDBACK" identifier="false" show-hide="show">
-              — <strong>That's not correct</strong></qti-feedback-inline
+              — <span>That's not correct</span></qti-feedback-inline
             >
           </qti-simple-choice>
         </qti-choice-interaction>
@@ -111,9 +111,10 @@ export const FeedbackInline: Story = {
     const choiceTrue = canvas.getByShadowText('True');
     const choiceFalse = canvas.getByShadowText('False');
 
-    // Select modal feedback dialogs and close buttons
-    const feedbackCorrect = canvas.getByShadowText(`That's correct`);
-    const feedbackIncorrect = canvas.getByShadowText(`That's not correct`);
+    // Select inline feedback content. Use regex so decorative prefixes (for example an em dash)
+    // do not make this brittle across theme/style variations.
+    const feedbackCorrect = canvas.getByShadowText(/That's correct/);
+    const feedbackIncorrect = canvas.getByShadowText(/That's not correct/);
 
     const slotCorrect = feedbackCorrect?.assignedSlot;
     const slotIncorrect = feedbackIncorrect?.assignedSlot;

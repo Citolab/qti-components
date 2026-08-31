@@ -1,2 +1,7 @@
-import { QtiEndAttemptInteraction } from './qti-end-attempt-interaction';
-customElements.define('qti-end-attempt-interaction', QtiEndAttemptInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

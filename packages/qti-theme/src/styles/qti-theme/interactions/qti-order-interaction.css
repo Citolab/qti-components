@@ -1,114 +1,251 @@
-@layer qti-components {
+/* This interaction's chip vocabulary — the bank chip, the placed chip, and the floating clone. One
+   such block per drag-drop interaction, opt-in; graphic-gap-match deliberately declares none. See
+   qti-states.css. Kept in the `global` layer, where these rules used to live, so cascade position is
+   unchanged.
+
+   The clone is matched by [data-drag-interaction] rather than by ancestry because it is a SIBLING of
+   the interaction, not a descendant: createDragClone appends it to the interaction's ROOT (the
+   item's shadow root), which is the same tree — so the theme can reach it — but not the same
+   subtree. The attribute is also what tells one interaction's chip in flight from another's, which
+   is how graphic-gap-match stays out without anyone writing an exclusion.
+
+   Its grip hangs off ::part(control)::before, the same place the resting chip's does, so a chip does
+   not move its handle when you pick it up. That the part is reachable at all is new: while the clone
+   sat on document.body it was in a different tree from the adopted stylesheet, and nothing — no
+   part, no attribute — could style it. */
+@layer qti-components.global {
+  qti-order-interaction :state(drag),
+  [data-drag-clone][data-drag-interaction='qti-order-interaction'] {
+    @mixin drag;
+  }
+
+  qti-order-interaction :state(drag)::part(control)::before,
+  qti-order-interaction::part(drag-control)::before,
+  qti-order-interaction ::part(drag-control)::before,
+  [data-drag-clone][data-drag-interaction='qti-order-interaction']::part(control)::before {
+    @mixin grip;
+  }
+}
+
+@layer qti-components.interactions.base {
   qti-order-interaction {
-    &:state(--dragzone-active)::part(drags) {
-      @apply act;
+    &:state(dragzone-active)::part(drags) {
+      @mixin dropping;
     }
-    &:state(--dragzone-enabled)::part(drags) {
-      @apply dropping;
+    &:state(dragzone-enabled)::part(drags) {
+      @mixin dropping;
     }
-    &::part(qti-simple-choice),
+    &::part(drag),
     & qti-simple-choice,
-    /* Editor fake-drag projected into the interaction's drop-list shadow.
+    /* Editor fake-drag projected into the interaction's drop-target shadow.
        Same `drag` styling so editor previews match runtime visuals. */
     &::part(drag) {
-      @apply drag;
+      @mixin drag;
       &[dragging] {
-        @apply dragging;
+        @mixin dragging;
       }
       &:hover {
-        @apply hov;
+        @mixin drag-hover;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
-    /* Editor fake-drag projected into the interaction's drop-list shadow.
+    /* Editor fake-drag projected into the interaction's drop-target shadow.
        Same `drag` styling so editor previews match runtime visuals.
        Kept as its own block (separate from the runtime-drag selector list
        above) because a CSS comment between commas inside a nested selector
        list is silently dropped by Chrome's nesting parser. */
     &::part(drag) {
-      @apply drag;
+      @mixin drag;
       &:hover {
-        @apply hov;
+        @mixin drag-hover;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
-    &::part(qti-simple-choice) {
-      display: flex;
-      overflow: hidden;
-      align-items: center;
-      width: 100%;
+    /* The drag's box — flex, centred, clipped — is in qti-order-interaction.styles.ts. */
+    &::part(drag) {
+      /*
+       * No `width: 100%`. It stretched a placed chip to its slot, which is why order was the one
+       * entry in CHIP_BOX_KNOWN_BAD ("the placed chip stretches to fill its drop slot") — a 55px
+       * chip in the bank became 666px once dropped. The slot is now sized from the chip instead of
+       * the other way round (qti-order-interaction.styles.ts), so there is nothing left to fill.
+       *
+       * Every chip now takes --qti-dropzone-min-width instead (see `@mixin drag`), the same name the
+       * slot reserves with — so chip and slot are the same size by construction, in the bank as well
+       * as in the drop, and nothing changes size at the moment of landing.
+       */
       text-overflow: ellipsis;
     }
+    /*
+     * Moved out of qti-order-interaction.styles.ts, which is layout-only now.
+     *
+     * The drop's flags are part tokens rather than attributes: an attribute selector cannot follow
+     * `::part()`, and a <div> cannot carry a custom state (attachInternals throws). See setDropFlag.
+     */
+    &::part(active) {
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(enabled) {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* A filled drop hides its dashed outline and drop-here glyph. Hides — the border keeps its
+       width, or the column shifts 2px the instant a chip lands. */
+    &::part(filled) {
+      --qti-drop-border: var(--qti-border-thickness, 1px) solid transparent;
+      --qti-drop-bg-img: none;
+    }
+
     &::part(drops) {
-      gap: 0.5rem;
+      gap: var(--qti-gap);
     }
     &::part(drags) {
-      gap: 0.5rem;
+      gap: var(--qti-gap);
     }
-    &::part(drop-list) {
-      @apply drop;
+    &::part(drop) {
+      @mixin drop;
       &[enabled] {
-        @apply dropping;
-        .qti-selections-light {
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          border-color: var(--qti-dark-border-active);
-        }
-      }
-      &:hover {
-        @apply hov;
+        @mixin dropping;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
-      display: flex;
-      min-height: 4rem;
     }
     &::part(active) {
-      @apply act;
+      @mixin dropping;
     }
-    & drop-list {
-      &[shape='circle'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-      }
-      &[shape='square'] {
-        @apply spot;
-        &:hover {
-          @apply hov;
-        }
-        &:focus {
-          @apply foc;
-        }
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
+  }
+
+  qti-order-interaction {
+    &::part(drops) {
+      margin: 0;
+      border-radius: var(--qti-border-radius);
+    }
+
+    /* No `height: 100%` here. The drop is a grid item, so `align-self: stretch` already fills the
+       row — and because dropRegion makes it content-box, a percentage height made its border-box
+       overhang the row by the border (42px row, 44px drop), which the drop's padding then doubled.
+       It also defeated `:has(qti-simple-choice) [part~='drop'] { align-self: flex-start }` in
+       qti-order-interaction.styles.ts. */
+    &::part(drop) {
+      border: var(--qti-drop-border, var(--qti-border-thickness) dashed var(--qti-border-color));
+      border-radius: var(--qti-border-radius);
+      background-color: transparent;
+      background-image: var(--qti-drop-bg-img, revert-layer);
+    }
+
+    &::part(active) {
+      background-color: var(--qti-bg-active);
+    }
+
+    &::part(enabled) {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
+       chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
+    /* The placed order chip's INVERTED look (white fill, dark text, neutral border) is
+       Kennisnet-specific — a light chip against the primary bank — so it lives in the Kennisnet brand
+       overlay (apps/e2e/src/stories/kennisnet/kennisnet.css), not here. In the base theme a placed
+       chip is just the neutral chip (@mixin drag), and its corrections route through --drag-*
+       like every other chip. */
+    & qti-simple-choice {
+      @mixin drag;
+    }
+
+    &::part(container) {
+      gap: 2rem;
+    }
+
+    /*
+     * Orientation is laid out by qti-order-interaction.styles.ts. What used to be here:
+     *
+     *   [orientation='horizontal']::part(drops)  restated the styles.ts base rule verbatim, which
+     *     cancelled that file's `grid-auto-flow: column`. It only matched the attribute, so
+     *     `orientation="horizontal"` wrapped while `class="qti-orientation-horizontal"` did not —
+     *     two spellings of one QTI concept rendering differently. Both now wrap; see styles.ts.
+     *
+     *   ::part(container) { flex-direction }     inert. The container is `display: grid` with
+     *     grid-template-areas, so flex-direction never applied. It was reaching for "horizontal puts
+     *     the bank above the drops" — that is what the qti-choices-top/bottom/left/right classes
+     *     already do, and wiring orientation to them is a behaviour change, not a move.
+     */
+    &[orientation='vertical'] {
+      & qti-simple-choice,
+      &::part(drag) {
+        width: auto;
       }
     }
   }
+}
+
+@layer qti-components.interactions.states {
+  qti-order-interaction qti-simple-choice:state(placeholder) {
+    @mixin drag-placeholder;
+    pointer-events: none;
+  }
+
+  qti-order-interaction qti-simple-choice:state(dragging) {
+    @mixin drag-placeholder;
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+    pointer-events: none;
+  }
+
+  qti-order-interaction qti-simple-choice:state(return-anchor) {
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+  }
+
+  qti-order-interaction::part(hover),
+  qti-order-interaction::part(active) {
+    background-color: var(--qti-drop-highlight-bg);
+  }
+
+  qti-order-interaction::part(enabled) {
+    background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  /*
+   * Judgement paint, via the shared mixin — every other drag-drop interaction already uses it.
+   *
+   * Order hand-rolled this, and set `background-color` and `border-color` but never `color`. The
+   * drag handle is `background-color: currentColor` behind a mask (see `@mixin grip`), so it can
+   * only be as green as the element's `color` — and `color` stayed at the `--qti-fg` the
+   * base layer gives a drag, which is #3e144e and reads as black. Every other interaction's grip
+   * turned green or red because `candidate-tint` sets all three.
+   *
+   * Two rules went with it, both dead: a `background-color: var(--qti-correct-response, …)` pair
+   * that the blocks below overrode at equal specificity, naming a `--qti-correct-response` token
+   * that is not defined anywhere in the repo.
+   *
+   * Keep :state() in the same selector as ::part(). Native nesting after a pseudo-element is not
+   * parsed consistently by the browser toolchain.
+   */
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  qti-order-interaction :state(drag):state(candidate-correct),
+  qti-order-interaction::part(drag):state(candidate-correct) {
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
+  }
+
+  qti-order-interaction :state(drag):state(candidate-incorrect),
+  qti-order-interaction::part(drag):state(candidate-incorrect) {
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
+     qti-order-interaction.styles.ts. */
 }

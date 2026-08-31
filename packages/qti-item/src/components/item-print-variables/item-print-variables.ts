@@ -1,13 +1,11 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { computedItemContext } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 import type { ComputedItemContext } from '@qti-components/base';
 
-@customElement('item-print-variables')
 export class ItemPrintVariables extends LitElement {
   @consume({ context: computedItemContext, subscribe: true })
   protected computedContext?: ComputedItemContext;

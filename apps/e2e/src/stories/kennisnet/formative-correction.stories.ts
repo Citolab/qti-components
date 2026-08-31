@@ -1,6 +1,7 @@
 import { html } from 'lit';
-import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
-import { findAllByShadowRole, findByShadowText } from 'shadow-dom-testing-library';
+import { waitFor } from 'storybook/test';
+
+import { withCorrection } from './with-correction';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -39,6 +40,7 @@ type QtiTestElement = HTMLElement & {
 
 type AssessmentItemElement = HTMLElement & {
   processResponse(countNumAttempts?: boolean, reportValidityAfterScoring?: boolean): boolean;
+  showCandidateCorrection?(show: boolean): void;
   variables: {
     identifier: string;
     value: string | string[] | null;
@@ -50,17 +52,17 @@ const items: ItemDefinition[] = [
   {
     identifier: 'ITEM011-TEST',
     title: 'Meerkeuzevraag',
-    href: '/assets/api/kennisnet-2/ITEM011.xml'
+    href: '/assets/api/kennisnet/ITEM011.xml'
   },
   {
     identifier: 'ITEM004-TEST',
     title: 'Tekst invullen',
-    href: '/assets/api/kennisnet-2/ITEM004.xml'
+    href: '/assets/api/kennisnet/ITEM004.xml'
   },
   {
     identifier: 'ITEM012-TEST',
     title: 'Meerdere antwoorden',
-    href: '/assets/api/kennisnet-2/ITEM012.xml'
+    href: '/assets/api/kennisnet/ITEM012.xml'
   }
 ];
 
@@ -80,6 +82,7 @@ const assessmentXML = `<?xml version="1.0" encoding="UTF-8"?>
 
 const meta: Meta = {
   title: 'kennisnet/formative correction',
+  decorators: [withCorrection],
   parameters: {
     layout: 'fullscreen'
   }
@@ -272,13 +275,7 @@ const checkCurrentItem = async (root: HTMLElement): Promise<void> => {
     return score;
   });
 
-  root.querySelector('test-navigation')?.dispatchEvent(
-    new CustomEvent('test-show-candidate-correction', {
-      bubbles: true,
-      composed: true,
-      detail: true
-    })
-  );
+  assessmentItem.showCandidateCorrection?.(true);
 
   updateControls(root);
 };
@@ -568,73 +565,5 @@ export const FormativeCorrection: Story = {
         <div class="result" data-testid="result" hidden></div>
       </main>
     </div>
-  `,
-  play: async ({ canvasElement, step }) => {
-    const nextButton = canvasElement.querySelector<HTMLButtonElement>('[data-testid="next-button"]');
-    const checkButton = canvasElement.querySelector<HTMLButtonElement>('[data-testid="check-button"]');
-    const status = canvasElement.querySelector<HTMLElement>('[data-testid="status"]');
-    const testContainer = await waitFor(() => {
-      const element = canvasElement.querySelector<HTMLElement>('test-container');
-      if (!element?.shadowRoot) {
-        throw new Error('test-container not ready');
-      }
-      return element;
-    });
-
-    await step('Checked incorrect answers reveal correction and unlock navigation', async () => {
-      const incorrectChoiceText = await findByShadowText(testContainer, 'Fout');
-      const incorrectChoice = incorrectChoiceText.closest('qti-simple-choice') as HTMLElement & {
-        internals: { states: CustomStateSet };
-      };
-
-      expect(nextButton).toBeDisabled();
-      await fireEvent.click(incorrectChoiceText);
-      await fireEvent.click(checkButton);
-
-      await waitFor(() => {
-        expect(status?.dataset.state).toBe('incorrect');
-        expect(nextButton).toBeEnabled();
-        expect(incorrectChoice.internals.states.has('candidate-incorrect')).toBe(true);
-      });
-    });
-
-    await step('Changing the answer hides candidate correction, then a correct check updates the state', async () => {
-      const correctChoiceText = await findByShadowText(testContainer, 'Goed');
-      const correctChoice = correctChoiceText.closest('qti-simple-choice') as HTMLElement & {
-        internals: { states: CustomStateSet };
-      };
-
-      await fireEvent.click(correctChoiceText);
-
-      await waitFor(() => {
-        expect(correctChoice.internals.states.has('candidate-correct')).toBe(false);
-      });
-
-      await fireEvent.click(checkButton);
-
-      await waitFor(() => {
-        expect(status?.dataset.state).toBe('correct');
-        expect(nextButton).toBeEnabled();
-        expect(checkButton).not.toBeVisible();
-        expect(correctChoice.internals.states.has('candidate-correct')).toBe(true);
-      });
-    });
-
-    await step('A partially correct checked answer also allows moving to the next question', async () => {
-      await fireEvent.click(nextButton);
-
-      const textboxes = await findAllByShadowRole<HTMLInputElement>(testContainer, 'textbox');
-      await userEvent.type(textboxes[0], 'tekst');
-      await userEvent.type(textboxes[1], 'verkeerd');
-      await fireEvent.click(checkButton);
-
-      await waitFor(() => {
-        expect(status?.dataset.state).toBe('partially-correct');
-        expect(nextButton).toBeEnabled();
-      });
-
-      await fireEvent.click(nextButton);
-      await findByShadowText(testContainer, 'Kies meerdere antwoorden');
-    });
-  }
+  `
 };

@@ -1,5 +1,4 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { type QtiRuleBase } from '@qti-components/base';
 
@@ -7,7 +6,6 @@ import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/temp
 
 import type { PropertyValueMap } from 'lit';
 
-@customElement('qti-response-processing')
 export class QtiResponseProcessing extends LitElement {
   static override styles = [
     css`

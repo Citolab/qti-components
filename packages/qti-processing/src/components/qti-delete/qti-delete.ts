@@ -35,5 +35,3 @@ export class QtiDelete extends QtiExpression<string[] | null> {
     return null;
   }
 }
-
-customElements.define('qti-delete', QtiDelete);

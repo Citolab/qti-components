@@ -1,13 +1,8 @@
-/* Apply .rubric-block for styling qti-rubric-block content */
-.rubric-block {
-  display: block;
-  border-left: 4px solid var(--qti-correct);
-  background-color: var(--qti-correct-light);
-  color: var(--qti-correct);
-  padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
-  border-radius: var(--qti-border-radius);
-}
-
+/* `display: block` is declared by the element itself, in qti-rubric-block.ts. */
 qti-rubric-block {
-  @apply rubric-block;
+  border: var(--qti-border-thickness) solid var(--qti-info);
+  background-color: color-mix(in srgb, var(--qti-info) 5%, white);
+  border-radius: var(--qti-border-radius);
+  padding: var(--qti-padding-box);
+  margin-top: var(--qti-gap);
 }

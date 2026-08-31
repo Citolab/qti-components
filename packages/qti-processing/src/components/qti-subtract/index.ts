@@ -1,5 +1,4 @@
-import { QtiSubtract } from './qti-subtract';
-customElements.define('qti-subtract', QtiSubtract);
+import type { QtiSubtract } from './qti-subtract';
 
 export * from './qti-subtract';
 

@@ -116,5 +116,3 @@ export class QtiPower extends QtiExpression<number | null> {
     return result;
   }
 }
-
-customElements.define('qti-power', QtiPower);

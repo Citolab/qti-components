@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 import { state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
@@ -15,11 +16,23 @@ import type { CSSResultGroup } from 'lit';
 const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-simple-associable-choice',
-  '.dl',
+  `[part~='drop']`,
   `slot[name='qti-simple-associable-choice']`,
   'pointerWithin'
 );
 
+/**
+ * Drag-and-drop associate interaction: candidates pair associable choices.
+ *
+ * @slot prompt - The prompt shown above the choices.
+ * @slot qti-simple-associable-choice - The associable choice sources.
+ *
+ * @csspart drags - Wrapper around the associable choice slot.
+ * @csspart drops - The container holding all drop targets.
+ * @csspart drop-row - Container for one left/right drop pair.
+ * @csspart drop - Each individual drop target.
+ * @csspart message - Live validation message region (role="alert").
+ */
 export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];
@@ -44,19 +57,72 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
     }
   }
 
+  /**
+   * A drop target, holding whatever the interaction's placement map says it holds.
+   * `data-declarative-drops` tells the mixin to keep the chips in that map rather than appending
+   * them into this div.
+   */
+  #renderDrop(identifier: string, name: string) {
+    const drags = this._dragDrop?.nodesByTarget?.[identifier] ?? [];
+    return html`<div name=${name} part="drop" data-declarative-drops identifier=${identifier}>
+      ${repeat(
+        drags,
+        node => node.getAttribute('identifier'),
+        node => node
+      )}
+    </div>`;
+  }
+
+  /**
+   * How many association rows to render.
+   *
+   * `max-associations` is how many associations the candidate may *make*, so it is exactly the
+   * number of rows. This used to be `ceil(choices / 2)` — the number of pairs the choices could
+   * possibly form — which made the limit unenforceable: with six choices the interaction always
+   * drew three rows, so `max-associations="3"` could never be exceeded and its validation always
+   * passed. Worse, the number read as a cap on *drags placed* rather than on associations formed.
+   *
+   * `0` is QTI's "no limit". With no limit there is still a natural ceiling: every choice paired
+   * with one other.
+   */
+  get #rowCount(): number {
+    return this.maxAssociations > 0 ? this.maxAssociations : Math.ceil(this._childrenMap.length / 2);
+  }
+
   protected getResponse(): string[] {
-    const pairCount = Math.ceil(this._childrenMap.length / 2);
     const response: string[] = [];
-    for (let i = 0; i < pairCount; i++) {
-      const leftDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_left"]`);
-      const rightDrop = this.shadowRoot?.querySelector(`.dl[identifier="droplist${i}_right"]`);
-      const leftId = leftDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
-      const rightId = rightDrop?.querySelector('[qti-draggable="true"]')?.getAttribute('identifier');
+    // Same count as `render()`. Read fewer rows than were drawn and the pairs in the last rows
+    // vanish from the response without a trace.
+    for (let i = 0; i < this.#rowCount; i++) {
+      const leftDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_left"]`);
+      const rightDrop = this.shadowRoot?.querySelector(`[part~='drop'][identifier="droplist${i}_right"]`);
+      // Read placement, not the DOM: the DOM is rendered from placement now.
+      const leftId = leftDrop && this.chipsIn(leftDrop as HTMLElement)[0]?.getAttribute('identifier');
+      const rightId = rightDrop && this.chipsIn(rightDrop as HTMLElement)[0]?.getAttribute('identifier');
       if (leftId && rightId) {
         response.push(`${leftId} ${rightId}`);
       }
     }
     return response;
+  }
+
+  /**
+   * How many associations the candidate has made.
+   *
+   * The mixin counts placed chips, which is right for gap-match — one chip in one gap is one
+   * association — and wrong here. An association is a *pair*, so three associations are six chips,
+   * and `max-associations="3"` compared 6 against 3 and declared the item invalid the moment it was
+   * correctly filled in.
+   *
+   * A half-filled row is not an association yet, and `getResponse()` already knows that: it emits a
+   * pair only when both sides hold a chip. Counting its entries counts associations by definition,
+   * and keeps the number validation sees equal to the number the response reports.
+   */
+  public override totalAssociationsFromState(): number {
+    // The mixin's version syncs first, and callers depend on that: `getResponse` reads the
+    // placement map, which is stale until the sync runs.
+    this.syncDragDropState();
+    return this.getResponse().length;
   }
 
   getValue(val: string[]) {
@@ -71,14 +137,15 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
 
   override render() {
     return html` <slot name="prompt"></slot>
-      <slot part="associable-choices" name="qti-simple-associable-choice"></slot>
-      <div part="drop-container">
+      <slot part="drags" name="qti-simple-associable-choice"></slot>
+      <div part="drops">
         ${this._childrenMap.length > 0 &&
-        Array.from(Array(Math.ceil(this._childrenMap.length / 2)).keys()).map(
+        Array.from(
+          { length: this.#rowCount },
           (_, index) =>
-            html`<div part="associables-container">
-              <div name="left${index}" part="drop-list" class="dl" identifier="droplist${index}_left"></div>
-              <div name="right${index}" part="drop-list" class="dl" identifier="droplist${index}_right"></div>
+            html`<div part="drop-row">
+              ${this.#renderDrop(`droplist${index}_left`, `left${index}`)}
+              ${this.#renderDrop(`droplist${index}_right`, `right${index}`)}
             </div>`
         )}
 

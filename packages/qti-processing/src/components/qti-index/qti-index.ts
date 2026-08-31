@@ -1,4 +1,4 @@
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
@@ -13,7 +13,7 @@ import type { ResponseVariable } from '@qti-components/base';
  * Returns the nth value from the container with original base-type and single cardinality.
  * Special cases: Returns NULL if container is NULL or n exceeds container size.
  */
-@customElement('qti-index')
+
 export class QtiIndex extends QtiExpression<any> {
   @property({ type: String })
   n!: string; // Required attribute, can be a number or an identifier

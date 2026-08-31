@@ -76,4 +76,3 @@ export class QtiSetOutcomeValueRule<T> implements QtiRuleBase {
 }
 
 // Define the custom element
-customElements.define('qti-set-outcome-value', QtiSetOutcomeValue);

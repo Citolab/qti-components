@@ -1,2 +1,7 @@
-import { QtiGraphicGapMatchInteraction } from './qti-graphic-gap-match-interaction';
-customElements.define('qti-graphic-gap-match-interaction', QtiGraphicGapMatchInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

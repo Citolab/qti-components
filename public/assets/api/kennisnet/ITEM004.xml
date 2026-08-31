@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM004"
+                     title="Tekstvraag – exacte match"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="string" cardinality="single">
+        <qti-correct-response>
+            <qti-value>44</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="44" mapped-value="1" case-sensitive="false"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col6">
+                <p>
+                    Wat is het decimale getal dat overeenkomt met het Romeinse cijfer <strong>XLIV</strong>?
+                </p>
+                <qti-text-entry-interaction response-identifier="RESPONSE" expected-length="3"/>
+            </div>
+            <div class="qti-layout-col6">
+                <img src="resources/ancient-rome.jpeg" alt="Rome"/>
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Correct: 44</li>
+                    <li>Uitleg: XL = 40, IV = 4, samen 44.</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

@@ -1,6 +1,5 @@
 import { consume } from '@lit/context';
 import { html, LitElement, nothing } from 'lit';
-import { customElement } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 
 import { sessionContext } from '@qti-components/base';
@@ -8,7 +7,6 @@ import { sessionContext } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 import type { SessionContext } from '@qti-components/base';
 
-@customElement('test-view-toggle')
 export class TestViewToggle extends LitElement {
   myTemplate: any;
 

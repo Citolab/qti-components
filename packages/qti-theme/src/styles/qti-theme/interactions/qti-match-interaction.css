@@ -1,213 +1,246 @@
-@layer qti-components {
-  qti-match-interaction.qti-match-tabular {
-    &::part(message) {
-      @apply validation-message;
-    }
-    &::part(table) {
-      border-collapse: collapse;
-      width: 100%;
-    }
-    &::part(r-header) {
-      background-color: var(--qti-bg-active, #f8f8f8);
-      font-weight: 500;
-      text-align: center;
-      padding: 8px 15px;
-      border: 1px solid #ddd;
-      width: auto;
-      word-wrap: break-word;
-      white-space: wrap;
-      min-width: 4rem;
-    }
-    &::part(c-header) {
-      background-color: var(--qti-bg-active, #f8f8f8);
-      font-weight: 500;
-      text-align: left;
-      padding: 8px;
-      border: 1px solid #ddd;
-      width: 8rem;
-      white-space: normal;
-    }
-    &::part(row) {
-      border-bottom: 1px solid #ddd;
-    }
-    &::part(input-cell) {
-      text-align: center;
-      vertical-align: middle;
-      height: 48px;
-      border: 1px solid #ddd;
-      padding: 8px;
-      width: 1%;
-    }
-    &::part(rb) {
-      appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid var(--qti-border-active, #2196f3);
-      background-color: transparent !important;
-      margin: 0 auto;
-      cursor: pointer;
-      display: block;
-    }
-    &::part(rb-checked) {
-      box-shadow: inset 0 0 0 6px var(--qti-border-active, #2196f3);
-    }
-    &::part(cb) {
-      appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 3px;
-      border: 2px solid var(--qti-border-active, #2196f3);
-      background-color: transparent !important;
-      margin: 0 auto;
-      cursor: pointer;
-      display: block;
-    }
-    &::part(cb-checked) {
-      background-color: var(--qti-border-active, #2196f3) !important;
-    }
-    &::part(checkmark) {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      top: 3px;
-      left: 3px;
-      pointer-events: none;
-    }
-    &::part(rb-correct) {
-      border-color: var(--qti-correct, #4caf50);
-    }
-    &::part(rb-checked rb-correct) {
-      box-shadow: inset 0 0 0 6px var(--qti-correct, #4caf50);
-    }
-    &::part(cb-correct) {
-      border-color: var(--qti-correct, #4caf50);
-    }
-    &::part(cb-checked cb-correct) {
-      background-color: var(--qti-correct, #4caf50) !important;
-    }
-    &::part(rb-incorrect) {
-      border-color: var(--qti-incorrect, #f44336);
-    }
-    &::part(rb-checked rb-incorrect) {
-      box-shadow: inset 0 0 0 6px var(--qti-incorrect, #f44336);
-    }
-    &::part(cb-incorrect) {
-      border-color: var(--qti-incorrect, #f44336);
-    }
-    &::part(cb-checked cb-incorrect) {
-      background-color: var(--qti-incorrect, #f44336) !important;
-    }
+/* This interaction's chip vocabulary — the bank chip, the placed chip, and the floating clone. One
+   such block per drag-drop interaction, opt-in; graphic-gap-match deliberately declares none. See
+   qti-states.css. Kept in the `global` layer, where these rules used to live, so cascade position is
+   unchanged.
+
+   The clone is matched by [data-drag-interaction] rather than by ancestry because it is a SIBLING of
+   the interaction, not a descendant: createDragClone appends it to the interaction's ROOT (the
+   item's shadow root), which is the same tree — so the theme can reach it — but not the same
+   subtree. The attribute is also what tells one interaction's chip in flight from another's, which
+   is how graphic-gap-match stays out without anyone writing an exclusion.
+
+   Its grip hangs off ::part(control)::before, the same place the resting chip's does, so a chip does
+   not move its handle when you pick it up. That the part is reachable at all is new: while the clone
+   sat on document.body it was in a different tree from the adopted stylesheet, and nothing — no
+   part, no attribute — could style it. */
+@layer qti-components.global {
+  qti-match-interaction :state(drag),
+  [data-drag-clone][data-drag-interaction='qti-match-interaction'] {
+    @mixin drag;
   }
-  /* Editor fake-drag projected into the target choice's `dropslot` shadow.
+
+  qti-match-interaction :state(drag)::part(control)::before,
+  qti-match-interaction::part(drag-control)::before,
+  qti-match-interaction ::part(drag-control)::before,
+  [data-drag-clone][data-drag-interaction='qti-match-interaction']::part(control)::before {
+    @mixin grip;
+  }
+}
+
+@layer qti-components.interactions.base {
+  /* Editor fake-drag projected into the target choice's `drop` shadow.
      Reuses the same `drag` styling so the editor preview matches what students
      see when an answer is dropped onto a target at runtime. */
   qti-simple-associable-choice::part(drag) {
-    @apply drag;
+    @mixin drag;
     &:hover {
-      @apply hov;
+      @mixin drag-hover;
     }
     &:focus {
-      @apply foc;
+      @mixin foc;
     }
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
-    &:state(--dragzone-enabled) qti-simple-match-set:first-of-type {
-      @apply dropping;
-    }
-    &:state(--dragzone-active) qti-simple-match-set:first-of-type {
-      @apply act;
-    }
+    /*
+     * The drag bank does not light up while you drag.
+     *
+     * `:state(dragzone-enabled)` filled it, `:state(dragzone-active)` drew a solid
+     * `--qti-border-active` box around it, and both fired the instant a chip was picked up — so
+     * lifting a chip framed the container the chip had just left. The one thing worth looking at is
+     * the hole, and the chip paints that itself via `:state(dragging)` / `:state(placeholder)`.
+     *
+     * `border: 2px solid transparent` went with them. It was reserving space for the active border,
+     * so that a transient state could repaint without resizing. With nothing left to repaint, it is
+     * 4px of nothing.
+     */
+    /* Non-tabular match wants an inline label, so a chip hugs its text. Handed to
+       qti-simple-associable-choice.styles.ts, which owns its own box; this used to be an
+       `::part(label) { display: inline !important }` further down the file. */
+    --qti-choice-label-display: inline;
+
+    /* The bank and the target grid are laid out in qti-match-interaction.styles.ts. Only the gaps
+       are still set here — gap is spacing. */
     & qti-simple-match-set:first-of-type {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: var(--qti-gap-size);
-      border: 2px solid transparent;
+      gap: var(--qti-gap);
       & qti-simple-associable-choice {
-        @apply drag;
+        @mixin drag;
         &[dragging] {
-          @apply dragging;
+          @mixin dragging;
         }
         &:hover {
-          @apply hov;
+          @mixin drag-hover;
         }
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
       }
     }
     & qti-simple-match-set:last-of-type {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      grid-auto-flow: unset;
-      grid-auto-columns: unset;
-      gap: var(--qti-gap-size);
+      gap: var(--qti-gap);
       & > qti-simple-associable-choice {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        grid-row: unset;
-        box-sizing: border-box;
         & img {
           max-width: 100%;
           height: auto;
         }
-        &[enabled] {
-          &::part(dropslot) {
-            @apply dropping;
-          }
-        }
         &[disabled] {
-          &::part(dropslot) {
-            @apply dis;
+          &::part(drop) {
+            cursor: not-allowed;
           }
         }
-        &[active] {
-          &::part(dropslot) {
-            @apply act;
-          }
-        }
-        &::part(dropslot) {
-          @apply drop;
-          &[dragging] {
-            @apply dragging;
-          }
+        /*
+         * No `[active]` highlight. Lifting a chip used to draw a solid `--qti-border-active` border
+         * around every drop container at once, which says "any of these" — the least useful thing to
+         * say. What the candidate wants to see is the hole the chip left, and that is painted on the
+         * chip's own `:state(dragging)` / `:state(placeholder)`.
+         */
+        &::part(drop) {
+          @mixin drop;
+          /* No `@mixin dragging` on the drop. It is a chip-in-flight look (rotate, pointer-events:
+             none, elevation) that never belonged on a drop. Per the comment above, a drop shows
+             nothing while a drag is in flight; the hole is painted on the chip. (Its elevation also
+             used to LEAK: `dragging` sets --component-box-shadow, one shared namespace, so it
+             inherited onto every chip nested in the drop. That half is now structural — `dragging`
+             sets --drag-box-shadow, which a drop does not read.) */
           &:focus {
-            @apply foc;
+            @mixin foc;
           }
-          padding: var(--qti-dropzone-padding);
-          margin-top: 0.5rem;
-          gap: 0.5rem;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          align-items: center;
+          margin-top: var(--qti-gap);
+          gap: var(--qti-gap);
         }
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;
         }
+        /* A chip nested in a drop target renders no drop region of its own. That is the component's
+           own rule — qti-simple-associable-choice.styles.ts hides [part~='drop'] for both
+           :host(:state(drag)) and :host([part~='drag']), which covers the placed clone this
+           selector could not reach. */
         & > qti-simple-associable-choice {
-          @apply drag;
-          &:state(candidate-correct) {
-            background-color: var(--qti-correct);
-          }
-          &:state(candidate-incorrect) {
-            background-color: var(--qti-incorrect);
-          }
-          &::part(dropslot) {
-            display: none;
-          }
+          @mixin drag;
           &:hover {
-            @apply hov;
+            @mixin drag-hover;
           }
           &:focus {
-            @apply foc;
+            @mixin foc;
           }
-          flex-basis: fit-content;
         }
       }
     }
   }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(drag),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag) {
+    @mixin drag;
+  }
+
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice {
+    /* The label's `align-content` and the drop's `flex-grow` are the target card's own box, and live
+       in qti-simple-associable-choice.styles.ts under :host(:state(droppable)). `box-sizing` went with
+       them: border-box is already the reset, and content-box is what dropRegion sets. */
+    &::part(label) {
+      border: var(--qti-border);
+      border-top-left-radius: var(--qti-border-radius);
+      border-top-right-radius: var(--qti-border-radius);
+      padding: 0.5rem;
+    }
+
+    &::part(drop) {
+      margin-top: 0;
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      background: none;
+    }
+
+  }
+}
+
+@layer qti-components.interactions.states {
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(dragging),
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(placeholder) {
+    @mixin drag-placeholder;
+    pointer-events: none;
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(dragging)
+    > *,
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(placeholder)
+    > * {
+    visibility: hidden;
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(dragging)::part(label),
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(placeholder)::part(label) {
+    visibility: hidden;
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:last-of-type
+    > qti-simple-associable-choice:state(hover)::part(drop),
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:last-of-type
+    > qti-simple-associable-choice:state(active)::part(drop) {
+    background-color: var(--qti-drop-highlight-bg);
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:last-of-type
+    > qti-simple-associable-choice:state(enabled)::part(drop) {
+    background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(dragging) {
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+  }
+
+  qti-match-interaction:not(.qti-match-tabular)
+    qti-simple-match-set:first-of-type
+    qti-simple-associable-choice:state(return-anchor) {
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  /* Two rules setting `--drag-background-color` on the placed chip are gone from here, dead for the
+     same reason as gap-match's: the shared rule's DIRECT `background-color` outranked the binding
+     that reads them, so their solid fill never rendered. They out-specify this block, so leaving them
+     would have flipped a corrected placed chip from the pale tint to solid. */
+  qti-match-interaction:not(.qti-match-tabular) :state(drag):state(candidate-correct),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-correct) {
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
+  }
+
+  qti-match-interaction:not(.qti-match-tabular) :state(drag):state(candidate-incorrect),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-incorrect) {
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
+     qti-match-interaction.styles.ts. */
 }

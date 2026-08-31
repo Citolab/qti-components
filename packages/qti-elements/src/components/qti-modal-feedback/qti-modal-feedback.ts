@@ -1,16 +1,14 @@
 import { css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
 
 import { QtiFeedback } from '@qti-components/base';
 
-@customElement('qti-modal-feedback')
 export class QtiModalFeedback extends QtiFeedback {
   static override styles = css`
-    .qti-dialog {
+    .cito-dialog {
       background: var(--qti-bg);
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
       border-radius: var(--qti-border-radius);
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       position: fixed;
       top: 50%;
@@ -23,7 +21,7 @@ export class QtiModalFeedback extends QtiFeedback {
 
     .button {
       border-radius: var(--qti-border-radius);
-      padding: var(--qti-padding-vertical) var(--qti-padding-horizontal);
+      padding: var(--qti-padding-box);
       background-color: var(--qti-bg-active);
       border: var(--qti-border-active);
       cursor: pointer;
@@ -31,13 +29,12 @@ export class QtiModalFeedback extends QtiFeedback {
       display: inline-block;
     }
 
-    .button:hover {
-      background-color: var(--qti-hover-bg);
-    }
-
+    /* Inlined from --qti-disabled-bg / --qti-disabled-color, which this button was the only reader
+       of anywhere in the repo. They were named as a global disabled vocabulary but no interaction
+       ever used them: the theme's disabled treatment is cursor only (see the note in qti-mixins.css). */
     .button:disabled {
-      background-color: var(--qti-disabled-bg);
-      color: var(--qti-disabled-color);
+      background-color: transparent;
+      color: var(--qti-fg);
       cursor: not-allowed;
     }
 
@@ -48,9 +45,9 @@ export class QtiModalFeedback extends QtiFeedback {
 
   override render() {
     return html`
-      <dialog class="qti-dialog" part="feedback" ?open="${this.showStatus === 'on'}">
+      <dialog class="cito-dialog" part="feedback" ?open="${this.showStatus === 'on'}">
         <slot></slot>
-        <div style="margin-top: var(--qti-gap-size); text-align: center;">
+        <div style="margin-top: var(--qti-gap); text-align: center;">
           <button class="button close-button" @click="${this.closeFeedback}">Close</button>
         </div>
       </dialog>

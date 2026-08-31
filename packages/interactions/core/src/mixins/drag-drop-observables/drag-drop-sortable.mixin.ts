@@ -1,6 +1,6 @@
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
 import { defaultSortingStrategy } from './strategies/sorting.strategy';
-import { type FlipAnimationOptions } from './utils/flip.utils';
+import { type FlipAnimationOptions, motionEnabled } from './utils/flip.utils';
 import {
   createSortableDragContext,
   resetSortableDragContext,
@@ -54,7 +54,15 @@ export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
       duration: 250,
       easing: 'ease'
     };
-    public enableFlipAnimations = true;
+    private _enableFlipAnimations = true;
+    set enableFlipAnimations(value: boolean) {
+      this._enableFlipAnimations = value;
+    }
+    /* Programmatic switch AND the theme's motion budget: FLIP runs only when both allow it, so
+       `--qti-motion: 0` / reduced-motion disables it without any consumer code. */
+    get enableFlipAnimations(): boolean {
+      return this._enableFlipAnimations && motionEnabled(this as unknown as Element);
+    }
 
     public get response(): string | string[] | null {
       return [...this._response];

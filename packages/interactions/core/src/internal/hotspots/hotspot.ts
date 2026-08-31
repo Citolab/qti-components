@@ -105,6 +105,35 @@ export function positionShapes(shape: string, coordsNumber: number[], img: HTMLI
 
         const polyD = polygonData.map(p => `${p.x}% ${p.y}%`).join(',');
         hotspot.style.clipPath = `polygon(${polyD})`;
+
+        /*
+         * Publish the polygon outline as SVG-stroke masks, so a theme can draw a ring round a poly
+         * hotspot the way it draws a border round a circle. A `clip-path` box has no border-box
+         * edge for a CSS `border` to paint on, so this is the only way to outline a polygon.
+         *
+         * Geometry only — the mask carries the shape, the theme's `background-color` carries the
+         * colour, so selection/light-dark/correction theming all stay in CSS (see
+         * qti-hotspot-interaction.css). Two widths, so a theme can swap thin↔bold between resting
+         * and selected without JS.
+         *
+         * `viewBox 0 0 100 100` + `preserveAspectRatio=none` stretches to the element; the points
+         * are the same percentages as the clip-path. `vector-effect=non-scaling-stroke` keeps the
+         * stroke a uniform screen width through any (even non-uniform) resize — verified.
+         *
+         * The theme keeps clip-path ON for hit-testing and layers the mask over it, so the stroke's
+         * outer half is clipped and a clean inner-edge ring remains — matching the inner edge a
+         * border-box border draws on the box shapes. Hence the widths here are doubled: the visible
+         * (inner) half is ~2px / ~4px.
+         */
+        const svgPoints = polygonData.map(p => `${p.x},${p.y}`).join(' ');
+        const outline = (strokeWidth: number): string =>
+          `url("data:image/svg+xml,${encodeURIComponent(
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'>` +
+              `<polygon points='${svgPoints}' fill='none' stroke='black' stroke-width='${strokeWidth}' ` +
+              `vector-effect='non-scaling-stroke' stroke-linejoin='round'/></svg>`
+          )}")`;
+        hotspot.style.setProperty('--qti-shape-outline', outline(4));
+        hotspot.style.setProperty('--qti-shape-outline-bold', outline(8));
       }
       break;
 

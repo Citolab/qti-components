@@ -1,5 +1,5 @@
 import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
@@ -7,7 +7,6 @@ import { sessionContext } from '@qti-components/base';
 
 import type { SessionContext } from '@qti-components/base';
 
-@customElement('test-view')
 export class TestView extends LitElement {
   static DEFAULT_VIEW_OPTIONS = ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'];
 

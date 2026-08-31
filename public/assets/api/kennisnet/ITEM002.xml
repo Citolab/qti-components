@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     title="Meerkeuzevraag meerdere antwoorden" time-dependent="false" identifier="ITEM002">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>choice1</qti-value>
+            <qti-value>choice2</qti-value>
+            <qti-value>choice4</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="choice1" mapped-value="1"/>
+            <qti-map-entry map-key="choice2" mapped-value="1"/>
+            <qti-map-entry map-key="choice3" mapped-value="-1"/>
+            <qti-map-entry map-key="choice4" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0"
+                             normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col5">
+                <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" min-choices="0" max-choices="0">
+                    <qti-prompt>
+                        Welke van de volgende landen zijn volledig door één enkel ander land ingesloten?
+                    </qti-prompt>
+                    <qti-simple-choice identifier="choice1" fixed="false" show-hide="show">
+                        Lesotho
+                    </qti-simple-choice>
+                    <qti-simple-choice identifier="choice2" fixed="false" show-hide="show">
+                        San Marino
+                    </qti-simple-choice>
+                    <qti-simple-choice identifier="choice3" fixed="false" show-hide="show">
+                        Bolivia
+                    </qti-simple-choice>
+                    <qti-simple-choice identifier="choice4" fixed="false" show-hide="show">
+                        Vaticaanstad
+                    </qti-simple-choice>
+                </qti-choice-interaction>
+            </div>
+            <div class="qti-layout-col7">
+                <img src="resources/world-map.jpg" alt="Wereldkaart"/>
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Lesotho ligt volledig binnen Zuid-Afrika</li>
+                    <li>San Marino en Vaticaanstad liggen volledig binnen Italië</li>
+                    <li>Bolivia is niet ingesloten</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

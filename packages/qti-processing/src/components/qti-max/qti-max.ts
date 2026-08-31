@@ -52,5 +52,3 @@ export class QtiMax extends QtiExpression<number | null> {
     return values;
   }
 }
-
-customElements.define('qti-max', QtiMax);

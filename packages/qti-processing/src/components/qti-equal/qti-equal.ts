@@ -51,5 +51,3 @@ export class QtiEqual extends QtiExpression<boolean> {
     return null;
   }
 }
-
-customElements.define('qti-equal', QtiEqual);

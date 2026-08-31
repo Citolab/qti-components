@@ -33,7 +33,12 @@ export class QtiSubstring extends QtiExpression<boolean | null> {
       console.error('qti-substring requires single cardinality');
       return null;
     }
-    if (needle.value === null || haystack.value === null || needle.value === undefined || haystack.value === undefined) {
+    if (
+      needle.value === null ||
+      haystack.value === null ||
+      needle.value === undefined ||
+      haystack.value === undefined
+    ) {
       return null;
     }
 
@@ -46,5 +51,3 @@ export class QtiSubstring extends QtiExpression<boolean | null> {
     return right.includes(left);
   }
 }
-
-customElements.define('qti-substring', QtiSubstring);

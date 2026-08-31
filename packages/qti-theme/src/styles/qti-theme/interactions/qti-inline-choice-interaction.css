@@ -1,69 +1,185 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-inline-choice-interaction {
-    &:state(candidate-correct) {
-      &::part(trigger) {
-        background-color: var(--qti-correct);
-      }
-    }
-    &:state(candidate-incorrect) {
-      &::part(trigger) {
-        background-color: var(--qti-incorrect);
-      }
-    }
+    /* ── Host: the closed combobox, painted through the paint contract so a brand can restyle the
+       field the same way it restyles chips/buttons/text-fields. Its one field-specific default (fg
+       text, rather than the contract's `inherit`) is set as --field-* so it stays overridable — and
+       being the field's own slot, it no longer inherits into the menu and message below. Those two
+       still land on the same colour: they inherit the field's computed `color`. */
+    @mixin field;
+    --field-color: var(--qti-fg);
+
+    /* ── Trigger: transparent inside the field border ───────────────────────── */
     &::part(trigger) {
-      @apply dropdown-trigger;
+      padding: var(--qti-padding-box);
+      background: transparent;
+      border: none;
+      border-radius: inherit;
+      color: inherit;
+      cursor: pointer;
       font-size: inherit;
-      vertical-align: baseline;
-      min-width: var(--qti-calculated-min-width, auto);
-      &:focus-visible {
-        @apply foc;
-      }
     }
-    &:not(:state(readonly)):not([readonly])::part(trigger):hover {
-      @apply hov;
+
+    &::part(trigger):focus-visible {
+      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+      outline: none;
     }
+
     &:state(disabled)::part(trigger),
     &[disabled]::part(trigger) {
-      @apply dis;
+      cursor: not-allowed;
     }
+
     &:state(readonly)::part(trigger),
     &[readonly]::part(trigger) {
-      @apply rdo;
-      @apply dis;
+      cursor: pointer;
     }
+
+    /* ── Chevron icon: color only; transform/mask/size live in shadow DOM ────── */
     &::part(dropdown-icon) {
-      @apply dropdown-icon;
-      font-size: 1.75em;
+      color: inherit;
     }
+
     &::part(dropdown-icon-open) {
-      @apply dropdown-icon-open;
+      color: inherit;
     }
+
+    /* ── Popover menu: the neutral paint box (fill + border + radius all default). ── */
+    /*
+     * No padding of its own — the rows go edge to edge, and each row pays --qti-padding-box, the
+     * SAME token the trigger pays.
+     *
+     * That is what makes the closed and the open control read as one thing: the selected value in
+     * the trigger and the option rows beneath it now start on exactly the same vertical line
+     * (measured: both 17px from the visible edge; before, the option text sat at 21px because the
+     * menu added --qti-padding-inline on top of the row's own --qti-padding-box).
+     *
+     * It also fixes the disproportion: the highlighted row used to float with 5px beside it and 3px
+     * above it. Two spacing tokens for one box is the whole bug — the vocabulary says pick one and
+     * spend it whole (see the CONTRACT note on --qti-padding-box / -inline / --qti-gap).
+     */
     &::part(menu) {
-      @apply dropdown-menu;
+      @mixin menu;
+      padding: 0;
     }
+
+    /*
+     * Open, the trigger and the menu are one shape, so the edges that meet lose their rounding.
+     *
+     * Both boxes are rounded on all four corners at rest, and the sides already line up to the pixel
+     * (measured: trigger and menu both 97.38 → 464.80, seam at 0.00). What read as "not quite
+     * meeting" was purely the two curves pinching inward at the join, with the two borders stacked
+     * between them.
+     *
+     * Paint only — border-radius changes nothing about where anything sits, so this is safe in a
+     * state (CONTRACT.md §2: a state must not change layout metrics).
+     *
+     * The host is the box that carries the field's border; the trigger inside it is transparent with
+     * `border-radius: inherit`, so squaring the host is what squares the visible bottom edge.
+     *
+     * Known limit: the menu may flip above the trigger when there is no room below
+     * (`position-try-fallbacks: flip-block` in the shadow styles). These two rules assume it sits
+     * below, so a flipped menu keeps its rounding at the join. There is no selector for "which
+     * position-try fallback applied", so fixing that needs a signal from script, and it is not worth
+     * one for the rarer case.
+     */
+    &:state(open) {
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    &::part(menu):popover-open {
+      border-start-start-radius: 0;
+      border-start-end-radius: 0;
+    }
+
+    /* ── Option rows ─────────────────────────────────────────────────────────── */
     &::part(option) {
-      @apply dropdown-option;
+      padding: var(--qti-padding-box);
+      border: 0;
+      /* Square, because a row now spans the full width of the menu. The menu's own radius still
+         rounds the first and last row, since it clips them (overflow: auto). A radius here would
+         only show as a notch inside a straight edge. */
+      border-radius: 0;
+      background: transparent;
+      cursor: pointer;
     }
-    &::part(option):hover {
-      @apply hov;
-    }
+
     &::part(option):focus-visible {
-      @apply foc;
+      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+      outline: none;
     }
+
     &::part(option-selected) {
-      @apply act-bg;
+      background-color: var(--qti-bg-active);
     }
+
+    /* ── Slotted qti-inline-choice elements (light DOM) ──────────────────────── */
+    /* The option row's own box — flex, centred, single-line, clipped — is in
+       qti-inline-choice.styles.ts. */
     & qti-inline-choice {
-      @apply dropdown-option;
+      width: 100%;
+      box-sizing: border-box;
+      padding: var(--qti-padding-box);
+      border: 0;
+      /* Square, for the same reason as ::part(option) above — these are the other half of the same
+         list (the prompt row is a part, the authored choices are slotted), and they have to agree. */
+      border-radius: 0;
+      background: transparent;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      text-overflow: ellipsis;
     }
-    & qti-inline-choice:hover {
-      @apply hov;
-    }
+
     & qti-inline-choice:focus-visible {
-      @apply foc;
+      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+      outline: none;
     }
-    & qti-inline-choice:state(--checked) {
-      @apply act-bg;
+
+    & qti-inline-choice:state(checked) {
+      background-color: var(--qti-bg-active);
+    }
+
+    /* ── Validation message: a warning box, painted through the contract. Its non-neutral bits
+       (fg text, amber-tinted fill, amber border) are --message-* overrides; width/style/radius
+       come from the defaults. ── */
+    &::part(message) {
+      @mixin message;
+      --message-color: var(--qti-fg);
+      --message-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      --message-border-color: var(--qti-warning);
+      padding: var(--qti-padding-box);
+    }
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  /* The answer key, moved here from the shared qti-corrections.css: it names this interaction, so
+     this file owns it. */
+  .full-correct-response qti-inline-choice-interaction {
+    @mixin answer;
+
+    &::part(value) {
+      color: var(--qti-answer-fg);
+    }
+  }
+
+  qti-inline-choice-interaction {
+    &:state(candidate-correct) {
+      @mixin candidate field, var(--qti-correct), var(--qti-correct-light);
+
+      &::part(trigger) {
+        background: transparent;
+      }
+    }
+
+    &:state(candidate-incorrect) {
+      @mixin candidate field, var(--qti-incorrect), var(--qti-incorrect-light);
+
+      &::part(trigger) {
+        background: transparent;
+      }
     }
   }
 }

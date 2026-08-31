@@ -1,3 +1,12 @@
-@import url('./qti-base.css');
+@layer qti-components.reset, qti-components.global, qti-components.interactions.base,
+	qti-components.interactions.brand, qti-components.interactions.states,
+	qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
+
+@import url('./reset.css') layer(qti-components.reset);
+/* Plain HTML author markup (tables, lists, rules). Sibling to reset.css, same @scope. */
+@import url('./prose.css');
+@import url('./qti-variables.css');
+@import url('./qti-mixins.css');
 @import url('./qti-interactions.css');
-@import url('./qti-elements.css');
+@import url('./qti-elements.css') layer(qti-components.elements);
+@import url('./qti-states.css');

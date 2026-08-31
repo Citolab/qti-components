@@ -1,12 +1,11 @@
 import { consume } from '@lit/context';
 import { LitElement, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 
 import { itemContext } from '@qti-components/base';
 
 import type { ItemContext, TemplateVariable } from '@qti-components/base';
 
-@customElement('qti-content-body')
 export class QtiContentBody extends LitElement {
   @consume({ context: itemContext, subscribe: true })
   @state()
@@ -33,7 +32,11 @@ export class QtiContentBody extends LitElement {
 
     for (const variable of templateVariables) {
       const templateVariable = variable as TemplateVariable;
-      if (templateVariable.mathVariable !== true || templateVariable.value === null || templateVariable.value === undefined) {
+      if (
+        templateVariable.mathVariable !== true ||
+        templateVariable.value === null ||
+        templateVariable.value === undefined
+      ) {
         continue;
       }
 

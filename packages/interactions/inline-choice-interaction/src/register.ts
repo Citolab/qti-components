@@ -1,2 +1,7 @@
-import { QtiInlineChoiceInteraction } from './qti-inline-choice-interaction';
-customElements.define('qti-inline-choice-interaction', QtiInlineChoiceInteraction);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

@@ -29,6 +29,31 @@ describe('resolveDragCloneHost', () => {
     expect(resolveDragCloneHost(source)).toBe(document.body);
   });
 
+  it("hosts the clone in the caller's preferred tree, the one the theme's rules can reach", () => {
+    const host = mount(document.createElement('div'));
+    const preferred = host.attachShadow({ mode: 'open' });
+
+    expect(resolveDragCloneHost(mount(document.createElement('div')), preferred)).toBe(preferred);
+  });
+
+  it('keeps the preferred tree while the fullscreen element still paints it', () => {
+    const fullscreenRoot = mount(document.createElement('div'));
+    const host = fullscreenRoot.appendChild(document.createElement('div'));
+    const preferred = host.attachShadow({ mode: 'open' });
+    fakeFullscreen(document, fullscreenRoot);
+
+    expect(resolveDragCloneHost(mount(document.createElement('div')), preferred)).toBe(preferred);
+  });
+
+  it('drops the preferred tree for the fullscreen element when the browser no longer paints it', () => {
+    const fullscreenRoot = mount(document.createElement('div'));
+    const host = mount(document.createElement('div'));
+    const preferred = host.attachShadow({ mode: 'open' });
+    fakeFullscreen(document, fullscreenRoot);
+
+    expect(resolveDragCloneHost(mount(document.createElement('div')), preferred)).toBe(fullscreenRoot);
+  });
+
   it('hosts the clone in the fullscreen element, which is the only subtree the browser paints', () => {
     const fullscreenRoot = mount(document.createElement('div'));
     const source = fullscreenRoot.appendChild(document.createElement('div'));

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM017"
+                     title="Sleepvraag – afbeeldingen koppelen"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="directedPair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>left_auto right_brandstof</qti-value>
+            <qti-value>left_trein right_elektriciteit</qti-value>
+            <qti-value>left_fiets right_spierkracht</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0">
+            <qti-map-entry map-key="left_auto right_brandstof" mapped-value="1"/>
+            <qti-map-entry map-key="left_trein right_elektriciteit" mapped-value="1"/>
+            <qti-map-entry map-key="left_fiets right_spierkracht" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="3">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <p>Koppel elk vervoermiddel aan de bijbehorende energiebron:</p>
+        <qti-match-interaction response-identifier="RESPONSE">
+            <qti-simple-match-set>
+                <qti-simple-associable-choice identifier="left_auto" match-max="1">
+                    <img src="resources/vehicle-car.svg" alt="Auto" width="100" height="65"/>
+                </qti-simple-associable-choice>
+                <qti-simple-associable-choice identifier="left_trein" match-max="1">
+                    <img src="resources/vehicle-train.svg" alt="Trein" width="110" height="65"/>
+                </qti-simple-associable-choice>
+                <qti-simple-associable-choice identifier="left_fiets" match-max="1">
+                    <img src="resources/vehicle-bike.svg" alt="Fiets" width="100" height="75"/>
+                </qti-simple-associable-choice>
+            </qti-simple-match-set>
+            <qti-simple-match-set>
+                <qti-simple-associable-choice identifier="right_brandstof" match-max="1">
+                    <img src="resources/energy-fuel.svg" alt="Brandstof" width="70" height="90"/>
+                </qti-simple-associable-choice>
+                <qti-simple-associable-choice identifier="right_elektriciteit" match-max="1">
+                    <img src="resources/energy-electric.svg" alt="Elektriciteit" width="70" height="90"/>
+                </qti-simple-associable-choice>
+                <qti-simple-associable-choice identifier="right_spierkracht" match-max="1">
+                    <img src="resources/energy-human.svg" alt="Spierkracht" width="70" height="90"/>
+                </qti-simple-associable-choice>
+            </qti-simple-match-set>
+        </qti-match-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Auto → Brandstof</li>
+                    <li>Trein → Elektriciteit</li>
+                    <li>Fiets → Spierkracht</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

@@ -1,103 +1,202 @@
-@layer qti-components {
+/* This interaction's chip vocabulary — the bank chip, the placed chip, and the floating clone. One
+   such block per drag-drop interaction, opt-in; graphic-gap-match deliberately declares none. See
+   qti-states.css. Kept in the `global` layer, where these rules used to live, so cascade position is
+   unchanged.
+
+   The clone is matched by [data-drag-interaction] rather than by ancestry because it is a SIBLING of
+   the interaction, not a descendant: createDragClone appends it to the interaction's ROOT (the
+   item's shadow root), which is the same tree — so the theme can reach it — but not the same
+   subtree. The attribute is also what tells one interaction's chip in flight from another's, which
+   is how graphic-gap-match stays out without anyone writing an exclusion.
+
+   Its grip hangs off ::part(control)::before, the same place the resting chip's does, so a chip does
+   not move its handle when you pick it up. That the part is reachable at all is new: while the clone
+   sat on document.body it was in a different tree from the adopted stylesheet, and nothing — no
+   part, no attribute — could style it. */
+@layer qti-components.global {
+  qti-gap-match-interaction :state(drag),
+  [data-drag-clone][data-drag-interaction='qti-gap-match-interaction'] {
+    @mixin drag;
+  }
+
+  qti-gap-match-interaction :state(drag)::part(control)::before,
+  qti-gap-match-interaction::part(drag-control)::before,
+  qti-gap-match-interaction ::part(drag-control)::before,
+  [data-drag-clone][data-drag-interaction='qti-gap-match-interaction']::part(control)::before {
+    @mixin grip;
+  }
+}
+
+@layer qti-components.interactions.base {
   qti-gap-match-interaction {
-    &.qti-selections-light {
-      &:state(--dragzone-active)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-        border-color: var(--qti-light-border-active);
-      }
-      &:state(--dragzone-enabled)::part(drags) {
-        background-color: var(--qti-light-bg-active);
-      }
+    /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
+       that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
+       item in this repo ever set it on a gap-match interaction. What was here overrode the neutral
+       drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
+    &:state(dragzone-active)::part(drags) {
+      @mixin dropping;
     }
-    &.qti-selections-dark {
-      &:state(--dragzone-active)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-        border-color: var(--qti-dark-border-active);
-      }
-      &:state(--dragzone-enabled)::part(drags) {
-        background-color: var(--qti-dark-bg-active);
-      }
-    }
-    &:state(--dragzone-active)::part(drags) {
-      @apply act;
-    }
-    &:state(--dragzone-enabled)::part(drags) {
-      @apply dropping;
+    &:state(dragzone-enabled)::part(drags) {
+      @mixin dropping;
     }
     /* Editor fake-drag projected into a filled <qti-gap>'s shadow. Same `drag`
        styling so the editor preview matches runtime when a gap is filled. */
     & qti-gap::part(drag) {
-      @apply drag;
+      @mixin drag;
       &:hover {
-        @apply hov;
+        @mixin drag-hover;
       }
       &:focus {
-        @apply foc;
+        @mixin foc;
       }
     }
     & qti-gap-text {
-      @apply drag;
+      @mixin drag;
       &[dragging] {
-        @apply dragging;
+        @mixin dragging;
       }
       &:hover {
-        @apply hov;
+        @mixin drag-hover;
       }
       &:focus {
-        @apply foc;
-      }
-      &:state(candidate-correct) {
-        background-color: var(--qti-correct);
-      }
-      &:state(candidate-incorrect) {
-        background-color: var(--qti-incorrect);
+        @mixin foc;
       }
     }
     & qti-gap {
-      @apply drop;
+      @mixin drop;
+
+      /*
+       * A filled gap hides its dashed edge, exactly as a filled order slot does
+       * (qti-order-interaction.css, `::part(filled)`).
+       *
+       * The dashed edge says "something goes here". Once something does, it is only a second frame
+       * drawn a pixel outside the chip's own border — two nested outlines around one word, which is
+       * what the drop inset made visible: before it, the two borders sat on top of each other and
+       * the duplication did not show.
+       *
+       * Transparent rather than `none`, and the width is untouched: `@mixin paint drop` binds
+       * border-width and border-color to separate slots, so switching only the colour keeps the
+       * gap's box identical empty or filled. `border-style: none` would collapse the width and move
+       * every word on the line the instant a chip landed — the exact reflow qti-gap.styles.ts and
+       * drag-drop.invariance.spec.ts exist to prevent.
+       */
+      &:state(filled):is(:not([match-max]), [match-max='1']) {
+        --drop-border-color: transparent;
+      }
+
       &[disabled] {
-        @apply dis;
-        &:not(:empty) {
+        cursor: not-allowed;
+        /* `:not(:empty)` tested light-DOM children; the gap renders its chips into its own shadow
+           root now, so it is always "empty" to a selector. `:state(filled)` is the occupancy hook. */
+        &:state(filled) {
           cursor: default !important;
         }
       }
       &[enabled] {
-        @apply dropping;
-        .qti-selections-light {
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          border-color: var(--qti-dark-border-active);
-        }
+        @mixin dropping;
       }
       &[active] {
-        @apply act;
-        .qti-selections-light {
-          background-color: var(--qti-light-bg-active);
-          border-color: var(--qti-light-border-active);
-        }
-        .qti-selections-dark {
-          background-color: var(--qti-dark-bg-active);
-          border-color: var(--qti-dark-border-active);
-        }
+        @mixin dropping;
       }
-      display: inline-flex;
-      align-items: center;
-      vertical-align: middle;
-      &:empty::after {
-        padding: var(--qti-padding-md) var(--qti-padding-lg);
-        content: '\0000a0';
-      }
-      &:not(:empty) {
-        display: inline-flex;
-        padding: 0;
-        width: auto;
-      }
-      &:not(:empty) > * {
-        flex: 1;
+      /* The gap's own box — inline-flex, centred, baseline-aligned — is in qti-gap.styles.ts. */
+
+      /*
+       * A gap is the same size empty or filled.
+       *
+       * It used to be sized two different ways: empty, by a padded non-breaking space; filled,
+       * by `padding: 0` and whatever the chip happened to be. So a gap resized the moment a chip
+       * landed in it, and — worse — every *other* gap on the line reflowed with it. Now the
+       * interaction publishes the widest and tallest chip as --qti-dropzone-min-*, and the gap
+       * reserves exactly that on its slot (see qti-gap.styles.ts).
+       *
+       * The `&:empty::after { content: '\0000a0' }` that used to hold an empty gap open is gone
+       * with it: it sat *beside* the slot, so an empty gap was one non-breaking space wider than
+       * the same gap once filled.
+       */
+
+      /*
+       * No `flex: 1`. A chip is the same size wherever it lives — in the bank, mid-drag as a
+       * clone, or dropped. Stretching it to its container's width made the drop the one place
+       * where that stopped being true.
+       *
+       * The chip is in the gap's shadow root, so `> *` cannot select it and `::part(drag)` is the
+       * only way in.
+       */
+      /* `flex: 0 0 auto` is dropRegion's, in qti-base — a drop hosts a chip, it never sizes one.
+         The rotate reset and the outline are paint. */
+      &::part(drag) {
         transform: rotate(0);
-        box-shadow: 0 0 0 1px #e5e7eb;
+        /* Through the drag slot so a correction (which sets --drag-box-shadow) composes over it
+           instead of this leaking onto a corrected chip. */
+        --drag-box-shadow: 0 0 0 1px #e5e7eb;
       }
     }
   }
+
+  /* The source and placed chip share one visual component. */
+  qti-gap-match-interaction qti-gap-text:state(drag),
+  qti-gap-match-interaction qti-gap::part(drag) {
+    @mixin drag;
+  }
+}
+
+@layer qti-components.interactions.states {
+  /* One chip vocabulary across the bank and placed drags for gap-match only. */
+  qti-gap::part(drag) {
+    @mixin drag;
+  }
+
+  qti-gap-match-interaction qti-gap-text:state(placeholder) {
+    @mixin drag-placeholder;
+    pointer-events: none;
+  }
+
+  qti-gap-match-interaction qti-gap-text:state(dragging) {
+    @mixin drag-placeholder;
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+    pointer-events: none;
+  }
+
+  qti-gap-match-interaction qti-gap-text:state(return-anchor) {
+    border-color: var(--qti-drop-highlight-border-color);
+    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
+      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+  }
+
+  qti-gap-match-interaction qti-gap:state(hover),
+  qti-gap-match-interaction qti-gap:state(active) {
+    background-color: var(--qti-drop-highlight-bg);
+  }
+
+  qti-gap-match-interaction qti-gap:state(enabled) {
+    background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  /* A corrected chip — in the bank, and where it landed. Moved here from the shared
+     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
+     `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
+     carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
+     that selector never matched anything. */
+  /* The two `qti-gap-text:state(candidate-*) { --drag-background-color: var(--qti-correct) }` rules
+     that used to sit here are gone, and were already dead: the shared rule declared `background-color`
+     DIRECTLY, which outranks the paint binding that reads --drag-background-color, so the solid fill
+     they asked for never rendered — a corrected gap-text has always been the pale tint. Left in place
+     they would have come alive the moment the shared rule left, and turned solid. */
+  qti-gap-match-interaction :state(drag):state(candidate-correct),
+  qti-gap::part(drag):state(candidate-correct) {
+    @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
+  }
+
+  qti-gap-match-interaction :state(drag):state(candidate-incorrect),
+  qti-gap::part(drag):state(candidate-incorrect) {
+    @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
+  }
+
+  /* The bank is hidden by the interaction itself, on :host([answer-key]) — see
+     qti-gap-match-interaction.styles.ts. */
 }

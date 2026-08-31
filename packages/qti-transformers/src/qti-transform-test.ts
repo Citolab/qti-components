@@ -9,6 +9,7 @@
  * const xml = qtiTransformer.xml();
  */
 
+import { warnMissingSeed } from './shared/missing-seed-warning';
 import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
 import { itemsFromTest } from './test/items';
 import { hasShuffleOrdering, shuffleSectionsOrdering } from './test/shuffle-sections';
@@ -27,7 +28,7 @@ export type transformTestApi = {
   items: () => { identifier: string; href: string; category: string }[];
   html: () => string;
   xml: () => string;
-  htmlDoc: () => DocumentFragment;
+  htmlDoc: (registry?: CustomElementRegistry) => DocumentFragment;
   xmlDoc: () => XMLDocument;
 };
 
@@ -71,9 +72,7 @@ export const qtiTransformTest = (): transformTestApi => {
 
       if (normalizedSeed === null || normalizedSeed === undefined || normalizedSeed === '') {
         const fallbackSeed = xmlUri || 'default-test-seed';
-        console.warn(
-          `[qtiTransformTest] No QTI_CONTEXT.seed provided; using "${fallbackSeed}" as deterministic fallback seed.`
-        );
+        warnMissingSeed('qtiTransformTest', fallbackSeed);
         shuffleSectionsOrdering(xmlFragment, fallbackSeed);
         return api;
       }
@@ -90,8 +89,8 @@ export const qtiTransformTest = (): transformTestApi => {
     xml(): string {
       return new XMLSerializer().serializeToString(xmlFragment);
     },
-    htmlDoc() {
-      return toHTML(xmlFragment);
+    htmlDoc(registry?: CustomElementRegistry) {
+      return toHTML(xmlFragment, registry);
     },
     xmlDoc(): XMLDocument {
       return xmlFragment;

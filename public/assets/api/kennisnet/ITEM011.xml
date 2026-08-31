@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM011"
+                     title="Woorden selecteren"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE1" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_door</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_door" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE2" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_analyse</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_analyse" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE3" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_flexibiliteit</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_flexibiliteit" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="3">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <p>Selecteer het woord dat duidt op oorzaak:</p>
+            <qti-hottext-interaction response-identifier="RESPONSE1" max-choices="1">
+                <div class="qti-margin-s-5 qti-italic">
+                    De productiviteit <qti-hottext identifier="ht_daalde">daalde</qti-hottext> aanzienlijk <qti-hottext identifier="ht_door">door</qti-hottext> een <qti-hottext identifier="ht_tekort">tekort</qti-hottext> aan grondstoffen.
+                </div>
+            </qti-hottext-interaction>
+        </div>
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <strong>Uitleg:</strong> Het woord <em>door</em> geeft in deze zin de oorzaak aan.
+                Het beschrijft waarom de productiviteit daalde, namelijk als gevolg van een tekort aan grondstoffen.
+                De andere woorden beschrijven respectievelijk de handeling (<em>daalde</em>) en de oorzaak zelf (<em>tekort</em>), maar niet het oorzakelijke verband.
+            </qti-content-body>
+        </qti-rubric-block>
+
+        <div class="qti-padding-t-5">
+            <p>Selecteer het synoniem van 'onderzoek':</p>
+            <qti-hottext-interaction response-identifier="RESPONSE2" max-choices="1">
+                <div class="qti-padding-s-5 qti-italic">
+                    In het <qti-hottext identifier="ht_rapport">rapport</qti-hottext> wordt beschreven hoe de <qti-hottext identifier="ht_analyse">analyse</qti-hottext> tot stand is gekomen.
+                </div>
+            </qti-hottext-interaction>
+        </div>
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <strong>Uitleg:</strong> Het woord <em>analyse</em> fungeert in deze context als synoniem van <em>onderzoek</em>.
+                Een analyse is een vorm van systematisch onderzoek waarbij gegevens worden bestudeerd om tot inzichten te komen.
+                Het woord <em>rapport</em> verwijst alleen naar de uitwerking of het document van een onderzoek, niet naar het onderzoek zelf.
+            </qti-content-body>
+        </qti-rubric-block>
+
+        <div class="qti-padding-t-5">
+            <p>Selecteer het woord dat een voordeel aanduidt:</p>
+            <qti-hottext-interaction response-identifier="RESPONSE3" max-choices="1">
+                <div class="qti-padding-s-5 qti-italic">
+                    Een hybride <qti-hottext identifier="ht_werkmodel">werkmodel</qti-hottext> biedt meer <qti-hottext identifier="ht_flexibiliteit">flexibiliteit</qti-hottext> voor <qti-hottext identifier="ht_medewerkers">medewerkers</qti-hottext>.
+                </div>
+            </qti-hottext-interaction>
+        </div>
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <strong>Uitleg:</strong> Het woord <em>flexibiliteit</em> duidt het voordeel van een hybride werkmodel aan.
+                Het benoemt een positieve eigenschap die medewerkers extra mogelijkheden geeft.
+                De andere woorden (<em>werkmodel</em> en <em>medewerkers</em>) zijn neutrale begrippen zonder waardeoordeel en beschrijven geen voordeel.
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-sum>
+                <qti-map-response identifier="RESPONSE1"/>
+                <qti-map-response identifier="RESPONSE2"/>
+                <qti-map-response identifier="RESPONSE3"/>
+            </qti-sum>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

@@ -1,6 +1,6 @@
 import { provide } from '@lit/context';
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 
 import { itemContext, itemContextVariables } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
@@ -8,14 +8,12 @@ import { watch } from '@qti-components/utilities';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
 import type { QtiFeedback, ResponseInteraction } from '@qti-components/base';
+import type { RegisteredInteraction } from '@qti-components/base';
 import type { VariableDeclaration, VariableValue } from '@qti-components/base';
 import type { OutcomeVariable, ResponseVariable, TemplateVariable } from '@qti-components/base';
 import type { QtiResponseProcessing } from '../qti-response-processing/qti-response-processing.ts';
 import type QtiRegisterVariable from '../../internal/events/qti-register-variable.ts';
 import type { ItemContext } from '@qti-components/base';
-import type { Interaction } from '@qti-components/base';
-// import type { ItemShowCandidateCorrection } from '../../qti-item/components/item-show-candidate-correction.ts';
-// import type { ItemShowCorrectResponse } from '../../qti-item/components/item-show-correct-response.ts';
 
 /**
  * @summary The qti-assessment-item element contains all the other QTI 3 item structures.
@@ -27,7 +25,7 @@ import type { Interaction } from '@qti-components/base';
  * @event qti-item-context-updated - Emitted when through a user action the itemContext is updated,
  * typically on interaction with the interactions, or calling response processing.
  */
-@customElement('qti-assessment-item')
+
 export class QtiAssessmentItem extends LitElement {
   #itemTitle: string | undefined;
   #templateProcessing: QtiTemplateProcessing | null = null;
@@ -49,13 +47,13 @@ export class QtiAssessmentItem extends LitElement {
   @property({ type: Boolean }) disabled: boolean;
   @watch('disabled', { waitUntilFirstUpdate: true })
   protected _handleDisabledChange = (_: boolean, disabled: boolean) => {
-    this.#interactionElements.forEach(ch => (ch.disabled = disabled));
+    this.interactionElements.forEach(ch => (ch.disabled = disabled));
   };
 
   @property({ type: Boolean }) readonly: boolean;
   @watch('readonly', { waitUntilFirstUpdate: true })
   protected _handleReadonlyChange = (_: boolean, readonly: boolean) =>
-    this.#interactionElements.forEach(ch => (ch.readonly = readonly));
+    this.interactionElements.forEach(ch => (ch.readonly = readonly));
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
@@ -109,8 +107,8 @@ export class QtiAssessmentItem extends LitElement {
 
     this._context.variables.forEach(variable => {
       if (variable.type === 'response') {
-        const interactionElement = this.#interactionElements.find(
-          (el: Interaction) => el.responseIdentifier === variable.identifier
+        const interactionElement = this.interactionElements.find(
+          (el: RegisteredInteraction) => el.responseIdentifier === variable.identifier
         );
         if (interactionElement) {
           interactionElement.response = variable.value as string | string[];
@@ -138,7 +136,8 @@ export class QtiAssessmentItem extends LitElement {
 
   #initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
   #feedbackElements: QtiFeedback[] = [];
-  #interactionElements: Interaction[] = [];
+  /** Registered candidate-input interactions. Correction packages may extend their presentation behavior. */
+  protected interactionElements: RegisteredInteraction[] = [];
 
   /** @deprecated use variables property instead */
   set responses(myResponses: ResponseInteraction[]) {
@@ -149,7 +148,7 @@ export class QtiAssessmentItem extends LitElement {
           this.updateResponseVariable(response.responseIdentifier, response.response);
         }
 
-        const interaction: Interaction | undefined = this.#interactionElements.find(
+        const interaction: RegisteredInteraction | undefined = this.interactionElements.find(
           i => i.getAttribute('response-identifier') === response.responseIdentifier
         );
         if (interaction) {
@@ -222,9 +221,9 @@ export class QtiAssessmentItem extends LitElement {
     }
   };
 
-  #handleRegisterInteraction = (e: CustomEvent<{ interaction: string; interactionElement: Interaction }>) => {
+  #handleRegisterInteraction = (e: CustomEvent<{ interaction: string; interactionElement: RegisteredInteraction }>) => {
     e.stopImmediatePropagation();
-    this.#interactionElements.push(e.detail.interactionElement);
+    this.interactionElements.push(e.detail.interactionElement);
   };
 
   #handleEndAttempt = (e: CustomEvent<{ responseIdentifier: string; countAttempt: boolean }>) => {
@@ -279,38 +278,6 @@ export class QtiAssessmentItem extends LitElement {
       })
     );
   };
-
-  /**
-   * Toggles the display of correct responses for all interactions.
-   * @param show - A boolean indicating whether to show or hide correct responses.
-   */
-  public showCorrectResponse(show: boolean): void {
-    // Iterate through all interaction elements
-    for (const interaction of this.#interactionElements) {
-      interaction.toggleCorrectResponse(show);
-    }
-
-    // Update one or more toggle component states // ItemShowCorrectResponse
-    document.querySelectorAll('item-show-correct-response').forEach((el: HTMLElement & { shown: boolean }) => {
-      el.shown = show;
-    });
-  }
-
-  /**
-   * Toggles the display of the candidate correction for all interactions.
-   * @param show - A boolean indicating whether to show or hide candidate correction.
-   */
-  public showCandidateCorrection(show: boolean): void {
-    // Iterate through all interaction elements
-    for (const interaction of this.#interactionElements) {
-      interaction.toggleCandidateCorrection(show);
-    }
-
-    // Update one or more toggle component states // ItemShowCandidateCorrection
-    document.querySelectorAll('item-show-candidate-correction').forEach((el: HTMLElement & { shown: boolean }) => {
-      el.shown = show;
-    });
-  }
 
   async #processTemplates(): Promise<void> {
     const templateDeclarations = Array.from(this.querySelectorAll<LitElement>('qti-template-declaration'));
@@ -378,6 +345,9 @@ export class QtiAssessmentItem extends LitElement {
     return this._context.variables.find(v => v.identifier === identifier) || null;
   }
 
+  /** Extension point for presentation packages reacting to a candidate response change. */
+  protected afterResponseVariableUpdated(): void {}
+
   // saving privates here: ------------------------------------------------------------------------------
 
   /**
@@ -397,8 +367,7 @@ export class QtiAssessmentItem extends LitElement {
       variables: this._context.variables.map(v => (v.identifier !== identifier ? v : { ...v, value: value }))
     };
 
-    // Turn off candidate correction after change of response variable
-    this.showCandidateCorrection(false);
+    this.afterResponseVariableUpdated();
 
     this.dispatchEvent(
       new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {
@@ -564,7 +533,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public validate(reportValidity = true): boolean {
-    const isValid = this.#interactionElements.every(interactionElement => interactionElement.validate());
+    const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
 
     if (reportValidity) {
       this.reportValidity();
@@ -574,7 +543,7 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   public reportValidity() {
-    for (const interactionElement of this.#interactionElements) {
+    for (const interactionElement of this.interactionElements) {
       interactionElement.reportValidity();
     }
   }

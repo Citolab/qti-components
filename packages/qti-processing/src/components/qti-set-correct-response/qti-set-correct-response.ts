@@ -94,5 +94,3 @@ export class QtiSetCorrectResponseRule<T> implements QtiRuleBase {
     return value;
   }
 }
-
-customElements.define('qti-set-correct-response', QtiSetCorrectResponse);

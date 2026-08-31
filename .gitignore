@@ -31,9 +31,17 @@ storybook-static/
 public/assets/api/test
 .env
 *__screenshots__/
+# VRT baselines are the regression contract — they MUST be committed (override above).
+# The glob must be `**/`: the kennisnet stories moved into their own folder, so the baselines now
+# live at stories/kennisnet/__screenshots__/, one level deeper than the old un-nested path. A literal
+# `!apps/e2e/src/stories/__screenshots__/` silently stopped matching them and nothing was tracked.
+!apps/e2e/src/stories/**/__screenshots__/
+# Vitest writes actual/diff images here on failure; never commit these.
+.vitest-attachments/
 .eslintcache
 cdn
 dev
+/conformance
 
 # Yalc
 /.yalc
@@ -43,3 +51,7 @@ tools/playwright/
 .playwright-mcp/
 packages/qti-components/tsup.config.bundled_z3j43jv4ey.mjs
 .opencode
+
+# Personal VS Code workspace file. Was tracked; untracked deliberately, since it holds one
+# developer's folder layout and settings rather than anything the project needs.
+QTI-Components.code-workspace

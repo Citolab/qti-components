@@ -1,99 +1,101 @@
-@layer qti-components {
+@layer qti-components.interactions.base {
   qti-choice-interaction {
-    &::part(message) {
-      @apply validation-message;
+    /* A choice hugs its text here, unlike order-interaction, which uses the same element as a chip.
+       Handed to qti-simple-choice.styles.ts, which owns the label's box; this was an
+       `::part(label) { display: inline !important }`. */
+    --qti-choice-label-display: inline;
+
+    & qti-simple-choice {
+      padding: var(--qti-padding-box);
+      width: fit-content;
+      cursor: pointer;
     }
 
     &.qti-input-control-hidden {
       & qti-simple-choice {
-        position: relative;
-        @apply button;
-        &:hover {
-          @apply hov;
-        }
+        @mixin button;
+        --qti-control-display: none;
         &:focus {
-          @apply foc;
-        }
-        &::part(ch) {
-          display: none;
-        }
-        &:state(--checked),
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &:state(readonly),
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &:state(disabled),
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-        &:state(correct-response),
-        &[data-correct-response='true'] {
-          border: 3px solid var(--qti-correct) !important;
-          padding-right: 30px;
-          &::after {
-            content: '\02714';
-            color: var(--qti-correct);
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-          }
+          @mixin foc;
         }
       }
     }
 
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
-        @apply check;
-        &:not([aria-disabled='true'], [aria-readonly='true'], :state(--checked)):hover {
-          @apply hov;
-        }
+        @mixin check;
+
         &:focus {
-          @apply foc;
+          @mixin foc;
         }
-        &:state(--checked),
-        &[aria-checked='true'] {
-          @apply act;
-        }
-        &:state(candidate-correct) {
-          background-color: var(--qti-correct);
-        }
-        &:state(candidate-incorrect) {
-          background-color: var(--qti-incorrect);
-        }
-        &:state(readonly),
-        &[aria-readonly='true'] {
-          @apply rdo;
-        }
-        &:state(disabled),
-        &[aria-disabled='true'] {
-          @apply dis;
-        }
-        &::part(cha) {
-          @apply check-size;
-        }
-        &:state(radio)::part(ch) {
-          @apply check-radio;
-        }
-        &:state(radio):state(--checked)::part(cha) {
-          @apply check-radio-checked;
-        }
-        &:state(checkbox)::part(ch) {
-          @apply check-checkbox;
-        }
-        &:state(checkbox):state(--checked)::part(cha) {
-          @apply check-checkbox-checked;
+
+        &::part(control-mark) {
+          @mixin mark-size;
         }
       }
     }
+  }
+}
 
+@layer qti-components.interactions.states {
+  qti-choice-interaction {
+    &.qti-input-control-hidden qti-simple-choice {
+      /* A selected choice, repainted through the button role's slots rather than by re-declaring the
+         properties — the choice is `@mixin button`, so switching a variable is all a state has to do.
+         This used to be `@mixin act` followed by two direct declarations, and half of `act` was dead
+         on arrival: it set `background-color: var(--qti-bg-active)` and the very next line overwrote
+         it with the selected fill. Only its border-colour ever survived, which is written out here. */
+      &:state(checked) {
+        --button-border-color: var(--qti-border-active);
+        --button-background-color: var(--qti-selected-bg);
+        --button-color: var(--qti-selected-color);
+      }
+
+      &:state(readonly) {
+        cursor: pointer;
+      }
+
+      &:state(disabled) {
+        cursor: not-allowed;
+      }
+    }
+
+    &:not(.qti-input-control-hidden) qti-simple-choice {
+      &:state(readonly) {
+        cursor: pointer;
+      }
+
+      &:state(disabled) {
+        cursor: not-allowed;
+      }
+
+      &:state(radio)::part(control) {
+        @mixin radio;
+      }
+
+      &:state(radio):state(checked)::part(control),
+      &:state(checkbox):state(checked)::part(control) {
+        @mixin control-selected var(--qti-primary);
+      }
+
+      &:state(radio):state(checked)::part(control-mark) {
+        @mixin radio-checked;
+      }
+
+      &:state(checkbox)::part(control) {
+        @mixin checkbox;
+      }
+
+      &:state(checkbox):state(checked)::part(control-mark) {
+        @mixin checkbox-checked;
+      }
+    }
+  }
+}
+
+@layer qti-components.interactions.corrections {
+  qti-choice-interaction {
     & qti-simple-choice {
-      width: fit-content;
-      cursor: pointer;
       &:state(correct-response),
       &[data-correct-response='true'] {
         &::after {
@@ -103,9 +105,78 @@
       }
     }
 
-    & qti-simple-choice > p {
-      margin: 0 !important;
-      padding: 0 !important;
+    &.qti-input-control-hidden qti-simple-choice {
+      /*
+       * Paint only. This used to set `border: 3px` over a 1px base and add `padding-right: 30px`,
+       * so revealing the answer key grew every correct choice and reflowed the list around it.
+       *
+       * The thicker edge is now an inset shadow, which paints inside the existing border box and
+       * costs no layout. The 30px that kept the label clear of the tick is reserved in the base
+       * rule for this variant, whether or not a tick ever appears.
+       */
+      &:state(correct-response),
+      &[data-correct-response='true'] {
+        border-color: var(--qti-correct) !important;
+        box-shadow: inset 0 0 0 2px var(--qti-correct);
+
+        &::after {
+          content: '\02714';
+          color: var(--qti-correct);
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          font-size: 1.2em;
+          font-weight: bold;
+        }
+      }
+
+      /* Candidate judgement follows checked/correct-response paint so it can
+         recolour the same stable box without changing its geometry. */
+      &:state(candidate-correct) {
+        @mixin candidate button, var(--qti-correct), var(--qti-correct-light);
+      }
+
+      &:state(candidate-incorrect) {
+        @mixin candidate button, var(--qti-incorrect), var(--qti-incorrect-light);
+      }
+    }
+
+    &:not(.qti-input-control-hidden) qti-simple-choice {
+      &:state(candidate-correct) {
+        background-color: transparent;
+
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-correct);
+        }
+      }
+
+      &:state(candidate-incorrect) {
+        background-color: transparent;
+
+        &:state(radio):state(checked)::part(control),
+        &:state(checkbox):state(checked)::part(control) {
+          @mixin control-selected var(--qti-incorrect);
+        }
+      }
+    }
+  }
+
+  .full-correct-response qti-choice-interaction {
+    qti-simple-choice {
+      &:state(radio):state(checked)::part(control),
+      &:state(checkbox):state(checked)::part(control) {
+        @mixin answer;
+      }
+
+      &:state(radio):state(checked)::part(control-mark),
+      &:state(checkbox):state(checked)::part(control-mark) {
+        background-color: var(--qti-answer-fg);
+      }
+    }
+
+    &.qti-input-control-hidden qti-simple-choice:state(checked) {
+      @mixin answer;
     }
   }
 }

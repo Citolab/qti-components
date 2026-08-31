@@ -9,13 +9,38 @@ import {
 // import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop/drag-drop-interaction-mixin.js';
 import styles from './qti-gap-match-interaction.styles.js';
 
-import type { ResponseVariable } from '@qti-components/base';
-import type { QtiGap } from '@qti-components/interactions-core/elements/qti-gap';
-import type { QtiGapText } from '@qti-components/interactions-core/elements/qti-gap-text';
 import type { CSSResultGroup } from 'lit';
-const SlottedBase = DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part='drags']`);
-
-export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
+/**
+ * Drag-and-drop gap-match interaction: candidates drag choices into gap targets.
+ *
+ * @customElement qti-gap-match-interaction
+ *
+ * @attr {string} response-identifier - Required. Identifier of the bound response variable.
+ * @attr {number} [max-associations=1] - Maximum gaps that may be filled across the whole
+ *   interaction; `0` means unlimited.
+ * @attr {number} [min-associations=1] - Minimum filled gaps for a valid response.
+ * @attr {boolean} [shuffle=false] - Requests shuffling of the `qti-gap-text` sources. Applied
+ *   by the transform pipeline (`qti-transformers`), not by this element.
+ * @attr {'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
+ *   QTI shared presentation vocabulary positioning the gap-choices container.
+ * @attr {boolean} [auto-size-dropzones=true] - Extension, not QTI. Sizes every gap to the
+ *   widest chip so placement does not reflow the prose. On by default: a gap is a slot, and a slot
+ *   that is already the size of the chip it will hold does not resize when one lands in it.
+ * @attr {boolean} [disable-animations=false] - Extension, not QTI. Disables the FLIP move
+ *   animation.
+ *
+ * @slot prompt - The prompt shown above the interaction.
+ * @slot drags - The draggable choice sources.
+ * @slot - Default slot for the drop targets (gaps).
+ *
+ * @csspart drags - Wrapper around the drag sources slot.
+ * @csspart drops - Wrapper around the drop targets slot.
+ * @csspart message - Live validation message region (role="alert").
+ */
+export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
+  DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part~='drags']`),
+  '[qti-draggable="true"]'
+) {
   static override styles: CSSResultGroup = styles;
 
   override render() {
@@ -23,104 +48,6 @@ export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(Slotted
       <slot part="drags" name="drags"></slot>
       <slot part="drops"></slot>
       <div role="alert" part="message" id="validation-message"></div>`;
-  }
-
-  public override toggleCorrectResponse(show: boolean): void {
-    const responseVariable = this.responseVariable;
-
-    if (show && responseVariable?.correctResponse) {
-      let matches: { text: string; gap: string }[] = [];
-      const response = Array.isArray(responseVariable.correctResponse)
-        ? responseVariable.correctResponse
-        : [responseVariable.correctResponse];
-
-      if (response) {
-        matches = response.map(x => {
-          const split = x.split(' ');
-          return { text: split[0], gap: split[1] };
-        });
-      }
-
-      const gaps = this.querySelectorAll('qti-gap');
-      gaps.forEach(gap => {
-        const identifier = gap.getAttribute('identifier');
-        const textIdentifier = matches.find(x => x.gap === identifier)?.text;
-        const text = this.querySelector(`qti-gap-text[identifier="${textIdentifier}"]`)?.textContent.trim();
-        if (textIdentifier && text) {
-          if (!gap.nextElementSibling?.classList.contains('correct-option')) {
-            const textSpan = document.createElement('span');
-            textSpan.classList.add('correct-option');
-            textSpan.textContent = text;
-
-            // Apply styles
-            textSpan.style.border = '1px solid var(--qti-correct)';
-            textSpan.style.borderRadius = '4px';
-            textSpan.style.padding = '2px 4px';
-            textSpan.style.display = 'inline-block';
-
-            gap.insertAdjacentElement('afterend', textSpan);
-          }
-        } else if (gap.nextElementSibling?.classList.contains('correct-option')) {
-          gap.nextElementSibling.remove();
-        }
-      });
-    } else {
-      const correctOptions = this.querySelectorAll('.correct-option');
-      correctOptions.forEach(option => {
-        option.remove();
-      });
-    }
-  }
-
-  #getMatches(responseVariable: ResponseVariable): { source: string; target: string }[] {
-    if (!responseVariable.correctResponse) {
-      return [];
-    }
-    const correctResponse = Array.isArray(responseVariable.correctResponse)
-      ? responseVariable.correctResponse
-      : [responseVariable.correctResponse];
-
-    const matches: { source: string; target: string }[] = [];
-    if (correctResponse) {
-      correctResponse.forEach(x => {
-        const split = x.split(' ');
-        matches.push({ source: split[0], target: split[1] });
-      });
-    }
-    return matches;
-  }
-
-  public override toggleCandidateCorrection(show: boolean) {
-    const responseVariable = this.responseVariable;
-
-    if (!responseVariable?.correctResponse) {
-      return;
-    }
-    const matches = this.#getMatches(responseVariable);
-
-    const targetChoices = Array.from<QtiGap>(this.querySelectorAll('qti-gap'));
-    targetChoices.forEach(targetChoice => {
-      const targetId = targetChoice.getAttribute('identifier');
-      const targetMatches = matches.filter(m => m.target === targetId);
-
-      const selectedChoices = targetChoice.querySelectorAll<QtiGapText>(`qti-gap-text`);
-
-      selectedChoices.forEach(selectedChoice => {
-        selectedChoice.internals.states.delete('candidate-correct');
-        selectedChoice.internals.states.delete('candidate-incorrect');
-
-        if (!show) {
-          return;
-        }
-
-        const isCorrect = targetMatches.find(m => m.source === selectedChoice.identifier)?.source !== undefined;
-        if (isCorrect) {
-          selectedChoice.internals.states.add('candidate-correct');
-        } else {
-          selectedChoice.internals.states.add('candidate-incorrect');
-        }
-      });
-    });
   }
 }
 

@@ -18,7 +18,7 @@ type Story = StoryObj<QtiTextEntryInteraction>;
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
   title: '03 Text Entry Interaction/Behavior',
-  tags: ['behavior', 'specific']
+  tags: ['behavior', 'specific', 'iol']
 };
 export default meta;
 
@@ -250,32 +250,6 @@ export const ReadonlyWithInitialValue: Story = {
 
     // Should retain initial value
     expect(interaction.value).toBe('initial');
-  }
-};
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// EMPTY ATTRIBUTE
-// ═══════════════════════════════════════════════════════════════════════════════
-
-export const EmptyAttributeTracking: Story = {
-  name: 'Empty Attribute - Tracking',
-  render: baseTemplate,
-  play: async ({ canvasElement, step }) => {
-    const { interaction, input } = getElements(canvasElement);
-
-    await step('Type text - empty should be false', async () => {
-      input.value = 'text';
-      await fireEvent.keyUp(input, { target: { value: 'text' } });
-      await interaction.updateComplete;
-      expect(interaction.getAttribute('empty')).toBe('false');
-    });
-
-    await step('Clear text - empty should be true', async () => {
-      input.value = '';
-      await fireEvent.keyUp(input, { target: { value: '' } });
-      await interaction.updateComplete;
-      expect(interaction.getAttribute('empty')).toBe('true');
-    });
   }
 };
 

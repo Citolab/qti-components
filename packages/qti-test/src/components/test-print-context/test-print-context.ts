@@ -1,12 +1,11 @@
 import { html, LitElement } from 'lit';
 import { consume } from '@lit/context';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 
 import { computedContext } from '@qti-components/base';
 
 import type { ComputedContext } from '@qti-components/base';
 
-@customElement('test-print-context')
 export class TestPrintContext extends LitElement {
   @state()
   @consume({ context: computedContext, subscribe: true })

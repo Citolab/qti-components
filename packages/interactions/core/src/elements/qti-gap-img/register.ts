@@ -1,2 +1,7 @@
-import { QtiGapImg } from './qti-gap-img';
-customElements.define('qti-gap-img', QtiGapImg);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

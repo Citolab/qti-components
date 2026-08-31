@@ -1,5 +1,3 @@
-import { customElement } from 'lit/decorators.js';
-
 import { QtiConditionExpression } from '@qti-components/base';
 
 import type { QtiExpression } from '@qti-components/base';
@@ -14,7 +12,7 @@ type Constructor<T> = new (...args: any[]) => T;
  * Returns true if all sub-expressions are true, false if any are false.
  * Special cases: Returns NULL if any sub-expression is NULL and all others are true.
  */
-@customElement('qti-and')
+
 export class QtiAnd extends qtiAndMixin(QtiConditionExpression as unknown as Constructor<QtiConditionExpression>) {
   public override calculate() {
     return this.calculateChildren(Array.from(this.children as unknown as QtiExpression<any>[]));

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM016"
+                     title="Punt selecteren"
+                     time-dependent="false">
+    <qti-response-declaration identifier="RESPONSE" base-type="point" cardinality="single">
+        <qti-area-mapping default-value="0">
+            <qti-area-map-entry shape="circle" coords="191,393,10" mapped-value="1"/>
+        </qti-area-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <qti-select-point-interaction response-identifier="RESPONSE" max-choices="1">
+                <qti-prompt>
+                    <p>Klik op één punt op de kaart van Europa waar het land ligt met de hoogste bevolkingsdichtheid.</p>
+                </qti-prompt>
+                <img src="resources/europe.svg" width="600" height="513" alt="Kaart van Europa"/>
+            </qti-select-point-interaction>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct land: Monaco. Monaco heeft met ruime afstand de hoogste bevolkingsdichtheid (~26.000 personen/km²).</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response-point identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

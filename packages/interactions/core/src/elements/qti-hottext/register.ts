@@ -1,2 +1,7 @@
-import { QtiHottext } from './qti-hottext';
-customElements.define('qti-hottext', QtiHottext);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

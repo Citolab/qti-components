@@ -1,35 +1,31 @@
 import { property, query, state } from 'lit/decorators.js';
-import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
-import { configContext, type ConfigContext } from '@qti-components/base';
+import { responseAttributeConverter } from '@qti-components/base';
 
-import type { Interaction, IInteraction } from '@qti-components/base';
+import type { ComplexAttributeConverter } from 'lit';
+import type { Interaction, ValidatableInteraction } from '@qti-components/base';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 
 export type Choice = HTMLElement & ChoiceInterface & { internals: ElementInternals };
 
-export interface ChoicesInterface extends IInteraction {
+export interface ChoicesInterface extends ValidatableInteraction {
   minChoices: number;
   maxChoices: number;
   value: string | null;
   response: string | string[] | null;
-  validate(): boolean;
-  reportValidity(): boolean;
 }
 
 export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, selector: string) => {
   abstract class ChoicesMixinElement extends superClass implements ChoicesInterface {
     protected _choiceElements: Choice[] = [];
 
-    private _mutationObserver: MutationObserver | null = null;
+    #mutationObserver: MutationObserver | null = null;
 
     @query('#validation-message')
     protected _validationMessageElement!: HTMLElement;
-
-    private _validationMessageShown = false;
 
     @property({ type: Number, attribute: 'min-choices' })
     public minChoices = 0;
@@ -53,7 +49,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._choiceElements.forEach(choice => (choice.readonly = readonly));
     };
 
-    @state() response: string | string[] | null = '';
+    @property({
+      attribute: 'response',
+      reflect: false,
+      converter: responseAttributeConverter({ emptyAs: '' }) as ComplexAttributeConverter<unknown, unknown>
+    })
+    response: string | string[] | null = '';
 
     @watch('response', { waitUntilFirstUpdate: true })
     protected _handleValueChange = () => {
@@ -61,9 +62,6 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._updateChoiceSelection();
     };
 
-    @state()
-    @consume({ context: configContext, subscribe: true })
-    protected _configContext: ConfigContext; //configContext
     override get value(): string | null {
       if (Array.isArray(this.response) && this.response.length === 0) {
         return null;
@@ -81,62 +79,12 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       }
     }
 
-    protected override toggleInternalCorrectResponse(show: boolean) {
-      // Get correct response from either responseVariable (item context) or local property (standalone)
-      const correctResponse = this.correctResponse;
-
-      if (correctResponse) {
-        const responseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
-        this._choiceElements.forEach(choice => {
-          choice.internals.states.delete('correct-response');
-          choice.internals.states.delete('incorrect-response');
-          if (show && responseArray.length > 0) {
-            if (responseArray.includes(choice.identifier)) {
-              choice.internals.states.add('correct-response');
-            } else {
-              choice.internals.states.add('incorrect-response');
-            }
-          }
-        });
-      }
-    }
-
-    public override toggleCandidateCorrection(show: boolean) {
-      // Get correct response from either responseVariable (item context) or local property (standalone)
-      const correctResponse = this.correctResponse;
-
-      if (!correctResponse) {
-        return;
-      }
-
-      const correctResponseArray = Array.isArray(correctResponse) ? correctResponse : [correctResponse];
-
-      // Get current response (works in both standalone and item context modes)
-      const currentResponse = this.response;
-      const candidateResponseArray = Array.isArray(currentResponse)
-        ? currentResponse
-        : currentResponse
-          ? [currentResponse]
-          : [];
-
-      this._choiceElements.forEach(choice => {
-        choice.internals.states.delete('candidate-correct');
-        choice.internals.states.delete('candidate-incorrect');
-        if (!show) {
-          return;
-        }
-        if (!candidateResponseArray.includes(choice.identifier)) {
-          return; // Not checked, so no feedback
-        }
-        if (correctResponseArray.includes(choice.identifier)) {
-          choice.internals.states.add('candidate-correct');
-        } else {
-          choice.internals.states.add('candidate-incorrect');
-        }
-      });
-
-      // Also update interaction-level states
-      super.toggleCandidateCorrection(show);
+    protected override firstUpdated() {
+      super.firstUpdated();
+      // The `response` watcher has waitUntilFirstUpdate:true, so an initial
+      // value set via the `response` attribute never fires it — sync the
+      // radios/checkboxes explicitly here.
+      this._updateChoiceSelection();
     }
 
     override connectedCallback() {
@@ -144,8 +92,8 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.addEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
 
       // Use MutationObserver to track choice elements (handles both direct children and nested descendants)
-      this._mutationObserver = new MutationObserver(() => this._syncChoicesFromDOM());
-      this._mutationObserver.observe(this, { childList: true, subtree: true });
+      this.#mutationObserver = new MutationObserver(() => this._syncChoicesFromDOM());
+      this.#mutationObserver.observe(this, { childList: true, subtree: true });
 
       // Initial sync after DOM is ready
       this._syncChoicesFromDOM();
@@ -156,9 +104,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this.removeEventListener(`activate-${selector}`, this._choiceElementSelectedHandler);
 
       // Disconnect the observer
-      if (this._mutationObserver) {
-        this._mutationObserver.disconnect();
-        this._mutationObserver = null;
+      if (this.#mutationObserver) {
+        this.#mutationObserver.disconnect();
+        this.#mutationObserver = null;
       }
     }
 
@@ -182,10 +130,11 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           if (choiceElement.internals && !choiceElement.internals.ariaChecked) {
             choiceElement.internals.ariaChecked = 'false';
           }
-
-          this._setInputType(choiceElement);
         }
       });
+
+      // Choices pull their own role from `interactionContext`; nothing to push here.
+      this._determineInputType();
 
       // Filter response to only include valid identifiers (handles removal)
       const validIdentifiers = new Set(this._choiceElements.map(c => c.identifier));
@@ -219,60 +168,44 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
       }
 
-      // Always set validity state, regardless of whether there are selections
-      // Anchor must be a shadow-including descendant of this element, or use this as fallback
+      // Always set validity state, regardless of whether there are selections.
       const anchor = this._choiceElements.find(c => this.contains(c)) || this;
-      this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, anchor);
+      this.setInteractionValidity(isValid, validityMessage, anchor, { suppressInline: true });
 
       return isValid;
     }
 
     override reportValidity() {
-      if (this._validationMessageElement) {
-        if (!this._internals.validity.valid) {
-          this._validationMessageElement.textContent = this._internals.validationMessage;
-          // Set the display to block to show the message, add important to override any styles
-          this._validationMessageElement.style.setProperty('display', 'block', 'important');
-          this._validationMessageShown = true; // Track that validation message was shown
-        } else {
-          this._validationMessageElement.textContent = '';
-          this._validationMessageElement.style.display = 'none';
-          // Don't reset _validationMessageShown here - let it be cleared by user input
-        }
-      }
-      return this._internals.validity.valid;
+      return super.reportValidity();
     }
 
+    /**
+     * Publish the role the choices should take. Each choice subscribes to
+     * `interactionContext` and applies its own ARIA role and `:state(radio|checkbox)`.
+     *
+     * The interaction no longer reaches into its children to do this. That also removes the
+     * upgrade-order hazard the old code worked around: a choice that had not yet upgraded had
+     * no `internals`, so the push silently did nothing. A subscriber applies the role whenever
+     * it is ready.
+     */
     protected _determineInputType() {
-      this._choiceElements.forEach(choice => {
-        this._setInputType(choice);
-      });
-    }
-
-    protected async _setInputType(choiceElement: Choice) {
       this._internals.role = this.maxChoices === 1 ? 'radiogroup' : null;
-
-      // Wait for the next update cycle to ensure DOM is ready before setting input type
-      // There was a weird bug in the shuffle stories only where radiobuttons were not shown
-      // This was because the choices were not upgraded to custom elements yet when this code ran, so internals was not available and role was not set
-
-      if (choiceElement.internals) {
-        const role = this.maxChoices === 1 ? 'radio' : 'checkbox';
-        choiceElement.internals.role = role;
-        choiceElement.internals.states.delete(role === 'radio' ? 'checkbox' : 'radio');
-        choiceElement.internals.states.add(role);
+      const choiceRole = this.maxChoices === 1 ? 'radio' : 'checkbox';
+      if (this._interactionContext.choiceRole !== choiceRole) {
+        this._interactionContext = { ...this._interactionContext, choiceRole };
       }
     }
 
     protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>) {
       this._toggleChoiceChecked(event.target as Choice);
+      const shouldDisableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: false });
       if (this.maxChoices === 1) {
         this._choiceElements.forEach(choice => {
           if (choice.identifier !== event.detail.identifier) {
             this._setChoiceChecked(choice, false);
           }
         });
-      } else if (this.maxChoices !== 0 && this._configContext?.disableAfterIfMaxChoicesReached) {
+      } else if (this.maxChoices !== 0 && shouldDisableAtMax) {
         const selectedChoices = this._choiceElements.filter(choice => this._getChoiceChecked(choice));
         if (selectedChoices.length >= this.maxChoices) {
           this._choiceElements.forEach(choice => {
@@ -291,17 +224,17 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
     protected _setChoiceChecked(choice: Choice, checked: boolean) {
       if (choice.internals?.states) {
         if (checked) {
-          choice.internals.states.add('--checked');
+          choice.internals.states.add('checked');
           choice.internals.ariaChecked = 'true';
         } else {
-          choice.internals.states.delete('--checked');
+          choice.internals.states.delete('checked');
           choice.internals.ariaChecked = 'false';
         }
       }
     }
 
     protected _getChoiceChecked(choice: Choice): boolean {
-      return choice.internals.states.has('--checked');
+      return choice.internals.states.has('checked');
     }
 
     protected _toggleChoiceChecked(choice: Choice) {
@@ -317,14 +250,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
       this.validate();
 
-      // Auto-update validation message if it was previously shown (FACE behavior)
-      if (this._validationMessageShown) {
-        this.reportValidity();
-        // Reset flag if now valid to prevent unnecessary future auto-updates
-        if (this._internals.validity.valid) {
-          this._validationMessageShown = false;
-        }
-      }
+      // Always update the configured validity UI mode after user-driven selection changes.
+      // This ensures inline messages are cleared immediately when state becomes valid again.
+      this.reportValidity();
 
       this.saveResponse(this.response);
     }

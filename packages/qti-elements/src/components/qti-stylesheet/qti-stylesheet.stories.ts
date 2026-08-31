@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-import inlineCSS from '../../../../../public/assets/qti-stylesheet/linked.css?inline';
+import inlineCSS from './fixtures/linked.css?inline';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiStylesheet } from './qti-stylesheet';
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () =>
     html`<qti-assessment-item>
-      <qti-stylesheet href="/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
+      <qti-stylesheet href="assets/qti-stylesheet/linked.css" type="text/css"></qti-stylesheet>
       <qti-item-body>
         <qti-choice-interaction
           class="qti-orientation-horizontal qti-input-control-hidden"

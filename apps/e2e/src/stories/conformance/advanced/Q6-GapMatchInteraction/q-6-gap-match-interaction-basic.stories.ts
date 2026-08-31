@@ -71,8 +71,9 @@ export const Default: Story = {
     });
 
     await step('Verify gaps contain correct values', () => {
-      expect(gapG1.textContent).toBe('winter');
-      expect(gapG2.textContent).toBe('summer');
+      // qti-gap renders its chips into its own shadow root, so its light-DOM textContent is empty.
+      expect(gapG1.shadowRoot?.textContent?.trim()).toBe('winter');
+      expect(gapG2.shadowRoot?.textContent?.trim()).toBe('summer');
     });
   },
   loaders: [async () => ({ xml: await getItemByUri('/assets/qti-conformance/Advanced/Q6/gap-match-example-1.xml') })]

@@ -1,2 +1,7 @@
-import { QtiPrompt } from './qti-prompt';
-customElements.define('qti-prompt', QtiPrompt);
+import { elements } from './elements';
+
+for (const { tag, ctor } of elements) {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, ctor);
+  }
+}

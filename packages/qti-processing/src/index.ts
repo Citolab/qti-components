@@ -1,3 +1,5 @@
+import './register';
+
 export * from './components/qti-lookup-outcome-value/qti-lookup-outcome-value';
 export * from './components/qti-response-condition/qti-response-condition';
 export * from './components/qti-set-outcome-value/qti-set-outcome-value';

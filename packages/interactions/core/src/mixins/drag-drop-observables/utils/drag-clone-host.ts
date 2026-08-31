@@ -1,17 +1,25 @@
 /**
  * Where a drag clone has to live to be painted, and in which coordinate space it is positioned.
  *
- * `document.body` is the right host for an item rendered in a plain page, but not for a player that
- * uses the **Fullscreen API** (exam lockdown / kiosk): the browser paints only the fullscreen
- * element's subtree, in the top layer. A clone appended to `body` is not painted at all - no
- * `z-index` can reach past the top layer - so the dragged element simply disappears while it is
- * held.
+ * The mixin's preferred host is the *interaction's* root node: item-container adopts the theme's
+ * item.css into its shadow root, so a clone parked on `document.body` sits in a tree those rules
+ * cannot reach - `[data-drag-clone]` goes inert and the chip's grip, a `::before` and so the one
+ * thing a computed-style copy cannot carry, disappears the moment the chip is picked up.
  *
- * The clone is deliberately *not* re-hosted into the shadow tree it was dragged from, tempting as
- * that is for keeping scoped styles: that tree belongs to the interaction, which queries and
- * observes it, and a clone living there is picked up as one of its own elements. The
- * order-interaction press/release conformance test fails exactly that way. Losing scoped styling is
- * the lesser problem, and `createDragClone` already inlines the source's computed styles.
+ * That preference cannot be unconditional, because of the **Fullscreen API** (exam lockdown /
+ * kiosk): the browser paints only the fullscreen element's subtree, in the top layer, which no
+ * `z-index` can reach past. A clone outside that subtree is not painted at all, so the dragged
+ * element simply disappears while it is held. When the preferred host is *inside* the fullscreen
+ * element - the usual case, a player that fullscreens its own wrapper around item-container - it is
+ * kept, and the theme still reaches the clone. Only when it is not does the fullscreen element take
+ * over as host, trading scoped styling for being visible at all; `createDragClone` inlines the
+ * source's computed styles either way.
+ *
+ * What no host may be is the tree the clone was dragged *out of*: that tree belongs to the
+ * interaction, which queries and observes it, and a clone living there is picked up as one of its
+ * own elements. The order-interaction press/release conformance test fails exactly that way. The
+ * interaction's root sits one level above a placed chip's gap or hotspot shadow root, and the
+ * interaction's own queries exclude `[data-drag-clone]`, so it is safe as a host.
  */
 
 type FullscreenDocument = Document & { webkitFullscreenElement?: Element | null };
@@ -25,8 +33,8 @@ export type DragCloneHost = HTMLElement | ShadowRoot;
  *
  * `fixed` is relative to the viewport only while no ancestor establishes a containing block
  * (`transform`, `filter`, `backdrop-filter`, `perspective`, `contain`, `will-change`, `zoom`).
- * Inside a host's subtree that is the integrator's choice, not ours, so the frame is measured
- * rather than assumed.
+ * Above item-container that is the integrator's choice, not ours - and a player scaling an item to
+ * fit the screen is exactly where such a wrapper appears - so the frame is measured, not assumed.
  */
 export interface FixedFrame {
   origin: { x: number; y: number };
@@ -66,14 +74,33 @@ const hostFor = (element: HTMLElement): DragCloneHost => {
   return shadowRoot.querySelector('slot:not([name])') ? element : shadowRoot;
 };
 
-/** Resolves the host for a clone of `dragSource`: the fullscreen element if there is one, else body. */
-export const resolveDragCloneHost = (dragSource: Node): DragCloneHost => {
+/**
+ * Whether `node` is painted as part of `ancestor`'s subtree. Crosses shadow boundaries upward -
+ * `parentNode` is null on a shadow root, where the walk continues through its host.
+ */
+const isInSubtreeOf = (ancestor: Node, node: Node | null): boolean => {
+  let current: Node | null = node;
+
+  while (current) {
+    if (current === ancestor) return true;
+    current = current.parentNode ?? (current as ShadowRoot).host ?? null;
+  }
+
+  return false;
+};
+
+/**
+ * Resolves the host for a clone of `dragSource`: `preferredHost` while the browser still paints it,
+ * the fullscreen element when it does not, and `document.body` when there is no preferred host.
+ */
+export const resolveDragCloneHost = (dragSource: Node, preferredHost?: DragCloneHost | null): DragCloneHost => {
   const ownerDocument = (dragSource.ownerDocument ?? document) as FullscreenDocument;
+  const host = preferredHost ?? ownerDocument.body;
 
   const fullscreenElement = deepestFullscreenElement(ownerDocument);
-  if (fullscreenElement) return hostFor(fullscreenElement);
+  if (fullscreenElement && !isInSubtreeOf(fullscreenElement, host)) return hostFor(fullscreenElement);
 
-  return ownerDocument.body;
+  return host;
 };
 
 /**

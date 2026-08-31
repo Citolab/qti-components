@@ -1,8 +1,54 @@
 import { css } from 'lit';
 
-export default css`
-  :host {
-    display: flex;
-    user-select: none;
-  }
-`;
+import { boxSizing, dropRegion } from '@qti-components/base';
+
+export default [
+  boxSizing,
+  dropRegion,
+  css`
+    /*
+   * A drop target. The interaction measures its chips and publishes the result as custom
+   * properties on its own host; the actual CSS properties live here, not in a style attribute.
+   *
+   * An authored data-choices-container-width takes the width axis: autoSizeDropzoneWidth goes
+   * false and the mixin never publishes --qti-dropzone-min-width at all, so the fallback below
+   * applies and the authored inline width is free to win. That works only because the token is
+   * never declared globally — min-width beats width, so a declared floor would silently outrank
+   * the author. See DROP-SIZING.md §2 and tools/stylelint/no-declared-measured-token.js.
+   */
+    /*
+     * A gap sits in a line of prose, so it is inline-flex and rides the text baseline. All four of
+     * these were in the theme, set on this host from the document — which also meant the
+     * 'display: flex' this file declared never took effect.
+     */
+    :host {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      user-select: none;
+    }
+
+    /*
+   * The chip's box is reserved on the slot, not on the host.
+   *
+   * --qti-dropzone-min-* is the border-box of the widest and tallest chip, so whatever carries
+   * that minimum must have no border or padding of its own — otherwise the theme's dashed gap
+   * border eats into the reservation, the gap comes up short, and it grows the instant a chip
+   * lands in it. That reflows the sentence and drags the neighbouring gaps sideways while the
+   * user is still on their way to one.
+   *
+   * It cannot live on :host. A theme's universal reset matches the host element from the
+   * document, and document rules outrank :host — so the host is border-box no matter what this
+   * file says. This div is inside the shadow tree, out of the document's reach, and inherits
+   * border-box harmlessly since it has no border or padding of its own.
+   */
+    [part~='drop'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--qti-dropzone-min-height, 0);
+      min-width: var(--qti-dropzone-min-width, 0);
+    }
+  `
+];
