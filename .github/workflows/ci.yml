@@ -22,7 +22,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.branch || 'main' }}
+          # `github.ref`, not 'main'. `inputs` is empty on anything but workflow_dispatch, so the
+          # fallback is what every pull_request and push actually used — and it was the literal
+          # string 'main'. This job therefore tested main on every PR, never the PR's own code:
+          # run 33399522449 reported main's 1166 tests against a head SHA whose branch has 1169,
+          # and failed on an assertion the branch fixes.
+          #
+          # A green check was worth nothing either, which is the more dangerous half: a broken main
+          # at least made it visible. On pull_request `github.ref` is refs/pull/N/merge, so this
+          # tests the merge result, which is the thing being asked about. workflow_dispatch still
+          # gets its branch input.
+          ref: ${{ inputs.branch || github.ref }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
