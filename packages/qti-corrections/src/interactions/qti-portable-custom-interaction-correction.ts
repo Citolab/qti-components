@@ -64,9 +64,24 @@ export class QtiPortableCustomInteractionCorrection extends CandidateCorrectionM
     const cardinality: Cardinality =
       responseVariable?.cardinality ?? (Array.isArray(correctResponse) ? 'multiple' : 'single');
     const baseType: BaseType = responseVariable?.baseType ?? 'string';
-    // Pushed once the viewer's own iframe has finished its handshake. Listened for rather than
-    // hooked into `connectedCallback`: custom element reactions are looked up on the prototype when
-    // the element is defined, so an instance-level override of it is never read.
+
+    // The standards-conformant handoff, for a PCI that implements the solution use case: it reads
+    // the key out of its own `getInstance` configuration rather than having a response pushed at it.
+    // Set explicitly because the viewer has no response declaration to derive one from — it is not a
+    // registered interaction, so `responseVariable` is undefined and the derived getter returns null.
+    // See https://github.com/1EdTech/qti-project-management/issues/210
+    viewer.status = 'solution';
+    viewer.responseDeclaration = {
+      baseType,
+      cardinality,
+      correctResponse: { value: correctResponse }
+    };
+
+    // The push below stays for PCIs that do NOT implement the solution use case: those only know how
+    // to render a response bound to them. It goes out once the viewer's own iframe has finished its
+    // handshake — listened for rather than hooked into `connectedCallback`, since custom element
+    // reactions are looked up on the prototype when the element is defined, so an instance-level
+    // override of it is never read.
     viewer.addEventListener(
       'qti-portable-custom-interaction-loaded',
       () => {

@@ -14,7 +14,27 @@ import styles from './qti-portable-custom-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
-import type { QtiRecordItem, QtiVariableJSON, ResponseVariableType } from './interface';
+import type {
+  PciInteractionStatus,
+  PciResponseDeclaration,
+  QtiRecordItem,
+  QtiVariableJSON,
+  ResponseVariableType
+} from './interface';
+
+/** Statuses in which the item is showing the correct response, so a PCI may legitimately see it. */
+const STATUSES_SHOWING_CORRECT_RESPONSE: PciInteractionStatus[] = ['solution', 'review'];
+
+/**
+ * Whether a response variable actually declares a correct response.
+ *
+ * Non-single cardinality yields `[]` for an empty `<qti-correct-response>`, which is "no correct
+ * response" and must not be reported as one.
+ */
+function hasCorrectResponseValue(value: string | string[] | null | undefined): boolean {
+  if (value === null || value === undefined) return false;
+  return Array.isArray(value) ? value.length > 0 : value !== '';
+}
 
 export class QtiPortableCustomInteraction extends Interaction {
   #value: string | string[];
@@ -24,7 +44,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   protected _pendingMessages: Array<{ method: string; params: any }> = [];
   protected iframe: HTMLIFrameElement;
   protected _iframeMessageOrigin: string | null = null;
-  private _iframeObjectUrl: string | null = null;
 
   // This implementation always renders inside an iframe.
   static override styles: CSSResultGroup = [
@@ -58,6 +77,75 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   @property({ type: Boolean, attribute: 'data-use-default-paths' })
   useDefaultPaths = false;
+
+  /**
+   * Item lifecycle status handed to the PCI in its `getInstance` configuration.
+   * A delivery engine sets `solution` to let a PCI render the correct response.
+   */
+  @property({ type: String, attribute: 'data-status' })
+  status: PciInteractionStatus = 'interacting';
+
+  #responseDeclaration: PciResponseDeclaration | null = null;
+
+  /**
+   * Response declaration passed into the PCI configuration, so a PCI can render
+   * the correct response itself instead of having it pushed in as a response.
+   *
+   * Derived from the item context, unless a host sets it explicitly - the
+   * correct response viewer does, since it has no response declaration of its own.
+   *
+   * See https://github.com/1EdTech/qti-project-management/issues/210
+   */
+  set responseDeclaration(declaration: PciResponseDeclaration | null) {
+    this.#responseDeclaration = declaration;
+  }
+
+  get responseDeclaration(): PciResponseDeclaration | null {
+    if (this.#responseDeclaration) {
+      return this.#responseDeclaration;
+    }
+
+    const variable = this.responseVariable;
+    if (!variable) {
+      return null;
+    }
+
+    const declaration: PciResponseDeclaration = {
+      baseType: variable.baseType,
+      cardinality: variable.cardinality
+    };
+
+    const correctResponse = variable.correctResponse;
+    if (hasCorrectResponseValue(correctResponse)) {
+      declaration.correctResponse = { value: correctResponse };
+    }
+
+    return declaration;
+  }
+
+  /**
+   * The declaration as it goes into the PCI configuration.
+   *
+   * `correctResponse` is withheld unless the item is actually showing a solution. A PCI is
+   * third-party code running in an iframe, and there is no reason for it to hold the answer key
+   * while the candidate is still working - the use case this field exists for only applies once
+   * the status says the correct response is being shown.
+   *
+   * The filter sits here rather than in the `responseDeclaration` getter so it also covers a
+   * declaration a host set explicitly, not just the one derived from the item context.
+   */
+  #responseDeclarationForStatus(): PciResponseDeclaration | null {
+    const declaration = this.responseDeclaration;
+    if (!declaration?.correctResponse) {
+      return declaration;
+    }
+    if (STATUSES_SHOWING_CORRECT_RESPONSE.includes(this.status)) {
+      return declaration;
+    }
+
+    const { correctResponse: _withheld, ...rest } = declaration;
+    return rest;
+  }
 
   @state()
   private _errorMessage: string = null;
@@ -551,10 +639,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('message', this.handleIframeMessage);
-    if (this._iframeObjectUrl) {
-      URL.revokeObjectURL(this._iframeObjectUrl);
-      this._iframeObjectUrl = null;
-    }
   }
 
   /**
@@ -702,10 +786,6 @@ export class QtiPortableCustomInteraction extends Interaction {
    */
   protected createIframe() {
     this._interactionReady = false;
-    if (this._iframeObjectUrl) {
-      URL.revokeObjectURL(this._iframeObjectUrl);
-      this._iframeObjectUrl = null;
-    }
     this.iframe = document.createElement('iframe');
     this.iframe.id = `pci-iframe-${this.responseIdentifier}`;
     this.iframe.setAttribute('title', 'QTI PCI Iframe');
@@ -719,10 +799,6 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Handle iframe load event
     this.iframe.onload = () => {
       this._iframeLoaded = true;
-      if (this._iframeObjectUrl) {
-        URL.revokeObjectURL(this._iframeObjectUrl);
-        this._iframeObjectUrl = null;
-      }
       this.#addMarkupToIframe();
       // Send initialization data to iframe
       this.#sendIframeInitData();
@@ -735,15 +811,14 @@ export class QtiPortableCustomInteraction extends Interaction {
     // Generate iframe HTML content with all required scripts
     const iframeContent = this.generateIframeContent();
 
-    // Prefer a same-origin blob URL to avoid postMessage target-origin mismatches (e.g. in Storybook).
-    try {
-      const blob = new Blob([iframeContent], { type: 'text/html' });
-      this._iframeObjectUrl = URL.createObjectURL(blob);
-      this.iframe.src = this._iframeObjectUrl;
-    } catch {
-      const encodedContent = encodeURIComponent(iframeContent);
-      this.iframe.src = `data:text/html;charset=utf-8,${encodedContent}`;
-    }
+    // Use `srcdoc` rather than a `blob:` (or `data:`) URL. Both of those give the iframe document
+    // a URL that is out of scope for any http(s) Service Worker registration, so a player that
+    // serves package resources through a Service Worker (CacheStorage, virtual paths) would see
+    // every request made from inside the PCI - module scripts, images, media, stylesheets, fetches -
+    // bypass it and hit the network instead. An `srcdoc` frame inherits this document's URL and
+    // stays controlled by the same Service Worker. It is same-origin either way, and messages are
+    // posted with a `'*'` target origin, so nothing about postMessage changes.
+    this.iframe.srcdoc = iframeContent;
 
     // Append iframe to component
     this.appendChild(this.iframe);
@@ -774,6 +849,8 @@ export class QtiPortableCustomInteraction extends Interaction {
       dataAttributes: { ...this.dataset },
       interactionModules: this.#getInteractionModules(),
       boundTo: storedState ? null : this.boundTo,
+      responseDeclaration: this.#responseDeclarationForStatus(),
+      status: this.status,
       state: storedState
     };
 
@@ -861,6 +938,16 @@ export class QtiPortableCustomInteraction extends Interaction {
         ? `${window.location.origin}${this.dataset.baseUrl}`
         : this.dataset.baseUrl
       : '';
+    // `data-base-url` names the directory the item was loaded from, so it is also the base every
+    // relative URL inside the interaction should resolve against - the markup's `src`/`href`, the
+    // stylesheets, and whatever the PCI module resolves itself. Anchoring `<base>` at the site
+    // origin instead would send `../assets/x.png` to `/assets/x.png`. Normalise to a trailing
+    // slash: without one the last segment counts as a filename and gets dropped.
+    const iframeBaseHref = iframeBaseUrl
+      ? iframeBaseUrl.endsWith('/')
+        ? iframeBaseUrl
+        : `${iframeBaseUrl}/`
+      : `${window.location.origin}/`;
     const forwardConsole = this.dataset.forwardConsole === 'true';
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const defaultComponentsCdnUrl = isLocalhost
@@ -886,7 +973,7 @@ export class QtiPortableCustomInteraction extends Interaction {
         <head>
           <meta charset="utf-8" />
           <title>QTI PCI Container</title>
-          <base href="${window.location.origin}" />
+          <base href="${iframeBaseHref}" />
           <script type="module">
             import '${componentsCdnUrl}';
           </script>
@@ -1008,6 +1095,7 @@ export class QtiPortableCustomInteraction extends Interaction {
             // PCI Manager for iframe implementation
             window.PCIManager = {
               pciInstance: null,
+              pciConfig: null,
               container: null,
               markupEl: null,
               propertiesEl: null,
@@ -1233,7 +1321,9 @@ export class QtiPortableCustomInteraction extends Interaction {
                           );
                         },
                         responseIdentifier: config.responseIdentifier,
-                        boundTo: config.boundTo
+                        boundTo: config.boundTo,
+                        responseDeclaration: config.responseDeclaration || undefined,
+                        status: config.status || 'interacting'
                       };
 
                       if (pciInstance.getInstance) {
@@ -1249,6 +1339,9 @@ export class QtiPortableCustomInteraction extends Interaction {
                             restoredState = config.state;
                           }
                         }
+                        // Keep the configuration around next to the instance, it carries the
+                        // status and response declaration this PCI was constructed with.
+                        this.pciConfig = pciConfig;
                         pciInstance.getInstance(dom, pciConfig, restoredState || undefined);
                       } else {
                         this.notifyError('Loaded PCI module has no getInstance().');
