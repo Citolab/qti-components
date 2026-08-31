@@ -20021,15 +20021,6 @@
             },
             {
               "kind": "field",
-              "name": "_iframeObjectUrl",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "_internals",
               "type": {
                 "text": "ElementInternals"
@@ -21399,19 +21390,6 @@
                 "text": "string | null"
               },
               "privacy": "protected",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "QtiPortableCustomInteraction",
-                "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_iframeObjectUrl",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "private",
               "default": "null",
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
