@@ -188,6 +188,30 @@ const INTERACTIONS: Array<{ name: string; html: string; chip: string; target: ()
     chip: 'A',
     target: () => el<any>('qti-order-interaction').shadowRoot!.querySelector(`[part~='drop']`) as HTMLElement
   },
+  /*
+   * The same interaction with a bank too narrow for its widest label.
+   *
+   * `order` above passes on a box-model bug, as long as the bank can give the chip its full width:
+   * both chips then sit at max-content and agree by coincidence. Narrow the bank and they stop
+   * agreeing — the bank chip shrinks and wraps like any flex item, and a placed chip pinned at
+   * `flex-shrink: 0` does not. Measured before the fix: 154x55 in the bank, 209x36 in the drop,
+   * the placed chip overflowing a drop that had reserved exactly the right 156px for it.
+   *
+   * This is the fixture that states the rule in pixels rather than leaving it to the font: the
+   * 480px case above is one text-metric change away from wrapping (it broke on CI's Linux fonts,
+   * where the same label measures ~227px, while passing on macOS at ~209px). A label that must
+   * wrap at any plausible metric cannot be talked out of the assertion.
+   */
+  {
+    name: 'order (narrow bank)',
+    html: `
+      <qti-order-interaction response-identifier="R" style="width: 340px">
+        <qti-simple-choice identifier="A">Hypothese formuleren</qti-simple-choice>
+        <qti-simple-choice identifier="B">Data verzamelen</qti-simple-choice>
+      </qti-order-interaction>`,
+    chip: 'A',
+    target: () => el<any>('qti-order-interaction').shadowRoot!.querySelector(`[part~='drop']`) as HTMLElement
+  },
   {
     name: 'associate',
     html: `
