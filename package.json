@@ -67,6 +67,7 @@
     "changeset:status": "pnpm dlx @changesets/cli status",
     "changeset:version": "pnpm dlx @changesets/cli version",
     "changeset:publish": "pnpm dlx @changesets/cli publish",
+    "changeset:tag": "node tools/changesets/tag-published.mjs",
     "changeset:check-umbrella": "node tools/changesets/check-umbrella-bump.mjs",
     "ci:release:changesets:dry": "pnpm run changeset:status",
     "ci:release:changesets": "pnpm run changeset:version && pnpm run build && pnpm run changeset:publish",
@@ -78,6 +79,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.3",
+    "@changesets/changelog-github": "^1.0.0",
     "@changesets/get-release-plan": "^5.0.0",
     "@chromatic-com/storybook": "^5.3.0",
     "@commitlint/cli": "^20.4.2",
