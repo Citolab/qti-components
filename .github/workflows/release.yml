@@ -83,6 +83,9 @@ jobs:
       - name: Apply changeset versions
         id: version
         if: ${{ !inputs.dry_run }}
+        env:
+          # @changesets/changelog-github resolves PR and author links through the API.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           pnpm run changeset:version
 
@@ -144,6 +147,30 @@ jobs:
           NPM_CONFIG_PROVENANCE: 'true'
           PNPM_GIT_CHECKS: 'false'
 
+      - name: Tag published packages
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        run: pnpm run changeset:tag
+
+      # `--follow-tags` pushes annotated tags only, and `changeset publish` writes
+      # lightweight ones, so tags silently never reached the remote. Push refs explicitly.
       - name: Push release commit and tags
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
-        run: git push origin HEAD --follow-tags
+        run: |
+          git push origin HEAD
+          git push origin --tags
+
+      - name: Create GitHub release for the umbrella package
+        if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(node -p "require('./packages/qti-components/package.json').version")
+          tag="@citolab/qti-components@${version}"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists."
+            exit 0
+          fi
+
+          notes=$(node tools/changesets/release-notes.mjs "$version")
+          gh release create "$tag" --title "@citolab/qti-components ${version}" --notes "$notes"
