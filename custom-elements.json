@@ -30427,12 +30427,16 @@
           "name": "QtiTextEntryInteraction",
           "cssParts": [
             {
-              "description": "Overlay shown when displaying the correct response.",
-              "name": "correct"
+              "description": "The answer-key line, revealed above the field when the correct response is shown.",
+              "name": "answer"
             },
             {
               "description": "The text input element.",
               "name": "input"
+            },
+            {
+              "description": "The validation message, hidden until `reportValidity` shows it.",
+              "name": "message"
             }
           ],
           "members": [
