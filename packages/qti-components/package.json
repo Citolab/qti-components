@@ -93,7 +93,7 @@
     "clean": "rm -rf dist cdn",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",
     "publint": "publint",
-    "tsup": "tsup",
+    "tsup": "NODE_OPTIONS=--max-old-space-size=8192 tsup",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
     "deploy": "cd ../interactions/core && pnpm run build && cd ../../qti-components && pnpm run build && yalc push",

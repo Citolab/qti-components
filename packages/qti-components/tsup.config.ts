@@ -17,7 +17,7 @@ export default defineConfig(async () => {
     splitting: true,
     esbuildPlugins: [InlineCSSPlugin],
     sourcemap: true,
-    dts: true
+    dts: { resolve: true }
   };
 
   // CDN build (ESM, bundled deps)
