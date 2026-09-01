@@ -1,0 +1,128 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="CSS contract" />
+
+# CSS contract
+
+How to style QTI components from your own stylesheet — and what we promise not to break.
+
+The components render into shadow roots, so their internals are unreachable and unstylable from
+the document by design. Everything you are meant to style is exposed through exactly three hooks:
+
+1. **Element names** — `qti-choice-interaction`, `qti-simple-choice`, … the host element is in your
+   light DOM, so ordinary selectors reach it.
+2. **`::part()`** — the named boxes inside a shadow root.
+3. **`:state()`** — the semantic states a component asserts about itself.
+
+If you find yourself reaching for a descendant selector into a shadow root, a class we happen to
+write, or `!important`, that is a gap in this contract — file it rather than working around it.
+
+## Cascade layers
+
+`@qti-components/theme/item.css` opens with:
+
+```css
+@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
+```
+
+Author your CSS in **`qti-extended`** (or unlayered, which beats every layer) and it wins over the
+shipped theme without specificity games:
+
+```css
+@layer qti-extended {
+  qti-simple-choice::part(control) {
+    border-radius: 0;
+  }
+}
+```
+
+## Parts
+
+Generated from the custom-elements manifest. Only elements that expose parts are listed.
+
+| Element | Parts |
+| --- | --- |
+| `qti-associable-hotspot` | `drop` |
+| `qti-associate-interaction` | `drags` `drop` `drop-row` `drops` `message` |
+| `qti-choice-interaction` | `message` `prompt` `slot` |
+| `qti-end-attempt-interaction` | `button` |
+| `qti-extended-text-interaction` | `textarea` |
+| `qti-gap` | `drop` |
+| `qti-gap-match-interaction` | `drags` `drops` `message` |
+| `qti-graphic-associate-interaction` | `correct-line` `line` `message` `point` |
+| `qti-graphic-gap-match-interaction` | `drags` `image` `message` |
+| `qti-graphic-order-interaction` | `message` |
+| `qti-hottext-interaction` | `message` |
+| `qti-inline-choice-interaction` | `dropdown-icon` `menu` `option` `option-content` `trigger` `value` |
+| `qti-item-body` | `qti-rubric-block` |
+| `qti-match-interaction` | `c-header` `checkbox-grid` `cols-wrap` `control` `control-mark` `corner` `grid` `input-cell` `message` `r-header` `rows-wrap` |
+| `qti-order-interaction` | `container` `drag` `drags` `drop` `drops` |
+| `qti-select-point-interaction` | `point` |
+| `qti-simple-choice` | `control` `control-mark` `label` `marker` |
+| `qti-slider-interaction` | `bounds` `knob` `knob-correct` `rail` `slider` `ticks` `value` |
+| `qti-text-entry-interaction` | `answer` `input` `message` |
+
+Two names carry most of the weight. **`control`** is the box whose role is carried by state, not by
+its name — a radio, a checkbox or a drag grip depending on `:state(radio)` / `:state(checkbox)` /
+`:state(drag)`. **`drag`** is on the chip clone inside a drop target, so a bare `::part(drag)`
+reaches a dropped chip in *any* target's shadow root.
+
+## States
+
+| State | Meaning | Set by |
+| --- | --- | --- |
+| `radio` / `checkbox` | the role this choice is playing | the interaction, via `interactionContext` |
+| `checked` | selected | choices mixin, inline-choice |
+| `disabled` / `readonly` | non-interactive | interaction base |
+| `drag` | this element is a draggable chip | drag-drop core |
+| `dragging` | a drag is in progress on this chip | drag-drop core |
+| `placeholder` | the gap left behind in the bank while its chip is placed | drag-drop core |
+| `return-anchor` | where this chip returns to if the drag is abandoned | drag-drop core |
+| `dragzone-enabled` / `dragzone-active` | the interaction has droppable zones / a drag is live | drag-drop mixins |
+| `droppable` | this element accepts chips | drag-drop core |
+| `filled` | this drop target holds at least one chip | `setDropFlag` |
+| `active` / `enabled` | a drag is live and this target could receive it | `setDropFlag` |
+| `hover` | the chip is currently over this target | `setDropFlag` |
+| `candidate-correct` / `candidate-incorrect` / `candidate-partially-correct` | how the candidate's answer scored | corrections package |
+| `correct-response` / `show-correct-response` | the correct answer is being displayed | corrections package |
+| `open` | the inline-choice dropdown is open | inline-choice |
+
+Correction states only exist when the `@qti-components/qti-corrections` elements are registered.
+
+## Rules the browser imposes
+
+These are verified in Chromium and they shape how the theme is written. They will bite you too.
+
+```css
+::part(x):state(y)   /* matches — but only when x is itself a custom element */
+::part(x)[attr]      /* NEVER matches — an attribute selector cannot follow a pseudo-element */
+::part(x):has(…)     /* NEVER matches */
+::part(y)            /* matches on anything — a plain div can take an extra part token */
+```
+
+Consequences worth knowing:
+
+- **A plain `<div>` cannot carry a custom state** — `attachInternals()` throws on it. So order's and
+  associate's `<div part="drop">` take an extra part *token* instead, and a theme reaches them as
+  `::part(active)` where a custom-element target would take `:state(active)`.
+- **Parts do not chain.** `::part(a)::part(b)` never matches; the contract stays one level deep.
+- **Keep `:state()` in the same selector as `::part()`.** Native nesting after a pseudo-element
+  does not do what it looks like it does.
+- **`:host` always loses to a document rule that matches the host**, regardless of specificity — so
+  anything a consumer must be able to override belongs in the theme sheet, not in `:host`.
+- **`@property` does not register from inside a shadow root.** Register animatable custom properties
+  from the document.
+
+## Custom properties
+
+Brand-level values are `--qti-*` custom properties declared in the theme's variables sheet
+(`qti-variables.css`), consumed through `var(--x, fallback)` chains. Set them on `:root` or on any
+ancestor to rebrand without touching a single selector. Measured drop-sizing values are the
+exception — see `packages/qti-theme/DROP-SIZING.md`.
+
+## Keeping this page honest
+
+The parts table is generated from `custom-elements.json`, which is built from `@csspart` JSDoc.
+That JSDoc can drift from what a component actually renders — `qti-text-entry-interaction` was
+documenting a `correct` part it no longer renders while omitting `answer` and `message`. When you
+add or rename a part, update the JSDoc in the same commit and regenerate with `pnpm cem`.

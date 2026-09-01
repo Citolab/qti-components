@@ -30,8 +30,9 @@ import type { CSSResultGroup } from 'lit';
  *   single-line input has no formatting to render: it can show neither preserved line breaks nor
  *   markup. The field is always plain text, so this is not planned either.
  *
+ * @csspart answer - The answer-key line, revealed above the field when the correct response is shown.
  * @csspart input - The text input element.
- * @csspart correct - Overlay shown when displaying the correct response.
+ * @csspart message - The validation message, hidden until `reportValidity` shows it.
  */
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
