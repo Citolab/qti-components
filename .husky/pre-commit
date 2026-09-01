@@ -57,7 +57,7 @@ restore_merge_state() {
 }
 trap restore_merge_state EXIT
 
-npx lint-staged --allow-empty --quiet --hide-unstaged
+npx lint-staged --allow-empty --hide-unstaged
 
 # Keep the committed custom-elements.json manifests in sync with source.
 # `cem` (analyzer) is much cheaper than a full `pnpm run build`.

@@ -104,6 +104,32 @@ function elementManifestDefinitionsPlugin() {
   };
 }
 
+/**
+ * Where the generated JSX types should import each component class from.
+ *
+ * The generator defaults to the CEM `modulePath`, which is a monorepo source path such as
+ * `packages/qti-base/src/abstract/interaction.ts`. That is meaningless to a consumer of the
+ * published package, so the emitted `.d.ts` ends up full of unresolvable imports and every
+ * prop silently degrades to `any`.
+ *
+ * The umbrella package re-exports each component from a bundled entry point, so map the source
+ * path back to the entry that owns it. Paths are relative to the generated file in `dist/`.
+ */
+function componentTypePath(_name, _tag, modulePath = '') {
+  const entryByPrefix = [
+    ['packages/interactions/', './interactions.js'],
+    ['packages/qti-test/', './test.js'],
+    ['packages/qti-item/', './item.js'],
+    ['packages/qti-elements/', './elements.js'],
+    ['packages/qti-processing/', './processing.js'],
+    ['packages/qti-corrections/', './corrections.js'],
+    ['packages/qti-base/', './base.js']
+  ];
+
+  const match = entryByPrefix.find(([prefix]) => modulePath.startsWith(prefix));
+  return match ? match[1] : './index.js';
+}
+
 export default {
   /** Globs to analyze */
   globs: [
@@ -162,7 +188,8 @@ export default {
     jsxTypesPlugin({
       outdir: outdir + 'dist',
       exclude: [],
-      fileName: `qti-components-jsx.d.ts`
+      fileName: `qti-components-jsx.d.ts`,
+      componentTypePath
     }),
     cemSorterPlugin({
       deprecatedLast: true
