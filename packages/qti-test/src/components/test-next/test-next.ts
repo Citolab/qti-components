@@ -34,7 +34,7 @@ export class TestNext extends LitElement {
   @watch('computedContext')
   _handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) {
     if (newValue) {
-      this._internalDisabled = false;
+      this.requestUpdate();
     }
   }
 
@@ -76,8 +76,26 @@ export class TestNext extends LitElement {
   }
 
   checkDisabled() {
+    const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
+    if (!testPart) return;
+    const activeSection = testPart.sections.find(s => s.active);
+    const navigationMode = activeSection?.navigationMode || testPart.navigationMode;
+    const submissionMode = activeSection?.submissionMode || testPart.submissionMode;
+    const activeItem = this.sectionItems[this.itemIndex];
+
+    const isLinearIndividual = navigationMode === 'linear' && submissionMode === 'individual';
+
+    // In linear/individual mode each item is submitted before the candidate
+    // leaves it, so Next stays locked until an attempt has been ended.
+    // numAttempts only increments in processResponse, so a mid-attempt
+    // selection can never unlock it.
+    const numAttempts = Number(activeItem?.variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
+
     this._internalDisabled =
-      !this.computedContext || this.itemIndex < 0 || this.itemIndex >= this.sectionItems?.length - 1;
+      !this.computedContext ||
+      this.itemIndex < 0 ||
+      this.itemIndex >= (this.sectionItems?.length ?? 0) - 1 ||
+      (isLinearIndividual && numAttempts === 0);
   }
 
   protected _requestItem(identifier: string): void {
