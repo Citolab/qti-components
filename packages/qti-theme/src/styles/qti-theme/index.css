@@ -1,12 +1,34 @@
+/**
+ * Layer order for everything the theme ships, and the imports that fill it.
+ *
+ * A file is assigned its layer HERE, at its import, wherever it belongs to exactly one layer —
+ * so the ordering is readable in one place and the file itself stays free of wrapper blocks.
+ * The files imported without `layer()` below span several layers internally and declare their
+ * own `@layer` blocks; splitting them per layer is the only way to import-assign them, and is
+ * not worth the file count.
+ *
+ * `interactions.brand` and `overrides` hold nothing here ON PURPOSE — they are the extension points
+ * a brand sheet writes into (apps/e2e/src/stories/kennisnet/kennisnet.css uses `interactions.brand`).
+ * They must stay DECLARED even while empty: a layer first created by a consumer's own `@layer`
+ * block is appended after every declared layer, which would put brand paint above the state and
+ * correction paint it is meant to sit under. Deleting the two names moved 7 of the 17 VRT baselines.
+ */
+
 @layer qti-components.reset, qti-components.global, qti-components.interactions.base,
-	qti-components.interactions.brand, qti-components.interactions.states,
-	qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
+  qti-components.interactions.brand, qti-components.interactions.states,
+  qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
 
 @import url('./reset.css') layer(qti-components.reset);
-/* Plain HTML author markup (tables, lists, rules). Sibling to reset.css, same @scope. */
-@import url('./prose.css');
+@import url('./prose.css') layer(qti-components.elements);
+
+/* Multi-layer: declares global + interactions.{base,states,corrections} internally. */
 @import url('./qti-variables.css');
+
+/* Mixin definitions only — emits nothing on its own, so it takes no layer. */
 @import url('./qti-mixins.css');
+
+/* Per-interaction sheets; each import carries its layer where the file has just one. */
 @import url('./qti-interactions.css');
+
 @import url('./qti-elements.css') layer(qti-components.elements);
-@import url('./qti-states.css');
+@import url('./qti-states.css') layer(qti-components.global);

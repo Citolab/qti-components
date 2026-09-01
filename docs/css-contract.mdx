@@ -22,11 +22,12 @@ write, or `!important`, that is a gap in this contract — file it rather than w
 `@qti-components/theme/item.css` opens with:
 
 ```css
-@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
+@layer qti-base, qti-components, qti-extended;
 ```
 
-Author your CSS in **`qti-extended`** (or unlayered, which beats every layer) and it wins over the
-shipped theme without specificity games:
+`qti-base` is the QTI 3.0 native vocabulary, `qti-components` is the shipped theme, and
+**`qti-extended` is empty on purpose — it is yours**. Everything the theme ships is inside a layer,
+so authoring there wins over all of it without specificity games:
 
 ```css
 @layer qti-extended {
@@ -35,6 +36,14 @@ shipped theme without specificity games:
   }
 }
 ```
+
+`qti-components` is ordered internally as `reset, global, interactions.base, interactions.brand,
+interactions.states, interactions.corrections, elements, overrides`. Two of those are empty in the
+shipped theme and exist for you: **`qti-components.interactions.brand`** for brand paint that should
+still sit *under* state and correction paint, and **`qti-components.overrides`** for rules that
+should beat the theme but still lose to `qti-extended`. Write into them by name — they are already
+declared, and a layer you create yourself with an undeclared name is appended *after* every declared
+layer, which would put your brand colours above the state colours rather than below them.
 
 ## Parts
 

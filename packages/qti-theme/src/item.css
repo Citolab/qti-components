@@ -1,35 +1,19 @@
-@layer qti-base, qti-components, qti-utilities, qti-variants, qti-extended;
+/*
+ * Layer order, weakest first.
+ *
+ *   qti-base        the QTI 3.0 shared class vocabulary and its layout overrides
+ *   qti-components  everything this theme paints (sublayers declared in styles/qti-theme/index.css)
+ *   qti-extended    reserved for the consumer — empty here, and it beats everything above
+ *
+ * Every stylesheet below is assigned a layer, at its import wherever the file belongs to just one.
+ * Nothing is left unlayered: unlayered CSS outranks every layer, so a single stray rule here would
+ * sit above the whole theme AND above the `qti-extended` slot consumers are told to author in.
+ */
+@layer qti-base, qti-components, qti-extended;
 
 @import url('./styles/qti-native/index.css');
 @import url('./styles/qti-theme/index.css');
 
-[view],
-qti-outcome-declaration,
-qti-response-declaration {
-  display: none;
-}
-
-[view].show {
-  display: block;
-}
-
-:host {
-  box-sizing: border-box;
-}
-
-qti-test-part:not(:has(qti-assessment-item)),
-qti-assessment-section:not(:has(qti-assessment-item)),
-qti-assessment-item-ref:not(:has(qti-assessment-item)) {
-  display: none;
-}
-
-div.full-correct-response {
-}
-
-div.full-correct-response-block {
-  display: block;
-}
-
-div.full-correct-response-inline {
-  display: inline-block;
-}
+/* Item-shell structure (what is shown, what is hidden). Kept out of styles/qti-theme/ because it is
+   structure rather than paint — that directory is where the no-layout-in-theme lint rule applies. */
+@import url('./styles/item-structure.css') layer(qti-components.global);

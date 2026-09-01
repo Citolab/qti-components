@@ -1,0 +1,35 @@
+/**
+ * Structural rules for the item shell itself — what is shown and what is hidden.
+ *
+ * Lives in a file of its own so it can be assigned a layer at its import (see index.css). Rules
+ * written straight into item.css would be unlayered, and unlayered CSS outranks every layer,
+ * including the `qti-extended` slot consumers are told to author in.
+ */
+
+[view],
+qti-outcome-declaration,
+qti-response-declaration {
+  display: none;
+}
+
+[view].show {
+  display: block;
+}
+
+:host {
+  box-sizing: border-box;
+}
+
+qti-test-part:not(:has(qti-assessment-item)),
+qti-assessment-section:not(:has(qti-assessment-item)),
+qti-assessment-item-ref:not(:has(qti-assessment-item)) {
+  display: none;
+}
+
+div.full-correct-response-block {
+  display: block;
+}
+
+div.full-correct-response-inline {
+  display: inline-block;
+}

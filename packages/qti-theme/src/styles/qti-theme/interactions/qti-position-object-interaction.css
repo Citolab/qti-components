@@ -1,7 +1,5 @@
-@layer qti-components.interactions.base {
-  qti-position-object-stage {
-    & qti-position-object-interaction {
-      /* no styles necessary, only layout styles, defined in the component */
-    }
+qti-position-object-stage {
+  & qti-position-object-interaction {
+    /* no styles necessary, only layout styles, defined in the component */
   }
 }

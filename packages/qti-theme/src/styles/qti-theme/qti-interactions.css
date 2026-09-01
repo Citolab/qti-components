@@ -12,8 +12,8 @@
 @import url('./interactions/qti-associate-interaction.css');
 @import url('./interactions/qti-graphic-order-interaction.css');
 @import url('./interactions/qti-graphic-associate-interaction.css');
-@import url('./interactions/qti-slider-interaction.css');
+@import url('./interactions/qti-slider-interaction.css') layer(qti-components.interactions.base);
 @import url('./interactions/qti-select-point-interaction.css');
-@import url('./interactions/qti-position-object-interaction.css');
-@import url('./interactions/qti-prompt.css');
-@import url('./interactions/qti-corrections.css');
+@import url('./interactions/qti-position-object-interaction.css') layer(qti-components.interactions.base);
+@import url('./interactions/qti-prompt.css') layer(qti-components.interactions.base);
+@import url('./interactions/qti-corrections.css') layer(qti-components.interactions.corrections);

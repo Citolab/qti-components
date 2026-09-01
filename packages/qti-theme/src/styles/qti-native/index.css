@@ -1,2 +1,2 @@
-@import url('./qti3p0.css');
-@import url('./qti3p0-override-layout.css');
+@import url('./qti3p0.css') layer(qti-base);
+@import url('./qti3p0-override-layout.css') layer(qti-base);
