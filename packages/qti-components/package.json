@@ -1,7 +1,7 @@
 {
   "name": "@citolab/qti-components",
   "description": "QTI component utilities",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "author": "",
   "dependencies": {
     "@heximal/templates": "^0.1.5",
