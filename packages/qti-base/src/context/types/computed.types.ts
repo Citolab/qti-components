@@ -6,6 +6,11 @@ export type ComputedItem = ComputedItemContext & {
   type?: 'info' | 'regular';
   index?: number;
   active?: boolean;
+  allowSkipping?: boolean;
+  maxAttempts?: number;
+  numAttempts?: number;
+  valid?: boolean;
+  isDefaultResponse?: boolean;
 };
 
 export type ComputedContext = {
@@ -17,6 +22,7 @@ export type ComputedContext = {
     identifier: string;
     navigationMode: 'linear' | 'nonlinear';
     submissionMode: 'individual' | 'simultaneous';
+    allowSkipping?: boolean;
     sections: {
       active?: boolean;
       identifier: string;
@@ -25,6 +31,7 @@ export type ComputedContext = {
       items: ComputedItem[];
       navigationMode: 'linear' | 'nonlinear';
       submissionMode: 'individual' | 'simultaneous';
+      allowSkipping?: boolean;
     }[];
   }[];
 };

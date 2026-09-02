@@ -7,6 +7,7 @@ export * from '../components/qti-test-part/qti-test-part';
 export * from '../components/qti-test-feedback/qti-test-feedback';
 export * from '../components/qti-outcome-processing/qti-outcome-processing';
 export * from '../components/qti-test-variables/qti-test-variables';
+export * from '../components/qti-item-session-control/qti-item-session-control';
 
 export * from './test-navigation/test-navigation';
 export * from './test-next/test-next';

@@ -17,6 +17,7 @@ import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assess
 import type { QtiAssessmentSection } from '../qti-assessment-section/qti-assessment-section';
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
 import type { QtiTestPart } from '../qti-test-part/qti-test-part';
+import type { QtiItemSessionControl } from '../qti-item-session-control/qti-item-session-control';
 import type { ConfigContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
@@ -74,6 +75,15 @@ export class TestNavigation extends LitElement {
 
     this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
     this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
+  }
+
+  /** The assessment item for an item-ref id, if it has been rendered. */
+  #assessmentItemFor(identifier: string | undefined): QtiAssessmentItem | undefined {
+    if (!identifier) return undefined;
+    const itemRef = this.#testElement?.querySelector<QtiAssessmentItemRef>(
+      `qti-assessment-item-ref[identifier="${identifier}"]`
+    );
+    return itemRef?.assessmentItem ?? undefined;
   }
 
   /** The currently active assessment item, exposed for optional presentation extensions. */
@@ -171,27 +181,50 @@ export class TestNavigation extends LitElement {
       view: this._sessionContext?.view,
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
+        const testPartSessionControl = testPart.querySelector<QtiItemSessionControl>(
+          ':scope > qti-item-session-control'
+        );
+        const partAllowSkipping = testPartSessionControl ? testPartSessionControl.allowSkipping : true;
+        const partMaxAttempts = testPartSessionControl ? testPartSessionControl.maxAttempts : 1;
         return {
           active: false,
           identifier: testPart.identifier,
           navigationMode: testPart.navigationMode,
           submissionMode: testPart.submissionMode,
+          allowSkipping: partAllowSkipping,
           sections: sectionElements.map(section => {
             const itemElements = [...section.querySelectorAll<QtiAssessmentItemRef>(`qti-assessment-item-ref`)];
+            const sectionSessionControl = section.querySelector<QtiItemSessionControl>(
+              ':scope > qti-item-session-control'
+            );
+            const sectionAllowSkipping = sectionSessionControl
+              ? sectionSessionControl.allowSkipping
+              : partAllowSkipping;
+            const sectionMaxAttempts = sectionSessionControl ? sectionSessionControl.maxAttempts : partMaxAttempts;
             return {
               active: false,
               identifier: section.identifier,
               title: section.title,
               navigationMode: section.navigationMode,
               submissionMode: section.submissionMode,
-              items: itemElements.map(item => ({
-                ...this.initContext?.find(i => i.identifier === item.identifier),
-                active: false,
-                identifier: item.identifier,
-                categories: item.category ? item.category?.split(' ') : [],
-                href: item.href,
-                variables: [] as OutcomeVariable[]
-              }))
+              allowSkipping: sectionAllowSkipping,
+              items: itemElements.map(item => {
+                const itemSessionControl = item.querySelector<QtiItemSessionControl>(
+                  ':scope > qti-item-session-control'
+                );
+                const itemAllowSkipping = itemSessionControl ? itemSessionControl.allowSkipping : sectionAllowSkipping;
+                const itemMaxAttempts = itemSessionControl ? itemSessionControl.maxAttempts : sectionMaxAttempts;
+                return {
+                  ...this.initContext?.find(i => i.identifier === item.identifier),
+                  active: false,
+                  identifier: item.identifier,
+                  categories: item.category ? item.category?.split(' ') : [],
+                  href: item.href,
+                  variables: [] as OutcomeVariable[],
+                  allowSkipping: itemAllowSkipping,
+                  maxAttempts: itemMaxAttempts
+                };
+              })
             };
           })
         };
@@ -340,9 +373,48 @@ export class TestNavigation extends LitElement {
                   ?.value as string;
 
                 const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
-                const numAttempts = computedItem.variables?.find(v => v.identifier === 'numAttempts')?.value || 0;
+                const numAttempts =
+                  Number(computedItem.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
 
                 const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
+
+                const valid = this.#assessmentItemFor(computedItem.identifier)?.validate(false) ?? true;
+
+                const responseVars = itemContext?.variables?.filter(v => v.type === 'response') || [];
+
+                const isDefaultResponse = responseVars.every(v => {
+                  if (v.value === undefined || v.value === null) {
+                    return true;
+                  }
+                  let fallbackValue: string;
+                  switch (v.baseType) {
+                    case 'integer':
+                    case 'float':
+                    case 'duration':
+                      fallbackValue = '0';
+                      break;
+                    case 'boolean':
+                      fallbackValue = 'false';
+                      break;
+                    case 'string':
+                    case 'directedPair':
+                    case 'identifier':
+                    case 'pair':
+                    case 'record':
+                    default:
+                      fallbackValue = '';
+                      break;
+                  }
+
+                  const defaultValue = v.defaultValue ?? fallbackValue;
+
+                  if (Array.isArray(v.value)) {
+                    const dv = Array.isArray(defaultValue) ? defaultValue : [defaultValue];
+                    return v.value.length === dv.length && v.value.every((val, i) => val === dv[i]);
+                  }
+
+                  return v.value === defaultValue;
+                });
 
                 // Computed and opiniated
                 // const type = item.categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
@@ -363,6 +435,8 @@ export class TestNavigation extends LitElement {
                   response,
                   index,
                   active,
+                  valid,
+                  isDefaultResponse,
                   maxScore
                   // type,
                   // correct,
