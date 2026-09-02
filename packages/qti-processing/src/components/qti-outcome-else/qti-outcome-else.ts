@@ -1,3 +1,3 @@
 import { QtiConditionElseBase } from '../qti-condition/qti-condition-base';
 
-export class QtiResponseElse extends QtiConditionElseBase {}
+export class QtiOutcomeElse extends QtiConditionElseBase {}
