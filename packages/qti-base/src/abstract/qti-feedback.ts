@@ -2,9 +2,11 @@ import { consume } from '@lit/context';
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
+import { computedContext } from '../context/computed.context';
 import { itemContext } from '../context/item.context';
 import { IsNullOrUndefined } from '../utils/utils';
 
+import type { ComputedContext } from '../context/types/computed.types';
 import type { ItemContext } from '../context/types/item.types';
 
 export abstract class QtiFeedback extends LitElement {
@@ -23,6 +25,10 @@ export abstract class QtiFeedback extends LitElement {
   @consume({ context: itemContext, subscribe: true })
   @state()
   private _context?: ItemContext;
+
+  @consume({ context: computedContext, subscribe: true })
+  @state()
+  private _computedContext?: ComputedContext;
 
   public override connectedCallback() {
     super.connectedCallback();
@@ -53,6 +59,23 @@ export abstract class QtiFeedback extends LitElement {
   }
 
   #showFeedback(value: boolean) {
+    if (!this.#sessionControlAllowsFeedback()) {
+      this.showStatus = 'off';
+      return;
+    }
     this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';
+  }
+
+  #sessionControlAllowsFeedback(): boolean {
+    // If show-feedback isn't set to true, we need to hide it after max-attempts
+    if (!this._computedContext) return true;
+    const activeItem = this._computedContext.testParts
+      ?.find(tp => tp.active)
+      ?.sections.flatMap(s => s.items)
+      .find(i => i.active);
+    if (!activeItem || activeItem.showFeedback) return true;
+    const maxAttempts = activeItem.maxAttempts ?? 1;
+    const numAttempts = Number(this._context?.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
+    return numAttempts < maxAttempts;
   }
 }

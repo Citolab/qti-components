@@ -32393,11 +32393,32 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
             },
             {
               "kind": "method",
@@ -36932,11 +36953,40 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37120,11 +37170,40 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37362,11 +37441,40 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -48903,11 +49011,40 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"

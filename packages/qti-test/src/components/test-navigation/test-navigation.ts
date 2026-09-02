@@ -221,6 +221,7 @@ export class TestNavigation extends LitElement {
         );
         const partAllowSkipping = testPartSessionControl ? testPartSessionControl.allowSkipping : true;
         const partMaxAttempts = testPartSessionControl ? testPartSessionControl.maxAttempts : 1;
+        const partShowFeedback = testPartSessionControl ? testPartSessionControl.showFeedback : false;
         return {
           active: false,
           identifier: testPart.identifier,
@@ -236,6 +237,7 @@ export class TestNavigation extends LitElement {
               ? sectionSessionControl.allowSkipping
               : partAllowSkipping;
             const sectionMaxAttempts = sectionSessionControl ? sectionSessionControl.maxAttempts : partMaxAttempts;
+            const sectionShowFeedback = sectionSessionControl ? sectionSessionControl.showFeedback : partShowFeedback;
             return {
               active: false,
               identifier: section.identifier,
@@ -249,6 +251,7 @@ export class TestNavigation extends LitElement {
                 );
                 const itemAllowSkipping = itemSessionControl ? itemSessionControl.allowSkipping : sectionAllowSkipping;
                 const itemMaxAttempts = itemSessionControl ? itemSessionControl.maxAttempts : sectionMaxAttempts;
+                const itemShowFeedback = itemSessionControl ? itemSessionControl.showFeedback : sectionShowFeedback;
                 return {
                   ...this.initContext?.find(i => i.identifier === item.identifier),
                   active: false,
@@ -257,7 +260,8 @@ export class TestNavigation extends LitElement {
                   href: item.href,
                   variables: [] as OutcomeVariable[],
                   allowSkipping: itemAllowSkipping,
-                  maxAttempts: itemMaxAttempts
+                  maxAttempts: itemMaxAttempts,
+                  showFeedback: itemShowFeedback
                 };
               })
             };
