@@ -1,8 +1,17 @@
-import type { PostLoadTransformCallback, PostLoadTestTransformCallback } from '../mixins/test-navigation.mixin';
+import type { ITestNavigationMixin } from '../mixins/test-navigation.mixin';
 import type { LitElement } from 'lit';
 import type { ConfigContext, TestContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
 import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
+
+/*
+ * `ITestNavigationMixin` is declared beside the class it describes, in
+ * ../mixins/test-navigation.mixin, and re-exported here so this module's public surface is
+ * unchanged. Keeping the declaration there is what lets the mixin `implements` it — the
+ * compiler then holds the interface and the class together — while the imports still run
+ * one way, types -> mixin, which `pnpm madge` requires.
+ */
+export type { ITestNavigationMixin };
 
 export interface IQtiTest extends LitElement, ITestNavigationMixin, ITestProcessingMixin, IMyQtiTest {}
 
@@ -14,17 +23,6 @@ export interface IMyQtiTest {
 
   // Methods from TestBase
   updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void;
-}
-
-export interface ITestNavigationMixin {
-  navigate: 'item' | 'section' | null;
-  requestTimeout: number;
-  showLoadingIndicators: boolean;
-
-  postLoadTransformCallback: PostLoadTransformCallback | null;
-  postLoadTestTransformCallback: PostLoadTestTransformCallback | null;
-  navigateTo(type: 'item' | 'section', id?: string): void;
-  retryNavigation(): void;
 }
 
 export interface ITestProcessingMixin {

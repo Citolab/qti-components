@@ -32,7 +32,35 @@ export interface NavigationError {
   sectionId?: string;
 }
 
-declare class TestNavigationInterface {}
+/**
+ * Exactly what this mixin adds. `IQtiTest` composes it (see ../types/iqti-test, which
+ * re-exports it), and `TestNavigationClass` below `implements` it, so the interface and the
+ * class cannot drift apart.
+ *
+ * This was `declare class TestNavigationInterface {}` — EMPTY — so the returned
+ * `Constructor<TestNavigationInterface> & T` added nothing and every member the mixin
+ * contributes was erased from the public type. `QtiTest` looked as though it had no
+ * `navigate` or `postLoadTransformCallback`, and consumers had to intersect the class with
+ * `IQtiTest` by hand to describe one element.
+ *
+ * `showLoadingIndicators` and `retryNavigation` used to be listed on the `IQtiTest` side with
+ * no implementation anywhere in the repo, so calling `retryNavigation()` would have thrown.
+ * They are gone rather than stubbed: there was no behaviour to preserve.
+ */
+export interface ITestNavigationMixin {
+  navigate: 'item' | 'section' | null;
+  requestTimeout: number;
+  postLoadTransformCallback: PostLoadTransformCallback | null;
+  postLoadTestTransformCallback: PostLoadTestTransformCallback | null;
+  navigateTo(type: 'item' | 'section', id?: string): void;
+  getLoadingProgress(): {
+    expectedItems: number;
+    connectedItems: number;
+    expectedStimulus: number;
+    loadedStimulus: number;
+    isComplete: boolean;
+  };
+}
 
 /**
  * Navigation mixin for QTI test components
@@ -44,7 +72,7 @@ declare class TestNavigationInterface {}
  * - Error handling and edge case coverage
  */
 export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
-  abstract class TestNavigationClass extends superClass implements TestNavigationInterface {
+  abstract class TestNavigationClass extends superClass implements ITestNavigationMixin {
     @property({ type: String }) navigate: 'item' | 'section' | null = null;
     @property({ type: Number }) requestTimeout: number = 30000;
     @property({ attribute: false }) postLoadTransformCallback: PostLoadTransformCallback | null = null;
@@ -674,5 +702,5 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     }
   }
 
-  return TestNavigationClass as Constructor<TestNavigationInterface> & T;
+  return TestNavigationClass as Constructor<ITestNavigationMixin> & T;
 };
