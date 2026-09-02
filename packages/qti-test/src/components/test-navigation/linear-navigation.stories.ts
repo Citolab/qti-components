@@ -21,6 +21,9 @@ const meta: Meta = {
 };
 export default meta;
 
+const CORRECT_CHOICE = 'You must stay with your luggage at all times.';
+const WRONG_CHOICE = 'Do not let someone else look after your luggage.';
+
 export const LinearNavigation: StoryObj = {
   parameters: {
     testTimeout: 60000
@@ -175,5 +178,148 @@ export const LinearNavigation: StoryObj = {
       hotspotD.click();
     });
     await submit();
+  }
+};
+
+/**
+ * Linear navigation must gate the Next button on the candidate having *ended an
+ * attempt* that resolves the item (correct, or maxAttempts exhausted) — and this
+ * rule has to hold whether or not the item runs response processing.
+ *
+ * The test below drives two items through the identical sequence:
+ *  - `ITM-choice` declares a qti-response-processing template (SCORE is computed).
+ *  - `ITM-choice_norp` has NO response processing, only a qti-correct-response.
+ *
+ * For each: a wrong submission (1 of 2 attempts) keeps Next disabled, then simply
+ * *selecting* the correct answer must NOT enable Next — only submitting it does.
+ */
+export const LinearGatingWithoutResponseProcessing: StoryObj = {
+  parameters: {
+    testTimeout: 60000
+  },
+  render: () => html`
+    <qti-test navigate="item">
+      <test-navigation>
+        <test-container test-url="/assets/qti-test-package/assessment-linear-noprocessing.xml"></test-container>
+        <test-end-attempt>End Attempt</test-end-attempt>
+        <test-next>Next</test-next>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const nextBtn = canvas.getByShadowText('Next');
+    const endAttemptBtn = canvas.getByShadowText('End Attempt');
+
+    await getAssessmentItemsFromTestContainer(canvasElement);
+
+    // Click a choice by its text and wait until the selection has propagated
+    // (the simple-choice reports `--checked`), guaranteeing the navigation
+    // context has recomputed before we assert on the Next button.
+    const pick = async (interaction: Element, text: string) => {
+      const choice = within(interaction as HTMLElement).getByText<QtiSimpleChoice>(text);
+      choice.click();
+      const simpleChoice = choice.closest('qti-simple-choice') as QtiSimpleChoice;
+      await waitFor(() => expect(simpleChoice.internals.states.has('checked')).toBe(true));
+    };
+
+    // Runs the full gating sequence against the currently-active item.
+    const assertGating = async (title: string) => {
+      const item = await waitFor(async () => getAssessmentItemFromTestContainerByDataTitle(canvasElement, title));
+      const interaction = item.querySelector<QtiChoiceInteraction>('qti-choice-interaction');
+
+      // Fresh item, no attempt ended yet → cannot advance.
+      expect(nextBtn).toBeDisabled();
+
+      // Select a wrong answer but don't submit → still cannot advance.
+      await pick(interaction, WRONG_CHOICE);
+      expect(nextBtn).toBeDisabled();
+
+      // Submit the wrong answer. 1 of 2 attempts used, answer is incorrect, so
+      // an attempt remains → Next stays disabled.
+      endAttemptBtn.click();
+      await waitFor(() => expect(nextBtn).toBeDisabled());
+
+      // Select the CORRECT answer but do NOT submit it: Next must remain disabled
+      // until test-end-attempt evaluates the response.
+      await pick(interaction, CORRECT_CHOICE);
+      expect(nextBtn).toBeDisabled();
+
+      // Submit the correct answer → item resolved → Next unlocks.
+      endAttemptBtn.click();
+      await waitFor(() => expect(nextBtn).toBeEnabled());
+    };
+
+    await step('Item WITH response processing enforces the gate', async () => {
+      await assertGating('Unattended Luggage');
+      nextBtn.click();
+    });
+
+    await step('Item WITHOUT response processing enforces the same gate', async () => {
+      await assertGating('Unattended Luggage (no processing)');
+      nextBtn.click();
+    });
+  }
+};
+
+/**
+ * "Done" means the candidate reached the *best* score, not that they matched the
+ * declared correct response. This item is mapping-scored (MAXSCORE = 1) and has
+ * two full-marks choices — "Joyful" (the declared qti-correct-response) and
+ * "Glad" — plus "Sad" (0). Submitting "Glad" earns full marks even though it
+ * isn't the declared correct response, so Next must unlock; an exact
+ * correct-response match would wrongly keep the candidate stuck.
+ */
+export const LinearGatingOnBestScore: StoryObj = {
+  parameters: {
+    testTimeout: 60000
+  },
+  render: () => html`
+    <qti-test navigate="item">
+      <test-navigation>
+        <test-container test-url="/assets/qti-test-package/assessment-linear-bestscore.xml"></test-container>
+        <test-end-attempt>End Attempt</test-end-attempt>
+        <test-next>Next</test-next>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const nextBtn = canvas.getByShadowText('Next');
+    const endAttemptBtn = canvas.getByShadowText('End Attempt');
+
+    await getAssessmentItemsFromTestContainer(canvasElement);
+
+    const pick = async (interaction: Element, text: string) => {
+      const choice = within(interaction as HTMLElement).getByText<QtiSimpleChoice>(text);
+      choice.click();
+      const simpleChoice = choice.closest('qti-simple-choice') as QtiSimpleChoice;
+      await waitFor(() => expect(simpleChoice.internals.states.has('checked')).toBe(true));
+    };
+
+    const item = await waitFor(async () =>
+      getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'A word for happy')
+    );
+    const interaction = item.querySelector<QtiChoiceInteraction>('qti-choice-interaction');
+
+    // No attempt ended yet → cannot advance.
+    expect(nextBtn).toBeDisabled();
+
+    // Submit a 0-score answer. 1 of 2 attempts used, below max → Next disabled.
+    await pick(interaction, 'Sad');
+    endAttemptBtn.click();
+    await waitFor(() => expect(nextBtn).toBeDisabled());
+
+    // "Glad" is NOT the declared correct response ("Joyful") but maps to the full
+    // mark. Selecting it doesn't advance until submitted…
+    await pick(interaction, 'Glad');
+    expect(nextBtn).toBeDisabled();
+
+    // …and once submitted, SCORE === MAXSCORE, so the item is done and Next unlocks
+    // even though the response isn't the declared correct one.
+    endAttemptBtn.click();
+    await waitFor(() => expect(nextBtn).toBeEnabled());
   }
 };

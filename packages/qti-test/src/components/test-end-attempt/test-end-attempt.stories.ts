@@ -169,6 +169,37 @@ export const MaxAttemptsAt2: Story = {
   }
 };
 
+export const OptimalDisablesWithAttemptsLeft: Story = {
+  render: args => itemSessionControlTemplate(args),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // wait for items to load
+    await getAssessmentItemsFromTestContainer(canvasElement);
+
+    // Navigate to the max-attempts=2 item
+    const max2Link = await canvas.findByShadowText('Max2');
+    max2Link.click();
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    const endAttemptButton = await canvas.findByShadowText('End Attempt');
+
+    // End attempt should be enabled before any attempt
+    await waitFor(() => expect(endAttemptButton).toBeEnabled());
+
+    // Select the *correct* choice (ChoiceA → SCORE reaches MAXSCORE = optimal)
+    const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
+    const correctChoice = item.querySelector('qti-simple-choice[identifier="ChoiceA"]') as HTMLElement;
+    correctChoice.click();
+
+    endAttemptButton.click();
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Last submission was optimal — disabled even though 1 of 2 attempts remain
+    await waitFor(() => expect(endAttemptButton).toBeDisabled());
+  }
+};
+
 export const NonSkippingItems: Story = {
   render: args => itemSessionControlTemplate(args),
   play: async ({ canvasElement }) => {

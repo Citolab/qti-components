@@ -35300,6 +35300,29 @@
             },
             {
               "kind": "method",
+              "name": "#assessOptimality",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ItemOptimality"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ItemContext"
+                  }
+                }
+              ],
+              "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#extractDefaultValues",
               "privacy": "private",
               "return": {
@@ -35350,6 +35373,24 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleItemContextUpdated",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<{ itemContext: ItemContext; responseProcessed?: boolean }>"
+                  }
+                }
+              ],
+              "description": "Latch whether an item reached its optimal outcome whenever it has just ended\nan attempt. processResponse — fired by test-end-attempt, autoscore, or an\nin-item end-attempt interaction — flags its context update with\n`responseProcessed`; a plain selection updates the context without it, so\n`done` can't flip until the candidate actually ends the attempt.",
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -35415,6 +35456,70 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#isItemDone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "numAttempts",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "optimality",
+                  "type": {
+                    "text": "ItemOptimality"
+                  }
+                },
+                {
+                  "name": "maxAttempts",
+                  "type": {
+                    "text": "number | undefined"
+                  }
+                }
+              ],
+              "description": "Decide whether an item should be treated as \"the candidate is done with it\"\nfor the purpose of gating forward navigation and further attempts.\n\n- The candidate must have actually ended an attempt (numAttempts > 0).\n- Once attempted, the item is done if they reached the optimal outcome\n  ('optimal'), or there's nothing to improve on ('unscored'). It is only *not*\n  done while a better attempt is still possible ('suboptimal') and attempts\n  remain — see #assessOptimality for how \"optimal\" is determined.\n\n`optimality` reflects the last *ended attempt* (see #optimality), not the\nlive selection — so a freshly-picked optimal answer doesn't count as done\nuntil test-end-attempt evaluates it.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#numericVariable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ItemContext['variables']"
+                  }
+                },
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Read a single numeric outcome value, or null when absent / non-numeric.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "#onShowCandidateCorrection",
               "privacy": "private",
@@ -35425,6 +35530,17 @@
               "name": "#onShowCorrectResponse",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#optimality",
+              "privacy": "private",
+              "default": "new Map<string, ItemOptimality>()",
+              "description": "Whether each item's last *ended attempt* reached the optimal outcome, keyed\nby item-ref id. Written from #handleItemContextUpdated when processResponse\nends an attempt — never on a plain selection. Mirrors how inline feedback\nonly re-evaluates when an attempt is processed, so a freshly-picked answer\ndoesn't flip `done` until the candidate ends the attempt.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
             },
             {
               "kind": "field",
@@ -50588,6 +50704,25 @@
             },
             {
               "kind": "method",
+              "name": "#assessOptimality",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ItemOptimality"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ItemContext"
+                  }
+                }
+              ],
+              "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough."
+            },
+            {
+              "kind": "method",
               "name": "#extractDefaultValues",
               "privacy": "private",
               "return": {
@@ -50630,6 +50765,20 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleItemContextUpdated",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<{ itemContext: ItemContext; responseProcessed?: boolean }>"
+                  }
+                }
+              ],
+              "description": "Latch whether an item reached its optimal outcome whenever it has just ended\nan attempt. processResponse — fired by test-end-attempt, autoscore, or an\nin-item end-attempt interaction — flags its context update with\n`responseProcessed`; a plain selection updates the context without it, so\n`done` can't flip until the candidate actually ends the attempt."
             },
             {
               "kind": "method",
@@ -50677,6 +50826,69 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#isItemDone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "numAttempts",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "optimality",
+                  "type": {
+                    "text": "ItemOptimality"
+                  }
+                },
+                {
+                  "name": "maxAttempts",
+                  "type": {
+                    "text": "number | undefined"
+                  }
+                }
+              ],
+              "description": "Decide whether an item should be treated as \"the candidate is done with it\"\nfor the purpose of gating forward navigation and further attempts.\n\n- The candidate must have actually ended an attempt (numAttempts > 0).\n- Once attempted, the item is done if they reached the optimal outcome\n  ('optimal'), or there's nothing to improve on ('unscored'). It is only *not*\n  done while a better attempt is still possible ('suboptimal') and attempts\n  remain — see #assessOptimality for how \"optimal\" is determined.\n\n`optimality` reflects the last *ended attempt* (see #optimality), not the\nlive selection — so a freshly-picked optimal answer doesn't count as done\nuntil test-end-attempt evaluates it."
+            },
+            {
+              "kind": "method",
+              "name": "#numericVariable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ItemContext['variables']"
+                  }
+                },
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Read a single numeric outcome value, or null when absent / non-numeric."
+            },
+            {
+              "kind": "field",
+              "name": "#optimality",
+              "privacy": "private",
+              "default": "new Map<string, ItemOptimality>()",
+              "description": "Whether each item's last *ended attempt* reached the optimal outcome, keyed\nby item-ref id. Written from #handleItemContextUpdated when processResponse\nends an attempt — never on a plain selection. Mirrors how inline feedback\nonly re-evaluates when an attempt is processed, so a freshly-picked answer\ndoesn't flip `done` until the candidate ends the attempt."
             },
             {
               "kind": "field",

@@ -62,6 +62,14 @@ export class TestEndAttempt extends LitElement {
     const maxAttempts = activeItem.maxAttempts ?? 1;
     const numAttempts = activeItem.numAttempts || 0;
 
+    // For non-adaptive items, the last ended attempt already reached the optimal
+    // outcome — nothing to improve, so disable even when attempts remain. Adaptive
+    // items keep iterating, so they're exempt (same as the max-attempts guard).
+    if (!activeItem.adaptive && activeItem.optimal) {
+      this._internalDisabled = true;
+      return;
+    }
+
     // For non-adaptive items, disable when max attempts have been reached
     if (!activeItem.adaptive && maxAttempts > 0 && numAttempts >= maxAttempts) {
       this._internalDisabled = true;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="LinearNoProcessing"
+        title="Linear navigation without response processing"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <!-- Linear/individual with up to two attempts per item, so a single wrong
+         submission leaves an attempt remaining and must NOT unlock Next. -->
+    <qti-test-part identifier="test-part-1" navigation-mode="linear" submission-mode="individual">
+        <qti-item-session-control max-attempts="2" allow-skipping="false" />
+        <qti-assessment-section identifier="section-1" title="Section 1" visible="true">
+            <!-- Item WITH response processing (match_correct → SCORE). -->
+            <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml" />
+            <!-- Item WITHOUT response processing: only a qti-correct-response. -->
+            <qti-assessment-item-ref identifier="ITM-choice_norp" href="items/choice_norp.xml" />
+            <!-- Trailing item so neither item above is the last one. -->
+            <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>
