@@ -1,5 +1,6 @@
 ---
 '@qti-components/theme': patch
+'@citolab/qti-components': patch
 ---
 
 Flatten native CSS nesting in the published stylesheet, and state the browser support floor.
