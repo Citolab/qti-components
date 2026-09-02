@@ -264,6 +264,17 @@ export abstract class Interaction extends LitElement implements ValidatableInter
     this._internals = this.attachInternals();
   }
 
-  /** Optional lifecycle bridge for interaction subclasses that do not need changed-property data. */
-  protected override firstUpdated(_changedProperties?: PropertyValues<this>): void {}
+  /**
+   * Optional lifecycle bridge for interaction subclasses that do not need changed-property data.
+   *
+   * The parameter is `PropertyValues`, matching LitElement, and NOT `PropertyValues<this>`.
+   * The polymorphic `this` narrowed the parameter per subclass, which made every interaction
+   * class structurally incompatible with `LitElement` — so `Constructor<LitElement>`, the
+   * standard constraint for a Lit mixin, rejected all of them and consumers could not wrap an
+   * interaction in a mixin without casting. `this` buys nothing in a parameter position and
+   * costs contravariant compatibility with the base class.
+   *
+   * Still optional, so subclasses that ignore the argument can override with `firstUpdated()`.
+   */
+  protected override firstUpdated(_changedProperties?: PropertyValues): void {}
 }
