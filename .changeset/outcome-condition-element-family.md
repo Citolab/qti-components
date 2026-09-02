@@ -1,5 +1,6 @@
 ---
 '@qti-components/processing': minor
+'@citolab/qti-components': minor
 ---
 
 Add `qti-outcome-condition` with its `qti-outcome-if` / `qti-outcome-else-if` / `qti-outcome-else`
