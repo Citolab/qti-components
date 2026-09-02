@@ -7,13 +7,13 @@ export const qtiTransformManifest = (): {
   let xmlFragment: XMLDocument;
 
   const api = {
-    async load(uri: string, signal: AbortSignal) {
-      return new Promise<typeof api>(resolve => {
-        loadXML(uri, signal).then(xml => {
-          xmlFragment = xml;
-          return resolve(api);
-        });
-      });
+    // Awaits loadXML so a failed fetch (network, CORS, non-2xx) rejects this
+    // promise. Callers own the failure: they can render it, retry it or let it
+    // bubble — rather than it escaping as an unhandled rejection while their
+    // own `await` never settles.
+    async load(uri: string, signal?: AbortSignal) {
+      xmlFragment = await loadXML(uri, signal);
+      return api;
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
