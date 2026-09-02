@@ -35591,6 +35591,41 @@
               }
             },
             {
+              "kind": "method",
+              "name": "afterAttemptEnded",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "assessmentItem",
+                  "type": {
+                    "text": "QtiAssessmentItem | undefined"
+                  }
+                },
+                {
+                  "name": "computedItem",
+                  "type": {
+                    "text": "ComputedItem | undefined"
+                  }
+                },
+                {
+                  "name": "done",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Reflect correctness back to the candidate after an ended attempt, for items\nthe assessment opted in via the standard `qti-item-session-control\nshow-solution` (QTI 3.0 ItemSessionControl.show-solution) — the player takes\nno opinion of its own:\n- candidate correction (a mark on the learner's selection) after every attempt;\n- the correct response (a mark on the right answer) once the item is done —\n  the candidate reached the optimal outcome, or ran out of attempts.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "autoScoreItems",
               "type": {
@@ -35613,6 +35648,29 @@
               "parsedType": {
                 "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "computedItemFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ComputedItem | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The computed-context entry for an item, from the session-control cascade.",
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -51051,6 +51109,37 @@
               "readonly": true
             },
             {
+              "kind": "method",
+              "name": "afterAttemptEnded",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_assessmentItem",
+                  "type": {
+                    "text": "QtiAssessmentItem | undefined"
+                  }
+                },
+                {
+                  "name": "_computedItem",
+                  "type": {
+                    "text": "ComputedItem | undefined"
+                  }
+                },
+                {
+                  "name": "_done",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Extension point for presentation packages reacting to an ended attempt.\n`done` is settled here — from the freshly latched optimality and the\nsession-control cascade — because the computed context only catches up on\nthe next update, after this event has finished bubbling."
+            },
+            {
               "kind": "field",
               "name": "autoScoreItems",
               "type": {
@@ -51069,6 +51158,25 @@
               "parsedType": {
                 "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
+            },
+            {
+              "kind": "method",
+              "name": "computedItemFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ComputedItem | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The computed-context entry for an item, from the session-control cascade."
             },
             {
               "kind": "field",

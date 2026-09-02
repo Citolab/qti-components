@@ -11,7 +11,7 @@ import { qtiContext } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiContext } from '@qti-components/base';
 import type { OutcomeVariable } from '@qti-components/base';
-import type { ComputedContext } from '@qti-components/base';
+import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../qti-assessment-section/qti-assessment-section';
@@ -107,7 +107,36 @@ export class TestNavigation extends LitElement {
     if (!event.detail?.responseProcessed) return;
     const itemContext = event.detail.itemContext;
     if (!itemContext?.identifier) return;
-    this.#optimality.set(itemContext.identifier, this.#assessOptimality(itemContext));
+    const optimality = this.#assessOptimality(itemContext);
+    this.#optimality.set(itemContext.identifier, optimality);
+
+    const computedItem = this.computedItemFor(itemContext.identifier);
+    const numAttempts = Number(itemContext.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
+    this.afterAttemptEnded(
+      (event.composedPath()[0] as HTMLElement)?.closest<QtiAssessmentItem>('qti-assessment-item'),
+      computedItem,
+      this.#isItemDone(numAttempts, optimality, computedItem?.maxAttempts)
+    );
+  }
+
+  /**
+   * Extension point for presentation packages reacting to an ended attempt.
+   * `done` is settled here — from the freshly latched optimality and the
+   * session-control cascade — because the computed context only catches up on
+   * the next update, after this event has finished bubbling.
+   */
+  protected afterAttemptEnded(
+    _assessmentItem: QtiAssessmentItem | undefined,
+    _computedItem: ComputedItem | undefined,
+    _done: boolean
+  ): void {}
+
+  /** The computed-context entry for an item, from the session-control cascade. */
+  protected computedItemFor(identifier: string): ComputedItem | undefined {
+    return this.computedContext?.testParts
+      ?.flatMap(part => part.sections)
+      .flatMap(section => section.items)
+      .find(i => i.identifier === identifier);
   }
 
   /** The assessment item for an item-ref id, if it has been rendered. */
@@ -222,6 +251,7 @@ export class TestNavigation extends LitElement {
         const partAllowSkipping = testPartSessionControl ? testPartSessionControl.allowSkipping : true;
         const partMaxAttempts = testPartSessionControl ? testPartSessionControl.maxAttempts : 1;
         const partShowFeedback = testPartSessionControl ? testPartSessionControl.showFeedback : false;
+        const partShowSolution = testPartSessionControl ? testPartSessionControl.showSolution : false;
         return {
           active: false,
           identifier: testPart.identifier,
@@ -238,6 +268,7 @@ export class TestNavigation extends LitElement {
               : partAllowSkipping;
             const sectionMaxAttempts = sectionSessionControl ? sectionSessionControl.maxAttempts : partMaxAttempts;
             const sectionShowFeedback = sectionSessionControl ? sectionSessionControl.showFeedback : partShowFeedback;
+            const sectionShowSolution = sectionSessionControl ? sectionSessionControl.showSolution : partShowSolution;
             return {
               active: false,
               identifier: section.identifier,
@@ -252,6 +283,7 @@ export class TestNavigation extends LitElement {
                 const itemAllowSkipping = itemSessionControl ? itemSessionControl.allowSkipping : sectionAllowSkipping;
                 const itemMaxAttempts = itemSessionControl ? itemSessionControl.maxAttempts : sectionMaxAttempts;
                 const itemShowFeedback = itemSessionControl ? itemSessionControl.showFeedback : sectionShowFeedback;
+                const itemShowSolution = itemSessionControl ? itemSessionControl.showSolution : sectionShowSolution;
                 return {
                   ...this.initContext?.find(i => i.identifier === item.identifier),
                   active: false,
@@ -261,7 +293,8 @@ export class TestNavigation extends LitElement {
                   variables: [] as OutcomeVariable[],
                   allowSkipping: itemAllowSkipping,
                   maxAttempts: itemMaxAttempts,
-                  showFeedback: itemShowFeedback
+                  showFeedback: itemShowFeedback,
+                  showSolution: itemShowSolution
                 };
               })
             };
