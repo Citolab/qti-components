@@ -1,5 +1,6 @@
 ---
 '@qti-components/transformers': patch
+'@citolab/qti-components': patch
 ---
 
 Reject `load()` when the XML fetch fails.
