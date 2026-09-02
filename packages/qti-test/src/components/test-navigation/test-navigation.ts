@@ -26,6 +26,8 @@ import type { ResponseVariable } from '@qti-components/base';
 
 type CustomEventMap = {
   'test-end-attempt': CustomEvent;
+  'qti-part-completed': CustomEvent<{ partId: string }>;
+  'qti-test-completed': CustomEvent;
 };
 
 declare global {
@@ -74,6 +76,11 @@ export class TestNavigation extends LitElement {
   @property({ type: Boolean, attribute: 'auto-score-items' }) autoScoreItems = false;
 
   #testElement: QtiAssessmentTest;
+
+  /** Test-parts whose end-of-part transition has already been announced. */
+  #endedParts = new Set<string>();
+  /** Whether the end-of-test transition has already been announced. */
+  #testEnded = false;
 
   /**
    * Whether each item's last *ended attempt* reached the optimal outcome, keyed
@@ -204,8 +211,10 @@ export class TestNavigation extends LitElement {
   /* PK: on test connected we can build the computed context */
   #handleTestConnected(event: CustomEvent) {
     this.#testElement = event.detail as QtiAssessmentTest;
-    // A fresh test invalidates the per-test optimality latches.
+    // A fresh test invalidates the per-test optimality and completion latches.
     this.#optimality.clear();
+    this.#endedParts.clear();
+    this.#testEnded = false;
     // Set the testIdentifier in qtiContext if not already set
     if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
       const currentContext = this.qtiContext.QTI_CONTEXT || {
@@ -542,6 +551,8 @@ export class TestNavigation extends LitElement {
       })
     };
 
+    this.#announceCompletionTransitions();
+
     this.dispatchEvent(
       new CustomEvent('qti-computed-context-updated', {
         detail: this.computedContext,
@@ -627,6 +638,42 @@ export class TestNavigation extends LitElement {
     if (raw === undefined || raw === null || Array.isArray(raw)) return null;
     const parsed = parseFloat(raw.toString());
     return Number.isNaN(parsed) ? null : parsed;
+  }
+
+  /**
+   * After computedContext has been rebuilt, fire one-shot transition events the
+   * first time each test-part — and the test as a whole — becomes done.
+   * Completion detection belongs here because this element already owns the
+   * per-item view; `test-processing.mixin` listens and runs outcome processing
+   * in response, so `atEnd` feedback gets a chance to evaluate.
+   *
+   * One-shot per test: a part that is done stays done, and re-announcing on
+   * every context rebuild would re-run outcome processing on every keystroke.
+   */
+  #announceCompletionTransitions(): void {
+    const partsWithItems = this.computedContext.testParts.filter(p => p.sections.some(s => s.items.length > 0));
+    for (const part of partsWithItems) {
+      if (this.#endedParts.has(part.identifier)) continue;
+      const allDone = part.sections.flatMap(s => s.items).every((i: ComputedItem) => i.done === true);
+      if (!allDone) continue;
+      this.#endedParts.add(part.identifier);
+      this.dispatchEvent(
+        new CustomEvent('qti-part-completed', {
+          detail: { partId: part.identifier },
+          bubbles: true,
+          composed: true
+        })
+      );
+    }
+
+    if (
+      !this.#testEnded &&
+      partsWithItems.length > 0 &&
+      partsWithItems.every(p => this.#endedParts.has(p.identifier))
+    ) {
+      this.#testEnded = true;
+      this.dispatchEvent(new CustomEvent('qti-test-completed', { bubbles: true, composed: true }));
+    }
   }
 }
 

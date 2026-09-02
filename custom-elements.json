@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@515: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@517: {  }, length: number }"
               }
             },
             {
@@ -35815,6 +35815,21 @@
             },
             {
               "kind": "method",
+              "name": "#announceCompletionTransitions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "After computedContext has been rebuilt, fire one-shot transition events the\nfirst time each test-part — and the test as a whole — becomes done.\nCompletion detection belongs here because this element already owns the\nper-item view; `test-processing.mixin` listens and runs outcome processing\nin response, so `atEnd` feedback gets a chance to evaluate.\n\nOne-shot per test: a part that is done stays done, and re-announcing on\nevery context rebuild would re-run outcome processing on every keystroke.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#assessmentItemFor",
               "privacy": "private",
               "return": {
@@ -35854,6 +35869,17 @@
                 }
               ],
               "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#endedParts",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "description": "Test-parts whose end-of-part transition has already been announced.",
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -36094,6 +36120,20 @@
             },
             {
               "kind": "field",
+              "name": "#testEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the end-of-test transition has already been announced.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "activeAssessmentItem",
               "type": {
                 "text": "QtiAssessmentItem | undefined"
@@ -36284,6 +36324,26 @@
           "events": [
             {
               "name": "qti-computed-context-updated",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "name": "qti-part-completed",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "name": "qti-test-completed",
               "type": {
                 "text": "CustomEvent"
               },
@@ -49968,6 +50028,12 @@
             },
             {
               "kind": "field",
+              "name": "#handleTestOutcomeChanged",
+              "privacy": "private",
+              "description": "Outcome processing has run, so give every test feedback below this element a\nchance to re-evaluate. The flags travel with the event rather than being\nre-derived here: only the run that concluded a part or the test can satisfy\n`access=\"atEnd\"`, and only feedback scoped to that part should respond."
+            },
+            {
+              "kind": "field",
               "name": "#title",
               "privacy": "private",
               "type": {
@@ -50326,6 +50392,38 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#outcomeMatches",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this feedback's test-level outcome currently names its identifier."
+            },
+            {
+              "kind": "field",
+              "name": "#ownPartId",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The test part this feedback belongs to, or null when it is test-root feedback.",
+              "readonly": true,
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
               "kind": "method",
               "name": "#sessionControlAllowsFeedback",
               "privacy": "private",
@@ -50358,6 +50456,20 @@
               }
             },
             {
+              "kind": "field",
+              "name": "access",
+              "type": {
+                "text": "TestFeedbackAccess"
+              },
+              "privacy": "public",
+              "default": "'atEnd'",
+              "description": "When the feedback may be presented, per the QTI 3 `access` characteristic.\n\n- `atEnd` — only at the conclusion of the test, or of the test part the\n  feedback sits in.\n- `during` — while the test is still in progress, after each instance of\n  outcome processing.",
+              "attribute": "access",
+              "parsedType": {
+                "text": "'atEnd' | 'during'"
+              }
+            },
+            {
               "kind": "method",
               "name": "checkShowFeedback",
               "privacy": "public",
@@ -50367,14 +50479,27 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "trigger",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ atEnd?: boolean; partId?: string | null }"
+                  }
                 }
               ],
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
               },
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-evaluate against the *test* context, rather than the item context the\ninherited implementation reads.\n\n`qti-assessment-test` calls this after each outcome-processing run, passing\nwhat that run concluded. `atEnd` feedback responds only to the run that\nended its own scope — the whole test for test-root feedback, or its own\ntest part for part-scoped feedback — while `during` feedback responds to\nevery run.",
               "type": {
-                "text": "checkShowFeedback(outcomeIdentifier: string) => void"
+                "text": "checkShowFeedback(outcomeIdentifier: string, trigger: { atEnd?: boolean; partId?: string | null } = {}) => void"
               }
             },
             {
@@ -50455,11 +50580,19 @@
               }
             }
           ],
-          "superclass": {
-            "name": "QtiModalFeedback",
-            "package": "@qti-components/elements/elements"
-          },
           "attributes": [
+            {
+              "name": "access",
+              "type": {
+                "text": "TestFeedbackAccess"
+              },
+              "default": "'atEnd'",
+              "description": "When the feedback may be presented, per the QTI 3 `access` characteristic.\n\n- `atEnd` — only at the conclusion of the test, or of the test part the\n  feedback sits in.\n- `during` — while the test is still in progress, after each instance of\n  outcome processing.",
+              "fieldName": "access",
+              "parsedType": {
+                "text": "'atEnd' | 'during'"
+              }
+            },
             {
               "name": "identifier",
               "type": {
@@ -50498,6 +50631,10 @@
               }
             }
           ],
+          "superclass": {
+            "name": "QtiModalFeedback",
+            "package": "@qti-components/elements/elements"
+          },
           "events": [
             {
               "name": "qti-register-feedback",
@@ -52142,6 +52279,17 @@
             },
             {
               "kind": "method",
+              "name": "#announceCompletionTransitions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "After computedContext has been rebuilt, fire one-shot transition events the\nfirst time each test-part — and the test as a whole — becomes done.\nCompletion detection belongs here because this element already owns the\nper-item view; `test-processing.mixin` listens and runs outcome processing\nin response, so `atEnd` feedback gets a chance to evaluate.\n\nOne-shot per test: a part that is done stays done, and re-announcing on\nevery context rebuild would re-run outcome processing on every keystroke."
+            },
+            {
+              "kind": "method",
               "name": "#assessmentItemFor",
               "privacy": "private",
               "return": {
@@ -52177,6 +52325,13 @@
                 }
               ],
               "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough."
+            },
+            {
+              "kind": "field",
+              "name": "#endedParts",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "description": "Test-parts whose end-of-part transition has already been announced."
             },
             {
               "kind": "method",
@@ -52357,6 +52512,16 @@
             },
             {
               "kind": "field",
+              "name": "#testEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the end-of-test transition has already been announced."
+            },
+            {
+              "kind": "field",
               "name": "activeAssessmentItem",
               "type": {
                 "text": "QtiAssessmentItem | undefined"
@@ -52478,6 +52643,18 @@
           "events": [
             {
               "name": "qti-computed-context-updated",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-part-completed",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-test-completed",
               "type": {
                 "text": "CustomEvent"
               }
