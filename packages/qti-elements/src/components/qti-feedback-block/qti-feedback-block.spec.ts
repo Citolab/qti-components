@@ -19,7 +19,10 @@ describe('qti-feedback-block show-feedback constraint', () => {
     container.remove();
   });
 
-  const makeComputedContext = (showFeedback: boolean | undefined): ComputedContext => ({
+  const makeComputedContext = (
+    showFeedback: boolean | undefined,
+    item: { maxAttempts?: number; adaptive?: boolean; completionStatus?: string } = {}
+  ): ComputedContext => ({
     view: 'candidate',
     identifier: 'test-1',
     title: 'Test',
@@ -43,7 +46,8 @@ describe('qti-feedback-block show-feedback constraint', () => {
                 href: '',
                 variables: [],
                 showFeedback,
-                maxAttempts: 1
+                maxAttempts: 1,
+                ...item
               }
             ]
           }
@@ -131,6 +135,94 @@ describe('qti-feedback-block show-feedback constraint', () => {
     await assessmentItem.updateComplete;
 
     // No constraint set — default behavior
+    assessmentItem.updateResponseVariable('RESPONSE', 'ChoiceB');
+    assessmentItem.processResponse();
+
+    const feedbackBlock = assessmentItem.querySelector('qti-feedback-block');
+    expect(feedbackBlock.showStatus).toBe('off');
+  });
+
+  /**
+   * "A value of max-attempts greater than 1, by definition, indicates that any
+   * applicable feedback must be shown." show-feedback only speaks for the state
+   * after the last attempt, so it cannot suppress feedback while attempts remain.
+   */
+  it('shows feedback while attempts remain, even when showFeedback is false', async () => {
+    new ContextProvider(container, {
+      context: computedContext,
+      initialValue: makeComputedContext(false, { maxAttempts: 2 })
+    });
+
+    render(feedbackTemplate, container);
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    await assessmentItem.updateComplete;
+
+    // One attempt of two — not yet out of attempts.
+    assessmentItem.updateResponseVariable('RESPONSE', 'ChoiceB');
+    assessmentItem.processResponse();
+
+    const feedbackBlock = assessmentItem.querySelector('qti-feedback-block');
+    expect(feedbackBlock.showStatus).toBe('on');
+  });
+
+  /**
+   * `max-attempts="0"` is "no limit", so the candidate never reaches the end of a
+   * last attempt and show-feedback never applies.
+   */
+  it('shows feedback with unlimited attempts, even when showFeedback is false', async () => {
+    new ContextProvider(container, {
+      context: computedContext,
+      initialValue: makeComputedContext(false, { maxAttempts: 0 })
+    });
+
+    render(feedbackTemplate, container);
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    await assessmentItem.updateComplete;
+
+    assessmentItem.updateResponseVariable('RESPONSE', 'ChoiceB');
+    assessmentItem.processResponse();
+
+    const feedbackBlock = assessmentItem.querySelector('qti-feedback-block');
+    expect(feedbackBlock.showStatus).toBe('on');
+  });
+
+  /**
+   * "For adaptive items, the value of max-attempts is ignored as the number of
+   * attempts is limited by the value of the completionStatus built-in outcome
+   * variable." An adaptive item mid-sequence is not out of attempts.
+   */
+  it('shows feedback for an adaptive item that is not yet completed', async () => {
+    new ContextProvider(container, {
+      context: computedContext,
+      initialValue: makeComputedContext(false, { adaptive: true, maxAttempts: 1, completionStatus: 'incomplete' })
+    });
+
+    render(feedbackTemplate, container);
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    await assessmentItem.updateComplete;
+
+    assessmentItem.updateResponseVariable('RESPONSE', 'ChoiceB');
+    assessmentItem.processResponse();
+
+    const feedbackBlock = assessmentItem.querySelector('qti-feedback-block');
+    expect(feedbackBlock.showStatus).toBe('on');
+  });
+
+  /** Once an adaptive item is completed, show-feedback decides. */
+  it('hides feedback for a completed adaptive item when showFeedback is false', async () => {
+    new ContextProvider(container, {
+      context: computedContext,
+      initialValue: makeComputedContext(false, { adaptive: true, maxAttempts: 0, completionStatus: 'completed' })
+    });
+
+    render(feedbackTemplate, container);
+
+    const assessmentItem = container.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    await assessmentItem.updateComplete;
+
     assessmentItem.updateResponseVariable('RESPONSE', 'ChoiceB');
     assessmentItem.processResponse();
 
