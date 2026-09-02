@@ -131,7 +131,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.3.2",
     "madge": "^8.0.0",
-    "mdx-mermaid": "^2.0.3",
+    "mdx-mermaid": "^2.0.4",
     "mermaid": "^11.12.2",
     "modern-normalize": "^3.0.1",
     "msw": "^2.12.7",
@@ -174,12 +174,29 @@
   "homepage": "https://github.com/Citolab/qti-components#readme",
   "overrides": {
     "storybook": "$storybook",
-    "basic-ftp": "^5.2.0"
+    "basic-ftp": "^5.3.1"
   },
   "pnpm": {
     "overrides": {
       "caniuse-lite": "1.0.30001805",
-      "basic-ftp": "^5.2.0"
+      "basic-ftp": "^5.3.1",
+      "minimatch@<3.1.4": "3.1.4",
+      "minimatch@>=9.0.0 <9.0.7": "9.0.7",
+      "brace-expansion@<1.1.18": "1.1.18",
+      "brace-expansion@>=2.0.0 <2.1.4": "2.1.4",
+      "brace-expansion@>=5.0.0 <5.0.9": "5.0.9",
+      "rollup@<4.59.0": "4.59.0",
+      "ajv@>=8.0.0 <8.18.0": "8.18.0",
+      "fast-uri@<3.1.7": "3.1.7",
+      "undici@<6.28.0": "6.28.0",
+      "picomatch@<2.3.2": "2.3.2",
+      "yaml@<2.8.3": "2.8.3",
+      "ip-address@<10.3.1": "10.3.1",
+      "uuid@>=11.0.0 <11.1.1": "11.1.1",
+      "shell-quote@<1.9.0": "1.9.0",
+      "js-yaml@>=4.0.0 <4.3.1": "4.3.1",
+      "decode-uri-component@<0.5.0": "0.5.0",
+      "mdx-mermaid>puppeteer": "-"
     }
   },
   "msw": {
