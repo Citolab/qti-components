@@ -8,7 +8,6 @@ export * from './components/qti-response-else/qti-response-else';
 export * from './components/qti-response-else-if/qti-response-else-if';
 export * from './components/qti-response-if/qti-response-if';
 
-export * from './components/qti-condition/qti-condition-base';
 export * from './components/qti-outcome-condition/qti-outcome-condition';
 export * from './components/qti-outcome-else/qti-outcome-else';
 export * from './components/qti-outcome-else-if/qti-outcome-else-if';

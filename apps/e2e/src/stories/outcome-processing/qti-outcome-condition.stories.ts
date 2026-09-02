@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-outcome-condition'
+  title: 'outcome-processing/qti-outcome-condition'
 };
 export default meta;
 
