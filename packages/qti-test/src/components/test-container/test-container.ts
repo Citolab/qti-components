@@ -89,10 +89,30 @@ export class TestContainer extends LitElement {
         }
       }
 
-      this.testDoc = api.htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
+      this.#setTestDoc(api.htmlDoc(this.#resolvedCustomElementRegistry ?? undefined));
     } catch (error) {
       console.error('Error loading or parsing XML:', error);
     }
+  }
+
+  /**
+   * Assign a new test document and announce it.
+   *
+   * The announcement has to happen here rather than on
+   * `qti-assessment-test-connected`, because by then the new document's
+   * children have already connected and registered themselves — a host that
+   * resets its context on that event throws those registrations away. Lit's
+   * re-render is async, so a handler running now still gets in before any child
+   * of the new `qti-assessment-test` connects.
+   */
+  #setTestDoc(testDoc: DocumentFragment): void {
+    this.testDoc = testDoc;
+    this.dispatchEvent(
+      new CustomEvent('qti-testdoc-loaded', {
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   @watch('testXML', { waitUntilFirstUpdate: true })
@@ -100,10 +120,12 @@ export class TestContainer extends LitElement {
     if (!this.testXML) return;
     try {
       const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
-      this.testDoc = qtiTransformTest()
-        .parse(this.testXML)
-        .shuffleOrdering(explicitSeed)
-        .htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);
+      this.#setTestDoc(
+        qtiTransformTest()
+          .parse(this.testXML)
+          .shuffleOrdering(explicitSeed)
+          .htmlDoc(this.#resolvedCustomElementRegistry ?? undefined)
+      );
     } catch (error) {
       console.error('Error parsing XML:', error);
     }

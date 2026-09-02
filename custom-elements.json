@@ -49273,6 +49273,25 @@
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "#setTestDoc",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "testDoc",
+                  "type": {
+                    "text": "DocumentFragment"
+                  }
+                }
+              ],
+              "description": "Assign a new test document and announce it.\n\nThe announcement has to happen here rather than on\n`qti-assessment-test-connected`, because by then the new document's\nchildren have already connected and registered themselves — a host that\nresets its context on that event throws those registrations away. Lit's\nre-render is async, so a handler running now still gets in before any child\nof the new `qti-assessment-test` connects."
+            },
+            {
               "kind": "field",
               "name": "#templateContent",
               "privacy": "private",
@@ -49338,6 +49357,14 @@
               },
               "default": "null",
               "description": "The raw XML string"
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-testdoc-loaded",
+              "type": {
+                "text": "CustomEvent"
+              }
             }
           ],
           "attributes": [
