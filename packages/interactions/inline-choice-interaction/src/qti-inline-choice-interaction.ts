@@ -215,13 +215,17 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     this._slotObserver = null;
   }
 
-  override willUpdate(changed: PropertyValues<this>) {
+  /* `PropertyValues`, not `PropertyValues<this>`: the polymorphic `this` narrows the
+  parameter per subclass and breaks structural compatibility with LitElement, which
+  is what `Constructor<LitElement>` — the standard Lit mixin constraint — checks.
+  See Interaction#firstUpdated in @qti-components/base. */
+  override willUpdate(changed: PropertyValues) {
     if (changed.has('configContext')) {
       this.#updateOptions();
     }
   }
 
-  override updated(changed: PropertyValues<this>) {
+  override updated(changed: PropertyValues) {
     const dropdownOpenKey = '_dropdownOpen' as keyof QtiInlineChoiceInteraction;
     if (changed.has(dropdownOpenKey) && this._dropdownOpen) {
       this.#syncSlottedChoices();

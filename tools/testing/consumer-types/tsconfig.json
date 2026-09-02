@@ -1,0 +1,32 @@
+{
+  /*
+   * The compilerOptions here are what a CONSUMER compiles with. `paths` is the one
+   * exception: it exists ONLY so this fixture resolves inside the workspace, where
+   * @citolab/qti-components is not installed and every import would otherwise be a red
+   * squiggle in the editor. The entries deliberately point at the BUILT declarations,
+   * which is roughly what a consumer receives, so the editor shows the published surface.
+   * (They are relative to this file — `paths` needs no `baseUrl`, which is deprecated.)
+   *
+   * tools/testing/consumer-types.mjs DROPS `paths` when it writes this config into the
+   * scratch project, so the actual check resolves through node_modules from the packed
+   * tarball. Never let the check depend on these mappings.
+   */
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "lib": ["es2022", "dom"],
+    "types": [],
+    "skipLibCheck": true,
+
+    "paths": {
+      "@citolab/qti-components": ["../../../packages/qti-components/dist/index.d.ts"],
+      "@citolab/qti-components/corrections": ["../../../packages/qti-components/dist/corrections.d.ts"],
+      "@citolab/qti-components/qti-test": ["../../../packages/qti-components/dist/test.d.ts"],
+      "lit": ["../../../packages/qti-components/node_modules/lit"]
+    }
+  },
+  "include": ["index.ts"]
+}

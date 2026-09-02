@@ -71,7 +71,7 @@ describe('response attribute coverage', () => {
   });
 
   it('the exclusion list names only real interactions', () => {
-    const tags = new Set(interactions.map(({ tag }) => tag));
+    const tags = new Set<string>(interactions.map(({ tag }) => tag));
     const stale = Object.keys(NO_RESPONSE_ATTRIBUTE).filter(tag => !tags.has(tag));
 
     // A renamed or removed interaction would otherwise leave a permanent free pass behind.

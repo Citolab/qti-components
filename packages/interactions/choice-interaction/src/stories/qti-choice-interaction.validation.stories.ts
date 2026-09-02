@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { expect, fireEvent } from 'storybook/test';
+import { expect, fireEvent, spyOn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { Test } from '../qti-choice-interaction.stories';
@@ -382,7 +382,7 @@ export const ValidationDisplayModeNative: Story = {
       };
     }
 
-    const nativeSpy = globalThis.vi.spyOn(interaction.internals, 'reportValidity');
+    const nativeSpy = spyOn(interaction.internals, 'reportValidity');
 
     interaction.validate();
     interaction.reportValidity();
@@ -428,7 +428,7 @@ export const ValidationDisplayModeBoth: Story = {
       };
     }
 
-    const nativeSpy = globalThis.vi.spyOn(interaction.internals, 'reportValidity');
+    const nativeSpy = spyOn(interaction.internals, 'reportValidity');
 
     interaction.validate();
     interaction.reportValidity();

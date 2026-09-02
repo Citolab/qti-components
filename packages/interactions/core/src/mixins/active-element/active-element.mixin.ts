@@ -138,7 +138,11 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       this.internals = this.attachInternals();
     }
 
-    override willUpdate(changed: PropertyValues<this>) {
+    /* `PropertyValues`, not `PropertyValues<this>`: the polymorphic `this` narrows the
+    parameter per subclass and breaks structural compatibility with LitElement, which
+    is what `Constructor<LitElement>` — the standard Lit mixin constraint — checks.
+    See Interaction#firstUpdated in @qti-components/base. */
+    override willUpdate(changed: PropertyValues) {
       super.willUpdate(changed);
       this.#syncChoiceRole();
     }
