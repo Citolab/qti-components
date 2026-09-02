@@ -74,10 +74,12 @@ export abstract class QtiFeedback extends LitElement {
    * of allowed attempts have been used (or for adaptive items, completionStatus has
    * been set to completed)" does `show-feedback` decide.
    *
-   * So the question is whether the item is out of attempts, and that is answered
-   * differently per item kind:
-   *  - adaptive items ignore max-attempts entirely; completionStatus bounds them;
-   *  - `max-attempts="0"` means no limit, so the state is never reached.
+   * This only ever forces feedback off, so `show-feedback` being true settles it:
+   * there is no state in which the constraint hides feedback. It defaults to
+   * false, and an absent value suppresses once the attempts are gone.
+   *
+   * That leaves one question — is the item out of attempts? — and the two item
+   * kinds answer it from different variables, so each reads only its own.
    */
   #sessionControlAllowsFeedback(): boolean {
     if (!this._computedContext) return true;
@@ -85,16 +87,17 @@ export abstract class QtiFeedback extends LitElement {
       ?.find(tp => tp.active)
       ?.sections.flatMap(s => s.items)
       .find(i => i.active);
-    if (!activeItem) return true;
+    if (!activeItem || activeItem.showFeedback) return true;
 
+    // Adaptive items ignore max-attempts: "the number of attempts is limited by
+    // the value of the completionStatus built-in outcome variable".
+    if (activeItem.adaptive) return activeItem.completionStatus !== 'completed';
+
+    // `max-attempts="0"` is "no limit", so the last attempt never arrives.
     const maxAttempts = activeItem.maxAttempts ?? 1;
+    if (maxAttempts <= 0) return true;
+
     const numAttempts = Number(this._context?.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
-
-    const outOfAttempts = activeItem.adaptive
-      ? activeItem.completionStatus === 'completed'
-      : maxAttempts > 0 && numAttempts >= maxAttempts;
-
-    // `show-feedback` defaults to false per the spec, so an absent value suppresses.
-    return !outOfAttempts || activeItem.showFeedback === true;
+    return numAttempts < maxAttempts;
   }
 }
