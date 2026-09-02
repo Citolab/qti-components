@@ -28,7 +28,7 @@
   },
   "scripts": {
     "local:workspace-publish:force": "pnpm run build && pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 publish --access public --ignore-scripts --no-git-checks",
-    "ci:push-quality": "run-s lint madge build test publint attw",
+    "ci:push-quality": "run-s lint madge build test publint attw consumer-types",
     "storybook": "run-p storybook:dev cem:storybook:watch",
     "lint": "eslint && pnpm run lint:css && pnpm run lint:vocab",
     "test": "node tools/testing/pretest-clean.mjs && pnpm run build && vitest run",
@@ -42,6 +42,7 @@
     "cem:qti": "pnpm --filter @qti-components/interactions run cem:qti",
     "build": "pnpm -r run build",
     "attw": "env NPM_CONFIG_CACHE=/tmp/qti-components-npm-cache pnpm -r run attw",
+    "consumer-types": "node tools/testing/consumer-types.mjs",
     "publint": "pnpm -r run publint",
     "yalc": "pnpm -r run yalc",
     "yalc:push": "pnpm -r run yalc:push",

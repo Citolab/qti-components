@@ -79,5 +79,11 @@
       "@qti-components/upload-interaction": ["./packages/interactions/upload-interaction/src/index.ts"],
       "@qti-components/upload-interaction/*": ["./packages/interactions/upload-interaction/src/*"]
     }
-  }
+  },
+  "exclude": [
+    // Compiled only inside the scratch project tools/testing/consumer-types.mjs creates,
+    // against an npm install of the packed tarball. Its imports deliberately do not
+    // resolve from inside the workspace.
+    "tools/testing/consumer-types"
+  ]
 }

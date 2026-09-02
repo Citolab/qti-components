@@ -1,10 +1,22 @@
 {
     "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "./dist",
-    },
+    /*
+     * This project has no source of its own to compile: `src` holds 41 story files and 2 spec
+     * files, and the `exclude` below drops all of them, which is why both TS 5.9 and TS 6
+     * reported TS18003 "No inputs were found". The vite-env reference in `include` is what
+     * gives it an input; it declares '*.css?inline' and friends, as every package tsconfig does.
+     *
+     * No `outDir`: the root config this extends sets `noEmit`, so nothing is emitted here and
+     * the setting was inert. It is dropped because TS 6 only enforces "every input under
+     * rootDir" when there is an output layout to enforce it for.
+     *
+     * Dropping "**\/*.stories.ts" from `exclude` would make this project actually type-check the
+     * e2e stories. That currently surfaces 21 TS2339 errors, so it is left as it was found.
+     */
+    "compilerOptions": {},
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "../../tools/storybook/vite-env.d.ts"
     ],
     "exclude": [
         "dist",
