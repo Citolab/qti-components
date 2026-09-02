@@ -37,7 +37,7 @@ export default [
      * that observer, so the state is the form that works everywhere and the [qti-droppable]
      * attribute that used to accompany it is gone. Positive opt-in, so tabular headers are untouched.
      */
-    :host(:state(droppable)) {
+    :host(:is(:state(droppable), [data-state~='droppable'])) {
       /*
        * The CARD token, not the slot one. This element is a droppable only in match, and match
        * publishes no measurement — so reading --qti-dropzone-min-height here meant reading a name
@@ -63,7 +63,7 @@ export default [
       justify-content: space-between;
     }
 
-    :host(:state(droppable)) [part~='drop'] {
+    :host(:is(:state(droppable), [data-state~='droppable'])) [part~='drop'] {
       /*
        * Match's dropzones are NOT auto-sized from the chips: a match target is a category, and
        * should look able to hold several answers rather than hugging the widest one. So this reads
@@ -103,7 +103,7 @@ export default [
     }
 
     /* The label sits against the drop region below it. */
-    :host(:state(droppable)) [part~='label'] {
+    :host(:is(:state(droppable), [data-state~='droppable'])) [part~='label'] {
       align-content: flex-end;
     }
 
@@ -117,7 +117,7 @@ export default [
      *   [part~='drag']  a chip a drop target renders, where that selector cannot reach it — match's
      *                   selector names a light-DOM ancestry the placed clone no longer has
      */
-    :host(:state(drag)) [part~='drop'],
+    :host(:is(:state(drag), [data-state~='drag'])) [part~='drop'],
     :host([part~='drag']) [part~='drop'] {
       display: none;
     }

@@ -191,7 +191,15 @@ export default defineConfig({
         test: {
           name: 'tests',
           setupFiles: ['./tools/testing/setup/index.js'],
-          include: ['packages/**/*.spec.ts', 'packages/**/*.test.ts', 'apps/**/*.spec.ts', 'apps/**/*.test.ts'],
+          include: [
+            'packages/**/*.spec.ts',
+            'packages/**/*.test.ts',
+            'apps/**/*.spec.ts',
+            'apps/**/*.test.ts',
+            // Build tooling that shapes shipped CSS is functional code, so it is
+            // covered here too — see tools/postcss/custom-state-fallback.mjs.
+            'tools/**/*.spec.ts'
+          ],
           globals: true,
           typecheck: {
             tsconfig: './tsconfig.json'
