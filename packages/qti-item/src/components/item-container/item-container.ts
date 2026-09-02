@@ -34,15 +34,15 @@ export class ItemContainer extends LitElement {
 
   /** URL of the item to load */
   @property({ type: String, attribute: 'item-url' })
-  itemURL: string = null;
+  itemURL: string | null = null;
 
   /** A parsed HTML document */
   @state()
-  itemDoc: DocumentFragment = null;
+  itemDoc: DocumentFragment | null = null;
 
   /** The raw XML string */
   @state()
-  itemXML: string = null;
+  itemXML: string | null = null;
 
   @state()
   @consume({ context: qtiContext, subscribe: true })
