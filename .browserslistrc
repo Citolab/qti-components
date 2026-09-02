@@ -1,0 +1,5 @@
+# Browser support floor. Safari/iOS 16.4 is the hard minimum imposed by
+# unguarded ElementInternals.attachInternals in the interaction base classes.
+defaults
+safari >= 16.4
+ios_saf >= 16.4
