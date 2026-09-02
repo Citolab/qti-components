@@ -37,10 +37,6 @@ export class QtiItemSessionControl extends LitElement {
   @property({ type: Boolean, converter: stringToBooleanConverter, attribute: 'validate-responses' })
   validateResponses = false;
 
-  // protected override createRenderRoot(): HTMLElement | DocumentFragment {
-  //   return this;
-  // }
-
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     await this.updateComplete;
