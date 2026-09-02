@@ -46,7 +46,12 @@ const getTargets = (canvasElement: HTMLElement) => {
 };
 
 const normalizeResponse = (interaction: QtiMatchInteraction): string[] => {
-  const raw = interaction.response;
+  /*
+   * The getter is declared `string[]`, but tabular mode stores `_response` as
+   * `string | string[]` and casts on the way out, so a comma-joined string can still arrive
+   * here at runtime. Widen to the honest type rather than dropping the guard below.
+   */
+  const raw = interaction.response as string | string[] | null;
   if (Array.isArray(raw)) return raw;
   if (!raw) return [];
   return raw.split(',').filter(Boolean);

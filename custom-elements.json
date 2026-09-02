@@ -38559,7 +38559,7 @@
               "kind": "field",
               "name": "itemDoc",
               "type": {
-                "text": "DocumentFragment"
+                "text": "DocumentFragment | null"
               },
               "default": "null",
               "description": "A parsed HTML document"
@@ -38568,7 +38568,7 @@
               "kind": "field",
               "name": "itemURL",
               "type": {
-                "text": "string"
+                "text": "string | null"
               },
               "default": "null",
               "description": "URL of the item to load",
@@ -38578,7 +38578,7 @@
               "kind": "field",
               "name": "itemXML",
               "type": {
-                "text": "string"
+                "text": "string | null"
               },
               "default": "null",
               "description": "The raw XML string"
@@ -38597,7 +38597,7 @@
             {
               "name": "item-url",
               "type": {
-                "text": "string"
+                "text": "string | null"
               },
               "default": "null",
               "description": "URL of the item to load",
@@ -49892,7 +49892,7 @@
               "kind": "field",
               "name": "testDoc",
               "type": {
-                "text": "DocumentFragment"
+                "text": "DocumentFragment | null"
               },
               "default": "null",
               "description": "A parsed HTML document"
@@ -49901,7 +49901,7 @@
               "kind": "field",
               "name": "testURL",
               "type": {
-                "text": "string"
+                "text": "string | null"
               },
               "default": "null",
               "description": "URL of the item to load",
@@ -49911,7 +49911,7 @@
               "kind": "field",
               "name": "testXML",
               "type": {
-                "text": "string"
+                "text": "string | null"
               },
               "default": "null",
               "description": "The raw XML string"
@@ -49921,7 +49921,7 @@
             {
               "name": "test-url",
               "type": {
-                "text": "string"
+                "text": "string | null"
               },
               "default": "null",
               "description": "URL of the item to load",

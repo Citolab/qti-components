@@ -41,6 +41,17 @@ export default defineConfig({
 
   test: {
     setupFiles: process.env.VRT === '1' ? ['./.storybook/vitest.vrt.setup.ts'] : [],
+    /*
+     * The `vrt` project loads all story files to tag-filter (the Storybook plugin ignores
+     * test.include), and an unrelated flaky story can throw "iframe reloaded during a test".
+     * Only `vrt`-tagged stories actually run and assert, so don't let that unrelated unhandled
+     * error abort the whole run.
+     *
+     * This has to live at the root: Vitest lists dangerouslyIgnoreUnhandledErrors in
+     * NonProjectOptions, so the copy that used to sit on the `vrt` project was silently
+     * ignored. Gated on VRT so normal runs still surface unhandled errors.
+     */
+    dangerouslyIgnoreUnhandledErrors: process.env.VRT === '1',
     typecheck: {
       tsconfig: './tsconfig.json'
     },
@@ -137,11 +148,7 @@ export default defineConfig({
               test: {
                 name: 'vrt',
                 setupFiles: ['./.storybook/vitest.vrt.setup.ts'],
-                // The `vrt` project loads all story files to tag-filter (the Storybook plugin
-                // ignores test.include), and an unrelated flaky story can throw "iframe reloaded
-                // during a test". Only `vrt`-tagged stories actually run and assert, so don't let
-                // that unrelated unhandled error abort the whole run.
-                dangerouslyIgnoreUnhandledErrors: true,
+                // dangerouslyIgnoreUnhandledErrors is root-only; see the root `test` block.
                 globals: true,
                 // Large-dimension item images make the screenshot-stability loop slow;
                 // give each capture room beyond the matcher's own timeout below.

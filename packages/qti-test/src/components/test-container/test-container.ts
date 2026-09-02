@@ -33,15 +33,15 @@ export class TestContainer extends LitElement {
 
   /** URL of the item to load */
   @property({ type: String, attribute: 'test-url' })
-  testURL: string = null;
+  testURL: string | null = null;
 
   /** A parsed HTML document */
   @state()
-  testDoc: DocumentFragment = null;
+  testDoc: DocumentFragment | null = null;
 
   /** The raw XML string */
   @state()
-  testXML: string = null;
+  testXML: string | null = null;
 
   @state()
   @consume({ context: qtiContext, subscribe: true })
