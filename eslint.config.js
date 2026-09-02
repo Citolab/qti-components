@@ -192,7 +192,11 @@ export default [
       '**/*.config.*', // Config files (prettier, etc.)
       '**/*.mjs', // Module JavaScript files
       '**/cdn/**', // CDN build files
-      'scripts/**' // Utility scripts
+      'scripts/**', // Utility scripts
+      // Compiled only inside the scratch project tools/testing/consumer-types.mjs builds,
+      // against an npm install of the packed tarball — its imports deliberately do not
+      // resolve from inside the workspace.
+      'tools/testing/consumer-types/**'
     ]
   }
 ];
