@@ -37,6 +37,10 @@ import { QtiNot } from './components/qti-not/qti-not';
 import { QtiNull } from './components/qti-null/qti-null';
 import { QtiOr } from './components/qti-or/qti-or';
 import { QtiOrdered } from './components/qti-ordered/qti-ordered';
+import { QtiOutcomeCondition } from './components/qti-outcome-condition/qti-outcome-condition';
+import { QtiOutcomeElseIf } from './components/qti-outcome-else-if/qti-outcome-else-if';
+import { QtiOutcomeElse } from './components/qti-outcome-else/qti-outcome-else';
+import { QtiOutcomeIf } from './components/qti-outcome-if/qti-outcome-if';
 import { QtiPatternMatch } from './components/qti-pattern-match/qti-pattern-match';
 import { QtiPower } from './components/qti-power/qti-power';
 import { QtiPrintedVariable } from './components/qti-printed-variable/qti-printed-variable';
@@ -102,6 +106,10 @@ export {
   QtiNull,
   QtiOr,
   QtiOrdered,
+  QtiOutcomeCondition,
+  QtiOutcomeElse,
+  QtiOutcomeElseIf,
+  QtiOutcomeIf,
   QtiPatternMatch,
   QtiPower,
   QtiPrintedVariable,
@@ -168,6 +176,10 @@ export const qtiProcessingElements = [
   { tag: 'qti-null', ctor: QtiNull },
   { tag: 'qti-or', ctor: QtiOr },
   { tag: 'qti-ordered', ctor: QtiOrdered },
+  { tag: 'qti-outcome-condition', ctor: QtiOutcomeCondition },
+  { tag: 'qti-outcome-else', ctor: QtiOutcomeElse },
+  { tag: 'qti-outcome-else-if', ctor: QtiOutcomeElseIf },
+  { tag: 'qti-outcome-if', ctor: QtiOutcomeIf },
   { tag: 'qti-pattern-match', ctor: QtiPatternMatch },
   { tag: 'qti-power', ctor: QtiPower },
   { tag: 'qti-printed-variable', ctor: QtiPrintedVariable },

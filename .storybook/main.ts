@@ -61,6 +61,11 @@ const config: StorybookConfig = {
             titlePrefix: 'Item'
           },
           {
+            directory: '../packages/qti-processing/src/components',
+            files: '**/*.stories.*',
+            titlePrefix: 'QTI Processing'
+          },
+          {
             directory: '../packages/qti-test/src/components',
             files: '**/*.stories.*',
             titlePrefix: 'Test'

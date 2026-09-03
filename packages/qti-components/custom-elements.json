@@ -39898,6 +39898,206 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The condition container: walk branches in order, process the first whose\n`shouldProcess()` is true, then stop.",
+          "name": "QtiConditionBase",
+          "members": [
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiRule",
+                "module": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiRule",
+            "module": "/packages/qti-processing/src/components/qti-rule/qti-rule"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "A single branch of a condition (if / else-if / else). It owns the sub-rule\nprocessing; subclasses decide whether the branch applies (`shouldProcess`)\nand which of its children are sub-rules (`getSubRules`).",
+          "name": "QtiConditionBranchBase",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getSubRules",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "QtiRule[]"
+                }
+              },
+              "description": "The sub-rules to process when this branch applies."
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed."
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+        },
+        {
+          "kind": "class",
+          "description": "The `else` branch: no condition (always applies), every child is a sub-rule.",
+          "name": "QtiConditionElseBase",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getSubRules",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "QtiRule[]"
+                }
+              },
+              "description": "The sub-rules to process when this branch applies.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiConditionBranchBase",
+            "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+          }
+        },
+        {
+          "kind": "class",
+          "description": "The `if` / `else-if` branch: first child is the boolean expression, the\nremaining children are the sub-rules processed when it evaluates to true.",
+          "name": "QtiConditionIfBase",
+          "members": [
+            {
+              "kind": "method",
+              "name": "getSubRules",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "QtiRule[]"
+                }
+              },
+              "description": "The sub-rules to process when this branch applies.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "QtiConditionBranchBase",
+            "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "QtiConditionBase",
+          "declaration": {
+            "name": "QtiConditionBase",
+            "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiConditionBranchBase",
+          "declaration": {
+            "name": "QtiConditionBranchBase",
+            "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiConditionElseBase",
+          "declaration": {
+            "name": "QtiConditionElseBase",
+            "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiConditionIfBase",
+          "declaration": {
+            "name": "QtiConditionIfBase",
+            "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-processing/src/components/qti-container-size/qti-container-size.ts",
       "declarations": [
         {
@@ -44648,6 +44848,318 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-outcome-condition/qti-outcome-condition.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOutcomeCondition",
+          "superclass": {
+            "name": "QtiConditionBase",
+            "module": "/packages/qti-processing/src/components/qti-condition/qti-condition-base"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiRule",
+                "module": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
+              },
+              "type": {
+                "text": "process() => void"
+              }
+            }
+          ],
+          "tagName": "qti-outcome-condition",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-outcome-condition/qti-outcome-condition.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-outcome-condition/qti-outcome-condition.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-outcome-condition",
+          "declaration": {
+            "name": "QtiOutcomeCondition",
+            "module": "packages/qti-processing/src/components/qti-outcome-condition/qti-outcome-condition.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeCondition",
+          "declaration": {
+            "name": "QtiOutcomeCondition",
+            "module": "packages/qti-processing/src/components/qti-outcome-condition/qti-outcome-condition.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-outcome-else-if/qti-outcome-else-if.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOutcomeElseIf",
+          "superclass": {
+            "name": "QtiOutcomeIf",
+            "module": "/packages/qti-processing/src/components/qti-outcome-if/qti-outcome-if"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "getSubRules",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "QtiRule[]"
+                }
+              },
+              "description": "The sub-rules to process when this branch applies.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "getSubRules() => QtiRule[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "process() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "shouldProcess() => boolean"
+              }
+            }
+          ],
+          "tagName": "qti-outcome-else-if",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-outcome-else-if/qti-outcome-else-if.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-outcome-else-if/qti-outcome-else-if.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-outcome-else-if",
+          "declaration": {
+            "name": "QtiOutcomeElseIf",
+            "module": "packages/qti-processing/src/components/qti-outcome-else-if/qti-outcome-else-if.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeElseIf",
+          "declaration": {
+            "name": "QtiOutcomeElseIf",
+            "module": "packages/qti-processing/src/components/qti-outcome-else-if/qti-outcome-else-if.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-outcome-else/qti-outcome-else.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOutcomeElse",
+          "superclass": {
+            "name": "QtiConditionElseBase",
+            "module": "/packages/qti-processing/src/components/qti-condition/qti-condition-base"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "getSubRules",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "QtiRule[]"
+                }
+              },
+              "description": "The sub-rules to process when this branch applies.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "getSubRules() => QtiRule[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "process() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "shouldProcess() => boolean"
+              }
+            }
+          ],
+          "tagName": "qti-outcome-else",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-outcome-else/qti-outcome-else.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-outcome-else/qti-outcome-else.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-outcome-else",
+          "declaration": {
+            "name": "QtiOutcomeElse",
+            "module": "packages/qti-processing/src/components/qti-outcome-else/qti-outcome-else.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeElse",
+          "declaration": {
+            "name": "QtiOutcomeElse",
+            "module": "packages/qti-processing/src/components/qti-outcome-else/qti-outcome-else.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-outcome-if/qti-outcome-if.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiOutcomeIf",
+          "superclass": {
+            "name": "QtiConditionIfBase",
+            "module": "/packages/qti-processing/src/components/qti-condition/qti-condition-base"
+          },
+          "members": [
+            {
+              "kind": "method",
+              "name": "getSubRules",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "QtiRule[]"
+                }
+              },
+              "description": "The sub-rules to process when this branch applies.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "getSubRules() => QtiRule[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "process",
+              "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "process() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "shouldProcess() => boolean"
+              }
+            }
+          ],
+          "tagName": "qti-outcome-if",
+          "customElement": true,
+          "modulePath": "packages/qti-processing/src/components/qti-outcome-if/qti-outcome-if.ts",
+          "definitionPath": "packages/qti-processing/src/components/qti-outcome-if/qti-outcome-if.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-outcome-if",
+          "declaration": {
+            "name": "QtiOutcomeIf",
+            "module": "packages/qti-processing/src/components/qti-outcome-if/qti-outcome-if.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeIf",
+          "declaration": {
+            "name": "QtiOutcomeIf",
+            "module": "packages/qti-processing/src/components/qti-outcome-if/qti-outcome-if.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-processing/src/components/qti-pattern-match/qti-pattern-match.ts",
       "declarations": [
         {
@@ -45553,6 +46065,10 @@
           "kind": "class",
           "description": "",
           "name": "QtiResponseCondition",
+          "superclass": {
+            "name": "QtiConditionBase",
+            "module": "/packages/qti-processing/src/components/qti-condition/qti-condition-base"
+          },
           "members": [
             {
               "kind": "method",
@@ -45567,10 +46083,6 @@
               }
             }
           ],
-          "superclass": {
-            "name": "QtiRule",
-            "module": "/packages/qti-processing/src/components/qti-rule/qti-rule"
-          },
           "tagName": "qti-response-condition",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-condition/qti-response-condition.ts",
@@ -45604,19 +46116,11 @@
           "kind": "class",
           "description": "",
           "name": "QtiResponseElseIf",
+          "superclass": {
+            "name": "QtiResponseIf",
+            "module": "/packages/qti-processing/src/components/qti-response-if/qti-response-if"
+          },
           "members": [
-            {
-              "kind": "method",
-              "name": "calculate",
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
-              },
-              "type": {
-                "text": "calculate() => void"
-              }
-            },
             {
               "kind": "method",
               "name": "getSubRules",
@@ -45626,9 +46130,10 @@
                   "text": "QtiRule[]"
                 }
               },
+              "description": "The sub-rules to process when this branch applies.",
               "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
               },
               "type": {
                 "text": "getSubRules() => QtiRule[]"
@@ -45639,18 +46144,32 @@
               "name": "process",
               "privacy": "public",
               "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
               },
               "type": {
                 "text": "process() => void"
               }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "shouldProcess() => boolean"
+              }
             }
           ],
-          "superclass": {
-            "name": "QtiResponseIf",
-            "module": "/packages/qti-processing/src/components/qti-response-if/qti-response-if"
-          },
           "tagName": "qti-response-else-if",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-else-if/qti-response-else-if.ts",
@@ -45684,15 +46203,11 @@
           "kind": "class",
           "description": "",
           "name": "QtiResponseElse",
+          "superclass": {
+            "name": "QtiConditionElseBase",
+            "module": "/packages/qti-processing/src/components/qti-condition/qti-condition-base"
+          },
           "members": [
-            {
-              "kind": "method",
-              "name": "calculate",
-              "privacy": "public",
-              "type": {
-                "text": "calculate() => void"
-              }
-            },
             {
               "kind": "method",
               "name": "getSubRules",
@@ -45702,6 +46217,11 @@
                   "text": "QtiRule[]"
                 }
               },
+              "description": "The sub-rules to process when this branch applies.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
               "type": {
                 "text": "getSubRules() => QtiRule[]"
               }
@@ -45710,19 +46230,37 @@
               "kind": "method",
               "name": "process",
               "privacy": "public",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
               "type": {
                 "text": "process() => void"
               }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "shouldProcess() => boolean"
+              }
             }
           ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
+          "tagName": "qti-response-else",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts",
-          "tagName": "qti-response-else"
+          "definitionPath": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
         }
       ],
       "exports": [
@@ -45752,19 +46290,11 @@
           "kind": "class",
           "description": "",
           "name": "QtiResponseIf",
+          "superclass": {
+            "name": "QtiConditionIfBase",
+            "module": "/packages/qti-processing/src/components/qti-condition/qti-condition-base"
+          },
           "members": [
-            {
-              "kind": "method",
-              "name": "calculate",
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
-              },
-              "type": {
-                "text": "calculate() => void"
-              }
-            },
             {
               "kind": "method",
               "name": "getSubRules",
@@ -45774,9 +46304,10 @@
                   "text": "QtiRule[]"
                 }
               },
+              "description": "The sub-rules to process when this branch applies.",
               "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
               },
               "type": {
                 "text": "getSubRules() => QtiRule[]"
@@ -45787,18 +46318,32 @@
               "name": "process",
               "privacy": "public",
               "inheritedFrom": {
-                "name": "QtiResponseElse",
-                "module": "packages/qti-processing/src/components/qti-response-else/qti-response-else.ts"
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
               },
               "type": {
                 "text": "process() => void"
               }
+            },
+            {
+              "kind": "method",
+              "name": "shouldProcess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this branch's sub-rules should be processed.",
+              "inheritedFrom": {
+                "name": "QtiConditionBranchBase",
+                "module": "packages/qti-processing/src/components/qti-condition/qti-condition-base.ts"
+              },
+              "type": {
+                "text": "shouldProcess() => boolean"
+              }
             }
           ],
-          "superclass": {
-            "name": "QtiResponseElse",
-            "module": "/packages/qti-processing/src/components/qti-response-else/qti-response-else"
-          },
           "tagName": "qti-response-if",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-response-if/qti-response-if.ts",
@@ -47518,9 +48063,9 @@
           "kind": "variable",
           "name": "qtiProcessingElements",
           "type": {
-            "text": "[\n  { tag: 'qti-and', ctor: QtiAnd },\n  { tag: 'qti-any-n', ctor: QtiAnyN },\n  { tag: 'qti-base-value', ctor: QtiBaseValue },\n  { tag: 'qti-container-size', ctor: QtiContainerSize },\n  { tag: 'qti-contains', ctor: QtiContains },\n  { tag: 'qti-correct', ctor: QtiCorrect },\n  { tag: 'qti-default', ctor: QtiDefault },\n  { tag: 'qti-delete', ctor: QtiDelete },\n  { tag: 'qti-divide', ctor: QtiDivide },\n  { tag: 'qti-duration-gte', ctor: QtiDurationGte },\n  { tag: 'qti-duration-lt', ctor: QtiDurationLt },\n  { tag: 'qti-equal', ctor: QtiEqual },\n  { tag: 'qti-equal-rounded', ctor: QtiEqualRounded },\n  { tag: 'qti-field-value', ctor: QtiFieldValue },\n  { tag: 'qti-gcd', ctor: QtiGcd },\n  { tag: 'qti-gt', ctor: QtiGt },\n  { tag: 'qti-gte', ctor: QtiGte },\n  { tag: 'qti-index', ctor: QtiIndex },\n  { tag: 'qti-inside', ctor: QtiInside },\n  { tag: 'qti-integer-divide', ctor: QtiIntegerDivide },\n  { tag: 'qti-integer-modulus', ctor: QtiIntegerModulus },\n  { tag: 'qti-integer-to-float', ctor: QtiIntegerToFloat },\n  { tag: 'qti-is-null', ctor: QtiIsNull },\n  { tag: 'qti-lcm', ctor: QtiLcm },\n  { tag: 'qti-lookup-outcome-value', ctor: QtiLookupOutcomeValue },\n  { tag: 'qti-lt', ctor: QtiLt },\n  { tag: 'qti-lte', ctor: QtiLte },\n  { tag: 'qti-map-response', ctor: QtiMapResponse },\n  { tag: 'qti-map-response-point', ctor: QtiMapResponsePoint },\n  { tag: 'qti-match', ctor: QtiMatch },\n  { tag: 'qti-math-operator', ctor: QtiMathOperator },\n  { tag: 'qti-max', ctor: QtiMax },\n  { tag: 'qti-member', ctor: QtiMember },\n  { tag: 'qti-min', ctor: QtiMin },\n  { tag: 'qti-multiple', ctor: QtiMultiple },\n  { tag: 'qti-not', ctor: QtiNot },\n  { tag: 'qti-null', ctor: QtiNull },\n  { tag: 'qti-or', ctor: QtiOr },\n  { tag: 'qti-ordered', ctor: QtiOrdered },\n  { tag: 'qti-pattern-match', ctor: QtiPatternMatch },\n  { tag: 'qti-power', ctor: QtiPower },\n  { tag: 'qti-printed-variable', ctor: QtiPrintedVariable },\n  { tag: 'qti-product', ctor: QtiProduct },\n  { tag: 'qti-random', ctor: QtiRandom },\n  { tag: 'qti-random-integer', ctor: QtiRandomInteger },\n  { tag: 'qti-repeat', ctor: QtiRepeat },\n  { tag: 'qti-response-condition', ctor: QtiResponseCondition },\n  { tag: 'qti-response-else', ctor: QtiResponseElse },\n  { tag: 'qti-response-else-if', ctor: QtiResponseElseIf },\n  { tag: 'qti-response-if', ctor: QtiResponseIf },\n  { tag: 'qti-round', ctor: QtiRound },\n  { tag: 'qti-round-to', ctor: QtiRoundTo },\n  { tag: 'qti-rule', ctor: QtiRule },\n  { tag: 'qti-set-correct-response', ctor: QtiSetCorrectResponse },\n  { tag: 'qti-set-outcome-value', ctor: QtiSetOutcomeValue },\n  { tag: 'qti-set-template-value', ctor: QtiSetTemplateValue },\n  { tag: 'qti-stats-operator', ctor: QtiStatsOperator },\n  { tag: 'qti-string-match', ctor: QtiStringMatch },\n  { tag: 'qti-substring', ctor: QtiSubstring },\n  { tag: 'qti-subtract', ctor: QtiSubtract },\n  { tag: 'qti-sum', ctor: QtiSum },\n  { tag: 'qti-truncate', ctor: QtiTruncate },\n  { tag: 'qti-variable', ctor: QtiVariable }\n]"
+            "text": "[\n  { tag: 'qti-and', ctor: QtiAnd },\n  { tag: 'qti-any-n', ctor: QtiAnyN },\n  { tag: 'qti-base-value', ctor: QtiBaseValue },\n  { tag: 'qti-container-size', ctor: QtiContainerSize },\n  { tag: 'qti-contains', ctor: QtiContains },\n  { tag: 'qti-correct', ctor: QtiCorrect },\n  { tag: 'qti-default', ctor: QtiDefault },\n  { tag: 'qti-delete', ctor: QtiDelete },\n  { tag: 'qti-divide', ctor: QtiDivide },\n  { tag: 'qti-duration-gte', ctor: QtiDurationGte },\n  { tag: 'qti-duration-lt', ctor: QtiDurationLt },\n  { tag: 'qti-equal', ctor: QtiEqual },\n  { tag: 'qti-equal-rounded', ctor: QtiEqualRounded },\n  { tag: 'qti-field-value', ctor: QtiFieldValue },\n  { tag: 'qti-gcd', ctor: QtiGcd },\n  { tag: 'qti-gt', ctor: QtiGt },\n  { tag: 'qti-gte', ctor: QtiGte },\n  { tag: 'qti-index', ctor: QtiIndex },\n  { tag: 'qti-inside', ctor: QtiInside },\n  { tag: 'qti-integer-divide', ctor: QtiIntegerDivide },\n  { tag: 'qti-integer-modulus', ctor: QtiIntegerModulus },\n  { tag: 'qti-integer-to-float', ctor: QtiIntegerToFloat },\n  { tag: 'qti-is-null', ctor: QtiIsNull },\n  { tag: 'qti-lcm', ctor: QtiLcm },\n  { tag: 'qti-lookup-outcome-value', ctor: QtiLookupOutcomeValue },\n  { tag: 'qti-lt', ctor: QtiLt },\n  { tag: 'qti-lte', ctor: QtiLte },\n  { tag: 'qti-map-response', ctor: QtiMapResponse },\n  { tag: 'qti-map-response-point', ctor: QtiMapResponsePoint },\n  { tag: 'qti-match', ctor: QtiMatch },\n  { tag: 'qti-math-operator', ctor: QtiMathOperator },\n  { tag: 'qti-max', ctor: QtiMax },\n  { tag: 'qti-member', ctor: QtiMember },\n  { tag: 'qti-min', ctor: QtiMin },\n  { tag: 'qti-multiple', ctor: QtiMultiple },\n  { tag: 'qti-not', ctor: QtiNot },\n  { tag: 'qti-null', ctor: QtiNull },\n  { tag: 'qti-or', ctor: QtiOr },\n  { tag: 'qti-ordered', ctor: QtiOrdered },\n  { tag: 'qti-outcome-condition', ctor: QtiOutcomeCondition },\n  { tag: 'qti-outcome-else', ctor: QtiOutcomeElse },\n  { tag: 'qti-outcome-else-if', ctor: QtiOutcomeElseIf },\n  { tag: 'qti-outcome-if', ctor: QtiOutcomeIf },\n  { tag: 'qti-pattern-match', ctor: QtiPatternMatch },\n  { tag: 'qti-power', ctor: QtiPower },\n  { tag: 'qti-printed-variable', ctor: QtiPrintedVariable },\n  { tag: 'qti-product', ctor: QtiProduct },\n  { tag: 'qti-random', ctor: QtiRandom },\n  { tag: 'qti-random-integer', ctor: QtiRandomInteger },\n  { tag: 'qti-repeat', ctor: QtiRepeat },\n  { tag: 'qti-response-condition', ctor: QtiResponseCondition },\n  { tag: 'qti-response-else', ctor: QtiResponseElse },\n  { tag: 'qti-response-else-if', ctor: QtiResponseElseIf },\n  { tag: 'qti-response-if', ctor: QtiResponseIf },\n  { tag: 'qti-round', ctor: QtiRound },\n  { tag: 'qti-round-to', ctor: QtiRoundTo },\n  { tag: 'qti-rule', ctor: QtiRule },\n  { tag: 'qti-set-correct-response', ctor: QtiSetCorrectResponse },\n  { tag: 'qti-set-outcome-value', ctor: QtiSetOutcomeValue },\n  { tag: 'qti-set-template-value', ctor: QtiSetTemplateValue },\n  { tag: 'qti-stats-operator', ctor: QtiStatsOperator },\n  { tag: 'qti-string-match', ctor: QtiStringMatch },\n  { tag: 'qti-substring', ctor: QtiSubstring },\n  { tag: 'qti-subtract', ctor: QtiSubtract },\n  { tag: 'qti-sum', ctor: QtiSum },\n  { tag: 'qti-truncate', ctor: QtiTruncate },\n  { tag: 'qti-variable', ctor: QtiVariable }\n]"
           },
-          "default": "[ { tag: 'qti-and', ctor: QtiAnd }, { tag: 'qti-any-n', ctor: QtiAnyN }, { tag: 'qti-base-value', ctor: QtiBaseValue }, { tag: 'qti-container-size', ctor: QtiContainerSize }, { tag: 'qti-contains', ctor: QtiContains }, { tag: 'qti-correct', ctor: QtiCorrect }, { tag: 'qti-default', ctor: QtiDefault }, { tag: 'qti-delete', ctor: QtiDelete }, { tag: 'qti-divide', ctor: QtiDivide }, { tag: 'qti-duration-gte', ctor: QtiDurationGte }, { tag: 'qti-duration-lt', ctor: QtiDurationLt }, { tag: 'qti-equal', ctor: QtiEqual }, { tag: 'qti-equal-rounded', ctor: QtiEqualRounded }, { tag: 'qti-field-value', ctor: QtiFieldValue }, { tag: 'qti-gcd', ctor: QtiGcd }, { tag: 'qti-gt', ctor: QtiGt }, { tag: 'qti-gte', ctor: QtiGte }, { tag: 'qti-index', ctor: QtiIndex }, { tag: 'qti-inside', ctor: QtiInside }, { tag: 'qti-integer-divide', ctor: QtiIntegerDivide }, { tag: 'qti-integer-modulus', ctor: QtiIntegerModulus }, { tag: 'qti-integer-to-float', ctor: QtiIntegerToFloat }, { tag: 'qti-is-null', ctor: QtiIsNull }, { tag: 'qti-lcm', ctor: QtiLcm }, { tag: 'qti-lookup-outcome-value', ctor: QtiLookupOutcomeValue }, { tag: 'qti-lt', ctor: QtiLt }, { tag: 'qti-lte', ctor: QtiLte }, { tag: 'qti-map-response', ctor: QtiMapResponse }, { tag: 'qti-map-response-point', ctor: QtiMapResponsePoint }, { tag: 'qti-match', ctor: QtiMatch }, { tag: 'qti-math-operator', ctor: QtiMathOperator }, { tag: 'qti-max', ctor: QtiMax }, { tag: 'qti-member', ctor: QtiMember }, { tag: 'qti-min', ctor: QtiMin }, { tag: 'qti-multiple', ctor: QtiMultiple }, { tag: 'qti-not', ctor: QtiNot }, { tag: 'qti-null', ctor: QtiNull }, { tag: 'qti-or', ctor: QtiOr }, { tag: 'qti-ordered', ctor: QtiOrdered }, { tag: 'qti-pattern-match', ctor: QtiPatternMatch }, { tag: 'qti-power', ctor: QtiPower }, { tag: 'qti-printed-variable', ctor: QtiPrintedVariable }, { tag: 'qti-product', ctor: QtiProduct }, { tag: 'qti-random', ctor: QtiRandom }, { tag: 'qti-random-integer', ctor: QtiRandomInteger }, { tag: 'qti-repeat', ctor: QtiRepeat }, { tag: 'qti-response-condition', ctor: QtiResponseCondition }, { tag: 'qti-response-else', ctor: QtiResponseElse }, { tag: 'qti-response-else-if', ctor: QtiResponseElseIf }, { tag: 'qti-response-if', ctor: QtiResponseIf }, { tag: 'qti-round', ctor: QtiRound }, { tag: 'qti-round-to', ctor: QtiRoundTo }, { tag: 'qti-rule', ctor: QtiRule }, { tag: 'qti-set-correct-response', ctor: QtiSetCorrectResponse }, { tag: 'qti-set-outcome-value', ctor: QtiSetOutcomeValue }, { tag: 'qti-set-template-value', ctor: QtiSetTemplateValue }, { tag: 'qti-stats-operator', ctor: QtiStatsOperator }, { tag: 'qti-string-match', ctor: QtiStringMatch }, { tag: 'qti-substring', ctor: QtiSubstring }, { tag: 'qti-subtract', ctor: QtiSubtract }, { tag: 'qti-sum', ctor: QtiSum }, { tag: 'qti-truncate', ctor: QtiTruncate }, { tag: 'qti-variable', ctor: QtiVariable } ]"
+          "default": "[ { tag: 'qti-and', ctor: QtiAnd }, { tag: 'qti-any-n', ctor: QtiAnyN }, { tag: 'qti-base-value', ctor: QtiBaseValue }, { tag: 'qti-container-size', ctor: QtiContainerSize }, { tag: 'qti-contains', ctor: QtiContains }, { tag: 'qti-correct', ctor: QtiCorrect }, { tag: 'qti-default', ctor: QtiDefault }, { tag: 'qti-delete', ctor: QtiDelete }, { tag: 'qti-divide', ctor: QtiDivide }, { tag: 'qti-duration-gte', ctor: QtiDurationGte }, { tag: 'qti-duration-lt', ctor: QtiDurationLt }, { tag: 'qti-equal', ctor: QtiEqual }, { tag: 'qti-equal-rounded', ctor: QtiEqualRounded }, { tag: 'qti-field-value', ctor: QtiFieldValue }, { tag: 'qti-gcd', ctor: QtiGcd }, { tag: 'qti-gt', ctor: QtiGt }, { tag: 'qti-gte', ctor: QtiGte }, { tag: 'qti-index', ctor: QtiIndex }, { tag: 'qti-inside', ctor: QtiInside }, { tag: 'qti-integer-divide', ctor: QtiIntegerDivide }, { tag: 'qti-integer-modulus', ctor: QtiIntegerModulus }, { tag: 'qti-integer-to-float', ctor: QtiIntegerToFloat }, { tag: 'qti-is-null', ctor: QtiIsNull }, { tag: 'qti-lcm', ctor: QtiLcm }, { tag: 'qti-lookup-outcome-value', ctor: QtiLookupOutcomeValue }, { tag: 'qti-lt', ctor: QtiLt }, { tag: 'qti-lte', ctor: QtiLte }, { tag: 'qti-map-response', ctor: QtiMapResponse }, { tag: 'qti-map-response-point', ctor: QtiMapResponsePoint }, { tag: 'qti-match', ctor: QtiMatch }, { tag: 'qti-math-operator', ctor: QtiMathOperator }, { tag: 'qti-max', ctor: QtiMax }, { tag: 'qti-member', ctor: QtiMember }, { tag: 'qti-min', ctor: QtiMin }, { tag: 'qti-multiple', ctor: QtiMultiple }, { tag: 'qti-not', ctor: QtiNot }, { tag: 'qti-null', ctor: QtiNull }, { tag: 'qti-or', ctor: QtiOr }, { tag: 'qti-ordered', ctor: QtiOrdered }, { tag: 'qti-outcome-condition', ctor: QtiOutcomeCondition }, { tag: 'qti-outcome-else', ctor: QtiOutcomeElse }, { tag: 'qti-outcome-else-if', ctor: QtiOutcomeElseIf }, { tag: 'qti-outcome-if', ctor: QtiOutcomeIf }, { tag: 'qti-pattern-match', ctor: QtiPatternMatch }, { tag: 'qti-power', ctor: QtiPower }, { tag: 'qti-printed-variable', ctor: QtiPrintedVariable }, { tag: 'qti-product', ctor: QtiProduct }, { tag: 'qti-random', ctor: QtiRandom }, { tag: 'qti-random-integer', ctor: QtiRandomInteger }, { tag: 'qti-repeat', ctor: QtiRepeat }, { tag: 'qti-response-condition', ctor: QtiResponseCondition }, { tag: 'qti-response-else', ctor: QtiResponseElse }, { tag: 'qti-response-else-if', ctor: QtiResponseElseIf }, { tag: 'qti-response-if', ctor: QtiResponseIf }, { tag: 'qti-round', ctor: QtiRound }, { tag: 'qti-round-to', ctor: QtiRoundTo }, { tag: 'qti-rule', ctor: QtiRule }, { tag: 'qti-set-correct-response', ctor: QtiSetCorrectResponse }, { tag: 'qti-set-outcome-value', ctor: QtiSetOutcomeValue }, { tag: 'qti-set-template-value', ctor: QtiSetTemplateValue }, { tag: 'qti-stats-operator', ctor: QtiStatsOperator }, { tag: 'qti-string-match', ctor: QtiStringMatch }, { tag: 'qti-substring', ctor: QtiSubstring }, { tag: 'qti-subtract', ctor: QtiSubtract }, { tag: 'qti-sum', ctor: QtiSum }, { tag: 'qti-truncate', ctor: QtiTruncate }, { tag: 'qti-variable', ctor: QtiVariable } ]"
         }
       ],
       "exports": [
@@ -47833,6 +48378,38 @@
           "name": "QtiOrdered",
           "declaration": {
             "name": "QtiOrdered",
+            "module": "packages/qti-processing/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeCondition",
+          "declaration": {
+            "name": "QtiOutcomeCondition",
+            "module": "packages/qti-processing/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeElse",
+          "declaration": {
+            "name": "QtiOutcomeElse",
+            "module": "packages/qti-processing/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeElseIf",
+          "declaration": {
+            "name": "QtiOutcomeElseIf",
+            "module": "packages/qti-processing/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiOutcomeIf",
+          "declaration": {
+            "name": "QtiOutcomeIf",
             "module": "packages/qti-processing/src/elements.ts"
           }
         },
