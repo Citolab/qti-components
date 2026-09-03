@@ -980,6 +980,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -1554,6 +1557,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "''",
               "attribute": "response",
               "inheritedFrom": {
@@ -1709,6 +1715,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -2038,7 +2047,10 @@
               "type": {
                 "text": "Readonly<DragDropState> | undefined"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ dragsByTarget: {  }, countByTarget: {  }, nodesByTarget: {  } }"
+              }
             },
             {
               "kind": "field",
@@ -2049,7 +2061,10 @@
               "privacy": "public",
               "readonly": true,
               "default": "true",
-              "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap."
+              "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap.",
+              "parsedType": {
+                "text": "true"
+              }
             },
             {
               "kind": "field",
@@ -2102,9 +2117,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-associable-hotspot",
           "modulePath": "packages/interactions/core/src/elements/qti-associable-hotspot/qti-associable-hotspot.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-associable-hotspot/qti-associable-hotspot.ts",
-          "tagName": "qti-associable-hotspot"
+          "definitionPath": "packages/interactions/core/src/elements/qti-associable-hotspot/qti-associable-hotspot.ts"
         }
       ],
       "exports": [
@@ -2214,7 +2229,10 @@
               },
               "default": "0",
               "attribute": "tabindex",
-              "reflects": true
+              "reflects": true,
+              "parsedType": {
+                "text": "number"
+              }
             }
           ],
           "attributes": [
@@ -2224,7 +2242,10 @@
                 "text": "number | undefined"
               },
               "default": "0",
-              "fieldName": "tabindex"
+              "fieldName": "tabindex",
+              "parsedType": {
+                "text": "number"
+              }
             }
           ],
           "superclass": {
@@ -2232,9 +2253,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-gap-img",
           "modulePath": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts",
-          "tagName": "qti-gap-img"
+          "definitionPath": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts"
         }
       ],
       "exports": [
@@ -2509,7 +2530,10 @@
               },
               "default": "0",
               "attribute": "tabindex",
-              "reflects": true
+              "reflects": true,
+              "parsedType": {
+                "text": "number"
+              }
             },
             {
               "kind": "field",
@@ -2607,6 +2631,9 @@
               },
               "default": "0",
               "fieldName": "tabindex",
+              "parsedType": {
+                "text": "number"
+              },
               "inheritedFrom": {
                 "name": "ActiveElementMixin",
                 "module": "packages/interactions/core/src/mixins/active-element/active-element.mixin.ts"
@@ -2750,7 +2777,10 @@
               "type": {
                 "text": "Readonly<DragDropState> | undefined"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ dragsByTarget: {  }, countByTarget: {  }, nodesByTarget: {  } }"
+              }
             },
             {
               "kind": "field",
@@ -2761,7 +2791,10 @@
               "privacy": "public",
               "readonly": true,
               "default": "true",
-              "description": "Opt-in marker, read by `DragDropSlottedMixin`. While this is true the interaction keeps this\ntarget's chips in its placement map and never touches this element's children."
+              "description": "Opt-in marker, read by `DragDropSlottedMixin`. While this is true the interaction keeps this\ntarget's chips in its placement map and never touches this element's children.",
+              "parsedType": {
+                "text": "true"
+              }
             },
             {
               "kind": "field",
@@ -2799,7 +2832,10 @@
               },
               "default": "0",
               "attribute": "tabindex",
-              "reflects": true
+              "reflects": true,
+              "parsedType": {
+                "text": "number"
+              }
             }
           ],
           "attributes": [
@@ -2852,7 +2888,10 @@
                 "text": "number | undefined"
               },
               "default": "0",
-              "fieldName": "tabindex"
+              "fieldName": "tabindex",
+              "parsedType": {
+                "text": "number"
+              }
             },
             {
               "type": {
@@ -3241,9 +3280,9 @@
               "name": ""
             }
           ],
+          "tagName": "qti-hotspot-choice",
           "modulePath": "packages/interactions/core/src/elements/qti-hotspot-choice/qti-hotspot-choice.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-hotspot-choice/qti-hotspot-choice.ts",
-          "tagName": "qti-hotspot-choice"
+          "definitionPath": "packages/interactions/core/src/elements/qti-hotspot-choice/qti-hotspot-choice.ts"
         }
       ],
       "exports": [
@@ -4119,9 +4158,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-prompt",
           "modulePath": "packages/interactions/core/src/elements/qti-prompt/qti-prompt.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-prompt/qti-prompt.ts",
-          "tagName": "qti-prompt"
+          "definitionPath": "packages/interactions/core/src/elements/qti-prompt/qti-prompt.ts"
         }
       ],
       "exports": [
@@ -4229,7 +4268,10 @@
               "type": {
                 "text": "Readonly<DragDropState> | undefined"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ dragsByTarget: {  }, countByTarget: {  }, nodesByTarget: {  } }"
+              }
             },
             {
               "kind": "field",
@@ -4301,7 +4343,10 @@
               "privacy": "public",
               "readonly": true,
               "default": "true",
-              "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap."
+              "description": "Opt-in marker read by `DragDropSlottedMixin`; see qti-gap.",
+              "parsedType": {
+                "text": "true"
+              }
             },
             {
               "kind": "field",
@@ -4911,7 +4956,10 @@
               },
               "privacy": "public",
               "default": "'show'",
-              "attribute": "show-hide"
+              "attribute": "show-hide",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -4936,7 +4984,10 @@
               },
               "privacy": "public",
               "default": "null",
-              "attribute": "template-identifier"
+              "attribute": "template-identifier",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "attributes": [
@@ -4993,7 +5044,10 @@
               "description": "How `template-identifier` controls visibility.",
               "name": "show-hide",
               "default": "'show'",
-              "fieldName": "showHide"
+              "fieldName": "showHide",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "tabindex",
@@ -5014,7 +5068,10 @@
               "description": "Identifier of a template variable controlling this choice's visibility.",
               "name": "template-identifier",
               "default": "null",
-              "fieldName": "templateIdentifier"
+              "fieldName": "templateIdentifier",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "mixins": [
@@ -10125,7 +10182,10 @@
               "type": {
                 "text": "null"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "any"
+              }
             },
             {
               "kind": "field",
@@ -10161,7 +10221,10 @@
                 "text": "number"
               },
               "readonly": true,
-              "default": "1"
+              "default": "1",
+              "parsedType": {
+                "text": "1"
+              }
             },
             {
               "kind": "method",
@@ -10270,7 +10333,10 @@
               "type": {
                 "text": "null"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "any"
+              }
             },
             {
               "kind": "field",
@@ -10280,7 +10346,10 @@
                 "text": "number"
               },
               "readonly": true,
-              "default": "5"
+              "default": "5",
+              "parsedType": {
+                "text": "5"
+              }
             },
             {
               "kind": "method",
@@ -10316,7 +10385,10 @@
               "type": {
                 "text": "null"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "any"
+              }
             },
             {
               "kind": "method",
@@ -12381,6 +12453,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12838,6 +12913,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -12998,6 +13076,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -13215,7 +13296,10 @@
               "privacy": "public",
               "default": "null",
               "description": "Defines the number of attempts that a user can make using the 'endAttemptInteraction' mechanism (this can be used to limit the number of hints, etc.). [More information](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_EndAttemptInteraction.Attr_count-attempt)",
-              "attribute": "count-attempt"
+              "attribute": "count-attempt",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              }
             },
             {
               "kind": "field",
@@ -13278,7 +13362,10 @@
               },
               "default": "null",
               "description": "Defines the number of attempts that a user can make using the 'endAttemptInteraction' mechanism (this can be used to limit the number of hints, etc.). [More information](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_EndAttemptInteraction.Attr_count-attempt)",
-              "fieldName": "countAttempt"
+              "fieldName": "countAttempt",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              }
             },
             {
               "name": "disabled",
@@ -13309,9 +13396,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-end-attempt-interaction",
           "modulePath": "packages/interactions/end-attempt-interaction/src/qti-end-attempt-interaction.ts",
-          "definitionPath": "packages/interactions/end-attempt-interaction/src/qti-end-attempt-interaction.ts",
-          "tagName": "qti-end-attempt-interaction"
+          "definitionPath": "packages/interactions/end-attempt-interaction/src/qti-end-attempt-interaction.ts"
         }
       ],
       "exports": [
@@ -13451,6 +13538,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -13609,7 +13699,10 @@
               "default": "'plain'",
               "description": "How the response text is presented. Reflected so themes can key off\n`:host([format='preformatted'])`.\n\n`xhtml` is accepted and recorded but renders as `plain`: the field is a `<textarea>`, and\nthere is no rich-text editor behind it. Downgrading loudly beats either refusing valid QTI\nor pretending to support formatting the candidate cannot actually produce.",
               "attribute": "format",
-              "reflects": true
+              "reflects": true,
+              "parsedType": {
+                "text": "'plain' | 'preformatted' | 'xhtml'"
+              }
             },
             {
               "kind": "method",
@@ -13839,6 +13932,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "default": "null",
               "attribute": "response",
               "inheritedFrom": {
@@ -14008,6 +14104,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -14074,7 +14173,10 @@
               "description": "How the response text is presented. Reflected so themes can key off\n`:host([format='preformatted'])`.\n\n`xhtml` is accepted and recorded but renders as `plain`: the field is a `<textarea>`, and\nthere is no rich-text editor behind it. Downgrading loudly beats either refusing valid QTI\nor pretending to support formatting the candidate cannot actually produce.",
               "name": "format",
               "default": "'plain'",
-              "fieldName": "format"
+              "fieldName": "format",
+              "parsedType": {
+                "text": "'plain' | 'preformatted' | 'xhtml'"
+              }
             },
             {
               "type": {
@@ -14132,7 +14234,10 @@
                 "text": "string | null"
               },
               "default": "null",
-              "fieldName": "response"
+              "fieldName": "response",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "response-identifier",
@@ -14364,6 +14469,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -15637,6 +15745,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
@@ -16004,6 +16115,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16312,6 +16426,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -16376,6 +16493,9 @@
               "privacy": "private",
               "type": {
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
+              },
+              "parsedType": {
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@515: {  }, length: number }"
               }
             },
             {
@@ -16681,6 +16801,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
@@ -16842,6 +16965,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -17865,6 +17991,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -17994,7 +18123,10 @@
               },
               "static": true,
               "readonly": true,
-              "default": "'cito-graphic-order-marker'"
+              "default": "'cito-graphic-order-marker'",
+              "parsedType": {
+                "text": "'cito-graphic-order-marker'"
+              }
             },
             {
               "kind": "field",
@@ -18337,6 +18469,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "''",
               "attribute": "response",
               "inheritedFrom": {
@@ -18492,6 +18627,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -18859,6 +18997,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -19279,6 +19420,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "''",
               "attribute": "response",
               "inheritedFrom": {
@@ -19434,6 +19578,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -19803,6 +19950,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20178,6 +20328,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "''",
               "attribute": "response",
               "inheritedFrom": {
@@ -20333,6 +20486,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -20630,6 +20786,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -20662,7 +20821,10 @@
               },
               "privacy": "private",
               "default": "undefined",
-              "description": "Captures an attribute-set response before slotted options have been\ngathered. `#updateOptions` consumes it once the options exist.\n`undefined` = no pending value."
+              "description": "Captures an attribute-set response before slotted options have been\ngathered. `#updateOptions` consumes it once the options exist.\n`undefined` = no pending value.",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -21315,6 +21477,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "privacy": "public",
               "attribute": "response",
               "inheritedFrom": {
@@ -21514,6 +21679,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -21610,7 +21778,10 @@
               "type": {
                 "text": "string | null"
               },
-              "fieldName": "response"
+              "fieldName": "response",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "response-identifier",
@@ -21885,6 +22056,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23210,6 +23384,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
@@ -23604,6 +23781,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -23894,6 +24074,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24165,6 +24348,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -24317,6 +24503,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -25066,7 +25255,10 @@
               },
               "privacy": "public",
               "description": "orientation of choices",
-              "attribute": "orientation"
+              "attribute": "orientation",
+              "parsedType": {
+                "text": "'horizontal' | 'vertical'"
+              }
             },
             {
               "kind": "method",
@@ -25162,7 +25354,10 @@
               "description": "orientation of choices",
               "name": "orientation",
               "default": "vertical",
-              "fieldName": "orientation"
+              "fieldName": "orientation",
+              "parsedType": {
+                "text": "'horizontal' | 'vertical'"
+              }
             },
             {
               "type": {
@@ -25337,7 +25532,10 @@
                 "text": "string | null"
               },
               "privacy": "protected",
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -25347,6 +25545,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -25512,7 +25713,10 @@
               "type": {
                 "text": "Record<string, string | string[]>"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "{  }"
+              }
             },
             {
               "kind": "field",
@@ -25521,7 +25725,10 @@
               "type": {
                 "text": "Record<string, any>"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "{  }"
+              }
             },
             {
               "kind": "field",
@@ -25539,7 +25746,10 @@
               "type": {
                 "text": "boolean | null"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
@@ -25685,6 +25895,9 @@
               "name": "boundTo",
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
+              },
+              "parsedType": {
+                "text": "{  }"
               }
             },
             {
@@ -26178,6 +26391,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "null",
               "attribute": "response",
               "inheritedFrom": {
@@ -26414,6 +26630,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26556,7 +26775,10 @@
                 "text": "string | string[] | null"
               },
               "default": "null",
-              "fieldName": "response"
+              "fieldName": "response",
+              "parsedType": {
+                "text": "string | string[]"
+              }
             },
             {
               "name": "response-identifier",
@@ -26676,6 +26898,9 @@
               },
               "privacy": "protected",
               "default": "null",
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -26689,6 +26914,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -26903,6 +27131,9 @@
                 "text": "Record<string, string | string[]>"
               },
               "default": "null",
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -26916,6 +27147,9 @@
                 "text": "Record<string, any>"
               },
               "default": "null",
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -26942,6 +27176,9 @@
                 "text": "boolean | null"
               },
               "default": "null",
+              "parsedType": {
+                "text": "boolean"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -27144,6 +27381,9 @@
               "name": "boundTo",
               "type": {
                 "text": "Record<string, QtiVariableJSON>"
+              },
+              "parsedType": {
+                "text": "{  }"
               },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
@@ -27931,6 +28171,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "null",
               "attribute": "response",
               "inheritedFrom": {
@@ -28208,6 +28451,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28411,6 +28657,9 @@
               },
               "default": "null",
               "fieldName": "response",
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "inheritedFrom": {
                 "name": "QtiPortableCustomInteraction",
                 "module": "packages/interactions/portable-custom-interaction/src/qti-portable-custom-interaction.ts"
@@ -28572,9 +28821,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-position-object-interaction",
           "modulePath": "packages/interactions/position-object-interaction/src/qti-position-object-interaction.ts",
-          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-interaction.ts",
-          "tagName": "qti-position-object-interaction"
+          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-interaction.ts"
         }
       ],
       "exports": [
@@ -28666,9 +28915,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-position-object-stage",
           "modulePath": "packages/interactions/position-object-interaction/src/qti-position-object-stage.ts",
-          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-stage.ts",
-          "tagName": "qti-position-object-stage"
+          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-stage.ts"
         }
       ],
       "exports": [
@@ -28838,6 +29087,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -28941,7 +29193,10 @@
               },
               "default": "null",
               "description": "Standalone area mapping as a JSON string. Mirrors the editor's\n`#syncAreaEntriesFromAttribute` codec — each entry has `{shape, coords, mappedValue?, defaultValue?}`\nand `shape` must be `'circle'` or `'rect'`. Used when no\n`qti-response-declaration` provides `areaMapping`.",
-              "attribute": "area-mappings"
+              "attribute": "area-mappings",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "method",
@@ -29250,6 +29505,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "default": "null",
               "attribute": "response",
               "inheritedFrom": {
@@ -29410,6 +29668,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -29424,7 +29685,10 @@
               "description": "Standalone area mapping as a JSON string. Mirrors the editor's\n`#syncAreaEntriesFromAttribute` codec — each entry has `{shape, coords, mappedValue?, defaultValue?}`\nand `shape` must be `'circle'` or `'rect'`. Used when no\n`qti-response-declaration` provides `areaMapping`.",
               "name": "area-mappings",
               "default": "null",
-              "fieldName": "areaMappings"
+              "fieldName": "areaMappings",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "disabled",
@@ -29675,6 +29939,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -30053,6 +30320,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string | string[]"
+              },
               "attribute": "response",
               "inheritedFrom": {
                 "name": "Interaction",
@@ -30215,6 +30485,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "Interaction",
@@ -30473,6 +30746,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -30804,6 +31080,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "default": "null",
               "attribute": "response",
               "inheritedFrom": {
@@ -30978,6 +31257,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -31070,7 +31352,10 @@
                 "text": "string | null"
               },
               "default": "null",
-              "fieldName": "response"
+              "fieldName": "response",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "response-identifier",
@@ -31240,6 +31525,9 @@
               },
               "privacy": "protected",
               "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -31264,7 +31552,10 @@
               "type": {
                 "text": "string | null"
               },
-              "default": "null"
+              "default": "null",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "method",
@@ -31551,6 +31842,9 @@
               "type": {
                 "text": "string | string[] | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -31704,6 +31998,9 @@
               "type": {
                 "text": "string | null"
               },
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
@@ -31845,7 +32142,10 @@
                 "text": "Readonly<InteractionContext>"
               },
               "privacy": "protected",
-              "default": "{ choiceRole: null, draggablesSelector: null }"
+              "default": "{ choiceRole: null, draggablesSelector: null }",
+              "parsedType": {
+                "text": "{ choiceRole: 'radio' | 'checkbox', draggablesSelector: string }"
+              }
             },
             {
               "kind": "field",
@@ -32026,6 +32326,9 @@
               "name": "response",
               "type": {
                 "text": "string | string[] | null"
+              },
+              "parsedType": {
+                "text": "string | string[]"
               }
             },
             {
@@ -32141,6 +32444,9 @@
               "name": "value",
               "type": {
                 "text": "string | null"
+              },
+              "parsedType": {
+                "text": "string"
               }
             }
           ],
@@ -32399,7 +32705,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -32473,7 +32779,10 @@
               },
               "privacy": "protected",
               "default": "'show'",
-              "attribute": "show-hide"
+              "attribute": "show-hide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              }
             },
             {
               "kind": "field",
@@ -32513,7 +32822,10 @@
                 "text": "'show' | 'hide'"
               },
               "default": "'show'",
-              "fieldName": "showHide"
+              "fieldName": "showHide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              }
             }
           ],
           "superclass": {
@@ -33806,7 +34118,10 @@
               "type": {
                 "text": "ConfigContext & CorrectionConfig"
               },
-              "privacy": "private"
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ infoItemCategory: string, reportValidityAfterScoring: boolean, validationDisplayMode: 'inline' | 'native' | 'both' | 'none', disableAfterMaxReached: boolean, allowReorder: boolean, disableAfterIfMaxChoicesReached: boolean, inlineChoicePrompt: string, inlineChoiceAutosize: boolean } & { correctResponseMode: 'internal' | 'full', fullCorrectResponseOnlyWhenIncorrect: boolean }"
+              }
             },
             {
               "kind": "field",
@@ -33841,9 +34156,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "item-correct-response-mode",
           "modulePath": "packages/qti-corrections/src/components/item-correct-response-mode/item-correct-response-mode.ts",
-          "definitionPath": "packages/qti-corrections/src/components/item-correct-response-mode/item-correct-response-mode.ts",
-          "tagName": "item-correct-response-mode"
+          "definitionPath": "packages/qti-corrections/src/components/item-correct-response-mode/item-correct-response-mode.ts"
         }
       ],
       "exports": [
@@ -33915,7 +34230,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
+                "text": "{ identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[] }"
               }
             },
             {
@@ -34021,9 +34336,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "item-show-candidate-correction",
           "modulePath": "packages/qti-corrections/src/components/item-show-candidate-correction/item-show-candidate-correction.ts",
-          "definitionPath": "packages/qti-corrections/src/components/item-show-candidate-correction/item-show-candidate-correction.ts",
-          "tagName": "item-show-candidate-correction"
+          "definitionPath": "packages/qti-corrections/src/components/item-show-candidate-correction/item-show-candidate-correction.ts"
         }
       ],
       "exports": [
@@ -34095,7 +34410,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
+                "text": "{ identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[] }"
               }
             },
             {
@@ -34201,9 +34516,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "item-show-correct-response",
           "modulePath": "packages/qti-corrections/src/components/item-show-correct-response/item-show-correct-response.ts",
-          "definitionPath": "packages/qti-corrections/src/components/item-show-correct-response/item-show-correct-response.ts",
-          "tagName": "item-show-correct-response"
+          "definitionPath": "packages/qti-corrections/src/components/item-show-correct-response/item-show-correct-response.ts"
         }
       ],
       "exports": [
@@ -34381,6 +34696,9 @@
                 "text": "Readonly<ItemContext>"
               },
               "default": "{ ...this._context, variables: this._context.variables }",
+              "parsedType": {
+                "text": "{ identifier: string, href: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[], state: {  } }"
+              },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
                 "module": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
@@ -34392,6 +34710,9 @@
               "privacy": "private",
               "type": {
                 "text": "string | undefined"
+              },
+              "parsedType": {
+                "text": "string"
               },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
@@ -34456,6 +34777,9 @@
               },
               "default": "'false'",
               "attribute": "adaptive",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
                 "module": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
@@ -34741,6 +35065,9 @@
                 "text": "ItemContext['state']"
               },
               "privacy": "public",
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
                 "module": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
@@ -34754,6 +35081,9 @@
               },
               "default": "null",
               "attribute": "timeDependent",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
                 "module": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
@@ -34958,6 +35288,9 @@
               },
               "default": "'false'",
               "fieldName": "adaptive",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
                 "module": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
@@ -35004,6 +35337,9 @@
               },
               "default": "null",
               "fieldName": "timeDependent",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              },
               "inheritedFrom": {
                 "name": "QtiAssessmentItem",
                 "module": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
@@ -35216,7 +35552,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] }"
+                "text": "{ identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiItem",
@@ -35826,7 +36162,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "TestNavigation",
@@ -35877,6 +36213,9 @@
               },
               "default": "undefined",
               "attribute": "identifier",
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -35933,6 +36272,9 @@
               },
               "default": "undefined",
               "fieldName": "identifier",
+              "parsedType": {
+                "text": "string"
+              },
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -36033,6 +36375,9 @@
               "privacy": "private",
               "type": {
                 "text": "unknown | undefined"
+              },
+              "parsedType": {
+                "text": "unknown"
               }
             },
             {
@@ -36048,7 +36393,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -36155,9 +36500,9 @@
           },
           "deprecated": "test-show-correct-response is deprecated and will be removed in the future.",
           "customElement": true,
+          "tagName": "test-show-correct-response",
           "modulePath": "packages/qti-corrections/src/components/test-show-correct-response/test-show-correct-response.ts",
-          "definitionPath": "packages/qti-corrections/src/components/test-show-correct-response/test-show-correct-response.ts",
-          "tagName": "test-show-correct-response"
+          "definitionPath": "packages/qti-corrections/src/components/test-show-correct-response/test-show-correct-response.ts"
         }
       ],
       "exports": [
@@ -36303,7 +36648,10 @@
               "type": {
                 "text": "Readonly<ItemContext>"
               },
-              "default": "{ ...this._context, variables: this._context.variables }"
+              "default": "{ ...this._context, variables: this._context.variables }",
+              "parsedType": {
+                "text": "{ identifier: string, href: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[], state: {  } }"
+              }
             },
             {
               "kind": "field",
@@ -36311,6 +36659,9 @@
               "privacy": "private",
               "type": {
                 "text": "string | undefined"
+              },
+              "parsedType": {
+                "text": "string"
               }
             },
             {
@@ -36354,7 +36705,10 @@
                 "text": "'true' | 'false'"
               },
               "default": "'false'",
-              "attribute": "adaptive"
+              "attribute": "adaptive",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              }
             },
             {
               "kind": "method",
@@ -36541,7 +36895,10 @@
               "type": {
                 "text": "ItemContext['state']"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "parsedType": {
+                "text": "{  }"
+              }
             },
             {
               "kind": "field",
@@ -36550,7 +36907,10 @@
                 "text": "'true' | 'false' | null"
               },
               "default": "null",
-              "attribute": "timeDependent"
+              "attribute": "timeDependent",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              }
             },
             {
               "kind": "field",
@@ -36717,7 +37077,10 @@
                 "text": "'true' | 'false'"
               },
               "default": "'false'",
-              "fieldName": "adaptive"
+              "fieldName": "adaptive",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              }
             },
             {
               "name": "disabled",
@@ -36747,7 +37110,10 @@
                 "text": "'true' | 'false' | null"
               },
               "default": "null",
-              "fieldName": "timeDependent"
+              "fieldName": "timeDependent",
+              "parsedType": {
+                "text": "'true' | 'false'"
+              }
             },
             {
               "name": "title",
@@ -36763,9 +37129,9 @@
           },
           "summary": "The qti-assessment-item element contains all the other QTI 3 item structures.",
           "customElement": true,
+          "tagName": "qti-assessment-item",
           "modulePath": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
-          "tagName": "qti-assessment-item"
+          "definitionPath": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
         }
       ],
       "exports": [
@@ -36856,9 +37222,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-assessment-stimulus-ref",
           "modulePath": "packages/qti-elements/src/components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts",
-          "tagName": "qti-assessment-stimulus-ref"
+          "definitionPath": "packages/qti-elements/src/components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts"
         },
         {
           "kind": "class",
@@ -36922,9 +37288,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-companion-materials-info",
           "modulePath": "packages/qti-elements/src/components/qti-companion-materials-info/qti-companion-materials-info.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-companion-materials-info/qti-companion-materials-info.ts",
-          "tagName": "qti-companion-materials-info"
+          "definitionPath": "packages/qti-elements/src/components/qti-companion-materials-info/qti-companion-materials-info.ts"
         }
       ],
       "exports": [
@@ -36997,9 +37363,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-content-body",
           "modulePath": "packages/qti-elements/src/components/qti-content-body/qti-content-body.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-content-body/qti-content-body.ts",
-          "tagName": "qti-content-body"
+          "definitionPath": "packages/qti-elements/src/components/qti-content-body/qti-content-body.ts"
         }
       ],
       "exports": [
@@ -37037,7 +37403,10 @@
                 "text": "'single' | 'multiple' | 'ordered' | 'record'"
               },
               "default": "'record'",
-              "attribute": "cardinality"
+              "attribute": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "kind": "field",
@@ -37056,7 +37425,10 @@
                 "text": "'single' | 'multiple' | 'ordered' | 'record'"
               },
               "default": "'record'",
-              "fieldName": "cardinality"
+              "fieldName": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "name": "identifier",
@@ -37073,9 +37445,9 @@
           },
           "summary": "The qti-context-declaration element declares context variables for an item.",
           "customElement": true,
+          "tagName": "qti-context-declaration",
           "modulePath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts",
-          "tagName": "qti-context-declaration"
+          "definitionPath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts"
         }
       ],
       "exports": [
@@ -37157,9 +37529,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-custom-operator",
           "modulePath": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts",
-          "tagName": "qti-custom-operator"
+          "definitionPath": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts"
         }
       ],
       "exports": [
@@ -37198,7 +37570,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -37304,6 +37676,9 @@
               "privacy": "protected",
               "default": "'show'",
               "attribute": "show-hide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37356,6 +37731,9 @@
               },
               "default": "'show'",
               "fieldName": "showHide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37416,7 +37794,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -37522,6 +37900,9 @@
               "privacy": "protected",
               "default": "'show'",
               "attribute": "show-hide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37574,6 +37955,9 @@
               },
               "default": "'show'",
               "fieldName": "showHide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37647,9 +38031,9 @@
           },
           "summary": "The qti-item-body node contains the text, graphics, media objects and interactions that describe the item's content and information about how it is structured.",
           "customElement": true,
+          "tagName": "qti-item-body",
           "modulePath": "packages/qti-elements/src/components/qti-item-body/qti-item-body.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-item-body/qti-item-body.ts",
-          "tagName": "qti-item-body"
+          "definitionPath": "packages/qti-elements/src/components/qti-item-body/qti-item-body.ts"
         }
       ],
       "exports": [
@@ -37688,7 +38072,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -37808,6 +38192,9 @@
               "privacy": "protected",
               "default": "'show'",
               "attribute": "show-hide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37860,6 +38247,9 @@
               },
               "default": "'show'",
               "fieldName": "showHide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37958,7 +38348,10 @@
                 "text": "'human' | 'externalMachine' | null"
               },
               "default": "null",
-              "attribute": "external-scored"
+              "attribute": "external-scored",
+              "parsedType": {
+                "text": "'human' | 'externalMachine'"
+              }
             },
             {
               "kind": "field",
@@ -38020,7 +38413,10 @@
                 "text": "'human' | 'externalMachine' | null"
               },
               "default": "null",
-              "fieldName": "externalScored"
+              "fieldName": "externalScored",
+              "parsedType": {
+                "text": "'human' | 'externalMachine'"
+              }
             },
             {
               "name": "identifier",
@@ -38081,7 +38477,7 @@
               },
               "readonly": true,
               "parsedType": {
-                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, areaMapEntries: QtiAreaMapEntry[] }"
+                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, areaMapEntries: { shape: 'default' | 'circle' | 'rect' | 'ellipse' | 'poly', coords: string, mappedValue: number, defaultValue: number }[] }"
               }
             },
             {
@@ -38102,7 +38498,7 @@
               },
               "readonly": true,
               "parsedType": {
-                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, mapEntries: QtiMapEntry[] }"
+                "text": "{ defaultValue: number, lowerBound: number, upperBound: number, mapEntries: { mapKey: string, mappedValue: number, caseSensitive: boolean }[] }"
               }
             },
             {
@@ -38250,9 +38646,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-response-processing",
           "modulePath": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing.ts",
-          "tagName": "qti-response-processing"
+          "definitionPath": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing.ts"
         }
       ],
       "exports": [
@@ -38312,7 +38708,10 @@
               "type": {
                 "text": "'instructions' | 'scoring' | 'navigation'"
               },
-              "attribute": "use"
+              "attribute": "use",
+              "parsedType": {
+                "text": "'instructions' | 'scoring' | 'navigation'"
+              }
             },
             {
               "kind": "field",
@@ -38320,7 +38719,10 @@
               "type": {
                 "text": "'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
               },
-              "attribute": "view"
+              "attribute": "view",
+              "parsedType": {
+                "text": "'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
+              }
             }
           ],
           "attributes": [
@@ -38343,14 +38745,20 @@
               "type": {
                 "text": "'instructions' | 'scoring' | 'navigation'"
               },
-              "fieldName": "use"
+              "fieldName": "use",
+              "parsedType": {
+                "text": "'instructions' | 'scoring' | 'navigation'"
+              }
             },
             {
               "name": "view",
               "type": {
                 "text": "'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
               },
-              "fieldName": "view"
+              "fieldName": "view",
+              "parsedType": {
+                "text": "'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor'"
+              }
             }
           ],
           "superclass": {
@@ -38358,9 +38766,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-rubric-block",
           "modulePath": "packages/qti-elements/src/components/qti-rubric-block/qti-rubric-block.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-rubric-block/qti-rubric-block.ts",
-          "tagName": "qti-rubric-block"
+          "definitionPath": "packages/qti-elements/src/components/qti-rubric-block/qti-rubric-block.ts"
         }
       ],
       "exports": [
@@ -38424,9 +38832,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-stylesheet",
           "modulePath": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet.ts",
-          "tagName": "qti-stylesheet"
+          "definitionPath": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet.ts"
         }
       ],
       "exports": [
@@ -38506,9 +38914,9 @@
           },
           "summary": "The qti-template-constraint element is a processing rule available only in Template Processing.",
           "customElement": true,
+          "tagName": "qti-template-constraint",
           "modulePath": "packages/qti-elements/src/components/qti-template-constraint/qti-template-constraint.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-template-constraint/qti-template-constraint.ts",
-          "tagName": "qti-template-constraint"
+          "definitionPath": "packages/qti-elements/src/components/qti-template-constraint/qti-template-constraint.ts"
         }
       ],
       "exports": [
@@ -38608,7 +39016,10 @@
                 "text": "'single' | 'multiple' | 'ordered' | 'record'"
               },
               "default": "'single'",
-              "attribute": "cardinality"
+              "attribute": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "kind": "method",
@@ -38678,7 +39089,10 @@
                 "text": "'single' | 'multiple' | 'ordered' | 'record'"
               },
               "default": "'single'",
-              "fieldName": "cardinality"
+              "fieldName": "cardinality",
+              "parsedType": {
+                "text": "'record' | 'multiple' | 'ordered' | 'single'"
+              }
             },
             {
               "name": "identifier",
@@ -38711,9 +39125,9 @@
           },
           "summary": "The qti-template-declaration element declares template variables for item cloning.",
           "customElement": true,
+          "tagName": "qti-template-declaration",
           "modulePath": "packages/qti-elements/src/components/qti-template-declaration/qti-template-declaration.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-template-declaration/qti-template-declaration.ts",
-          "tagName": "qti-template-declaration"
+          "definitionPath": "packages/qti-elements/src/components/qti-template-declaration/qti-template-declaration.ts"
         }
       ],
       "exports": [
@@ -38782,9 +39196,9 @@
           },
           "summary": "The qti-template-processing element contains template processing rules.",
           "customElement": true,
+          "tagName": "qti-template-processing",
           "modulePath": "packages/qti-elements/src/components/qti-template-processing/qti-template-processing.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-template-processing/qti-template-processing.ts",
-          "tagName": "qti-template-processing"
+          "definitionPath": "packages/qti-elements/src/components/qti-template-processing/qti-template-processing.ts"
         }
       ],
       "exports": [
@@ -39048,7 +39462,10 @@
               },
               "default": "null",
               "description": "URL of the item to load",
-              "attribute": "item-url"
+              "attribute": "item-url",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -39057,7 +39474,10 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "The raw XML string"
+              "description": "The raw XML string",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -39077,7 +39497,10 @@
               },
               "default": "null",
               "description": "URL of the item to load",
-              "fieldName": "itemURL"
+              "fieldName": "itemURL",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -39085,9 +39508,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "item-container",
           "modulePath": "packages/qti-item/src/components/item-container/item-container.ts",
-          "definitionPath": "packages/qti-item/src/components/item-container/item-container.ts",
-          "tagName": "item-container"
+          "definitionPath": "packages/qti-item/src/components/item-container/item-container.ts"
         }
       ],
       "exports": [
@@ -39126,7 +39549,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] } | undefined"
+                "text": "{ identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[] }"
               }
             }
           ],
@@ -39135,9 +39558,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "item-print-variables",
           "modulePath": "packages/qti-item/src/components/item-print-variables/item-print-variables.ts",
-          "definitionPath": "packages/qti-item/src/components/item-print-variables/item-print-variables.ts",
-          "tagName": "item-print-variables"
+          "definitionPath": "packages/qti-item/src/components/item-print-variables/item-print-variables.ts"
         }
       ],
       "exports": [
@@ -39244,7 +39667,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ identifier: string, href: string, correct: false | true, incorrect: false | true, completed: false | true, adaptive: false | true, timeDependent: false | true, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: readonly VariableDeclaration<string | string[]>[] }"
+                "text": "{ identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: { cardinality: 'record' | 'multiple' | 'ordered' | 'single', baseType: 'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record', identifier: string, value: string | string[], defaultValue: string | string[], type: 'outcome' | 'response' | 'context' | 'template' }[] }"
               }
             },
             {
@@ -39272,9 +39695,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-item",
           "modulePath": "packages/qti-item/src/components/qti-item/qti-item.ts",
-          "definitionPath": "packages/qti-item/src/components/qti-item/qti-item.ts",
-          "tagName": "qti-item"
+          "definitionPath": "packages/qti-item/src/components/qti-item/qti-item.ts"
         }
       ],
       "exports": [
@@ -41512,7 +41935,10 @@
                 "text": "'decimalPlaces' | 'significantFigures'"
               },
               "default": "'significantFigures'",
-              "attribute": "roundingMode"
+              "attribute": "roundingMode",
+              "parsedType": {
+                "text": "'decimalPlaces' | 'significantFigures'"
+              }
             }
           ],
           "attributes": [
@@ -41522,7 +41948,10 @@
                 "text": "'decimalPlaces' | 'significantFigures'"
               },
               "default": "'significantFigures'",
-              "fieldName": "roundingMode"
+              "fieldName": "roundingMode",
+              "parsedType": {
+                "text": "'decimalPlaces' | 'significantFigures'"
+              }
             }
           ],
           "superclass": {
@@ -41646,7 +42075,10 @@
                 "text": "'exact' | 'relative' | 'absolute'"
               },
               "default": "'exact'",
-              "attribute": "toleranceMode"
+              "attribute": "toleranceMode",
+              "parsedType": {
+                "text": "'exact' | 'relative' | 'absolute'"
+              }
             }
           ],
           "attributes": [
@@ -41656,7 +42088,10 @@
                 "text": "'exact' | 'relative' | 'absolute'"
               },
               "default": "'exact'",
-              "fieldName": "toleranceMode"
+              "fieldName": "toleranceMode",
+              "parsedType": {
+                "text": "'exact' | 'relative' | 'absolute'"
+              }
             }
           ],
           "superclass": {
@@ -45756,9 +46191,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-printed-variable",
           "modulePath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
-          "tagName": "qti-printed-variable"
+          "definitionPath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts"
         }
       ],
       "exports": [
@@ -46815,7 +47250,10 @@
                 "text": "'decimalPlaces' | 'significantFigures'"
               },
               "default": "'significantFigures'",
-              "attribute": "rounding-mode"
+              "attribute": "rounding-mode",
+              "parsedType": {
+                "text": "'decimalPlaces' | 'significantFigures'"
+              }
             }
           ],
           "attributes": [
@@ -46833,7 +47271,10 @@
                 "text": "'decimalPlaces' | 'significantFigures'"
               },
               "default": "'significantFigures'",
-              "fieldName": "roundingMode"
+              "fieldName": "roundingMode",
+              "parsedType": {
+                "text": "'decimalPlaces' | 'significantFigures'"
+              }
             }
           ],
           "superclass": {
@@ -47004,9 +47445,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-rule",
           "modulePath": "packages/qti-processing/src/components/qti-rule/qti-rule.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-rule/qti-rule.ts",
-          "tagName": "qti-rule"
+          "definitionPath": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
         }
       ],
       "exports": [
@@ -49157,7 +49598,10 @@
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "category"
+              "attribute": "category",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -49165,7 +49609,10 @@
               "type": {
                 "text": "boolean | undefined"
               },
-              "attribute": "fixed"
+              "attribute": "fixed",
+              "parsedType": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
@@ -49173,7 +49620,10 @@
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "href"
+              "attribute": "href",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -49181,7 +49631,10 @@
               "type": {
                 "text": "string | undefined"
               },
-              "attribute": "identifier"
+              "attribute": "identifier",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -49196,7 +49649,10 @@
               "type": {
                 "text": "boolean | undefined"
               },
-              "attribute": "required"
+              "attribute": "required",
+              "parsedType": {
+                "text": "boolean"
+              }
             },
             {
               "kind": "field",
@@ -49228,35 +49684,50 @@
               "type": {
                 "text": "string | undefined"
               },
-              "fieldName": "category"
+              "fieldName": "category",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "fixed",
               "type": {
                 "text": "boolean | undefined"
               },
-              "fieldName": "fixed"
+              "fieldName": "fixed",
+              "parsedType": {
+                "text": "boolean"
+              }
             },
             {
               "name": "href",
               "type": {
                 "text": "string | undefined"
               },
-              "fieldName": "href"
+              "fieldName": "href",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "identifier",
               "type": {
                 "text": "string | undefined"
               },
-              "fieldName": "identifier"
+              "fieldName": "identifier",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "name": "required",
               "type": {
                 "text": "boolean | undefined"
               },
-              "fieldName": "required"
+              "fieldName": "required",
+              "parsedType": {
+                "text": "boolean"
+              }
             }
           ],
           "superclass": {
@@ -49264,9 +49735,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-assessment-item-ref",
           "modulePath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts",
-          "tagName": "qti-assessment-item-ref"
+          "definitionPath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts"
         }
       ],
       "exports": [
@@ -49344,7 +49815,10 @@
               "type": {
                 "text": "'linear' | 'nonlinear' | undefined"
               },
-              "attribute": "navigation-mode"
+              "attribute": "navigation-mode",
+              "parsedType": {
+                "text": "'linear' | 'nonlinear'"
+              }
             },
             {
               "kind": "field",
@@ -49360,7 +49834,10 @@
               "type": {
                 "text": "'individual' | 'simultaneous' | undefined"
               },
-              "attribute": "submission-mode"
+              "attribute": "submission-mode",
+              "parsedType": {
+                "text": "'individual' | 'simultaneous'"
+              }
             },
             {
               "kind": "field",
@@ -49413,7 +49890,10 @@
               "type": {
                 "text": "'linear' | 'nonlinear' | undefined"
               },
-              "fieldName": "navigationMode"
+              "fieldName": "navigationMode",
+              "parsedType": {
+                "text": "'linear' | 'nonlinear'"
+              }
             },
             {
               "name": "required",
@@ -49427,7 +49907,10 @@
               "type": {
                 "text": "'individual' | 'simultaneous' | undefined"
               },
-              "fieldName": "submissionMode"
+              "fieldName": "submissionMode",
+              "parsedType": {
+                "text": "'individual' | 'simultaneous'"
+              }
             },
             {
               "name": "visible",
@@ -49442,9 +49925,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-assessment-section",
           "modulePath": "packages/qti-test/src/components/qti-assessment-section/qti-assessment-section.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-assessment-section/qti-assessment-section.ts",
-          "tagName": "qti-assessment-section"
+          "definitionPath": "packages/qti-test/src/components/qti-assessment-section/qti-assessment-section.ts"
         }
       ],
       "exports": [
@@ -49538,9 +50021,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-assessment-test",
           "modulePath": "packages/qti-test/src/components/qti-assessment-test/qti-assessment-test.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-assessment-test/qti-assessment-test.ts",
-          "tagName": "qti-assessment-test"
+          "definitionPath": "packages/qti-test/src/components/qti-assessment-test/qti-assessment-test.ts"
         }
       ],
       "exports": [
@@ -49707,9 +50190,9 @@
           },
           "summary": "The qti-item-session-control element contains configurations relating to flow of test sessions.",
           "customElement": true,
+          "tagName": "qti-item-session-control",
           "modulePath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
-          "tagName": "qti-item-session-control"
+          "definitionPath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts"
         }
       ],
       "exports": [
@@ -49754,9 +50237,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-outcome-processing",
           "modulePath": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts",
-          "tagName": "qti-outcome-processing"
+          "definitionPath": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts"
         },
         {
           "kind": "class",
@@ -49823,7 +50306,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -49951,6 +50434,9 @@
               "privacy": "protected",
               "default": "'show'",
               "attribute": "show-hide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -50003,6 +50489,9 @@
               },
               "default": "'show'",
               "fieldName": "showHide",
+              "parsedType": {
+                "text": "'show' | 'hide'"
+              },
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -50089,7 +50578,10 @@
                 "text": "'linear' | 'nonlinear'"
               },
               "default": "'nonlinear'",
-              "attribute": "navigation-mode"
+              "attribute": "navigation-mode",
+              "parsedType": {
+                "text": "'linear' | 'nonlinear'"
+              }
             },
             {
               "kind": "field",
@@ -50098,7 +50590,10 @@
                 "text": "'individual' | 'simultaneous'"
               },
               "default": "'individual'",
-              "attribute": "submission-mode"
+              "attribute": "submission-mode",
+              "parsedType": {
+                "text": "'individual' | 'simultaneous'"
+              }
             },
             {
               "kind": "field",
@@ -50139,7 +50634,10 @@
                 "text": "'linear' | 'nonlinear'"
               },
               "default": "'nonlinear'",
-              "fieldName": "navigationMode"
+              "fieldName": "navigationMode",
+              "parsedType": {
+                "text": "'linear' | 'nonlinear'"
+              }
             },
             {
               "name": "submission-mode",
@@ -50147,7 +50645,10 @@
                 "text": "'individual' | 'simultaneous'"
               },
               "default": "'individual'",
-              "fieldName": "submissionMode"
+              "fieldName": "submissionMode",
+              "parsedType": {
+                "text": "'individual' | 'simultaneous'"
+              }
             }
           ],
           "superclass": {
@@ -50155,9 +50656,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-test-part",
           "modulePath": "packages/qti-test/src/components/qti-test-part/qti-test-part.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-test-part/qti-test-part.ts",
-          "tagName": "qti-test-part"
+          "definitionPath": "packages/qti-test/src/components/qti-test-part/qti-test-part.ts"
         }
       ],
       "exports": [
@@ -50383,9 +50884,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "qti-test",
           "modulePath": "packages/qti-test/src/components/qti-test/qti-test.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-test/qti-test.ts",
-          "tagName": "qti-test"
+          "definitionPath": "packages/qti-test/src/components/qti-test/qti-test.ts"
         }
       ],
       "exports": [
@@ -50480,9 +50981,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-check-item",
           "modulePath": "packages/qti-test/src/components/test-check-item/test-check-item.ts",
-          "definitionPath": "packages/qti-test/src/components/test-check-item/test-check-item.ts",
-          "tagName": "test-check-item"
+          "definitionPath": "packages/qti-test/src/components/test-check-item/test-check-item.ts"
         }
       ],
       "exports": [
@@ -50607,7 +51108,10 @@
               },
               "default": "null",
               "description": "URL of the item to load",
-              "attribute": "test-url"
+              "attribute": "test-url",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -50616,7 +51120,10 @@
                 "text": "string | null"
               },
               "default": "null",
-              "description": "The raw XML string"
+              "description": "The raw XML string",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "events": [
@@ -50635,7 +51142,10 @@
               },
               "default": "null",
               "description": "URL of the item to load",
-              "fieldName": "testURL"
+              "fieldName": "testURL",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -50643,9 +51153,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-container",
           "modulePath": "packages/qti-test/src/components/test-container/test-container.ts",
-          "definitionPath": "packages/qti-test/src/components/test-container/test-container.ts",
-          "tagName": "test-container"
+          "definitionPath": "packages/qti-test/src/components/test-container/test-container.ts"
         }
       ],
       "exports": [
@@ -50723,7 +51233,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             }
           ],
@@ -50742,9 +51252,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-end-attempt",
           "modulePath": "packages/qti-test/src/components/test-end-attempt/test-end-attempt.ts",
-          "definitionPath": "packages/qti-test/src/components/test-end-attempt/test-end-attempt.ts",
-          "tagName": "test-end-attempt"
+          "definitionPath": "packages/qti-test/src/components/test-end-attempt/test-end-attempt.ts"
         }
       ],
       "exports": [
@@ -50827,9 +51337,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-item-link",
           "modulePath": "packages/qti-test/src/components/test-item-link/test-item-link.ts",
-          "definitionPath": "packages/qti-test/src/components/test-item-link/test-item-link.ts",
-          "tagName": "test-item-link"
+          "definitionPath": "packages/qti-test/src/components/test-item-link/test-item-link.ts"
         }
       ],
       "exports": [
@@ -51021,7 +51531,10 @@
               "type": {
                 "text": "string | null | undefined"
               },
-              "default": "undefined"
+              "default": "undefined",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -51175,9 +51688,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-item-to-speech",
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
-          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
-          "tagName": "test-item-to-speech"
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
         },
         {
           "kind": "class",
@@ -51900,7 +52413,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -51938,7 +52451,10 @@
                 "text": "string | undefined"
               },
               "default": "undefined",
-              "attribute": "identifier"
+              "attribute": "identifier",
+              "parsedType": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -51982,7 +52498,10 @@
                 "text": "string | undefined"
               },
               "default": "undefined",
-              "fieldName": "identifier"
+              "fieldName": "identifier",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "superclass": {
@@ -51990,9 +52509,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-navigation",
           "modulePath": "packages/qti-test/src/components/test-navigation/test-navigation.ts",
-          "definitionPath": "packages/qti-test/src/components/test-navigation/test-navigation.ts",
-          "tagName": "test-navigation"
+          "definitionPath": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
         }
       ],
       "exports": [
@@ -52104,7 +52623,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52153,9 +52672,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-next",
           "modulePath": "packages/qti-test/src/components/test-next/test-next.ts",
-          "definitionPath": "packages/qti-test/src/components/test-next/test-next.ts",
-          "tagName": "test-next"
+          "definitionPath": "packages/qti-test/src/components/test-next/test-next.ts"
         }
       ],
       "exports": [
@@ -52210,7 +52729,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52227,9 +52746,9 @@
           },
           "deprecated": "test-paging-buttons-stamp is deprecated and will be removed in the future.",
           "customElement": true,
+          "tagName": "test-paging-buttons-stamp",
           "modulePath": "packages/qti-test/src/components/test-paging-buttons-stamp/test-paging-buttons-stamp.ts",
-          "definitionPath": "packages/qti-test/src/components/test-paging-buttons-stamp/test-paging-buttons-stamp.ts",
-          "tagName": "test-paging-buttons-stamp"
+          "definitionPath": "packages/qti-test/src/components/test-paging-buttons-stamp/test-paging-buttons-stamp.ts"
         }
       ],
       "exports": [
@@ -52325,7 +52844,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52366,9 +52885,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-prev",
           "modulePath": "packages/qti-test/src/components/test-prev/test-prev.ts",
-          "definitionPath": "packages/qti-test/src/components/test-prev/test-prev.ts",
-          "tagName": "test-prev"
+          "definitionPath": "packages/qti-test/src/components/test-prev/test-prev.ts"
         }
       ],
       "exports": [
@@ -52407,7 +52926,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             }
           ],
@@ -52416,9 +52935,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-print-context",
           "modulePath": "packages/qti-test/src/components/test-print-context/test-print-context.ts",
-          "definitionPath": "packages/qti-test/src/components/test-print-context/test-print-context.ts",
-          "tagName": "test-print-context"
+          "definitionPath": "packages/qti-test/src/components/test-print-context/test-print-context.ts"
         }
       ],
       "exports": [
@@ -52457,7 +52976,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             }
           ],
@@ -52466,9 +52985,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-print-item-variables",
           "modulePath": "packages/qti-test/src/components/test-print-item-variables/test-print-item-variables.ts",
-          "definitionPath": "packages/qti-test/src/components/test-print-item-variables/test-print-item-variables.ts",
-          "tagName": "test-print-item-variables"
+          "definitionPath": "packages/qti-test/src/components/test-print-item-variables/test-print-item-variables.ts"
         }
       ],
       "exports": [
@@ -52520,7 +53039,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52581,9 +53100,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-scoring-buttons",
           "modulePath": "packages/qti-test/src/components/test-scoring-buttons/test-scoring-buttons.ts",
-          "definitionPath": "packages/qti-test/src/components/test-scoring-buttons/test-scoring-buttons.ts",
-          "tagName": "test-scoring-buttons"
+          "definitionPath": "packages/qti-test/src/components/test-scoring-buttons/test-scoring-buttons.ts"
         }
       ],
       "exports": [
@@ -52622,7 +53141,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52657,9 +53176,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-scoring-feedback",
           "modulePath": "packages/qti-test/src/components/test-scoring-feedback/test-scoring-feedback.ts",
-          "definitionPath": "packages/qti-test/src/components/test-scoring-feedback/test-scoring-feedback.ts",
-          "tagName": "test-scoring-feedback"
+          "definitionPath": "packages/qti-test/src/components/test-scoring-feedback/test-scoring-feedback.ts"
         }
       ],
       "exports": [
@@ -52714,7 +53233,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52731,9 +53250,9 @@
           },
           "deprecated": "test-section-buttons-stamp is deprecated and will be removed in the future.",
           "customElement": true,
+          "tagName": "test-section-buttons-stamp",
           "modulePath": "packages/qti-test/src/components/test-section-buttons-stamp/test-section-buttons-stamp.ts",
-          "definitionPath": "packages/qti-test/src/components/test-section-buttons-stamp/test-section-buttons-stamp.ts",
-          "tagName": "test-section-buttons-stamp"
+          "definitionPath": "packages/qti-test/src/components/test-section-buttons-stamp/test-section-buttons-stamp.ts"
         }
       ],
       "exports": [
@@ -52811,9 +53330,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-section-link",
           "modulePath": "packages/qti-test/src/components/test-section-link/test-section-link.ts",
-          "definitionPath": "packages/qti-test/src/components/test-section-link/test-section-link.ts",
-          "tagName": "test-section-link"
+          "definitionPath": "packages/qti-test/src/components/test-section-link/test-section-link.ts"
         }
       ],
       "exports": [
@@ -52852,7 +53371,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -52985,9 +53504,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-view-toggle",
           "modulePath": "packages/qti-test/src/components/test-view-toggle/test-view-toggle.ts",
-          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view-toggle.ts",
-          "tagName": "test-view-toggle"
+          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view-toggle.ts"
         }
       ],
       "exports": [
@@ -53118,9 +53637,9 @@
             "package": "lit"
           },
           "customElement": true,
+          "tagName": "test-view",
           "modulePath": "packages/qti-test/src/components/test-view-toggle/test-view.ts",
-          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view.ts",
-          "tagName": "test-view"
+          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view.ts"
         }
       ],
       "exports": [
