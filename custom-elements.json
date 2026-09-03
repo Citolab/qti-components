@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@515: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@516: {  }, length: number }"
               }
             },
             {
@@ -32522,6 +32522,18 @@
           "name": "QtiConditionExpression",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -32582,6 +32594,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -32621,6 +32656,14 @@
           "name": "QtiExpression",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected"
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -32659,6 +32702,25 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully."
             },
             {
               "kind": "field",
@@ -40341,6 +40403,18 @@
           "name": "QtiAnyN",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -40419,6 +40493,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -40485,6 +40582,18 @@
           "description": "",
           "name": "QtiBaseValue",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "field",
               "name": "baseType",
@@ -40555,6 +40664,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -40825,6 +40957,18 @@
           "name": "QtiContainerSize",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -40888,6 +41032,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -40939,6 +41106,18 @@
           "description": "",
           "name": "QtiContains",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -41003,6 +41182,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -41053,6 +41255,18 @@
           "description": "",
           "name": "QtiCorrect",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -41122,6 +41336,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -41179,7 +41416,11 @@
               "type": {
                 "text": "TestContext | undefined"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             },
             {
               "kind": "method",
@@ -41254,6 +41495,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -41315,6 +41579,18 @@
           "description": "",
           "name": "QtiDelete",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -41379,6 +41655,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -41430,6 +41729,18 @@
           "description": "",
           "name": "QtiDivide",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#collectNumericValues",
@@ -41512,6 +41823,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -41563,6 +41897,18 @@
           "description": "",
           "name": "QtiDurationGte",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#getDurationValues",
@@ -41649,6 +41995,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41706,6 +42075,18 @@
           "name": "QtiDurationLt",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#getDurationValues",
               "privacy": "private",
@@ -41797,6 +42178,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -41848,6 +42252,18 @@
           "description": "",
           "name": "QtiEqualRounded",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -41911,6 +42327,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41994,6 +42433,18 @@
           "name": "QtiEqual",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -42051,6 +42502,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42134,6 +42608,18 @@
           "name": "QtiFieldValue",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -42197,6 +42683,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -42248,6 +42757,18 @@
           "description": "",
           "name": "QtiGcd",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#calculateGcd",
@@ -42356,6 +42877,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -42407,6 +42951,18 @@
           "description": "",
           "name": "QtiGt",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -42471,6 +43027,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -42521,6 +43100,18 @@
           "description": "",
           "name": "QtiGte",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -42585,6 +43176,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -42635,6 +43249,18 @@
           "description": "",
           "name": "QtiIndex",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#lookupVariableValue",
@@ -42725,6 +43351,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -42785,6 +43434,18 @@
           "description": "",
           "name": "QtiInside",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#isInsideCircle",
@@ -42990,6 +43651,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -43068,6 +43752,18 @@
           "name": "QtiIntegerDivide",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#collectIntegerValues",
               "privacy": "private",
@@ -43143,6 +43839,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43201,6 +43920,18 @@
           "name": "QtiIntegerModulus",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#collectIntegerValues",
               "privacy": "private",
@@ -43282,6 +44013,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -43333,6 +44087,18 @@
           "description": "",
           "name": "QtiIntegerToFloat",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -43397,6 +44163,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -43448,6 +44237,18 @@
           "description": "",
           "name": "QtiIsNull",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -43512,6 +44313,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -43563,6 +44387,18 @@
           "description": "",
           "name": "QtiLcm",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#collectIntegerValues",
@@ -43687,6 +44523,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43841,6 +44700,18 @@
           "name": "QtiLt",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -43904,6 +44775,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -43954,6 +44848,18 @@
           "description": "",
           "name": "QtiLte",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -44018,6 +44924,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -44068,6 +44997,18 @@
           "description": "",
           "name": "QtiMapResponsePoint",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -44134,6 +45075,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44200,6 +45164,18 @@
           "name": "QtiMapResponse",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -44265,6 +45241,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44337,6 +45336,18 @@
           "description": "",
           "name": "QtiMatch",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -44424,6 +45435,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -44475,6 +45509,18 @@
           "description": "",
           "name": "QtiMathOperator",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#performOperation",
@@ -44572,6 +45618,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -44634,6 +45703,18 @@
           "name": "QtiMax",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#collectNumericValues",
               "privacy": "private",
@@ -44709,6 +45790,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44767,6 +45871,18 @@
           "name": "QtiMember",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -44830,6 +45946,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -44880,6 +46019,18 @@
           "description": "",
           "name": "QtiMin",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#collectNumericValues",
@@ -44962,6 +46113,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -45013,6 +46187,18 @@
           "description": "",
           "name": "QtiMultiple",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -45077,6 +46263,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -45127,6 +46336,18 @@
           "description": "",
           "name": "QtiNot",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -45191,6 +46412,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -45242,6 +46486,18 @@
           "description": "",
           "name": "QtiNull",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -45306,6 +46562,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -45357,6 +46636,18 @@
           "description": "",
           "name": "QtiOr",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -45421,6 +46712,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -45472,6 +46786,18 @@
           "description": "",
           "name": "QtiOrdered",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -45530,6 +46856,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45899,6 +47248,18 @@
           "name": "QtiPatternMatch",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -45971,6 +47332,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -46033,6 +47417,18 @@
           "name": "QtiPower",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46090,6 +47486,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46225,6 +47644,18 @@
           "name": "QtiProduct",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46288,6 +47719,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -46339,6 +47793,18 @@
           "description": "",
           "name": "QtiRandomInteger",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -46435,6 +47901,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -46522,6 +48011,18 @@
           "name": "QtiRandom",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46585,6 +48086,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -46635,6 +48159,18 @@
           "description": "",
           "name": "QtiRepeat",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "#resolveRepeatCount",
@@ -46730,6 +48266,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47110,6 +48669,18 @@
           "name": "QtiRoundTo",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#roundToDecimalPlaces",
               "privacy": "private",
@@ -47232,6 +48803,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -47317,6 +48911,18 @@
           "name": "QtiRound",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -47374,6 +48980,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47877,6 +49506,18 @@
           "name": "QtiStatsOperator",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#collectNumericValues",
               "privacy": "private",
@@ -47985,6 +49626,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -48046,6 +49710,18 @@
           "description": "",
           "name": "QtiStringMatch",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -48113,6 +49789,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48180,6 +49879,18 @@
           "name": "QtiSubstring",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48246,6 +49957,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48438,6 +50172,18 @@
           "name": "QtiSum",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48495,6 +50241,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48573,6 +50342,18 @@
           "name": "QtiTruncate",
           "members": [
             {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48636,6 +50417,29 @@
               }
             },
             {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "result",
               "type": {
@@ -48687,6 +50491,18 @@
           "description": "",
           "name": "QtiVariable",
           "members": [
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -48745,6 +50561,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50695,7 +52534,11 @@
               "type": {
                 "text": "TestContext | undefined"
               },
-              "privacy": "public"
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             },
             {
               "kind": "field",
@@ -50763,6 +52606,29 @@
                 "text": "QtiContext | undefined"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveVariable",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "VariableDeclaration<string | string[] | null> | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resolve a declared variable from the closest available scope: item-level\nfirst, then the test-level outcome variables. So an expression used in an\nassessmentTest's outcome processing can reference a test-level outcome\n(e.g. a total set earlier in the same run) — which the QTI variable\nexpression is specified to do. Returns null when unresolved rather than\nthrowing, so callers degrade gracefully.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
