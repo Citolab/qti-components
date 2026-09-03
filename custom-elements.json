@@ -32393,11 +32393,33 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "The QTI `show-feedback` constraint governs exactly one state: after the end of\nthe last attempt. Up to that point the spec requires any applicable feedback to\nbe shown — \"a value of max-attempts greater than 1, by definition, indicates\nthat any applicable feedback must be shown\" — and only \"once the maximum number\nof allowed attempts have been used (or for adaptive items, completionStatus has\nbeen set to completed)\" does `show-feedback` decide.\n\nThis only ever forces feedback off, so `show-feedback` being true settles it:\nthere is no state in which the constraint hides feedback. It defaults to\nfalse, and an absent value suppresses once the attempts are gone.\n\nThat leaves one question — is the item out of attempts? — and the two item\nkinds answer it from different variables, so each reads only its own."
             },
             {
               "kind": "method",
@@ -35457,6 +35479,52 @@
             },
             {
               "kind": "method",
+              "name": "#assessmentItemFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentItem | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string | undefined"
+                  }
+                }
+              ],
+              "description": "The assessment item for an item-ref id, if it has been rendered.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#assessOptimality",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ItemOptimality"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ItemContext"
+                  }
+                }
+              ],
+              "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#extractDefaultValues",
               "privacy": "private",
               "return": {
@@ -35507,6 +35575,24 @@
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleItemContextUpdated",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<{ itemContext: ItemContext; responseProcessed?: boolean }>"
+                  }
+                }
+              ],
+              "description": "Latch whether an item reached its optimal outcome whenever it has just ended\nan attempt. processResponse — fired by test-end-attempt, autoscore, or an\nin-item end-attempt interaction — flags its context update with\n`responseProcessed`; a plain selection updates the context without it, so\n`done` can't flip until the candidate actually ends the attempt.",
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -35572,6 +35658,70 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#isItemDone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "numAttempts",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "optimality",
+                  "type": {
+                    "text": "ItemOptimality"
+                  }
+                },
+                {
+                  "name": "maxAttempts",
+                  "type": {
+                    "text": "number | undefined"
+                  }
+                }
+              ],
+              "description": "Decide whether an item should be treated as \"the candidate is done with it\"\nfor the purpose of gating forward navigation and further attempts.\n\n- The candidate must have actually ended an attempt (numAttempts > 0).\n- Once attempted, the item is done if they reached the optimal outcome\n  ('optimal'), or there's nothing to improve on ('unscored'). It is only *not*\n  done while a better attempt is still possible ('suboptimal') and attempts\n  remain — see #assessOptimality for how \"optimal\" is determined.\n\n`optimality` reflects the last *ended attempt* (see #optimality), not the\nlive selection — so a freshly-picked optimal answer doesn't count as done\nuntil test-end-attempt evaluates it.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#numericVariable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ItemContext['variables']"
+                  }
+                },
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Read a single numeric outcome value, or null when absent / non-numeric.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "#onShowCandidateCorrection",
               "privacy": "private",
@@ -35582,6 +35732,17 @@
               "name": "#onShowCorrectResponse",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#optimality",
+              "privacy": "private",
+              "default": "new Map<string, ItemOptimality>()",
+              "description": "Whether each item's last *ended attempt* reached the optimal outcome, keyed\nby item-ref id. Written from #handleItemContextUpdated when processResponse\nends an attempt — never on a plain selection. Mirrors how inline feedback\nonly re-evaluates when an attempt is processed, so a freshly-picked answer\ndoesn't flip `done` until the candidate ends the attempt.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
             },
             {
               "kind": "field",
@@ -35610,6 +35771,41 @@
               }
             },
             {
+              "kind": "method",
+              "name": "afterAttemptEnded",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "assessmentItem",
+                  "type": {
+                    "text": "QtiAssessmentItem | undefined"
+                  }
+                },
+                {
+                  "name": "computedItem",
+                  "type": {
+                    "text": "ComputedItem | undefined"
+                  }
+                },
+                {
+                  "name": "done",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Reflect correctness back to the candidate after an ended attempt, for items\nthe assessment opted in via the standard `qti-item-session-control\nshow-solution` (QTI 3.0 ItemSessionControl.show-solution) — the player takes\nno opinion of its own:\n- candidate correction (a mark on the learner's selection) after every attempt;\n- the correct response (a mark on the right answer) once the item is done —\n  the candidate reached the optimal outcome, or ran out of attempts.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "autoScoreItems",
               "type": {
@@ -35630,8 +35826,31 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "computedItemFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ComputedItem | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The computed-context entry for an item, from the session-control cascade.",
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -35829,7 +36048,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
               }
             },
             {
@@ -36973,11 +37192,41 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "The QTI `show-feedback` constraint governs exactly one state: after the end of\nthe last attempt. Up to that point the spec requires any applicable feedback to\nbe shown — \"a value of max-attempts greater than 1, by definition, indicates\nthat any applicable feedback must be shown\" — and only \"once the maximum number\nof allowed attempts have been used (or for adaptive items, completionStatus has\nbeen set to completed)\" does `show-feedback` decide.\n\nThis only ever forces feedback off, so `show-feedback` being true settles it:\nthere is no state in which the constraint hides feedback. It defaults to\nfalse, and an absent value suppresses once the attempts are gone.\n\nThat leaves one question — is the item out of attempts? — and the two item\nkinds answer it from different variables, so each reads only its own.",
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37161,11 +37410,41 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "The QTI `show-feedback` constraint governs exactly one state: after the end of\nthe last attempt. Up to that point the spec requires any applicable feedback to\nbe shown — \"a value of max-attempts greater than 1, by definition, indicates\nthat any applicable feedback must be shown\" — and only \"once the maximum number\nof allowed attempts have been used (or for adaptive items, completionStatus has\nbeen set to completed)\" does `show-feedback` decide.\n\nThis only ever forces feedback off, so `show-feedback` being true settles it:\nthere is no state in which the constraint hides feedback. It defaults to\nfalse, and an absent value suppresses once the attempts are gone.\n\nThat leaves one question — is the item out of attempts? — and the two item\nkinds answer it from different variables, so each reads only its own.",
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -37403,11 +37682,41 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "The QTI `show-feedback` constraint governs exactly one state: after the end of\nthe last attempt. Up to that point the spec requires any applicable feedback to\nbe shown — \"a value of max-attempts greater than 1, by definition, indicates\nthat any applicable feedback must be shown\" — and only \"once the maximum number\nof allowed attempts have been used (or for adaptive items, completionStatus has\nbeen set to completed)\" does `show-feedback` decide.\n\nThis only ever forces feedback off, so `show-feedback` being true settles it:\nthere is no state in which the constraint hides feedback. It defaults to\nfalse, and an absent value suppresses once the attempts are gone.\n\nThat leaves one question — is the item out of attempts? — and the two item\nkinds answer it from different variables, so each reads only its own.",
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -48676,6 +48985,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-test/src/components/test-navigation/test-navigation"
           }
         },
@@ -49247,6 +49564,175 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "QtiItemSessionControl",
+          "members": [
+            {
+              "kind": "field",
+              "name": "allowComment",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "allow-comment"
+            },
+            {
+              "kind": "field",
+              "name": "allowReview",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "allow-review"
+            },
+            {
+              "kind": "field",
+              "name": "allowSkipping",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "allow-skipping"
+            },
+            {
+              "kind": "field",
+              "name": "maxAttempts",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "max-attempts"
+            },
+            {
+              "kind": "field",
+              "name": "showFeedback",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "show-feedback"
+            },
+            {
+              "kind": "field",
+              "name": "showSolution",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "show-solution"
+            },
+            {
+              "kind": "field",
+              "name": "validateResponses",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "validate-responses"
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-item-session-control-connected",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "allow-comment",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "allowComment"
+            },
+            {
+              "name": "allow-review",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "allowReview"
+            },
+            {
+              "name": "allow-skipping",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "allowSkipping"
+            },
+            {
+              "name": "max-attempts",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "maxAttempts"
+            },
+            {
+              "name": "show-feedback",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "showFeedback"
+            },
+            {
+              "name": "show-solution",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "showSolution"
+            },
+            {
+              "name": "validate-responses",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "validateResponses"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "The qti-item-session-control element contains configurations relating to flow of test sessions.",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
+          "definitionPath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
+          "tagName": "qti-item-session-control"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "qti-item-session-control",
+          "declaration": {
+            "name": "QtiItemSessionControl",
+            "module": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiItemSessionControl",
+          "declaration": {
+            "name": "QtiItemSessionControl",
+            "module": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts",
       "declarations": [
         {
@@ -49331,11 +49817,41 @@
           "members": [
             {
               "kind": "field",
+              "name": "_computedContext",
+              "type": {
+                "text": "ComputedContext | undefined"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "_context",
               "type": {
                 "text": "ItemContext | undefined"
               },
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sessionControlAllowsFeedback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "The QTI `show-feedback` constraint governs exactly one state: after the end of\nthe last attempt. Up to that point the spec requires any applicable feedback to\nbe shown — \"a value of max-attempts greater than 1, by definition, indicates\nthat any applicable feedback must be shown\" — and only \"once the maximum number\nof allowed attempts have been used (or for adaptive items, completionStatus has\nbeen set to completed)\" does `show-feedback` decide.\n\nThis only ever forces feedback off, so `show-feedback` being true settles it:\nthere is no state in which the constraint hides feedback. It defaults to\nfalse, and an absent value suppresses once the attempts are gone.\n\nThat leaves one question — is the item out of attempts? — and the two item\nkinds answer it from different variables, so each reads only its own.",
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
@@ -50017,6 +50533,25 @@
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "#setTestDoc",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "testDoc",
+                  "type": {
+                    "text": "DocumentFragment"
+                  }
+                }
+              ],
+              "description": "Assign a new test document and announce it.\n\nThe announcement has to happen here rather than on\n`qti-assessment-test-connected`, because by then the new document's\nchildren have already connected and registered themselves — a host that\nresets its context on that event throws those registrations away. Lit's\nre-render is async, so a handler running now still gets in before any child\nof the new `qti-assessment-test` connects."
+            },
+            {
               "kind": "field",
               "name": "#templateContent",
               "privacy": "private",
@@ -50084,6 +50619,14 @@
               "description": "The raw XML string"
             }
           ],
+          "events": [
+            {
+              "name": "qti-testdoc-loaded",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
           "attributes": [
             {
               "name": "test-url",
@@ -50132,6 +50675,68 @@
           "kind": "class",
           "description": "",
           "name": "TestEndAttempt",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_handleTestElementChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleTestElementChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_internalDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "checkDisabled",
+              "type": {
+                "text": "checkDisabled() => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "computedContext",
+              "type": {
+                "text": "ComputedContext"
+              },
+              "privacy": "protected",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "_internalDisabled"
+            }
+          ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
@@ -51024,6 +51629,44 @@
             },
             {
               "kind": "method",
+              "name": "#assessmentItemFor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentItem | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string | undefined"
+                  }
+                }
+              ],
+              "description": "The assessment item for an item-ref id, if it has been rendered."
+            },
+            {
+              "kind": "method",
+              "name": "#assessOptimality",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ItemOptimality"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ItemContext"
+                  }
+                }
+              ],
+              "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough."
+            },
+            {
+              "kind": "method",
               "name": "#extractDefaultValues",
               "privacy": "private",
               "return": {
@@ -51066,6 +51709,20 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleItemContextUpdated",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<{ itemContext: ItemContext; responseProcessed?: boolean }>"
+                  }
+                }
+              ],
+              "description": "Latch whether an item reached its optimal outcome whenever it has just ended\nan attempt. processResponse — fired by test-end-attempt, autoscore, or an\nin-item end-attempt interaction — flags its context update with\n`responseProcessed`; a plain selection updates the context without it, so\n`done` can't flip until the candidate actually ends the attempt."
             },
             {
               "kind": "method",
@@ -51115,6 +51772,69 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "#isItemDone",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "numAttempts",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "optimality",
+                  "type": {
+                    "text": "ItemOptimality"
+                  }
+                },
+                {
+                  "name": "maxAttempts",
+                  "type": {
+                    "text": "number | undefined"
+                  }
+                }
+              ],
+              "description": "Decide whether an item should be treated as \"the candidate is done with it\"\nfor the purpose of gating forward navigation and further attempts.\n\n- The candidate must have actually ended an attempt (numAttempts > 0).\n- Once attempted, the item is done if they reached the optimal outcome\n  ('optimal'), or there's nothing to improve on ('unscored'). It is only *not*\n  done while a better attempt is still possible ('suboptimal') and attempts\n  remain — see #assessOptimality for how \"optimal\" is determined.\n\n`optimality` reflects the last *ended attempt* (see #optimality), not the\nlive selection — so a freshly-picked optimal answer doesn't count as done\nuntil test-end-attempt evaluates it."
+            },
+            {
+              "kind": "method",
+              "name": "#numericVariable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variables",
+                  "type": {
+                    "text": "ItemContext['variables']"
+                  }
+                },
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Read a single numeric outcome value, or null when absent / non-numeric."
+            },
+            {
+              "kind": "field",
+              "name": "#optimality",
+              "privacy": "private",
+              "default": "new Map<string, ItemOptimality>()",
+              "description": "Whether each item's last *ended attempt* reached the optimal outcome, keyed\nby item-ref id. Written from #handleItemContextUpdated when processResponse\nends an attempt — never on a plain selection. Mirrors how inline feedback\nonly re-evaluates when an attempt is processed, so a freshly-picked answer\ndoesn't flip `done` until the candidate ends the attempt."
+            },
+            {
               "kind": "field",
               "name": "#testElement",
               "privacy": "private",
@@ -51133,6 +51853,37 @@
               "readonly": true
             },
             {
+              "kind": "method",
+              "name": "afterAttemptEnded",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_assessmentItem",
+                  "type": {
+                    "text": "QtiAssessmentItem | undefined"
+                  }
+                },
+                {
+                  "name": "_computedItem",
+                  "type": {
+                    "text": "ComputedItem | undefined"
+                  }
+                },
+                {
+                  "name": "_done",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Extension point for presentation packages reacting to an ended attempt.\n`done` is settled here — from the freshly latched optimality and the\nsession-control cascade — because the computed context only catches up on\nthe next update, after this event has finished bubbling."
+            },
+            {
               "kind": "field",
               "name": "autoScoreItems",
               "type": {
@@ -51149,8 +51900,27 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
+            },
+            {
+              "kind": "method",
+              "name": "computedItemFor",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "ComputedItem | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The computed-context entry for an item, from the session-control cascade."
             },
             {
               "kind": "field",
@@ -51334,7 +52104,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
             },
             {
@@ -51440,7 +52210,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
             },
             {
@@ -51555,7 +52325,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
             },
             {
@@ -51637,7 +52407,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
               }
             }
           ],
@@ -51687,7 +52457,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
               }
             }
           ],
@@ -51750,7 +52520,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
               }
             },
             {
@@ -51852,7 +52622,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... } | undefined"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] } | undefined"
               }
             },
             {
@@ -51944,7 +52714,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
             },
             {
@@ -52082,7 +52852,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; sections: { active?: boolean; identifier: string; title: string; completed?: boolean; items: ComputedItem[]; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultane... }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active?: boolean; identifier: string; navigationMode: 'linear' | 'nonlinear'; submissionMode: 'individual' | 'simultaneous'; allowSkipping?: boolean; sections: { active?: boolean; identifier: string; ... 5 more ...; allowSkipping?: boolean; }[]; }[] }"
               }
             },
             {
@@ -52380,9 +53150,9 @@
           "kind": "variable",
           "name": "qtiTestElements",
           "type": {
-            "text": "[\n  { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },\n  { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },\n  { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },\n  { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },\n  { tag: 'qti-test', ctor: QtiTest },\n  { tag: 'qti-test-feedback', ctor: QtiTestFeedback },\n  { tag: 'qti-test-part', ctor: QtiTestPart },\n  { tag: 'qti-test-variables', ctor: QtiTestVariables },\n  { tag: 'test-check-item', ctor: TestCheckItem },\n  { tag: 'test-container', ctor: TestContainer },\n  { tag: 'test-end-attempt', ctor: TestEndAttempt },\n  { tag: 'test-item-link', ctor: TestItemLink },\n  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },\n  { tag: 'test-navigation', ctor: TestNavigation },\n  { tag: 'test-next', ctor: TestNext },\n  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },\n  { tag: 'test-prev', ctor: TestPrev },\n  { tag: 'test-print-context', ctor: TestPrintContext },\n  { tag: 'test-print-item-variables', ctor: TestPrintVariables },\n  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },\n  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },\n  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },\n  { tag: 'test-section-link', ctor: TestSectionLink },\n  { tag: 'test-stamp', ctor: TestStamp },\n  { tag: 'test-tts-next', ctor: TestTtsNext },\n  { tag: 'test-tts-pause', ctor: TestTtsPause },\n  { tag: 'test-tts-play', ctor: TestTtsPlay },\n  { tag: 'test-tts-prev', ctor: TestTtsPrev },\n  { tag: 'test-tts-resume', ctor: TestTtsResume },\n  { tag: 'test-tts-stop', ctor: TestTtsStop },\n  { tag: 'test-view', ctor: TestView },\n  { tag: 'test-view-toggle', ctor: TestViewToggle }\n]"
+            "text": "[\n  { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },\n  { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },\n  { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },\n  { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },\n  { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },\n  { tag: 'qti-test', ctor: QtiTest },\n  { tag: 'qti-test-feedback', ctor: QtiTestFeedback },\n  { tag: 'qti-test-part', ctor: QtiTestPart },\n  { tag: 'qti-test-variables', ctor: QtiTestVariables },\n  { tag: 'test-check-item', ctor: TestCheckItem },\n  { tag: 'test-container', ctor: TestContainer },\n  { tag: 'test-end-attempt', ctor: TestEndAttempt },\n  { tag: 'test-item-link', ctor: TestItemLink },\n  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },\n  { tag: 'test-navigation', ctor: TestNavigation },\n  { tag: 'test-next', ctor: TestNext },\n  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },\n  { tag: 'test-prev', ctor: TestPrev },\n  { tag: 'test-print-context', ctor: TestPrintContext },\n  { tag: 'test-print-item-variables', ctor: TestPrintVariables },\n  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },\n  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },\n  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },\n  { tag: 'test-section-link', ctor: TestSectionLink },\n  { tag: 'test-stamp', ctor: TestStamp },\n  { tag: 'test-tts-next', ctor: TestTtsNext },\n  { tag: 'test-tts-pause', ctor: TestTtsPause },\n  { tag: 'test-tts-play', ctor: TestTtsPlay },\n  { tag: 'test-tts-prev', ctor: TestTtsPrev },\n  { tag: 'test-tts-resume', ctor: TestTtsResume },\n  { tag: 'test-tts-stop', ctor: TestTtsStop },\n  { tag: 'test-view', ctor: TestView },\n  { tag: 'test-view-toggle', ctor: TestViewToggle }\n]"
           },
-          "default": "[ { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef }, { tag: 'qti-assessment-section', ctor: QtiAssessmentSection }, { tag: 'qti-assessment-test', ctor: QtiAssessmentTest }, { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing }, { tag: 'qti-test', ctor: QtiTest }, { tag: 'qti-test-feedback', ctor: QtiTestFeedback }, { tag: 'qti-test-part', ctor: QtiTestPart }, { tag: 'qti-test-variables', ctor: QtiTestVariables }, { tag: 'test-check-item', ctor: TestCheckItem }, { tag: 'test-container', ctor: TestContainer }, { tag: 'test-end-attempt', ctor: TestEndAttempt }, { tag: 'test-item-link', ctor: TestItemLink }, { tag: 'test-item-to-speech', ctor: TestItemToSpeech }, { tag: 'test-navigation', ctor: TestNavigation }, { tag: 'test-next', ctor: TestNext }, { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp }, { tag: 'test-prev', ctor: TestPrev }, { tag: 'test-print-context', ctor: TestPrintContext }, { tag: 'test-print-item-variables', ctor: TestPrintVariables }, { tag: 'test-scoring-buttons', ctor: TestScoringButtons }, { tag: 'test-scoring-feedback', ctor: TestScoringFeedback }, { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp }, { tag: 'test-section-link', ctor: TestSectionLink }, { tag: 'test-stamp', ctor: TestStamp }, { tag: 'test-tts-next', ctor: TestTtsNext }, { tag: 'test-tts-pause', ctor: TestTtsPause }, { tag: 'test-tts-play', ctor: TestTtsPlay }, { tag: 'test-tts-prev', ctor: TestTtsPrev }, { tag: 'test-tts-resume', ctor: TestTtsResume }, { tag: 'test-tts-stop', ctor: TestTtsStop }, { tag: 'test-view', ctor: TestView }, { tag: 'test-view-toggle', ctor: TestViewToggle } ]"
+          "default": "[ { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef }, { tag: 'qti-assessment-section', ctor: QtiAssessmentSection }, { tag: 'qti-assessment-test', ctor: QtiAssessmentTest }, { tag: 'qti-item-session-control', ctor: QtiItemSessionControl }, { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing }, { tag: 'qti-test', ctor: QtiTest }, { tag: 'qti-test-feedback', ctor: QtiTestFeedback }, { tag: 'qti-test-part', ctor: QtiTestPart }, { tag: 'qti-test-variables', ctor: QtiTestVariables }, { tag: 'test-check-item', ctor: TestCheckItem }, { tag: 'test-container', ctor: TestContainer }, { tag: 'test-end-attempt', ctor: TestEndAttempt }, { tag: 'test-item-link', ctor: TestItemLink }, { tag: 'test-item-to-speech', ctor: TestItemToSpeech }, { tag: 'test-navigation', ctor: TestNavigation }, { tag: 'test-next', ctor: TestNext }, { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp }, { tag: 'test-prev', ctor: TestPrev }, { tag: 'test-print-context', ctor: TestPrintContext }, { tag: 'test-print-item-variables', ctor: TestPrintVariables }, { tag: 'test-scoring-buttons', ctor: TestScoringButtons }, { tag: 'test-scoring-feedback', ctor: TestScoringFeedback }, { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp }, { tag: 'test-section-link', ctor: TestSectionLink }, { tag: 'test-stamp', ctor: TestStamp }, { tag: 'test-tts-next', ctor: TestTtsNext }, { tag: 'test-tts-pause', ctor: TestTtsPause }, { tag: 'test-tts-play', ctor: TestTtsPlay }, { tag: 'test-tts-prev', ctor: TestTtsPrev }, { tag: 'test-tts-resume', ctor: TestTtsResume }, { tag: 'test-tts-stop', ctor: TestTtsStop }, { tag: 'test-view', ctor: TestView }, { tag: 'test-view-toggle', ctor: TestViewToggle } ]"
         }
       ],
       "exports": [
@@ -52407,6 +53177,14 @@
           "name": "QtiAssessmentTest",
           "declaration": {
             "name": "QtiAssessmentTest",
+            "module": "packages/qti-test/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "QtiItemSessionControl",
+          "declaration": {
+            "name": "QtiItemSessionControl",
             "module": "packages/qti-test/src/elements.ts"
           }
         },

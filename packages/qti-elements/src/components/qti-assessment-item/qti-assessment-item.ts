@@ -318,11 +318,14 @@ export class QtiAssessmentItem extends LitElement {
       this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
     }
 
+    // `responseProcessed` marks this as the end of an attempt (vs. a plain
+    // selection, which fires the same event without the flag). Lets listeners
+    // react only when an attempt actually ends.
     this.dispatchEvent(
-      new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+      new CustomEvent<{ itemContext: ItemContext; responseProcessed: boolean }>('qti-item-context-updated', {
         bubbles: true,
         composed: true,
-        detail: { itemContext: this._context }
+        detail: { itemContext: this._context, responseProcessed: true }
       })
     );
 

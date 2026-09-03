@@ -85,17 +85,16 @@ export class TestNext extends LitElement {
 
     const isLinearIndividual = navigationMode === 'linear' && submissionMode === 'individual';
 
-    // In linear/individual mode each item is submitted before the candidate
-    // leaves it, so Next stays locked until an attempt has been ended.
-    // numAttempts only increments in processResponse, so a mid-attempt
-    // selection can never unlock it.
-    const numAttempts = Number(activeItem?.variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
-
+    // In linear individual mode the candidate may only advance once they are
+    // "done" with the active item: they reached the optimal outcome (best score),
+    // exhausted maxAttempts, or the item has no judgeable optimal value. `done` is
+    // computed centrally in test-navigation (#isItemDone), so this Next gate
+    // matches the exact rule that decides an item is resolved.
     this._internalDisabled =
       !this.computedContext ||
       this.itemIndex < 0 ||
       this.itemIndex >= (this.sectionItems?.length ?? 0) - 1 ||
-      (isLinearIndividual && numAttempts === 0);
+      (isLinearIndividual && !activeItem?.done);
   }
 
   protected _requestItem(identifier: string): void {

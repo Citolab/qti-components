@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!-- Mapping-scored item where more than one choice reaches the maximum score.
+     The declared qti-correct-response is "JOY", but "GLAD" also maps to the full
+     mark, so judging "best score" by an exact correct-response match would wrongly
+     keep Next disabled after a full-marks answer. SCORE vs MAXSCORE gets it right. -->
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+	xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+	identifier="ITM-choice_mapping" title="A word for happy" adaptive="false" time-dependent="false">
+	<qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+		<qti-correct-response>
+			<qti-value>JOY</qti-value>
+		</qti-correct-response>
+		<qti-mapping lower-bound="0" upper-bound="1" default-value="0">
+			<qti-map-entry map-key="JOY" mapped-value="1" />
+			<qti-map-entry map-key="GLAD" mapped-value="1" />
+		</qti-mapping>
+	</qti-response-declaration>
+
+	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+		<qti-default-value>
+			<qti-value>0</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+
+	<qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+		<qti-default-value>
+			<qti-value>1</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+
+	<qti-item-body>
+		<qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+			<qti-prompt>Which word means "happy"?</qti-prompt>
+			<qti-simple-choice identifier="JOY">Joyful</qti-simple-choice>
+			<qti-simple-choice identifier="GLAD">Glad</qti-simple-choice>
+			<qti-simple-choice identifier="SAD">Sad</qti-simple-choice>
+		</qti-choice-interaction>
+	</qti-item-body>
+	<qti-response-processing
+		template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response.xml" />
+</qti-assessment-item>

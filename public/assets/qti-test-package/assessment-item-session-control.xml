@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="ItemSessionControlTest"
+        title="Item Session Control Test"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <qti-test-part identifier="test-part-1" navigation-mode="nonlinear" submission-mode="individual">
+        <!-- Section with no explicit max-attempts (defaults to 1) -->
+        <qti-assessment-section identifier="section-max-attempts-default" title="Max Attempts Default" visible="true">
+            <qti-assessment-item-ref identifier="ITM-choice-default" href="items/choice.xml"/>
+        </qti-assessment-section>
+
+        <!-- Section with max-attempts=2 -->
+        <qti-assessment-section identifier="section-max-attempts-2" title="Max Attempts 2" visible="true">
+            <qti-item-session-control max-attempts="2"/>
+            <qti-assessment-item-ref identifier="ITM-choice-max2" href="items/choice.xml"/>
+        </qti-assessment-section>
+
+        <!-- Section with allow-skipping=false -->
+        <qti-assessment-section identifier="section-no-skipping" title="No Skipping" visible="true">
+            <qti-item-session-control allow-skipping="false" max-attempts="0"/>
+            <qti-assessment-item-ref identifier="ITM-choice-noskip" href="items/choice.xml"/>
+            <qti-assessment-item-ref identifier="ITM-textentry-noskip" href="items/text_entry.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

@@ -6,6 +6,16 @@ export type ComputedItem = ComputedItemContext & {
   type?: 'info' | 'regular';
   index?: number;
   active?: boolean;
+  allowSkipping?: boolean;
+  maxAttempts?: number;
+  showFeedback?: boolean;
+  showSolution?: boolean;
+  numAttempts?: number;
+  valid?: boolean;
+  isDefaultResponse?: boolean;
+  done?: boolean;
+  /** Last *ended attempt* reached the optimal outcome (best achievable score / correct response). */
+  optimal?: boolean;
 };
 
 export type ComputedContext = {
@@ -17,6 +27,7 @@ export type ComputedContext = {
     identifier: string;
     navigationMode: 'linear' | 'nonlinear';
     submissionMode: 'individual' | 'simultaneous';
+    allowSkipping?: boolean;
     sections: {
       active?: boolean;
       identifier: string;
@@ -25,6 +36,7 @@ export type ComputedContext = {
       items: ComputedItem[];
       navigationMode: 'linear' | 'nonlinear';
       submissionMode: 'individual' | 'simultaneous';
+      allowSkipping?: boolean;
     }[];
   }[];
 };

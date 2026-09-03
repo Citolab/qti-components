@@ -1,6 +1,6 @@
 import { QtiTest, TestCheckItem, TestNavigation } from '@qti-components/test/elements';
 
-import type { View } from '@qti-components/base';
+import type { ComputedItem, View } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
 type CorrectionAssessmentItem = QtiAssessmentItem & {
@@ -32,6 +32,27 @@ export class TestNavigationCorrection extends TestNavigation {
     this.removeEventListener('test-show-correct-response', this.#onShowCorrectResponse);
     this.removeEventListener('test-show-candidate-correction', this.#onShowCandidateCorrection);
     super.disconnectedCallback();
+  }
+
+  /**
+   * Reflect correctness back to the candidate after an ended attempt, for items
+   * the assessment opted in via the standard `qti-item-session-control
+   * show-solution` (QTI 3.0 ItemSessionControl.show-solution) — the player takes
+   * no opinion of its own:
+   * - candidate correction (a mark on the learner's selection) after every attempt;
+   * - the correct response (a mark on the right answer) once the item is done —
+   *   the candidate reached the optimal outcome, or ran out of attempts.
+   */
+  protected override afterAttemptEnded(
+    assessmentItem: QtiAssessmentItem | undefined,
+    computedItem: ComputedItem | undefined,
+    done: boolean
+  ): void {
+    if (!assessmentItem || !computedItem?.showSolution) return;
+
+    const correctable = assessmentItem as Partial<CorrectionAssessmentItem>;
+    correctable.showCandidateCorrection?.(true);
+    correctable.showCorrectResponse?.(done);
   }
 }
 
