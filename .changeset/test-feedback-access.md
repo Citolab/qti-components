@@ -9,7 +9,9 @@ Present test feedback according to its `access` characteristic.
 context the inherited implementation reads:
 
 - `during` — presented after each instance of outcome processing, while the test is in progress.
-- `atEnd` — presented only at the conclusion of the test, or of the test part the feedback sits in.
+- `atEnd` — reachable only at the conclusion of the test, or of the test part the feedback sits in.
+  Concluding that scope makes the feedback available rather than showing it; the candidate reaches
+  it through a `test-show-feedback` button.
 
 `test-navigation` announces `qti-part-completed` and `qti-test-completed` the first time each part,
 and then the test, becomes done — it already owns the per-item view through the computed context, so
