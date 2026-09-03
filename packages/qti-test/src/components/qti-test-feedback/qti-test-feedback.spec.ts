@@ -82,37 +82,75 @@ describe('qti-test-feedback access', () => {
     expect(isHidden('part-over')).toBe(true);
   });
 
-  it('shows test-root feedback at the conclusion of the test', () => {
+  it('makes test-root feedback available, but not shown, at the conclusion of the test', async () => {
     qtiTest.outcomeProcessing({ atEnd: true });
+
+    expect(isHidden('test-over')).toBe(true);
+
+    qtiTest.navigateTo('feedback', 'test-over');
+    await feedback('test-over')?.updateComplete;
 
     expect(feedback('test-over')?.showStatus).toBe('on');
   });
 
-  it('does not show part feedback at the conclusion of the test', () => {
+  it('does not make part feedback available at the conclusion of the test', async () => {
     qtiTest.outcomeProcessing({ atEnd: true });
+
+    expect(isHidden('part-over')).toBe(true);
+
+    // Attempting to navigate to it anyway must not show it — it never latched
+    // available, so the navigation target alone isn't enough.
+    qtiTest.navigateTo('feedback', 'part-over');
+    await feedback('part-over')?.updateComplete;
 
     expect(isHidden('part-over')).toBe(true);
   });
 
-  it('shows part feedback at the conclusion of its own part', () => {
+  it('makes part feedback available, but not shown, at the conclusion of its own part', async () => {
     qtiTest.outcomeProcessing({ atEnd: true, partId: 'P1' });
+
+    expect(isHidden('part-over')).toBe(true);
+    expect(isHidden('test-over')).toBe(true);
+
+    qtiTest.navigateTo('feedback', 'part-over');
+    await feedback('part-over')?.updateComplete;
 
     expect(feedback('part-over')?.showStatus).toBe('on');
     expect(isHidden('test-over')).toBe(true);
   });
 
-  it('runs outcome processing when a part reports completion', () => {
+  it('hides atEnd feedback again once the candidate navigates away to a section', async () => {
+    qtiTest.outcomeProcessing({ atEnd: true });
+    qtiTest.navigateTo('feedback', 'test-over');
+    await feedback('test-over')?.updateComplete;
+    expect(feedback('test-over')?.showStatus).toBe('on');
+
+    qtiTest.navigateTo('section', 'S1');
+    await feedback('test-over')?.updateComplete;
+
+    expect(isHidden('test-over')).toBe(true);
+  });
+
+  it('runs outcome processing when a part reports completion, making its feedback available', async () => {
     const testElement = document.body.querySelector('qti-assessment-test')!;
 
     testElement.dispatchEvent(new CustomEvent('qti-part-completed', { detail: { partId: 'P1' }, bubbles: true }));
+    expect(isHidden('part-over')).toBe(true);
+
+    qtiTest.navigateTo('feedback', 'part-over');
+    await feedback('part-over')?.updateComplete;
 
     expect(feedback('part-over')?.showStatus).toBe('on');
   });
 
-  it('runs outcome processing when the test reports completion', () => {
+  it('runs outcome processing when the test reports completion, making its feedback available', async () => {
     const testElement = document.body.querySelector('qti-assessment-test')!;
 
     testElement.dispatchEvent(new CustomEvent('qti-test-completed', { bubbles: true }));
+    expect(isHidden('test-over')).toBe(true);
+
+    qtiTest.navigateTo('feedback', 'test-over');
+    await feedback('test-over')?.updateComplete;
 
     expect(feedback('test-over')?.showStatus).toBe('on');
   });

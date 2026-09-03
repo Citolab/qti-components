@@ -30,6 +30,7 @@ import { TestScoringButtons } from './components/test-scoring-buttons/test-scori
 import { TestScoringFeedback } from './components/test-scoring-feedback/test-scoring-feedback';
 import { TestSectionButtonsStamp } from './components/test-section-buttons-stamp/test-section-buttons-stamp';
 import { TestSectionLink } from './components/test-section-link/test-section-link';
+import { TestShowFeedback } from './components/test-show-feedback/test-show-feedback';
 import { TestStamp } from './components/test-stamp/test-stamp';
 import { TestView } from './components/test-view-toggle/test-view';
 import { TestViewToggle } from './components/test-view-toggle/test-view-toggle';
@@ -59,6 +60,7 @@ export {
   TestScoringFeedback,
   TestSectionButtonsStamp,
   TestSectionLink,
+  TestShowFeedback,
   TestStamp,
   TestTtsNext,
   TestTtsPause,
@@ -95,6 +97,7 @@ export const qtiTestElements = [
   { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },
   { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },
   { tag: 'test-section-link', ctor: TestSectionLink },
+  { tag: 'test-show-feedback', ctor: TestShowFeedback },
   { tag: 'test-stamp', ctor: TestStamp },
   { tag: 'test-tts-next', ctor: TestTtsNext },
   { tag: 'test-tts-pause', ctor: TestTtsPause },

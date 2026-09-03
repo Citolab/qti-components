@@ -11,7 +11,8 @@ import { qtiContext } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiContext } from '@qti-components/base';
 import type { OutcomeVariable } from '@qti-components/base';
-import type { ComputedContext, ComputedItem } from '@qti-components/base';
+import type { ComputedContext, ComputedItem, AvailableFeedback } from '@qti-components/base';
+import type { QtiTestFeedbackAvailabilityChangedEvent } from '../qti-test-feedback/qti-test-feedback';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../qti-assessment-section/qti-assessment-section';
@@ -91,6 +92,9 @@ export class TestNavigation extends LitElement {
    */
   #optimality = new Map<string, ItemOptimality>();
 
+  /** atEnd feedbacks that have announced themselves available, keyed by identifier → partId. */
+  #availableFeedbacks = new Map<string, string | null>();
+
   constructor() {
     super();
     this.addEventListener('qti-assessment-test-connected', this.#handleTestConnected.bind(this));
@@ -101,6 +105,32 @@ export class TestNavigation extends LitElement {
 
     this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
     this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
+    this.addEventListener('qti-test-feedback-availability-changed', this.#handleFeedbackAvailabilityChanged.bind(this));
+  }
+
+  /**
+   * Record (or clear) an atEnd feedback's availability and rebuild the computed
+   * context so test-show-feedback can react. Owned here because test-navigation
+   * already provides computedContext to the navigation buttons.
+   */
+  #handleFeedbackAvailabilityChanged(event: QtiTestFeedbackAvailabilityChangedEvent): void {
+    const { identifier, partId, available } = event.detail;
+    if (available) {
+      this.#availableFeedbacks.set(identifier, partId);
+    } else {
+      this.#availableFeedbacks.delete(identifier);
+    }
+    // qti-part-completed/qti-test-completed — announced at the end of this
+    // element's own willUpdate — cascade synchronously through outcome
+    // processing into checkShowFeedback, so this event can arrive while that
+    // willUpdate call is still on the stack. A plain requestUpdate() would be
+    // absorbed into that in-flight cycle, which already read the old list.
+    // Defer to a fresh cycle so computedContext picks up the change.
+    queueMicrotask(() => this.requestUpdate());
+  }
+
+  #availableFeedbacksList(): AvailableFeedback[] {
+    return Array.from(this.#availableFeedbacks, ([identifier, partId]) => ({ identifier, partId }));
   }
 
   /**
@@ -215,6 +245,7 @@ export class TestNavigation extends LitElement {
     this.#optimality.clear();
     this.#endedParts.clear();
     this.#testEnded = false;
+    this.#availableFeedbacks.clear();
     // Set the testIdentifier in qtiContext if not already set
     if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
       const currentContext = this.qtiContext.QTI_CONTEXT || {
@@ -423,6 +454,7 @@ export class TestNavigation extends LitElement {
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
+      availableFeedbacks: this.#availableFeedbacksList(),
       testParts: this.computedContext.testParts.map(testPart => {
         return {
           ...testPart,
