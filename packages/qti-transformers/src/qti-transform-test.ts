@@ -37,16 +37,16 @@ export const qtiTransformTest = (): transformTestApi => {
   let xmlUri = '';
 
   const api: transformTestApi = {
+    // Awaits loadXML so a failed fetch (network, CORS, non-2xx) rejects this
+    // promise. Callers own the failure: they can render it, retry it or let it
+    // bubble — rather than it escaping as an unhandled rejection while their
+    // own `await` never settles.
     async load(uri, signal) {
-      return new Promise<transformTestApi>((resolve, _) => {
-        loadXML(uri, signal).then(xml => {
-          xmlFragment = xml;
-          xmlUri = uri;
+      xmlFragment = await loadXML(uri, signal);
+      xmlUri = uri;
 
-          api.path(uri.substring(0, uri.lastIndexOf('/')));
-          return resolve(api);
-        });
-      });
+      api.path(uri.substring(0, uri.lastIndexOf('/')));
+      return api;
     },
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
