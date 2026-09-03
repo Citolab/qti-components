@@ -72,7 +72,7 @@ jobs:
             exit 0
           fi
 
-          pnpm dlx @changesets/cli version --snapshot dryrun
+          pnpm exec changeset version --snapshot dryrun
 
           echo "Preview of version/changelog changes:"
           git --no-pager diff -- .changeset packages || true

@@ -90,7 +90,7 @@ jobs:
 
       - name: Check for changesets
         run: |
-          if pnpm dlx @changesets/cli status --since=origin/main; then
+          if pnpm exec changeset status --since=origin/main; then
             echo "✅ Changeset found."
           else
             echo "⚠️ No changeset found. If this PR changes published package behavior, a maintainer will add one before merging."

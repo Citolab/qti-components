@@ -8,6 +8,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 This repo uses Changesets for versioning and npm publishing.
 
+`@changesets/cli` is a pinned devDependency, invoked as `pnpm exec changeset`. It used to be
+`pnpm dlx @changesets/cli`, which resolves `latest` at run time — so when 3.0.0 was published
+on 2026-08-11 it walked into the release pipeline unannounced, including `changeset version`,
+which rewrites every package version and changelog. Keep it in the lockfile and move it
+deliberately.
+
 - Release workflow: `.github/workflows/release-changesets.yml`
 - Primary CI release scripts:
   - `pnpm run ci:release:changesets:dry`
