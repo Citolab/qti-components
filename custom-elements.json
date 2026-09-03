@@ -33059,6 +33059,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-base/src/utils/custom-state-set"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-base/src/utils/scoring-helper"
           }
         },
@@ -33367,6 +33375,178 @@
           "declaration": {
             "name": "ctor",
             "module": "packages/qti-base/src/register.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/utils/custom-state-set.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "anonymous_0",
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "PROBE_TAG",
+          "customElement": true,
+          "modulePath": "packages/qti-base/src/utils/custom-state-set.ts",
+          "definitionPath": "packages/qti-base/src/utils/custom-state-set.ts"
+        },
+        {
+          "kind": "function",
+          "name": "classifyCustomStateSupport",
+          "return": {
+            "type": {
+              "text": "CustomStateSupport"
+            }
+          },
+          "parameters": [
+            {
+              "name": "attachInternals",
+              "type": {
+                "text": "(this: HTMLElement) => ElementInternals"
+              }
+            }
+          ],
+          "description": "Classify native custom-state support by behaviour:\n\n- `missing`: `ElementInternals` carries no `states` at all.\n- `legacy`: `states` exists but rejects a bare name.\n- `modern`: `states` exists and accepts a bare name — no shim wanted.\n\n`attachInternals` only works on a custom element, so the probe registers a\nthrowaway one. That happens solely when `states` is present, so the `missing`\npath never defines anything."
+        },
+        {
+          "kind": "class",
+          "description": "A permissive `CustomStateSet` that mirrors its contents to `data-state`.",
+          "name": "CustomStateSetShim",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#host",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "readonly": true,
+              "default": "host"
+            },
+            {
+              "kind": "method",
+              "name": "#reflect",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#write",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "add",
+              "return": {
+                "type": {
+                  "text": "this"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "delete",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "Set",
+            "module": "packages/qti-base/src/utils/custom-state-set.ts"
+          }
+        },
+        {
+          "kind": "function",
+          "name": "installCustomStateSetFallback",
+          "return": {
+            "type": {
+              "text": "CustomStateSupport | 'already-installed'"
+            }
+          },
+          "description": "Patch `HTMLElement.prototype.attachInternals` so every element's `states` is\nthe shim, on the two profiles that need it. Idempotent, and a no-op where\nnative support is usable.\n\nReturns the classification that was acted on, which is what the tests assert."
+        },
+        {
+          "kind": "variable",
+          "name": "PROBE_TAG",
+          "type": {
+            "text": "string"
+          },
+          "default": "'custom-state-support-probe'"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "classifyCustomStateSupport",
+          "declaration": {
+            "name": "classifyCustomStateSupport",
+            "module": "packages/qti-base/src/utils/custom-state-set.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "CustomStateSetShim",
+          "declaration": {
+            "name": "CustomStateSetShim",
+            "module": "packages/qti-base/src/utils/custom-state-set.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "installCustomStateSetFallback",
+          "declaration": {
+            "name": "installCustomStateSetFallback",
+            "module": "packages/qti-base/src/utils/custom-state-set.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "PROBE_TAG",
+          "declaration": {
+            "name": "anonymous_0",
+            "module": "packages/qti-base/src/utils/custom-state-set.ts"
           }
         }
       ]
