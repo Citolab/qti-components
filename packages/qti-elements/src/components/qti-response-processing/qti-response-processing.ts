@@ -6,6 +6,13 @@ import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/temp
 
 import type { PropertyValueMap } from 'lit';
 
+/** The response processing templates we substitute for, keyed by the file name in `template`. */
+const responseProcessingTemplates: Record<string, string> = {
+  map_response: mapResponse,
+  map_response_point: mapResponsePoint,
+  match_correct: matchCorrect
+};
+
 export class QtiResponseProcessing extends LitElement {
   static override styles = [
     css`
@@ -29,28 +36,20 @@ export class QtiResponseProcessing extends LitElement {
   }
 
   public override firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
-    if (this.getAttribute('template')) {
-      const splittedTemplateName = this.getAttribute('template')!.split('/');
-      const templateName = splittedTemplateName[splittedTemplateName.length - 1].replace('.xml', '');
-      this.innerHTML = '';
-      switch (templateName) {
-        case 'map_response': {
-          this.appendChild(this.#fragmentFromString(mapResponse).firstElementChild.firstElementChild);
-          break;
-        }
-        case 'map_response_point': {
-          this.appendChild(this.#fragmentFromString(mapResponsePoint).firstElementChild.firstElementChild);
-          break;
-        }
-        case 'match_correct':
-          this.appendChild(this.#fragmentFromString(matchCorrect).firstElementChild.firstElementChild);
-          break;
-      }
-    }
-  }
+    const template = this.getAttribute('template');
+    if (!template) return;
 
-  #fragmentFromString(strHTML: string) {
-    return document.createRange().createContextualFragment(strHTML);
+    const templateName = template.split('/').pop()!.replace('.xml', '');
+    const rules = responseProcessingTemplates[templateName];
+    // Leave an unknown template's authored children alone; there is nothing to substitute.
+    if (!rules) return;
+
+    // Parsed through this element's own `innerHTML` rather than a fragment created off `document`:
+    // the HTML fragment parsing algorithm takes its custom element registry from the context
+    // element, so the rules are upgraded with the registry this element lives in. A fragment from
+    // `document.createRange()` is parsed against the global registry, which leaves every rule an
+    // unupgraded HTMLElement when the item was rendered into a scoped registry.
+    this.innerHTML = rules;
   }
 }
 

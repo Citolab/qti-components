@@ -37929,19 +37929,6 @@
           "members": [
             {
               "kind": "method",
-              "name": "#fragmentFromString",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "strHTML",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "process",
               "privacy": "public",
               "type": {
