@@ -43,8 +43,16 @@ pnpm run changeset:version
 Publish locally (when needed):
 
 ```bash
-pnpm run changeset:publish
+pnpm run ci:publish:missing
 ```
+
+This runs `tools/publish-if-needed.mjs` for every package: it publishes a version only when
+that version is not already on npm, so it is safe to re-run after a partial release.
+
+`changeset publish` is deliberately not used. @changesets/cli 3.0.1 crashes in
+`getUnpublishedPackages` on this workspace — it reads `response.info.versions` without
+checking it exists, and its pnpm path can return a response without one — and it would only
+duplicate what the script above already does.
 
 ## Pull Request StackBlitz Links
 

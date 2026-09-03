@@ -120,23 +120,20 @@ jobs:
           # Write a clean .npmrc — no _authToken so npm falls back to OIDC
           printf '%s\n' 'registry=https://registry.npmjs.org/' 'provenance=true' > "$HOME/.npmrc"
 
-      - name: Publish changesets
-        id: publish
+      # `changeset publish` used to run here, with continue-on-error, and it crashed on every
+      # release: @changesets/cli 3.0.1 reads `response.info.versions` in getUnpublishedPackages
+      # without checking it exists, and its pnpm code path can return a response that has no
+      # `versions` array (the first `pnpm info <name>` lookup fails — a registry hiccup or rate
+      # limit across ~34 packages is enough — and the `<name>@<version>` fallback it falls back
+      # to is marked published regardless of shape).
+      #
+      # It was also redundant. The step below already publishes every package through
+      # tools/publish-if-needed.mjs, which is idempotent and skips versions already on npm, and
+      # tags come from `changeset:tag` further down. Nothing is lost by not running it: this repo
+      # is not in changesets pre-release mode, so there are no dist-tags for it to get right, and
+      # prereleases go through pkg-pr-new in a separate workflow.
+      - name: Publish packages to npm
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
-        continue-on-error: true
-        shell: bash
-        run: |
-          # Unset pnpm-injected npm_config_* vars that npm doesn't understand
-          for var in $(env | grep -oP '^npm_config_\w+' | grep -vE '^npm_config_(registry|provenance|cache|userconfig)$'); do
-            unset "$var"
-          done
-          pnpm run changeset:publish
-        env:
-          NPM_CONFIG_PROVENANCE: 'true'
-          PNPM_GIT_CHECKS: 'false'
-
-      - name: Reconcile missing npm publishes
-        if: ${{ always() && !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
         shell: bash
         run: |
           for var in $(env | grep -oP '^npm_config_\w+' | grep -vE '^npm_config_(registry|provenance|cache|userconfig)$'); do
@@ -151,8 +148,10 @@ jobs:
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
         run: pnpm run changeset:tag
 
-      # `--follow-tags` pushes annotated tags only, and `changeset publish` writes
-      # lightweight ones, so tags silently never reached the remote. Push refs explicitly.
+      # Push the commit and the tags as separate refspecs rather than relying on
+      # `--follow-tags`. `changeset:tag` writes one tag per package (annotated, via
+      # `git tag -a`), and pushing them explicitly keeps that independent of whatever
+      # tag-following behaviour the commit push happens to have.
       - name: Push release commit and tags
         if: ${{ !inputs.dry_run && steps.version.outputs.has_changes == 'true' }}
         run: |
