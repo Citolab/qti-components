@@ -6,6 +6,8 @@ export interface SessionContext {
   navPartId?: string | null;
   navSectionId?: string | null;
   navItemRefId?: string | null;
+  /** Identifier of the atEnd qti-test-feedback currently on screen, or null/absent otherwise. */
+  navFeedbackIdentifier?: string | null;
   navItemLoading?: boolean;
   navTestLoading?: boolean;
   view?: View;

@@ -18,10 +18,19 @@ export type ComputedItem = ComputedItemContext & {
   optimal?: boolean;
 };
 
+/** A qti-test-feedback that has become available to view (its atEnd outcome matched). */
+export type AvailableFeedback = {
+  identifier: string;
+  /** Identifier of the enclosing qti-test-part, or null for test-root feedback. */
+  partId: string | null;
+};
+
 export type ComputedContext = {
   view: View;
   identifier: string;
   title: string;
+  /** atEnd feedbacks that are ready to show, surfaced for test-show-feedback. */
+  availableFeedbacks?: AvailableFeedback[];
   testParts: {
     active?: boolean;
     identifier: string;

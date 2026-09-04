@@ -8,7 +8,7 @@ declare class TestProcessingInterface {
   updateOutcomeVariable(identifier: string, value: string | string[] | undefined): void;
   getOutcome(identifier: string): Readonly<OutcomeVariable>;
   getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>>;
-  outcomeProcessing(): boolean;
+  outcomeProcessing(options?: { atEnd?: boolean; partId?: string }): boolean;
 }
 export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
   abstract class TestProcessingElement extends superClass implements TestProcessingInterface {
@@ -30,12 +30,39 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
           e.stopPropagation();
         }
       );
+
+      // Completion detection lives in test-navigation, which already owns the
+      // per-item view through computedContext. Here we only run outcome
+      // processing when it reports that a part, or the test, has just become
+      // done — which is what gives `atEnd` feedback its chance to evaluate.
+      this.addEventListener('qti-part-completed', (e: CustomEvent<{ partId: string }>) => {
+        this.outcomeProcessing({ atEnd: true, partId: e.detail.partId });
+      });
+      this.addEventListener('qti-test-completed', () => {
+        this.outcomeProcessing({ atEnd: true });
+      });
     }
 
-    outcomeProcessing(): boolean {
-      const outcomeProcessor = this.querySelector('qti-outcome-processing') as unknown as QtiOutcomeProcessing;
+    outcomeProcessing(options: { atEnd?: boolean; partId?: string } = {}): boolean {
+      const outcomeProcessor = this._testElement?.querySelector<QtiOutcomeProcessing>('qti-outcome-processing');
       if (!outcomeProcessor) return false;
-      outcomeProcessor?.process();
+      outcomeProcessor.process();
+
+      // Dispatched from _testElement so qti-assessment-test is the target and
+      // qti-test still sees it by bubbling.
+      //
+      // `atEnd` separates the conclusion-of-test run, which is what
+      // qti-test-feedback access="atEnd" waits for, from in-flight runs.
+      // `partId` scopes which feedback re-evaluates: with one, only feedback
+      // inside the matching qti-test-part; without, only test-root feedback.
+      const target = this._testElement ?? this;
+      target.dispatchEvent(
+        new CustomEvent('qti-test-outcome-changed', {
+          detail: { atEnd: options.atEnd === true, partId: options.partId ?? null },
+          bubbles: true,
+          composed: true
+        })
+      );
       return true;
     }
 

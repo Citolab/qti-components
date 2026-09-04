@@ -11,7 +11,8 @@ import { qtiContext } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiContext } from '@qti-components/base';
 import type { OutcomeVariable } from '@qti-components/base';
-import type { ComputedContext, ComputedItem } from '@qti-components/base';
+import type { ComputedContext, ComputedItem, AvailableFeedback } from '@qti-components/base';
+import type { QtiTestFeedbackAvailabilityChangedEvent } from '../qti-test-feedback/qti-test-feedback';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../qti-assessment-section/qti-assessment-section';
@@ -26,6 +27,8 @@ import type { ResponseVariable } from '@qti-components/base';
 
 type CustomEventMap = {
   'test-end-attempt': CustomEvent;
+  'qti-part-completed': CustomEvent<{ partId: string }>;
+  'qti-test-completed': CustomEvent;
 };
 
 declare global {
@@ -75,6 +78,11 @@ export class TestNavigation extends LitElement {
 
   #testElement: QtiAssessmentTest;
 
+  /** Test-parts whose end-of-part transition has already been announced. */
+  #endedParts = new Set<string>();
+  /** Whether the end-of-test transition has already been announced. */
+  #testEnded = false;
+
   /**
    * Whether each item's last *ended attempt* reached the optimal outcome, keyed
    * by item-ref id. Written from #handleItemContextUpdated when processResponse
@@ -83,6 +91,9 @@ export class TestNavigation extends LitElement {
    * doesn't flip `done` until the candidate ends the attempt.
    */
   #optimality = new Map<string, ItemOptimality>();
+
+  /** atEnd feedbacks that have announced themselves available, keyed by identifier → partId. */
+  #availableFeedbacks = new Map<string, string | null>();
 
   constructor() {
     super();
@@ -94,6 +105,32 @@ export class TestNavigation extends LitElement {
 
     this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
     this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
+    this.addEventListener('qti-test-feedback-availability-changed', this.#handleFeedbackAvailabilityChanged.bind(this));
+  }
+
+  /**
+   * Record (or clear) an atEnd feedback's availability and rebuild the computed
+   * context so test-show-feedback can react. Owned here because test-navigation
+   * already provides computedContext to the navigation buttons.
+   */
+  #handleFeedbackAvailabilityChanged(event: QtiTestFeedbackAvailabilityChangedEvent): void {
+    const { identifier, partId, available } = event.detail;
+    if (available) {
+      this.#availableFeedbacks.set(identifier, partId);
+    } else {
+      this.#availableFeedbacks.delete(identifier);
+    }
+    // qti-part-completed/qti-test-completed — announced at the end of this
+    // element's own willUpdate — cascade synchronously through outcome
+    // processing into checkShowFeedback, so this event can arrive while that
+    // willUpdate call is still on the stack. A plain requestUpdate() would be
+    // absorbed into that in-flight cycle, which already read the old list.
+    // Defer to a fresh cycle so computedContext picks up the change.
+    queueMicrotask(() => this.requestUpdate());
+  }
+
+  #availableFeedbacksList(): AvailableFeedback[] {
+    return Array.from(this.#availableFeedbacks, ([identifier, partId]) => ({ identifier, partId }));
   }
 
   /**
@@ -204,8 +241,11 @@ export class TestNavigation extends LitElement {
   /* PK: on test connected we can build the computed context */
   #handleTestConnected(event: CustomEvent) {
     this.#testElement = event.detail as QtiAssessmentTest;
-    // A fresh test invalidates the per-test optimality latches.
+    // A fresh test invalidates the per-test optimality and completion latches.
     this.#optimality.clear();
+    this.#endedParts.clear();
+    this.#testEnded = false;
+    this.#availableFeedbacks.clear();
     // Set the testIdentifier in qtiContext if not already set
     if (!this.qtiContext.QTI_CONTEXT?.testIdentifier) {
       const currentContext = this.qtiContext.QTI_CONTEXT || {
@@ -414,6 +454,7 @@ export class TestNavigation extends LitElement {
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
+      availableFeedbacks: this.#availableFeedbacksList(),
       testParts: this.computedContext.testParts.map(testPart => {
         return {
           ...testPart,
@@ -542,6 +583,8 @@ export class TestNavigation extends LitElement {
       })
     };
 
+    this.#announceCompletionTransitions();
+
     this.dispatchEvent(
       new CustomEvent('qti-computed-context-updated', {
         detail: this.computedContext,
@@ -627,6 +670,42 @@ export class TestNavigation extends LitElement {
     if (raw === undefined || raw === null || Array.isArray(raw)) return null;
     const parsed = parseFloat(raw.toString());
     return Number.isNaN(parsed) ? null : parsed;
+  }
+
+  /**
+   * After computedContext has been rebuilt, fire one-shot transition events the
+   * first time each test-part — and the test as a whole — becomes done.
+   * Completion detection belongs here because this element already owns the
+   * per-item view; `test-processing.mixin` listens and runs outcome processing
+   * in response, so `atEnd` feedback gets a chance to evaluate.
+   *
+   * One-shot per test: a part that is done stays done, and re-announcing on
+   * every context rebuild would re-run outcome processing on every keystroke.
+   */
+  #announceCompletionTransitions(): void {
+    const partsWithItems = this.computedContext.testParts.filter(p => p.sections.some(s => s.items.length > 0));
+    for (const part of partsWithItems) {
+      if (this.#endedParts.has(part.identifier)) continue;
+      const allDone = part.sections.flatMap(s => s.items).every((i: ComputedItem) => i.done === true);
+      if (!allDone) continue;
+      this.#endedParts.add(part.identifier);
+      this.dispatchEvent(
+        new CustomEvent('qti-part-completed', {
+          detail: { partId: part.identifier },
+          bubbles: true,
+          composed: true
+        })
+      );
+    }
+
+    if (
+      !this.#testEnded &&
+      partsWithItems.length > 0 &&
+      partsWithItems.every(p => this.#endedParts.has(p.identifier))
+    ) {
+      this.#testEnded = true;
+      this.dispatchEvent(new CustomEvent('qti-test-completed', { bubbles: true, composed: true }));
+    }
   }
 }
 

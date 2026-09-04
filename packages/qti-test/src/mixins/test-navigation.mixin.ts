@@ -52,7 +52,7 @@ export interface ITestNavigationMixin {
   requestTimeout: number;
   postLoadTransformCallback: PostLoadTransformCallback | null;
   postLoadTestTransformCallback: PostLoadTestTransformCallback | null;
-  navigateTo(type: 'item' | 'section', id?: string): void;
+  navigateTo(type: 'item' | 'section' | 'feedback', id?: string): void;
   getLoadingProgress(): {
     expectedItems: number;
     connectedItems: number;
@@ -108,12 +108,12 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     /**
-     * Navigate to a specific item or section
-     * @param type - Navigation type ('item' or 'section')
-     * @param id - Target identifier (optional, falls back to first available)
+     * Navigate to a specific item, section, or test-feedback
+     * @param type - Navigation type ('item', 'section' or 'feedback')
+     * @param id - Target identifier (optional for item/section, required for feedback)
      */
-    public navigateTo(type: 'item' | 'section', id?: string): void {
-      const targetId = id || this._getDefaultNavigationId(type);
+    public navigateTo(type: 'item' | 'section' | 'feedback', id?: string): void {
+      const targetId = id || (type === 'feedback' ? undefined : this._getDefaultNavigationId(type));
 
       if (targetId) {
         this.dispatchEvent(
@@ -273,8 +273,17 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Main navigation request handler with proper lifecycle management
      */
-    private async _handleNavigationRequest({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) {
+    private async _handleNavigationRequest({
+      detail
+    }: CustomEvent<{ type: 'item' | 'section' | 'feedback'; id: string }>) {
       if (!detail?.id) return;
+
+      // Feedback isn't an item in the linear sequence — it's the candidate's
+      // end-of-part/test review screen, always reachable once available.
+      if (detail.type === 'feedback') {
+        this._navigateToFeedback(detail.id);
+        return;
+      }
 
       if (this._isLinearNavigationRestricted(detail.type, detail.id)) {
         this._handleNavigationError(new Error('Navigation restricted in linear mode'), detail.type, detail.id);
@@ -337,6 +346,23 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     }
 
     /**
+     * Navigate to a test-feedback: clear the on-screen item (so the candidate
+     * leaves the assessment item) and record which feedback is now showing. The
+     * item/part context is kept so test-prev/test-next can navigate back and the
+     * feedback's own part-scoping keeps working. Navigating to any item/section
+     * later clears navFeedbackIdentifier, which hides the feedback again.
+     */
+    private _navigateToFeedback(feedbackId: string): void {
+      this._clearLoadedItems();
+      this._clearStimulusRef();
+
+      this.sessionContext = {
+        ...this.sessionContext,
+        navFeedbackIdentifier: feedbackId
+      };
+    }
+
+    /**
      * Navigate to section with simple state tracking
      */
     private async _navigateToSection(
@@ -351,7 +377,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         ...this.sessionContext,
         navPartId,
         navSectionId: sectionId,
-        navItemRefId: null
+        navItemRefId: null,
+        navFeedbackIdentifier: null
       };
 
       const itemIds = this._getSectionItemIds(sectionId);
@@ -614,7 +641,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         ...this.sessionContext,
         navPartId,
         navSectionId,
-        navItemRefId: itemId
+        navItemRefId: itemId,
+        navFeedbackIdentifier: null
       };
     }
 

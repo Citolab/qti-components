@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@515: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@535: {  }, length: number }"
               }
             },
             {
@@ -32767,7 +32767,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -35877,6 +35877,21 @@
             },
             {
               "kind": "method",
+              "name": "#announceCompletionTransitions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "After computedContext has been rebuilt, fire one-shot transition events the\nfirst time each test-part — and the test as a whole — becomes done.\nCompletion detection belongs here because this element already owns the\nper-item view; `test-processing.mixin` listens and runs outcome processing\nin response, so `atEnd` feedback gets a chance to evaluate.\n\nOne-shot per test: a part that is done stays done, and re-announcing on\nevery context rebuild would re-run outcome processing on every keystroke.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#assessmentItemFor",
               "privacy": "private",
               "return": {
@@ -35922,6 +35937,42 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#availableFeedbacks",
+              "privacy": "private",
+              "default": "new Map<string, string | null>()",
+              "description": "atEnd feedbacks that have announced themselves available, keyed by identifier → partId.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#availableFeedbacksList",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AvailableFeedback[]"
+                }
+              },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#endedParts",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "description": "Test-parts whose end-of-part transition has already been announced.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#extractDefaultValues",
               "privacy": "private",
@@ -35939,6 +35990,29 @@
                 }
               ],
               "description": "Extract default values from a qti-context-declaration element",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleFeedbackAvailabilityChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "QtiTestFeedbackAvailabilityChangedEvent"
+                  }
+                }
+              ],
+              "description": "Record (or clear) an atEnd feedback's availability and rebuild the computed\ncontext so test-show-feedback can react. Owned here because test-navigation\nalready provides computedContext to the navigation buttons.",
               "inheritedFrom": {
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
@@ -36156,6 +36230,20 @@
             },
             {
               "kind": "field",
+              "name": "#testEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the end-of-test transition has already been announced.",
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "activeAssessmentItem",
               "type": {
                 "text": "QtiAssessmentItem | undefined"
@@ -36224,7 +36312,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "TestNavigation",
@@ -36353,6 +36441,26 @@
                 "name": "TestNavigation",
                 "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
               }
+            },
+            {
+              "name": "qti-part-completed",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
+            },
+            {
+              "name": "qti-test-completed",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "TestNavigation",
+                "module": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+              }
             }
           ],
           "tagName": "test-navigation",
@@ -36455,7 +36563,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -37632,7 +37740,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -37856,7 +37964,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -38134,7 +38242,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -51297,6 +51405,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-test/src/components/test-show-feedback/test-show-feedback"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-test/src/components/test-view-toggle/test-view"
           }
         },
@@ -51807,6 +51923,12 @@
             },
             {
               "kind": "field",
+              "name": "#handleTestOutcomeChanged",
+              "privacy": "private",
+              "description": "Outcome processing has run, so give every test feedback below this element a\nchance to re-evaluate. The flags travel with the event rather than being\nre-derived here: only the run that concluded a part or the test can satisfy\n`access=\"atEnd\"`, and only feedback scoped to that part should respond."
+            },
+            {
+              "kind": "field",
               "name": "#title",
               "privacy": "private",
               "type": {
@@ -52139,13 +52261,23 @@
           "members": [
             {
               "kind": "field",
+              "name": "_available",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "For `access=\"atEnd\"`: whether the feedback's outcome has matched and it is\nready to be shown. While available, the feedback stays hidden until a\ntest-show-feedback button navigates the candidate to it\n(`_sessionContext.navFeedbackIdentifier`). `during` feedback ignores this\nflag and shows the instant its outcome matches."
+            },
+            {
+              "kind": "field",
               "name": "_computedContext",
               "type": {
                 "text": "ComputedContext | undefined"
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               },
               "inheritedFrom": {
                 "name": "QtiFeedback",
@@ -52165,6 +52297,46 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_sessionContext",
+              "type": {
+                "text": "SessionContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_testContext",
+              "type": {
+                "text": "TestContext | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#outcomeMatches",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Whether this feedback's test-level outcome currently names its identifier."
+            },
+            {
+              "kind": "field",
+              "name": "#ownPartId",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "description": "The test part this feedback belongs to, or null when it is test-root feedback.",
+              "readonly": true,
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
               "kind": "method",
               "name": "#sessionControlAllowsFeedback",
               "privacy": "private",
@@ -52178,6 +52350,25 @@
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "#setAvailable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "available",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Update availability and announce the change so test-show-feedback can enable."
             },
             {
               "kind": "method",
@@ -52197,6 +52388,20 @@
               }
             },
             {
+              "kind": "field",
+              "name": "access",
+              "type": {
+                "text": "TestFeedbackAccess"
+              },
+              "privacy": "public",
+              "default": "'atEnd'",
+              "description": "When the feedback may be presented, per the QTI 3 `access` characteristic.\n\n- `atEnd` — only at the conclusion of the test, or of the test part the\n  feedback sits in. Becoming available only unlocks a test-show-feedback\n  button — the feedback itself stays hidden until the candidate navigates\n  to it.\n- `during` — while the test is still in progress, after each instance of\n  outcome processing. Shows the instant its outcome matches.",
+              "attribute": "access",
+              "parsedType": {
+                "text": "'atEnd' | 'during'"
+              }
+            },
+            {
               "kind": "method",
               "name": "checkShowFeedback",
               "privacy": "public",
@@ -52206,14 +52411,27 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "trigger",
+                  "default": "{}",
+                  "type": {
+                    "text": "{ atEnd?: boolean; partId?: string | null }"
+                  }
                 }
               ],
               "inheritedFrom": {
                 "name": "QtiFeedback",
                 "module": "packages/qti-base/src/abstract/qti-feedback.ts"
               },
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Re-evaluate against the *test* context, rather than the item context the\ninherited implementation reads.\n\n`qti-assessment-test` calls this after each outcome-processing run, passing\nwhat that run concluded. `atEnd` feedback responds only to the run that\nended its own scope — the whole test for test-root feedback, or its own\ntest part for part-scoped feedback — while `during` feedback responds to\nevery run.",
               "type": {
-                "text": "checkShowFeedback(outcomeIdentifier: string) => void"
+                "text": "checkShowFeedback(outcomeIdentifier: string, trigger: { atEnd?: boolean; partId?: string | null } = {}) => void"
               }
             },
             {
@@ -52294,11 +52512,37 @@
               }
             }
           ],
-          "superclass": {
-            "name": "QtiModalFeedback",
-            "package": "@qti-components/elements/elements"
-          },
+          "events": [
+            {
+              "name": "qti-register-feedback",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "inheritedFrom": {
+                "name": "QtiFeedback",
+                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
+              }
+            },
+            {
+              "name": "qti-test-feedback-availability-changed",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
           "attributes": [
+            {
+              "name": "access",
+              "type": {
+                "text": "TestFeedbackAccess"
+              },
+              "default": "'atEnd'",
+              "description": "When the feedback may be presented, per the QTI 3 `access` characteristic.\n\n- `atEnd` — only at the conclusion of the test, or of the test part the\n  feedback sits in. Becoming available only unlocks a test-show-feedback\n  button — the feedback itself stays hidden until the candidate navigates\n  to it.\n- `during` — while the test is still in progress, after each instance of\n  outcome processing. Shows the instant its outcome matches.",
+              "fieldName": "access",
+              "parsedType": {
+                "text": "'atEnd' | 'during'"
+              }
+            },
             {
               "name": "identifier",
               "type": {
@@ -52337,18 +52581,10 @@
               }
             }
           ],
-          "events": [
-            {
-              "name": "qti-register-feedback",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "QtiFeedback",
-                "module": "packages/qti-base/src/abstract/qti-feedback.ts"
-              }
-            }
-          ],
+          "superclass": {
+            "name": "QtiModalFeedback",
+            "package": "@qti-components/elements/elements"
+          },
           "tagName": "qti-test-feedback",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/qti-test-feedback/qti-test-feedback.ts",
@@ -53099,7 +53335,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             }
           ],
@@ -54008,6 +54244,17 @@
             },
             {
               "kind": "method",
+              "name": "#announceCompletionTransitions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "After computedContext has been rebuilt, fire one-shot transition events the\nfirst time each test-part — and the test as a whole — becomes done.\nCompletion detection belongs here because this element already owns the\nper-item view; `test-processing.mixin` listens and runs outcome processing\nin response, so `atEnd` feedback gets a chance to evaluate.\n\nOne-shot per test: a part that is done stays done, and re-announcing on\nevery context rebuild would re-run outcome processing on every keystroke."
+            },
+            {
+              "kind": "method",
               "name": "#assessmentItemFor",
               "privacy": "private",
               "return": {
@@ -54045,6 +54292,30 @@
               "description": "Decide whether an item's submission is as good as it can get — i.e. the\ncandidate reached the *optimal* outcome, so there's no reason to make them\ntry again. 'optimal' means best achievable, 'suboptimal' means a better\nattempt is still possible, 'unscored' means there's nothing to judge against.\n(\"optimal\" is the spec's own word — a qti-correct-response is defined as\n\"the (or an) optimal value\".)\n\nTwo signals, in order of authority:\n 1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).\n    This correctly handles partial-credit / qti-mapping items, where an exact\n    response match would under- or over-judge.\n 2. The declared qti-correct-response, for items that aren't scored (no\n    SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping\n    variables like numAttempts can be typed 'response' but never declare a\n    correctResponse, so we filter on a declared correctResponse.\n\nItems with neither a comparable score nor a correctResponse (essays, info\nitems, etc.) are 'unscored' — there's no optimal value to require, so one\nattempt is enough."
             },
             {
+              "kind": "field",
+              "name": "#availableFeedbacks",
+              "privacy": "private",
+              "default": "new Map<string, string | null>()",
+              "description": "atEnd feedbacks that have announced themselves available, keyed by identifier → partId."
+            },
+            {
+              "kind": "method",
+              "name": "#availableFeedbacksList",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "AvailableFeedback[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#endedParts",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "description": "Test-parts whose end-of-part transition has already been announced."
+            },
+            {
               "kind": "method",
               "name": "#extractDefaultValues",
               "privacy": "private",
@@ -54062,6 +54333,25 @@
                 }
               ],
               "description": "Extract default values from a qti-context-declaration element"
+            },
+            {
+              "kind": "method",
+              "name": "#handleFeedbackAvailabilityChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "QtiTestFeedbackAvailabilityChangedEvent"
+                  }
+                }
+              ],
+              "description": "Record (or clear) an atEnd feedback's availability and rebuild the computed\ncontext so test-show-feedback can react. Owned here because test-navigation\nalready provides computedContext to the navigation buttons."
             },
             {
               "kind": "method",
@@ -54223,6 +54513,16 @@
             },
             {
               "kind": "field",
+              "name": "#testEnded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the end-of-test transition has already been announced."
+            },
+            {
+              "kind": "field",
               "name": "activeAssessmentItem",
               "type": {
                 "text": "QtiAssessmentItem | undefined"
@@ -54279,7 +54579,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -54344,6 +54644,18 @@
           "events": [
             {
               "name": "qti-computed-context-updated",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-part-completed",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "qti-test-completed",
               "type": {
                 "text": "CustomEvent"
               }
@@ -54489,7 +54801,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -54595,7 +54907,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -54710,7 +55022,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -54792,7 +55104,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             }
           ],
@@ -54842,7 +55154,7 @@
               },
               "privacy": "public",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             }
           ],
@@ -54905,7 +55217,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -55007,7 +55319,7 @@
               },
               "privacy": "protected",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -55099,7 +55411,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -55222,6 +55534,169 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-test/src/components/test-show-feedback/test-show-feedback.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Navigates the candidate to an `access=\"atEnd\"` qti-test-feedback once it has\nbecome available (its end-of-part / end-of-test outcome has matched). The\nbutton is disabled until then, so a host can keep it hidden until enabled.\n\nClicking dispatches a `feedback` navigation request, which clears the current\nassessment item and shows the feedback. Navigating to any item afterwards (or\nmoving into a later test-part) hides the feedback again.",
+          "name": "TestShowFeedback",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_handleComputedContextChange",
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "ComputedContext"
+                  }
+                }
+              ],
+              "type": {
+                "text": "_handleComputedContextChange(_oldValue: ComputedContext, newValue: ComputedContext) => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_internalDisabled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_requestFeedback",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#feedbackId",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "description": "Identifier of the feedback to navigate to, set whenever one is available.",
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Show feedback'"
+            },
+            {
+              "kind": "field",
+              "name": "computedContext",
+              "type": {
+                "text": "ComputedContext"
+              },
+              "privacy": "private",
+              "parsedType": {
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "'button'"
+            },
+            {
+              "kind": "field",
+              "name": "sessionContext",
+              "type": {
+                "text": "SessionContext"
+              },
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "name": "qti-request-navigation",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "_internalDisabled"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "test-show-feedback",
+          "modulePath": "packages/qti-test/src/components/test-show-feedback/test-show-feedback.ts",
+          "definitionPath": "packages/qti-test/src/components/test-show-feedback/test-show-feedback.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "test-show-feedback",
+          "declaration": {
+            "name": "TestShowFeedback",
+            "module": "packages/qti-test/src/components/test-show-feedback/test-show-feedback.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestShowFeedback",
+          "declaration": {
+            "name": "TestShowFeedback",
+            "module": "packages/qti-test/src/components/test-show-feedback/test-show-feedback.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-test/src/components/test-stamp/test-stamp.ts",
       "declarations": [
         {
@@ -55237,7 +55712,7 @@
               },
               "privacy": "private",
               "parsedType": {
-                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
+                "text": "{ view: '' | 'author' | 'candidate' | 'proctor' | 'scorer' | 'testConstructor' | 'tutor', identifier: string, title: string, availableFeedbacks: { identifier: string, partId: string }[], testParts: { active: boolean, identifier: string, navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean, sections: { active: boolean, identifier: string, title: string, completed: boolean, items: { identifier: string, href: string, correct: boolean, incorrect: boolean, completed: boolean, adaptive: boolean, timeDependent: boolean, title: string, label: string, score: number, maxScore: number, completionStatus: string, variables: ReadonlyArray } & { categories: Array, type: type | type, index: number, active: boolean, allowSkipping: boolean, maxAttempts: number, showFeedback: boolean, showSolution: boolean, numAttempts: number, valid: boolean, isDefaultResponse: boolean, done: boolean, optimal: boolean }[], navigationMode: 'linear' | 'nonlinear', submissionMode: 'individual' | 'simultaneous', allowSkipping: boolean }[] }[] }"
               }
             },
             {
@@ -55535,9 +56010,9 @@
           "kind": "variable",
           "name": "qtiTestElements",
           "type": {
-            "text": "[\n  { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },\n  { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },\n  { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },\n  { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },\n  { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },\n  { tag: 'qti-test', ctor: QtiTest },\n  { tag: 'qti-test-feedback', ctor: QtiTestFeedback },\n  { tag: 'qti-test-part', ctor: QtiTestPart },\n  { tag: 'qti-test-variables', ctor: QtiTestVariables },\n  { tag: 'test-check-item', ctor: TestCheckItem },\n  { tag: 'test-container', ctor: TestContainer },\n  { tag: 'test-end-attempt', ctor: TestEndAttempt },\n  { tag: 'test-item-link', ctor: TestItemLink },\n  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },\n  { tag: 'test-navigation', ctor: TestNavigation },\n  { tag: 'test-next', ctor: TestNext },\n  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },\n  { tag: 'test-prev', ctor: TestPrev },\n  { tag: 'test-print-context', ctor: TestPrintContext },\n  { tag: 'test-print-item-variables', ctor: TestPrintVariables },\n  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },\n  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },\n  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },\n  { tag: 'test-section-link', ctor: TestSectionLink },\n  { tag: 'test-stamp', ctor: TestStamp },\n  { tag: 'test-tts-next', ctor: TestTtsNext },\n  { tag: 'test-tts-pause', ctor: TestTtsPause },\n  { tag: 'test-tts-play', ctor: TestTtsPlay },\n  { tag: 'test-tts-prev', ctor: TestTtsPrev },\n  { tag: 'test-tts-resume', ctor: TestTtsResume },\n  { tag: 'test-tts-stop', ctor: TestTtsStop },\n  { tag: 'test-view', ctor: TestView },\n  { tag: 'test-view-toggle', ctor: TestViewToggle }\n]"
+            "text": "[\n  { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },\n  { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },\n  { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },\n  { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },\n  { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },\n  { tag: 'qti-test', ctor: QtiTest },\n  { tag: 'qti-test-feedback', ctor: QtiTestFeedback },\n  { tag: 'qti-test-part', ctor: QtiTestPart },\n  { tag: 'qti-test-variables', ctor: QtiTestVariables },\n  { tag: 'test-check-item', ctor: TestCheckItem },\n  { tag: 'test-container', ctor: TestContainer },\n  { tag: 'test-end-attempt', ctor: TestEndAttempt },\n  { tag: 'test-item-link', ctor: TestItemLink },\n  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },\n  { tag: 'test-navigation', ctor: TestNavigation },\n  { tag: 'test-next', ctor: TestNext },\n  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },\n  { tag: 'test-prev', ctor: TestPrev },\n  { tag: 'test-print-context', ctor: TestPrintContext },\n  { tag: 'test-print-item-variables', ctor: TestPrintVariables },\n  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },\n  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },\n  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },\n  { tag: 'test-section-link', ctor: TestSectionLink },\n  { tag: 'test-show-feedback', ctor: TestShowFeedback },\n  { tag: 'test-stamp', ctor: TestStamp },\n  { tag: 'test-tts-next', ctor: TestTtsNext },\n  { tag: 'test-tts-pause', ctor: TestTtsPause },\n  { tag: 'test-tts-play', ctor: TestTtsPlay },\n  { tag: 'test-tts-prev', ctor: TestTtsPrev },\n  { tag: 'test-tts-resume', ctor: TestTtsResume },\n  { tag: 'test-tts-stop', ctor: TestTtsStop },\n  { tag: 'test-view', ctor: TestView },\n  { tag: 'test-view-toggle', ctor: TestViewToggle }\n]"
           },
-          "default": "[ { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef }, { tag: 'qti-assessment-section', ctor: QtiAssessmentSection }, { tag: 'qti-assessment-test', ctor: QtiAssessmentTest }, { tag: 'qti-item-session-control', ctor: QtiItemSessionControl }, { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing }, { tag: 'qti-test', ctor: QtiTest }, { tag: 'qti-test-feedback', ctor: QtiTestFeedback }, { tag: 'qti-test-part', ctor: QtiTestPart }, { tag: 'qti-test-variables', ctor: QtiTestVariables }, { tag: 'test-check-item', ctor: TestCheckItem }, { tag: 'test-container', ctor: TestContainer }, { tag: 'test-end-attempt', ctor: TestEndAttempt }, { tag: 'test-item-link', ctor: TestItemLink }, { tag: 'test-item-to-speech', ctor: TestItemToSpeech }, { tag: 'test-navigation', ctor: TestNavigation }, { tag: 'test-next', ctor: TestNext }, { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp }, { tag: 'test-prev', ctor: TestPrev }, { tag: 'test-print-context', ctor: TestPrintContext }, { tag: 'test-print-item-variables', ctor: TestPrintVariables }, { tag: 'test-scoring-buttons', ctor: TestScoringButtons }, { tag: 'test-scoring-feedback', ctor: TestScoringFeedback }, { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp }, { tag: 'test-section-link', ctor: TestSectionLink }, { tag: 'test-stamp', ctor: TestStamp }, { tag: 'test-tts-next', ctor: TestTtsNext }, { tag: 'test-tts-pause', ctor: TestTtsPause }, { tag: 'test-tts-play', ctor: TestTtsPlay }, { tag: 'test-tts-prev', ctor: TestTtsPrev }, { tag: 'test-tts-resume', ctor: TestTtsResume }, { tag: 'test-tts-stop', ctor: TestTtsStop }, { tag: 'test-view', ctor: TestView }, { tag: 'test-view-toggle', ctor: TestViewToggle } ]"
+          "default": "[ { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef }, { tag: 'qti-assessment-section', ctor: QtiAssessmentSection }, { tag: 'qti-assessment-test', ctor: QtiAssessmentTest }, { tag: 'qti-item-session-control', ctor: QtiItemSessionControl }, { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing }, { tag: 'qti-test', ctor: QtiTest }, { tag: 'qti-test-feedback', ctor: QtiTestFeedback }, { tag: 'qti-test-part', ctor: QtiTestPart }, { tag: 'qti-test-variables', ctor: QtiTestVariables }, { tag: 'test-check-item', ctor: TestCheckItem }, { tag: 'test-container', ctor: TestContainer }, { tag: 'test-end-attempt', ctor: TestEndAttempt }, { tag: 'test-item-link', ctor: TestItemLink }, { tag: 'test-item-to-speech', ctor: TestItemToSpeech }, { tag: 'test-navigation', ctor: TestNavigation }, { tag: 'test-next', ctor: TestNext }, { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp }, { tag: 'test-prev', ctor: TestPrev }, { tag: 'test-print-context', ctor: TestPrintContext }, { tag: 'test-print-item-variables', ctor: TestPrintVariables }, { tag: 'test-scoring-buttons', ctor: TestScoringButtons }, { tag: 'test-scoring-feedback', ctor: TestScoringFeedback }, { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp }, { tag: 'test-section-link', ctor: TestSectionLink }, { tag: 'test-show-feedback', ctor: TestShowFeedback }, { tag: 'test-stamp', ctor: TestStamp }, { tag: 'test-tts-next', ctor: TestTtsNext }, { tag: 'test-tts-pause', ctor: TestTtsPause }, { tag: 'test-tts-play', ctor: TestTtsPlay }, { tag: 'test-tts-prev', ctor: TestTtsPrev }, { tag: 'test-tts-resume', ctor: TestTtsResume }, { tag: 'test-tts-stop', ctor: TestTtsStop }, { tag: 'test-view', ctor: TestView }, { tag: 'test-view-toggle', ctor: TestViewToggle } ]"
         }
       ],
       "exports": [
@@ -55738,6 +56213,14 @@
           "name": "TestSectionLink",
           "declaration": {
             "name": "TestSectionLink",
+            "module": "packages/qti-test/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestShowFeedback",
+          "declaration": {
+            "name": "TestShowFeedback",
             "module": "packages/qti-test/src/elements.ts"
           }
         },
