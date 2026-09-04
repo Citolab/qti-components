@@ -2117,9 +2117,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-associable-hotspot",
           "modulePath": "packages/interactions/core/src/elements/qti-associable-hotspot/qti-associable-hotspot.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-associable-hotspot/qti-associable-hotspot.ts"
+          "definitionPath": "packages/interactions/core/src/elements/qti-associable-hotspot/qti-associable-hotspot.ts",
+          "tagName": "qti-associable-hotspot"
         }
       ],
       "exports": [
@@ -2253,9 +2253,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-gap-img",
           "modulePath": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts"
+          "definitionPath": "packages/interactions/core/src/elements/qti-gap-img/qti-gap-img.ts",
+          "tagName": "qti-gap-img"
         }
       ],
       "exports": [
@@ -3280,9 +3280,9 @@
               "name": ""
             }
           ],
-          "tagName": "qti-hotspot-choice",
           "modulePath": "packages/interactions/core/src/elements/qti-hotspot-choice/qti-hotspot-choice.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-hotspot-choice/qti-hotspot-choice.ts"
+          "definitionPath": "packages/interactions/core/src/elements/qti-hotspot-choice/qti-hotspot-choice.ts",
+          "tagName": "qti-hotspot-choice"
         }
       ],
       "exports": [
@@ -4158,9 +4158,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-prompt",
           "modulePath": "packages/interactions/core/src/elements/qti-prompt/qti-prompt.ts",
-          "definitionPath": "packages/interactions/core/src/elements/qti-prompt/qti-prompt.ts"
+          "definitionPath": "packages/interactions/core/src/elements/qti-prompt/qti-prompt.ts",
+          "tagName": "qti-prompt"
         }
       ],
       "exports": [
@@ -13396,9 +13396,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-end-attempt-interaction",
           "modulePath": "packages/interactions/end-attempt-interaction/src/qti-end-attempt-interaction.ts",
-          "definitionPath": "packages/interactions/end-attempt-interaction/src/qti-end-attempt-interaction.ts"
+          "definitionPath": "packages/interactions/end-attempt-interaction/src/qti-end-attempt-interaction.ts",
+          "tagName": "qti-end-attempt-interaction"
         }
       ],
       "exports": [
@@ -28821,9 +28821,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-position-object-interaction",
           "modulePath": "packages/interactions/position-object-interaction/src/qti-position-object-interaction.ts",
-          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-interaction.ts"
+          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-interaction.ts",
+          "tagName": "qti-position-object-interaction"
         }
       ],
       "exports": [
@@ -28915,9 +28915,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-position-object-stage",
           "modulePath": "packages/interactions/position-object-interaction/src/qti-position-object-stage.ts",
-          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-stage.ts"
+          "definitionPath": "packages/interactions/position-object-interaction/src/qti-position-object-stage.ts",
+          "tagName": "qti-position-object-stage"
         }
       ],
       "exports": [
@@ -34218,9 +34218,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "item-correct-response-mode",
           "modulePath": "packages/qti-corrections/src/components/item-correct-response-mode/item-correct-response-mode.ts",
-          "definitionPath": "packages/qti-corrections/src/components/item-correct-response-mode/item-correct-response-mode.ts"
+          "definitionPath": "packages/qti-corrections/src/components/item-correct-response-mode/item-correct-response-mode.ts",
+          "tagName": "item-correct-response-mode"
         }
       ],
       "exports": [
@@ -34398,9 +34398,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "item-show-candidate-correction",
           "modulePath": "packages/qti-corrections/src/components/item-show-candidate-correction/item-show-candidate-correction.ts",
-          "definitionPath": "packages/qti-corrections/src/components/item-show-candidate-correction/item-show-candidate-correction.ts"
+          "definitionPath": "packages/qti-corrections/src/components/item-show-candidate-correction/item-show-candidate-correction.ts",
+          "tagName": "item-show-candidate-correction"
         }
       ],
       "exports": [
@@ -34578,9 +34578,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "item-show-correct-response",
           "modulePath": "packages/qti-corrections/src/components/item-show-correct-response/item-show-correct-response.ts",
-          "definitionPath": "packages/qti-corrections/src/components/item-show-correct-response/item-show-correct-response.ts"
+          "definitionPath": "packages/qti-corrections/src/components/item-show-correct-response/item-show-correct-response.ts",
+          "tagName": "item-show-correct-response"
         }
       ],
       "exports": [
@@ -36562,9 +36562,9 @@
           },
           "deprecated": "test-show-correct-response is deprecated and will be removed in the future.",
           "customElement": true,
-          "tagName": "test-show-correct-response",
           "modulePath": "packages/qti-corrections/src/components/test-show-correct-response/test-show-correct-response.ts",
-          "definitionPath": "packages/qti-corrections/src/components/test-show-correct-response/test-show-correct-response.ts"
+          "definitionPath": "packages/qti-corrections/src/components/test-show-correct-response/test-show-correct-response.ts",
+          "tagName": "test-show-correct-response"
         }
       ],
       "exports": [
@@ -37191,9 +37191,9 @@
           },
           "summary": "The qti-assessment-item element contains all the other QTI 3 item structures.",
           "customElement": true,
-          "tagName": "qti-assessment-item",
           "modulePath": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-assessment-item/qti-assessment-item.ts",
+          "tagName": "qti-assessment-item"
         }
       ],
       "exports": [
@@ -37284,9 +37284,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-assessment-stimulus-ref",
           "modulePath": "packages/qti-elements/src/components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref.ts",
+          "tagName": "qti-assessment-stimulus-ref"
         },
         {
           "kind": "class",
@@ -37350,9 +37350,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-companion-materials-info",
           "modulePath": "packages/qti-elements/src/components/qti-companion-materials-info/qti-companion-materials-info.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-companion-materials-info/qti-companion-materials-info.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-companion-materials-info/qti-companion-materials-info.ts",
+          "tagName": "qti-companion-materials-info"
         }
       ],
       "exports": [
@@ -37425,9 +37425,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-content-body",
           "modulePath": "packages/qti-elements/src/components/qti-content-body/qti-content-body.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-content-body/qti-content-body.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-content-body/qti-content-body.ts",
+          "tagName": "qti-content-body"
         }
       ],
       "exports": [
@@ -37507,9 +37507,9 @@
           },
           "summary": "The qti-context-declaration element declares context variables for an item.",
           "customElement": true,
-          "tagName": "qti-context-declaration",
           "modulePath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-context-declaration/qti-context-declaration.ts",
+          "tagName": "qti-context-declaration"
         }
       ],
       "exports": [
@@ -37591,9 +37591,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-custom-operator",
           "modulePath": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-custom-operator/qti-custom-operator.ts",
+          "tagName": "qti-custom-operator"
         }
       ],
       "exports": [
@@ -38093,9 +38093,9 @@
           },
           "summary": "The qti-item-body node contains the text, graphics, media objects and interactions that describe the item's content and information about how it is structured.",
           "customElement": true,
-          "tagName": "qti-item-body",
           "modulePath": "packages/qti-elements/src/components/qti-item-body/qti-item-body.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-item-body/qti-item-body.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-item-body/qti-item-body.ts",
+          "tagName": "qti-item-body"
         }
       ],
       "exports": [
@@ -38708,9 +38708,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-response-processing",
           "modulePath": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-response-processing/qti-response-processing.ts",
+          "tagName": "qti-response-processing"
         }
       ],
       "exports": [
@@ -38828,9 +38828,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-rubric-block",
           "modulePath": "packages/qti-elements/src/components/qti-rubric-block/qti-rubric-block.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-rubric-block/qti-rubric-block.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-rubric-block/qti-rubric-block.ts",
+          "tagName": "qti-rubric-block"
         }
       ],
       "exports": [
@@ -38894,9 +38894,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-stylesheet",
           "modulePath": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-stylesheet/qti-stylesheet.ts",
+          "tagName": "qti-stylesheet"
         }
       ],
       "exports": [
@@ -38976,9 +38976,9 @@
           },
           "summary": "The qti-template-constraint element is a processing rule available only in Template Processing.",
           "customElement": true,
-          "tagName": "qti-template-constraint",
           "modulePath": "packages/qti-elements/src/components/qti-template-constraint/qti-template-constraint.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-template-constraint/qti-template-constraint.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-template-constraint/qti-template-constraint.ts",
+          "tagName": "qti-template-constraint"
         }
       ],
       "exports": [
@@ -39187,9 +39187,9 @@
           },
           "summary": "The qti-template-declaration element declares template variables for item cloning.",
           "customElement": true,
-          "tagName": "qti-template-declaration",
           "modulePath": "packages/qti-elements/src/components/qti-template-declaration/qti-template-declaration.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-template-declaration/qti-template-declaration.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-template-declaration/qti-template-declaration.ts",
+          "tagName": "qti-template-declaration"
         }
       ],
       "exports": [
@@ -39258,9 +39258,9 @@
           },
           "summary": "The qti-template-processing element contains template processing rules.",
           "customElement": true,
-          "tagName": "qti-template-processing",
           "modulePath": "packages/qti-elements/src/components/qti-template-processing/qti-template-processing.ts",
-          "definitionPath": "packages/qti-elements/src/components/qti-template-processing/qti-template-processing.ts"
+          "definitionPath": "packages/qti-elements/src/components/qti-template-processing/qti-template-processing.ts",
+          "tagName": "qti-template-processing"
         }
       ],
       "exports": [
@@ -39570,9 +39570,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "item-container",
           "modulePath": "packages/qti-item/src/components/item-container/item-container.ts",
-          "definitionPath": "packages/qti-item/src/components/item-container/item-container.ts"
+          "definitionPath": "packages/qti-item/src/components/item-container/item-container.ts",
+          "tagName": "item-container"
         }
       ],
       "exports": [
@@ -39620,9 +39620,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "item-print-variables",
           "modulePath": "packages/qti-item/src/components/item-print-variables/item-print-variables.ts",
-          "definitionPath": "packages/qti-item/src/components/item-print-variables/item-print-variables.ts"
+          "definitionPath": "packages/qti-item/src/components/item-print-variables/item-print-variables.ts",
+          "tagName": "item-print-variables"
         }
       ],
       "exports": [
@@ -39757,9 +39757,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-item",
           "modulePath": "packages/qti-item/src/components/qti-item/qti-item.ts",
-          "definitionPath": "packages/qti-item/src/components/qti-item/qti-item.ts"
+          "definitionPath": "packages/qti-item/src/components/qti-item/qti-item.ts",
+          "tagName": "qti-item"
         }
       ],
       "exports": [
@@ -47610,9 +47610,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-printed-variable",
           "modulePath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
+          "tagName": "qti-printed-variable"
         }
       ],
       "exports": [
@@ -49074,9 +49074,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-rule",
           "modulePath": "packages/qti-processing/src/components/qti-rule/qti-rule.ts",
-          "definitionPath": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
+          "definitionPath": "packages/qti-processing/src/components/qti-rule/qti-rule.ts",
+          "tagName": "qti-rule"
         }
       ],
       "exports": [
@@ -51574,9 +51574,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-assessment-item-ref",
           "modulePath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts",
+          "tagName": "qti-assessment-item-ref"
         }
       ],
       "exports": [
@@ -51764,9 +51764,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-assessment-section",
           "modulePath": "packages/qti-test/src/components/qti-assessment-section/qti-assessment-section.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-assessment-section/qti-assessment-section.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-assessment-section/qti-assessment-section.ts",
+          "tagName": "qti-assessment-section"
         }
       ],
       "exports": [
@@ -51860,9 +51860,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-assessment-test",
           "modulePath": "packages/qti-test/src/components/qti-assessment-test/qti-assessment-test.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-assessment-test/qti-assessment-test.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-assessment-test/qti-assessment-test.ts",
+          "tagName": "qti-assessment-test"
         }
       ],
       "exports": [
@@ -52029,9 +52029,9 @@
           },
           "summary": "The qti-item-session-control element contains configurations relating to flow of test sessions.",
           "customElement": true,
-          "tagName": "qti-item-session-control",
           "modulePath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-item-session-control/qti-item-session-control.ts",
+          "tagName": "qti-item-session-control"
         }
       ],
       "exports": [
@@ -52076,9 +52076,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-outcome-processing",
           "modulePath": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-outcome-processing/qti-outcome-processing.ts",
+          "tagName": "qti-outcome-processing"
         },
         {
           "kind": "class",
@@ -52495,9 +52495,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-test-part",
           "modulePath": "packages/qti-test/src/components/qti-test-part/qti-test-part.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-test-part/qti-test-part.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-test-part/qti-test-part.ts",
+          "tagName": "qti-test-part"
         }
       ],
       "exports": [
@@ -52750,9 +52750,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "qti-test",
           "modulePath": "packages/qti-test/src/components/qti-test/qti-test.ts",
-          "definitionPath": "packages/qti-test/src/components/qti-test/qti-test.ts"
+          "definitionPath": "packages/qti-test/src/components/qti-test/qti-test.ts",
+          "tagName": "qti-test"
         }
       ],
       "exports": [
@@ -52847,9 +52847,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-check-item",
           "modulePath": "packages/qti-test/src/components/test-check-item/test-check-item.ts",
-          "definitionPath": "packages/qti-test/src/components/test-check-item/test-check-item.ts"
+          "definitionPath": "packages/qti-test/src/components/test-check-item/test-check-item.ts",
+          "tagName": "test-check-item"
         }
       ],
       "exports": [
@@ -53019,9 +53019,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-container",
           "modulePath": "packages/qti-test/src/components/test-container/test-container.ts",
-          "definitionPath": "packages/qti-test/src/components/test-container/test-container.ts"
+          "definitionPath": "packages/qti-test/src/components/test-container/test-container.ts",
+          "tagName": "test-container"
         }
       ],
       "exports": [
@@ -53118,9 +53118,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-end-attempt",
           "modulePath": "packages/qti-test/src/components/test-end-attempt/test-end-attempt.ts",
-          "definitionPath": "packages/qti-test/src/components/test-end-attempt/test-end-attempt.ts"
+          "definitionPath": "packages/qti-test/src/components/test-end-attempt/test-end-attempt.ts",
+          "tagName": "test-end-attempt"
         }
       ],
       "exports": [
@@ -53203,9 +53203,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-item-link",
           "modulePath": "packages/qti-test/src/components/test-item-link/test-item-link.ts",
-          "definitionPath": "packages/qti-test/src/components/test-item-link/test-item-link.ts"
+          "definitionPath": "packages/qti-test/src/components/test-item-link/test-item-link.ts",
+          "tagName": "test-item-link"
         }
       ],
       "exports": [
@@ -53554,9 +53554,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-item-to-speech",
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
-          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "tagName": "test-item-to-speech"
         },
         {
           "kind": "class",
@@ -54375,9 +54375,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-navigation",
           "modulePath": "packages/qti-test/src/components/test-navigation/test-navigation.ts",
-          "definitionPath": "packages/qti-test/src/components/test-navigation/test-navigation.ts"
+          "definitionPath": "packages/qti-test/src/components/test-navigation/test-navigation.ts",
+          "tagName": "test-navigation"
         }
       ],
       "exports": [
@@ -54538,9 +54538,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-next",
           "modulePath": "packages/qti-test/src/components/test-next/test-next.ts",
-          "definitionPath": "packages/qti-test/src/components/test-next/test-next.ts"
+          "definitionPath": "packages/qti-test/src/components/test-next/test-next.ts",
+          "tagName": "test-next"
         }
       ],
       "exports": [
@@ -54612,9 +54612,9 @@
           },
           "deprecated": "test-paging-buttons-stamp is deprecated and will be removed in the future.",
           "customElement": true,
-          "tagName": "test-paging-buttons-stamp",
           "modulePath": "packages/qti-test/src/components/test-paging-buttons-stamp/test-paging-buttons-stamp.ts",
-          "definitionPath": "packages/qti-test/src/components/test-paging-buttons-stamp/test-paging-buttons-stamp.ts"
+          "definitionPath": "packages/qti-test/src/components/test-paging-buttons-stamp/test-paging-buttons-stamp.ts",
+          "tagName": "test-paging-buttons-stamp"
         }
       ],
       "exports": [
@@ -54751,9 +54751,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-prev",
           "modulePath": "packages/qti-test/src/components/test-prev/test-prev.ts",
-          "definitionPath": "packages/qti-test/src/components/test-prev/test-prev.ts"
+          "definitionPath": "packages/qti-test/src/components/test-prev/test-prev.ts",
+          "tagName": "test-prev"
         }
       ],
       "exports": [
@@ -54801,9 +54801,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-print-context",
           "modulePath": "packages/qti-test/src/components/test-print-context/test-print-context.ts",
-          "definitionPath": "packages/qti-test/src/components/test-print-context/test-print-context.ts"
+          "definitionPath": "packages/qti-test/src/components/test-print-context/test-print-context.ts",
+          "tagName": "test-print-context"
         }
       ],
       "exports": [
@@ -54851,9 +54851,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-print-item-variables",
           "modulePath": "packages/qti-test/src/components/test-print-item-variables/test-print-item-variables.ts",
-          "definitionPath": "packages/qti-test/src/components/test-print-item-variables/test-print-item-variables.ts"
+          "definitionPath": "packages/qti-test/src/components/test-print-item-variables/test-print-item-variables.ts",
+          "tagName": "test-print-item-variables"
         }
       ],
       "exports": [
@@ -54966,9 +54966,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-scoring-buttons",
           "modulePath": "packages/qti-test/src/components/test-scoring-buttons/test-scoring-buttons.ts",
-          "definitionPath": "packages/qti-test/src/components/test-scoring-buttons/test-scoring-buttons.ts"
+          "definitionPath": "packages/qti-test/src/components/test-scoring-buttons/test-scoring-buttons.ts",
+          "tagName": "test-scoring-buttons"
         }
       ],
       "exports": [
@@ -55042,9 +55042,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-scoring-feedback",
           "modulePath": "packages/qti-test/src/components/test-scoring-feedback/test-scoring-feedback.ts",
-          "definitionPath": "packages/qti-test/src/components/test-scoring-feedback/test-scoring-feedback.ts"
+          "definitionPath": "packages/qti-test/src/components/test-scoring-feedback/test-scoring-feedback.ts",
+          "tagName": "test-scoring-feedback"
         }
       ],
       "exports": [
@@ -55116,9 +55116,9 @@
           },
           "deprecated": "test-section-buttons-stamp is deprecated and will be removed in the future.",
           "customElement": true,
-          "tagName": "test-section-buttons-stamp",
           "modulePath": "packages/qti-test/src/components/test-section-buttons-stamp/test-section-buttons-stamp.ts",
-          "definitionPath": "packages/qti-test/src/components/test-section-buttons-stamp/test-section-buttons-stamp.ts"
+          "definitionPath": "packages/qti-test/src/components/test-section-buttons-stamp/test-section-buttons-stamp.ts",
+          "tagName": "test-section-buttons-stamp"
         }
       ],
       "exports": [
@@ -55196,9 +55196,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-section-link",
           "modulePath": "packages/qti-test/src/components/test-section-link/test-section-link.ts",
-          "definitionPath": "packages/qti-test/src/components/test-section-link/test-section-link.ts"
+          "definitionPath": "packages/qti-test/src/components/test-section-link/test-section-link.ts",
+          "tagName": "test-section-link"
         }
       ],
       "exports": [
@@ -55370,9 +55370,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-view-toggle",
           "modulePath": "packages/qti-test/src/components/test-view-toggle/test-view-toggle.ts",
-          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view-toggle.ts"
+          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view-toggle.ts",
+          "tagName": "test-view-toggle"
         }
       ],
       "exports": [
@@ -55503,9 +55503,9 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "test-view",
           "modulePath": "packages/qti-test/src/components/test-view-toggle/test-view.ts",
-          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view.ts"
+          "definitionPath": "packages/qti-test/src/components/test-view-toggle/test-view.ts",
+          "tagName": "test-view"
         }
       ],
       "exports": [

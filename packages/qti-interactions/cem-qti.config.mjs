@@ -156,10 +156,6 @@ export default {
 
   overrideModuleCreation({ ts, globs }) {
     const program = getTsProgram(ts, globs, 'tsconfig.json');
-    const checker = program.getTypeChecker();
-    if (typeof checker.getProgram !== 'function') {
-      checker.getProgram = () => program;
-    }
 
     const includePathParts = ['/packages/interactions/', '/packages/qti-interactions/src/'];
     const excludePathParts = ['/node_modules/', '/dist/'];
