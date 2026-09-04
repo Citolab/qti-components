@@ -1,5 +1,86 @@
 # @qti-components/base
 
+## 2.2.0
+
+### Minor Changes
+
+- [#194](https://github.com/Citolab/qti-components/pull/194) [`db1364a`](https://github.com/Citolab/qti-components/commit/db1364adbf2f081f96cde3a9e5511a65c0a17d13) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - Gate linear navigation and further attempts on item doneness.
+
+  An item is done once an attempt has ended and either reached the optimal outcome or exhausted its
+  `max-attempts`. `test-navigation` computes that centrally and publishes `done` and `optimal` on the
+  computed context.
+
+  Optimality is judged from the scored outcome where there is one — `SCORE` having reached `MAXSCORE`,
+  which handles partial-credit and `qti-mapping` items correctly — and otherwise from an exact match
+  against the declared `qti-correct-response`. Items with neither (essays, info items) count as done
+  after one attempt, since there is no optimal value to require.
+
+  It is latched only when `processResponse` ends an attempt: `qti-assessment-item` now flags that
+  context update with `responseProcessed`, so a mid-attempt selection never counts. A restored session
+  seeds the latch once from the persisted context.
+
+  `test-next` in linear/individual mode gates on `done` in place of "any attempt ended", and
+  `test-end-attempt` is additionally disabled once a non-adaptive item's last ended attempt was
+  already optimal — there is nothing left to improve.
+
+- [#194](https://github.com/Citolab/qti-components/pull/194) [`db1364a`](https://github.com/Citolab/qti-components/commit/db1364adbf2f081f96cde3a9e5511a65c0a17d13) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - Add `qti-item-session-control`, and honour `max-attempts` and `allow-skipping`.
+
+  The element exposes the QTI 3.0 `ItemSessionControl` attributes, and `test-navigation` cascades
+  them from test-part to section to item into the computed context, so every item carries the
+  settings that apply to it.
+
+  `test-end-attempt` reads that cascade: it is disabled once a non-adaptive item has reached its
+  `max-attempts` (`max-attempts="0"` means unlimited), and — when `allow-skipping` is false — while
+  the active item's response is still invalid or untouched. Adaptive items are exempt from the
+  attempt limit, since they are meant to keep iterating.
+
+  The computed context gains `valid` and `isDefaultResponse` per item to support that, alongside
+  `maxAttempts` and `allowSkipping`.
+
+- [#194](https://github.com/Citolab/qti-components/pull/194) [`db1364a`](https://github.com/Citolab/qti-components/commit/db1364adbf2f081f96cde3a9e5511a65c0a17d13) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - Apply the `show-feedback` constraint per the QTI `ItemSessionControl` rules.
+
+  `test-navigation` cascades `show-feedback` from the session control into the computed context, and
+  `QtiFeedback` consults it.
+
+  The constraint governs exactly one state: after the end of the last attempt. Until then the spec
+  requires any applicable feedback to be shown — "a value of max-attempts greater than 1, by
+  definition, indicates that any applicable feedback must be shown" — and only "once the maximum
+  number of allowed attempts have been used (or for adaptive items, completionStatus has been set to
+  completed)" does `show-feedback` decide. So the gate asks whether the item is out of attempts, which
+  is answered per item kind:
+
+  - adaptive items ignore `max-attempts` entirely, and are out of attempts only once
+    `completionStatus` is `completed`;
+  - `max-attempts="0"` means no limit, so that state is never reached and feedback always shows;
+  - otherwise, once `numAttempts` reaches `max-attempts`, `show-feedback` decides, defaulting to
+    false.
+
+- [#194](https://github.com/Citolab/qti-components/pull/194) [`db1364a`](https://github.com/Citolab/qti-components/commit/db1364adbf2f081f96cde3a9e5511a65c0a17d13) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - Reveal the solution after an ended attempt when `show-solution` says so.
+
+  `test-navigation` settles item doneness on an ended attempt and hands it to a new
+  `afterAttemptEnded` extension point, alongside the item and its computed-context entry. The hook is
+  needed because the computed context only catches up on the next update, after the event has finished
+  bubbling.
+
+  `TestNavigationCorrection` overrides it for the standard `qti-item-session-control show-solution`:
+  an ended attempt marks the candidate's selection, and a done item also reveals the correct answer.
+  The player takes no opinion of its own — whether marks accumulate across attempts belongs to the
+  corrections rendering, not to item session control.
+
+### Patch Changes
+
+- [#198](https://github.com/Citolab/qti-components/pull/198) [`0173d1d`](https://github.com/Citolab/qti-components/commit/0173d1d93e6e780d97cf5c1412fad89cccf6743c) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - Resolve test-level outcomes in variable expressions.
+
+  The `variable` expression and `getVariables()` only consulted item scope, so a test-level outcome
+  that had just been set — a total summed in outcome processing, say — could not be read back:
+  `<qti-variable identifier="TEST_SCORE"/>` resolved to `undefined` and threw once used in a
+  comparison.
+
+  Item scope is resolved first, then the test-level outcome variables, mirroring how
+  `qti-printed-variable` already does it — and an unresolved identifier now returns `null` instead of
+  throwing. This is the pattern the QTI 3.0 spec's own feedback examples rely on: set a total via
+  `qti-test-variables`, then branch on it with `qti-variable` in an `outcomeCondition`.
+
 ## 2.1.0
 
 ### Minor Changes
