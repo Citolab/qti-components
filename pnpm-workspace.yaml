@@ -3,10 +3,22 @@ packages:
   - packages/*
   - packages/interactions/*
 
-onlyBuiltDependencies:
-  - '@swc/core'
-  - esbuild
-  - msw
-  - puppeteer
-  - rs-module-lexer
-  - unrs-resolver
+overrides:
+  storybook: $storybook
+  caniuse-lite: 1.0.30001805
+  esbuild@>=0.27.3 <0.28.1: ^0.28.1
+  mdx-mermaid>puppeteer: '-'
+  # Pin until wc-toolkit/cem-inheritance#30 is fixed upstream: cem-utilities 1.6.0
+  # made getAllComponents() return shallow copies, so cem-inheritance's mutation-based
+  # inheritance silently drops attributes/members/slots/events/cssParts for components
+  # that don't already declare an entry of their own.
+  '@wc-toolkit/cem-utilities': 1.2.0
+
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  msw: true
+  puppeteer: true
+  rs-module-lexer: true
+  unrs-resolver: true

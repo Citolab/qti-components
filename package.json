@@ -173,22 +173,12 @@
     "url": "https://github.com/Citolab/qti-components/issues"
   },
   "homepage": "https://github.com/Citolab/qti-components#readme",
-  "overrides": {
-    "storybook": "$storybook"
-  },
-  "pnpm": {
-    "overrides": {
-      "caniuse-lite": "1.0.30001805",
-      "esbuild@>=0.27.3 <0.28.1": "^0.28.1",
-      "mdx-mermaid>puppeteer": "-"
-    }
-  },
   "msw": {
     "workerDirectory": [
       "public"
     ]
   },
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@11.25.0",
   "sherif": {
     "ignoreRule": [
       "packages-without-package-json"
