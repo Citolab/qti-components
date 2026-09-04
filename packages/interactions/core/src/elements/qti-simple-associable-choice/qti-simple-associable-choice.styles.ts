@@ -142,5 +142,17 @@ export default [
     ::slotted(p) {
       display: inline;
     }
+
+    /*
+     * The control div's only content is the theme's ::before grip glyph. Centering it with
+     * 'vertical-align: middle' (the theme's only lever on a pseudo-element it owns) aligns to the
+     * line box's baseline metrics, which drift with font/line-height. Flex centering here is
+     * geometric and font-independent — the same fix qti-simple-choice already has for its control.
+     */
+    [part='control'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   `
 ];
