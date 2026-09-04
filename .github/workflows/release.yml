@@ -67,6 +67,10 @@ jobs:
 
       - name: Dry-run version preview (snapshot)
         if: ${{ inputs.dry_run }}
+        env:
+          # @changesets/changelog-github resolves PR and author links through the API,
+          # so the preview needs the same token the real version step uses.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           if ! ls .changeset/*.md >/dev/null 2>&1; then
             exit 0
