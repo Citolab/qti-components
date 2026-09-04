@@ -13,3 +13,7 @@ QTI-Components.code-workspace
 
 # Justfile uses tab-indented recipe bodies; prettier strips them
 Justfile
+
+# Written by msw's postinstall on every install, in msw's own style, and asks not
+# to be modified. Formatting it makes every subsequent install dirty the tree.
+public/mockServiceWorker.js
