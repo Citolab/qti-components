@@ -14,6 +14,14 @@
  * So: pack the package, install the tarball into a scratch project outside the workspace,
  * and run tsc over a fixture that uses the public API. Any unresolvable import shows up as
  * the member types collapsing, which the fixture's assignments then reject.
+ *
+ * Pack with `pnpm pack`, never `npm pack`. Workspace manifests declare their cross-cutting
+ * runtime deps as `"lit": "catalog:"` (see the catalog in pnpm-workspace.yaml). pnpm rewrites
+ * that to the real range while packing — in dependencies, devDependencies AND peerDependencies
+ * — exactly as `pnpm publish` does. npm knows nothing about the protocol and copies the literal
+ * string through, so an npm-packed tarball declares `"lit": "catalog:"`, which is not a version
+ * range. That tarball is not what gets published, so testing it would prove nothing about the
+ * real artifact.
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, cpSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
@@ -32,7 +40,25 @@ const scratch = mkdtempSync(join(tmpdir(), 'qti-consumer-types-'));
 let failed = false;
 try {
   console.log(`consumer-types: packing @citolab/qti-components…`);
-  const packed = run('npm', ['pack', '--silent', '--pack-destination', scratch], pkgDir).trim().split('\n').pop();
+  // `--out` rather than parsing stdout: pnpm pack prints a "Tarball Details" report, not a bare
+  // filename the way `npm pack --silent` does.
+  const packed = join(scratch, 'package.tgz');
+  run('pnpm', ['pack', '--out', packed], pkgDir);
+
+  // The packed manifest is the artifact consumers actually get. Assert pnpm resolved every
+  // workspace-only protocol out of it — a literal `catalog:` or `workspace:` range would make the
+  // tarball uninstallable, and reaching this point with one means something packed it with npm.
+  const packedManifest = JSON.parse(run('tar', ['xzOf', packed, 'package/package.json'], scratch));
+  for (const field of ['dependencies', 'peerDependencies', 'optionalDependencies']) {
+    for (const [name, range] of Object.entries(packedManifest[field] ?? {})) {
+      if (/^(catalog|workspace):/.test(range)) {
+        throw new Error(
+          `consumer-types: the packed manifest still declares ${field}.${name} as "${range}". ` +
+            'pnpm rewrites these while packing; npm does not. Pack with pnpm.'
+        );
+      }
+    }
+  }
 
   cpSync(fixture, scratch, { recursive: true });
   writeFileSync(
@@ -53,11 +79,7 @@ try {
   writeFileSync(join(scratch, 'tsconfig.json'), JSON.stringify(config, null, 2));
 
   console.log('consumer-types: installing the tarball into a scratch project…');
-  run(
-    'npm',
-    ['install', '--silent', '--no-audit', '--no-fund', 'typescript@5.9.3', 'lit@3.3.3', join(scratch, packed)],
-    scratch
-  );
+  run('npm', ['install', '--silent', '--no-audit', '--no-fund', 'typescript@5.9.3', 'lit@3.3.3', packed], scratch);
 
   console.log('consumer-types: type-checking…');
   try {

@@ -3,8 +3,39 @@ packages:
   - packages/*
   - packages/interactions/*
 
+# Single source of truth for the runtime dependencies that MUST be one instance across the
+# workspace. Every package writes `"lit": "catalog:"` instead of a literal range.
+#
+# Lit was hand-written in 62 places at two different ranges — `^3.3.1` in every peerDependencies
+# block and `^3.3.3` in every devDependencies block — and the umbrella declared `^3.3.3` as a hard
+# `dependency`. A consumer pinned to 3.3.1 or 3.3.2 could satisfy the parts and not the umbrella,
+# which is how a second copy of Lit gets installed. Two copies mean two `ReactiveElement` base
+# classes (`instanceof` fails across them) and two `@lit/context` registries; because the contexts
+# in qti-base are keyed with a unique `Symbol()` rather than `Symbol.for`, every `@consume` then
+# silently never resolves — no error, no log.
+#
+# One entry, so peer and dev ranges cannot drift apart again. `^3.3.1` (the wider peer range) is
+# the correct one to keep: it still installs 3.3.3 locally, and narrowing it would exclude
+# consumers the sibling packages already accept.
+#
+# `pnpm pack`/`pnpm publish` rewrite `catalog:` to the real range in dependencies,
+# devDependencies AND peerDependencies, so published manifests are unaffected. `npm pack` does
+# NOT — it ships the literal string `"lit": "catalog:"` — so any tooling that packs this workspace
+# must use pnpm. See tools/testing/consumer-types.mjs.
+#
+# Only cross-cutting runtime deps belong here. Build tooling lives in the root package.json alone,
+# where there is no second copy to drift from, and single-use deps (sass, observable-polyfill)
+# gain nothing.
+catalog:
+  lit: ^3.3.1
+  '@lit/context': ^1.1.6
+  '@heximal/templates': ^0.1.5
+  storybook: ^10.6.0
+
 overrides:
-  storybook: $storybook
+  # `catalog:` rather than the `$storybook` version-reference syntax, which pnpm has deprecated
+  # (publint flags it).
+  storybook: 'catalog:'
   caniuse-lite: 1.0.30001805
   esbuild@>=0.27.3 <0.28.1: ^0.28.1
   mdx-mermaid>puppeteer: '-'
