@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@lit/context": "catalog:",
+    "@qti-components/theme": "workspace:^",
     "lit": "catalog:"
   },
   "keywords": [
@@ -49,7 +50,7 @@
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null --noEmit false",
+    "build": "pnpm run clean && tsc --paths null --noEmit false",
     "clean": "rm -rf dist",
     "publish": "node ../../tools/publish-if-needed.mjs",
     "yalc": "yalc publish",

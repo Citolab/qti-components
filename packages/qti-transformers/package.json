@@ -10,7 +10,7 @@
   "license": "GPL-3.0-only",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --paths null",
+    "build": "pnpm run clean && tsc --paths null",
     "clean": "rm -rf dist",
     "publish": "node ../../tools/publish-if-needed.mjs",
     "yalc": "yalc publish",

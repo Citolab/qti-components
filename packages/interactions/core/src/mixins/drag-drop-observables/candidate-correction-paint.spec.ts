@@ -3,7 +3,7 @@ import { expect, test, describe, beforeEach } from 'vitest';
 
 import '@qti-components/interactions';
 
-import itemCss from '../../../../../qti-theme/src/item.css?inline';
+import itemCss from '@qti-components/theme/item-css';
 
 /**
  * Candidate corrections are OPT-IN per interaction, and this is what holds that together.

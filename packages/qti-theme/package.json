@@ -5,7 +5,11 @@
   "author": "",
   "exports": {
     "./item.css": "./dist/item.css",
-    "./native.css": "./dist/native.css"
+    "./native.css": "./dist/native.css",
+    "./item-css": {
+      "types": "./dist/item-css.d.ts",
+      "import": "./dist/item-css.js"
+    }
   },
   "files": [
     "dist"
@@ -17,7 +21,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m",
+    "build": "pnpm run clean && postcss ./src/item.css -d dist -m && postcss ./src/native.css -d dist -m && node ../../tools/build/css-text-module.mjs dist/item.css dist/item-css",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",

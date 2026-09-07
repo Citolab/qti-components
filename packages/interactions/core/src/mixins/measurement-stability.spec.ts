@@ -3,7 +3,7 @@ import { expect, test, describe, beforeEach } from 'vitest';
 
 import '@qti-components/interactions';
 
-import itemCss from '../../../../qti-theme/src/item.css?inline';
+import itemCss from '@qti-components/theme/item-css';
 
 /**
  * Measurement stability for the two auto-sizing mixins.

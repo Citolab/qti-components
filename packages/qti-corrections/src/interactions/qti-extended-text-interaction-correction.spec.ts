@@ -1,7 +1,8 @@
 import normalizeCss from 'modern-normalize/modern-normalize.css?inline';
 import { expect, test, describe, beforeEach } from 'vitest';
 
-import itemCss from '../../../qti-theme/src/item.css?inline';
+import itemCss from '@qti-components/theme/item-css';
+
 import { QtiExtendedTextInteractionCorrection } from './qti-extended-text-interaction-correction';
 
 /**

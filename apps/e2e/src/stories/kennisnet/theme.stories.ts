@@ -7,8 +7,8 @@ import { qtiItemElements } from '@qti-components/item/elements';
 import { qtiProcessingElements } from '@qti-components/processing/elements';
 import { qtiCorrectionElements } from '@qti-components/corrections/elements';
 import { qtiTestElements } from '@qti-components/test/elements';
+import itemCss from '@qti-components/theme/item-css';
 
-import itemCss from '../../../../../packages/qti-theme/src/item.css?inline';
 import kennisnetCss from './kennisnet.css?inline';
 
 import type { Decorator, Meta, StoryObj } from '@storybook/web-components-vite';
