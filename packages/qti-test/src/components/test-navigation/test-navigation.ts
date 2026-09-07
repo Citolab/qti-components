@@ -163,19 +163,15 @@ export class TestNavigation extends LitElement {
    * @param {CustomEvent} event - The custom event object.
    */
   #handleTestEndAttempt(_event: CustomEvent) {
-    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${this._sessionContext.navItemRefId}"]`
-    );
-    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    const qtiAssessmentItemEl = this.activeAssessmentItem;
+    if (!qtiAssessmentItemEl) return;
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
   }
 
   #handleTestUpdateOutcomeVariable(event: CustomEvent) {
-    const qtiItemEl = this.#testElement.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${event.detail.assessmentItemRefId}"]`
-    );
-    const qtiAssessmentItemEl = qtiItemEl.assessmentItem;
+    const qtiAssessmentItemEl = this.#assessmentItemFor(event.detail?.assessmentItemRefId);
+    if (!qtiAssessmentItemEl) return;
     qtiAssessmentItemEl.setOutcomeVariable(event.detail.outcomeVariableId, event.detail.value);
   }
 
@@ -184,6 +180,9 @@ export class TestNavigation extends LitElement {
       const assessmentItem = (_event.composedPath()[0] as HTMLElement).closest<QtiAssessmentItem>(
         'qti-assessment-item'
       );
+      // Autoscoring resolves the item from the event's own path, so a change
+      // raised outside an assessment item has nothing to score.
+      if (!assessmentItem) return;
       const scoreOutcomeIdentifier = assessmentItem.variables.find(v => v.identifier === 'SCORE') as OutcomeVariable;
       if (
         scoreOutcomeIdentifier &&
