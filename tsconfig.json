@@ -18,7 +18,11 @@
       "@qti-components/test/*": ["./packages/qti-test/src/*"],
       "@qti-components/corrections": ["./packages/qti-corrections/src/index.ts"],
       "@qti-components/corrections/*": ["./packages/qti-corrections/src/*"],
-      "@qti-components/theme": ["./packages/qti-theme/src/index.ts"],
+      // Dev resolves the theme text to source, so Storybook/Vitest/apps-e2e keep going through
+      // Vite's `?inline` handling. The published entry is a generated dist/item-css.js — see
+      // tools/build/css-text-module.mjs. (There is no `@qti-components/theme` bare mapping: the
+      // package has no index, only CSS and this one module.)
+      "@qti-components/theme/item-css": ["./packages/qti-theme/src/item-css.ts"],
       "@qti-components/transformers": ["./packages/qti-transformers/src/index.ts"],
       "@qti-components/loader": ["./packages/qti-loader/src/index.ts"],
       "@qti-components/utilities": ["./packages/qti-utilities/src/index.ts"],

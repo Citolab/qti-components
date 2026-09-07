@@ -6,9 +6,7 @@ import { until } from 'lit/directives/until.js';
 import { qtiContext } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 import { qtiTransformTest } from '@qti-components/transformers';
-
-// eslint-disable-next-line import/no-relative-packages
-import itemCss from '../../../../qti-theme/src/item.css?inline';
+import itemCss from '@qti-components/theme/item-css';
 
 import type { QtiContext } from '@qti-components/base';
 

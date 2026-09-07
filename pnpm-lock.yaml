@@ -312,6 +312,10 @@ importers:
       lit:
         specifier: 'catalog:'
         version: 3.3.3
+    devDependencies:
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: link:../../packages/qti-theme
 
   packages/interactions/associate-interaction:
     dependencies:
@@ -366,6 +370,9 @@ importers:
       '@lit/context':
         specifier: 'catalog:'
         version: 1.1.6
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: link:../../qti-theme
       lit:
         specifier: 'catalog:'
         version: 3.3.3
@@ -865,6 +872,9 @@ importers:
       '@lit/context':
         specifier: 'catalog:'
         version: 1.1.6
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: link:../qti-theme
       lit:
         specifier: 'catalog:'
         version: 3.3.3
@@ -987,6 +997,9 @@ importers:
       '@qti-components/processing':
         specifier: workspace:^
         version: link:../qti-processing
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: link:../qti-theme
       '@qti-components/transformers':
         specifier: workspace:^
         version: link:../qti-transformers
@@ -997,9 +1010,6 @@ importers:
       '@lit/context':
         specifier: 'catalog:'
         version: 1.1.6
-      '@qti-components/theme':
-        specifier: workspace:^
-        version: link:../qti-theme
       lit:
         specifier: 'catalog:'
         version: 3.3.3

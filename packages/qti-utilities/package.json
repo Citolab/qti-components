@@ -19,7 +19,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc --paths null",
+    "build": "pnpm run clean && tsc --paths null",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",

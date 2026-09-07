@@ -4,6 +4,9 @@
   "description": "QTI e2e",
   "private": true,
   "type": "module",
+  "devDependencies": {
+    "@qti-components/theme": "workspace:^"
+  },
   "dependencies": {
     "@citolab/qti-components": "workspace:^",
     "@heximal/templates": "catalog:",
