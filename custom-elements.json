@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@360: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@516: {  }, length: number }"
               }
             },
             {
@@ -47559,6 +47559,78 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/qti-processing/src/components/qti-printed-variable/printed-variable-format.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applyFormat",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "format",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Renders `value` through a QTI `format` string. The value is passed as the raw string held in\nthe item context, so integers and floats arrive as `\"5\"` / `\"3.14\"` and are coerced per\nconversion."
+        },
+        {
+          "kind": "function",
+          "name": "toExponential",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "precision",
+              "optional": true,
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applyFormat",
+          "declaration": {
+            "name": "applyFormat",
+            "module": "packages/qti-processing/src/components/qti-printed-variable/printed-variable-format.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toExponential",
+          "declaration": {
+            "name": "toExponential",
+            "module": "packages/qti-processing/src/components/qti-printed-variable/printed-variable-format.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
       "declarations": [
         {
@@ -47566,6 +47638,59 @@
           "description": "",
           "name": "QtiPrintedVariable",
           "members": [
+            {
+              "kind": "method",
+              "name": "#print",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "variable",
+                  "type": {
+                    "text": "VariableDeclaration<unknown>"
+                  }
+                }
+              ],
+              "description": "Returns `null` for anything QTI treats as NULL, which prints as nothing."
+            },
+            {
+              "kind": "method",
+              "name": "#printValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "optional": true,
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "base",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "attribute": "base"
+            },
             {
               "kind": "method",
               "name": "calculate",
@@ -47589,26 +47714,162 @@
             },
             {
               "kind": "field",
+              "name": "delimiter",
+              "type": {
+                "text": "string"
+              },
+              "default": "';'",
+              "attribute": "delimiter"
+            },
+            {
+              "kind": "field",
+              "name": "field",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "field",
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "format",
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
               "name": "identifier",
               "type": {
                 "text": "string"
               },
               "attribute": "identifier"
+            },
+            {
+              "kind": "field",
+              "name": "index",
+              "type": {
+                "text": "number | undefined"
+              },
+              "attribute": "index",
+              "parsedType": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mappingIndicator",
+              "type": {
+                "text": "string"
+              },
+              "default": "'='",
+              "attribute": "mapping-indicator"
+            },
+            {
+              "kind": "field",
+              "name": "powerForm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "power-form"
             }
           ],
           "attributes": [
             {
-              "name": "identifier",
               "type": {
                 "text": "string"
               },
+              "name": ""
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Number base used when printing an integer variable.",
+              "name": "base",
+              "default": "10",
+              "fieldName": "base"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Separator between the values of an ordered/multiple/record variable.",
+              "name": "delimiter",
+              "default": "';'",
+              "fieldName": "delimiter"
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Field of a record variable to print, instead of the whole record.",
+              "name": "field",
+              "fieldName": "field",
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "printf-style conversion string, e.g. `%.2f` or `Score: %d`. Applies to each value printed. Takes precedence over `base` and `power-form`.",
+              "name": "format",
+              "fieldName": "format",
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Required. Identifier of the variable to print.",
+              "name": "identifier",
               "fieldName": "identifier"
+            },
+            {
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "1-based index selecting a single value of an ordered variable.",
+              "name": "index",
+              "fieldName": "index",
+              "parsedType": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "mapping-indicator",
+              "type": {
+                "text": "string"
+              },
+              "default": "'='",
+              "fieldName": "mappingIndicator"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Print numeric values in exponential form.",
+              "name": "power-form",
+              "default": "false",
+              "fieldName": "powerForm"
             }
           ],
           "superclass": {
             "name": "LitElement",
             "package": "lit"
           },
+          "summary": "Prints the value of an item variable into the item body.",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
           "definitionPath": "packages/qti-processing/src/components/qti-printed-variable/qti-printed-variable.ts",
