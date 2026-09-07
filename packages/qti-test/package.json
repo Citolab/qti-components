@@ -13,9 +13,9 @@
     "@qti-components/utilities": "workspace:^"
   },
   "devDependencies": {
-    "@heximal/templates": "^0.1.5",
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.3"
+    "@heximal/templates": "catalog:",
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "keywords": [
     "qti",
@@ -39,9 +39,9 @@
     "./*": "./dist/*"
   },
   "peerDependencies": {
-    "@heximal/templates": "^0.1.5",
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.1"
+    "@heximal/templates": "catalog:",
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",

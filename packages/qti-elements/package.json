@@ -9,8 +9,8 @@
     "@qti-components/utilities": "workspace:^"
   },
   "devDependencies": {
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.3"
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "keywords": [
     "elements",
@@ -34,8 +34,8 @@
     "./*": "./dist/*"
   },
   "peerDependencies": {
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.1"
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",

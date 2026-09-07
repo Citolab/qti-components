@@ -53,5 +53,13 @@ jobs:
         run: pnpm run build
 
       # Use the installed binary (pnpm exec), NOT pnpm dlx / npx — required in CI.
+      #
+      # `--pnpm` is load-bearing, not a preference. pkg-pr-new packs each package by shelling out
+      # to `<pm> pack`, and that pm defaults to npm — only `--pnpm` flips it (the separate
+      # `--packageManager` flag is validated but never reaches the pack call). Workspace manifests
+      # declare their shared runtime deps as `"lit": "catalog:"`, which pnpm resolves to a real
+      # range while packing and npm copies through verbatim. Packed by npm, every prerelease
+      # tarball would declare `"lit": "catalog:"` — not a version range — and fail to install in
+      # QTI-Editor, which consumes this channel.
       - name: Publish prereleases to pkg.pr.new
-        run: pnpm exec pkg-pr-new publish './packages/*' './packages/interactions/*'
+        run: pnpm exec pkg-pr-new publish --pnpm './packages/*' './packages/interactions/*'

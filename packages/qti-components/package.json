@@ -4,9 +4,9 @@
   "version": "9.0.0",
   "author": "",
   "dependencies": {
-    "@heximal/templates": "^0.1.5",
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.3"
+    "@heximal/templates": "catalog:",
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "devDependencies": {
     "@qti-components/base": "workspace:^",
