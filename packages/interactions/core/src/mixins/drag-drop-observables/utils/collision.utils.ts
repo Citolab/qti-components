@@ -198,6 +198,12 @@ export function closestCornersCollision(
   return closestZone;
 }
 
+/** Is the point within the zone's bounding box? Size-independent, unlike corner distance. */
+function containsPoint(zone: HTMLElement, x: number, y: number): boolean {
+  const rect = zone.getBoundingClientRect();
+  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+}
+
 /**
  * Closest Corners with Inventory Priority Algorithm
  * Similar to closestCorners but gives priority to drag containers (inventory slots).
@@ -323,7 +329,23 @@ export function closestCornersWithInventoryPriorityCollision(
     }
   }
 
-  // SECOND: Use distance-based priority with threshold.
+  // SECOND: if the drop point is inside the closest droppable, that droppable wins outright.
+  //
+  // The threshold below ranks by AVERAGE corner distance, which grows with a zone's own
+  // dimensions: the corners of a wide target are far from the drag even when the drag sits dead
+  // centre in it. A target spanning the full width of an interaction — a match set holding a
+  // single target renders full-width — therefore lost to the inventory container beside it, and
+  // the chip sprang back instead of dropping (issue #145). Containment is size-independent, and
+  // mirrors the absolute priority the inventory container already gets above.
+  //
+  // Deliberately scoped to `closestDroppable`: this decides droppable-vs-inventory only, and
+  // never which droppable wins. Overlapping targets — a filled hotspot that has grown over its
+  // neighbour, say — stay the corner-distance ranking's business.
+  if (closestDroppable && containsPoint(closestDroppable, clientX, clientY)) {
+    return closestDroppable;
+  }
+
+  // THIRD: Use distance-based priority with threshold.
   // For drags that originate from a dropzone, avoid over-prioritizing inventory:
   // users typically expect the item to remain in/return to a dropzone unless they
   // explicitly drag into the inventory container.
