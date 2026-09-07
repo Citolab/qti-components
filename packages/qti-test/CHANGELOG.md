@@ -1,5 +1,28 @@
 # @qti-components/test
 
+## 1.6.1
+
+### Patch Changes
+
+- [#201](https://github.com/Citolab/qti-components/pull/201) [`eac8b80`](https://github.com/Citolab/qti-components/commit/eac8b80db65b08c01314fc5a6fd9630afbae3541) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - No-op `test-navigation`'s candidate events when there is nothing to act on.
+
+  The navigation buttons are clickable before a test document has loaded — a failed
+  `assessment.xml` fetch leaves them enabled indefinitely — so a click could reach a handler
+  that dereferenced the test element, the item-ref and its assessment item unguarded, throwing
+  `TypeError: Cannot read properties of undefined (reading 'querySelector')`.
+
+  `test-end-attempt` now resolves the item through the existing `activeAssessmentItem` getter and
+  `test-update-outcome-variable` through `#assessmentItemFor`, each returning early when nothing is
+  rendered. Autoscoring resolves the item from the interaction event's own path, so
+  `qti-interaction-changed` also returns early for a change raised outside an assessment item.
+
+  `test-show-correct-response` and `test-show-candidate-correction` need no change: they are handled
+  by `TestNavigationCorrection` in qti-corrections, which already resolves the item through optional
+  chaining.
+
+- Updated dependencies [[`0822231`](https://github.com/Citolab/qti-components/commit/0822231381b8b4d5d6f98c524e86cf2ef42f12ce)]:
+  - @qti-components/processing@1.5.0
+
 ## 1.6.0
 
 ### Minor Changes

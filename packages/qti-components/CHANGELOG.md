@@ -1,5 +1,65 @@
 # @citolab/qti-components
 
+## 9.0.0
+
+### Major Changes
+
+- [#203](https://github.com/Citolab/qti-components/pull/203) [`a5739c6`](https://github.com/Citolab/qti-components/commit/a5739c6327dd3e850081dfd76f6b5923d3fbbfdd) Thanks [@herrKlein](https://github.com/herrKlein)! - `@citolab/qti-components/corrections` is now a drop-in alternative to the package root. Where the root registers the standard delivery elements, this registers the same set with the correction variants substituted for the tags they cover, plus the correction-only controls:
+
+  ```html
+  <script type="module">
+    import '@citolab/qti-components/corrections';
+  </script>
+  ```
+
+  Elements without a correction variant — the processing operators, most test controls, interactions like media and upload — still get their standard constructor, so the page works as a whole.
+
+  **Breaking:** that subpath previously only re-exported `@qti-components/corrections` and registered nothing. It still exports everything it did, but importing it now defines custom elements. Anything importing it purely for the mixins, types or constructors should move to the package root.
+
+  Importing `@citolab/qti-components` is unchanged.
+
+  Registration is first-wins and silently so — every `register.ts` guards with `if (!customElements.get(tag))` — so importing both entry points leaves the correction variants inactive with no error. The corrections entry detects that and warns, naming the tags it could not claim.
+
+### Minor Changes
+
+- [`0822231`](https://github.com/Citolab/qti-components/commit/0822231381b8b4d5d6f98c524e86cf2ef42f12ce) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - Implement the `qti-printed-variable` formatting attributes: `format`, `base`, `index`, `power-form`, `field`, `delimiter` and `mapping-indicator`.
+
+  The element rendered its value with `JSON.stringify(value, null, 2)` and declared none of these attributes, so every printed variable came out as JSON: a single value carried its quotes (`"ChoiceA"`, `"1"`), and an ordered or multiple variable printed as a pretty-printed array —
+
+  > Here is a set of numbers: `["-98",\n  "2",\n  "-70",\n  "48"]`
+
+  — instead of a delimited list. That is what made the mc_stat2 example look like it was printing nothing useful ([#134](https://github.com/Citolab/qti-components/issues/134)).
+
+  Now a container prints its values joined by `delimiter` (default `;`), a record prints `name=value` pairs using `mapping-indicator` (default `=`), `index` selects one value of an ordered variable (1-based), `field` selects one field of a record, `base` prints an integer in another number base, `power-form` prints numeric values in exponential form, and `format` applies a printf-style conversion string (`%.2f`, `Score: %d`, flags `-+ 0#`, width, precision, and the conversions `d i u o x X f F e E g G s c`). A NULL variable — absent, null, or an empty container — prints nothing.
+
+  Closes [#202](https://github.com/Citolab/qti-components/issues/202).
+
+### Patch Changes
+
+- [#201](https://github.com/Citolab/qti-components/pull/201) [`eac8b80`](https://github.com/Citolab/qti-components/commit/eac8b80db65b08c01314fc5a6fd9630afbae3541) Thanks [@RyanPetersClassroomReady](https://github.com/RyanPetersClassroomReady)! - No-op `test-navigation`'s candidate events when there is nothing to act on.
+
+  The navigation buttons are clickable before a test document has loaded — a failed
+  `assessment.xml` fetch leaves them enabled indefinitely — so a click could reach a handler
+  that dereferenced the test element, the item-ref and its assessment item unguarded, throwing
+  `TypeError: Cannot read properties of undefined (reading 'querySelector')`.
+
+  `test-end-attempt` now resolves the item through the existing `activeAssessmentItem` getter and
+  `test-update-outcome-variable` through `#assessmentItemFor`, each returning early when nothing is
+  rendered. Autoscoring resolves the item from the interaction event's own path, so
+  `qti-interaction-changed` also returns early for a change raised outside an assessment item.
+
+  `test-show-correct-response` and `test-show-candidate-correction` need no change: they are handled
+  by `TestNavigationCorrection` in qti-corrections, which already resolves the item through optional
+  chaining.
+
+- [`1252a5b`](https://github.com/Citolab/qti-components/commit/1252a5b0f6c9dc1205101ab9844729c6a9e2918c) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - Fix drops being refused by a drop target that spans the full width of its interaction.
+
+  `closestCornersWithInventoryPriority` — the default collision algorithm for slotted drag-drop — ranks zones by **average corner distance**, which grows with a zone's own dimensions: the corners of a wide target are far from the drag even when the drag sits dead centre in it. The inventory container then won the `distance <= droppableDistance * 1.5` comparison, so the chip animated back to the source set and the response stayed empty.
+
+  A `qti-match-interaction` whose second match set holds a single target hit this every time, because one target renders full-width. That is the item reported in [#145](https://github.com/Citolab/qti-components/issues/145): four image choices and one "The biggest obtuse angle" target that nothing could be dropped into.
+
+  The closest droppable now wins outright when the drop point is inside it, which is size-independent — mirroring the absolute priority the inventory container already had for the same test. Scoped to the closest droppable on purpose: it settles droppable-vs-inventory and never which droppable wins, so overlapping targets (a filled `qti-associable-hotspot` grown over its neighbour, say) stay the corner ranking's business.
+
 ## 8.2.0
 
 ### Minor Changes
