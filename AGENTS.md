@@ -24,6 +24,14 @@
 - Type check: `pnpm tsc`
 - Lint: `pnpm lint`
 
+## Committed Generated Files
+
+`public/mockServiceWorker.js` is written by msw's postinstall on every `pnpm install`, in msw's
+own style, and is committed byte-for-byte as msw produces it — `.prettierignore` lists it so
+nothing reformats it. Commit whatever `pnpm install` writes and never tidy it by hand: a diff
+there means the msw version moved, and a reformatted copy makes every subsequent install dirty
+the working tree.
+
 ## Coding And Testing Defaults
 
 - Prefer small, focused changes with clear file-level intent.

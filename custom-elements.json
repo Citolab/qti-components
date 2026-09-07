@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@360: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@549: {  }, length: number }"
               }
             },
             {
