@@ -95,7 +95,7 @@ export default defineConfig(async () => {
     clean: false, // handled by our npm script
     outDir: 'dist',
     format: 'esm',
-    entry: ['./src/**/*.ts'],
+    entry: ['./src/**/*.ts', '!./src/**/*.spec.ts'],
     external: litExternal,
     noExternal: bundledDependencies,
     splitting: true,
