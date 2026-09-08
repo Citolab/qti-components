@@ -1,5 +1,116 @@
 # @citolab/qti-components
 
+## 9.1.0
+
+### Minor Changes
+
+- [#205](https://github.com/Citolab/qti-components/pull/205) [`8959ee7`](https://github.com/Citolab/qti-components/commit/8959ee7e6417061d80fba5d027900dd7fc42afce) Thanks [@herrKlein](https://github.com/herrKlein)! - Ship the theme sheet as a real module, so `@qti-components/item` and `@qti-components/test` can be
+  installed on their own.
+
+  Both packages adopt the theme into their shadow root, so they need the sheet as _text_. They got it
+  with `import itemCss from '../../../../qti-theme/src/item.css?inline'` — but `?inline` is
+  bundler-only syntax, and `tsc` (how all 32 non-umbrella packages build) copies the specifier through
+  verbatim. `@qti-components/item@1.4.3` therefore shipped that exact line. Two things wrong with it:
+  the `?inline` suffix no plain bundler resolves, and the path climbs out of the package into a
+  sibling directory that `files: ["dist"]` never publishes. Installing the package from npm and
+  bundling it fails outright:
+
+  ```
+  ✘ [ERROR] Could not resolve "../../../../qti-theme/src/item.css?inline"
+      @qti-components/item/dist/components/item-container/item-container.js:15:20
+  ```
+
+  It went unnoticed because the umbrella inlines these packages at build time and its esbuild plugin
+  resolves the `?inline` right there — inside the workspace, where `dist/` sits at the same depth as
+  `src/` and the relative path happens to land on a real file. Consumers of `@citolab/qti-components`
+  never saw the broken specifier. Consumers of the granular packages could not get past it.
+
+  `@qti-components/theme` now exposes `./item-css`, an ES module exporting the compiled sheet as a
+  string. It is generated from the already-built `dist/item.css` rather than by running PostCSS a
+  second time, and the result is byte-for-byte what the inline plugin produced (279,603 chars) — so
+  the text these containers adopt is unchanged and nothing renders differently. `item-container` and
+  `test-container` import that instead, and `@qti-components/theme` moves to a real `dependency` of
+  `@qti-components/item` (it already was one of `@qti-components/test`) so the topological build
+  order guarantees it exists first.
+
+  Verified: with the fix, `@qti-components/item` installed from a tarball bundles cleanly and carries
+  exactly one copy of the sheet.
+
+  Also in this change:
+
+  - **Every package now cleans before it builds.** None did, so `dist/` accumulated files whose
+    sources were deleted — `@qti-components/corrections` was carrying a stale
+    `dist/stories/with-correction-registry.decorator.js` from a removed source file, itself
+    containing a `?inline` import. Nothing broken had actually shipped from this (the file was
+    outside the published tarball), but `publish-if-needed.mjs` runs `--ignore-scripts`, so the
+    tarball is whatever happens to be on disk.
+  - **An eslint rule** rejects `?inline`/`?raw`/`?url` specifiers in package sources, naming the fix
+    in the message. `import/no-relative-packages` had already flagged the original line and was
+    silenced with an inline disable; that disable is gone. Exempt: `packages/qti-theme` (owns the
+    dev-side source shim), spec/story files and `apps/*` (never compiled into a published dist).
+  - The five spec files and two `apps/e2e` stories that loaded the sheet through `?inline` now use
+    the same entry point as production, so they exercise the path consumers actually take rather than
+    a dev-only one.
+  - Removed a dead `@qti-components/theme` mapping in the root `tsconfig.json` pointing at a
+    `src/index.ts` that does not exist.
+
+### Patch Changes
+
+- [#206](https://github.com/Citolab/qti-components/pull/206) [`3984227`](https://github.com/Citolab/qti-components/commit/39842270a207dfb43e0cd95a9a63faaaaf6a8989) Thanks [@herrKlein](https://github.com/herrKlein)! - Make `@heximal/templates` a dependency of `@qti-components/test` instead of a peer.
+
+  A peerDependency says "there must be exactly one of these, and you own the choice". Neither half is
+  true here: `@heximal/templates` is a templating library used by seven files inside one package, it
+  has no singleton requirement, and no consumer has any reason to hold an opinion about its version.
+  Peering it just forced every consumer to install a transitive implementation detail by hand.
+
+  That was a real failure, not a theoretical one. Under an install that does not auto-install peers —
+  Yarn 2+, or pnpm with `auto-install-peers=false` — the published `@qti-components/test@1.6.1` cannot
+  resolve its own import:
+
+  ```
+  @heximal/templates  ->  MODULE_NOT_FOUND
+  ```
+
+  As a plain dependency it now installs automatically, and the consumer declares nothing.
+
+  `lit` and `@lit/context` stay peers, where the reasoning does hold: two copies of Lit mean two
+  `ReactiveElement` base classes, so `instanceof` fails across them, and Lit's own multi-version
+  warning fires.
+
+- [#204](https://github.com/Citolab/qti-components/pull/204) [`bea30e9`](https://github.com/Citolab/qti-components/commit/bea30e9c6df3e2e71d14b4deaa6c3de288a6e92d) Thanks [@herrKlein](https://github.com/herrKlein)! - Declare the shared runtime dependencies through a pnpm catalog, so Lit cannot drift out of
+  alignment again.
+
+  `lit` was hand-written in 62 places across 34 manifests at two different ranges — `^3.3.1` in every
+  `peerDependencies` block, `^3.3.3` in every `devDependencies` block — and `@citolab/qti-components`
+  declared `^3.3.3` as a hard `dependency`. A consumer pinned to 3.3.1 or 3.3.2 could satisfy the
+  parts and not the umbrella, which is how a package manager ends up installing a second copy of Lit.
+  Two copies mean two `ReactiveElement` base classes (`instanceof` fails across them) and two
+  `@lit/context` registries; because the contexts in `@qti-components/base` are keyed with a unique
+  `Symbol()` rather than `Symbol.for`, every `@consume` then silently never resolves — no error, no
+  log.
+
+  `lit`, `@lit/context` and `@heximal/templates` now live in the `catalog:` block of
+  `pnpm-workspace.yaml`, and every manifest references them as `"catalog:"`. The peer and dev ranges
+  are unified on `^3.3.1`, the wider of the two: it still installs 3.3.3 locally, and narrowing it
+  would exclude consumers the sibling packages already accept.
+
+  The only change to a published manifest is `@citolab/qti-components`'s `dependencies.lit`, which
+  widens from `^3.3.3` to `^3.3.1` to match its own parts. Every other packed manifest is byte
+  identical — `pnpm pack` and `pnpm publish` resolve `catalog:` back to the real range in
+  `dependencies`, `devDependencies` and `peerDependencies` alike. No resolved version changes.
+
+  Two pieces of tooling had to move with it, because **npm does not understand the `catalog:`
+  protocol and copies the literal string through**:
+
+  - `tools/testing/consumer-types.mjs` now packs with `pnpm pack` instead of `npm pack`, and asserts
+    the packed manifest contains no leftover `catalog:` or `workspace:` range.
+  - The pkg.pr.new prerelease workflow now passes `--pnpm`. pkg-pr-new shells out to `<pm> pack` and
+    that pm defaults to npm, so without the flag every prerelease tarball would have declared
+    `"lit": "catalog:"` — not a version range — and failed to install downstream.
+
+  The `storybook` override also moves to the catalog, retiring the deprecated `$storybook`
+  version-reference syntax that publint was warning about.
+
 ## 9.0.0
 
 ### Major Changes
