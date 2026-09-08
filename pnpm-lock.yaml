@@ -1041,6 +1041,9 @@ importers:
 
   packages/qti-test:
     dependencies:
+      '@heximal/templates':
+        specifier: 'catalog:'
+        version: 0.1.5
       '@qti-components/base':
         specifier: workspace:^
         version: link:../qti-base
@@ -1063,9 +1066,6 @@ importers:
         specifier: workspace:^
         version: link:../qti-utilities
     devDependencies:
-      '@heximal/templates':
-        specifier: 'catalog:'
-        version: 0.1.5
       '@lit/context':
         specifier: 'catalog:'
         version: 1.1.6

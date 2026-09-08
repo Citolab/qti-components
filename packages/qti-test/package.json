@@ -4,6 +4,7 @@
   "version": "1.6.1",
   "author": "",
   "dependencies": {
+    "@heximal/templates": "catalog:",
     "@qti-components/base": "workspace:^",
     "@qti-components/elements": "workspace:^",
     "@qti-components/interactions": "workspace:^",
@@ -13,7 +14,6 @@
     "@qti-components/utilities": "workspace:^"
   },
   "devDependencies": {
-    "@heximal/templates": "catalog:",
     "@lit/context": "catalog:",
     "lit": "catalog:"
   },
@@ -39,7 +39,6 @@
     "./*": "./dist/*"
   },
   "peerDependencies": {
-    "@heximal/templates": "catalog:",
     "@lit/context": "catalog:",
     "lit": "catalog:"
   },
