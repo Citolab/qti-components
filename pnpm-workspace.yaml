@@ -28,6 +28,7 @@ packages:
 # gain nothing.
 catalog:
   lit: ^3.3.1
+  lit-html: ^3.3.1
   '@lit/context': ^1.1.6
   '@heximal/templates': ^0.1.5
   storybook: ^10.6.0

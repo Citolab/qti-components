@@ -35,52 +35,17 @@ export default new Map([
       )
   ],
   [
-    'src/content/docs/guides/response-processing.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fguides%2Fresponse-processing.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
-    'src/content/docs/qti-test/navigation.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fnavigation.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
-    'src/content/docs/qti-test/overview.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Foverview.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
-    'src/content/docs/qti-test/scoring-and-state.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fscoring-and-state.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
-    'src/content/docs/qti-test/structure.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fstructure.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
-    'src/content/docs/qti-test/view-helpers.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fview-helpers.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
     'src/content/docs/interactions/associate.mdx',
     () =>
       import(
         'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Finteractions%2Fassociate.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/guides/response-processing.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fguides%2Fresponse-processing.mdx&astroContentModuleFlag=true'
       )
   ],
   [
@@ -168,17 +133,17 @@ export default new Map([
       )
   ],
   [
-    'src/content/docs/interactions/order.mdx',
-    () =>
-      import(
-        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Finteractions%2Forder.mdx&astroContentModuleFlag=true'
-      )
-  ],
-  [
     'src/content/docs/interactions/media.mdx',
     () =>
       import(
         'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Finteractions%2Fmedia.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/interactions/order.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Finteractions%2Forder.mdx&astroContentModuleFlag=true'
       )
   ],
   [
@@ -228,6 +193,41 @@ export default new Map([
     () =>
       import(
         'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Finteractions%2Fupload.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/qti-test/navigation.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fnavigation.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/qti-test/overview.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Foverview.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/qti-test/scoring-and-state.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fscoring-and-state.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/qti-test/structure.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fstructure.mdx&astroContentModuleFlag=true'
+      )
+  ],
+  [
+    'src/content/docs/qti-test/view-helpers.mdx',
+    () =>
+      import(
+        'astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fqti-test%2Fview-helpers.mdx&astroContentModuleFlag=true'
       )
   ]
 ]);
