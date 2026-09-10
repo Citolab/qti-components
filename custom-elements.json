@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@512: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@580: {  }, length: number }"
               }
             },
             {
@@ -19166,6 +19166,11 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#positionHotspotOnRegister",
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "clearInlineValidationMessage",
               "privacy": "protected",
@@ -19178,11 +19183,6 @@
                 "name": "Interaction",
                 "module": "packages/qti-base/src/abstract/interaction.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "#positionHotspotOnRegister",
-              "privacy": "private"
             },
             {
               "kind": "field",

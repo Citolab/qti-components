@@ -52,4 +52,5 @@ allowBuilds:
   msw: true
   puppeteer: true
   rs-module-lexer: true
+  sharp: true
   unrs-resolver: true
