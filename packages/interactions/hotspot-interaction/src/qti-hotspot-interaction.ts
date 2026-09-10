@@ -69,7 +69,7 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('unregister-qti-hotspot-choice', this.#positionHotspotOnRegister);
+    this.removeEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
   }
 }
 
