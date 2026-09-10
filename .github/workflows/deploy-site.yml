@@ -50,11 +50,10 @@ jobs:
           echo "📦 Installing dependencies..."
           pnpm install --frozen-lockfile
 
-      - name: Build packages 🔨
+      - name: Build 🔨
+        # Recursively builds every workspace package in dependency order, which
+        # includes apps/site itself — no separate site-build step needed.
         run: pnpm run build
-
-      - name: Build docs site
-        run: pnpm --filter @qti-components/site run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
