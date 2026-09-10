@@ -116,9 +116,8 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     });
   }
 
-  #positionHotspotOnRegister(e: CustomEvent<QtiHotspotChoice>): void {
+  #positionHotspot(hotspot: QtiHotspotChoice): void {
     const img = this.querySelector('img') as HTMLImageElement;
-    const hotspot = e.target as QtiHotspotChoice;
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));
@@ -126,11 +125,21 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     positionShapes(shape, coordsNumber, img, hotspot);
   }
 
+  #positionHotspotOnRegister = (e: CustomEvent<QtiHotspotChoice>): void => {
+    this.#positionHotspot(e.target as QtiHotspotChoice);
+  };
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
     this.addEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
     this.refreshLocatorPins();
+    // qti-hotspot-choice registers itself (and dispatches this event) as soon as it's
+    // upgraded, which can happen before this element is upgraded and this listener is
+    // attached — the shared elements module is registered ahead of the interaction
+    // modules in the bundle. Catch any choices that already connected and missed the
+    // event by positioning them directly here too.
+    this.querySelectorAll<QtiHotspotChoice>('qti-hotspot-choice').forEach(hotspot => this.#positionHotspot(hotspot));
   }
   override disconnectedCallback() {
     this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());

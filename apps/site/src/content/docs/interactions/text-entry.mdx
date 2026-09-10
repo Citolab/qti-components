@@ -1,0 +1,35 @@
+---
+title: Text entry interaction
+description: qti-text-entry-interaction — an inline text input.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.3 Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.5bw8rpbotrcs)** — an inline interaction that accepts text from the candidate.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/). This is an **inline** interaction (`isInline` is `true`) — it's meant to sit inside flowing text, not as a standalone block. Unlike the block interactions, it renders no `prompt` slot; a `<qti-prompt>` placed inside it renders as a plain sibling.
+
+## Example
+
+<InteractionDemo>
+  <p>
+    The capital of France is <qti-text-entry-interaction response-identifier="RESPONSE" expected-length="15"></qti-text-entry-interaction>.
+  </p>
+</InteractionDemo>
+
+```html
+<p>
+  The capital of France is
+  <qti-text-entry-interaction response-identifier="RESPONSE" expected-length="15"></qti-text-entry-interaction>.
+</p>
+```
+
+## `qti-text-entry-interaction`
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `expected-length` | `number` | Expected answer length — used as a styling hook (`qti-input-width-*` classes), not enforced as a hard character limit. |
+| `pattern-mask` | `string` | Regex applied to the native `<input pattern>`. If it's exactly `[0-9]*`, the input's `type` becomes `number`; otherwise `text`. |
+| `placeholder-text` | `string` | Sets the input's placeholder. |
+| `data-patternmask-message` | `string` (dataset attribute) | Custom validity message shown when `pattern-mask` fails. |
+
+Renders a single shadow-DOM `<input part="input">`, with `showCorrectResponse` adding a `<div part="correct">` showing the correct text.

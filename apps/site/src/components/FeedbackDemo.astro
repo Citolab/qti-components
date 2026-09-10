@@ -1,0 +1,27 @@
+---
+import InteractionDemo from './InteractionDemo.astro';
+---
+
+<InteractionDemo>
+  <div id="feedback-demo">
+    <qti-item>
+      <item-container item-url="/assets/guides/feedback/item.xml"></item-container>
+    </qti-item>
+    <p>
+      <button id="feedback-submit" type="button">Submit</button>
+    </p>
+  </div>
+</InteractionDemo>
+
+<script>
+  const root = document.querySelector('#feedback-demo');
+  const submitButton = root?.querySelector('#feedback-submit');
+
+  submitButton?.addEventListener('click', () => {
+    // <item-container> renders <qti-assessment-item> inside its own shadow root,
+    // so we have to pierce it explicitly rather than querying from the light DOM.
+    const itemContainer = root?.querySelector('item-container');
+    const item = itemContainer?.shadowRoot?.querySelector('qti-assessment-item');
+    item?.processResponse();
+  });
+</script>

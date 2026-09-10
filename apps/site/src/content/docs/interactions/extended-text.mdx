@@ -1,0 +1,35 @@
+---
+title: Extended text interaction
+description: qti-extended-text-interaction — a multi-line text response.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.4 Extended Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.omuxci3o5dmg)** — a block interaction that allows the candidate to enter an extended amount of text.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/). Note that `toggleCorrectResponse()` is a deliberate no-op here — free text has no single correct answer, so `correct-response`/`show-correct-response` have no visible effect.
+
+## Example
+
+<InteractionDemo>
+  <qti-extended-text-interaction response-identifier="RESPONSE" expected-length="200" placeholder-text="Write your answer here...">
+    <qti-prompt>Explain, in your own words, why QTI 3.0 uses web components.</qti-prompt>
+  </qti-extended-text-interaction>
+</InteractionDemo>
+
+```html
+<qti-extended-text-interaction response-identifier="RESPONSE" expected-length="200" placeholder-text="Write your answer here...">
+  <qti-prompt>Explain, in your own words, why QTI 3.0 uses web components.</qti-prompt>
+</qti-extended-text-interaction>
+```
+
+## `qti-extended-text-interaction`
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `expected-length` | `number` | Used to estimate the rendered `<textarea>`'s `rows` (`ceil(expectedLength / 50)`) when no explicit size class is set. |
+| `pattern-mask` | `string` | Regex the response must match, validated via `ElementInternals`. |
+| `placeholder-text` | `string` | Placeholder shown when empty. |
+| `data-patternmask-message` | `string` (dataset) | Custom validity message when `pattern-mask` fails. |
+| `class` | `string` | A `qti-height-lines-N` class overrides the computed row count directly. |
+
+Renders `<textarea part="textarea">` with a fixed `maxlength="5000"` regardless of `expected-length`.

@@ -1,0 +1,39 @@
+---
+title: Media interaction
+description: qti-media-interaction — track how many times a candidate plays a media clip.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.15 Media Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.u9utgghwf8ck)** — gives more control over how the candidate interacts with a time-based media object, and reports how many times it was played as the response.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/).
+
+## Example
+
+<InteractionDemo>
+  <qti-media-interaction response-identifier="RESPONSE">
+    <qti-prompt>Play this video.</qti-prompt>
+    <video width="320" height="240" controls>
+      <source src="/assets/qti-media-interaction/earth.mp4" type="video/mp4" />
+      Your browser does not support the video tag
+    </video>
+  </qti-media-interaction>
+</InteractionDemo>
+
+```html
+<qti-media-interaction response-identifier="RESPONSE">
+  <qti-prompt>Play this video.</qti-prompt>
+  <video width="320" height="240" controls>
+    <source src="/assets/qti-media-interaction/earth.mp4" type="video/mp4" />
+    Your browser does not support the video tag
+  </video>
+</qti-media-interaction>
+```
+
+## `qti-media-interaction`
+
+| Attribute | Type | Default | Notes |
+|---|---|---|---|
+| `step` | `number` | `10` | Per the QTI spec, the required minimum play count — this component reads the attribute but doesn't itself enforce it as a hard minimum. |
+
+The interaction looks for its first `<audio>`, `<video>`, or `<object>` child (in that priority order) and increments its response every time that element fires a native `ended` event.

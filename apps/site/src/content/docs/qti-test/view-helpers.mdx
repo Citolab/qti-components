@@ -1,0 +1,40 @@
+---
+title: View helpers
+description: Switching and inspecting what's displayed — test-view, test-view-toggle, print helpers, text-to-speech, and the deprecated stamp components.
+---
+
+## Views
+
+QTI defines several audiences for the same item content — `author`, `candidate`, `proctor`, `scorer`, `testConstructor`, `tutor` — controlled via `sessionContext.view`. Elements tagged with a `view` attribute inside the loaded test are shown/hidden by toggling a `.show` class whenever the view changes (handled by `TestViewMixin` on `<qti-test>`); switching to `'scorer'` also calls `showCorrectResponse(true)` on the active item.
+
+- **`<test-view>`** — a `<select>` dropdown for choosing the current view. `label` sets the accompanying `<label>` text (default `"view"`); `view-options` restricts the offered choices to a comma-separated subset of the six views above. Dispatches `on-test-switch-view` on change.
+- **`<test-view-toggle>`** — a simpler candidate/scorer toggle button. Content is rendered from a `<template>` child (Heximal templates), receiving `{ view }`; clicking cycles between `'candidate'` and `'scorer'`.
+
+## Debug/print helpers
+
+- **`<test-print-context>`** — dumps the full `computedContext` as formatted JSON. Useful while wiring up a custom UI to see exactly what shape of data is available.
+- **`<test-print-item-variables>`** — renders the active item's response and outcome variables as two readable tables (identifier, value, cardinality, base type, correct response/mapping).
+
+## Text-to-speech: `<test-item-to-speech>`
+
+A controller + `@lit/context` provider for reading the active item's body aloud via the Web Speech API. It collects block-level text elements (`p`, `h1`–`h6`, `li`, `blockquote`, `figcaption`) from the active item's `qti-item-body`, and exposes a `ttsContext` (`state: 'idle' | 'playing' | 'paused'`, `currentElementIndex`, `elementCount`, plus `play`/`pause`/`resume`/`stop`/`prevElement`/`nextElement`) for child controls to consume.
+
+```html
+<test-item-to-speech language="nl-NL">
+  <test-tts-play></test-tts-play>
+  <test-tts-prev>◀◀</test-tts-prev>
+  <test-tts-next>▶▶</test-tts-next>
+  <test-tts-stop>■</test-tts-stop>
+</test-item-to-speech>
+```
+
+Speech automatically stops on navigation. Uses the CSS Custom Highlight API (`::highlight()`) to mark the current reading element and the word being spoken, and mirrors playback state onto each button's `ElementInternals` custom states (`:state(idle)`, `:state(playing)`, `:state(paused)`) for CSS-only styling.
+
+## Other
+
+- **`<test-end-attempt>`** — a plain button that dispatches `test-end-attempt` on click (see [Scoring & State](/qti-test/scoring-and-state/)).
+- **`<qti-test-feedback>`** — extends the item-level `QtiModalFeedback` for test-level modal feedback (e.g. an end-of-test message).
+
+## Deprecated stamp components
+
+`<test-stamp>`, `<test-paging-buttons-stamp>`, and `<test-section-buttons-stamp>` are all marked `@deprecated` in source. They predate the `<template>`-driven pattern (`test-scoring-buttons`, `test-view-toggle`) and render item/section lists via a `<template>` child, iterating `computedContext`. No direct replacement is documented in source — check with the team before building on these.

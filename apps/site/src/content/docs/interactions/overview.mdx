@@ -1,0 +1,53 @@
+---
+title: Interactions overview
+description: The contract every QTI interaction shares, before looking at each type individually.
+---
+
+Every interaction package under `packages/interactions/*` renders a [form-associated custom element](https://web.dev/articles/more-capable-form-controls) that implements a shared base contract (`Interaction`, in `@qti-components/base`). The per-interaction pages in this section only describe what's *specific* to each interaction — this page covers what's common to all of them.
+
+## Shared attributes
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `response-identifier` | `string` | Matches the interaction to a `qti-response-declaration` when used inside a full item; optional in standalone use. |
+| `disabled` | `boolean` | Reflected. |
+| `readonly` | `boolean` | Reflected. |
+| `name` | `string` | Used as the form field name when the interaction participates in an HTML `<form>`. |
+| `correct-response` | `string` (comma-separated for multiple values) | Sets the correct response directly — useful for standalone demos and docs, without a full item/response-processing context. |
+| `show-correct-response` | `boolean` | Reflected. Marks each choice/child as correct or incorrect via CSS custom states (`:state(correct-response)` / `:state(incorrect-response)`). |
+| `show-full-correct-response` | `boolean` | Reflected. Instead of annotating in place, clones the interaction right after itself with the correct response filled in and disabled. |
+| `show-candidate-correction` | `boolean` | Reflected. Annotates the candidate's own selections as right/wrong via `:state(candidate-correct)` / `:state(candidate-incorrect)`. |
+
+## Standalone mode vs. item context
+
+Every interaction can work two ways:
+
+- **Standalone** — just the interaction element on a page, as shown on every page in this section. `correct-response`, `value`, and `response` are all read/written directly as attributes/properties.
+- **Inside a `qti-assessment-item`** — the interaction consumes an `ItemContext` (via `@lit/context`) provided by the enclosing item, and `correctResponse` prefers the response variable's own correct response over the local attribute. This is how interactions behave when used through `@qti-components/item` or `@qti-components/test`.
+
+## The response event
+
+Every interaction reports its answer the same way — by calling `saveResponse()`, which dispatches:
+
+```ts
+new CustomEvent('qti-interaction-response', {
+  bubbles: true,
+  composed: true,
+  detail: { responseIdentifier, response } // response: string | string[]
+});
+```
+
+This is the one event to listen for regardless of which interaction type you're using.
+
+## Choice-based interactions
+
+Several interactions (`qti-choice-interaction`, `qti-order-interaction`, and others) share a second mixin, `ChoicesMixin`, on top of the base contract. It adds:
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `min-choices` | `number` | Default `0` (unlimited). |
+| `max-choices` | `number` | Default `1`. `1` renders children with `role="radio"`; anything else renders `role="checkbox"`. |
+
+Choice-based interactions track their child choice elements (e.g. `qti-simple-choice`) via a `MutationObserver`, so choices can be added/removed dynamically and the interaction stays in sync.
+
+The pages that follow document what's unique to each of the 20 interaction types — starting with [Choice](/interactions/choice/).

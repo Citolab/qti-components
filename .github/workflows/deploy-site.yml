@@ -1,4 +1,4 @@
-name: Storybook Deployment
+name: Docs Site Deployment
 
 on:
   # Auto-deploy the site after a successful release. workflow_run is immune to
@@ -50,11 +50,11 @@ jobs:
           echo "📦 Installing dependencies..."
           pnpm install --frozen-lockfile
 
-      - name: Build project 🔨
+      - name: Build packages 🔨
         run: pnpm run build
 
-      - name: Build Storybook
-        run: pnpm run build-storybook
+      - name: Build docs site
+        run: pnpm --filter @qti-components/site run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -62,7 +62,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: storybook-static
+          path: apps/site/dist
 
       - name: Deploy to GitHub Pages
         id: deployment

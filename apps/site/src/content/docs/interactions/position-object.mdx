@@ -1,0 +1,35 @@
+---
+title: Position object interaction
+description: qti-position-object-interaction — drag an image onto a background stage.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**3.2.16 Position Object Interaction** — a single image which must be positioned on another graphic image (the stage) by the candidate.
+
+:::caution
+Unlike every other interaction on this site, `qti-position-object-interaction` and its companion `qti-position-object-stage` extend plain `LitElement`, **not** the shared `Interaction` base — there's no `response-identifier`, `disabled`, `correct-response`, etc., and no wired `qti-interaction-response` event in current source. Dragging repositions the image visually, but nothing is persisted as a response yet.
+:::
+
+## Example
+
+The stage and the interaction are siblings — the stage holds the background image, the interaction holds the draggable one.
+
+<InteractionDemo>
+  <qti-position-object-stage>
+    <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />
+    <qti-position-object-interaction>
+      <img src="https://qti-convert.web.app/images/airport.png" alt="Drop Zone" />
+    </qti-position-object-interaction>
+  </qti-position-object-stage>
+</InteractionDemo>
+
+```html
+<qti-position-object-stage>
+  <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />
+  <qti-position-object-interaction>
+    <img src="https://qti-convert.web.app/images/airport.png" alt="Drop Zone" />
+  </qti-position-object-interaction>
+</qti-position-object-stage>
+```
+
+`qti-position-object-stage` finds the draggable image via `this.querySelector('qti-position-object-interaction > img')` and implements dragging directly with `mousedown`/`mousemove`/`mouseup` — it doesn't use the shared drag/drop mixins the other graphic interactions use.
