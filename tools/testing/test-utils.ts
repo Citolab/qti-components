@@ -42,17 +42,20 @@ export async function getAssessmentTest(canvasElement: HTMLElement): Promise<HTM
 }
 
 export async function getAssessmentItemsFromTestContainer(canvasElement: HTMLElement): Promise<HTMLElement[] | null> {
-  const assessmentItems = await waitFor(() => {
-    const testContainer = canvasElement.querySelector('test-container');
-    if (!testContainer || !testContainer.shadowRoot) {
-      throw new Error('test-container or its shadowRoot not ready yet');
-    }
-    const qtiAssessmentItems = testContainer.shadowRoot.querySelectorAll('qti-assessment-item');
-    if (!qtiAssessmentItems || !qtiAssessmentItems.length) {
-      throw new Error('qti-assessment-item or its shadowRoot not ready yet');
-    }
-    return Array.from(qtiAssessmentItems);
-  });
+  const assessmentItems = await waitFor(
+    () => {
+      const testContainer = canvasElement.querySelector('test-container');
+      if (!testContainer || !testContainer.shadowRoot) {
+        throw new Error('test-container or its shadowRoot not ready yet');
+      }
+      const qtiAssessmentItems = testContainer.shadowRoot.querySelectorAll('qti-assessment-item');
+      if (!qtiAssessmentItems || !qtiAssessmentItems.length) {
+        throw new Error('qti-assessment-item or its shadowRoot not ready yet');
+      }
+      return Array.from(qtiAssessmentItems);
+    },
+    { timeout: 15000 }
+  );
   return assessmentItems;
 }
 
