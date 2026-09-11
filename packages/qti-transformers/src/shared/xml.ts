@@ -1,3 +1,37 @@
+/**
+ * Parse XML, reporting a malformed document instead of handing one on.
+ *
+ * `DOMParser.parseFromString` never throws for `text/xml`: it returns a *document describing the
+ * failure*, whose root is an HTML page reading "This page contains the following errors…". Nothing
+ * downstream distinguishes that from a real item, so `toHTML` copied the error page into the DOM
+ * and the player rendered the browser's parse error as the item — silently, past every try/catch,
+ * because nothing ever threw.
+ *
+ * Leading whitespace and a BOM are stripped first. XML forbids anything before the declaration, so
+ * a stray newline in front of `<?xml` is fatal to the letter of the spec — and it is also one of
+ * the most common artefacts of an item that has been through an editor, a template or a copy and
+ * paste. Accepting it costs nothing and keeps real authoring mistakes visible.
+ */
+function parseXMLOrThrow(text: string, describeSource: (message: string) => string): XMLDocument {
+  const parser = new DOMParser();
+  const xmlFragment = parser.parseFromString(text.replace(/^[\s\uFEFF]+/, ''), 'text/xml');
+
+  /*
+   * Matched by the error document's own namespace, so an item that legitimately contains an
+   * element named `parsererror` cannot be mistaken for a failure. Blink and WebKit put it in the
+   * XHTML namespace; Gecko has a namespace of its own.
+   */
+  const error =
+    xmlFragment.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', 'parsererror')[0] ??
+    xmlFragment.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror')[0];
+
+  if (error) {
+    throw new Error(describeSource(error.textContent?.replace(/\s+/g, ' ').trim() || 'malformed XML'));
+  }
+
+  return xmlFragment;
+}
+
 export function loadXML(url: string, signal?: AbortSignal): Promise<XMLDocument | null> {
   return fetch(url, { signal })
     .then(response => {
@@ -6,10 +40,7 @@ export function loadXML(url: string, signal?: AbortSignal): Promise<XMLDocument 
       }
       return response.text();
     })
-    .then(text => {
-      const parser = new DOMParser();
-      return parser.parseFromString(text, 'text/xml');
-    })
+    .then(text => parseXMLOrThrow(text, message => `is not well-formed XML: ${message}`))
     .catch(error => {
       if (error.name === 'AbortError') {
         throw error;
@@ -18,10 +49,8 @@ export function loadXML(url: string, signal?: AbortSignal): Promise<XMLDocument 
     });
 }
 
-export function parseXML(xmlDocument: string) {
-  const parser = new DOMParser();
-  const xmlFragment = parser.parseFromString(xmlDocument, 'text/xml');
-  return xmlFragment;
+export function parseXML(xmlDocument: string): XMLDocument {
+  return parseXMLOrThrow(xmlDocument, message => `Failed to parse XML: ${message}`);
 }
 
 // Function to strip unsupported namespaces (qti) from the nodes sent to the browser
