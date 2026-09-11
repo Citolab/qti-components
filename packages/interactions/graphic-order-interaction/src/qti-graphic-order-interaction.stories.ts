@@ -76,3 +76,26 @@ export const MultipleShapes: Story = {
       `
     )
 };
+
+/**
+ * The graphic as `<object type="image/png">`, which is the form QTI 3 uses and the form the
+ * spec's own "Flying Home" example ships. Hotspots position against it exactly as against an
+ * `<img>` — before issue #209 they positioned against neither and stacked below the map.
+ */
+export const SpecFormObjectGraphic: Story = {
+  name: 'Object graphic',
+  render: () =>
+    template(
+      args,
+      html`
+        <qti-prompt>Mark the airports shown on the map according to Lorna's preferences.</qti-prompt>
+        <object type="image/png" data="assets/qti-graphic-order-interaction/uk.png" width="206" height="280">
+          UK Map
+        </object>
+        <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>
+        <qti-hotspot-choice coords="100,102,8" identifier="D" shape="circle"></qti-hotspot-choice>
+      `
+    )
+};
