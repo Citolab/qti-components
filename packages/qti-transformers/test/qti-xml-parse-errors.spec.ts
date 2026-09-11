@@ -36,7 +36,10 @@ describe('parsing a malformed item', () => {
     } catch (error) {
       message = (error as Error).message;
     }
-    expect(message).toMatch(/line/i);
+    expect(message).toMatch(/error on line \d+ at column \d+/i);
+    // The error document's page boilerplate is not part of the message.
+    expect(message).not.toMatch(/This page contains the following errors/i);
+    expect(message).not.toMatch(/Below is a rendering/i);
   });
 
   it('never renders the browser error page as the item', () => {

@@ -12,6 +12,20 @@
  * the most common artefacts of an item that has been through an editor, a template or a copy and
  * paste. Accepting it costs nothing and keeps real authoring mistakes visible.
  */
+/**
+ * The one useful sentence out of the error document — "error on line N at column M: …" — without
+ * the page boilerplate the browser wraps it in.
+ */
+function readParserMessage(error: Element): string {
+  const text = (error.textContent || '').replace(/\s+/g, ' ').trim();
+  return (
+    text
+      .replace(/^This page contains the following errors:\s*/i, '')
+      .replace(/\s*Below is a rendering of the page up to the first error\.?\s*$/i, '')
+      .trim() || 'malformed XML'
+  );
+}
+
 function parseXMLOrThrow(text: string, describeSource: (message: string) => string): XMLDocument {
   const parser = new DOMParser();
   const xmlFragment = parser.parseFromString(text.replace(/^[\s\uFEFF]+/, ''), 'text/xml');
@@ -26,7 +40,7 @@ function parseXMLOrThrow(text: string, describeSource: (message: string) => stri
     xmlFragment.getElementsByTagNameNS('http://www.mozilla.org/newlayout/xml/parsererror.xml', 'parsererror')[0];
 
   if (error) {
-    throw new Error(describeSource(error.textContent?.replace(/\s+/g, ' ').trim() || 'malformed XML'));
+    throw new Error(describeSource(readParserMessage(error)));
   }
 
   return xmlFragment;
