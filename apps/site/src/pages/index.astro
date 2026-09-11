@@ -1,0 +1,301 @@
+---
+import InteractionDemo from '../components/InteractionDemo.astro';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QTI Components</title>
+    <meta
+      name="description"
+      content="Web components for rendering and running 1EdTech QTI 3.0 assessment items — framework-agnostic, drop into anything that renders HTML."
+    />
+    <script is:inline>
+      const darkMedia = window.matchMedia('(prefers-color-scheme: dark)');
+      const applyTheme = () => {
+        document.documentElement.classList.toggle('dark', darkMedia.matches);
+      };
+      applyTheme();
+      darkMedia.addEventListener('change', applyTheme);
+    </script>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <h1>QTI Components</h1>
+        <h2>Web components for modern assessment delivery</h2>
+        <p>
+          A framework-agnostic web component library for rendering
+          <a href="https://www.imsglobal.org/spec/qti/v3p0" target="_blank" rel="noopener">1EdTech QTI 3.0</a>
+          assessment items and tests — the same interoperable content, wherever you build.
+        </p>
+        <div class="cta">
+          <a class="button primary" href="/getting-started/introduction/">Read the docs</a>
+          <a class="button" href="/getting-started/quick-start/">Quick Start</a>
+          <a class="button" href="https://github.com/citolab/qti-components" target="_blank" rel="noopener">
+            View on GitHub
+          </a>
+        </div>
+      </section>
+
+      <section class="cards" aria-label="Highlights">
+        <a class="card" href="/interactions/overview/">
+          <h3>20 interactions</h3>
+          <p>Every QTI 3.0 interaction type is implemented, documented, and shown with a live, working example.</p>
+        </a>
+        <a class="card" href="/qti-test/overview/">
+          <h3>Full test runner</h3>
+          <p>Navigation, scoring, outcome processing, and views for multi-item tests — not just single items.</p>
+        </a>
+        <a class="card" href="/getting-started/quick-start/">
+          <h3>Framework-agnostic</h3>
+          <p>Plain custom elements. Drop them into a Vite app, a legacy jQuery page, or anything in between.</p>
+        </a>
+        <a class="card" href="/qti-landscape/">
+          <h3>Part of a bigger toolkit</h3>
+          <p>Pairs with the Citolab QTI ecosystem — an authoring editor, a converter, and a live playground.</p>
+        </a>
+      </section>
+
+      <section class="try-it">
+        <h2>Try it right here</h2>
+        <p>This is a real, running <code>&lt;qti-choice-interaction&gt;</code> — not a screenshot.</p>
+        <InteractionDemo>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="1">
+            <qti-prompt>Pick one:</qti-prompt>
+            <qti-simple-choice identifier="A">It's just a picture</qti-simple-choice>
+            <qti-simple-choice identifier="B">It's a real web component</qti-simple-choice>
+          </qti-choice-interaction>
+        </InteractionDemo>
+        <p class="try-it-link"><a href="/interactions/overview/">See all 20 interactions →</a></p>
+      </section>
+    </main>
+
+    <footer>
+      <a href="https://github.com/citolab/qti-components" target="_blank" rel="noopener">GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://www.npmjs.com/package/@citolab/qti-components" target="_blank" rel="noopener">npm</a>
+      <span aria-hidden="true">·</span>
+      <span>Licensed GPLv3</span>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :global(html),
+  :global(body) {
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(body) {
+    min-height: 100vh;
+    background: #f9f7f4;
+    color: #1b1f24;
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      sans-serif;
+  }
+
+  :global(html.dark body) {
+    background: #0b1020;
+    color: #e2e8f0;
+  }
+
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 3rem;
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #449b44;
+  }
+
+  :global(html.dark) .hero h1 {
+    color: #34d399;
+  }
+
+  .hero h2 {
+    margin: 0.5rem 0 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #3f4a58;
+  }
+
+  :global(html.dark) .hero h2 {
+    color: #cbd5e1;
+  }
+
+  .hero p {
+    margin-top: 1.25rem;
+    max-width: 60ch;
+    line-height: 1.6;
+    color: #4b5563;
+  }
+
+  :global(html.dark) .hero p {
+    color: #94a3b8;
+  }
+
+  .hero a {
+    color: #449b44;
+  }
+
+  :global(html.dark) .hero a {
+    color: #34d399;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 0.65rem 1.15rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid #e5ddd1;
+    background: #fff;
+    color: #449b44;
+  }
+
+  .button.primary {
+    background: #449b44;
+    border-color: #449b44;
+    color: #fff;
+  }
+
+  :global(html.dark) .button {
+    background: #1e293b;
+    border-color: #334155;
+    color: #34d399;
+  }
+
+  :global(html.dark) .button.primary {
+    background: #34d399;
+    border-color: #34d399;
+    color: #0b1020;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .card {
+    display: block;
+    border-radius: 1rem;
+    border: 1px solid #e5ddd1;
+    background: #fffdf8;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 150ms ease;
+  }
+
+  .card:hover {
+    border-color: #449b44;
+  }
+
+  :global(html.dark) .card {
+    border-color: #334155;
+    background: #131b2e;
+  }
+
+  :global(html.dark) .card:hover {
+    border-color: #34d399;
+  }
+
+  .card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #4b5563;
+  }
+
+  :global(html.dark) .card p {
+    color: #94a3b8;
+  }
+
+  .try-it {
+    margin-top: 3.5rem;
+  }
+
+  .try-it h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .try-it > p {
+    margin: 0.5rem 0 0;
+    color: #4b5563;
+  }
+
+  :global(html.dark) .try-it > p {
+    color: #94a3b8;
+  }
+
+  .try-it code {
+    background: #eee7d9;
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.9em;
+  }
+
+  :global(html.dark) .try-it code {
+    background: #1e293b;
+  }
+
+  .try-it-link {
+    margin-top: 1rem !important;
+  }
+
+  .try-it-link a {
+    color: #449b44;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  :global(html.dark) .try-it-link a {
+    color: #34d399;
+  }
+
+  footer {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  footer a {
+    color: inherit;
+  }
+
+  :global(html.dark) footer {
+    color: #64748b;
+  }
+</style>

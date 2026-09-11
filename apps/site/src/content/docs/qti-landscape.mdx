@@ -1,0 +1,49 @@
+---
+title: CitoLab QTI landscape
+description: The open-source QTI tooling CitoLab builds alongside qti-components.
+---
+
+`@citolab/qti-components` doesn't exist in isolation — it's one piece of a small family of open-source QTI tools Citolab builds and maintains. If you're evaluating this library, these are worth knowing about too.
+
+## QTI Components
+
+*This library.* A web component library that renders QTI items in any web application — highly customizable, framework-agnostic.
+
+[GitHub](https://github.com/citolab/qti-components) · [npm](https://www.npmjs.com/package/@citolab/qti-components) · [Storybook](https://qti-components.citolab.nl/?path=/docs/%F0%9F%91%8B-hi-qti--docs)
+
+## QTI Player
+
+A minimal, fully functional example of a QTI player built on `@citolab/qti-components`. It's a "Hello World" — a cookbook-style reference for wiring the library up into a real player, rather than a product of its own.
+
+[GitHub](https://github.com/Citolab/qti-player) · [Try it on StackBlitz](https://stackblitz.com/~/github.com/Citolab/qti-player?file=index.html)
+
+## QTI Editor
+
+A composable authoring experience for QTI interactions, built as a kit alongside the ProseMirror editor rather than a replacement for it — WYSIWYG authoring with a live preview of how interactions will appear to learners.
+
+[Site](https://qti-editor.citolab.nl) · [Docs](https://qti-editor.citolab.nl/docs) · [GitHub](https://github.com/Citolab/qti-editor)
+
+## QTI Convert
+
+A conversion engine for going between QTI 2.x and QTI 3 packages, so content authored against the older spec doesn't have to be abandoned.
+
+[GitHub](https://github.com/citolab/qti-convert) · [npm](https://www.npmjs.com/package/@citolab/qti-convert)
+
+## tspci
+
+A CLI and library for spinning up a Portable Custom Interaction (PCI) development environment in seconds — bundling handles third-party libraries and images automatically, so building/debugging a PCI doesn't mean hand-rolling a build setup first.
+
+[GitHub](https://github.com/citolab/tspci) · [npm](https://www.npmjs.com/package/@citolab/tspci) · [Examples](https://github.com/citolab/tspci-examples)
+
+## QTI Playground
+
+An open-source web app tying several of the above together: upload or drag in a QTI package (or a CSV/Excel/DOCX/PDF, converted via AI) and preview, convert, or upgrade it — entirely client-side, nothing leaves your browser.
+
+[GitHub](https://github.com/citolab/qti-playground)
+
+## Try it yourself
+
+Two of the above are live applications you can use directly, not just repositories to read:
+
+- **[QTI Playground](https://qti.citolab.nl/landing)** — preview or convert a real QTI package in your browser right now.
+- **[QTI Editor](https://qti-editor.citolab.nl)** — try the authoring experience firsthand, including a live in-browser editor instance.

@@ -1,0 +1,35 @@
+---
+title: qti-test overview
+description: What @qti-components/test is and how its pieces fit together.
+---
+
+`@qti-components/test` builds a full, navigable, scorable **test** on top of `@qti-components/elements` (which renders individual QTI items). It's the layer you reach for once you have more than one item and need navigation, per-item state, and outcome processing across the whole test.
+
+## Anatomy
+
+A minimal test with navigation looks like this:
+
+```html
+<qti-test>
+  <test-navigation>
+    <test-container test-url="./path/to/assessmenttest.xml"></test-container>
+    <nav>
+      <test-prev>Previous</test-prev>
+      <test-next>Next</test-next>
+    </nav>
+  </test-navigation>
+</qti-test>
+```
+
+- **`<qti-test>`** is the outermost element. It provides the shared `testContext` and `sessionContext` (via `@lit/context`) that every descendant reads from, and listens for lifecycle events bubbling up from the elements below it.
+- **`<test-navigation>`** sits inside `<qti-test>` and is where most day-to-day work happens: it computes the `computedContext` (test parts → sections → items, each annotated with score, completion status, active state, etc.) that navigation and view components consume, and it's the event hub for navigation requests, outcome updates, and view switches.
+- **`<test-container>`** loads an `assessmenttest.xml` from a URL (`test-url` attribute), transforms it to HTML, and renders the resulting `<qti-assessment-test>` tree inside its shadow DOM.
+
+Everything else in this section is a component that either **describes the test structure** (declared in the loaded XML — see [Structure](/qti-test/structure/)), **drives navigation** ([Navigation](/qti-test/navigation/)), **reads or writes scores and outcomes** ([Scoring & State](/qti-test/scoring-and-state/)), or **changes what's displayed** ([View Helpers](/qti-test/view-helpers/)).
+
+## How data flows
+
+1. `<test-container>` loads and parses the test XML into `<qti-assessment-test>` / `<qti-test-part>` / `<qti-assessment-section>` / `<qti-assessment-item-ref>` elements.
+2. As those elements connect, `<qti-test>` and `<test-navigation>` build up `testContext` (raw item state: variables, completion status) and `computedContext` (a denormalized, render-friendly view: active test part/section/item, computed scores, indices).
+3. Navigation components (`test-next`, `test-prev`, `test-item-link`, `test-section-link`) dispatch a `qti-request-navigation` event; `<qti-test>`'s navigation logic loads the requested item(s) and updates context.
+4. Scoring and view components read `computedContext`/`sessionContext` via `@lit/context` and re-render reactively — nothing polls, everything is event- and context-driven.

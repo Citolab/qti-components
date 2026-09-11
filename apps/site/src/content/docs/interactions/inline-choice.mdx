@@ -1,0 +1,47 @@
+---
+title: Inline choice interaction
+description: qti-inline-choice-interaction — a dropdown selected from flowing text.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.8 Inline Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.y2th8rh73267)** — an inline interaction that presents the candidate with a set of choices, each an answer option (usually text). The candidate selects one.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/). This interaction doesn't use `ChoicesMixin` — it implements its own popover-based listbox (`role="listbox"` on the host, native `popover` API for the dropdown menu) rather than radio/checkbox semantics.
+
+## Example
+
+<InteractionDemo>
+  <p>
+    The Wars of the Roses were fought between the houses of <qti-inline-choice-interaction response-identifier="RESPONSE">
+      <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+      <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+      <qti-inline-choice identifier="Y">York</qti-inline-choice>
+    </qti-inline-choice-interaction> and York.
+  </p>
+</InteractionDemo>
+
+```html
+<p>
+  The Wars of the Roses were fought between the houses of
+  <qti-inline-choice-interaction response-identifier="RESPONSE">
+    <qti-inline-choice identifier="G">Gloucester</qti-inline-choice>
+    <qti-inline-choice identifier="L">Lancaster</qti-inline-choice>
+    <qti-inline-choice identifier="Y">York</qti-inline-choice>
+  </qti-inline-choice-interaction>
+  and York.
+</p>
+```
+
+## `qti-inline-choice-interaction`
+
+The first entry in the dropdown is always a "select" prompt, its text taken from `data-prompt` (dataset), falling back to `configContext.inlineChoicePrompt`, then `'select'`.
+
+`show-correct-response` renders a `[part="correct-option"]` span inline next to the correct choice's content, rather than annotating a specific option row.
+
+## `qti-inline-choice`
+
+| Attribute | Notes |
+|---|---|
+| `identifier` | The option's identifier — its slotted content (text, or an `<img>`) becomes the visible label. |
+
+Dispatches `qti-inline-choice-register` on connect and `qti-inline-choice-select` (detail `{ identifier }`) on click; the interaction listens for both to build and update the dropdown.

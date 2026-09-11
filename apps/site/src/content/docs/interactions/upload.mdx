@@ -1,0 +1,30 @@
+---
+title: Upload interaction
+description: qti-upload-interaction — let the candidate upload a file as their response.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**3.2.19 Upload Interaction** — allows the candidate to upload a pre-prepared file representing their response.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/). No component-specific attributes beyond the shared base.
+
+## Example
+
+<InteractionDemo>
+  <qti-upload-interaction response-identifier="RESPONSE">
+    <qti-prompt>
+      Build a spreadsheet simulating 50 cartons of chocolates, 10 chocolates per carton, where one-seventh of the
+      chocolates have nut centres. Upload your spreadsheet file.
+    </qti-prompt>
+  </qti-upload-interaction>
+</InteractionDemo>
+
+```html
+<qti-upload-interaction response-identifier="RESPONSE">
+  <qti-prompt>
+    Build a spreadsheet simulating 50 cartons of chocolates ... Upload your spreadsheet file.
+  </qti-prompt>
+</qti-upload-interaction>
+```
+
+Renders a native `<input type="file">`. On selection, the file is read via `FileReader.readAsDataURL` and the resulting Base64 string becomes the response — worth a callout in your own docs/exports if candidates might upload large files, since the whole file ends up inline in the response variable.

@@ -16495,7 +16495,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@512: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@570: {  }, length: number }"
               }
             },
             {
@@ -18143,7 +18143,7 @@
             },
             {
               "kind": "method",
-              "name": "#positionHotspotOnRegister",
+              "name": "#positionHotspot",
               "privacy": "private",
               "return": {
                 "type": {
@@ -18152,12 +18152,17 @@
               },
               "parameters": [
                 {
-                  "name": "e",
+                  "name": "hotspot",
                   "type": {
-                    "text": "CustomEvent<QtiHotspotChoice>"
+                    "text": "QtiHotspotChoice"
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "#positionHotspotOnRegister",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -19144,7 +19149,7 @@
             },
             {
               "kind": "method",
-              "name": "#positionHotspotOnRegister",
+              "name": "#positionHotspot",
               "privacy": "private",
               "return": {
                 "type": {
@@ -19153,12 +19158,17 @@
               },
               "parameters": [
                 {
-                  "name": "e",
+                  "name": "hotspot",
                   "type": {
-                    "text": "CustomEvent<QtiHotspotChoice>"
+                    "text": "QtiHotspotChoice"
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "#positionHotspotOnRegister",
+              "privacy": "private"
             },
             {
               "kind": "method",

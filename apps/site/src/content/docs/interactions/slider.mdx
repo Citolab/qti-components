@@ -1,0 +1,33 @@
+---
+title: Slider interaction
+description: qti-slider-interaction — pick a numeric value between two bounds.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.18 Slider Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.s61xcrj4qcyj)** — presents the candidate with a control for selecting a numerical value between a lower and upper bound.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/).
+
+## Example
+
+<InteractionDemo>
+  <qti-slider-interaction response-identifier="RESPONSE" lower-bound="0" upper-bound="100" step="1">
+    <qti-prompt>What percentage of the Earth's surface is covered by water?</qti-prompt>
+  </qti-slider-interaction>
+</InteractionDemo>
+
+```html
+<qti-slider-interaction response-identifier="RESPONSE" lower-bound="0" upper-bound="100" step="1">
+  <qti-prompt>What percentage of the Earth's surface is covered by water?</qti-prompt>
+</qti-slider-interaction>
+```
+
+## `qti-slider-interaction`
+
+| Attribute | Type | Default | Notes |
+|---|---|---|---|
+| `lower-bound` | `number` | `0` | Minimum selectable value. |
+| `upper-bound` | `number` | `100` | Maximum selectable value. |
+| `step` | `number` | `1` | Increment step while dragging. |
+
+The host itself gets `role="slider"` and `tabindex="0"`. A native `change` event is dispatched (in addition to `qti-interaction-response`) once dragging ends.

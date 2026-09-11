@@ -1,0 +1,31 @@
+---
+title: Custom interaction
+description: qti-custom-interaction — legacy CES-based custom interactions.
+---
+
+**[qti-custom-interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.ml3l73qfo5e3)** hosts a legacy **CES** (Custom Element Standard) custom interaction — the predecessor to the newer [Portable Custom Interaction](/interactions/portable-custom/) player.
+
+:::note
+No live example on this page. A working `qti-custom-interaction` needs a real CES package (a `manifest.json` plus its script/style/media files) at a resolvable URL — this repo's own Storybook story points at a test-fixture path (`../ref/6047-BiKB-.../manifest.json`) that isn't checked into the repo, so it can't be reproduced here without inventing a fake package. This page documents the wire format instead.
+:::
+
+## `qti-custom-interaction`
+
+| Attribute | Notes |
+|---|---|
+| `data` | Path/URL to the interaction's `manifest.json`. Can also be supplied via a child `<object data="...">` instead of this attribute. |
+| `data-base-item` | Base URL used to resolve `data` when it's relative. |
+| `data-base-ref` | Base URL used to resolve resource references found inside the fetched manifest. |
+| `width` / `height` | Passed straight through to the rendered `<iframe>`. |
+
+Renders a single `<iframe id="pciContainer">`. On load, it fetches the manifest, injects a small CES-compatibility proxy script into the referenced HTML, and loads the result into the iframe via `srcdoc` plus a `postMessage` handshake. The manifest must have non-empty `script` and `style` arrays or the component shows an inline error instead.
+
+Communicates with the parent page via `postMessage` types `setResponse`, `getResponse`, `getBlobUrl`, `getMedia` — a `setResponse` message is what ultimately triggers the shared `qti-interaction-response` event (see the [overview page](/interactions/overview/)).
+
+```xml
+<qti-custom-interaction response-identifier="RESPONSE" id="Ie855768e-...">
+  <object type="application/javascript" height="370" width="467" data="path/to/manifest.json">
+    <param name="responseLength" value="1" valuetype="DATA" />
+  </object>
+</qti-custom-interaction>
+```

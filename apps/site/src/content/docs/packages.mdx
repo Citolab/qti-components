@@ -1,0 +1,50 @@
+---
+title: Package reference
+description: What each @qti-components package is for, and when you'd reach for it directly.
+---
+
+`@citolab/qti-components` is a meta package — installing it pulls in everything below and registers all of it as a side effect (see the [Quick Start](/getting-started/quick-start/)). Reaching for one of these packages directly only matters if you want a smaller bundle, or you're building something lower-level (your own interaction, your own response-processing rule). The list below is ordered roughly leaf-to-root — each package builds on the ones above it.
+
+## `@qti-components/utilities`
+
+Shared, framework-level plumbing with no QTI knowledge of its own: the `@watch` decorator (used everywhere in this codebase to react to a property change) and a handful of Lit directives. You won't import this directly unless you're writing a new component in the same style as the rest of the library.
+
+## `@qti-components/theme`
+
+The CSS. Exports `item.css` (the theme every item/interaction/test expects to be loaded once, globally — this is what `import '@citolab/qti-components/item.css'` in the Quick Start actually pulls in) and `native.css`. It has no dark-mode variant, which is why every live example on this site renders inside a fixed light panel regardless of the site's own theme.
+
+## `@qti-components/transformers`
+
+The XML → HTML layer: `qtiTransformItem()`, `qtiTransformTest()`, `qtiTransformManifest()`. Given a URL or a raw XML string, these parse QTI XML and produce the actual `<qti-assessment-item>`/`<qti-assessment-test>` custom-element tree (with optional shuffling via a seed). Both [`item-container`](#qti-componentsitem) and [`test-container`](/qti-test/navigation/#test-container) are thin wrappers around this — you'd reach for it directly if you needed to transform XML without mounting it (e.g. server-side, or to inspect the result before rendering).
+
+## `@qti-components/base`
+
+Shared abstract classes and `@lit/context` definitions that almost everything else extends or consumes: the `Interaction` base class (documented on the [Interactions overview](/interactions/overview/)), `QtiExpression`/`QtiConditionExpression` (base classes for response-processing rules), `QtiVariableDeclaration`, and the context objects (`testContext`, `sessionContext`, `itemContext`, `configContext`, etc.) that flow data down through `qti-test`/`qti-item`. You'd import this directly only if you're authoring a new interaction or a new response-processing expression from scratch.
+
+## `@qti-components/processing`
+
+The concrete response/outcome-processing rule vocabulary used inside `<qti-response-processing>`: `qti-response-condition`, `qti-response-if`/`qti-response-else`/`qti-response-else-if`, `qti-set-outcome-value`, `qti-lookup-outcome-value`. This is what actually executes when an item scores itself — it's the sibling of [`qti-outcome-processing`](/qti-test/scoring-and-state/) at the test level, but for a single item.
+
+## `@qti-components/elements`
+
+The item's structural building blocks, minus the interactions themselves: `qti-assessment-item` (the root element), `qti-item-body`, `qti-response-processing`/`qti-template-processing` (the containers the rules above run inside), feedback elements (`qti-feedback-block`, `qti-feedback-inline`, `qti-modal-feedback`), declarations (`qti-response-declaration`, `qti-outcome-declaration`, `qti-template-declaration`, `qti-context-declaration`), plus `qti-rubric-block`, `qti-stylesheet`, `qti-assessment-stimulus-ref`, and `qti-custom-operator`. Think of this package as "everything an item needs except its interactions and its runtime chrome."
+
+## `@qti-components/interactions`
+
+Aggregates all 20 interaction packages (`qti-choice-interaction`, `qti-match-interaction`, ...) plus theme and transformers. Each interaction is documented in depth, with a live example, in the [Interactions](/interactions/overview/) section — this package is just the bundle that re-exports and registers all of them together.
+
+## `@qti-components/item`
+
+The single-item runtime: `<qti-item>` + `<item-container>` (used in the [Quick Start](/getting-started/quick-start/)), plus small UI helpers scoped to one item — `item-correct-response-mode` (switch between internal/full correct-response display), `item-show-correct-response`, `item-show-candidate-correction`, `item-print-variables` (a response/outcome variable table, for debugging). These are the single-item equivalents of `qti-test`'s [scoring & view-helper components](/qti-test/view-helpers/) — same idea, one level down.
+
+## `@qti-components/test`
+
+The full test runner — navigation, test-level outcome processing, scoring UI, views. Documented in its own section: see [qti-test](/qti-test/overview/).
+
+## `@qti-components/loader`
+
+Small standalone fetch helpers that don't require mounting any component: `getManifestInfo(manifestURL)` walks an `imsmanifest.xml` to a fully-resolved test structure (identifier, items, hrefs), and `getItemByUri(itemUri)` fetches and transforms a single item. Useful if you need a test's structure (e.g. to build a custom table of contents) before deciding what to render.
+
+## `@citolab/qti-components`
+
+The meta package described at the top of this page. Also ships CDN bundles (`./cdn/*`, used in the [Quick Start](/getting-started/quick-start/)'s script-tag install) and a `./react` entry providing JSX type augmentations, so `<qti-item>`-style tags type-check in a `.tsx` file without a separate React wrapper library.

@@ -6,7 +6,8 @@
   "dependencies": {
     "@heximal/templates": "catalog:",
     "@lit/context": "catalog:",
-    "lit": "catalog:"
+    "lit": "catalog:",
+    "lit-html": "catalog:"
   },
   "devDependencies": {
     "@qti-components/base": "workspace:^",

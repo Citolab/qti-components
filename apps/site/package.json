@@ -1,0 +1,27 @@
+{
+  "name": "@qti-components/site",
+  "version": "1.0.0",
+  "description": "QTI components documentation site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "clean": "rm -rf dist .astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.30.6",
+    "@citolab/qti-components": "workspace:^",
+    "@heximal/templates": "^0.1.5",
+    "@lit/context": "^1.1.6",
+    "astro": "^5.7.2",
+    "lit": "^3.3.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.3.14",
+    "typescript": "^5.9.3"
+  }
+}

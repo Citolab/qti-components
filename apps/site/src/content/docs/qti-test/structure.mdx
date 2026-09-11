@@ -1,0 +1,69 @@
+---
+title: Structure
+description: The elements that describe a test's structure — qti-assessment-test, qti-test-part, qti-assessment-section, qti-assessment-item-ref.
+---
+
+These four elements mirror the nesting of a QTI `assessmentTest.xml` document one-to-one. They're normally produced by `<test-container>` parsing the loaded XML, not authored by hand — but understanding their attributes helps when reading `computedContext` or writing a `postLoadTestTransformCallback`.
+
+```
+qti-assessment-test
+└── qti-test-part
+    └── qti-assessment-section
+        └── qti-assessment-item-ref
+```
+
+## `<qti-assessment-test>`
+
+The root of a test.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `identifier` | `string` | |
+| `title` | `string` | Stored internally and re-exposed as `data-title` (the native `title` attribute is removed) so it doesn't produce a browser tooltip. |
+
+Dispatches `qti-assessment-test-connected` (bubbles, composed) once connected — this is the event `<qti-test>` and `<test-navigation>` listen for to (re)initialize `testContext`/`computedContext`.
+
+## `<qti-test-part>`
+
+A test part groups one or more sections and declares how navigation and submission behave for everything inside it.
+
+| Attribute | Type | Values |
+|---|---|---|
+| `identifier` | `string` | |
+| `title` | `string` | Same `data-title` handling as above. |
+| `navigation-mode` | `'linear' \| 'nonlinear'` | Default `'nonlinear'`. |
+| `submission-mode` | `'individual' \| 'simultaneous'` | Default `'individual'`. |
+
+Dispatches `qti-test-part-connected`.
+
+## `<qti-assessment-section>`
+
+A section groups item references (and, optionally, nested sections).
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `identifier` | `string` | |
+| `title` | `string` | Same `data-title` handling. |
+| `required` | `string` | Per the [QTI 3.0 spec](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#Root_AssessmentSection). |
+| `fixed` | `boolean` | Parsed from the `"true"`/`"false"` string attribute. |
+| `visible` | `boolean` | Same boolean parsing. |
+| `keep-together` | `boolean` | Same boolean parsing. |
+
+Renders a named `qti-rubric-block` slot ahead of its default slot, so rubric content always appears before item refs. Dispatches `qti-assessment-section-connected`.
+
+## `<qti-assessment-item-ref>`
+
+A reference to a single item within a section — this is what actually triggers loading an item's XML.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `identifier` | `string` | Must match the `identifier` in the referenced item's XML — `<qti-test>` warns to the console if they don't. |
+| `category` | `string` | Space-separated categories; used for include/exclude filtering (see [`qti-test-variables`](/qti-test/scoring-and-state/#qti-test-variables)). |
+| `href` | `string` | Path to the item's XML. |
+| `required` | `boolean` | |
+| `fixed` | `boolean` | |
+| `xmlDoc` | `DocumentFragment` | Set programmatically once the referenced item is loaded and transformed — not an HTML attribute. |
+
+Exposes an `assessmentItem` getter that returns the rendered `<qti-assessment-item>` once loaded. Dispatches `qti-assessment-item-ref-connected` with `{ identifier, href, category }` in the event detail.
+
+It also supports an optional `<template item-ref>` placed inside `<test-container>` for rendering extra per-item chrome (a bookmark, an index number, etc.) alongside the item — this uses the same [Heximal templates](https://github.com/heximal/templates) mechanism as `test-scoring-buttons` and `test-view-toggle` (see [Scoring & State](/qti-test/scoring-and-state/) and [View Helpers](/qti-test/view-helpers/)).
