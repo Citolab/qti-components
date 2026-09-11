@@ -58,6 +58,11 @@ const flyingHome = (graphic: string) => `
   </qti-response-processing>
 </qti-assessment-item>`;
 
+// The same map as a real 206x280 bitmap. Where the item declares no usable width/height the
+// coordinate space can only come from the bitmap itself, so those cases need one that is not 1x1.
+const PNG_206x280 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAAEYCAAAAAAxZJaeAAAA+klEQVR42u3PgQwAAAACsPzZgsqj/QZPr0RHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0fntzM4mJY+RyIT4gAAAABJRU5ErkJggg==';
+
 const asObject = `<object type="image/png" width="206" height="280" data="${PNG}">UK Map</object>`;
 const asImg = `<img width="206" height="280" src="${PNG}" alt="UK Map"/>`;
 
@@ -172,6 +177,46 @@ describe('qti-graphic-order-interaction', () => {
       interaction.maxChoices = 2;
       await click('A', 'D', 'C');
       expect(interaction.response).toEqual(['A', 'D']);
+    });
+  });
+  /*
+   * width/height are *optional* on the QTI <object> — the schema requires only `data` and `type` —
+   * and LengthDType is `[0-9]+%?`, so a percentage is valid on either form. In neither case can the
+   * coordinate space come from the attributes, and both left every hotspot unpositioned: the first
+   * bailed out with no size at all, the second read "50%" as 50px.
+   */
+  describe.each([
+    ['an <object> that declares no size', `<object type="image/png" data="${PNG_206x280}">UK Map</object>`],
+    [
+      'an <object> sized in percent',
+      `<object type="image/png" width="50%" height="50%" data="${PNG_206x280}">UK Map</object>`
+    ],
+    ['an <img> sized in percent', `<img width="50%" height="50%" src="${PNG_206x280}" alt="UK Map"/>`]
+  ])('with %s', (_label, graphic) => {
+    beforeEach(() => mount(graphic));
+
+    it("positions the hotspots against the bitmap's own 206x280 space", () => {
+      // A: coords 77,115,8 -> left (77-8)/206, top (115-8)/280, width 16/206, height 16/280.
+      const style = hotspot('A').style;
+      expect(parseFloat(style.left)).toBeCloseTo(33.5, 1);
+      expect(parseFloat(style.top)).toBeCloseTo(38.2, 1);
+      expect(parseFloat(style.width)).toBeCloseTo(7.77, 1);
+      expect(parseFloat(style.height)).toBeCloseTo(5.71, 1);
+    });
+
+    it('positions every hotspot, in the left-to-right order of the coords', () => {
+      for (const identifier of ['A', 'B', 'C', 'D']) {
+        const style = hotspot(identifier).style;
+        expect(parseFloat(style.left), `hotspot ${identifier} has no left`).toBeGreaterThan(0);
+        expect(parseFloat(style.top), `hotspot ${identifier} has no top`).toBeGreaterThan(0);
+        // Reading "50%" as 50px would make this 32% and push C's left past 100%.
+        expect(parseFloat(style.width), `hotspot ${identifier} spans the graphic`).toBeLessThan(20);
+        expect(parseFloat(style.left), `hotspot ${identifier} is off the graphic`).toBeLessThan(100);
+      }
+      const left = (identifier: string) => parseFloat(hotspot(identifier).style.left);
+      expect(left('A')).toBeLessThan(left('D'));
+      expect(left('D')).toBeLessThan(left('B'));
+      expect(left('B')).toBeLessThan(left('C'));
     });
   });
 });
