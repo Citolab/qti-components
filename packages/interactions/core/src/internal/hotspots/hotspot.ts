@@ -1,7 +1,52 @@
-export function positionShapes(shape: string, coordsNumber: number[], img: HTMLImageElement, hotspot: HTMLElement) {
+/** The graphic an image-based interaction draws its hotspots on. */
+export type Graphic = HTMLImageElement | HTMLObjectElement;
+
+/**
+ * Find the graphic inside an image-based interaction.
+ *
+ * QTI 3 carries it as `<object type="image/*" data="…">` — that is what the spec's own graphic
+ * interaction examples use. An item that has been through a converter usually carries the same
+ * graphic as a plain `<img>`. Both are valid input, so accept either rather than assuming the
+ * converted form: looking only for `img` left every hotspot unpositioned on a spec-form item.
+ */
+export function findGraphic(root: ParentNode): Graphic | null {
+  return root.querySelector<Graphic>('img, object[type^="image"]');
+}
+
+/**
+ * The coordinate space the `coords` attributes are expressed in.
+ *
+ * The width/height attributes come first, as they did before: `coords` are authored against the
+ * size the item declares, not against however the graphic is being laid out. `<object>` has no
+ * intrinsic size to fall back on — QTI requires width/height on it — so for that form the
+ * attributes are the only source.
+ */
+function graphicSize(graphic: Graphic): { width: number; height: number } {
+  const attribute = (name: 'width' | 'height'): number | null => {
+    const raw = graphic.getAttribute(name);
+    const parsed = raw ? parseFloat(raw) : NaN;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  };
+  const image = graphic as HTMLImageElement;
+  return {
+    width: attribute('width') ?? image.naturalWidth,
+    height: attribute('height') ?? image.naturalHeight
+  };
+}
+
+export function positionShapes(shape: string, coordsNumber: number[], img: Graphic, hotspot: HTMLElement) {
   // Determine the reference width and height based on the attributes or natural dimensions
-  const imgWidth = img.getAttribute('width') ? parseFloat(img.getAttribute('width')!) : img.naturalWidth;
-  const imgHeight = img.getAttribute('height') ? parseFloat(img.getAttribute('height')!) : img.naturalHeight;
+  const { width: imgWidth, height: imgHeight } = graphicSize(img);
+
+  /*
+   * Without a usable coordinate space every percentage below is NaN, which the style setters drop
+   * silently — the hotspot then keeps the theme's 100%x100% and stacks unpositioned on top of the
+   * graphic. Say so instead of leaving that to be diagnosed from the rendering.
+   */
+  if (!(imgWidth > 0) || !(imgHeight > 0)) {
+    console.error('Cannot position hotspots: the graphic has no usable width/height.', img);
+    return;
+  }
 
   switch (shape) {
     case 'circle':

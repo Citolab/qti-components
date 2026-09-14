@@ -1,8 +1,10 @@
 import { html } from 'lit';
+import { property } from 'lit/decorators.js';
 
+import { watch } from '@qti-components/utilities';
 import { Interaction } from '@qti-components/base';
 import { ChoicesMixin } from '@qti-components/interactions-core/mixins/choices/choices.mixin';
-import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
+import { findGraphic, positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 
 import styles from './qti-graphic-order-interaction.styles';
 
@@ -10,7 +12,7 @@ import type { QtiHotspotChoice } from '@qti-components/interactions-core/element
 import type { Choice } from '@qti-components/interactions-core/mixins/choices/choices.mixin';
 import type { CSSResultGroup } from 'lit';
 
-type HotspotChoice = Choice & { order: number };
+type HotspotChoice = Choice & { order: number | null };
 /**
  * Graphic order interaction: candidates order hotspots on an image.
  *
@@ -24,7 +26,13 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
 
   static readonly #LOCATOR_CLASS = 'cito-graphic-order-marker';
 
-  protected choiceOrdering: boolean;
+  /*
+   * Unlimited by default, unlike ChoicesMixin's `1`. Ordering is not a single-select: a default of
+   * 1 made this interaction a `radiogroup` of `radio` hotspots and let only one hotspot carry an
+   * order at a time. QTI's own `max-choices` default for an ordering is "no limit", i.e. 0.
+   */
+  @property({ type: Number, attribute: 'max-choices' })
+  public override maxChoices = 0;
 
   protected _choiceElements: Choice[] = [];
 
@@ -36,44 +44,53 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     `;
   }
 
-  #setHotspotOrder(e: CustomEvent<{ identifier: string }>): void {
-    const { identifier } = e.detail;
+  /*
+   * Shadows ChoicesMixin's handler, deliberately without calling up to it.
+   *
+   * The mixin publishes the response as the set of *checked* choices in DOM order, which is
+   * exactly what an ordering interaction must not do: the candidate's sequence never reached
+   * RESPONSE, and with the mixin's max-choices default of 1 each click also cleared the previous
+   * hotspot. Here the response IS the ordering, so the interaction owns it — and because the
+   * response is the ordered list of identifiers, removing one renumbers the rest by itself.
+   */
+  protected _choiceElementSelectedHandler(event: CustomEvent<{ identifier: string }>): void {
+    const { identifier } = event.detail;
 
-    const hotspot = this._choiceElements.find(el => el.getAttribute('identifier') === identifier) as HotspotChoice;
+    if (!this._choiceElements.some(choice => choice.identifier === identifier)) return;
 
-    if (!hotspot) return;
+    const ordered = [...this.#orderedResponse()];
+    const position = ordered.indexOf(identifier);
 
-    const maxSelection = this._choiceElements.length;
-
-    if (!this.choiceOrdering) {
-      this.choiceOrdering = true;
-
-      if (hotspot.order == null) {
-        // Hotspot is not selected, so assign the next available order
-        const currentSelection = (this._choiceElements as HotspotChoice[]).filter(i => i.order != null).length;
-
-        if (currentSelection >= maxSelection) {
-          this.choiceOrdering = false;
-          return; // Maximum selection reached
-        }
-
-        hotspot.order = currentSelection + 1;
-      } else {
-        // Hotspot is already selected, so remove its order and renumber the rest
-        const removedOrder = hotspot.order;
-
-        hotspot.order = null;
-
-        (this._choiceElements as HotspotChoice[]).forEach(hotspot => {
-          if (hotspot.order != null && hotspot.order > removedOrder) {
-            hotspot.order--;
-          }
-        });
-      }
-
-      this.refreshLocatorPins();
-      this.choiceOrdering = false;
+    if (position >= 0) {
+      ordered.splice(position, 1);
+    } else {
+      // 0 means "no limit" — QTI's default for an ordering — so cap at the hotspots that exist.
+      const maxSelection = this.maxChoices > 0 ? this.maxChoices : this._choiceElements.length;
+      if (ordered.length >= maxSelection) return;
+      ordered.push(identifier);
     }
+
+    this.response = ordered;
+
+    this.validate();
+    this.reportValidity();
+    this.saveResponse(this.response);
+  }
+
+  /** The response as the ordered identifier list this interaction always treats it as. */
+  #orderedResponse(): string[] {
+    if (Array.isArray(this.response)) return this.response;
+    return this.response ? [this.response] : [];
+  }
+
+  /*
+   * Pins and `aria-ordervalue` are a pure function of the response, so any route into it repaints
+   * them: a candidate's click, a restored attempt, a correct-response display, an author setting
+   * the property. Nothing has to remember to keep a second copy of the ordering in step.
+   */
+  @watch('response')
+  protected handleOrderedResponseChange(): void {
+    this.refreshLocatorPins();
   }
 
   #anchorNameForChoice(choice: HotspotChoice): string {
@@ -88,16 +105,44 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
   }
 
   protected refreshLocatorPins() {
-    // Remove previous markers and anchor names managed by this component.
-    this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());
+    const ordered = this.#orderedResponse();
 
-    (this._choiceElements as HotspotChoice[]).forEach(choice => {
-      choice.style.removeProperty('anchor-name');
-    });
+    for (const choice of this._choiceElements as HotspotChoice[]) {
+      const position = ordered.indexOf(choice.identifier);
+      choice.order = position >= 0 ? position + 1 : null;
+    }
 
     const orderedChoices = (this._choiceElements as HotspotChoice[])
       .filter(choice => choice.order != null)
       .sort((a, b) => a.order - b.order);
+
+    const markers = Array.from(this.querySelectorAll<HTMLElement>(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`));
+
+    /*
+     * Idempotent on purpose, because the pins are light-DOM children of an element ChoicesMixin
+     * watches with a subtree MutationObserver: appending a marker feeds a mutation straight back
+     * into _syncChoicesFromDOM -> _updateChoiceSelection -> here. Rebuilding unconditionally would
+     * mutate again on every round and never settle.
+     */
+    const unchanged =
+      markers.length === orderedChoices.length &&
+      orderedChoices.every((choice, index) => {
+        const marker = markers[index];
+        return (
+          marker.textContent === String(choice.order) &&
+          marker.style.getPropertyValue('position-anchor') === this.#anchorNameForChoice(choice) &&
+          marker.style.getPropertyValue('--qti-graphic-order-pin-color') === this.resolvePinColor(choice)
+        );
+      });
+
+    if (unchanged) return;
+
+    // Remove previous markers and anchor names managed by this component.
+    markers.forEach(marker => marker.remove());
+
+    (this._choiceElements as HotspotChoice[]).forEach(choice => {
+      choice.style.removeProperty('anchor-name');
+    });
 
     orderedChoices.forEach(choice => {
       const anchorName = this.#anchorNameForChoice(choice);
@@ -117,21 +162,30 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
   }
 
   #positionHotspot(hotspot: QtiHotspotChoice): void {
-    const img = this.querySelector('img') as HTMLImageElement;
+    // `<object>` as well as `<img>`: the spec's own example items carry the graphic as an object.
+    const graphic = findGraphic(this);
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
+
+    if (!graphic) {
+      console.error('No <img> or <object type="image/*"> found in <qti-graphic-order-interaction>.');
+      return;
+    }
+
     const coordsNumber = coords.split(',').map(s => parseInt(s));
 
-    positionShapes(shape, coordsNumber, img, hotspot);
+    positionShapes(shape, coordsNumber, graphic, hotspot);
   }
 
   #positionHotspotOnRegister = (e: CustomEvent<QtiHotspotChoice>): void => {
     this.#positionHotspot(e.target as QtiHotspotChoice);
+    // A hotspot can upgrade after the response is already set — a restored attempt, say — so give
+    // the newcomer its order and pin rather than waiting for the next response change.
+    this.refreshLocatorPins();
   };
 
   override connectedCallback(): void {
     super.connectedCallback();
-    this.addEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
     this.addEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
     this.refreshLocatorPins();
     // qti-hotspot-choice registers itself (and dispatches this event) as soon as it's
@@ -144,7 +198,6 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
   override disconnectedCallback() {
     this.querySelectorAll(`.${QtiGraphicOrderInteraction.#LOCATOR_CLASS}`).forEach(marker => marker.remove());
     super.disconnectedCallback();
-    this.removeEventListener('activate-qti-hotspot-choice', this.#setHotspotOrder);
     this.removeEventListener('register-qti-hotspot-choice', this.#positionHotspotOnRegister);
   }
 }
