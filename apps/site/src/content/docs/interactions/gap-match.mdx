@@ -1,0 +1,75 @@
+---
+title: Gap match interaction
+description: qti-gap-match-interaction — drag text choices into gaps embedded in a passage.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.5 Gap Match Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7sroqk3xl8e1)** — a block interaction with a number of gaps that the candidate fills in from an associated set of choices.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/).
+
+## Example
+
+<InteractionDemo>
+  <qti-gap-match-interaction response-identifier="RESPONSE" max-associations="2">
+    <qti-prompt>Identify the missing words in this famous quote from Shakespeare's Richard III.</qti-prompt>
+    <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+    <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+    <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+    <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+    <blockquote>
+      <p>
+        Now is the <qti-gap identifier="G1"></qti-gap> of our discontent<br />
+        Made glorious <qti-gap identifier="G2"></qti-gap> by this sun of York;<br />
+        And all the clouds that lour'd upon our house<br />
+        In the deep bosom of the ocean buried.
+      </p>
+    </blockquote>
+  </qti-gap-match-interaction>
+</InteractionDemo>
+
+```html
+<qti-gap-match-interaction response-identifier="RESPONSE" max-associations="2">
+  <qti-prompt>Identify the missing words in this famous quote from Shakespeare's Richard III.</qti-prompt>
+  <qti-gap-text identifier="W" match-max="1">winter</qti-gap-text>
+  <qti-gap-text identifier="Sp" match-max="1">spring</qti-gap-text>
+  <qti-gap-text identifier="Su" match-max="1">summer</qti-gap-text>
+  <qti-gap-text identifier="A" match-max="1">autumn</qti-gap-text>
+  <blockquote>
+    <p>
+      Now is the <qti-gap identifier="G1"></qti-gap> of our discontent<br />
+      Made glorious <qti-gap identifier="G2"></qti-gap> by this sun of York;<br />
+      And all the clouds that lour'd upon our house<br />
+      In the deep bosom of the ocean buried.
+    </p>
+  </blockquote>
+</qti-gap-match-interaction>
+```
+
+## `qti-gap-match-interaction`
+
+| Attribute | Type | Default | Notes |
+|---|---|---|---|
+| `min-associations` | `number` | `1` | |
+| `max-associations` | `number` | `1` | Unlike the other drag/drop interactions, this one special-cases its default to `1` (not `0`/unlimited) when the attribute is omitted — matching most real gap-match items, which have one filled answer per gap. |
+| `disable-animations` / `auto-size-dropzones` | `boolean` | `false` | Same as other drag/drop interactions. |
+
+:::caution
+`max-associations` is the total number of gaps that can be filled **across the whole interaction** — it defaults to `1` unless you set it explicitly. It's easy to mistake `qti-gap-text`'s `match-max` for this cap, since that's the attribute right there on each draggable choice — but `match-max` only limits how many times *that one choice* can be reused, not how many gaps can be filled overall. With two gaps (as in the example above), the interaction needs `max-associations="2"`, or the second drop will fail validation with "You've selected too many associations."
+:::
+
+`show-correct-response` here injects a `.correct-option` `<span>` right after each `<qti-gap>`, rather than annotating the gap itself.
+
+## `qti-gap-text` (draggable choice)
+
+| Attribute | Notes |
+|---|---|
+| `identifier` | |
+| `match-max` | How many times this text can be used across gaps. |
+
+## `qti-gap` (drop target)
+
+| Attribute | Notes |
+|---|---|
+| `identifier` | Used in response pairs, e.g. `"W G1"`. |
+| `match-max` | How many choices this specific gap can accept. |

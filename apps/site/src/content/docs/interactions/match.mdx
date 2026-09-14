@@ -1,0 +1,64 @@
+---
+title: Match interaction
+description: qti-match-interaction — associate choices between two sets.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.9 Match Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.be4ll1tm4t99)** — a block interaction that presents candidates with two sets of choices and lets them create associations between pairs of choices in the two sets (never between two choices from the same set).
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/), and `min-associations`/`max-associations`/`disable-animations`/`auto-size-dropzones` from the same drag/drop mixin used by [Order](/interactions/order/).
+
+## Example
+
+<InteractionDemo>
+  <qti-match-interaction response-identifier="RESPONSE">
+    <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
+    </qti-simple-match-set>
+    <qti-simple-match-set>
+      <qti-simple-associable-choice identifier="M" match-max="2">A Midsummer Night's Dream</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
+    </qti-simple-match-set>
+  </qti-match-interaction>
+</InteractionDemo>
+
+```html
+<qti-match-interaction response-identifier="RESPONSE">
+  <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
+  <qti-simple-match-set>
+    <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="D" match-max="1">Demetrius</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="L" match-max="1">Lysander</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="P" match-max="1">Prospero</qti-simple-associable-choice>
+  </qti-simple-match-set>
+  <qti-simple-match-set>
+    <qti-simple-associable-choice identifier="M" match-max="2">A Midsummer Night's Dream</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="R" match-max="2">Romeo and Juliet</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="T" match-max="2">The Tempest</qti-simple-associable-choice>
+  </qti-simple-match-set>
+</qti-match-interaction>
+```
+
+## `qti-match-interaction`
+
+| Attribute | Notes |
+|---|---|
+| `class` | `qti-choices-top` / `-bottom` / `-left` / `-right`, or `qti-match-tabular` to switch to a table-based rendering instead of the drag/drop list layout. |
+
+Note: `<qti-simple-match-set>` is a plain grouping tag, not a registered custom element — it's only used for CSS `:first-of-type`/`:last-of-type` selection and `shuffle` targeting, so it never "upgrades" to anything with its own behavior.
+
+## `qti-simple-associable-choice`
+
+Shared with [Associate](/interactions/associate/).
+
+| Attribute | Type | Default | Notes |
+|---|---|---|---|
+| `identifier` | `string` | — | |
+| `match-min` | `number` | `0` | Minimum selections required. |
+| `match-max` | `number` | `1` | Maximum selections before further matches are disabled (`0` = unlimited). |
+| `fixed` | `boolean` | `false` | Excludes the choice from shuffling. |

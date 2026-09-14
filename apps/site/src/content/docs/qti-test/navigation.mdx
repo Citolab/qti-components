@@ -1,0 +1,56 @@
+---
+title: Navigation
+description: How moving between items and sections works — test-navigation, test-container, test-next/prev, and the navigation event.
+---
+
+Navigation in `qti-test` is event-driven: any element can request navigation by dispatching a `qti-request-navigation` event, and `<qti-test>`'s navigation logic (backed by `TestNavigationMixin`) is the only thing that actually loads items and updates context in response.
+
+## `<test-navigation>`
+
+The context hub. It provides `qtiContext` (the `QTI_CONTEXT` variable — test/candidate/environment identifiers plus an optional shuffle `seed`) and computes `computedContext` (see [Overview](/qti-test/overview/#how-data-flows)) from the loaded test structure.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `identifier` | `string` | Optional. |
+| `auto-score-items` | `boolean` (`auto-score-items` attr) | When set, listens for `qti-interaction-changed` and automatically calls `processResponse()` on non-adaptive items whose `SCORE` outcome isn't externally scored. |
+
+It also listens for and re-dispatches several test-level events onto the currently active item's `<qti-assessment-item>`: `test-end-attempt`, `test-show-correct-response`, `test-show-candidate-correction`, and `test-update-outcome-variable` (used by [`test-scoring-buttons`](/qti-test/scoring-and-state/#test-scoring-buttons)).
+
+## `<test-container>`
+
+Loads the test XML and hosts the parsed `<qti-assessment-test>` tree in its shadow DOM.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `test-url` | `string` | URL of `assessmenttest.xml` to load. |
+| `testXML` | `string` | Alternative to `test-url` — parse an already-fetched XML string directly (JS property, not an attribute). |
+
+Supports an optional `postLoadTestTransformCallback` (read from the closest `<qti-test>`) to transform the parsed test before it's rendered, and applies a shuffle `seed` from `qtiContext.QTI_CONTEXT.seed` if one is set, so item/choice ordering is reproducible across reloads.
+
+## Requesting navigation
+
+Any element can trigger navigation by dispatching:
+
+```ts
+this.dispatchEvent(
+  new CustomEvent('qti-request-navigation', {
+    bubbles: true,
+    composed: true,
+    detail: { type: 'item' | 'section', id: identifier }
+  })
+);
+```
+
+`<qti-test>` exposes this as a public `navigateTo(type, id?)` method too (from `ITestNavigationMixin`) — useful for driving navigation from outside the DOM tree, e.g. a router.
+
+The navigation lifecycle dispatches (in order): `qti-navigation-loading-started`, then either `qti-test-loaded` (with the loaded item ref(s) in `detail`) or `qti-navigation-error` (with a `NavigationError`), and finally `qti-navigation-loading-ended` — all bubbling and composed, so a page can show a loading spinner without reaching into internals.
+
+## Built-in navigation controls
+
+All of these read `computedContext` to know the active test part/section/item and disable themselves automatically at the start/end of a section.
+
+- **`<test-next>`** / **`<test-prev>`** — step to the next/previous item in the active test part. Each attaches `ElementInternals` with `role="button"`, and reflects a `disabled` attribute when there's nowhere to go.
+- **`<test-item-link item-id="...">`** — jump straight to a specific item by identifier.
+- **`<test-section-link section-id="...">`** — jump to the first item of a specific section.
+
+All four ultimately dispatch the same `qti-request-navigation` event described above — they're thin, replaceable wrappers around it.

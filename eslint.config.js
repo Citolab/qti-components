@@ -100,6 +100,24 @@ export default [
             {
               group: ['packages/*', 'packages/*/src', 'packages/*/src/*'],
               message: 'Use relative imports within the same package or @qti-components/* for cross-package imports'
+            },
+            {
+              // `?inline` is bundler-only syntax. Every package here builds with plain `tsc`,
+              // which copies the specifier through verbatim — so it survives into the published
+              // dist, where no consumer's bundler can resolve it. That is how
+              // @qti-components/item@1.4.3 shipped an import of
+              // '../../../../qti-theme/src/item.css?inline', a path outside its own tarball;
+              // bundling that package straight from npm fails with "Could not resolve".
+              //
+              // Import '@qti-components/theme/item-css' instead — a real, published module that
+              // exports the compiled sheet as a string.
+              //
+              // Exempt below: packages/qti-theme/** (owns the source shim this rule points at)
+              // and spec/story files (never compiled into a dist).
+              group: ['**/*.css?inline', '**/*.css?raw', '**/*.css?url'],
+              message:
+                "`?inline` does not survive tsc into a published dist. Import '@qti-components/theme/item-css', " +
+                'or add a generated text module for the sheet (see tools/build/css-text-module.mjs).'
             }
           ]
         }
@@ -153,7 +171,42 @@ export default [
       '@typescript-eslint/no-unsafe-return': 'off',
 
       // Allow cross-package relative imports in test files
-      'import/no-relative-packages': 'off'
+      'import/no-relative-packages': 'off',
+
+      // Spec and story files are excluded from every tsc build, so a `?inline` specifier here
+      // cannot reach a published dist. Fixtures (`./fixtures/linked.css?inline`) and
+      // node_modules sheets (`modern-normalize/...?inline`) legitimately use it.
+      'no-restricted-imports': 'off'
+    }
+  },
+
+  // The theme package owns the source shim the ?inline ban points at: src/item-css.ts is the
+  // dev-side counterpart of the generated dist/item-css.js, and it must use ?inline to let Vite
+  // resolve the sheet in Storybook and Vitest. It is never compiled by tsc.
+  {
+    files: ['packages/qti-theme/src/**/*.ts'],
+    rules: {
+      'no-restricted-imports': 'off'
+    }
+  },
+
+  // apps/* are private and never published, so nothing here can reach a consumer's bundler and
+  // `?inline` is free to use — Vite resolves it. The `packages/*` path ban still applies, so this
+  // redefines the rule without that one group rather than switching it off wholesale.
+  {
+    files: ['apps/**/*.{js,ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['packages/*', 'packages/*/src', 'packages/*/src/*'],
+              message: 'Use relative imports within the same package or @qti-components/* for cross-package imports'
+            }
+          ]
+        }
+      ]
     }
   },
 

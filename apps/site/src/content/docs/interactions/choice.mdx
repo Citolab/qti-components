@@ -1,0 +1,66 @@
+---
+title: Choice interaction
+description: qti-choice-interaction — select one or more choices, up to a maximum.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.2 Choice Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.j9nu1oa1tu3b)** — presents a set of choices to the candidate. The candidate's task is to select one or more of the choices, up to a maximum number of choices allowed.
+
+Also see the attributes and `qti-interaction-response` event shared by every interaction on the [overview page](/interactions/overview/), and `min-choices`/`max-choices` from `ChoicesMixin`.
+
+## Example
+
+<InteractionDemo>
+  <qti-choice-interaction response-identifier="RESPONSE" max-choices="1">
+    <qti-prompt>
+      <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+    </qti-prompt>
+    <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+    <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+    <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+    <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+  </qti-choice-interaction>
+</InteractionDemo>
+
+```html
+<qti-choice-interaction response-identifier="RESPONSE" max-choices="1">
+  <qti-prompt>
+    <p>Which of the following features are <strong>new</strong> to QTI 3?</p>
+  </qti-prompt>
+  <qti-simple-choice identifier="A">Option A</qti-simple-choice>
+  <qti-simple-choice identifier="B">Option B</qti-simple-choice>
+  <qti-simple-choice identifier="C">Option C</qti-simple-choice>
+  <qti-simple-choice identifier="D">Option D</qti-simple-choice>
+</qti-choice-interaction>
+```
+
+Set `max-choices="0"` (or any value greater than 1) to allow multiple selections — children then render with `role="checkbox"` instead of `role="radio"`.
+
+## `qti-choice-interaction`
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `orientation` | `'horizontal' \| 'vertical'` | Default `'vertical'`. **Deprecated** — use the `qti-orientation-horizontal` / `qti-orientation-vertical` classes instead. |
+
+Also implements `VocabularyMixin`, which reads QTI's `class` vocabulary (e.g. `qti-input-control-hidden`, `qti-choices-stacking-2`) for layout/styling variants — see the [`CorrectResponse` story](https://github.com/Citolab/qti-components/blob/main/packages/interactions/choice-interaction/src/qti-choice-interaction.stories.ts) for an example combining both.
+
+## `qti-simple-choice`
+
+The child element used by both `qti-choice-interaction` and `qti-order-interaction`.
+
+| Attribute | Type | Notes |
+|---|---|---|
+| `identifier` | `string` | |
+| `template-identifier` | `string` | |
+| `show-hide` | `string` | Default `'show'`. |
+| `fixed` | `boolean` | Prevents the choice from being reordered when shuffling. |
+
+Exposes a `checked` getter backed by the `--checked` CSS custom state.
+
+## Showing a correct response
+
+```html
+<qti-choice-interaction response-identifier="RESPONSE" max-choices="1" correct-response="A" show-correct-response>
+  ...
+</qti-choice-interaction>
+```

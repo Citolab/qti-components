@@ -1,0 +1,31 @@
+---
+import '@citolab/qti-components/item.css';
+---
+
+<div class="qti-interaction-demo">
+  <slot />
+</div>
+
+<script>
+  import '@citolab/qti-components';
+</script>
+
+<style>
+  .qti-interaction-demo {
+    /*
+     * The qti-components theme (item.css) paints its own light backgrounds
+     * (choices, drop zones, etc.) but doesn't carry a dark variant. Letting
+     * the site's dark mode bleed in here produces low-contrast/invisible
+     * text on those light chips. Rather than re-theming every QTI element,
+     * pin this demo box as a fixed light island regardless of page theme —
+     * same fix used for the equivalent problem in qti-editor's landing page.
+     */
+    color-scheme: light;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    background: #ffffff;
+    color: #1b1f24;
+  }
+</style>

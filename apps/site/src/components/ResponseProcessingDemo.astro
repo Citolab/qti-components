@@ -1,0 +1,33 @@
+---
+import InteractionDemo from './InteractionDemo.astro';
+---
+
+<InteractionDemo>
+  <div id="response-processing-demo">
+    <qti-item>
+      <item-container item-url="/assets/guides/response-processing/item.xml"></item-container>
+    </qti-item>
+    <p>
+      <button id="rp-submit" type="button">Submit</button>
+      <strong id="rp-result"></strong>
+    </p>
+  </div>
+</InteractionDemo>
+
+<script>
+  const root = document.querySelector('#response-processing-demo');
+  const submitButton = root?.querySelector('#rp-submit');
+  const result = root?.querySelector('#rp-result');
+
+  submitButton?.addEventListener('click', () => {
+    // <item-container> renders <qti-assessment-item> inside its own shadow root,
+    // so we have to pierce it explicitly rather than querying from the light DOM.
+    const itemContainer = root?.querySelector('item-container');
+    const item = itemContainer?.shadowRoot?.querySelector('qti-assessment-item');
+    if (!item) return;
+    item.processResponse();
+    const score = item.variables.find(v => v.identifier === 'SCORE')?.value;
+    const response = item.variables.find(v => v.identifier === 'RESPONSE')?.value;
+    result.textContent = response ? `RESPONSE: ${response} -> SCORE: ${score}` : 'Pick an answer first.';
+  });
+</script>

@@ -1,0 +1,30 @@
+---
+title: End attempt interaction
+description: qti-end-attempt-interaction — a button that ends the current attempt.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.21 End Attempt Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.b3g8rgbtuwqp)** — a special interaction that immediately ends the current attempt. Typically used to let the candidate request a hint or model solution, or to move on in an adaptive item.
+
+Unlike the other interactions on this site, `qti-end-attempt-interaction` extends plain `LitElement`, not the shared `Interaction` base — it's a button, not a response-collecting control.
+
+## Example
+
+<InteractionDemo>
+  <qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show hint"></qti-end-attempt-interaction>
+</InteractionDemo>
+
+```html
+<qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show hint"></qti-end-attempt-interaction>
+```
+
+Clicking it dispatches an `end-attempt` event (bubbles/composed) with `detail: { responseIdentifier, countAttempt }`. On its own — outside a `qti-assessment-item`/`qti-test` context — that's all it does; the actual "end attempt" behavior (scoring, revealing feedback) is handled by whatever's listening, such as [`test-navigation`](/qti-test/navigation/) or an item's own response processing.
+
+## `qti-end-attempt-interaction`
+
+| Attribute | Type | Default | Notes |
+|---|---|---|---|
+| `response-identifier` | `string` | — | Reported in the `end-attempt` event detail. |
+| `disabled` | `boolean` (reflect) | `false` | |
+| `count-attempt` | `'true' \| 'false'` | `null` | Per the QTI spec's `count-attempt` characteristic — limits how many times this mechanism can be used (e.g. capping the number of hints). |
+| `title` | `string` | `'end attempt'` | The button's label text. |

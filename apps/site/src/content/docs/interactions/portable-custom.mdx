@@ -1,0 +1,60 @@
+---
+title: Portable custom interaction
+description: qti-portable-custom-interaction — host a QTI 3 Portable Custom Interaction (PCI) module.
+---
+
+**Portable Custom Interaction (PCI)** — hosts an IMS QTI 3 [Portable Custom Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.jsncxx6a57ao) inside an iframe and bridges response/state/configuration between the item runtime and the PCI's AMD module. This is the modern successor to the legacy [Custom interaction](/interactions/custom/) (CES) mechanism.
+
+:::note
+No live example on this page yet. Real PCI packages *do* exist in this repo (e.g. `public/assets/qti-portable-interaction/baking_soda/`) and could power a working demo, but wiring one up (RequireJS bootstrapping, the iframe handshake, asset paths) is more involved than the other interaction pages and hasn't been done yet — worth a follow-up if a live PCI demo is wanted here.
+:::
+
+## `qti-portable-custom-interaction`
+
+| Attribute | Notes |
+|---|---|
+| `module` | AMD module id to load via RequireJS, e.g. `"pci-getallen"`. |
+| `custom-interaction-type-identifier` | The PCI's type identifier (spec prefers a URN, e.g. `urn:fdc:hmhco.com:pci:shading`). |
+| `data-require-paths` | JSON object of RequireJS `paths` overrides. |
+| `data-require-shim` | JSON object of RequireJS `shim` config. |
+| `data-require-js-url` | RequireJS library URL loaded inside the iframe. Defaults to a CDN copy. |
+| `data-base-url` | Base URL prefix used to resolve module paths and assets. |
+| any other `data-*` | Forwarded (hyphenated key, normalized) into the PCI's `properties` object. |
+
+## Child elements
+
+| Element | Purpose |
+|---|---|
+| `<qti-interaction-modules>` / `<qti-interaction-module id="..." primary-path="...">` | Per-module RequireJS path overrides. |
+| `<qti-interaction-markup>` | Raw markup forwarded into the iframe as the PCI's container content. |
+| `<qti-template-variable template-identifier="...">` | Resolves a template variable and passes it to the PCI. |
+| `<qti-context-variable identifier="...">` | Resolves a context variable (including `QTI_CONTEXT`) for the PCI. |
+
+## Module contract
+
+The author's AMD module must call `qtiCustomInteractionContext.register(pciInstance)`, where `pciInstance` implements:
+
+```ts
+interface IMSpci<T> {
+  typeIdentifier: string;
+  getInstance(dom: HTMLElement, configuration: unknown, state: T | null): void;
+  getResponse(): unknown;
+  setResponse(value: unknown): void;
+  getState(): T;
+  setState(value: T): void;
+}
+```
+
+```html
+<qti-portable-custom-interaction
+  response-identifier="RESPONSE"
+  module="pci-getallen"
+  custom-interaction-type-identifier="getallenFormule"
+  data-base-url="/assets/qti-portable-interaction/baking_soda"
+>
+  <qti-interaction-modules>
+    <qti-interaction-module id="pci-getallen" primary-path="pci-getallen.js"></qti-interaction-module>
+  </qti-interaction-modules>
+  <qti-interaction-markup></qti-interaction-markup>
+</qti-portable-custom-interaction>
+```

@@ -1,0 +1,50 @@
+---
+title: Scoring & state
+description: Outcome processing and per-item state — qti-outcome-processing, qti-test-variables, test-check-item, test-scoring-buttons, test-scoring-feedback.
+---
+
+## `<qti-outcome-processing>`
+
+Declared inside `<qti-assessment-test>` (per the QTI spec), this element is invisible (`display: none`) and does nothing until `outcomeProcessing()` is called on the enclosing `<qti-test>`. That method finds the `<qti-outcome-processing>` element and calls `process()` on it, which in turn runs `process()` on each of its child rule elements in document order — the same rule-execution model used by item-level response processing.
+
+## `qti-test-variables`
+
+A test-level **expression**, used inside `<qti-outcome-processing>` rules to aggregate a variable across multiple items — e.g. summing every item's `SCORE`.
+
+| Attribute | Notes |
+|---|---|
+| `variable-identifier` | The item-level variable to aggregate (e.g. `SCORE`). |
+| `include-category` / `exclude-category` | Space-separated category lists to filter which item refs contribute. |
+| `weight-identifier` | Optional per-item weight, read from each `qti-assessment-item-ref`'s `weigths` map. |
+
+`getResult()` walks every `qti-assessment-item-ref` in the test, filters by category, applies weights, and sums the named variable's value across the matching items' current `testContext`.
+
+## `<test-check-item>`
+
+A "submit this attempt" button. On click it:
+
+1. Dispatches `test-end-attempt` (bubbles) — picked up by `<test-navigation>`, which calls `processResponse(true, ...)` on the active item.
+2. Dispatches `test-show-correct-response` with `detail: true` — reveals the item's correct response.
+3. Toggles `.show` on every `[view]`-tagged element inside the current `<test-container>`, making scorer-only content visible immediately.
+
+## `test-scoring-buttons`
+
+Renders a human-scoring UI for the active item, driven by a `<template>` child (via [Heximal templates](https://github.com/heximal/templates)) so the markup is fully up to you — the component only supplies the data: `{ scores, score, disabled }`, where `scores` is `[0..MAXSCORE]` and `disabled` is `true` unless the item's `SCORE` outcome has `externalScored === 'human'`.
+
+Clicking an `<input>` inside the template dispatches `test-update-outcome-variable` with `{ assessmentItemRefId, outcomeVariableId: 'SCORE', value }`, which `<test-navigation>` applies to the active item.
+
+```html
+<test-scoring-buttons>
+  <template>
+    <!-- receives { scores, score, disabled } -->
+  </template>
+</test-scoring-buttons>
+```
+
+## `test-scoring-feedback`
+
+Renders feedback text for the active item based on completion status, `SCORE`, and `externalScored`. The actual copy is supplied via `data-*` attributes on the element itself — `data-text-no-response`, `data-text-correct`, `data-text-incorrect`, `data-score-unknown`, `data-in-progress` — so wording is fully caller-controlled; the component only picks which one applies.
+
+## `test-show-correct-response` — deprecated
+
+Marked `@deprecated` in source. It toggled correct-response visibility via a `shown` state and `test-show-correct-response` event, but the codebase is moving toward the `<template>`-driven pattern used by `test-scoring-buttons`/`test-view-toggle`. Check with the team before reaching for it in new work.

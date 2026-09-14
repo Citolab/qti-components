@@ -1,0 +1,56 @@
+---
+title: Quick start
+description: Install qti-components and render your first QTI item.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+## Install
+
+```sh
+npm install @citolab/qti-components
+```
+
+Or, without a build step, via CDN:
+
+```html
+<script type="module">
+  import 'https://unpkg.com/@citolab/qti-components/cdn';
+</script>
+```
+
+## Register the components
+
+Importing the package registers every custom element it ships (items, tests, all 20 interactions) as a side effect — there's no separate "init" call:
+
+```js
+import '@citolab/qti-components';
+import '@citolab/qti-components/item.css';
+```
+
+`item.css` is the theme — the interactions, choices, and layout classes all expect it to be loaded once, globally.
+
+## Render a single item
+
+The smallest useful building block is `<qti-item>` with an `<item-container>` inside it, pointed at an item's XML:
+
+<InteractionDemo>
+  <qti-item>
+    <item-container item-url="/assets/quick-start/items/item.xml"></item-container>
+  </qti-item>
+</InteractionDemo>
+
+```html
+<qti-item>
+  <item-container item-url="/assets/quick-start/items/item.xml"></item-container>
+</qti-item>
+```
+
+`<item-container>` fetches the XML, transforms it into the `<qti-assessment-item>` custom-element tree, and renders it in its own shadow DOM. `<qti-item>` wraps it to provide scoring/feedback context. Selecting a choice above already updates the item's response variable (`RESPONSE`) and `completionStatus` — try it and inspect `document.querySelector('qti-assessment-item').variables` in the console. Actually running response processing (declared in the item's own XML via `<qti-response-processing>`, to compute `SCORE`) happens when something calls `processResponse()` on the item — normally triggered by a submit button your app provides, or automatically by [`test-navigation`](/qti-test/navigation/) inside a full test.
+
+This is the same `item-url` + transform pattern used by [`test-container`](/qti-test/navigation/#test-container) for a whole test — a single item is the simplest case of the same idea.
+
+## Where to go from here
+
+- **One interaction, no scoring** — see [Interactions](/interactions/overview/) for every interaction type in isolation.
+- **A full, navigable, multi-item test** — see [qti-test](/qti-test/overview/).
+- **What each package actually does** — see the [Package Reference](/packages/).

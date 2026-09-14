@@ -1,9 +1,10 @@
 {
   "name": "@qti-components/test",
   "description": "QTI test utilities",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "author": "",
   "dependencies": {
+    "@heximal/templates": "catalog:",
     "@qti-components/base": "workspace:^",
     "@qti-components/elements": "workspace:^",
     "@qti-components/interactions": "workspace:^",
@@ -13,9 +14,8 @@
     "@qti-components/utilities": "workspace:^"
   },
   "devDependencies": {
-    "@heximal/templates": "^0.1.5",
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.3"
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "keywords": [
     "qti",
@@ -39,13 +39,12 @@
     "./*": "./dist/*"
   },
   "peerDependencies": {
-    "@heximal/templates": "^0.1.5",
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.1"
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   },
   "scripts": {
     "attw": "attw --profile esm-only --pack",
-    "build": "tsc --paths null",
+    "build": "pnpm run clean && tsc --paths null",
     "clean": "rm -rf dist",
     "publish": "node ../../tools/publish-if-needed.mjs",
     "yalc": "yalc publish",

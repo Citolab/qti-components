@@ -4,10 +4,13 @@
   "description": "QTI e2e",
   "private": true,
   "type": "module",
+  "devDependencies": {
+    "@qti-components/theme": "workspace:^"
+  },
   "dependencies": {
     "@citolab/qti-components": "workspace:^",
-    "@heximal/templates": "^0.1.5",
-    "@lit/context": "^1.1.6",
-    "lit": "^3.3.3"
+    "@heximal/templates": "catalog:",
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
   }
 }

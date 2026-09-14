@@ -1,0 +1,45 @@
+---
+title: Hottext interaction
+description: qti-hottext-interaction — select runs of text within a passage.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.7 Hot Text Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.sbnpx830yzqu)** — presents a set of choices represented as selectable runs of text embedded within surrounding context, such as a passage.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/), and `min-choices`/`max-choices` from `ChoicesMixin` (also used by [Choice](/interactions/choice/)).
+
+## Example
+
+<InteractionDemo>
+  <p>
+    Sponsors of the Olympic Games
+    <qti-hottext-interaction response-identifier="RESPONSE" max-choices="2" class="qti-input-control-hidden">
+      <qti-hottext identifier="A">who bought</qti-hottext> advertising time on United States television
+      <qti-hottext identifier="B">includes</qti-hottext>
+      <qti-hottext identifier="C">at least</qti-hottext> a dozen international firms
+      <qti-hottext identifier="D">whose</qti-hottext> names are familiar to American consumers.
+      <qti-hottext identifier="E">No error.</qti-hottext>
+    </qti-hottext-interaction>
+  </p>
+</InteractionDemo>
+
+```html
+<p>
+  Sponsors of the Olympic Games
+  <qti-hottext-interaction response-identifier="RESPONSE" max-choices="2" class="qti-input-control-hidden">
+    <qti-hottext identifier="A">who bought</qti-hottext> advertising time on United States television
+    <qti-hottext identifier="B">includes</qti-hottext>
+    <qti-hottext identifier="C">at least</qti-hottext> a dozen international firms
+    <qti-hottext identifier="D">whose</qti-hottext> names are familiar to American consumers.
+    <qti-hottext identifier="E">No error.</qti-hottext>
+  </qti-hottext-interaction>
+</p>
+```
+
+## `qti-hottext-interaction`
+
+QTI doesn't define a way to specify radio/checkbox-style indicators for hottext, so none render by default (per an explicit note in source). Set `class="qti-input-control-hidden"` (as above) or `class="qti-unselected-hidden"` for the styling variants seen in the component's own stories.
+
+## `qti-hottext`
+
+Just `identifier` (plus the standard `disabled`/`readonly`/`tabIndex` from the shared active-element mixin) — content is the selectable run of text itself.

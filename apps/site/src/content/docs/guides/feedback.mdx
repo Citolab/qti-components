@@ -1,0 +1,85 @@
+---
+title: Showing feedback
+description: How qti-feedback-block, qti-feedback-inline, and qti-modal-feedback decide when to show.
+---
+import FeedbackDemo from '../../../components/FeedbackDemo.astro';
+
+Feedback elements don't know anything about scoring — they just watch one outcome variable and show or hide themselves depending on its value. [Response processing](/guides/response-processing/) is what sets that variable; feedback is a pure display layer on top of it.
+
+## The pattern
+
+Every feedback element shares the same three attributes (from the `QtiFeedback` base class in `@qti-components/base`):
+
+| Attribute | Meaning |
+|---|---|
+| `outcome-identifier` | Which outcome variable to watch. |
+| `identifier` | The value that variable needs to have for this element to match. |
+| `show-hide` | `show` (default) — visible when matched. `hide` — visible when **not** matched. |
+
+So a typical setup declares a dedicated outcome variable just for feedback — separate from `SCORE` — with `base-type="identifier"`:
+
+```html
+<qti-outcome-declaration identifier="FEEDBACK" cardinality="single" base-type="identifier" />
+```
+
+Response processing sets it alongside `SCORE`:
+
+```html
+<qti-response-if>
+  <qti-match>
+    <qti-variable identifier="RESPONSE" />
+    <qti-correct identifier="RESPONSE" />
+  </qti-match>
+  <qti-set-outcome-value identifier="SCORE">
+    <qti-base-value base-type="float">1</qti-base-value>
+  </qti-set-outcome-value>
+  <qti-set-outcome-value identifier="FEEDBACK">
+    <qti-base-value base-type="identifier">correct</qti-base-value>
+  </qti-set-outcome-value>
+</qti-response-if>
+```
+
+Then any number of feedback elements can watch `FEEDBACK` and match against `correct`, `incorrect`, or whatever identifiers your rules produce — each decides independently whether to show.
+
+Visibility isn't just set once either: `<qti-assessment-item>` tracks every feedback element that registers itself, and re-checks each one whenever the outcome variable it watches changes — so feedback updates live, every time `processResponse()` runs, not just on first render.
+
+## The three elements
+
+- **`<qti-feedback-block>`** — a block-level region (`display: block` when shown), for a paragraph of explanation after the interaction.
+- **`<qti-feedback-inline>`** — inline (`display: inline-block` when shown), for a short indicator right next to the question text.
+- **`<qti-modal-feedback>`** — a native `<dialog>`, opened via `showModal()` automatically the moment its outcome value matches. Closing it just hides it — it reopens automatically next time the match becomes true again.
+
+## Live example
+
+<FeedbackDemo />
+
+```html
+<qti-outcome-declaration identifier="FEEDBACK" cardinality="single" base-type="identifier" />
+
+<qti-item-body>
+  <p>
+    What is the capital of France?
+    <qti-feedback-inline outcome-identifier="FEEDBACK" identifier="correct" show-hide="show"> — Correct!</qti-feedback-inline>
+    <qti-feedback-inline outcome-identifier="FEEDBACK" identifier="incorrect" show-hide="show"> — Not quite.</qti-feedback-inline>
+  </p>
+  <qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+    <qti-simple-choice identifier="ChoiceA">Berlin</qti-simple-choice>
+    <qti-simple-choice identifier="ChoiceB">Paris</qti-simple-choice>
+    <qti-simple-choice identifier="ChoiceC">Madrid</qti-simple-choice>
+  </qti-choice-interaction>
+  <qti-feedback-block outcome-identifier="FEEDBACK" identifier="incorrect" show-hide="show">
+    <p>The correct answer is Paris.</p>
+  </qti-feedback-block>
+  <qti-modal-feedback outcome-identifier="FEEDBACK" identifier="correct" show-hide="show">
+    <p><strong>Nice work!</strong> Paris has been the capital of France since the 10th century.</p>
+  </qti-modal-feedback>
+</qti-item-body>
+```
+
+Notice the incorrect-answer message uses `<qti-feedback-block>` while the correct-answer message uses `<qti-modal-feedback>` — nothing requires symmetry here. Mix and match per outcome value however your item needs to.
+
+## See also
+
+- [Authoring response processing](/guides/response-processing/) — how the outcome variable feedback watches actually gets set
+- [Package Reference: `@qti-components/elements`](/packages/#qti-componentselements)
+- [qti-test: `qti-test-feedback`](/qti-test/view-helpers/#other) — the test-level equivalent, for end-of-test modal feedback

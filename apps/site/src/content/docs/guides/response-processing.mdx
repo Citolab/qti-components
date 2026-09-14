@@ -1,0 +1,82 @@
+---
+title: Authoring response processing
+description: How declarations, rules, and expressions combine to turn a candidate's response into a score.
+---
+import ResponseProcessingDemo from '../../../components/ResponseProcessingDemo.astro';
+
+Response processing is what turns a candidate's answer into a score. It's declarative: you write a small tree of rule and expression elements inside `<qti-response-processing>`, and the library walks that tree and executes it whenever something calls `processResponse()` on the item.
+
+## The fast path: built-in templates
+
+Most items don't need custom rules at all. QTI defines a handful of standard response-processing templates, and `<qti-response-processing>` recognizes them by URL — this is what the [Quick Start](/getting-started/quick-start/)'s example item actually uses:
+
+```html
+<qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+```
+
+| Template | Scoring |
+|---|---|
+| `match_correct` | 1 point if the response exactly matches the declared correct response, 0 otherwise. |
+| `map_response` | Looks up the response in the response variable's `qti-mapping` (per-choice point values). |
+| `map_response_point` | Same idea, for point-based interactions (e.g. [Select Point](/interactions/select-point/)), via `qti-area-mapping`. |
+
+No network fetch happens for these — the library recognizes the template by its filename and expands it locally.
+
+## What `match_correct` actually expands to
+
+Seeing the real markup is the fastest way to understand the rule model, so here's exactly what that one-line shortcut expands to internally:
+
+```html
+<qti-response-processing>
+  <qti-response-condition>
+    <qti-response-if>
+      <qti-match>
+        <qti-variable identifier="RESPONSE"></qti-variable>
+        <qti-correct identifier="RESPONSE"></qti-correct>
+      </qti-match>
+      <qti-set-outcome-value identifier="SCORE">
+        <qti-base-value base-type="float">1</qti-base-value>
+      </qti-set-outcome-value>
+    </qti-response-if>
+    <qti-response-else>
+      <qti-set-outcome-value identifier="SCORE">
+        <qti-base-value base-type="float">0</qti-base-value>
+      </qti-set-outcome-value>
+    </qti-response-else>
+  </qti-response-condition>
+</qti-response-processing>
+```
+
+Reading it as an execution model rather than markup:
+
+1. **`<qti-response-processing>`** runs each of its child rules in order — normally just one `<qti-response-condition>`.
+2. **`<qti-response-condition>`** evaluates its `<qti-response-if>`/`<qti-response-else-if>`/`<qti-response-else>` children in order, and runs the sub-rules of the **first** one whose own expression evaluates to `true`.
+3. **`<qti-match>`** is a boolean expression — it compares its two child expressions for equality. Here that's `<qti-variable identifier="RESPONSE">` (the candidate's answer) against `<qti-correct identifier="RESPONSE">` (the answer declared in `<qti-response-declaration>`'s `<qti-correct-response>`).
+4. **`<qti-set-outcome-value identifier="SCORE">`** assigns the outcome variable named `SCORE` to whatever its child expression evaluates to — here, a literal `<qti-base-value base-type="float">`.
+
+Writing this out by hand instead of using the template shortcut is exactly how you'd handle anything the standard templates don't cover — partial credit, multiple conditions, combining several interactions' responses into one score, and so on.
+
+## Live example
+
+This item uses the exact rule tree above, written out explicitly rather than via the template shortcut. Pick an answer and press Submit to actually run it:
+
+<ResponseProcessingDemo />
+
+## Common operators
+
+Response processing has a full expression vocabulary beyond `qti-match` — around 35 operators in `@qti-components/processing`, covering logic, comparison, math, and container manipulation. Rather than a page per operator, here's the full list at a glance; each links conceptually to the [QTI 3.0 operators spec](https://www.imsglobal.org/spec/qti/v3p0/info/index.html) for exact semantics:
+
+**Logic** — `qti-and`, `qti-or`, `qti-not`, `qti-any-n` (true if between N and M sub-expressions are true)
+
+**Comparison** — `qti-match`, `qti-equal`, `qti-equal-rounded`, `qti-gt`/`qti-gte`, `qti-lt`/`qti-lte`, `qti-duration-lt`/`qti-duration-gte`, `qti-pattern-match`, `qti-substring`, `qti-is-null`, `qti-null`
+
+**Math** — `qti-sum`, `qti-product`, `qti-subtract`, `qti-divide`, `qti-integer-divide`, `qti-integer-modulus`, `qti-power`, `qti-round`, `qti-round-to`, `qti-truncate`, `qti-gcd`, `qti-min`/`qti-max`, `qti-integer-to-float`, `qti-math-operator`, `qti-stats-operator`
+
+**Containers & lookups** — `qti-index`, `qti-field-value`, `qti-container-size`, `qti-delete`, `qti-repeat`, `qti-random-integer`, `qti-map-response`, `qti-map-response-point`, `qti-correct`, `qti-default`
+
+**Variables** — `qti-variable` (read any declared variable by identifier), `qti-base-value` (a literal value)
+
+## See also
+
+- [Package Reference: `@qti-components/processing`](/packages/#qti-componentsprocessing) and [`@qti-components/elements`](/packages/#qti-componentselements)
+- [qti-test: Scoring & State](/qti-test/scoring-and-state/) — the same rule engine, one level up, for scoring a whole test from its items' outcomes

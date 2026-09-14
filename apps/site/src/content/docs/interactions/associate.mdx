@@ -1,0 +1,47 @@
+---
+title: Associate interaction
+description: qti-associate-interaction — draw associations between choices in a single set.
+---
+import InteractionDemo from '../../../components/InteractionDemo.astro';
+
+**[3.2.12 Associate Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.7cs7637r54vv)** — a block interaction that presents candidates with a number of choices and lets them create associations between them.
+
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/), and `min-associations`/`max-associations`/`disable-animations`/`auto-size-dropzones` from the same drag/drop mixin used by [Order](/interactions/order/) and [Match](/interactions/match/).
+
+## Example
+
+<InteractionDemo>
+  <qti-associate-interaction response-identifier="RESPONSE">
+    <qti-prompt>
+      Hidden in this list of characters from famous Shakespeare plays are three pairs of rivals. Match each
+      character to his adversary.
+    </qti-prompt>
+    <qti-simple-associable-choice identifier="A">Antonio</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="C">Capulet</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="D">Demetrius</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="L">Lysander</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="M">Montague</qti-simple-associable-choice>
+    <qti-simple-associable-choice identifier="P">Prospero</qti-simple-associable-choice>
+  </qti-associate-interaction>
+</InteractionDemo>
+
+```html
+<qti-associate-interaction response-identifier="RESPONSE">
+  <qti-prompt>
+    Hidden in this list of characters from famous Shakespeare plays are three pairs of rivals. Match each
+    character to his adversary.
+  </qti-prompt>
+  <qti-simple-associable-choice identifier="A">Antonio</qti-simple-associable-choice>
+  <qti-simple-associable-choice identifier="C">Capulet</qti-simple-associable-choice>
+  <qti-simple-associable-choice identifier="D">Demetrius</qti-simple-associable-choice>
+  <qti-simple-associable-choice identifier="L">Lysander</qti-simple-associable-choice>
+  <qti-simple-associable-choice identifier="M">Montague</qti-simple-associable-choice>
+  <qti-simple-associable-choice identifier="P">Prospero</qti-simple-associable-choice>
+</qti-associate-interaction>
+```
+
+Unlike [Match](/interactions/match/), all choices here come from a single flat set — the candidate pairs them up directly, rather than pairing across two `qti-simple-match-set` groups.
+
+## `qti-simple-associable-choice`
+
+See the attribute table on the [Match](/interactions/match/#qti-simple-associable-choice) page — it's the same element.
