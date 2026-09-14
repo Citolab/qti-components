@@ -62,7 +62,6 @@ const flyingHome = (graphic: string) => `
 // coordinate space can only come from the bitmap itself, so those cases need one that is not 1x1.
 const PNG_206x280 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAM4AAAEYCAAAAAAxZJaeAAAA+klEQVR42u3PgQwAAAACsPzZgsqj/QZPr0RHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0fntzM4mJY+RyIT4gAAAABJRU5ErkJggg==';
-
 const asObject = `<object type="image/png" width="206" height="280" data="${PNG}">UK Map</object>`;
 const asImg = `<img width="206" height="280" src="${PNG}" alt="UK Map"/>`;
 
