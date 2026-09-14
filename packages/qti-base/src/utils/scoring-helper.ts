@@ -22,8 +22,16 @@ export class ScoringHelper {
     const coordinates = coords.map(Number);
 
     switch (shape.toLowerCase()) {
-      case 'circle':
-      case 'default': {
+      // "The default shape refers to the entire area of the associated image" (QTI 3.0 §8.29), so
+      // every point is inside it and the coords are not read — §7.9 says none should be given, and
+      // the XSD still requires the attribute, so whatever is there is filler.
+      //
+      // This used to share the `circle` branch below, which demands exactly three coords and so
+      // rejected any real default entry as an "Invalid circle definition" (Citolab/qti-components#83).
+      case 'default':
+        return true;
+
+      case 'circle': {
         const [cx, cy, radius] = coordinates;
         if (coordinates.length !== 3) {
           console.warn(`Invalid circle definition: ${areaKey}`);

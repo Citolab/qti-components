@@ -46,6 +46,12 @@ export class QtiMapResponsePoint extends QtiExpression<number> {
         if (isPointInArea) {
           result += entry.mappedValue ?? 0;
           mappedAreas.add(entry.coords);
+          // First match wins: "each area is tested in turn, with those listed first taking priority
+          // in the case where areas overlap and a point falls in the intersection" (QTI 3.0 §7.4).
+          // Without this the point would also score every later area it happens to fall in — which
+          // only became reachable once `shape="default"`, an area covering the whole image, started
+          // matching (Citolab/qti-components#83).
+          break;
         }
       }
     }

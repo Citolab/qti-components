@@ -282,6 +282,22 @@ function applyShape(
       }
       break;
 
+    case 'default':
+      /*
+       * A default area is the entire image, whatever its coords say. QTI 3.0 §7.9 lists the coords
+       * interpretation per shape and ends "(e) default: no coordinates should be given" — but the
+       * XSD makes `coords` use="required" on AreaMapEntry/HotspotChoice, so authors have to write
+       * filler (Citolab/qti-components#83 carries `0,0,100%,100%`). HTML, which QTI derives the
+       * vocabulary from, states the resolution: "This area is the whole image. (The coords
+       * attribute is not used.)" So `coordsNumber` is deliberately not read here — no validation,
+       * no percentage resolution, nothing to get wrong.
+       */
+      hotspot.style.left = '0%';
+      hotspot.style.top = '0%';
+      hotspot.style.width = '100%';
+      hotspot.style.height = '100%';
+      break;
+
     default:
       console.error(`Unsupported shape: ${shape}`);
       break;
