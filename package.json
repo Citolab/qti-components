@@ -27,6 +27,9 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "docs": "pnpm --filter @qti-components/site dev",
+    "docs:build": "pnpm --filter @qti-components/site build",
+    "docs:preview": "pnpm --filter @qti-components/site preview",
     "local:workspace-publish:force": "pnpm run build && pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 publish --access public --ignore-scripts --no-git-checks",
     "ci:push-quality": "run-s lint madge build test publint attw consumer-types",
     "storybook": "run-p storybook:dev cem:storybook:watch",

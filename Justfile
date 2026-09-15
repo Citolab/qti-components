@@ -13,6 +13,11 @@ default:
 dev:
 	pnpm run storybook
 
+# Astro docs development server
+[group('primary')]
+docs:
+	pnpm run docs
+
 # Build workspace, then run the full vitest suite
 [group('primary')]
 test:

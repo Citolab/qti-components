@@ -22,7 +22,6 @@ import { elements as textEntryInteractionElements } from '@qti-components/text-e
 import { elements as uploadInteractionElements } from '@qti-components/upload-interaction/elements';
 
 export const qtiInteractionElements = [
-  ...qtiInteractionCoreElements,
   ...associateInteractionElements,
   ...choiceInteractionElements,
   ...customInteractionElements,
@@ -43,5 +42,6 @@ export const qtiInteractionElements = [
   ...selectPointInteractionElements,
   ...sliderInteractionElements,
   ...textEntryInteractionElements,
-  ...uploadInteractionElements
+  ...uploadInteractionElements,
+  ...qtiInteractionCoreElements
 ] as const;
