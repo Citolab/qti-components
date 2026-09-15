@@ -2219,7 +2219,7 @@
                 "text": "ElementInternals"
               },
               "privacy": "public",
-              "description": "`qti-gap-img` is a draggable chip, so it needs ElementInternals to carry the drag states\n(`dragging`, `placeholder`). It works without a shadow root.\n\nNOTE: this element never calls `super.connectedCallback()`, so Lit never enables updating\nand it has no shadow root — which makes `qti-gap-img.styles.ts` dead code. Fixing that means\nadding a `<slot>` to a `render()` first, otherwise the authored `<img>` child disappears."
+              "description": "`qti-gap-img` is a draggable chip, so it needs ElementInternals to carry the drag states\n(`dragging`, `placeholder`)."
             },
             {
               "kind": "field",
@@ -5277,6 +5277,24 @@
       "declarations": [
         {
           "kind": "function",
+          "name": "findGraphic",
+          "return": {
+            "type": {
+              "text": "Graphic | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            }
+          ],
+          "description": "Find the graphic inside an image-based interaction.\n\nQTI 3 carries it as `<object type=\"image/*\" data=\"…\">` — that is what the spec's own graphic\ninteraction examples use. An item that has been through a converter usually carries the same\ngraphic as a plain `<img>`. Both are valid input, so accept either rather than assuming the\nconverted form: looking only for `img` left every hotspot unpositioned on a spec-form item."
+        },
+        {
+          "kind": "function",
           "name": "positionShapes",
           "parameters": [
             {
@@ -5294,7 +5312,7 @@
             {
               "name": "img",
               "type": {
-                "text": "HTMLImageElement"
+                "text": "Graphic"
               }
             },
             {
@@ -5307,6 +5325,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "findGraphic",
+          "declaration": {
+            "name": "findGraphic",
+            "module": "packages/interactions/core/src/internal/hotspots/hotspot.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "positionShapes",
@@ -17875,6 +17901,11 @@
                   }
                 }
               ],
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "ChoicesMixin",
                 "module": "packages/interactions/core/src/mixins/choices/choices.mixin.ts"
@@ -18143,6 +18174,17 @@
             },
             {
               "kind": "method",
+              "name": "#orderedResponse",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "description": "The response as the ordered identifier list this interaction always treats it as."
+            },
+            {
+              "kind": "method",
               "name": "#positionHotspot",
               "privacy": "private",
               "return": {
@@ -18163,32 +18205,6 @@
               "kind": "field",
               "name": "#positionHotspotOnRegister",
               "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "#setHotspotOrder",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "CustomEvent<{ identifier: string }>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "choiceOrdering",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -18276,6 +18292,16 @@
               }
             },
             {
+              "kind": "method",
+              "name": "handleOrderedResponseChange",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "internals",
               "type": {
@@ -18306,7 +18332,7 @@
                 "text": "number"
               },
               "privacy": "public",
-              "default": "1",
+              "default": "0",
               "attribute": "max-choices",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
@@ -18642,16 +18668,6 @@
               }
             }
           ],
-          "mixins": [
-            {
-              "name": "ChoicesMixin",
-              "package": "@qti-components/interactions-core/mixins/choices/choices.mixin"
-            }
-          ],
-          "superclass": {
-            "name": "Interaction",
-            "package": "@qti-components/base"
-          },
           "attributes": [
             {
               "name": "disabled",
@@ -18670,7 +18686,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "1",
+              "default": "0",
               "fieldName": "maxChoices",
               "inheritedFrom": {
                 "name": "ChoicesMixin",
@@ -18733,6 +18749,16 @@
               }
             }
           ],
+          "mixins": [
+            {
+              "name": "ChoicesMixin",
+              "package": "@qti-components/interactions-core/mixins/choices/choices.mixin"
+            }
+          ],
+          "superclass": {
+            "name": "Interaction",
+            "package": "@qti-components/base"
+          },
           "events": [
             {
               "name": "qti-interaction-response",
@@ -34087,7 +34113,8 @@
                 "text": "number | string"
               }
             }
-          ]
+          ],
+          "description": "Renders a number the way QTI stores one: a plain decimal string with `.` as the separator and no\ngrouping, whatever the browser's locale is. Strings are already in that form and pass through.\n\n`Number.prototype.toString()` is exactly that format. The locale-aware versions this used to call\nare not: under a comma-decimal locale (nl, de, fr, ...) it ran `.replace('.', '')` over a string\nthat always uses `.`, so a score of 0.5 was stored as \"05\" and 1.5 as \"15\" — an item's SCORE came\nout ten times too big for every value with a fraction. Under a dot-decimal locale\n`toLocaleString()` grouped thousands instead, turning 1234.5 into \"1,234.5\"."
         },
         {
           "kind": "function",
