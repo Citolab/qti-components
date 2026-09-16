@@ -6,13 +6,22 @@
  * including the `qti-extended` slot consumers are told to author in.
  */
 
-[view],
+/*
+ * `view` on content marks WHO it is for, and content not addressed to the current audience is
+ * hidden until `TestViewMixin` / `ItemViewMixin` marks it `.show`.
+ *
+ * `qti-item` is excluded because its `view` says which audience to resolve, not who the element
+ * is for. Without the exclusion `<qti-item view="scorer">` would hide the item it configures,
+ * wherever this sheet reaches the host — which it does in a shadow root that adopts it above
+ * `qti-item` rather than inside `item-container`.
+ */
+[view]:not(qti-item),
 qti-outcome-declaration,
 qti-response-declaration {
   display: none;
 }
 
-[view].show {
+[view]:not(qti-item).show {
   display: block;
 }
 

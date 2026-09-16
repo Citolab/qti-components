@@ -10,6 +10,18 @@ QTI defines several audiences for the same item content — `author`, `candidate
 - **`<test-view>`** — a `<select>` dropdown for choosing the current view. `label` sets the accompanying `<label>` text (default `"view"`); `view-options` restricts the offered choices to a comma-separated subset of the six views above. Dispatches `on-test-switch-view` on change.
 - **`<test-view-toggle>`** — a simpler candidate/scorer toggle button. Content is rendered from a `<template>` child (Heximal templates), receiving `{ view }`; clicking cycles between `'candidate'` and `'scorer'`.
 
+### On a standalone item
+
+An item delivered on its own has no session to carry a view, so `<qti-item>` takes one directly (`ItemViewMixin`). Everything else matches: `[view]` content inside the item is toggled with `.show`, and with `@qti-components/corrections` loaded, `'scorer'` also calls `showCorrectResponse(true)`.
+
+```html
+<qti-item view="scorer">
+  <item-container item-url="./path/to/item.xml"></item-container>
+</qti-item>
+```
+
+This is what makes a `qti-rubric-block view="scorer"` — the answer model a marker reads — visible outside a test. The item stylesheet hides every `[view]` element, so before the mixin a rubric block in a standalone item could not be shown at all. A child control switches the view by dispatching `item-switch-view` with the view as its detail; there is no item-level equivalent of `<test-view>` yet.
+
 ## Debug/print helpers
 
 - **`<test-print-context>`** — dumps the full `computedContext` as formatted JSON. Useful while wiring up a custom UI to see exactly what shape of data is available.
