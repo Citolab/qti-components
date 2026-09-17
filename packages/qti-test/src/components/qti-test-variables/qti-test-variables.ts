@@ -3,13 +3,11 @@ import { consume } from '@lit/context';
 import { testContext } from '@qti-components/base';
 import { QtiExpression } from '@qti-components/base';
 
+import { selectItemRefs, selectionFrom } from '../../internal/item-ref-selection';
+
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
 import type { TestContext } from '@qti-components/base';
-import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiExpressionBase } from '@qti-components/base';
-
-/** `category` and `include-category`/`exclude-category` are space-separated lists. */
-const categoryList = (value: string | null | undefined): string[] => value?.split(/\s+/).filter(Boolean) ?? [];
 
 export class QtiTestVariables extends QtiExpression<number> {
   @consume({ context: testContext, subscribe: true })
@@ -42,33 +40,13 @@ export class QtiTestVariables extends QtiExpression<number> {
       return 0;
     }
 
-    const includedCategories = categoryList(this.getAttribute('include-category'));
-    const excludedCategories = categoryList(this.getAttribute('exclude-category'));
     const weightIdentifier = this.getAttribute('weight-identifier') ?? '';
     const itemVariable = this.getAttribute('variable-identifier');
 
-    // Scoped to the test element itself: the item refs are its descendants, not
-    // the descendants of a further `qti-assessment-test` below it.
-    const itemRefEls = Array.from(testElement.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref'));
-
-    const includedItems = itemRefEls
-      .filter(itemRef => {
-        const categories = categoryList(itemRef.category);
-        // Both attributes may be present, and then both have to hold: an item
-        // contributes when it carries one of the included categories and none
-        // of the excluded ones.
-        if (includedCategories.length > 0 && !categories.some(c => includedCategories.includes(c))) {
-          return false;
-        }
-        if (excludedCategories.length > 0 && categories.some(c => excludedCategories.includes(c))) {
-          return false;
-        }
-        return true;
-      })
-      .map(itemRef => ({
-        item: itemRef.identifier,
-        weight: (weightIdentifier ? itemRef.weights.get(weightIdentifier) : undefined) ?? 1
-      }));
+    const includedItems = selectItemRefs(testElement, selectionFrom(this)).map(itemRef => ({
+      item: itemRef.identifier,
+      weight: (weightIdentifier ? itemRef.weights.get(weightIdentifier) : undefined) ?? 1
+    }));
 
     const logic = new QtiTestVariablesExpression(this._testContext, itemVariable, includedItems);
     const value = logic.calculate();

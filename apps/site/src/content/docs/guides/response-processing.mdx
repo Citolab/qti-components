@@ -2,6 +2,7 @@
 title: Authoring response processing
 description: How declarations, rules, and expressions combine to turn a candidate's response into a score.
 ---
+
 import ResponseProcessingDemo from '../../../components/ResponseProcessingDemo.astro';
 
 Response processing is what turns a candidate's answer into a score. It's declarative: you write a small tree of rule and expression elements inside `<qti-response-processing>`, and the library walks that tree and executes it whenever something calls `processResponse()` on the item.
@@ -14,10 +15,10 @@ Most items don't need custom rules at all. QTI defines a handful of standard res
 <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
 ```
 
-| Template | Scoring |
-|---|---|
-| `match_correct` | 1 point if the response exactly matches the declared correct response, 0 otherwise. |
-| `map_response` | Looks up the response in the response variable's `qti-mapping` (per-choice point values). |
+| Template             | Scoring                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `match_correct`      | 1 point if the response exactly matches the declared correct response, 0 otherwise.                                 |
+| `map_response`       | Looks up the response in the response variable's `qti-mapping` (per-choice point values).                           |
 | `map_response_point` | Same idea, for point-based interactions (e.g. [Select Point](/interactions/select-point/)), via `qti-area-mapping`. |
 
 No network fetch happens for these — the library recognizes the template by its filename and expands it locally.
@@ -70,11 +71,21 @@ Response processing has a full expression vocabulary beyond `qti-match` — arou
 
 **Comparison** — `qti-match`, `qti-equal`, `qti-equal-rounded`, `qti-gt`/`qti-gte`, `qti-lt`/`qti-lte`, `qti-duration-lt`/`qti-duration-gte`, `qti-pattern-match`, `qti-substring`, `qti-is-null`, `qti-null`
 
-**Math** — `qti-sum`, `qti-product`, `qti-subtract`, `qti-divide`, `qti-integer-divide`, `qti-integer-modulus`, `qti-power`, `qti-round`, `qti-round-to`, `qti-truncate`, `qti-gcd`, `qti-min`/`qti-max`, `qti-integer-to-float`, `qti-math-operator`, `qti-stats-operator`
+**Math** — `qti-sum`, `qti-product`, `qti-subtract`, `qti-divide`, `qti-integer-divide`, `qti-integer-modulus`, `qti-power`, `qti-round`, `qti-round-to`, `qti-truncate`, `qti-gcd`, `qti-min`/`qti-max`, `qti-integer-to-float`, `qti-math-operator`, `qti-math-constant` (`pi` or `e`), `qti-stats-operator`
 
 **Containers & lookups** — `qti-index`, `qti-field-value`, `qti-container-size`, `qti-delete`, `qti-repeat`, `qti-random-integer`, `qti-map-response`, `qti-map-response-point`, `qti-correct`, `qti-default`
 
 **Variables** — `qti-variable` (read any declared variable by identifier), `qti-base-value` (a literal value)
+
+## Flow rules
+
+Beyond `qti-response-condition`, two rules shape how a run proceeds:
+
+- `qti-exit-response` ends the attempt's response processing wherever it sits — inside a condition
+  branch or a fragment included. No rule after it runs, and the outcomes already set are kept.
+- `qti-response-processing-fragment` groups rules for reuse. It is transparent: its rules run in
+  place, in document order, exactly as if written where the fragment sits. A fragment held in a
+  separate file is not pulled in, because `qti-include` is not resolved.
 
 ## See also
 

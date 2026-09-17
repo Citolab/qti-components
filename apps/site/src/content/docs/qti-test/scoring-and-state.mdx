@@ -19,6 +19,19 @@ A test-level **expression**, used inside `<qti-outcome-processing>` rules to agg
 
 `getResult()` walks every `qti-assessment-item-ref` in the enclosing `<qti-assessment-test>`, filters by category, applies weights, and sums the named variable's value across the matching items' current `testContext`. An item whose value is not a number contributes nothing rather than turning the total into `NaN`.
 
+## `qti-number-selected`
+
+A test-level **expression** returning how many item references the test selected — the count of the
+same set `qti-test-variables` aggregates over, and right before any item has been attempted.
+
+| Attribute                               | Notes                                                                                                                    |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `section-identifier`                    | Only count item refs inside the `<qti-assessment-section>` with this identifier; every section when absent.              |
+| `include-category` / `exclude-category` | The same space-separated category filters `qti-test-variables` uses, with the same any-match / both-must-hold semantics. |
+
+`section-identifier` works on `qti-test-variables` too — both elements select their item refs the
+same way.
+
 ## `<test-check-item>`
 
 A "submit this attempt" button. On click it:

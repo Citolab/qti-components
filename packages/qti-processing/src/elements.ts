@@ -11,6 +11,7 @@ import { QtiDurationGte } from './components/qti-duration-gte/qti-duration-gte';
 import { QtiDurationLt } from './components/qti-duration-lt/qti-duration-lt';
 import { QtiEqualRounded } from './components/qti-equal-rounded/qti-equal-rounded';
 import { QtiEqual } from './components/qti-equal/qti-equal';
+import { QtiExitResponse } from './components/qti-exit-response/qti-exit-response';
 import { QtiFieldValue } from './components/qti-field-value/qti-field-value';
 import { QtiGcd } from './components/qti-gcd/qti.gcd';
 import { QtiGt } from './components/qti-gt/qti-gt';
@@ -28,6 +29,7 @@ import { QtiLte } from './components/qti-lte/qti-lte';
 import { QtiMapResponsePoint } from './components/qti-map-response-point/qti-map-response-point';
 import { QtiMapResponse } from './components/qti-map-response/qti-map-response';
 import { QtiMatch } from './components/qti-match/qti-match';
+import { QtiMathConstant } from './components/qti-math-constant/qti-math-constant';
 import { QtiMathOperator } from './components/qti-math-operator/qti-math-operator';
 import { QtiMax } from './components/qti-max/qti-max';
 import { QtiMember } from './components/qti-member/qti-member';
@@ -52,6 +54,7 @@ import { QtiResponseCondition } from './components/qti-response-condition/qti-re
 import { QtiResponseElseIf } from './components/qti-response-else-if/qti-response-else-if';
 import { QtiResponseElse } from './components/qti-response-else/qti-response-else';
 import { QtiResponseIf } from './components/qti-response-if/qti-response-if';
+import { QtiResponseProcessingFragment } from './components/qti-response-processing-fragment/qti-response-processing-fragment';
 import { QtiRoundTo } from './components/qti-round-to/qti-round-to';
 import { QtiRound } from './components/qti-round/qti-round';
 import { QtiRule } from './components/qti-rule/qti-rule';
@@ -80,6 +83,7 @@ export {
   QtiDurationLt,
   QtiEqual,
   QtiEqualRounded,
+  QtiExitResponse,
   QtiFieldValue,
   QtiGcd,
   QtiGt,
@@ -97,6 +101,7 @@ export {
   QtiMapResponse,
   QtiMapResponsePoint,
   QtiMatch,
+  QtiMathConstant,
   QtiMathOperator,
   QtiMax,
   QtiMember,
@@ -121,6 +126,7 @@ export {
   QtiResponseElse,
   QtiResponseElseIf,
   QtiResponseIf,
+  QtiResponseProcessingFragment,
   QtiRound,
   QtiRoundTo,
   QtiRule,
@@ -150,6 +156,7 @@ export const qtiProcessingElements = [
   { tag: 'qti-duration-lt', ctor: QtiDurationLt },
   { tag: 'qti-equal', ctor: QtiEqual },
   { tag: 'qti-equal-rounded', ctor: QtiEqualRounded },
+  { tag: 'qti-exit-response', ctor: QtiExitResponse },
   { tag: 'qti-field-value', ctor: QtiFieldValue },
   { tag: 'qti-gcd', ctor: QtiGcd },
   { tag: 'qti-gt', ctor: QtiGt },
@@ -167,6 +174,7 @@ export const qtiProcessingElements = [
   { tag: 'qti-map-response', ctor: QtiMapResponse },
   { tag: 'qti-map-response-point', ctor: QtiMapResponsePoint },
   { tag: 'qti-match', ctor: QtiMatch },
+  { tag: 'qti-math-constant', ctor: QtiMathConstant },
   { tag: 'qti-math-operator', ctor: QtiMathOperator },
   { tag: 'qti-max', ctor: QtiMax },
   { tag: 'qti-member', ctor: QtiMember },
@@ -191,6 +199,7 @@ export const qtiProcessingElements = [
   { tag: 'qti-response-else', ctor: QtiResponseElse },
   { tag: 'qti-response-else-if', ctor: QtiResponseElseIf },
   { tag: 'qti-response-if', ctor: QtiResponseIf },
+  { tag: 'qti-response-processing-fragment', ctor: QtiResponseProcessingFragment },
   { tag: 'qti-round', ctor: QtiRound },
   { tag: 'qti-round-to', ctor: QtiRoundTo },
   { tag: 'qti-rule', ctor: QtiRule },

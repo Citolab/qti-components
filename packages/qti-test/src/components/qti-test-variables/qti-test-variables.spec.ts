@@ -117,6 +117,29 @@ describe('qti-test-variables', () => {
     expect(el.calculate()).toBe(101);
   });
 
+  it('aggregates only the items of a named section', async () => {
+    container.innerHTML = `
+      <qti-assessment-test identifier="TEST">
+        <qti-test-part identifier="PART">
+          <qti-assessment-section identifier="S1">
+            <qti-assessment-item-ref identifier="ITEM-1"></qti-assessment-item-ref>
+          </qti-assessment-section>
+          <qti-assessment-section identifier="S2">
+            <qti-assessment-item-ref identifier="ITEM-2"></qti-assessment-item-ref>
+            <qti-assessment-item-ref identifier="ITEM-3"></qti-assessment-item-ref>
+          </qti-assessment-section>
+        </qti-test-part>
+        <qti-outcome-processing>
+          <qti-test-variables variable-identifier="SCORE" section-identifier="S2"></qti-test-variables>
+        </qti-outcome-processing>
+      </qti-assessment-test>`;
+    const el = container.querySelector('qti-test-variables') as QtiTestVariables;
+    await el.updateComplete;
+    el._testContext = threeScores;
+
+    expect(el.calculate()).toBe(110);
+  });
+
   it('returns 0 outside an assessment test instead of throwing', async () => {
     container.innerHTML = `<qti-test-variables variable-identifier="SCORE"></qti-test-variables>`;
     const el = container.querySelector('qti-test-variables') as QtiTestVariables;
