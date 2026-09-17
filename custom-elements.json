@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@570: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@587: {  }, length: number }"
               }
             },
             {
@@ -35687,6 +35687,33 @@
             },
             {
               "kind": "method",
+              "name": "updateAssessmentItemView",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "assessmentItem",
+                  "type": {
+                    "text": "QtiAssessmentItem"
+                  }
+                },
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "View"
+                  }
+                }
+              ],
+              "description": "Scorer view IS the answer key, the same pairing `QtiTestCorrection` makes at test level.\nA marker switching to `scorer` to read the rubric would otherwise have to ask for the key\nseparately, and the two would drift apart.\n\n`scorer` alone because that is what the test side does — not because no other audience has\na use for a key. An author reviewing their own item plainly wants one, and arguably a tutor\ndoes too. If that is ever granted it has to be granted in both places at once, or the same\nitem answers differently depending on whether it is delivered inside a test.",
+              "type": {
+                "text": "updateAssessmentItemView(assessmentItem: QtiAssessmentItem, view: View) => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "updateControlState",
               "privacy": "private",
               "return": {
@@ -38475,6 +38502,15 @@
                 "text": "ItemContext | undefined"
               },
               "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "matchTable",
+              "type": {
+                "text": "Map<number, string> | null"
+              },
+              "description": "A qti-match-table maps a source value onto a target exactly, with no\nboundaries and no interpolation. Targets keep their authored spelling\nbecause a match table is not restricted to numeric outcomes.",
+              "readonly": true
             }
           ],
           "events": [
@@ -39687,7 +39723,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.\nIt can also host some functionalities to interact with the item like scoring, showing feedback, etc.\nPlacing a mandatory `<item-container>` inside '<qti-item>' will load or parse the item and render it.\nSee `<item-container>` for more details.\n\n```html\n<qti-item>\n  <item-container class=\"m-4 bg-white\" item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```",
+          "description": "`<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.\nIt can also host some functionalities to interact with the item like scoring, showing feedback, etc.\nPlacing a mandatory `<item-container>` inside '<qti-item>' will load or parse the item and render it.\nSee `<item-container>` for more details.\n\n```html\n<qti-item>\n  <item-container class=\"m-4 bg-white\" item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```\n\n`view` selects the audience the item is presented to, which is what reveals `view`-tagged\ncontent such as a scorer's `qti-rubric-block` — see `ItemViewMixin`.\n\n```html\n<qti-item view=\"scorer\">\n  <item-container item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```",
           "name": "QtiItem",
           "members": [
             {
@@ -39787,6 +39823,12 @@
               "privacy": "public",
               "default": "{ QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' } }",
               "description": "Provided so that descendants (e.g. `<item-container>`) can read the QTI runtime\ncontext for standalone item delivery, including the optional shuffle `seed`."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ItemViewMixin",
+              "module": "/packages/qti-item/src/mixins/item-view.mixin"
             }
           ],
           "superclass": {
@@ -42694,6 +42736,7 @@
                   "text": "Readonly<T>"
                 }
               },
+              "description": "Every failure here is NULL rather than a thrown error. `qti-is-null` over a\n`qti-field-value` is the specified way to ask whether a record carries a\nfield at all, so a missing one has to be an ordinary value — throwing\naborted the whole response processing run instead.",
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44669,7 +44712,7 @@
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "number"
+                  "text": "number | string"
                 }
               },
               "inheritedFrom": {
@@ -44677,7 +44720,7 @@
                 "module": "packages/qti-processing/src/components/qti-rule/qti-rule.ts"
               },
               "type": {
-                "text": "process() => number"
+                "text": "process() => number | string"
               }
             }
           ],
@@ -45557,6 +45600,25 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "#finite",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "A function with no finite result at this argument is NULL, not Infinity."
             },
             {
               "kind": "method",
@@ -47298,6 +47360,17 @@
             },
             {
               "kind": "method",
+              "name": "#compile",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "RegExp | null"
+                }
+              },
+              "description": "XML Schema pattern semantics: the pattern has to match the *whole* value,\nnot appear somewhere inside it. Without the anchors a pattern like `[0-9]+`\naccepts \"abc123\". The pattern is wrapped in a group so a top-level `|`\ncannot escape them — `a|b` has to anchor as `^(?:a|b)$`.\n\nCompiled with the unicode flag first, because XML Schema allows `\\p{L}`\ncategory escapes and those only mean anything under `u`. That flag also\nrejects escapes JavaScript otherwise tolerates, so a pattern it refuses is\nretried without it rather than failing the whole comparison."
+            },
+            {
+              "kind": "method",
               "name": "calculate",
               "privacy": "public",
               "return": {
@@ -48471,6 +48544,24 @@
             },
             {
               "kind": "method",
+              "name": "#cap",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#resolveRepeatCount",
               "privacy": "private",
               "return": {
@@ -48619,7 +48710,6 @@
             "name": "QtiExpression",
             "package": "@qti-components/base"
           },
-          "summary": "The qti-repeat operator generates a container by repeating an expression.",
           "tagName": "qti-repeat",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-repeat/qti-repeat.ts",
@@ -49835,7 +49925,7 @@
             },
             {
               "kind": "method",
-              "name": "#populationStandardDeviation",
+              "name": "#mean",
               "privacy": "private",
               "return": {
                 "type": {
@@ -49850,6 +49940,49 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#median",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "number[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#variance",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "number[]"
+                  }
+                },
+                {
+                  "name": "denominator",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Sum of squared deviations over `denominator` — the population or sample divisor."
             },
             {
               "kind": "method",
@@ -51793,11 +51926,12 @@
             },
             {
               "kind": "field",
-              "name": "weigths",
+              "name": "weights",
               "type": {
                 "text": "Map<string, number>"
               },
-              "default": "new Map()"
+              "description": "The `<qti-weight>` children of this ref, keyed by identifier — what\n`qti-test-variables`' `weight-identifier` resolves against.\n\nRead on access rather than cached: the test document is rendered into this\nelement's light DOM, so the weights are not in place at construction time,\nand outcome processing runs long after they are.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -52840,11 +52974,22 @@
             },
             {
               "kind": "field",
+              "name": "#connectedTest",
+              "privacy": "private",
+              "type": {
+                "text": "QtiAssessmentTest | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#testElement",
               "privacy": "private",
               "type": {
-                "text": "QtiAssessmentTest"
-              }
+                "text": "QtiAssessmentTest | null"
+              },
+              "description": "`qti-assessment-test-connected` bubbles *up* from the test element, and this\nexpression lives inside that test's `qti-outcome-processing` — so the\nlistener above only ever fires for a test handed to us directly (a test\nharness). Walking up the tree is what resolves the test in a real document.",
+              "readonly": true
             },
             {
               "kind": "method",

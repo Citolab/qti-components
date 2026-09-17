@@ -11,13 +11,13 @@ Declared inside `<qti-assessment-test>` (per the QTI spec), this element is invi
 
 A test-level **expression**, used inside `<qti-outcome-processing>` rules to aggregate a variable across multiple items — e.g. summing every item's `SCORE`.
 
-| Attribute | Notes |
-|---|---|
-| `variable-identifier` | The item-level variable to aggregate (e.g. `SCORE`). |
-| `include-category` / `exclude-category` | Space-separated category lists to filter which item refs contribute. |
-| `weight-identifier` | Optional per-item weight, read from each `qti-assessment-item-ref`'s `weigths` map. |
+| Attribute                               | Notes                                                                                                                                                                                                                                                          |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variable-identifier`                   | The item-level variable to aggregate (e.g. `SCORE`).                                                                                                                                                                                                           |
+| `include-category` / `exclude-category` | Space-separated category lists to filter which item refs contribute. An item ref qualifies when it carries one of the included categories _and_ none of the excluded ones; its own `category` is a space-separated list too, and matching any entry is enough. |
+| `weight-identifier`                     | Optional per-item weight, read from each `qti-assessment-item-ref`'s `weights` map — its `<qti-weight>` children, keyed by `identifier`. An item ref that declares no such weight counts as 1.                                                                 |
 
-`getResult()` walks every `qti-assessment-item-ref` in the test, filters by category, applies weights, and sums the named variable's value across the matching items' current `testContext`.
+`getResult()` walks every `qti-assessment-item-ref` in the enclosing `<qti-assessment-test>`, filters by category, applies weights, and sums the named variable's value across the matching items' current `testContext`. An item whose value is not a number contributes nothing rather than turning the total into `NaN`.
 
 ## `<test-check-item>`
 
