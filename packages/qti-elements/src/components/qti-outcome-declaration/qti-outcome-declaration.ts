@@ -52,6 +52,28 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
     return null;
   }
 
+  /**
+   * A qti-match-table maps a source value onto a target exactly, with no
+   * boundaries and no interpolation. Targets keep their authored spelling
+   * because a match table is not restricted to numeric outcomes.
+   */
+  get matchTable(): Map<number, string> | null {
+    const table = this.querySelector('qti-match-table');
+    if (!table) return null;
+
+    const entries = new Map<number, string>();
+    for (const entry of table.querySelectorAll('qti-match-table-entry')) {
+      const sourceValue = parseFloat(entry.getAttribute('source-value'));
+      const targetValue = entry.getAttribute('target-value');
+      if (Number.isNaN(sourceValue) || targetValue === null) {
+        console.error('source-value or target-value is missing or invalid in qti-match-table-entry');
+        continue;
+      }
+      entries.set(sourceValue, targetValue);
+    }
+    return entries;
+  }
+
   public override connectedCallback() {
     super.connectedCallback();
 
@@ -65,6 +87,7 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
       type: 'outcome',
       value: null,
       interpolationTable: this.interpolationTable,
+      matchTable: this.matchTable,
       externalScored: this.externalScored
     };
     // At runtime, outcome variables are instantiated as part of an item session.

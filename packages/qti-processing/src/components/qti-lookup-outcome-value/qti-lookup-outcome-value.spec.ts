@@ -202,4 +202,58 @@ describe('qti-lookup-outcome-value', () => {
     const result = lookupOutcomeValue.process();
     expect(result).toBe(0);
   });
+  // qti-match-table: an exact source -> target mapping, and unlike an
+  // interpolation table its targets need not be numeric.
+  function setupMatchTableItem() {
+    const matchContainer = document.createElement('div');
+    document.body.appendChild(matchContainer);
+    const template = html`
+      <qti-assessment-item>
+        <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+          <qti-default-value>
+            <qti-value>0</qti-value>
+          </qti-default-value>
+        </qti-outcome-declaration>
+        <qti-outcome-declaration identifier="GRADE" cardinality="single" base-type="identifier">
+          <qti-match-table>
+            <qti-match-table-entry source-value="0" target-value="FAIL"></qti-match-table-entry>
+            <qti-match-table-entry source-value="1" target-value="PASS"></qti-match-table-entry>
+            <qti-match-table-entry source-value="2" target-value="MERIT"></qti-match-table-entry>
+          </qti-match-table>
+        </qti-outcome-declaration>
+        <qti-response-processing>
+          <qti-lookup-outcome-value identifier="GRADE">
+            <qti-variable identifier="RAW_SCORE"></qti-variable>
+          </qti-lookup-outcome-value>
+        </qti-response-processing>
+      </qti-assessment-item>
+    `;
+    render(template, matchContainer);
+    return matchContainer.querySelector('qti-assessment-item');
+  }
+
+  it('maps a raw score onto a match table target', () => {
+    const assessmentItem = setupMatchTableItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '2');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+
+    expect(lookupOutcomeValue.process()).toBe('MERIT');
+  });
+
+  it('writes the match table target onto the outcome variable', () => {
+    const assessmentItem = setupMatchTableItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '1');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+    lookupOutcomeValue.process();
+
+    expect(assessmentItem.variables.find(v => v.identifier === 'GRADE').value).toBe('PASS');
+  });
+
+  it('returns 0 for a source value the match table has no entry for', () => {
+    const assessmentItem = setupMatchTableItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '9');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+
+    expect(lookupOutcomeValue.process()).toBe(0);
+  });
 });

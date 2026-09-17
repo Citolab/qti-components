@@ -39,6 +39,11 @@ export interface VariableDeclaration<T> extends VariableValue<T> {
 export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {
   // specific to outcome variables
   interpolationTable?: Map<number, number>;
+  /**
+   * A qti-match-table's entries. Its targets are not necessarily numeric — a
+   * match table may map onto identifiers or strings — so they stay as written.
+   */
+  matchTable?: Map<number, string>;
   externalScored?: 'human' | 'externalMachine' | null;
 }
 

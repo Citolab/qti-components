@@ -98,7 +98,8 @@ export class QtiAssessmentItem extends LitElement {
           return {
             ...variable,
             ...matchingValue,
-            interpolationTable: (variable as OutcomeVariable).interpolationTable
+            interpolationTable: (variable as OutcomeVariable).interpolationTable,
+            matchTable: (variable as OutcomeVariable).matchTable
           };
         }
         return variable;
