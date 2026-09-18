@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd"
+  identifier="feedbackBlock-solution-random"
+  title="Exponential to 3 decimal places"
+  adaptive="true"
+  time-dependent="false"
+  xml:lang="en-US">
+<!--
+  Shape taken from the worked examples in the QTI 3.0 implementation guide, as
+  supplied in review. Kept because the calculation is the point: template
+  processing computes an answer with qti-divide / qti-math-operator and response
+  processing compares the candidate against it.
+
+  The specs over this file assert the RELATIONSHIPS between the template
+  variables rather than fixed numbers, because the values are randomised on
+  every run.
+-->
+  <qti-response-declaration base-type="float" cardinality="single" identifier="RESPONSE"/>
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE"/>
+
+  <qti-template-declaration base-type="integer" cardinality="single" identifier="iA" math-variable="true" param-variable="false"/>
+  <qti-template-declaration base-type="float" cardinality="single" identifier="fAns" math-variable="true" param-variable="false"/>
+
+  <qti-template-processing>
+    <qti-set-template-value identifier="iA">
+      <qti-random-integer max="4" min="1"/>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="fAns">
+      <qti-math-operator name="exp">
+        <qti-variable identifier="iA"/>
+      </qti-math-operator>
+    </qti-set-template-value>
+  </qti-template-processing>
+
+  <qti-item-body>
+    <p>Lorem ipsum e^<qti-printed-variable identifier="iA"/>.</p>
+    <qti-text-entry-interaction response-identifier="RESPONSE"/>
+  </qti-item-body>
+
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-equal-rounded figures="3" rounding-mode="decimalPlaces">
+          <qti-variable identifier="RESPONSE"/>
+          <qti-variable identifier="fAns"/>
+        </qti-equal-rounded>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">1.0</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

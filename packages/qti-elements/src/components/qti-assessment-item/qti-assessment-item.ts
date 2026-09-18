@@ -32,7 +32,14 @@ export class QtiAssessmentItem extends LitElement {
 
   @property({ type: String }) identifier: string = '';
   @property({ type: String }) adaptive: 'true' | 'false' = 'false';
-  @property({ type: String }) timeDependent: 'true' | 'false' | null = null;
+  /*
+   * `attribute` spelled out: Lit derives `timedependent` from the property
+   * name, while QTI writes `time-dependent`. Without it the attribute never
+   * reached the property, so an item declaring `time-dependent="true"` still
+   * reported false to `test-navigation`, which reads this to build the computed
+   * item context.
+   */
+  @property({ type: String, attribute: 'time-dependent' }) timeDependent: 'true' | 'false' | null = null;
 
   @property({ type: String })
   override get title(): string {

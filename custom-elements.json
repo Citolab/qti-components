@@ -35393,7 +35393,7 @@
                 "text": "'true' | 'false' | null"
               },
               "default": "null",
-              "attribute": "timeDependent",
+              "attribute": "time-dependent",
               "parsedType": {
                 "text": "'true' | 'false'"
               },
@@ -35644,7 +35644,7 @@
               }
             },
             {
-              "name": "timeDependent",
+              "name": "time-dependent",
               "type": {
                 "text": "'true' | 'false' | null"
               },
@@ -37220,7 +37220,7 @@
                 "text": "'true' | 'false' | null"
               },
               "default": "null",
-              "attribute": "timeDependent",
+              "attribute": "time-dependent",
               "parsedType": {
                 "text": "'true' | 'false'"
               }
@@ -37418,7 +37418,7 @@
               "fieldName": "readonly"
             },
             {
-              "name": "timeDependent",
+              "name": "time-dependent",
               "type": {
                 "text": "'true' | 'false' | null"
               },
@@ -43167,7 +43167,7 @@
                 "text": "'decimalPlaces' | 'significantFigures'"
               },
               "default": "'significantFigures'",
-              "attribute": "roundingMode",
+              "attribute": "rounding-mode",
               "parsedType": {
                 "text": "'decimalPlaces' | 'significantFigures'"
               }
@@ -43175,7 +43175,7 @@
           ],
           "attributes": [
             {
-              "name": "roundingMode",
+              "name": "rounding-mode",
               "type": {
                 "text": "'decimalPlaces' | 'significantFigures'"
               },

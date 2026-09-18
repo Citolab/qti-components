@@ -14,7 +14,16 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns NULL if either sub-expression is NULL.
  */
 export class QtiEqualRounded extends QtiExpression<boolean> {
-  @property({ type: String }) roundingMode: 'decimalPlaces' | 'significantFigures' = 'significantFigures';
+  /*
+   * `attribute` spelled out, because Lit would otherwise derive `roundingmode`
+   * from the property name while QTI writes `rounding-mode`. Without it the
+   * attribute never reached the property and every comparison silently used the
+   * `significantFigures` default — an item asking for 3 decimal places got 3
+   * significant figures instead, so 54.598 and 54.608 both read as 54.6 and a
+   * wrong answer scored full marks.
+   */
+  @property({ type: String, attribute: 'rounding-mode' })
+  roundingMode: 'decimalPlaces' | 'significantFigures' = 'significantFigures';
 
   get figures() {
     const attr = this.getAttribute('figures');
