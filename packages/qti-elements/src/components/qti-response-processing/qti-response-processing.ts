@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 
-import { type QtiRuleBase } from '@qti-components/base';
+import { QtiExitResponseSignal, type QtiRuleBase } from '@qti-components/base';
 
 import { mapResponse, mapResponsePoint, matchCorrect } from '../../internal/template-strings';
 
@@ -30,8 +30,15 @@ export class QtiResponseProcessing extends LitElement {
     const assessmentItem = this.closest('qti-assessment-item');
     if (!assessmentItem) return;
     const rules = [...this.children] as unknown as QtiRuleBase[];
-    for (const rule of rules) {
-      rule.process();
+    try {
+      for (const rule of rules) {
+        rule.process();
+      }
+    } catch (error) {
+      // `qti-exit-response` ends the attempt's processing from wherever it
+      // sits, however deeply nested. Reaching here is the rule doing its job,
+      // so the run simply stops; anything else is a real failure and rethrows.
+      if (!(error instanceof QtiExitResponseSignal)) throw error;
     }
   }
 

@@ -159,4 +159,50 @@ describe('qti-field-value with QTI_CONTEXT', () => {
     const qtiFieldValue = testContainer.querySelector('qti-field-value') as QtiFieldValue;
     expect(qtiFieldValue.calculate()).toBe('customValue');
   });
+  it('returns null for a field the record does not carry, so qti-is-null can test for it', async () => {
+    @customElement('test-provider-5')
+    class TestProvider5 extends LitElement {
+      @provide({ context: qtiContext })
+      qtiContext: QtiContext = {
+        QTI_CONTEXT: {
+          testIdentifier: 'TEST_003',
+          candidateIdentifier: 'CANDIDATE_789',
+          environmentIdentifier: 'production'
+        }
+      };
+
+      render() {
+        return html`<slot></slot>`;
+      }
+    }
+
+    const template = () => html`
+      <test-provider-5>
+        <qti-field-value field-identifier="noSuchField">
+          <qti-variable identifier="QTI_CONTEXT"></qti-variable>
+        </qti-field-value>
+      </test-provider-5>
+    `;
+
+    render(template(), testContainer);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    const qtiFieldValue = testContainer.querySelector('qti-field-value') as QtiFieldValue;
+    expect(() => qtiFieldValue.calculate()).not.toThrow();
+    expect(qtiFieldValue.calculate()).toBeNull();
+  });
+
+  it('returns null instead of throwing when the child is not a record', async () => {
+    const template = () => html`
+      <qti-field-value field-identifier="anything">
+        <qti-base-value base-type="string">not a record</qti-base-value>
+      </qti-field-value>
+    `;
+
+    render(template(), testContainer);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    const qtiFieldValue = testContainer.querySelector('qti-field-value') as QtiFieldValue;
+    expect(qtiFieldValue.calculate()).toBeNull();
+  });
 });

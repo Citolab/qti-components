@@ -37,11 +37,35 @@ export class QtiPatternMatch extends QtiExpression<boolean | null> {
       return null;
     }
 
-    try {
-      return new RegExp(this.pattern).test(variable.value.toString());
-    } catch (error) {
-      console.error('qti-pattern-match requires a valid regular expression', error);
+    const anchored = this.#compile();
+    if (!anchored) {
       return null;
+    }
+    return anchored.test(variable.value.toString());
+  }
+
+  /**
+   * XML Schema pattern semantics: the pattern has to match the *whole* value,
+   * not appear somewhere inside it. Without the anchors a pattern like `[0-9]+`
+   * accepts "abc123". The pattern is wrapped in a group so a top-level `|`
+   * cannot escape them — `a|b` has to anchor as `^(?:a|b)$`.
+   *
+   * Compiled with the unicode flag first, because XML Schema allows `\p{L}`
+   * category escapes and those only mean anything under `u`. That flag also
+   * rejects escapes JavaScript otherwise tolerates, so a pattern it refuses is
+   * retried without it rather than failing the whole comparison.
+   */
+  #compile(): RegExp | null {
+    const source = `^(?:${this.pattern})$`;
+    try {
+      return new RegExp(source, 'u');
+    } catch {
+      try {
+        return new RegExp(source);
+      } catch (error) {
+        console.error('qti-pattern-match requires a valid regular expression', error);
+        return null;
+      }
     }
   }
 }

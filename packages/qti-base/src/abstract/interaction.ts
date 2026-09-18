@@ -159,7 +159,7 @@ export abstract class Interaction extends LitElement implements ValidatableInter
     if (config.disableAfterIfMaxChoicesReached !== undefined) {
       if (!this.#didLogDisableAfterIfMaxChoicesReachedDeprecation) {
         this.#didLogDisableAfterIfMaxChoicesReachedDeprecation = true;
-        console.log(
+        console.warn(
           '[QTI Config] `disableAfterIfMaxChoicesReached` is deprecated. Use `disableAfterMaxReached` instead.'
         );
       }

@@ -55,4 +55,15 @@ describe('qti-repeat', () => {
     expect(result).toHaveLength(2);
     expect(result.map(item => item.value)).toEqual(['4', '4']);
   });
+  it('caps an unreasonable repeat count rather than building an endless container', () => {
+    const template = () => html`
+      <qti-repeat number-repeats="100000">
+        <qti-base-value base-type="integer">1</qti-base-value>
+      </qti-repeat>
+    `;
+    render(template(), testContainer);
+
+    const qtiRepeat = testContainer.querySelector('qti-repeat') as QtiRepeat;
+    expect(qtiRepeat.calculate()).toHaveLength(1000);
+  });
 });

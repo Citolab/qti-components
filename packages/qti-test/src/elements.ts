@@ -2,6 +2,7 @@ import { QtiAssessmentItemRef } from './components/qti-assessment-item-ref/qti-a
 import { QtiAssessmentSection } from './components/qti-assessment-section/qti-assessment-section';
 import { QtiAssessmentTest } from './components/qti-assessment-test/qti-assessment-test';
 import { QtiItemSessionControl } from './components/qti-item-session-control/qti-item-session-control';
+import { QtiNumberSelected } from './components/qti-number-selected/qti-number-selected';
 import { QtiOutcomeProcessing } from './components/qti-outcome-processing/qti-outcome-processing';
 import { QtiTestFeedback } from './components/qti-test-feedback/qti-test-feedback';
 import { QtiTestPart } from './components/qti-test-part/qti-test-part';
@@ -39,6 +40,7 @@ export {
   QtiAssessmentSection,
   QtiAssessmentTest,
   QtiItemSessionControl,
+  QtiNumberSelected,
   QtiOutcomeProcessing,
   QtiTest,
   QtiTestFeedback,
@@ -75,6 +77,7 @@ export const qtiTestElements = [
   { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },
   { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },
   { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },
+  { tag: 'qti-number-selected', ctor: QtiNumberSelected },
   { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },
   { tag: 'qti-test', ctor: QtiTest },
   { tag: 'qti-test-feedback', ctor: QtiTestFeedback },
