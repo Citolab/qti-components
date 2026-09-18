@@ -2,6 +2,8 @@ import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
+import type { BaseType } from '@qti-components/base';
+
 /**
  * @summary The qti-math-constant expression returns a mathematical constant.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.math-constant
@@ -12,6 +14,10 @@ import { QtiExpression } from '@qti-components/base';
  */
 export class QtiMathConstant extends QtiExpression<number | null> {
   @property({ type: String }) name: string = '';
+
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
 
   public override getResult(): number | null {
     switch (this.name.toLowerCase()) {

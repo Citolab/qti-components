@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-math-operator performs mathematical operations on numerical values.
@@ -14,6 +14,14 @@ import type { ResponseVariable } from '@qti-components/base';
  */
 export class QtiMathOperator extends QtiExpression<number | null> {
   @property({ type: String }) name: string = '';
+
+  /**
+   * Float for every function except the three that produce a whole number:
+   * `floor`, `ceil` and `signum`.
+   */
+  public override get resultBaseType(): BaseType {
+    return ['floor', 'ceil', 'signum'].includes(this.name?.toLowerCase()) ? 'integer' : 'float';
+  }
 
   public override getResult(): number | null {
     if (!this.name) {

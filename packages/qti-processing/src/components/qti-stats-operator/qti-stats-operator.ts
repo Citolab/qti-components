@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-stats-operator performs statistical calculations on a container.
@@ -15,6 +15,10 @@ import type { ResponseVariable } from '@qti-components/base';
  */
 export class QtiStatsOperator extends QtiExpression<number | null> {
   @property({ type: String }) name: string = '';
+
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
 
   public override getResult(): number | null {
     if (!this.name) {

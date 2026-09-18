@@ -23,14 +23,17 @@ export interface QtiExpressionBase<T> {
  * Wrap whatever an expression handed back in a variable, reading the base type
  * off the value itself.
  *
- * Some elements reached through `getVariables` declare no base type — an
- * operator with no case of its own, or a custom operator, which returns
- * whatever the host's implementation returned. Everything used to be labelled
- * `integer`, and since `compareSingleValues` parses an integer with `parseInt`,
- * that silently truncated: `equal(divide(5, 2), 2.4)` compared 2 against 2 and
- * answered true.
+ * An operator that knows its own result type says so through `resultBaseType`
+ * and that wins, because the QTI vocabulary fixes it regardless of the operands
+ * — `qti-divide` is a float even when it divides two integers exactly. Only
+ * when nothing is declared, as for a custom operator returning whatever the
+ * host computed, is the type read off the value.
+ *
+ * Everything used to be labelled `integer`, and since `compareSingleValues`
+ * parses an integer with `parseInt`, that silently truncated:
+ * `equal(divide(5, 2), 2.4)` compared 2 against 2 and answered true.
  */
-const variableFromValue = (value: unknown): ResponseVariable => {
+const variableFromValue = (value: unknown, declared?: BaseType): ResponseVariable => {
   /*
    * A NULL result is still a value: the operand exists and is NULL. Returning
    * nothing would drop it from the list, which both hides the NULL from
@@ -51,7 +54,7 @@ const variableFromValue = (value: unknown): ResponseVariable => {
   if (Array.isArray(value)) {
     return {
       identifier: '',
-      baseType: inferBaseType(value[0]),
+      baseType: declared ?? inferBaseType(value[0]),
       value: value.map(entry => String(entry)),
       cardinality: 'multiple',
       type: 'response'
@@ -60,7 +63,7 @@ const variableFromValue = (value: unknown): ResponseVariable => {
 
   return {
     identifier: '',
-    baseType: inferBaseType(value),
+    baseType: declared ?? inferBaseType(value),
     value: String(value),
     cardinality: 'single',
     type: 'response'
@@ -157,6 +160,19 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
 
   protected getResult(): Readonly<T> {
     throw new Error('Not implemented');
+  }
+
+  /**
+   * The base type this operator always produces, when the QTI vocabulary fixes
+   * one regardless of its operands — `qti-divide` is a float even dividing two
+   * integers exactly, and `qti-round` is an integer whatever it rounds.
+   *
+   * Left undefined by operators whose result type follows their operands (a
+   * `qti-sum` of integers is an integer) and by those that return no number at
+   * all; the type is then read off the value.
+   */
+  public get resultBaseType(): BaseType | undefined {
+    return undefined;
   }
 
   /*
@@ -304,7 +320,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             // Every operator without a case of its own lands here.
             try {
               const expression = e as QtiExpression<unknown>;
-              return variableFromValue(expression.getResult());
+              return variableFromValue(expression.getResult(), expression.resultBaseType);
             } catch (error) {
               console.warn(`getVariables: could not read a value from <${e.tagName.toLowerCase()}>`, error);
             }

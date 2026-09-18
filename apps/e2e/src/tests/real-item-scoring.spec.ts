@@ -6,6 +6,7 @@ import { qtiTransformItem } from '@qti-components/transformers';
 
 import interpolationItem from './fixtures/biologie/items/32eugm.xml?raw';
 import matchItem from './fixtures/examples/items/match.xml?raw';
+import numericItem from './fixtures/numeric/items/divide-compare.xml?raw';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
@@ -127,6 +128,41 @@ describe('scoring real items', () => {
 
     it('credits only the correctly directed pairs of a mixed response', async () => {
       expect(outcome(await scoreWith(['C R', 'M D']), 'SCORE')).toBe('1');
+    });
+  });
+  /*
+   * No item in this repo computes with `qti-divide` or `qti-math-operator` —
+   * 0 of 295 — so nothing exercised numeric comparison through real response
+   * processing. This item does, and it covers both halves: a fractional result
+   * and a whole one, since only the whole one triggered the truncation.
+   */
+  describe('numeric comparison (divide-compare.xml)', () => {
+    const scoreWith = async (response: string, response2: string) => {
+      const item = await mount(numericItem);
+      item.updateResponseVariable('RESPONSE', response);
+      item.updateResponseVariable('RESPONSE2', response2);
+      item.processResponse();
+      return item;
+    };
+
+    it('scores full marks for both divisions answered correctly', async () => {
+      const item = await scoreWith('3.5', '4');
+      expect(outcome(item, 'SCORE')).toBe('2');
+      expect(outcome(item, 'SCORE')).toBe(outcome(item, 'MAXSCORE'));
+    });
+
+    it('rejects a truncated answer to the fractional division', async () => {
+      expect(outcome(await scoreWith('3', '4'), 'SCORE')).toBe('1');
+    });
+
+    // The whole-result half: 8/2 is 4, inferred as an integer, and "4.5" used
+    // to be truncated to 4 and credited.
+    it('rejects a fractional answer to the whole-number division', async () => {
+      expect(outcome(await scoreWith('3.5', '4.5'), 'SCORE')).toBe('1');
+    });
+
+    it('scores nothing when both are wrong', async () => {
+      expect(outcome(await scoreWith('3', '4.5'), 'SCORE')).toBe('0');
     });
   });
 });

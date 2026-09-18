@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-integer-modulus operator returns the remainder of integer division.
@@ -11,6 +11,10 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns NULL if any argument is NULL or if divisor is 0.
  */
 export class QtiIntegerModulus extends QtiExpression<number | null> {
+  public override get resultBaseType(): BaseType {
+    return 'integer';
+  }
+
   public override getResult(): number | null {
     const values = this.#collectIntegerValues(this.getVariables() as ResponseVariable[]);
 

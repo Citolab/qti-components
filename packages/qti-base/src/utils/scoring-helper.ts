@@ -110,6 +110,23 @@ export class ScoringHelper {
         const int1 = parseInt(value1, 10);
         const int2 = parseInt(value2, 10);
         if (!isNaN(int1) && !isNaN(int2)) {
+          /*
+           * `parseInt` truncates, so on its own it reads "2" and "2.5" as the
+           * same number. That matters because the base type is taken from one
+           * operand: an expression whose result happens to be whole is an
+           * integer, and it was then compared against a fractional value with
+           * the fraction thrown away — `equal(divide(4, 2), 2.5)` was true.
+           *
+           * When either side has a fractional part the two are, by definition,
+           * not the same number. Comparing them in full says so, while the
+           * integer path keeps `parseInt`'s tolerance of a value like "12 euro"
+           * for everything that really is whole.
+           */
+          const float1 = parseFloat(value1);
+          const float2 = parseFloat(value2);
+          if (!Number.isInteger(float1) || !Number.isInteger(float2)) {
+            return float1 === float2;
+          }
           return int1 === int2;
         } else {
           console.error(`Cannot convert ${value1} and/or ${value2} to int.`);

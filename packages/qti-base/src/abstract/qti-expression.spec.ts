@@ -173,4 +173,62 @@ describe('QtiExpression', () => {
       expect(isNull.calculate()).toBe(true);
     });
   });
+  /**
+   * The QTI vocabulary fixes the result type of some operators regardless of
+   * their operands, so those declare it rather than have it guessed from the
+   * value they happened to produce. `qti-divide` is the clearest case: it is a
+   * float even when it divides two integers exactly.
+   */
+  describe('declared result base type', () => {
+    const declaredTypeOf = (markup: string, selector: string) => {
+      testContainer.innerHTML = markup;
+      return (testContainer.querySelector(selector) as QtiExpression<unknown>).resultBaseType;
+    };
+
+    it.each([
+      ['<qti-divide></qti-divide>', 'qti-divide', 'float'],
+      ['<qti-power></qti-power>', 'qti-power', 'float'],
+      ['<qti-math-constant name="pi"></qti-math-constant>', 'qti-math-constant', 'float'],
+      ['<qti-integer-to-float></qti-integer-to-float>', 'qti-integer-to-float', 'float'],
+      ['<qti-integer-divide></qti-integer-divide>', 'qti-integer-divide', 'integer'],
+      ['<qti-integer-modulus></qti-integer-modulus>', 'qti-integer-modulus', 'integer'],
+      ['<qti-round></qti-round>', 'qti-round', 'integer'],
+      ['<qti-truncate></qti-truncate>', 'qti-truncate', 'integer'],
+      ['<qti-container-size></qti-container-size>', 'qti-container-size', 'integer']
+    ])('%s declares %s', (markup, selector, expected) => {
+      expect(declaredTypeOf(markup as string, selector as string)).toBe(expected);
+    });
+
+    it('is float for a qti-math-operator that computes, integer for one that rounds', () => {
+      expect(declaredTypeOf('<qti-math-operator name="sin"></qti-math-operator>', 'qti-math-operator')).toBe('float');
+      expect(declaredTypeOf('<qti-math-operator name="sqrt"></qti-math-operator>', 'qti-math-operator')).toBe('float');
+      expect(declaredTypeOf('<qti-math-operator name="floor"></qti-math-operator>', 'qti-math-operator')).toBe(
+        'integer'
+      );
+      expect(declaredTypeOf('<qti-math-operator name="signum"></qti-math-operator>', 'qti-math-operator')).toBe(
+        'integer'
+      );
+    });
+
+    it('is undefined where the result type follows the operands', () => {
+      expect(declaredTypeOf('<qti-sum></qti-sum>', 'qti-sum')).toBeUndefined();
+    });
+
+    /*
+     * The case the declaration exists for: 8 / 2 is 4, a whole number, which
+     * value inference would have called an integer — and an integer comparison
+     * then truncated the 2.5 it was compared against.
+     */
+    it('keeps an exact division comparing as a float', () => {
+      testContainer.innerHTML = `
+        <qti-equal>
+          <qti-divide>
+            <qti-base-value base-type="float">8</qti-base-value>
+            <qti-base-value base-type="float">2</qti-base-value>
+          </qti-divide>
+          <qti-base-value base-type="float">2.5</qti-base-value>
+        </qti-equal>`;
+      expect((testContainer.querySelector('qti-equal') as QtiExpression<boolean>).calculate()).toBe(false);
+    });
+  });
 });

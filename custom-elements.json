@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@591: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@590: {  }, length: number }"
               }
             },
             {
@@ -32680,6 +32680,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -32795,6 +32812,19 @@
                 "text": "any"
               },
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              }
             }
           ],
           "superclass": {
@@ -35867,33 +35897,6 @@
               "inheritedFrom": {
                 "name": "QtiItem",
                 "module": "packages/qti-item/src/components/qti-item/qti-item.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "updateAssessmentItemView",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "assessmentItem",
-                  "type": {
-                    "text": "QtiAssessmentItem"
-                  }
-                },
-                {
-                  "name": "view",
-                  "type": {
-                    "text": "View"
-                  }
-                }
-              ],
-              "description": "Scorer view IS the answer key, the same pairing `QtiTestCorrection` makes at test level.\nA marker switching to `scorer` to read the rubric would otherwise have to ask for the key\nseparately, and the two would drift apart.\n\n`scorer` alone because that is what the test side does — not because no other audience has\na use for a key. An author reviewing their own item plainly wants one, and arguably a tutor\ndoes too. If that is ever granted it has to be granted in both places at once, or the same\nitem answers differently depending on whether it is delivered inside a test.",
-              "type": {
-                "text": "updateAssessmentItemView(assessmentItem: QtiAssessmentItem, view: View) => void"
               }
             },
             {
@@ -39922,7 +39925,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.\nIt can also host some functionalities to interact with the item like scoring, showing feedback, etc.\nPlacing a mandatory `<item-container>` inside '<qti-item>' will load or parse the item and render it.\nSee `<item-container>` for more details.\n\n```html\n<qti-item>\n  <item-container class=\"m-4 bg-white\" item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```\n\n`view` selects the audience the item is presented to, which is what reveals `view`-tagged\ncontent such as a scorer's `qti-rubric-block` — see `ItemViewMixin`.\n\n```html\n<qti-item view=\"scorer\">\n  <item-container item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```",
+          "description": "`<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.\nIt can also host some functionalities to interact with the item like scoring, showing feedback, etc.\nPlacing a mandatory `<item-container>` inside '<qti-item>' will load or parse the item and render it.\nSee `<item-container>` for more details.\n\n```html\n<qti-item>\n  <item-container class=\"m-4 bg-white\" item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```",
           "name": "QtiItem",
           "members": [
             {
@@ -40022,12 +40025,6 @@
               "privacy": "public",
               "default": "{ QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' } }",
               "description": "Provided so that descendants (e.g. `<item-container>`) can read the QTI runtime\ncontext for standalone item delivery, including the optional shuffle `seed`."
-            }
-          ],
-          "mixins": [
-            {
-              "name": "ItemViewMixin",
-              "module": "/packages/qti-item/src/mixins/item-view.mixin"
             }
           ],
           "superclass": {
@@ -40853,6 +40850,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "attributes": [
@@ -41043,6 +41057,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41426,6 +41457,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -41704,6 +41752,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -41872,6 +41937,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42052,6 +42134,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "attributes": [
@@ -42225,6 +42324,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42410,6 +42526,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "Always a float, even dividing two integers exactly.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42609,6 +42742,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -42803,6 +42953,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -42971,6 +43138,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43205,6 +43389,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43535,6 +43736,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -43746,6 +43964,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -43913,6 +44148,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -44075,6 +44327,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44267,6 +44536,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44591,6 +44877,23 @@
             },
             {
               "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "shape",
               "type": {
                 "text": "string"
@@ -44799,6 +45102,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -44984,6 +45304,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -45151,6 +45488,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -45314,6 +45668,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45547,6 +45918,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45839,6 +46227,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -46001,6 +46406,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46175,6 +46597,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46358,6 +46797,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46567,6 +47023,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -46739,6 +47212,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46972,6 +47462,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "Float for every function except the three that produce a whole number:\n`floor`, `ceil` and `signum`.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "attributes": [
@@ -47167,6 +47674,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -47330,6 +47854,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47518,6 +48059,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -47685,6 +48243,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -47847,6 +48422,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48018,6 +48610,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -48185,6 +48794,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -48348,6 +48974,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48850,6 +49493,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "attributes": [
@@ -49023,6 +49683,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -49532,6 +50209,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -49734,6 +50428,23 @@
             },
             {
               "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "step",
               "type": {
                 "text": "number"
@@ -49929,6 +50640,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50150,6 +50878,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50756,6 +51501,23 @@
             },
             {
               "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "roundingMode",
               "type": {
                 "text": "'decimalPlaces' | 'significantFigures'"
@@ -50949,6 +51711,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -51653,6 +52432,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "attributes": [
@@ -51839,6 +52635,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "attributes": [
@@ -52020,6 +52833,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -52325,6 +53155,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -52512,6 +53359,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -52675,6 +53539,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -54327,6 +55208,23 @@
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             }
           ],
           "superclass": {
@@ -54975,6 +55873,23 @@
                 "text": "any"
               },
               "privacy": "protected",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resultBaseType",
+              "type": {
+                "text": "BaseType | undefined"
+              },
+              "privacy": "public",
+              "description": "The base type this operator always produces, when the QTI vocabulary fixes\none regardless of its operands — `qti-divide` is a float even dividing two\nintegers exactly, and `qti-round` is an integer whatever it rounds.\n\nLeft undefined by operators whose result type follows their operands (a\n`qti-sum` of integers is an integer) and by those that return no number at\nall; the type is then read off the value.",
+              "readonly": true,
+              "parsedType": {
+                "text": "'string' | 'boolean' | 'directedPair' | 'duration' | 'float' | 'integer' | 'identifier' | 'pair' | 'record'"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"

@@ -46,4 +46,30 @@ describe('ScoringHelper.compareSingleValues', () => {
       expect(ScoringHelper.compareSingleValues('A', 'a', 'identifier')).toBe(false);
     });
   });
+  describe('mixed whole and fractional numbers', () => {
+    /*
+     * The base type comes from one operand, so an expression whose result
+     * happens to be whole is an `integer` — and `parseInt` then truncated the
+     * other side. `equal(divide(4, 2), 2.5)` was true.
+     */
+    it('does not treat a whole number as equal to a fractional one', () => {
+      expect(ScoringHelper.compareSingleValues('2', '2.5', 'integer')).toBe(false);
+      expect(ScoringHelper.compareSingleValues('2.5', '2', 'integer')).toBe(false);
+    });
+
+    it('still compares two whole numbers as integers', () => {
+      expect(ScoringHelper.compareSingleValues('2', '2', 'integer')).toBe(true);
+      expect(ScoringHelper.compareSingleValues('02', '2', 'integer')).toBe(true);
+    });
+
+    it('compares two fractional values in full', () => {
+      expect(ScoringHelper.compareSingleValues('2.5', '2.5', 'integer')).toBe(true);
+      expect(ScoringHelper.compareSingleValues('2.5', '2.4', 'integer')).toBe(false);
+    });
+
+    // parseInt's tolerance of trailing text is relied on for candidate input.
+    it('keeps reading a whole number out of a value with trailing text', () => {
+      expect(ScoringHelper.compareSingleValues('12 euro', '12', 'integer')).toBe(true);
+    });
+  });
 });
