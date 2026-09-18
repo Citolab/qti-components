@@ -128,8 +128,17 @@ export class ScoringHelper {
       }
       case 'pair':
       case 'directedPair': {
-        const pair1 = value1.split(' ').sort();
-        const pair2 = value2.split(' ').sort();
+        /*
+         * Only a `pair` is unordered. A `directedPair` is directed — "A B" and
+         * "B A" are different values — so it must be compared as written.
+         *
+         * Both operands used to be sorted the moment they were split, which
+         * made the `baseType === 'pair'` sort below it dead code and every
+         * directedPair comparison order-insensitive: a candidate who matched
+         * the right two identifiers the wrong way round scored as correct.
+         */
+        const pair1 = value1.split(' ');
+        const pair2 = value2.split(' ');
         if (pair1.length === 2 && pair2.length === 2) {
           if (baseType === 'pair') {
             pair1.sort();

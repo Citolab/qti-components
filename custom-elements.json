@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@590: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@591: {  }, length: number }"
               }
             },
             {
@@ -41400,11 +41400,122 @@
             },
             {
               "kind": "method",
+              "name": "#containsSubMultiset",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "haystack",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "needle",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "Every needle value present, multiplicity respected, order disregarded."
+            },
+            {
+              "kind": "method",
+              "name": "#containsSubSequence",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "haystack",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "needle",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "The needle appearing contiguously, in order, somewhere in the haystack."
+            },
+            {
+              "kind": "method",
+              "name": "#equal",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "a",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "b",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "baseType",
+                  "type": {
+                    "text": "BaseType"
+                  }
+                }
+              ],
+              "description": "`ScoringHelper.compareSingleValues` knows how each base type compares — a\n`pair` ignoring the order within it, numbers compared numerically. It\nreturns false for a base type it has no case for, so an unknown one falls\nback to comparing the values as written."
+            },
+            {
+              "kind": "method",
+              "name": "#toArray",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "Readonly<string | string[]>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "calculate",
               "privacy": "public",
               "return": {
                 "type": {
-                  "text": "Readonly<boolean>"
+                  "text": "Readonly<T>"
                 }
               },
               "inheritedFrom": {
@@ -41412,7 +41523,7 @@
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
               },
               "type": {
-                "text": "calculate() => Readonly<boolean>"
+                "text": "calculate() => Readonly<T>"
               }
             },
             {
@@ -41433,7 +41544,7 @@
               "privacy": "protected",
               "return": {
                 "type": {
-                  "text": "Readonly<boolean>"
+                  "text": "boolean | null"
                 }
               },
               "inheritedFrom": {
@@ -41498,9 +41609,10 @@
             }
           ],
           "superclass": {
-            "name": "QtiConditionExpression",
+            "name": "QtiExpression",
             "package": "@qti-components/base"
           },
+          "summary": "The qti-contains operator tests whether one container holds another.",
           "tagName": "qti-contains",
           "customElement": true,
           "modulePath": "packages/qti-processing/src/components/qti-contains/qti-contains.ts",
