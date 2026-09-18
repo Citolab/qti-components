@@ -32,3 +32,17 @@ export class QtiExitResponseSignal extends Error {
     this.name = 'QtiExitResponseSignal';
   }
 }
+
+/**
+ * Thrown by `qti-exit-test` to end the outcome processing of a test.
+ *
+ * The test-level twin of {@link QtiExitResponseSignal}, and unwinds the stack
+ * for the same reason: an exit inside a `qti-outcome-condition` branch has to
+ * stop the rules after the condition, not just its own siblings.
+ */
+export class QtiExitTestSignal extends Error {
+  constructor() {
+    super('qti-exit-test');
+    this.name = 'QtiExitTestSignal';
+  }
+}

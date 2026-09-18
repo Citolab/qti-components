@@ -12,6 +12,7 @@ import { QtiDurationLt } from './components/qti-duration-lt/qti-duration-lt';
 import { QtiEqualRounded } from './components/qti-equal-rounded/qti-equal-rounded';
 import { QtiEqual } from './components/qti-equal/qti-equal';
 import { QtiExitResponse } from './components/qti-exit-response/qti-exit-response';
+import { QtiExitTest } from './components/qti-exit-test/qti-exit-test';
 import { QtiFieldValue } from './components/qti-field-value/qti-field-value';
 import { QtiGcd } from './components/qti-gcd/qti.gcd';
 import { QtiGt } from './components/qti-gt/qti-gt';
@@ -84,6 +85,7 @@ export {
   QtiEqual,
   QtiEqualRounded,
   QtiExitResponse,
+  QtiExitTest,
   QtiFieldValue,
   QtiGcd,
   QtiGt,
@@ -157,6 +159,7 @@ export const qtiProcessingElements = [
   { tag: 'qti-equal', ctor: QtiEqual },
   { tag: 'qti-equal-rounded', ctor: QtiEqualRounded },
   { tag: 'qti-exit-response', ctor: QtiExitResponse },
+  { tag: 'qti-exit-test', ctor: QtiExitTest },
   { tag: 'qti-field-value', ctor: QtiFieldValue },
   { tag: 'qti-gcd', ctor: QtiGcd },
   { tag: 'qti-gt', ctor: QtiGt },

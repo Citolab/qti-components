@@ -36,9 +36,21 @@ export interface VariableDeclaration<T> extends VariableValue<T> {
   baseType?: BaseType;
 }
 
+/**
+ * One `qti-interpolation-table-entry`. `sourceValue` is the *lower bound* of a
+ * range rather than a value to match exactly, so the entries have to keep their
+ * document order: the first whose bound the source value clears wins.
+ */
+export interface InterpolationTableEntry {
+  sourceValue: number;
+  targetValue: number;
+  /** Whether `sourceValue` itself is in range. Defaults to true, per the spec. */
+  includeBoundary: boolean;
+}
+
 export interface OutcomeVariable extends VariableDeclaration<string | string[] | null> {
   // specific to outcome variables
-  interpolationTable?: Map<number, number>;
+  interpolationTable?: InterpolationTableEntry[];
   /**
    * A qti-match-table's entries. Its targets are not necessarily numeric — a
    * match table may map onto identifiers or strings — so they stay as written.

@@ -25,6 +25,7 @@ export * from './qti-lcm/qti-lcm';
 export * from './qti-null/qti-null';
 export * from './qti-is-null/qti-is-null';
 export * from './qti-exit-response/qti-exit-response';
+export * from './qti-exit-test/qti-exit-test';
 export * from './qti-field-value/qti-field-value';
 export * from './qti-lt/qti-lt';
 export * from './qti-lte/qti-lte';

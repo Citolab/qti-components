@@ -77,6 +77,29 @@ Response processing has a full expression vocabulary beyond `qti-match` — arou
 
 **Variables** — `qti-variable` (read any declared variable by identifier), `qti-base-value` (a literal value)
 
+## Lookup tables
+
+`qti-lookup-outcome-value` reads the table on the outcome declaration it writes to.
+
+A `qti-interpolation-table` maps a number onto a range. Each entry's `source-value` is the **lower
+bound** of that range, not a value to match exactly, and `include-boundary` (default `true`) says
+whether the bound itself is in range. Entries are tested in document order and the first one the
+value clears wins, so tables are authored from the highest bound down:
+
+```xml
+<qti-interpolation-table>
+  <qti-interpolation-table-entry source-value="10" target-value="2" />
+  <qti-interpolation-table-entry source-value="5" target-value="1" />
+  <qti-interpolation-table-entry source-value="0" target-value="0" />
+</qti-interpolation-table>
+```
+
+A `qti-match-table` matches its `source-value` exactly instead, and its targets need not be numeric —
+a match table may map onto identifiers.
+
+When nothing matches, the outcome is left at the default its declaration gave it rather than
+overwritten with a score the table never specified.
+
 ## Custom operators
 
 A custom operator is outside the QTI vocabulary, so what it does is supplied by the delivery engine
@@ -112,6 +135,7 @@ Beyond `qti-response-condition`, two rules shape how a run proceeds:
 
 - `qti-exit-response` ends the attempt's response processing wherever it sits — inside a condition
   branch or a fragment included. No rule after it runs, and the outcomes already set are kept.
+  `qti-exit-test` is its counterpart in a test's outcome processing.
 - `qti-response-processing-fragment` groups rules for reuse. It is transparent: its rules run in
   place, in document order, exactly as if written where the fragment sits. A fragment held in a
   separate file is not pulled in, because `qti-include` is not resolved.
