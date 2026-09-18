@@ -99,7 +99,6 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
 
     Array.from(this.children)
       .map((e: Element) => {
-        console.debug('getVariables', e.tagName.toLowerCase());
         switch (e.tagName.toLowerCase()) {
           case 'qti-base-value': {
             return {
@@ -138,7 +137,6 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             const multiple = e as QtiExpression<ResponseVariable[]>;
 
             const values = multiple.getResult();
-            console.debug('values', values);
             if (values?.length > 0) {
               return {
                 identifier: '',
