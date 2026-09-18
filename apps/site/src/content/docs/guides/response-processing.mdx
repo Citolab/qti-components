@@ -77,6 +77,35 @@ Response processing has a full expression vocabulary beyond `qti-match` — arou
 
 **Variables** — `qti-variable` (read any declared variable by identifier), `qti-base-value` (a literal value)
 
+## Custom operators
+
+A custom operator is outside the QTI vocabulary, so what it does is supplied by the delivery engine
+rather than by the item. `<qti-custom-operator>` offers two ways to supply one.
+
+`definition` names an operator, and the operator is handed the calculated values of the element's
+child expressions:
+
+```xml
+<qti-custom-operator definition="depcp:Trim">
+  <qti-variable identifier="RESPONSE" />
+</qti-custom-operator>
+```
+
+Three are built in — `Trim`, `ToAscii` (replaces diacritics) and `ParseCommaDecimal` (a decimal
+comma becomes a dot) — each registered under the `depcp:`, `questify:` and `qade:` prefixes. Register
+your own, or override a built-in of the same name, from `@qti-components/base`:
+
+```ts
+import { registerCustomOperator } from '@qti-components/base';
+
+registerCustomOperator('acme:Shout', values => String(values[0]).toUpperCase());
+```
+
+A `definition` nothing provides is NULL rather than an error, so `qti-is-null` can test for it.
+
+`class="js.org"` instead runs inline JavaScript from a CDATA section, receiving the item context.
+The two mechanisms do not interact; `definition` is checked first.
+
 ## Flow rules
 
 Beyond `qti-response-condition`, two rules shape how a run proceeds:

@@ -33491,6 +33491,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/qti-base/src/lib/custom-operators"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/qti-base/src/utils/custom-state-set"
           }
         },
@@ -33508,6 +33516,98 @@
           "declaration": {
             "name": "*",
             "module": "packages/qti-base/src/utils/utils"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/qti-base/src/lib/custom-operators.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "getCustomOperator",
+          "return": {
+            "type": {
+              "text": "CustomOperator | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "definition",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The operator for a `definition`, or null when nothing provides it."
+        },
+        {
+          "kind": "function",
+          "name": "registerCustomOperator",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "definition",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "operator",
+              "type": {
+                "text": "CustomOperator"
+              }
+            }
+          ],
+          "description": "Make an operator available to every `qti-custom-operator` that names it.\n\nThe key is the `definition` attribute in full, prefix included. Registering a\nkey a built-in already uses overrides that built-in, which is how a delivery\nengine replaces one it disagrees with."
+        },
+        {
+          "kind": "function",
+          "name": "unregisterCustomOperator",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "definition",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "Undo a registerCustomOperator, restoring any built-in of that name."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "getCustomOperator",
+          "declaration": {
+            "name": "getCustomOperator",
+            "module": "packages/qti-base/src/lib/custom-operators.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "registerCustomOperator",
+          "declaration": {
+            "name": "registerCustomOperator",
+            "module": "packages/qti-base/src/lib/custom-operators.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "unregisterCustomOperator",
+          "declaration": {
+            "name": "unregisterCustomOperator",
+            "module": "packages/qti-base/src/lib/custom-operators.ts"
           }
         }
       ]
@@ -37628,7 +37728,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw\n<qti-custom-operator class=\"js.org\">\n     <qti-base-value base-type=\"string\"><![CDATA[\n       console.log(context.variables);\n       return 'B'\n       document.querySelector('qti-end-attempt-interaction').disabled = true;\n       ]]></qti-base-value>\n   </qti-custom-operator>\n </qti-set-outcome-value>",
+          "description": "https://www.imsglobal.org/spec/qti/v3p0/impl#h.fi29q8dubjgw\n\nA custom operator is outside the QTI vocabulary, so what it does is supplied\nby the delivery engine rather than by the item. Two ways to supply it:\n\n`definition` names an operator the host registered with\n`registerCustomOperator`, or one of the built-ins (`Trim`, `ToAscii`,\n`ParseCommaDecimal` under the `depcp:`, `questify:` and `qade:` prefixes).\nThe operator is handed the calculated values of the child expressions:\n\n```xml\n<qti-custom-operator definition=\"depcp:Trim\">\n  <qti-variable identifier=\"RESPONSE\"/>\n</qti-custom-operator>\n```\n\n`class=\"js.org\"` instead runs inline JavaScript out of a CDATA section:\n\n```xml\n<qti-custom-operator class=\"js.org\">\n  <qti-base-value base-type=\"string\"><![CDATA[\n    console.log(context.variables);\n    return 'B'\n  ]]></qti-base-value>\n</qti-custom-operator>\n```\n\n`definition` is checked first; the two do not interact.",
           "name": "QtiCustomOperator",
           "members": [
             {
@@ -37638,6 +37738,20 @@
                 "text": "ItemContext | undefined"
               },
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#applyDefinedOperator",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "definition",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "An operator the host registered, or a built-in. An unknown `definition` is\nNULL rather than an error: the item names an operator this engine does not\nprovide, which the surrounding expression can still test with\n`qti-is-null`."
             },
             {
               "kind": "field",

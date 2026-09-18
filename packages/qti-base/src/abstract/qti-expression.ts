@@ -8,6 +8,7 @@ import { testContext } from '../context/test.context';
 
 import type { ItemContext } from '../context/types/item.types';
 import type { QtiContext, QtiContextType } from '../context/qti.context';
+import type { Calculate } from '../lib/expression-result';
 import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
 import type { TestContext } from '../context/test.context';
 
@@ -170,6 +171,39 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
               return values;
             }
             return null;
+          }
+          case 'qti-custom-operator': {
+            // Not a QtiExpression — it has `calculate` but no `getResult`, so
+            // the default branch below throws on it and the surrounding
+            // expression is handed nothing. What it returns is whatever the
+            // host's operator returned, so the base type is read off the value
+            // rather than declared.
+            const value = (e as unknown as Calculate).calculate?.();
+            if (value === null || value === undefined) return null;
+            if (Array.isArray(value)) {
+              return {
+                identifier: '',
+                baseType: 'string',
+                value,
+                cardinality: 'multiple',
+                type: 'response'
+              } as ResponseVariable;
+            }
+            const baseType =
+              typeof value === 'number'
+                ? Number.isInteger(value)
+                  ? 'integer'
+                  : 'float'
+                : typeof value === 'boolean'
+                  ? 'boolean'
+                  : 'string';
+            return {
+              identifier: '',
+              baseType,
+              value: String(value),
+              cardinality: 'single',
+              type: 'response'
+            } as ResponseVariable;
           }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
