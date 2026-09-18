@@ -12,11 +12,13 @@ import type { QtiAssessmentItem } from '@qti-components/elements';
 /**
  * Scores real authored items, not constructed fixtures.
  *
- * The two items are copies of shipped content (`public/assets/api/biologie` and
- * `.../examples`), taken under `fixtures/` the way the other e2e suites take
- * theirs. They are inputs this suite owns: the originals are demo assets that
- * get edited for unrelated reasons, and a scoring regression test should fail
- * because scoring changed, not because a demo was restyled.
+ * "Real" here means the scoring is real, not the prose. Both fixtures keep the
+ * declarations, correct responses, mapping, interpolation table and response
+ * processing of items authored by hand — the parts that decide a score — while
+ * their text is lorem ipsum, because the provenance of the original wording is
+ * not ours to vouch for. They live under `fixtures/` the way the other e2e
+ * suites keep theirs, so this suite owns its inputs and fails when scoring
+ * changes rather than when a demo asset is edited.
  *
  * Three recent changes alter how a score is computed — interpolation tables
  * matching on ranges, directed pairs respecting their direction, and expression
@@ -45,8 +47,8 @@ describe('scoring real items', () => {
     item.variables.find(v => v.identifier === identifier)?.value;
 
   /*
-   * A Cito item (ITM-32eugm): three sub-questions feed a RAW_SCORE of 0..3,
-   * which an interpolation table maps onto a SCORE out of 2.
+   * ITM-32eugm: three sub-questions feed a RAW_SCORE of 0..3, which an
+   * interpolation table maps onto a SCORE out of 2.
    *
    * Its table omits `include-boundary`, so every entry defaults to including
    * its bound — which is why range matching gives this item exactly the same
