@@ -4,13 +4,19 @@ import '@citolab/qti-components';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import interpolationItem from '../../../../public/assets/api/biologie/items/32eugm.xml?raw';
-import matchItem from '../../../../public/assets/api/examples/items/match.xml?raw';
+import interpolationItem from './fixtures/biologie/items/32eugm.xml?raw';
+import matchItem from './fixtures/examples/items/match.xml?raw';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
 /**
  * Scores real authored items, not constructed fixtures.
+ *
+ * The two items are copies of shipped content (`public/assets/api/biologie` and
+ * `.../examples`), taken under `fixtures/` the way the other e2e suites take
+ * theirs. They are inputs this suite owns: the originals are demo assets that
+ * get edited for unrelated reasons, and a scoring regression test should fail
+ * because scoring changed, not because a demo was restyled.
  *
  * Three recent changes alter how a score is computed — interpolation tables
  * matching on ranges, directed pairs respecting their direction, and expression

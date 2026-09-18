@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd
+                                                                                               http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd
+                                                                                               http://www.duo.nl/schema/dep_extension ../dep_extension.xsd"
+  title="32eugm"
+  identifier="ITM-32eugm"
+  time-dependent="false"
+  label="32eugm"
+  xmlns:m="http://www.w3.org/1998/Math/MathML"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:dep="http://www.duo.nl/schema/dep_extension"
+>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="C">
+      <qti-value>C</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE2" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="E">
+      <qti-value>E</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE3" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="D">
+      <qti-value>D</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-interpolation-table>
+      <qti-interpolation-table-entry source-value="3" target-value="2" />
+      <qti-interpolation-table-entry source-value="2" target-value="1" />
+      <qti-interpolation-table-entry source-value="1" target-value="0" />
+      <qti-interpolation-table-entry source-value="0" target-value="0" />
+    </qti-interpolation-table>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>2</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-companion-materials-info>
+    <qti-calculator>
+      <qti-calculator-type>basic</qti-calculator-type>
+      <qti-description />
+    </qti-calculator>
+    <dep:dep-calculator>
+      <dep:dep-description />
+      <dep:dep-calculator-type>basic</dep:dep-calculator-type>
+      <dep:dep-switch>true</dep:dep-switch>
+    </dep:dep-calculator>
+    <dep:dep-symbolPicker>
+      <dep:dep-description />
+      <dep:dep-symbols>€èéëêïöàá§±→←↑↓↔↕</dep:dep-symbols>
+    </dep:dep-symbolPicker>
+    <dep:dep-textMarker>
+      <dep:dep-description />
+    </dep:dep-textMarker>
+  </qti-companion-materials-info>
+  <qti-stylesheet href="../css/cito_itemstyle.css" type="text/css" />
+  <qti-stylesheet href="../css/cito_userstyle.css" type="text/css" />
+  <qti-item-body class="defaultBody" xml:lang="nl-NL">
+    <div class="content">
+      <div class="qti-layout-row">
+        <div class="qti-layout-col6">
+          <div id="leftbody">
+            <p>
+              <strong>Asperges</strong>
+            </p>
+            <p>
+              Na het eten van asperges wordt bij sommige mensen urine met een sterke geur geproduceerd. Je ziet onder
+              andere delen van het uitscheidingsstelsel.
+            </p>
+            <p>
+              <img
+                id="Id-IMG_e1c3dc0c-1552-4c13-a167-2d90d15b63b8"
+                src="../img/itembank-cbt-326.jpg"
+                width="250"
+                height="366"
+                alt=""
+              />
+            </p>
+          </div>
+        </div>
+
+        <div class="qti-layout-col6">
+          <div id="itemBody">
+            <p>
+              Bij het maken en uitscheiden van urine zijn meerdere organen betrokken.
+              <br />
+              Enkele organen zijn:
+              <br />
+              blaas, endeldarm, longen, nieren, urinebuis, urineleiders
+            </p>
+          </div>
+
+          <div id="itemquestion">
+            <p>
+              <strong>
+                Langs welk weg verlaat urine het lichaam? Maak het schema af. De blaas is al op de juiste plaats in het
+                schema ingevuld.
+              </strong>
+            </p>
+            <p>
+              <qti-inline-choice-interaction
+                id="Iade4afc7-db6a-4a62-9dc6-abbd1016db5c"
+                response-identifier="RESPONSE"
+                shuffle="false"
+                required="true"
+              >
+                <qti-inline-choice identifier="A">
+                  <span>endeldarm</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="B">
+                  <span>longen</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="C">
+                  <span>nieren</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="D">
+                  <span>urinebuis</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="E">
+                  <span>urineleiders</span>
+                </qti-inline-choice>
+              </qti-inline-choice-interaction>
+
+              <m:math>
+                <m:mo mathsize="20px">→</m:mo>
+              </m:math>
+
+              <qti-inline-choice-interaction
+                id="Id908c2e1-e71d-4de7-9c0c-9f34c9e1840c"
+                response-identifier="RESPONSE2"
+                shuffle="false"
+                required="true"
+              >
+                <qti-inline-choice identifier="A">
+                  <span>endeldarm</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="B">
+                  <span>longen</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="C">
+                  <span>nieren</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="D">
+                  <span>urinebuis</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="E">
+                  <span>urineleiders</span>
+                </qti-inline-choice>
+              </qti-inline-choice-interaction>
+
+              <m:math>
+                <m:mo mathsize="20px">→</m:mo>
+              </m:math>
+              blaas
+              <m:math>
+                <m:mo mathsize="20px">→</m:mo>
+              </m:math>
+
+              <qti-inline-choice-interaction
+                id="I0bda7d99-7c1f-47da-8a73-b5da5dfe4e86"
+                response-identifier="RESPONSE3"
+                shuffle="false"
+                required="true"
+              >
+                <qti-inline-choice identifier="A">
+                  <span>endeldarm</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="B">
+                  <span>longen</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="C">
+                  <span>nieren</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="D">
+                  <span>urinebuis</span>
+                </qti-inline-choice>
+
+                <qti-inline-choice identifier="E">
+                  <span>urineleiders</span>
+                </qti-inline-choice>
+              </qti-inline-choice-interaction>
+            </p>
+          </div>
+
+          <div id="answer" />
+        </div>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE" />
+          <qti-base-value base-type="identifier">C</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="RAW_SCORE">
+          <qti-sum>
+            <qti-base-value base-type="integer">1</qti-base-value>
+            <qti-variable identifier="RAW_SCORE" />
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE2" />
+          <qti-base-value base-type="identifier">E</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="RAW_SCORE">
+          <qti-sum>
+            <qti-base-value base-type="integer">1</qti-base-value>
+            <qti-variable identifier="RAW_SCORE" />
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE3" />
+          <qti-base-value base-type="identifier">D</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="RAW_SCORE">
+          <qti-sum>
+            <qti-base-value base-type="integer">1</qti-base-value>
+            <qti-variable identifier="RAW_SCORE" />
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-lookup-outcome-value identifier="SCORE">
+      <qti-variable identifier="RAW_SCORE" />
+    </qti-lookup-outcome-value>
+  </qti-response-processing>
+</qti-assessment-item>
