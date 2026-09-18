@@ -96,4 +96,81 @@ describe('QtiExpression', () => {
 
     expect(renders).toBe(0);
   });
+  /**
+   * Elements reached through `getVariables` that declare no base type used to
+   * be labelled `integer` wholesale. `compareSingleValues` parses an integer
+   * with `parseInt`, so every non-integer result was silently truncated before
+   * it was compared.
+   */
+  describe('base type of an undeclared result', () => {
+    const calc = (markup: string, selector: string) => {
+      testContainer.innerHTML = markup;
+      return (testContainer.querySelector(selector) as QtiExpression<unknown>).calculate();
+    };
+
+    it('does not treat two different floats as equal', () => {
+      // divide(5,2) is 2.5; truncated to an integer it compared 2 against 2.
+      expect(
+        calc(
+          `<qti-equal>
+             <qti-divide>
+               <qti-base-value base-type="float">5</qti-base-value>
+               <qti-base-value base-type="float">2</qti-base-value>
+             </qti-divide>
+             <qti-base-value base-type="float">2.4</qti-base-value>
+           </qti-equal>`,
+          'qti-equal'
+        )
+      ).toBe(false);
+    });
+
+    it('still matches a float against its own value', () => {
+      expect(
+        calc(
+          `<qti-equal>
+             <qti-divide>
+               <qti-base-value base-type="float">5</qti-base-value>
+               <qti-base-value base-type="float">2</qti-base-value>
+             </qti-divide>
+             <qti-base-value base-type="float">2.5</qti-base-value>
+           </qti-equal>`,
+          'qti-equal'
+        )
+      ).toBe(true);
+    });
+
+    it('keeps integers comparing as integers', () => {
+      expect(
+        calc(
+          `<qti-equal>
+             <qti-sum>
+               <qti-base-value base-type="integer">2</qti-base-value>
+               <qti-base-value base-type="integer">3</qti-base-value>
+             </qti-sum>
+             <qti-base-value base-type="integer">5</qti-base-value>
+           </qti-equal>`,
+          'qti-equal'
+        )
+      ).toBe(true);
+    });
+
+    it('reports an expression that evaluated to NULL as a NULL value, not a missing operand', () => {
+      expect(calc('<qti-is-null><qti-null></qti-null></qti-is-null>', 'qti-is-null')).toBe(true);
+    });
+  });
+
+  describe('qti-correct with an unresolvable identifier', () => {
+    it('is NULL rather than taking down the processing run', () => {
+      testContainer.innerHTML = `
+        <qti-assessment-item identifier="I">
+          <qti-is-null>
+            <qti-correct identifier="NOT_DECLARED"></qti-correct>
+          </qti-is-null>
+        </qti-assessment-item>`;
+      const isNull = testContainer.querySelector('qti-is-null') as QtiExpression<boolean>;
+
+      expect(() => isNull.calculate()).not.toThrow();
+      expect(isNull.calculate()).toBe(true);
+    });
+  });
 });

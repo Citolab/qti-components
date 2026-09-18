@@ -8,6 +8,7 @@ import { testContext } from '../context/test.context';
 import type { ItemContext } from '../context/types/item.types';
 import type { QtiContext, QtiContextType } from '../context/qti.context';
 import type { Calculate } from '../lib/expression-result';
+import type { BaseType } from '../lib/expression-result';
 import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
 import type { TestContext } from '../context/test.context';
 
@@ -17,6 +18,61 @@ export interface QtiExpressionBase<T> {
   // getVariables(): VariableDeclaration<number | string | (number | string)[] | null>[];
   calculate(): Readonly<T>;
 }
+
+/**
+ * Wrap whatever an expression handed back in a variable, reading the base type
+ * off the value itself.
+ *
+ * Some elements reached through `getVariables` declare no base type — an
+ * operator with no case of its own, or a custom operator, which returns
+ * whatever the host's implementation returned. Everything used to be labelled
+ * `integer`, and since `compareSingleValues` parses an integer with `parseInt`,
+ * that silently truncated: `equal(divide(5, 2), 2.4)` compared 2 against 2 and
+ * answered true.
+ */
+const variableFromValue = (value: unknown): ResponseVariable => {
+  /*
+   * A NULL result is still a value: the operand exists and is NULL. Returning
+   * nothing would drop it from the list, which both hides the NULL from
+   * `qti-is-null` and shifts every operand after it — a binary operator with a
+   * NULL first argument would silently read its second as its first. The base
+   * type is moot here, since every operator tests the value before it.
+   */
+  if (value === null || value === undefined) {
+    return {
+      identifier: '',
+      baseType: 'string',
+      value: null,
+      cardinality: 'single',
+      type: 'response'
+    } as ResponseVariable;
+  }
+
+  if (Array.isArray(value)) {
+    return {
+      identifier: '',
+      baseType: inferBaseType(value[0]),
+      value: value.map(entry => String(entry)),
+      cardinality: 'multiple',
+      type: 'response'
+    } as ResponseVariable;
+  }
+
+  return {
+    identifier: '',
+    baseType: inferBaseType(value),
+    value: String(value),
+    cardinality: 'single',
+    type: 'response'
+  } as ResponseVariable;
+};
+
+/** A JS value's QTI base type. A string stays text; it is not re-parsed. */
+const inferBaseType = (value: unknown): BaseType => {
+  if (typeof value === 'number') return Number.isInteger(value) ? 'integer' : 'float';
+  if (typeof value === 'boolean') return 'boolean';
+  return 'string';
+};
 
 export abstract class QtiExpression<T> extends LitElement implements QtiExpressionBase<T> {
   /*
@@ -219,40 +275,25 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
           case 'qti-custom-operator': {
             // Not a QtiExpression — it has `calculate` but no `getResult`, so
             // the default branch below throws on it and the surrounding
-            // expression is handed nothing. What it returns is whatever the
-            // host's operator returned, so the base type is read off the value
-            // rather than declared.
-            const value = (e as unknown as Calculate).calculate?.();
-            if (value === null || value === undefined) return null;
-            if (Array.isArray(value)) {
-              return {
-                identifier: '',
-                baseType: 'string',
-                value,
-                cardinality: 'multiple',
-                type: 'response'
-              } as ResponseVariable;
-            }
-            const baseType =
-              typeof value === 'number'
-                ? Number.isInteger(value)
-                  ? 'integer'
-                  : 'float'
-                : typeof value === 'boolean'
-                  ? 'boolean'
-                  : 'string';
-            return {
-              identifier: '',
-              baseType,
-              value: String(value),
-              cardinality: 'single',
-              type: 'response'
-            } as ResponseVariable;
+            // expression is handed nothing.
+            return variableFromValue((e as unknown as Calculate).calculate?.());
           }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
-            const responseVariable: ResponseVariable =
-              this.context?.variables?.find(v => v.identifier === identifier) || null;
+            const responseVariable = this.context?.variables?.find(v => v.identifier === identifier) as
+              | ResponseVariable
+              | undefined;
+
+            // A `qti-correct` naming a response that is not declared — a typo,
+            // or an expression evaluated before the declaration registered —
+            // used to dereference the null this deliberately produced and take
+            // down the whole processing run. It is an unresolved variable, so
+            // it is NULL.
+            if (!responseVariable) {
+              console.warn(`qti-correct: no response declaration for "${identifier}"`);
+              return variableFromValue(null);
+            }
+
             return {
               baseType: responseVariable.baseType,
               value: responseVariable.correctResponse,
@@ -260,17 +301,12 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             } as ResponseVariable;
           }
           default: {
-            // added for use of qti-equal-rounded
+            // Every operator without a case of its own lands here.
             try {
-              const expression = e as QtiExpression<number>;
-              const value = expression.getResult();
-              return {
-                baseType: 'integer',
-                value: value?.toString() || null,
-                cardinality: 'single'
-              } as ResponseVariable;
+              const expression = e as QtiExpression<unknown>;
+              return variableFromValue(expression.getResult());
             } catch (error) {
-              console.warn('default not sufficient');
+              console.warn(`getVariables: could not read a value from <${e.tagName.toLowerCase()}>`, error);
             }
             return null;
           }
