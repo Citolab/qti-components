@@ -1,6 +1,5 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
-import { state } from 'lit/decorators.js';
 
 import { itemContext } from '../context/item.context';
 import { qtiContext } from '../context/qti.context';
@@ -20,8 +19,24 @@ export interface QtiExpressionBase<T> {
 }
 
 export abstract class QtiExpression<T> extends LitElement implements QtiExpressionBase<T> {
-  @state()
+  /*
+   * Not `@state()`. Nothing renders it any more (see `render` below), so making
+   * it reactive only scheduled an update per `calculate()` — and response
+   * processing calls that on every expression of every rule it walks.
+   */
   protected result: any;
+
+  /**
+   * What the last `calculate()` produced, or undefined if it has not run.
+   *
+   * This is the supported way to inspect a scoring run: process the responses,
+   * then walk the rule tree reading this off each expression. A tool that wants
+   * to visualise how a score came about gets the whole tree annotated with its
+   * values, without the components having to re-render to show them.
+   */
+  public get lastResult(): Readonly<T> | undefined {
+    return this.result;
+  }
 
   /*
    * Written here rather than imported from a .css file, and that is a packaging constraint rather
@@ -51,9 +66,32 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     }
   `;
 
+  /*
+   * Just the slot. This used to render `JSON.stringify(this.result, null, 2)`
+   * into a <pre> beside it — a development aid that nobody could see, because
+   * expressions live inside `qti-response-processing`, which is `display: none`.
+   * It cost a full serialisation of the result on every render.
+   */
   override render() {
-    return html`<pre>${JSON.stringify(this.result, null, 2)}</pre>
-      <slot></slot>`;
+    return html`<slot></slot>`;
+  }
+
+  /*
+   * Render once, then never again: the template above is constant, so every
+   * later update is pure overhead.
+   *
+   * It is not the `@state()` decorators that drive those updates — `@consume`
+   * subscribes through `ContextConsumer`, which calls `host.requestUpdate()`
+   * itself on every context change, "in case this value is used in a template".
+   * Here it is not. An item with 30 response-processing rules holds ~180
+   * expression elements and the test context changes on every keystroke, so
+   * that was ~180 renders per keystroke producing identical output.
+   *
+   * The subscriptions stay, because `calculate()` reads the current values when
+   * a rule invokes it. Only the rendering stops.
+   */
+  protected override shouldUpdate(): boolean {
+    return !this.hasUpdated;
   }
 
   public calculate(): Readonly<T> {
@@ -65,16 +103,24 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     throw new Error('Not implemented');
   }
 
+  /*
+   * Subscribed but deliberately NOT `@state()`.
+   *
+   * An expression is pull-based: nothing reads these until a rule calls
+   * `calculate()`, which reads whatever the consumer has by then. Marking them
+   * reactive made every context change schedule a render of every expression
+   * element in the document — an item with 30 response-processing rules holds
+   * ~180 of them, and the test context changes on every keystroke. The
+   * subscription still keeps the properties current; it just no longer asks
+   * for a render nothing depends on.
+   */
   @consume({ context: itemContext, subscribe: true })
-  @state()
   protected context?: ItemContext;
 
   @consume({ context: qtiContext, subscribe: true })
-  @state()
   protected qtiContext?: QtiContext;
 
   @consume({ context: testContext, subscribe: true })
-  @state()
   protected _testContext?: TestContext;
 
   /**

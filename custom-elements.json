@@ -32619,6 +32619,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -32730,6 +32747,19 @@
             {
               "kind": "field",
               "name": "getVariables"
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              }
             },
             {
               "kind": "field",
@@ -40747,6 +40777,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "max",
               "default": "Infinity",
               "attribute": "max"
@@ -40932,6 +40979,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41301,6 +41365,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -41562,6 +41643,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -41714,6 +41812,23 @@
               "kind": "field",
               "name": "interpretation",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             },
             {
               "kind": "field",
@@ -41876,6 +41991,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -42029,6 +42161,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42197,6 +42346,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42382,6 +42548,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -42559,6 +42742,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -42707,6 +42907,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42928,6 +43145,23 @@
                 "text": "boolean"
               },
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             },
             {
               "kind": "field",
@@ -43240,6 +43474,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -43434,6 +43685,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -43584,6 +43852,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -43726,6 +44011,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43893,6 +44195,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44208,6 +44527,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -44402,6 +44738,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -44570,6 +44923,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -44720,6 +45090,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -44863,6 +45250,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45079,6 +45483,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45357,6 +45778,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -45499,6 +45937,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45660,6 +46115,23 @@
                 "text": "string"
               },
               "attribute": "identifier"
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
             },
             {
               "kind": "field",
@@ -45829,6 +46301,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -45987,6 +46476,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46160,6 +46666,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46379,6 +46902,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -46566,6 +47106,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -46709,6 +47266,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46883,6 +47457,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -47033,6 +47624,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -47175,6 +47783,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47332,6 +47957,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -47482,6 +48124,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -47625,6 +48284,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48104,6 +48780,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "pattern",
               "type": {
                 "text": "string"
@@ -48266,6 +48959,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48761,6 +49471,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -48918,6 +49645,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -49128,6 +49872,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -49316,6 +50077,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -49914,6 +50692,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -50090,6 +50885,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50771,6 +51583,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -50949,6 +51778,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -51110,6 +51956,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -51401,6 +52264,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -51571,6 +52451,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -51714,6 +52611,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -53352,6 +54266,23 @@
             },
             {
               "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "qtiContext",
               "type": {
                 "text": "QtiContext | undefined"
@@ -53980,6 +54911,23 @@
             {
               "kind": "field",
               "name": "getVariables",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastResult",
+              "type": {
+                "text": "Readonly<T> | undefined"
+              },
+              "privacy": "public",
+              "description": "What the last `calculate()` produced, or undefined if it has not run.\n\nThis is the supported way to inspect a scoring run: process the responses,\nthen walk the rule tree reading this off each expression. A tool that wants\nto visualise how a score came about gets the whole tree annotated with its\nvalues, without the components having to re-render to show them.",
+              "readonly": true,
+              "parsedType": {
+                "text": "{  }"
+              },
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
