@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@570: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@420: {  }, length: number }"
               }
             },
             {
@@ -51722,6 +51722,17 @@
           "name": "QtiAssessmentItemRef",
           "members": [
             {
+              "kind": "method",
+              "name": "#findTestElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              },
+              "description": "The `<qti-test>` this ref belongs to, crossing shadow boundaries on the way\nup.\n\n`<test-container>` renders its items into a shadow root, so an item-ref is\nusually one hop below one; but it is also valid in plain light DOM, and a\nhost is free to nest it deeper. Climbing root by root covers all three\nwithout assuming any of them."
+            },
+            {
               "kind": "field",
               "name": "assessmentItem",
               "type": {
@@ -51777,8 +51788,9 @@
               "kind": "field",
               "name": "myTemplate",
               "type": {
-                "text": "TemplateFunction"
-              }
+                "text": "TemplateFunction | null"
+              },
+              "default": "null"
             },
             {
               "kind": "field",
