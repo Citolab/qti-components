@@ -128,7 +128,8 @@ export class QtiAssessmentItemRef extends LitElement {
       that varies per item comes through the model (see ItemRefTemplateModel).
     */
     const templateElement = this.#findTestElement()?.querySelector<HTMLTemplateElement>('template[item-ref]');
-    if (templateElement) this.myTemplate = prepareTemplate(templateElement);
+    this.myTemplate = templateElement ? prepareTemplate(templateElement) : null;
+    this.requestUpdate();
 
     await this.updateComplete;
 
@@ -142,10 +143,11 @@ export class QtiAssessmentItemRef extends LitElement {
   }
 
   override render() {
-    if (!this.myTemplate) return this.xmlDoc;
+    const xmlDoc = this.xmlDoc.cloneNode(true) as DocumentFragment;
+    if (!this.myTemplate) return xmlDoc;
 
     const model: ItemRefTemplateModel = {
-      xmlDoc: this.xmlDoc,
+      xmlDoc,
       identifier: this.identifier,
       href: this.href,
       category: this.category,

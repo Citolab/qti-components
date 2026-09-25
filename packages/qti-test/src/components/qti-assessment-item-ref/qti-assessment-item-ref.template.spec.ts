@@ -108,6 +108,21 @@ describe('qti-assessment-item-ref template hook', () => {
     expect(itemRef.querySelector('qti-assessment-item')?.textContent).toBe('ITEM BODY');
   });
 
+  it('drops the old template when reconnected under a test without one', async () => {
+    const itemRef = await mount({
+      template: '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'
+    });
+
+    const nextTest = document.createElement('qti-test');
+    document.body.append(nextTest);
+    nextTest.append(itemRef);
+    await itemRef.updateComplete;
+
+    expect(itemRef.myTemplate).toBeNull();
+    expect(itemRef.querySelector('.badge')).toBeNull();
+    expect(itemRef.querySelector('qti-assessment-item')?.textContent).toBe('ITEM BODY');
+  });
+
   it('re-renders the template when the item document changes', async () => {
     const itemRef = await mount({
       template: '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'
