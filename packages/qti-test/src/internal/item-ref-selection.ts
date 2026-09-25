@@ -37,24 +37,26 @@ export const selectItemRefs = (
   testElement: QtiAssessmentTest,
   { sectionIdentifier, includeCategories, excludeCategories }: ItemRefSelection
 ): QtiAssessmentItemRef[] => {
-  // Scoped to the test element itself: the item refs are its descendants, not
-  // the descendants of a further `qti-assessment-test` below it.
-  const scope = sectionIdentifier
-    ? testElement.querySelector(`qti-assessment-section[identifier="${CSS.escape(sectionIdentifier)}"]`)
-    : testElement;
-  if (!scope) {
+  const scopes = sectionIdentifier
+    ? Array.from(
+        testElement.querySelectorAll(`qti-assessment-section[identifier="${CSS.escape(sectionIdentifier)}"]`)
+      )
+    : [testElement];
+  if (scopes.length === 0) {
     console.warn(`no qti-assessment-section with identifier "${sectionIdentifier}"`);
     return [];
   }
 
-  return Array.from(scope.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref')).filter(itemRef => {
-    const categories = categoryList(itemRef.category);
-    if (includeCategories.length > 0 && !categories.some(c => includeCategories.includes(c))) {
-      return false;
-    }
-    if (excludeCategories.length > 0 && categories.some(c => excludeCategories.includes(c))) {
-      return false;
-    }
-    return true;
-  });
+  return scopes
+    .flatMap(scope => Array.from(scope.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref')))
+    .filter(itemRef => {
+      const categories = categoryList(itemRef.category);
+      if (includeCategories.length > 0 && !categories.some(c => includeCategories.includes(c))) {
+        return false;
+      }
+      if (excludeCategories.length > 0 && categories.some(c => excludeCategories.includes(c))) {
+        return false;
+      }
+      return true;
+    });
 };

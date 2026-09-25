@@ -46,6 +46,20 @@ describe('qti-number-selected', () => {
     expect((await mount('section-identifier="S1"', sections)).calculate()).toBe(2);
   });
 
+  it('counts the items of every matching named section', async () => {
+    const repeatedSections = `
+      <qti-assessment-section identifier="S1">
+        <qti-assessment-item-ref identifier="ITEM-1"></qti-assessment-item-ref>
+      </qti-assessment-section>
+      <qti-assessment-section identifier="BRANCH">
+        <qti-assessment-section identifier="S1">
+          <qti-assessment-item-ref identifier="ITEM-2"></qti-assessment-item-ref>
+        </qti-assessment-section>
+      </qti-assessment-section>`;
+
+    expect((await mount('section-identifier="S1"', repeatedSections)).calculate()).toBe(2);
+  });
+
   it('drops the items carrying an excluded category', async () => {
     expect((await mount('exclude-category="dep-informational"', sections)).calculate()).toBe(2);
   });
