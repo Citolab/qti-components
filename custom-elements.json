@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@420: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@573: {  }, length: number }"
               }
             },
             {
@@ -53560,7 +53560,7 @@
               "type": {
                 "text": "TtsContext"
               },
-              "default": "{ state: 'idle', currentElementIndex: 0, elementCount: 0, play: () => this.#playSpeech(), pause: () => this.#pause(), resume: () => this.#resume(), stop: () => this.#stop(), prevElement: () => this.#prevElement(), nextElement: () => this.#nextElement() }"
+              "default": "{ state: 'idle', currentElementIndex: 0, elementCount: 0, play: () => this.#playSpeech(), pause: () => this.#pause(), resume: () => this.#resume(), stop: () => { this.#stopPicking(); this.#stop(); }, prevElement: () => this.#prevElement(), nextElement: () => this.#nextElement(), togglePick: () => this.#togglePick(), picking: false }"
             },
             {
               "kind": "field",
@@ -53570,6 +53570,11 @@
             {
               "kind": "field",
               "name": "#boundHandleNavigation",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#boundHandlePickClick",
               "privacy": "private"
             },
             {
@@ -53612,6 +53617,15 @@
             },
             {
               "kind": "field",
+              "name": "#currentUtterance",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechSynthesisUtterance | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#elementHighlight",
               "privacy": "private",
               "default": "new Highlight()"
@@ -53630,6 +53644,34 @@
                 "text": "EventTarget | null"
               },
               "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#findItemInDom",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "QtiAssessmentItem | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "identifier",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Find the rendered `qti-assessment-item` for an item-ref identifier without relying on the\nconnected-event cache — the player may be added after the item rendered (a header built\naround an existing item) or sit in a shadow root the event never bubbled through."
+            },
+            {
+              "kind": "field",
+              "name": "#finished",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
             },
             {
               "kind": "method",
@@ -53657,6 +53699,19 @@
             },
             {
               "kind": "method",
+              "name": "#handlePickClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#highlightElement",
               "privacy": "private",
               "parameters": [
@@ -53668,6 +53723,20 @@
                 }
               ],
               "description": "Highlight the whole element as the navigation cursor (blue)."
+            },
+            {
+              "kind": "method",
+              "name": "#highlightElements",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "elements",
+                  "type": {
+                    "text": "Element[]"
+                  }
+                }
+              ],
+              "description": "Put the blue cursor highlight on several elements at once (pick mode)."
             },
             {
               "kind": "field",
@@ -53689,6 +53758,24 @@
               "kind": "method",
               "name": "#pause",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#picking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#pickRoot",
+              "privacy": "private",
+              "type": {
+                "text": "EventTarget | null"
+              },
+              "default": "null"
             },
             {
               "kind": "method",
@@ -53720,6 +53807,31 @@
                 "text": "Element[] | null"
               },
               "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#resetReadingPosition",
+              "privacy": "private",
+              "description": "Stop speech and forget the collected reading elements, so the next play starts afresh."
+            },
+            {
+              "kind": "method",
+              "name": "#resolveLang",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "description": "Resolve the speech language for a reading element.\nElement `lang` → closest ancestor `lang` (crossing shadow hosts) → `<html lang>` → `language` attribute.\nEmpty `lang=\"\"` is treated as absent."
             },
             {
               "kind": "method",
@@ -53756,7 +53868,18 @@
             },
             {
               "kind": "method",
+              "name": "#startPicking",
+              "privacy": "private",
+              "description": "Highlight every reading element and wait for a click on one of them."
+            },
+            {
+              "kind": "method",
               "name": "#stop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#stopPicking",
               "privacy": "private"
             },
             {
@@ -53767,6 +53890,11 @@
                 "text": "Text[]"
               },
               "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#togglePick",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -53827,21 +53955,46 @@
             },
             {
               "kind": "field",
+              "name": "itemRefId",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Identifier of the `qti-assessment-item-ref` this player reads. Leave unset to follow the\nnavigation cursor (`navItemRefId`) instead.",
+              "attribute": "item-ref-id",
+              "parsedType": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
               "name": "language",
               "type": {
                 "text": "string"
               },
               "default": "'nl-NL'",
+              "description": "Fallback language when neither the item content nor the document declares one.",
               "attribute": "language"
             }
           ],
           "attributes": [
+            {
+              "name": "item-ref-id",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Identifier of the `qti-assessment-item-ref` this player reads. Leave unset to follow the\nnavigation cursor (`navItemRefId`) instead.",
+              "fieldName": "itemRefId",
+              "parsedType": {
+                "text": "string"
+              }
+            },
             {
               "name": "language",
               "type": {
                 "text": "string"
               },
               "default": "'nl-NL'",
+              "description": "Fallback language when neither the item content nor the document declares one.",
               "fieldName": "language"
             }
           ],
@@ -53853,6 +54006,10 @@
             {
               "description": "Speech is paused",
               "name": "paused"
+            },
+            {
+              "description": "Pick mode: all reading elements highlighted, waiting for a click",
+              "name": "picking"
             },
             {
               "description": "Speech is playing",
@@ -53870,7 +54027,7 @@
         },
         {
           "kind": "class",
-          "description": "Next-element button — moves cursor to the next reading element and pauses.\nDisabled at the last element or when no elements are loaded.",
+          "description": "Next-element button — moves cursor to the next reading element and pauses.\nDisabled at the last element; enabled while the elements have not been collected yet\n(see `TestTtsPrev`).",
           "name": "TestTtsNext",
           "cssParts": [
             {
@@ -53894,6 +54051,34 @@
               "kind": "field",
               "name": "#internals",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
               "inheritedFrom": {
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
@@ -53945,6 +54130,34 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -53958,6 +54171,84 @@
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
           "tagName": "test-tts-pause",
+          "customElement": true,
+          "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
+          "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+        },
+        {
+          "kind": "class",
+          "description": "Pick button — toggles pick mode on the controller: every reading element is highlighted and\na click on one of them starts reading from there. Reflects the mode as `:state(picking)`.",
+          "name": "TestTtsPick",
+          "cssParts": [
+            {
+              "name": "button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_tts",
+              "type": {
+                "text": "TtsContext | undefined"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "/ playing / paused",
+              "name": "idle"
+            },
+            {
+              "name": "picking"
+            }
+          ],
+          "superclass": {
+            "name": "TtsButtonBase",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          },
+          "tagName": "test-tts-pick",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
           "definitionPath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
@@ -53994,6 +54285,34 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#toggle",
               "privacy": "private"
@@ -54016,7 +54335,7 @@
         },
         {
           "kind": "class",
-          "description": "Prev-element button — moves cursor to the previous reading element and pauses.\nDisabled at the first element or when no elements are loaded.",
+          "description": "Prev-element button — moves cursor to the previous reading element and pauses.\nDisabled at the first element. Reading elements are collected lazily, so an element count\nof 0 means \"not looked yet\" rather than \"nothing to read\": the button stays enabled and the\nfirst click collects them.",
           "name": "TestTtsPrev",
           "cssParts": [
             {
@@ -54040,6 +54359,34 @@
               "kind": "field",
               "name": "#internals",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
               "inheritedFrom": {
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
@@ -54091,6 +54438,34 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54110,7 +54485,7 @@
         },
         {
           "kind": "class",
-          "description": "Stop button — enabled when playing or paused.",
+          "description": "Stop button — enabled when playing, paused, or in pick mode (where it leaves pick mode).",
           "name": "TestTtsStop",
           "cssParts": [
             {
@@ -54134,6 +54509,34 @@
               "kind": "field",
               "name": "#internals",
               "privacy": "private",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredPicking",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mirroredState",
+              "privacy": "private",
+              "type": {
+                "text": "SpeechState | undefined"
+              },
+              "parsedType": {
+                "text": "'idle' | 'playing' | 'paused'"
+              },
               "inheritedFrom": {
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
@@ -54195,6 +54598,14 @@
         },
         {
           "kind": "custom-element-definition",
+          "name": "test-tts-pick",
+          "declaration": {
+            "name": "TestTtsPick",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
           "name": "test-tts-play",
           "declaration": {
             "name": "TestTtsPlay",
@@ -54246,6 +54657,14 @@
           "name": "TestTtsPause",
           "declaration": {
             "name": "TestTtsPause",
+            "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsPick",
+          "declaration": {
+            "name": "TestTtsPick",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           }
         },
@@ -55845,9 +56264,9 @@
           "kind": "variable",
           "name": "qtiTestElements",
           "type": {
-            "text": "[\n  { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },\n  { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },\n  { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },\n  { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },\n  { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },\n  { tag: 'qti-test', ctor: QtiTest },\n  { tag: 'qti-test-feedback', ctor: QtiTestFeedback },\n  { tag: 'qti-test-part', ctor: QtiTestPart },\n  { tag: 'qti-test-variables', ctor: QtiTestVariables },\n  { tag: 'test-check-item', ctor: TestCheckItem },\n  { tag: 'test-container', ctor: TestContainer },\n  { tag: 'test-end-attempt', ctor: TestEndAttempt },\n  { tag: 'test-item-link', ctor: TestItemLink },\n  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },\n  { tag: 'test-navigation', ctor: TestNavigation },\n  { tag: 'test-next', ctor: TestNext },\n  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },\n  { tag: 'test-prev', ctor: TestPrev },\n  { tag: 'test-print-context', ctor: TestPrintContext },\n  { tag: 'test-print-item-variables', ctor: TestPrintVariables },\n  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },\n  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },\n  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },\n  { tag: 'test-section-link', ctor: TestSectionLink },\n  { tag: 'test-stamp', ctor: TestStamp },\n  { tag: 'test-tts-next', ctor: TestTtsNext },\n  { tag: 'test-tts-pause', ctor: TestTtsPause },\n  { tag: 'test-tts-play', ctor: TestTtsPlay },\n  { tag: 'test-tts-prev', ctor: TestTtsPrev },\n  { tag: 'test-tts-resume', ctor: TestTtsResume },\n  { tag: 'test-tts-stop', ctor: TestTtsStop },\n  { tag: 'test-view', ctor: TestView },\n  { tag: 'test-view-toggle', ctor: TestViewToggle }\n]"
+            "text": "[\n  { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },\n  { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },\n  { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },\n  { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },\n  { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },\n  { tag: 'qti-test', ctor: QtiTest },\n  { tag: 'qti-test-feedback', ctor: QtiTestFeedback },\n  { tag: 'qti-test-part', ctor: QtiTestPart },\n  { tag: 'qti-test-variables', ctor: QtiTestVariables },\n  { tag: 'test-check-item', ctor: TestCheckItem },\n  { tag: 'test-container', ctor: TestContainer },\n  { tag: 'test-end-attempt', ctor: TestEndAttempt },\n  { tag: 'test-item-link', ctor: TestItemLink },\n  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },\n  { tag: 'test-navigation', ctor: TestNavigation },\n  { tag: 'test-next', ctor: TestNext },\n  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },\n  { tag: 'test-prev', ctor: TestPrev },\n  { tag: 'test-print-context', ctor: TestPrintContext },\n  { tag: 'test-print-item-variables', ctor: TestPrintVariables },\n  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },\n  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },\n  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },\n  { tag: 'test-section-link', ctor: TestSectionLink },\n  { tag: 'test-stamp', ctor: TestStamp },\n  { tag: 'test-tts-next', ctor: TestTtsNext },\n  { tag: 'test-tts-pause', ctor: TestTtsPause },\n  { tag: 'test-tts-pick', ctor: TestTtsPick },\n  { tag: 'test-tts-play', ctor: TestTtsPlay },\n  { tag: 'test-tts-prev', ctor: TestTtsPrev },\n  { tag: 'test-tts-resume', ctor: TestTtsResume },\n  { tag: 'test-tts-stop', ctor: TestTtsStop },\n  { tag: 'test-view', ctor: TestView },\n  { tag: 'test-view-toggle', ctor: TestViewToggle }\n]"
           },
-          "default": "[ { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef }, { tag: 'qti-assessment-section', ctor: QtiAssessmentSection }, { tag: 'qti-assessment-test', ctor: QtiAssessmentTest }, { tag: 'qti-item-session-control', ctor: QtiItemSessionControl }, { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing }, { tag: 'qti-test', ctor: QtiTest }, { tag: 'qti-test-feedback', ctor: QtiTestFeedback }, { tag: 'qti-test-part', ctor: QtiTestPart }, { tag: 'qti-test-variables', ctor: QtiTestVariables }, { tag: 'test-check-item', ctor: TestCheckItem }, { tag: 'test-container', ctor: TestContainer }, { tag: 'test-end-attempt', ctor: TestEndAttempt }, { tag: 'test-item-link', ctor: TestItemLink }, { tag: 'test-item-to-speech', ctor: TestItemToSpeech }, { tag: 'test-navigation', ctor: TestNavigation }, { tag: 'test-next', ctor: TestNext }, { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp }, { tag: 'test-prev', ctor: TestPrev }, { tag: 'test-print-context', ctor: TestPrintContext }, { tag: 'test-print-item-variables', ctor: TestPrintVariables }, { tag: 'test-scoring-buttons', ctor: TestScoringButtons }, { tag: 'test-scoring-feedback', ctor: TestScoringFeedback }, { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp }, { tag: 'test-section-link', ctor: TestSectionLink }, { tag: 'test-stamp', ctor: TestStamp }, { tag: 'test-tts-next', ctor: TestTtsNext }, { tag: 'test-tts-pause', ctor: TestTtsPause }, { tag: 'test-tts-play', ctor: TestTtsPlay }, { tag: 'test-tts-prev', ctor: TestTtsPrev }, { tag: 'test-tts-resume', ctor: TestTtsResume }, { tag: 'test-tts-stop', ctor: TestTtsStop }, { tag: 'test-view', ctor: TestView }, { tag: 'test-view-toggle', ctor: TestViewToggle } ]"
+          "default": "[ { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef }, { tag: 'qti-assessment-section', ctor: QtiAssessmentSection }, { tag: 'qti-assessment-test', ctor: QtiAssessmentTest }, { tag: 'qti-item-session-control', ctor: QtiItemSessionControl }, { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing }, { tag: 'qti-test', ctor: QtiTest }, { tag: 'qti-test-feedback', ctor: QtiTestFeedback }, { tag: 'qti-test-part', ctor: QtiTestPart }, { tag: 'qti-test-variables', ctor: QtiTestVariables }, { tag: 'test-check-item', ctor: TestCheckItem }, { tag: 'test-container', ctor: TestContainer }, { tag: 'test-end-attempt', ctor: TestEndAttempt }, { tag: 'test-item-link', ctor: TestItemLink }, { tag: 'test-item-to-speech', ctor: TestItemToSpeech }, { tag: 'test-navigation', ctor: TestNavigation }, { tag: 'test-next', ctor: TestNext }, { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp }, { tag: 'test-prev', ctor: TestPrev }, { tag: 'test-print-context', ctor: TestPrintContext }, { tag: 'test-print-item-variables', ctor: TestPrintVariables }, { tag: 'test-scoring-buttons', ctor: TestScoringButtons }, { tag: 'test-scoring-feedback', ctor: TestScoringFeedback }, { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp }, { tag: 'test-section-link', ctor: TestSectionLink }, { tag: 'test-stamp', ctor: TestStamp }, { tag: 'test-tts-next', ctor: TestTtsNext }, { tag: 'test-tts-pause', ctor: TestTtsPause }, { tag: 'test-tts-pick', ctor: TestTtsPick }, { tag: 'test-tts-play', ctor: TestTtsPlay }, { tag: 'test-tts-prev', ctor: TestTtsPrev }, { tag: 'test-tts-resume', ctor: TestTtsResume }, { tag: 'test-tts-stop', ctor: TestTtsStop }, { tag: 'test-view', ctor: TestView }, { tag: 'test-view-toggle', ctor: TestViewToggle } ]"
         }
       ],
       "exports": [
@@ -56072,6 +56491,14 @@
           "name": "TestTtsPause",
           "declaration": {
             "name": "TestTtsPause",
+            "module": "packages/qti-test/src/elements.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "TestTtsPick",
+          "declaration": {
+            "name": "TestTtsPick",
             "module": "packages/qti-test/src/elements.ts"
           }
         },
