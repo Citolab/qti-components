@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-truncate operator removes fractional parts of a number.
@@ -11,6 +11,10 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns NULL if input is NULL or NaN.
  */
 export class QtiTruncate extends QtiExpression<number | null> {
+  public override get resultBaseType(): BaseType {
+    return 'integer';
+  }
+
   public override getResult(): number | null {
     const variables = this.getVariables() as ResponseVariable[];
 

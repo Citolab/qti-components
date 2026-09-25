@@ -2,19 +2,23 @@ import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-stats-operator performs statistical calculations on a container.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#statsOperator
  *
  * Takes 1 container (multiple/ordered) of numerical base-type.
- * 'name' attribute identifies function (mean, popSD, popVariance, sampleSD, sampleVariance).
+ * 'name' attribute identifies function (mean, median, popVariance, popSD, sampleVariance, sampleSD).
  * Returns result as a single float.
  * Special cases: Returns NULL if any values in container are NULL or non-numerical.
  */
 export class QtiStatsOperator extends QtiExpression<number | null> {
   @property({ type: String }) name: string = '';
+
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
 
   public override getResult(): number | null {
     if (!this.name) {
@@ -30,19 +34,40 @@ export class QtiStatsOperator extends QtiExpression<number | null> {
 
     switch (this.name.toLowerCase()) {
       case 'mean':
-        return values.reduce((sum, value) => sum + value, 0) / values.length;
+        return this.#mean(values);
+      case 'median':
+        return this.#median(values);
+      case 'popvariance':
+        return this.#variance(values, values.length);
       case 'popsd':
-        return this.#populationStandardDeviation(values);
+        return Math.sqrt(this.#variance(values, values.length));
+      case 'samplevariance':
+        // A sample variance over a single observation has no denominator.
+        return values.length < 2 ? null : this.#variance(values, values.length - 1);
+      case 'samplesd':
+        return values.length < 2 ? null : Math.sqrt(this.#variance(values, values.length - 1));
       default:
         console.warn(`qti-stats-operator: unsupported operator "${this.name}"`);
         return null;
     }
   }
 
-  #populationStandardDeviation(values: number[]): number {
-    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
-    const variance = values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / values.length;
-    return Math.sqrt(variance);
+  #mean(values: number[]): number {
+    return values.reduce((sum, value) => sum + value, 0) / values.length;
+  }
+
+  #median(values: number[]): number {
+    const sorted = [...values].sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+    // An even-sized container has no single middle value, so the two straddling
+    // it are averaged.
+    return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
+  }
+
+  /** Sum of squared deviations over `denominator` — the population or sample divisor. */
+  #variance(values: number[], denominator: number): number {
+    const mean = this.#mean(values);
+    return values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / denominator;
   }
 
   #collectNumericValues(variables: ResponseVariable[]): number[] {

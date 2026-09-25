@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  title="Lorem Interpolation"
+  identifier="ITM-32eugm"
+  time-dependent="false"
+  label="32eugm"
+>
+  <!--
+    Three sub-questions feed a RAW_SCORE of 0..3, which an interpolation table
+    maps onto a SCORE out of 2.
+
+    The declarations, the table and the response processing below are the point
+    of this fixture and are kept exactly as authored. The prose, images and
+    stylesheets of the original item are not, so the body is lorem ipsum.
+
+    Note the table carries no `include-boundary`, so every entry includes its
+    bound — which is why matching each entry as a range gives this item the same
+    scores that matching them exactly used to give.
+  -->
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="C">
+      <qti-value>C</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE2" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="E">
+      <qti-value>E</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE3" cardinality="single" base-type="identifier">
+    <qti-correct-response interpretation="D">
+      <qti-value>D</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-interpolation-table>
+      <qti-interpolation-table-entry source-value="3" target-value="2" />
+      <qti-interpolation-table-entry source-value="2" target-value="1" />
+      <qti-interpolation-table-entry source-value="1" target-value="0" />
+      <qti-interpolation-table-entry source-value="0" target-value="0" />
+    </qti-interpolation-table>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>2</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <p>
+      <qti-inline-choice-interaction response-identifier="RESPONSE" shuffle="false" required="true">
+        <qti-inline-choice identifier="A"><span>Lorem</span></qti-inline-choice>
+        <qti-inline-choice identifier="B"><span>Ipsum</span></qti-inline-choice>
+        <qti-inline-choice identifier="C"><span>Dolor</span></qti-inline-choice>
+        <qti-inline-choice identifier="D"><span>Sit</span></qti-inline-choice>
+        <qti-inline-choice identifier="E"><span>Amet</span></qti-inline-choice>
+      </qti-inline-choice-interaction>
+      <qti-inline-choice-interaction response-identifier="RESPONSE2" shuffle="false" required="true">
+        <qti-inline-choice identifier="A"><span>Lorem</span></qti-inline-choice>
+        <qti-inline-choice identifier="B"><span>Ipsum</span></qti-inline-choice>
+        <qti-inline-choice identifier="C"><span>Dolor</span></qti-inline-choice>
+        <qti-inline-choice identifier="D"><span>Sit</span></qti-inline-choice>
+        <qti-inline-choice identifier="E"><span>Amet</span></qti-inline-choice>
+      </qti-inline-choice-interaction>
+      <qti-inline-choice-interaction response-identifier="RESPONSE3" shuffle="false" required="true">
+        <qti-inline-choice identifier="A"><span>Lorem</span></qti-inline-choice>
+        <qti-inline-choice identifier="B"><span>Ipsum</span></qti-inline-choice>
+        <qti-inline-choice identifier="C"><span>Dolor</span></qti-inline-choice>
+        <qti-inline-choice identifier="D"><span>Sit</span></qti-inline-choice>
+        <qti-inline-choice identifier="E"><span>Amet</span></qti-inline-choice>
+      </qti-inline-choice-interaction>
+    </p>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE" />
+          <qti-base-value base-type="identifier">C</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="RAW_SCORE">
+          <qti-sum>
+            <qti-base-value base-type="integer">1</qti-base-value>
+            <qti-variable identifier="RAW_SCORE" />
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE2" />
+          <qti-base-value base-type="identifier">E</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="RAW_SCORE">
+          <qti-sum>
+            <qti-base-value base-type="integer">1</qti-base-value>
+            <qti-variable identifier="RAW_SCORE" />
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE3" />
+          <qti-base-value base-type="identifier">D</qti-base-value>
+        </qti-match>
+        <qti-set-outcome-value identifier="RAW_SCORE">
+          <qti-sum>
+            <qti-base-value base-type="integer">1</qti-base-value>
+            <qti-variable identifier="RAW_SCORE" />
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-lookup-outcome-value identifier="SCORE">
+      <qti-variable identifier="RAW_SCORE" />
+    </qti-lookup-outcome-value>
+  </qti-response-processing>
+</qti-assessment-item>

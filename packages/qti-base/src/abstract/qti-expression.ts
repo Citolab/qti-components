@@ -1,6 +1,5 @@
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
-import { state } from 'lit/decorators.js';
 
 import { itemContext } from '../context/item.context';
 import { qtiContext } from '../context/qti.context';
@@ -8,6 +7,8 @@ import { testContext } from '../context/test.context';
 
 import type { ItemContext } from '../context/types/item.types';
 import type { QtiContext, QtiContextType } from '../context/qti.context';
+import type { Calculate } from '../lib/expression-result';
+import type { BaseType } from '../lib/expression-result';
 import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
 import type { TestContext } from '../context/test.context';
 
@@ -18,9 +19,83 @@ export interface QtiExpressionBase<T> {
   calculate(): Readonly<T>;
 }
 
+/**
+ * Wrap whatever an expression handed back in a variable, reading the base type
+ * off the value itself.
+ *
+ * An operator that knows its own result type says so through `resultBaseType`
+ * and that wins, because the QTI vocabulary fixes it regardless of the operands
+ * — `qti-divide` is a float even when it divides two integers exactly. Only
+ * when nothing is declared, as for a custom operator returning whatever the
+ * host computed, is the type read off the value.
+ *
+ * Everything used to be labelled `integer`, and since `compareSingleValues`
+ * parses an integer with `parseInt`, that silently truncated:
+ * `equal(divide(5, 2), 2.4)` compared 2 against 2 and answered true.
+ */
+const variableFromValue = (value: unknown, declared?: BaseType): ResponseVariable => {
+  /*
+   * A NULL result is still a value: the operand exists and is NULL. Returning
+   * nothing would drop it from the list, which both hides the NULL from
+   * `qti-is-null` and shifts every operand after it — a binary operator with a
+   * NULL first argument would silently read its second as its first. The base
+   * type is moot here, since every operator tests the value before it.
+   */
+  if (value === null || value === undefined) {
+    return {
+      identifier: '',
+      baseType: 'string',
+      value: null,
+      cardinality: 'single',
+      type: 'response'
+    } as ResponseVariable;
+  }
+
+  if (Array.isArray(value)) {
+    return {
+      identifier: '',
+      baseType: declared ?? inferBaseType(value[0]),
+      value: value.map(entry => String(entry)),
+      cardinality: 'multiple',
+      type: 'response'
+    } as ResponseVariable;
+  }
+
+  return {
+    identifier: '',
+    baseType: declared ?? inferBaseType(value),
+    value: String(value),
+    cardinality: 'single',
+    type: 'response'
+  } as ResponseVariable;
+};
+
+/** A JS value's QTI base type. A string stays text; it is not re-parsed. */
+const inferBaseType = (value: unknown): BaseType => {
+  if (typeof value === 'number') return Number.isInteger(value) ? 'integer' : 'float';
+  if (typeof value === 'boolean') return 'boolean';
+  return 'string';
+};
+
 export abstract class QtiExpression<T> extends LitElement implements QtiExpressionBase<T> {
-  @state()
+  /*
+   * Not `@state()`. Nothing renders it any more (see `render` below), so making
+   * it reactive only scheduled an update per `calculate()` — and response
+   * processing calls that on every expression of every rule it walks.
+   */
   protected result: any;
+
+  /**
+   * What the last `calculate()` produced, or undefined if it has not run.
+   *
+   * This is the supported way to inspect a scoring run: process the responses,
+   * then walk the rule tree reading this off each expression. A tool that wants
+   * to visualise how a score came about gets the whole tree annotated with its
+   * values, without the components having to re-render to show them.
+   */
+  public get lastResult(): Readonly<T> | undefined {
+    return this.result;
+  }
 
   /*
    * Written here rather than imported from a .css file, and that is a packaging constraint rather
@@ -50,9 +125,32 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     }
   `;
 
+  /*
+   * Just the slot. This used to render `JSON.stringify(this.result, null, 2)`
+   * into a <pre> beside it — a development aid that nobody could see, because
+   * expressions live inside `qti-response-processing`, which is `display: none`.
+   * It cost a full serialisation of the result on every render.
+   */
   override render() {
-    return html`<pre>${JSON.stringify(this.result, null, 2)}</pre>
-      <slot></slot>`;
+    return html`<slot></slot>`;
+  }
+
+  /*
+   * Render once, then never again: the template above is constant, so every
+   * later update is pure overhead.
+   *
+   * It is not the `@state()` decorators that drive those updates — `@consume`
+   * subscribes through `ContextConsumer`, which calls `host.requestUpdate()`
+   * itself on every context change, "in case this value is used in a template".
+   * Here it is not. An item with 30 response-processing rules holds ~180
+   * expression elements and the test context changes on every keystroke, so
+   * that was ~180 renders per keystroke producing identical output.
+   *
+   * The subscriptions stay, because `calculate()` reads the current values when
+   * a rule invokes it. Only the rendering stops.
+   */
+  protected override shouldUpdate(): boolean {
+    return !this.hasUpdated;
   }
 
   public calculate(): Readonly<T> {
@@ -64,16 +162,37 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     throw new Error('Not implemented');
   }
 
+  /**
+   * The base type this operator always produces, when the QTI vocabulary fixes
+   * one regardless of its operands — `qti-divide` is a float even dividing two
+   * integers exactly, and `qti-round` is an integer whatever it rounds.
+   *
+   * Left undefined by operators whose result type follows their operands (a
+   * `qti-sum` of integers is an integer) and by those that return no number at
+   * all; the type is then read off the value.
+   */
+  public get resultBaseType(): BaseType | undefined {
+    return undefined;
+  }
+
+  /*
+   * Subscribed but deliberately NOT `@state()`.
+   *
+   * An expression is pull-based: nothing reads these until a rule calls
+   * `calculate()`, which reads whatever the consumer has by then. Marking them
+   * reactive made every context change schedule a render of every expression
+   * element in the document — an item with 30 response-processing rules holds
+   * ~180 of them, and the test context changes on every keystroke. The
+   * subscription still keeps the properties current; it just no longer asks
+   * for a render nothing depends on.
+   */
   @consume({ context: itemContext, subscribe: true })
-  @state()
   protected context?: ItemContext;
 
   @consume({ context: qtiContext, subscribe: true })
-  @state()
   protected qtiContext?: QtiContext;
 
   @consume({ context: testContext, subscribe: true })
-  @state()
   protected _testContext?: TestContext;
 
   /**
@@ -98,7 +217,6 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
 
     Array.from(this.children)
       .map((e: Element) => {
-        console.debug('getVariables', e.tagName.toLowerCase());
         switch (e.tagName.toLowerCase()) {
           case 'qti-base-value': {
             return {
@@ -137,7 +255,6 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             const multiple = e as QtiExpression<ResponseVariable[]>;
 
             const values = multiple.getResult();
-            console.debug('values', values);
             if (values?.length > 0) {
               return {
                 identifier: '',
@@ -171,10 +288,28 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             }
             return null;
           }
+          case 'qti-custom-operator': {
+            // Not a QtiExpression — it has `calculate` but no `getResult`, so
+            // the default branch below throws on it and the surrounding
+            // expression is handed nothing.
+            return variableFromValue((e as unknown as Calculate).calculate?.());
+          }
           case 'qti-correct': {
             const identifier = e.getAttribute('identifier') || '';
-            const responseVariable: ResponseVariable =
-              this.context?.variables?.find(v => v.identifier === identifier) || null;
+            const responseVariable = this.context?.variables?.find(v => v.identifier === identifier) as
+              | ResponseVariable
+              | undefined;
+
+            // A `qti-correct` naming a response that is not declared — a typo,
+            // or an expression evaluated before the declaration registered —
+            // used to dereference the null this deliberately produced and take
+            // down the whole processing run. It is an unresolved variable, so
+            // it is NULL.
+            if (!responseVariable) {
+              console.warn(`qti-correct: no response declaration for "${identifier}"`);
+              return variableFromValue(null);
+            }
+
             return {
               baseType: responseVariable.baseType,
               value: responseVariable.correctResponse,
@@ -182,17 +317,12 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             } as ResponseVariable;
           }
           default: {
-            // added for use of qti-equal-rounded
+            // Every operator without a case of its own lands here.
             try {
-              const expression = e as QtiExpression<number>;
-              const value = expression.getResult();
-              return {
-                baseType: 'integer',
-                value: value?.toString() || null,
-                cardinality: 'single'
-              } as ResponseVariable;
+              const expression = e as QtiExpression<unknown>;
+              return variableFromValue(expression.getResult(), expression.resultBaseType);
             } catch (error) {
-              console.warn('default not sufficient');
+              console.warn(`getVariables: could not read a value from <${e.tagName.toLowerCase()}>`, error);
             }
             return null;
           }

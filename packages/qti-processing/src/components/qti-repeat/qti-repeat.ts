@@ -12,6 +12,13 @@ import type { ResponseVariable } from '@qti-components/base';
  * Returns an ordered container filled with results of the evaluated sub-expressions.
  * Special cases: Returns NULL if number-repeats < 1; ignores evaluated NULL values.
  */
+/**
+ * `number-repeats` may name a variable, so the count is only known at run time
+ * and nothing stops an item from asking for millions of iterations. Capped so a
+ * bad value costs a warning rather than a hung tab.
+ */
+const MAX_REPEATS = 1000;
+
 export class QtiRepeat extends QtiExpression<ResponseVariable[]> {
   @property({ type: String, attribute: 'number-repeats' }) numberRepeats: string = '';
 
@@ -47,7 +54,7 @@ export class QtiRepeat extends QtiExpression<ResponseVariable[]> {
 
     const numericCount = parseInt(this.numberRepeats, 10);
     if (!Number.isNaN(numericCount)) {
-      return numericCount;
+      return this.#cap(numericCount);
     }
 
     const identifier = this.numberRepeats;
@@ -65,7 +72,15 @@ export class QtiRepeat extends QtiExpression<ResponseVariable[]> {
       return 0;
     }
 
-    return resolvedCount;
+    return this.#cap(resolvedCount);
+  }
+
+  #cap(count: number): number {
+    if (count > MAX_REPEATS) {
+      console.warn(`qti-repeat: number-repeats ${count} exceeds the ${MAX_REPEATS} limit, truncating`);
+      return MAX_REPEATS;
+    }
+    return count;
   }
 
   #toResponseVariable(value: unknown): ResponseVariable | null {

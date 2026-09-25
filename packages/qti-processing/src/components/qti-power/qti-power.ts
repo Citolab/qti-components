@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-power operator raises the first expression to the power of the second.
@@ -11,6 +11,10 @@ import type { ResponseVariable } from '@qti-components/base';
  * Returns NULL if either expression is NULL or if the result is outside the float value set.
  */
 export class QtiPower extends QtiExpression<number | null> {
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
+
   public override getResult(): number | null {
     if (this.children.length !== 2) {
       console.error('qti-power must have exactly two child expressions');

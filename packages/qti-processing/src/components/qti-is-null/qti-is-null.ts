@@ -14,7 +14,10 @@ export class QtiIsNull extends QtiExpression<boolean> {
   public override getResult(): boolean {
     if (this.children.length === 1) {
       const variables = this.getVariables() as ResponseVariable[];
-      if (!variables) {
+      // An empty list is an operand that resolved to nothing at all, which is
+      // as NULL as a value can get. `!variables` never caught that, because an
+      // empty array is truthy — and the read below then threw.
+      if (!variables?.length) {
         return true;
       }
       const value = variables[0].value;

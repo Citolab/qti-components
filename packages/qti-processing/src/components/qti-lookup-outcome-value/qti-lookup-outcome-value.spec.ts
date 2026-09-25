@@ -148,35 +148,142 @@ describe('qti-lookup-outcome-value', () => {
     }
   }
 
-  it('should interpolate RAW_SCORE to SCORE correctly', () => {
+  /*
+   * This fixture's entries are `3 -> 2`, `2 -> 1`, `1 -> 0`, `0 -> 0`, every one
+   * of them `include-boundary="false"`. Each source-value is the lower bound of
+   * a range and the first entry the value clears wins, so a raw score of 2
+   * clears only the `1` bound and scores 0 — it does not match the `2` entry,
+   * which needs a value strictly above 2.
+   */
+  it.each([
+    [4, 2],
+    [3, 1],
+    [2, 0],
+    [1, 0]
+  ])('interpolates a raw score of %i to %i', (rawScore, expected) => {
     const assessmentItem = setupQtiAssessmentItem();
-    assessmentItem.updateOutcomeVariable('RAW_SCORE', '2');
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', String(rawScore));
     const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
 
-    const result = lookupOutcomeValue.process();
-    expect(result).toBe(1);
+    expect(lookupOutcomeValue.process()).toBe(expected);
   });
 
-  it('should return 0 if RAW_SCORE is not found in interpolation table', () => {
+  it('returns null when the value clears no lower bound', () => {
     const assessmentItem = setupQtiAssessmentItem();
-
-    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
-
-    assessmentItem.updateOutcomeVariable('RAW_SCORE', '1');
-    const result = lookupOutcomeValue.process();
-
-    expect(result).toBe(0);
-  });
-
-  it('should correctly handle missing interpolation table', () => {
-    const assessmentItem = setupQtiAssessmentItem();
-
-    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
-
+    // The lowest bound is 0 and excludes its boundary, so 0 itself is below the
+    // whole table.
     assessmentItem.updateOutcomeVariable('RAW_SCORE', '0');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
 
-    const result = lookupOutcomeValue.process();
-    expect(result).toBe(0);
+    expect(lookupOutcomeValue.process()).toBeNull();
+  });
+
+  it('leaves the outcome at its default when nothing matches', () => {
+    const assessmentItem = setupQtiAssessmentItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '0');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+    lookupOutcomeValue.process();
+
+    expect(assessmentItem.variables.find(v => v.identifier === 'SCORE').value).toBe('0');
+  });
+
+  describe('include-boundary', () => {
+    const setupBoundaryItem = (includeBoundary: string) => {
+      const boundaryContainer = document.createElement('div');
+      document.body.appendChild(boundaryContainer);
+      render(
+        html`
+          <qti-assessment-item>
+            <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+              <qti-default-value><qti-value>0</qti-value></qti-default-value>
+            </qti-outcome-declaration>
+            <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+              <qti-interpolation-table>
+                <qti-interpolation-table-entry
+                  include-boundary="${includeBoundary}"
+                  source-value="5"
+                  target-value="1"
+                ></qti-interpolation-table-entry>
+              </qti-interpolation-table>
+            </qti-outcome-declaration>
+            <qti-response-processing>
+              <qti-lookup-outcome-value identifier="SCORE">
+                <qti-variable identifier="RAW_SCORE"></qti-variable>
+              </qti-lookup-outcome-value>
+            </qti-response-processing>
+          </qti-assessment-item>
+        `,
+        boundaryContainer
+      );
+      return boundaryContainer.querySelector('qti-assessment-item');
+    };
+
+    const lookup = (assessmentItem, rawScore: number) => {
+      assessmentItem.updateOutcomeVariable('RAW_SCORE', String(rawScore));
+      return (assessmentItem.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue).process();
+    };
+
+    it('includes the bound itself when true', () => {
+      expect(lookup(setupBoundaryItem('true'), 5)).toBe(1);
+    });
+
+    it('excludes the bound itself when false', () => {
+      expect(lookup(setupBoundaryItem('false'), 5)).toBeNull();
+    });
+
+    it('includes the bound by default, as the spec specifies', () => {
+      const boundaryContainer = document.createElement('div');
+      document.body.appendChild(boundaryContainer);
+      render(
+        html`
+          <qti-assessment-item>
+            <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+              <qti-default-value><qti-value>0</qti-value></qti-default-value>
+            </qti-outcome-declaration>
+            <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+              <qti-interpolation-table>
+                <qti-interpolation-table-entry source-value="5" target-value="1"></qti-interpolation-table-entry>
+              </qti-interpolation-table>
+            </qti-outcome-declaration>
+            <qti-response-processing>
+              <qti-lookup-outcome-value identifier="SCORE">
+                <qti-variable identifier="RAW_SCORE"></qti-variable>
+              </qti-lookup-outcome-value>
+            </qti-response-processing>
+          </qti-assessment-item>
+        `,
+        boundaryContainer
+      );
+      expect(lookup(boundaryContainer.querySelector('qti-assessment-item'), 5)).toBe(1);
+    });
+
+    it('takes the first matching entry in document order, not the closest', () => {
+      const boundaryContainer = document.createElement('div');
+      document.body.appendChild(boundaryContainer);
+      render(
+        html`
+          <qti-assessment-item>
+            <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+              <qti-default-value><qti-value>0</qti-value></qti-default-value>
+            </qti-outcome-declaration>
+            <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+              <qti-interpolation-table>
+                <qti-interpolation-table-entry source-value="0" target-value="99"></qti-interpolation-table-entry>
+                <qti-interpolation-table-entry source-value="10" target-value="1"></qti-interpolation-table-entry>
+              </qti-interpolation-table>
+            </qti-outcome-declaration>
+            <qti-response-processing>
+              <qti-lookup-outcome-value identifier="SCORE">
+                <qti-variable identifier="RAW_SCORE"></qti-variable>
+              </qti-lookup-outcome-value>
+            </qti-response-processing>
+          </qti-assessment-item>
+        `,
+        boundaryContainer
+      );
+      // 20 clears both bounds; the entry written first wins.
+      expect(lookup(boundaryContainer.querySelector('qti-assessment-item'), 20)).toBe(99);
+    });
   });
 
   it('score correct with RESPONSE B', () => {
@@ -201,5 +308,59 @@ describe('qti-lookup-outcome-value', () => {
 
     const result = lookupOutcomeValue.process();
     expect(result).toBe(0);
+  });
+  // qti-match-table: an exact source -> target mapping, and unlike an
+  // interpolation table its targets need not be numeric.
+  function setupMatchTableItem() {
+    const matchContainer = document.createElement('div');
+    document.body.appendChild(matchContainer);
+    const template = html`
+      <qti-assessment-item>
+        <qti-outcome-declaration identifier="RAW_SCORE" cardinality="single" base-type="integer">
+          <qti-default-value>
+            <qti-value>0</qti-value>
+          </qti-default-value>
+        </qti-outcome-declaration>
+        <qti-outcome-declaration identifier="GRADE" cardinality="single" base-type="identifier">
+          <qti-match-table>
+            <qti-match-table-entry source-value="0" target-value="FAIL"></qti-match-table-entry>
+            <qti-match-table-entry source-value="1" target-value="PASS"></qti-match-table-entry>
+            <qti-match-table-entry source-value="2" target-value="MERIT"></qti-match-table-entry>
+          </qti-match-table>
+        </qti-outcome-declaration>
+        <qti-response-processing>
+          <qti-lookup-outcome-value identifier="GRADE">
+            <qti-variable identifier="RAW_SCORE"></qti-variable>
+          </qti-lookup-outcome-value>
+        </qti-response-processing>
+      </qti-assessment-item>
+    `;
+    render(template, matchContainer);
+    return matchContainer.querySelector('qti-assessment-item');
+  }
+
+  it('maps a raw score onto a match table target', () => {
+    const assessmentItem = setupMatchTableItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '2');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+
+    expect(lookupOutcomeValue.process()).toBe('MERIT');
+  });
+
+  it('writes the match table target onto the outcome variable', () => {
+    const assessmentItem = setupMatchTableItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '1');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+    lookupOutcomeValue.process();
+
+    expect(assessmentItem.variables.find(v => v.identifier === 'GRADE').value).toBe('PASS');
+  });
+
+  it('returns null for a source value the match table has no entry for', () => {
+    const assessmentItem = setupMatchTableItem();
+    assessmentItem.updateOutcomeVariable('RAW_SCORE', '9');
+    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
+
+    expect(lookupOutcomeValue.process()).toBeNull();
   });
 });
