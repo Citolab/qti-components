@@ -12,6 +12,8 @@ import type { BaseType } from '../lib/expression-result';
 import type { ResponseVariable, VariableDeclaration } from '../lib/variables';
 import type { TestContext } from '../context/test.context';
 
+type ExpressionVariable = ResponseVariable | VariableDeclaration<QtiContextType>;
+
 export interface QtiExpressionBase<T> {
   // get assessmentItem(): QtiAssessmentItem;
 
@@ -83,7 +85,7 @@ const inferContainerBaseType = (expression: QtiExpression<unknown>, value: unkno
   }
 
   return expression
-    .getVariables()
+    .lastVariables
     .find(variable => variable?.baseType && variable.baseType !== 'record' && variable.cardinality !== 'record')
     ?.baseType as BaseType | undefined;
 };
@@ -95,6 +97,7 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
    * processing calls that on every expression of every rule it walks.
    */
   protected result: any;
+  #lastVariables: ExpressionVariable[] = [];
 
   /**
    * What the last `calculate()` produced, or undefined if it has not run.
@@ -106,6 +109,10 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
    */
   public get lastResult(): Readonly<T> | undefined {
     return this.result;
+  }
+
+  public get lastVariables(): readonly ExpressionVariable[] {
+    return this.#lastVariables;
   }
 
   /*
@@ -222,11 +229,11 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     );
   }
 
-  getVariables = (): (ResponseVariable | VariableDeclaration<QtiContextType>)[] =>
+  getVariables = (): ExpressionVariable[] => {
     // FIXME: if this itself is multiple, this will never enter the qti-multiple switch
     // See this example here: https://github.com/1EdTech/qti-examples/blob/master/qtiv3-examples/packaging/items/Example05-feedbackBlock-adaptive.xml
 
-    Array.from(this.children)
+    const variables = Array.from(this.children)
       .map((e: Element) => {
         switch (e.tagName.toLowerCase()) {
           case 'qti-base-value': {
@@ -341,5 +348,9 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
         }
       })
       .flatMap(v => (Array.isArray(v) ? v : [v]))
-      .filter(v => v !== null);
+      .filter((v): v is ExpressionVariable => v !== null);
+
+    this.#lastVariables = variables;
+    return variables;
+  };
 }

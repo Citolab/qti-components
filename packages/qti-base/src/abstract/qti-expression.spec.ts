@@ -17,6 +17,7 @@ class TestExpressionCollector extends QtiExpression<unknown> {
 
 class TestEmptyIntegerContainer extends QtiExpression<unknown[]> {
   override getResult() {
+    this.getVariables();
     return [];
   }
 }
