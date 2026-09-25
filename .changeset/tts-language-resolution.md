@@ -3,14 +3,21 @@
 '@citolab/qti-components': minor
 ---
 
-`test-item-to-speech`: speak each reading element in its own language, read a
-specific item on a multi-item page, and start reading from a chosen sentence.
+`test-item-to-speech`: speak each element in its own language, a player per item, and pick mode.
 
-- Language resolution: the nearest `lang` / `xml:lang` on the element or its
-  ancestors (across shadow roots), then `<html lang>`, then the player's
-  `language` attribute.
-- `item-ref-id` pins a player to one `qti-assessment-item-ref`, looked up in its
-  own tree first and otherwise in any reachable `test-container` shadow root.
-  Starting one player stops any other.
-- New `<test-tts-pick>` button: pick mode highlights every reading element and
-  starts reading from the one that is clicked.
+- **Language resolution.** Each reading element is spoken in the language of the nearest `lang`
+  (or `xml:lang`): the element, its closest ancestor — across shadow roots — then `<html lang>`,
+  and only then the `language` attribute, which is now a fallback.
+- **A player per item.** `item-ref-id` pins a player to one `qti-assessment-item-ref`, so it reads
+  that item whatever the navigation cursor points at. That makes a player per item possible on a
+  section page, for instance from a `<template item-ref>`:
+  `<test-item-to-speech item-ref-id="{{ identifier }}">`. Unset, the player follows
+  `navItemRefId` as before.
+- **Several players on a page** share the browser's one speech queue: starting one stops any other,
+  a player never cancels speech or clears highlights it does not own, and moving to another section
+  stops every player, pinned or not.
+- **Pick mode.** `<test-tts-pick>` highlights every reading element; a click on one starts reading
+  from there. The player reflects it as `:state(picking)`.
+- Reading elements now include `qti-prompt` and `qti-simple-choice`, and nested matches are read
+  once. Prev/next stay enabled before the elements have been collected, and play after the last
+  element starts the item over.

@@ -32,6 +32,11 @@ The model is `ItemRefTemplateModel`: `xmlDoc`, `identifier`, `href`, `category`,
 the escape hatch for a template that needs a handler or a host value, reached through a property on
 the element.
 
+`item` is this ref's entry in the computed context — the same object the stamps iterate as `item` —
+so a template can show `{{ item.index }}`, `{{ item.score }} / {{ item.maxScore }}` and the rest of
+the item's state. The element subscribes to the context, so the template re-renders as scores come
+in.
+
 Two fixes to the commented code it replaces. The lookup assumed the ref always sits directly inside
 a shadow root (`getRootNode().host.closest('qti-test')`), which throws for a ref in plain light DOM
 and for one nested deeper than one root; it now climbs root by root and gives up quietly when there

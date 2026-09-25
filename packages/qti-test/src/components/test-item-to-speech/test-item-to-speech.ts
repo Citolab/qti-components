@@ -197,6 +197,7 @@ export class TestItemToSpeech extends LitElement {
 
   // Tracks previous navItemRefId to detect item switches
   #prevNavItemRefId: string | null | undefined = undefined;
+  #prevNavSectionId: string | null | undefined = undefined;
   #boundHandleNavigation = () => this.#stop();
 
   constructor() {
@@ -232,10 +233,16 @@ export class TestItemToSpeech extends LitElement {
     // Stop speech when navItemRefId changes (ignore the initial undefined → value transition).
     // A player pinned to an item keeps its reading position: the cursor moving elsewhere on a
     // multi-item page does not change what this player reads.
-    if (this.#prevNavItemRefId !== undefined && this.#prevNavItemRefId !== current && !this.itemRefId) {
+    // Moving to another section does take a pinned player's item off the page, so that
+    // stops every player; section navigation leaves navItemRefId null, so it needs its own check.
+    const section = this._sessionContext?.navSectionId ?? null;
+    const itemChanged = this.#prevNavItemRefId !== undefined && this.#prevNavItemRefId !== current;
+    const sectionChanged = this.#prevNavSectionId !== undefined && this.#prevNavSectionId !== section;
+    if (sectionChanged || (itemChanged && !this.itemRefId)) {
       this.#resetReadingPosition();
     }
     this.#prevNavItemRefId = current;
+    this.#prevNavSectionId = section;
   }
 
   /** Stop speech and forget the collected reading elements, so the next play starts afresh. */

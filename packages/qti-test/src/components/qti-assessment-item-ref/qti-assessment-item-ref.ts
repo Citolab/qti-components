@@ -1,7 +1,11 @@
 import { LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 import { prepareTemplate } from '@heximal/templates';
 
+import { computedContext } from '@qti-components/base';
+
+import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { TemplateFunction } from '@heximal/templates';
 
@@ -30,6 +34,12 @@ export interface ItemRefTemplateModel {
   identifier?: string;
   href?: string;
   category?: string;
+  /**
+   * This item's entry in the computed context, the same object the stamps
+   * iterate as `item`: `index` (1-based, null for info items), `score`,
+   * `maxScore`, `completed`, `active`, … Undefined until the test has computed it.
+   */
+  item?: ComputedItem;
   /** The element being rendered. */
   itemRef: QtiAssessmentItemRef;
 }
@@ -42,8 +52,10 @@ export class QtiAssessmentItemRef extends LitElement {
   @property({ type: Boolean, converter: stringToBooleanConverter }) fixed?: boolean;
   @property({ type: String }) href?: string;
 
-  // @consume({ context: computedContext, subscribe: true })
-  // private computedContext: ComputedContext;
+  // Only read by a <template item-ref>; subscribing re-renders it as scores come in
+  @state()
+  @consume({ context: computedContext, subscribe: true })
+  protected computedContext?: ComputedContext;
 
   weigths: Map<string, number> = new Map();
 
@@ -120,6 +132,16 @@ export class QtiAssessmentItemRef extends LitElement {
     );
   }
 
+  #computedItem(): ComputedItem | undefined {
+    for (const testPart of this.computedContext?.testParts ?? []) {
+      for (const section of testPart.sections) {
+        const item = section.items.find(i => i.identifier === this.identifier);
+        if (item) return item;
+      }
+    }
+    return undefined;
+  }
+
   override render() {
     if (!this.myTemplate) return this.xmlDoc;
 
@@ -128,6 +150,7 @@ export class QtiAssessmentItemRef extends LitElement {
       identifier: this.identifier,
       href: this.href,
       category: this.category,
+      item: this.#computedItem(),
       itemRef: this
     };
     return this.myTemplate(model);

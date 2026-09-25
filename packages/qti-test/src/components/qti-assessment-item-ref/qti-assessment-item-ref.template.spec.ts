@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { ContextProvider } from '@lit/context';
+
+import { computedContext } from '@qti-components/base';
 
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
+
+import type { ComputedContext } from '@qti-components/base';
 
 /**
  * `<template item-ref>` lets a host render its own chrome around every item in
@@ -30,9 +35,15 @@ async function mount(options: {
   template?: string;
   inShadowRoot?: boolean;
   inTest?: boolean;
+  computed?: ComputedContext;
 }): Promise<QtiAssessmentItemRef> {
   const test = document.createElement(options.inTest === false ? 'div' : 'qti-test');
   document.body.append(test);
+  // Stands in for the computed context <qti-test> provides.
+  const provider = options.computed
+    ? new ContextProvider(test, { context: computedContext, initialValue: options.computed })
+    : undefined;
+  providers.push(provider);
   if (options.template !== undefined) {
     test.innerHTML = `<template item-ref>${options.template}</template>`;
   }
@@ -56,9 +67,36 @@ async function mount(options: {
   return itemRef;
 }
 
+const providers: (ContextProvider<typeof computedContext> | undefined)[] = [];
+
 afterEach(() => {
+  providers.length = 0;
   document.body.replaceChildren();
 });
+
+/** A computed context with ITEM-1 in it, as index 3 with a score. */
+const computedWith = (item: { index: number; score: number }): ComputedContext =>
+  ({
+    identifier: 'TEST',
+    title: 'Test',
+    view: 'candidate',
+    testParts: [
+      {
+        identifier: 'part-1',
+        navigationMode: 'nonlinear',
+        submissionMode: 'individual',
+        sections: [
+          {
+            identifier: 'section-1',
+            title: 'Section 1',
+            navigationMode: 'nonlinear',
+            submissionMode: 'individual',
+            items: [{ identifier: 'ITEM-1', ...item }]
+          }
+        ]
+      }
+    ]
+  }) as unknown as ComputedContext;
 
 describe('qti-assessment-item-ref template hook', () => {
   it('renders the item on its own when no template is provided', async () => {
@@ -122,5 +160,20 @@ describe('qti-assessment-item-ref template hook', () => {
 
     expect(itemRef.querySelector('.badge')?.textContent).toBe('ITEM-1');
     expect(itemRef.querySelector('qti-assessment-item')?.textContent).toBe('SECOND ITEM');
+  });
+
+  it('passes the computed item, and re-renders when the context changes', async () => {
+    const itemRef = await mount({
+      template: '<span class="index">{{ item.index }}</span><span class="score">{{ item.score }}</span>',
+      computed: computedWith({ index: 3, score: 0 })
+    });
+
+    expect(itemRef.querySelector('.index')?.textContent).toBe('3');
+    expect(itemRef.querySelector('.score')?.textContent).toBe('0');
+
+    providers[0]!.setValue(computedWith({ index: 3, score: 2 }));
+    await itemRef.updateComplete;
+
+    expect(itemRef.querySelector('.score')?.textContent).toBe('2');
   });
 });
