@@ -24,12 +24,15 @@ export * from './qti-integer-to-float/qti-integer-to-float';
 export * from './qti-lcm/qti-lcm';
 export * from './qti-null/qti-null';
 export * from './qti-is-null/qti-is-null';
+export * from './qti-exit-response/qti-exit-response';
+export * from './qti-exit-test/qti-exit-test';
 export * from './qti-field-value/qti-field-value';
 export * from './qti-lt/qti-lt';
 export * from './qti-lte/qti-lte';
 export * from './qti-map-response/qti-map-response';
 export * from './qti-map-response-point/qti-map-response-point';
 
+export * from './qti-math-constant/qti-math-constant';
 export * from './qti-math-operator/qti-math-operator';
 export * from './qti-match/qti-match';
 export * from './qti-max/qti-max';
@@ -64,3 +67,4 @@ export * from './qti-index/qti-index';
 
 // export * from './qti-expression';
 // export * from './qti-condition-expression';
+export * from './qti-response-processing-fragment/qti-response-processing-fragment';

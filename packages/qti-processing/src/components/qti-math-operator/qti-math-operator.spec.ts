@@ -114,9 +114,20 @@ describe('qti-math-operator', () => {
 
   // Logarithmic functions
   describe('logarithmic functions', () => {
-    it('should calculate log (natural log) correctly', () => {
+    it('should calculate log as the base-10 logarithm', () => {
       const template = () => html`
         <qti-math-operator name="log">
+          <qti-base-value base-type="float">1000</qti-base-value>
+        </qti-math-operator>
+      `;
+      render(template(), testContainer);
+      const qtiMathOp = testContainer.querySelector('qti-math-operator') as QtiMathOperator;
+      expect(qtiMathOp.calculate()).toBeCloseTo(3, 10);
+    });
+
+    it('should calculate ln as the natural logarithm', () => {
+      const template = () => html`
+        <qti-math-operator name="ln">
           <qti-base-value base-type="float">${Math.E}</qti-base-value>
         </qti-math-operator>
       `;
@@ -378,6 +389,47 @@ describe('qti-math-operator', () => {
       render(template(), testContainer);
       const qtiMathOp = testContainer.querySelector('qti-math-operator') as QtiMathOperator;
       expect(qtiMathOp.calculate()).toBeNull();
+    });
+  });
+  // Functions the QTI vocabulary names but that had no implementation here.
+  describe('reciprocal trigonometric functions and angle conversion', () => {
+    const calc = (name: string, value: number) => {
+      render(
+        html`
+          <qti-math-operator name="${name}">
+            <qti-base-value base-type="float">${value}</qti-base-value>
+          </qti-math-operator>
+        `,
+        testContainer
+      );
+      return (testContainer.querySelector('qti-math-operator') as QtiMathOperator).calculate();
+    };
+
+    it.each([
+      ['secant', 0, 1],
+      ['sec', 0, 1],
+      ['cosecant', Math.PI / 2, 1],
+      ['csc', Math.PI / 2, 1],
+      ['cotangent', Math.PI / 4, 1],
+      ['cot', Math.PI / 4, 1]
+    ])('should calculate %s correctly', (name, value, expected) => {
+      expect(calc(name as string, value as number)).toBeCloseTo(expected as number, 10);
+    });
+
+    it('should return null for cosecant where sin is 0', () => {
+      expect(calc('cosecant', 0)).toBeNull();
+    });
+
+    it('should return null for cotangent where sin is 0', () => {
+      expect(calc('cotangent', 0)).toBeNull();
+    });
+
+    it('should convert radians to degrees', () => {
+      expect(calc('toDegrees', Math.PI)).toBeCloseTo(180, 10);
+    });
+
+    it('should convert degrees to radians', () => {
+      expect(calc('toRadians', 180)).toBeCloseTo(Math.PI, 10);
     });
   });
 });

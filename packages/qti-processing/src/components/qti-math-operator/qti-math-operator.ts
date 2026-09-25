@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-math-operator performs mathematical operations on numerical values.
@@ -14,6 +14,14 @@ import type { ResponseVariable } from '@qti-components/base';
  */
 export class QtiMathOperator extends QtiExpression<number | null> {
   @property({ type: String }) name: string = '';
+
+  /**
+   * Float for every function except the three that produce a whole number:
+   * `floor`, `ceil` and `signum`.
+   */
+  public override get resultBaseType(): BaseType {
+    return ['floor', 'ceil', 'signum'].includes(this.name?.toLowerCase()) ? 'integer' : 'float';
+  }
 
   public override getResult(): number | null {
     if (!this.name) {
@@ -66,6 +74,11 @@ export class QtiMathOperator extends QtiExpression<number | null> {
     return this.#performOperation(this.name, values);
   }
 
+  /** A function with no finite result at this argument is NULL, not Infinity. */
+  #finite(value: number): number | null {
+    return Number.isFinite(value) ? value : null;
+  }
+
   #performOperation(operation: string, values: number[]): number | null {
     try {
       switch (operation.toLowerCase()) {
@@ -108,10 +121,41 @@ export class QtiMathOperator extends QtiExpression<number | null> {
           if (values.length !== 1) return null;
           return Math.tanh(values[0]);
 
+        // Reciprocal trigonometric functions. Accepted under both the long
+        // names the QTI vocabulary spells out and the short ones items use in
+        // practice. Each is NULL where its reciprocal is undefined, which
+        // #finite catches as a non-finite result.
+        case 'secant':
+        case 'sec':
+          if (values.length !== 1) return null;
+          return this.#finite(1 / Math.cos(values[0]));
+
+        case 'cosecant':
+        case 'csc':
+          if (values.length !== 1) return null;
+          return this.#finite(1 / Math.sin(values[0]));
+
+        case 'cotangent':
+        case 'cot':
+          if (values.length !== 1) return null;
+          return this.#finite(Math.cos(values[0]) / Math.sin(values[0]));
+
+        // Angle conversions. Every other function here works in radians.
+        case 'todegrees':
+          if (values.length !== 1) return null;
+          return (values[0] * 180) / Math.PI;
+
+        case 'toradians':
+          if (values.length !== 1) return null;
+          return (values[0] * Math.PI) / 180;
+
+        // `log` is the base-10 logarithm per the QTI vocabulary; `ln` is the
+        // natural one. They are not interchangeable — this used to return the
+        // natural log for both.
         case 'log':
           if (values.length !== 1) return null;
           if (values[0] <= 0) return null; // Outside domain
-          return Math.log(values[0]);
+          return Math.log10(values[0]);
 
         case 'ln':
           if (values.length !== 1) return null;

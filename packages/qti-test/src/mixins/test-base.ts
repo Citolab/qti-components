@@ -164,7 +164,6 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
       const identifier = context.identifier;
       const fullVariables = context.variables;
 
-      // console.log(this._testContext);
       // Find the corresponding item in the test context by identifier
       const itemContext = this.testContext.items.find(i => i?.identifier === identifier);
 
