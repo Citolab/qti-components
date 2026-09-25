@@ -8,6 +8,12 @@ export class TestItemLink extends LitElement {
     :host {
       ${styles.btn};
     }
+    :host(:hover:not([disabled])) {
+      ${styles.btnInteractive};
+    }
+    :host(:focus-visible) {
+      ${styles.focusRing};
+    }
     :host([disabled]) {
       ${styles.dis};
     }

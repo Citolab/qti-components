@@ -99,10 +99,10 @@ export const QtiTest: Story = {
             <div class="flex items-center gap-2 p-2">
               <test-view>View</test-view><test-scoring-buttons></test-scoring-buttons>
               <test-item-to-speech language="nl-NL">
-                <test-tts-prev>◀◀</test-tts-prev>
+                <test-tts-prev></test-tts-prev>
                 <test-tts-play></test-tts-play>
-                <test-tts-next>▶▶</test-tts-next>
-                <test-tts-stop>■</test-tts-stop>
+                <test-tts-next></test-tts-next>
+                <test-tts-stop></test-tts-stop>
               </test-item-to-speech>
             </div>
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>

@@ -22,11 +22,13 @@ A controller + `@lit/context` provider for reading the active item's body aloud 
 ```html
 <test-item-to-speech language="nl-NL">
   <test-tts-play></test-tts-play>
-  <test-tts-prev>◀◀</test-tts-prev>
-  <test-tts-next>▶▶</test-tts-next>
-  <test-tts-stop>■</test-tts-stop>
+  <test-tts-prev></test-tts-prev>
+  <test-tts-next></test-tts-next>
+  <test-tts-stop></test-tts-stop>
 </test-item-to-speech>
 ```
+
+Each control draws an icon button with an English accessible name; slotted content replaces the icon, and a slotted `<svg>` is sized like the default. `label` (and `pause-label` on `<test-tts-play>`) names the button — set it when you slot an icon of your own, which has no text to be named by. The buttons read the qti-theme tokens, with the theme's defaults as fallbacks, and `--test-button-size` / `--test-tts-icon-size` resize them.
 
 Speech automatically stops on navigation. Uses the CSS Custom Highlight API (`::highlight()`) to mark the current reading element and the word being spoken, and mirrors playback state onto each button's `ElementInternals` custom states (`:state(idle)`, `:state(playing)`, `:state(paused)`) for CSS-only styling.
 

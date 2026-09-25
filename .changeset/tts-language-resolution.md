@@ -21,3 +21,7 @@
 - Reading elements now include `qti-prompt` and `qti-simple-choice`, and nested matches are read
   once. Prev/next stay enabled before the elements have been collected, and play after the last
   element starts the item over.
+- **Icon buttons.** The controls draw SVG icons instead of text glyphs, so every button has the
+  same box, each with an English accessible name. Slotted content still replaces the default, and
+  a slotted `<svg>` is sized like it; `label` (plus `pause-label` on `<test-tts-play>`) names the
+  button, which a slotted icon needs. The controller lays its controls out as a wrapping row.

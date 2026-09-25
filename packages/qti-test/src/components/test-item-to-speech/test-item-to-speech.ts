@@ -1,8 +1,11 @@
 import { html, LitElement, css } from 'lit';
 import { consume, provide, createContext } from '@lit/context';
 import { property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sessionContext } from '@qti-components/base';
+
+import * as styles from '../styles';
 
 import type { PropertyValues } from 'lit';
 import type { SessionContext } from '@qti-components/base';
@@ -52,6 +55,25 @@ export interface TtsContext {
 export { SpeechState };
 export const ttsContext = createContext<TtsContext>(Symbol('tts-context'));
 
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+// Plain geometric glyphs on a 24-unit grid, painted in currentColor. SVG rather than text so
+// every button gets the same box: text glyphs (◀◀ ▶ ⏸ ■ ☞) differ in width, and some fall back
+// to an emoji font with different line metrics.
+const ICONS = {
+  play: 'M8 5v14l11-7z',
+  pause: 'M6 5h4v14H6zM14 5h4v14h-4z',
+  stop: 'M6 6h12v12H6z',
+  prev: 'M6 5h2v14H6zM20 5v14L9 12z',
+  next: 'M16 5h2v14h-2zM4 5v14l11-7z',
+  pick: 'M5 3l13 7-5.5 1.6 3.4 6.6-2.4 1.3-3.4-6.7L6 17z'
+} as const;
+
+/** Default button content: the icon, plus a visually hidden label as the accessible name. */
+const iconContent = (icon: keyof typeof ICONS, label: string) =>
+  html`<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${ICONS[icon]}></path></svg
+    ><span class="label">${label}</span>`;
+
 // ─── Shared base for child button elements ────────────────────────────────────
 
 /**
@@ -62,16 +84,53 @@ export const ttsContext = createContext<TtsContext>(Symbol('tts-context'));
 abstract class TtsButtonBase extends LitElement {
   static override styles = css`
     :host {
-      display: inline-block;
+      display: inline-flex;
     }
     button {
-      cursor: pointer;
+      ${styles.btn};
+      min-inline-size: var(--test-button-size, 2.25rem);
+      padding-inline: 0.5rem;
+    }
+    button:hover:not(:disabled) {
+      ${styles.btnInteractive};
+    }
+    button:focus-visible {
+      ${styles.focusRing};
     }
     button:disabled {
-      opacity: 0.4;
-      cursor: default;
+      ${styles.dis};
+    }
+    button[aria-pressed='true'],
+    button[aria-pressed='true']:hover {
+      background-color: var(--test-button-selected-background-color, var(--qti-selected-bg, #0175aa));
+      color: var(--test-button-selected-color, var(--qti-selected-color, #fff));
+    }
+    svg,
+    ::slotted(svg) {
+      flex: none;
+      inline-size: var(--test-tts-icon-size, 1.125rem);
+      block-size: var(--test-tts-icon-size, 1.125rem);
+    }
+    svg {
+      fill: currentColor;
+    }
+    /* The default content is icon-only; this keeps the button's accessible name. */
+    .label {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   `;
+
+  /**
+   * Accessible name of the button. Without it the default icon carries an English name, and
+   * slotted content names the button by its text; set it when you slot an icon of your own,
+   * which has no text to be named by.
+   */
+  @property({ type: String }) label?: string;
 
   #internals = this.attachInternals();
 
@@ -106,11 +165,16 @@ abstract class TtsButtonBase extends LitElement {
  * ```html
  * <test-item-to-speech language="nl-NL">
  *   <test-tts-play></test-tts-play>
- *   <test-tts-prev>◀◀</test-tts-prev>
- *   <test-tts-next>▶▶</test-tts-next>
- *   <test-tts-stop>■</test-tts-stop>
+ *   <test-tts-prev></test-tts-prev>
+ *   <test-tts-next></test-tts-next>
+ *   <test-tts-stop></test-tts-stop>
  * </test-item-to-speech>
  * ```
+ *
+ * The controller lays its controls out as a wrapping row; each control draws an icon button,
+ * and slotted content replaces the icon — a slotted `<svg>` is sized like the default one. Give a
+ * control with a slotted icon a `label`, since an icon has no text to name the button by. Buttons read the qti-theme tokens (with the theme's
+ * defaults as fallbacks) and can be sized with `--test-button-size` and `--test-tts-icon-size`.
  *
  * ### Language resolution
  *
@@ -150,6 +214,15 @@ abstract class TtsButtonBase extends LitElement {
  */
 
 export class TestItemToSpeech extends LitElement {
+  static override styles = css`
+    :host {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--test-tts-gap, 0.25rem);
+    }
+  `;
+
   /** Fallback language when neither the item content nor the document declares one. */
   @property({ type: String }) language = 'nl-NL';
 
@@ -703,13 +776,14 @@ export class TestItemToSpeech extends LitElement {
 
 /**
  * Play/pause/resume toggle button — always enabled, cycles through states.
- * Use named slots `play` and `pause` to customise the icons/labels independently.
+ * Use named slots `play` and `pause` to customise the icons/labels independently; `label` and
+ * `pause-label` name the button in each state (set them when the slotted content is an icon).
  *
  * @example
  * ```html
  * <test-tts-play>
- *   <span slot="play">▶ Play</span>
- *   <span slot="pause">⏸ Pause</span>
+ *   <span slot="play">Voorlezen</span>
+ *   <span slot="pause">Pauzeren</span>
  * </test-tts-play>
  * ```
  *
@@ -718,6 +792,9 @@ export class TestItemToSpeech extends LitElement {
  */
 
 export class TestTtsPlay extends TtsButtonBase {
+  /** Accessible name of the button while speech is playing; see `label`. */
+  @property({ type: String, attribute: 'pause-label' }) pauseLabel?: string;
+
   #toggle() {
     if (!this._tts) return;
     if (this._tts.state === 'idle') this._tts.play();
@@ -728,8 +805,10 @@ export class TestTtsPlay extends TtsButtonBase {
   override render() {
     const playing = this._tts?.state === 'playing';
     return html`
-      <button part="button" @click=${this.#toggle}>
-        ${playing ? html`<slot name="pause">⏸</slot>` : html`<slot name="play">▶</slot>`}
+      <button part="button" aria-label=${ifDefined(playing ? this.pauseLabel : this.label)} @click=${this.#toggle}>
+        ${playing
+          ? html`<slot name="pause">${iconContent('pause', this.pauseLabel ?? 'Pause')}</slot>`
+          : html`<slot name="play">${iconContent('play', this.label ?? 'Play')}</slot>`}
       </button>
     `;
   }
@@ -744,8 +823,13 @@ export class TestTtsPlay extends TtsButtonBase {
 export class TestTtsPause extends TtsButtonBase {
   override render() {
     return html`
-      <button part="button" ?disabled=${this._tts?.state !== 'playing'} @click=${() => this._tts?.pause()}>
-        <slot>⏸</slot>
+      <button
+        part="button"
+        aria-label=${ifDefined(this.label)}
+        ?disabled=${this._tts?.state !== 'playing'}
+        @click=${() => this._tts?.pause()}
+      >
+        <slot>${iconContent('pause', this.label ?? 'Pause')}</slot>
       </button>
     `;
   }
@@ -760,8 +844,13 @@ export class TestTtsPause extends TtsButtonBase {
 export class TestTtsResume extends TtsButtonBase {
   override render() {
     return html`
-      <button part="button" ?disabled=${this._tts?.state !== 'paused'} @click=${() => this._tts?.resume()}>
-        <slot>▶</slot>
+      <button
+        part="button"
+        aria-label=${ifDefined(this.label)}
+        ?disabled=${this._tts?.state !== 'paused'}
+        @click=${() => this._tts?.resume()}
+      >
+        <slot>${iconContent('play', this.label ?? 'Resume')}</slot>
       </button>
     `;
   }
@@ -777,8 +866,8 @@ export class TestTtsStop extends TtsButtonBase {
   override render() {
     const idle = this._tts?.state === 'idle' && !this._tts?.picking;
     return html`
-      <button part="button" ?disabled=${idle} @click=${() => this._tts?.stop()}>
-        <slot>■</slot>
+      <button part="button" aria-label=${ifDefined(this.label)} ?disabled=${idle} @click=${() => this._tts?.stop()}>
+        <slot>${iconContent('stop', this.label ?? 'Stop')}</slot>
       </button>
     `;
   }
@@ -798,8 +887,13 @@ export class TestTtsPrev extends TtsButtonBase {
     const collected = (this._tts?.elementCount ?? 0) > 0;
     const atStart = (this._tts?.currentElementIndex ?? 0) === 0;
     return html`
-      <button part="button" ?disabled=${collected && atStart} @click=${() => this._tts?.prevElement()}>
-        <slot>◀◀</slot>
+      <button
+        part="button"
+        aria-label=${ifDefined(this.label)}
+        ?disabled=${collected && atStart}
+        @click=${() => this._tts?.prevElement()}
+      >
+        <slot>${iconContent('prev', this.label ?? 'Previous sentence')}</slot>
       </button>
     `;
   }
@@ -818,8 +912,13 @@ export class TestTtsNext extends TtsButtonBase {
     const count = this._tts?.elementCount ?? 0;
     const atEnd = count > 0 && (this._tts?.currentElementIndex ?? 0) >= count - 1;
     return html`
-      <button part="button" ?disabled=${atEnd} @click=${() => this._tts?.nextElement()}>
-        <slot>▶▶</slot>
+      <button
+        part="button"
+        aria-label=${ifDefined(this.label)}
+        ?disabled=${atEnd}
+        @click=${() => this._tts?.nextElement()}
+      >
+        <slot>${iconContent('next', this.label ?? 'Next sentence')}</slot>
       </button>
     `;
   }
@@ -838,10 +937,11 @@ export class TestTtsPick extends TtsButtonBase {
     return html`
       <button
         part="button"
+        aria-label=${ifDefined(this.label)}
         aria-pressed=${this._tts?.picking ? 'true' : 'false'}
         @click=${() => this._tts?.togglePick()}
       >
-        <slot>☞</slot>
+        <slot>${iconContent('pick', this.label ?? 'Read from here')}</slot>
       </button>
     `;
   }

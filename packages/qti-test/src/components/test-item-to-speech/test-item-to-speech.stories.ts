@@ -1,13 +1,14 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, spyOn, waitFor, within } from 'storybook/test';
 import { within as shadowWithin } from 'shadow-dom-testing-library';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer
 } from '../../../../../tools/testing/test-utils';
 
+import '../../../../../.storybook/utilities.css';
 import type { TestItemToSpeech } from './test-item-to-speech';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -63,24 +64,26 @@ const EXAMPLES = [
 export const LanguageResolution: Story = {
   render: args => html`
     <qti-test navigate="item">
-      <test-navigation>
-        <ol style="font-size: 0.875rem; line-height: 1.5">
+      <test-navigation class="stack">
+        <div class="card stack text-sm">
           ${EXAMPLES.map(
-            e => html`<li><test-item-link item-id=${e.id}>${e.label}</test-item-link> — ${e.explains}</li>`
+            e =>
+              html`<div class="row">
+                <test-item-link item-id=${e.id}>${e.label}</test-item-link><span class="muted">${e.explains}</span>
+              </div>`
           )}
-        </ol>
-        <div style="display: flex; gap: 0.5rem; align-items: center; padding: 0.5rem 0">
+        </div>
+        <div class="row">
           <test-item-to-speech language=${args.language}>
-            <test-tts-prev>◀◀</test-tts-prev>
-            <test-tts-play>
-              <span slot="play">▶ Play</span>
-              <span slot="pause">⏸ Pause</span>
-            </test-tts-play>
-            <test-tts-next>▶▶</test-tts-next>
-            <test-tts-stop>■ Stop</test-tts-stop>
+            <test-tts-prev></test-tts-prev>
+            <test-tts-play></test-tts-play>
+            <test-tts-next></test-tts-next>
+            <test-tts-stop></test-tts-stop>
+            <test-tts-pick></test-tts-pick>
           </test-item-to-speech>
           <button
             type="button"
+            class="story-button"
             @click=${(e: Event) => {
               const root = document.documentElement;
               if (root.getAttribute('lang')) root.removeAttribute('lang');
@@ -90,7 +93,7 @@ export const LanguageResolution: Story = {
           >
             Document lang: ${document.documentElement.getAttribute('lang') || 'none'}
           </button>
-          <span style="font-size: 0.875rem">Player fallback language: <code>${args.language}</code></span>
+          <span class="text-sm muted">Player fallback language: <code>${args.language}</code></span>
         </div>
         <test-container test-url=${TEST_URL}></test-container>
       </test-navigation>
@@ -111,7 +114,11 @@ export const LanguageResolution: Story = {
     const cancel = spyOn(speechSynthesis, 'cancel').mockImplementation(() => {});
 
     const tts = canvasElement.querySelector('test-item-to-speech') as TestItemToSpeech;
-    const playButton = await canvas.findByText('▶ Play');
+    const playButton = await waitFor(() => {
+      const button = tts.querySelector('test-tts-play')?.shadowRoot?.querySelector('button');
+      expect(button).toBeTruthy();
+      return button!;
+    });
 
     const readItem = async (title: string, itemId: string) => {
       spokenLangs.length = 0;
@@ -176,21 +183,21 @@ export const LanguageResolution: Story = {
  * pins each player to the item it sits on, so this also works on a section page showing several
  * items at once; starting one player stops any other.
  *
- * The template renders inside `<test-container>`'s shadow root, where page CSS does not reach,
- * so the toolbar is styled inline. `{{ item.index }}` comes from the computed context and is
- * empty for info items.
+ * The template renders inside `<test-container>`'s shadow root, where page CSS does not reach;
+ * the player lays out and paints itself, so only the row around it needs an inline style.
+ * `{{ item.index }}` is the item's number in the test, from the computed context.
  */
 export const OnEveryItem: Story = {
   render: () =>
     html` <qti-test navigate="item">
       <template item-ref>
-        <div style="display:flex; gap:0.25rem; align-items:center; margin-block-end:0.5rem">
+        <div style="display: flex; gap: 0.5rem; align-items: center; margin-block-end: 0.75rem">
           <template type="if" if="{{ item.index }}">
             <strong>{{ item.index }}.</strong>
           </template>
-          <test-item-to-speech item-ref-id="{{ identifier }}" style="display:flex; gap:0.25rem">
+          <test-item-to-speech item-ref-id="{{ identifier }}">
             <test-tts-play></test-tts-play>
-            <test-tts-pick>☞</test-tts-pick>
+            <test-tts-pick></test-tts-pick>
             <test-tts-prev></test-tts-prev>
             <test-tts-next></test-tts-next>
             <test-tts-stop></test-tts-stop>
@@ -198,8 +205,8 @@ export const OnEveryItem: Story = {
         </div>
         {{ xmlDoc }}
       </template>
-      <test-navigation>
-        <test-section-buttons-stamp>
+      <test-navigation class="stack">
+        <test-section-buttons-stamp class="row">
           <template>
             <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
           </template>
@@ -224,5 +231,68 @@ export const OnEveryItem: Story = {
     await fireEvent.click(await canvas.findByShadowText('info-end'));
     const lastItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info End');
     expectToolbarAboveItem(lastItem);
+  }
+};
+
+/** Outline icons standing in for a host's own icon set (Lucide, Font Awesome, a brand set, …). */
+const ownIcon = (slot: string | undefined, d: string) =>
+  html`<svg
+    slot=${slot ?? nothing}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d=${d}></path>
+  </svg>`;
+
+/**
+ * Each control takes its content from its slot, so a host can use its own icon set. The default
+ * icon is replaced along with its built-in English name, and an icon has no text to name the
+ * button by, so give every control a `label` (and `<test-tts-play>` a `pause-label` too). A
+ * slotted `<svg>` is sized like the default icon; `--test-tts-icon-size` resizes both.
+ */
+export const WithOwnIcons: Story = {
+  render: () => html`
+    <qti-test navigate="item">
+      <test-navigation class="stack">
+        <test-item-to-speech>
+          <test-tts-prev label="Vorige zin">${ownIcon(undefined, 'M18 6v12L9 12zM6 6v12')}</test-tts-prev>
+          <test-tts-play label="Voorlezen" pause-label="Pauzeren">
+            ${ownIcon('play', 'M7 4.5v15l12-7.5z')} ${ownIcon('pause', 'M8 5v14M16 5v14')}
+          </test-tts-play>
+          <test-tts-next label="Volgende zin">${ownIcon(undefined, 'M6 6v12l9-6zM18 6v12')}</test-tts-next>
+          <test-tts-stop label="Stoppen"
+            >${ownIcon(
+              undefined,
+              'M7 6h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z'
+            )}</test-tts-stop
+          >
+          <test-tts-pick label="Voorlezen vanaf hier">${ownIcon(undefined, 'M4 4l6 16 2.5-6.5L19 11z')}</test-tts-pick>
+        </test-item-to-speech>
+        <test-container test-url=${TEST_URL}></test-container>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement }) => {
+    const button = (tag: string) =>
+      canvasElement.querySelector(tag)!.shadowRoot!.querySelector<HTMLButtonElement>('button[part="button"]')!;
+
+    await waitFor(() => expect(button('test-tts-play')).toBeTruthy());
+
+    // Every control is named by its label, since the slotted icons carry no text.
+    expect(button('test-tts-prev').getAttribute('aria-label')).toBe('Vorige zin');
+    expect(button('test-tts-play').getAttribute('aria-label')).toBe('Voorlezen');
+    expect(button('test-tts-next').getAttribute('aria-label')).toBe('Volgende zin');
+    expect(button('test-tts-stop').getAttribute('aria-label')).toBe('Stoppen');
+    expect(button('test-tts-pick').getAttribute('aria-label')).toBe('Voorlezen vanaf hier');
+
+    // A slotted icon gets the default icon's size.
+    const icon = canvasElement.querySelector('test-tts-stop svg')!.getBoundingClientRect();
+    expect(icon.width).toBeCloseTo(18, 0);
+    expect(icon.height).toBeCloseTo(18, 0);
   }
 };

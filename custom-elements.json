@@ -53112,17 +53112,28 @@
         {
           "kind": "variable",
           "name": "btn",
-          "default": "css` background-color: lightgray; ${form}; `"
+          "default": "css` ${form}; background-color: var(--test-button-background-color, var(--qti-component-background-color, #fff)); color: var(--test-button-color, var(--qti-component-color, inherit)); border: var(--qti-component-border-width, 1px) var(--qti-component-border-style, solid) var(--test-button-border-color, var(--qti-component-border-color, #0175aa)); `"
+        },
+        {
+          "kind": "variable",
+          "name": "btnInteractive",
+          "default": "css` background-color: var(--test-button-hover-background-color, var(--qti-bg-active, #f2f8fb)); `",
+          "description": "Hover and keyboard focus; paint only, so the box never moves."
         },
         {
           "kind": "variable",
           "name": "dis",
-          "default": "css` cursor: not-allowed; opacity: 0.8; `"
+          "default": "css` cursor: not-allowed; opacity: 0.45; `"
+        },
+        {
+          "kind": "variable",
+          "name": "focusRing",
+          "default": "css` outline: var(--qti-focus-border-width, 2px) solid var(--qti-focus-color, #007ac3); outline-offset: 2px; `"
         },
         {
           "kind": "variable",
           "name": "form",
-          "default": "css` display: inline-flex; align-items: center; cursor: pointer; padding: 0.5rem 1rem; border-radius: 0.25rem; user-select: none; `"
+          "default": "css` display: inline-flex; align-items: center; justify-content: center; gap: 0.375em; box-sizing: border-box; min-block-size: var(--test-button-size, 2.25rem); padding: 0 0.875rem; font: inherit; line-height: 1.25; cursor: pointer; user-select: none; border-radius: var(--test-button-border-radius, var(--qti-component-border-radius, 0.2rem)); `"
         },
         {
           "kind": "variable",
@@ -53141,9 +53152,25 @@
         },
         {
           "kind": "js",
+          "name": "btnInteractive",
+          "declaration": {
+            "name": "btnInteractive",
+            "module": "packages/qti-test/src/components/styles.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "dis",
           "declaration": {
             "name": "dis",
+            "module": "packages/qti-test/src/components/styles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "focusRing",
+          "declaration": {
+            "name": "focusRing",
             "module": "packages/qti-test/src/components/styles.ts"
           }
         },
@@ -54116,6 +54143,22 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54128,6 +54171,23 @@
             "name": "TtsButtonBase",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
           "tagName": "test-tts-next",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
@@ -54191,6 +54251,22 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54203,6 +54279,23 @@
             "name": "TtsButtonBase",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
           "tagName": "test-tts-pause",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
@@ -54266,6 +54359,22 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54281,6 +54390,23 @@
             "name": "TtsButtonBase",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
           "tagName": "test-tts-pick",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
@@ -54288,7 +54414,7 @@
         },
         {
           "kind": "class",
-          "description": "Play/pause/resume toggle button — always enabled, cycles through states.\nUse named slots `play` and `pause` to customise the icons/labels independently.",
+          "description": "Play/pause/resume toggle button — always enabled, cycles through states.\nUse named slots `play` and `pause` to customise the icons/labels independently; `label` and\n`pause-label` name the button in each state (set them when the slotted content is an icon).",
           "name": "TestTtsPlay",
           "cssParts": [
             {
@@ -54349,6 +54475,62 @@
               "kind": "method",
               "name": "#toggle",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pauseLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button while speech is playing; see `label`.",
+              "attribute": "pause-label",
+              "parsedType": {
+                "text": "string"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            },
+            {
+              "name": "pause-label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button while speech is playing; see `label`.",
+              "fieldName": "pauseLabel",
+              "parsedType": {
+                "text": "string"
+              }
             }
           ],
           "cssStates": [
@@ -54424,6 +54606,22 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54436,6 +54634,23 @@
             "name": "TtsButtonBase",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
           "tagName": "test-tts-prev",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
@@ -54499,6 +54714,22 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54511,6 +54742,23 @@
             "name": "TtsButtonBase",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
           "tagName": "test-tts-resume",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
@@ -54574,6 +54822,22 @@
                 "name": "TtsButtonBase",
                 "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "attribute": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
             }
           ],
           "cssStates": [
@@ -54586,6 +54850,23 @@
             "name": "TtsButtonBase",
             "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
           },
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string | undefined"
+              },
+              "description": "Accessible name of the button. Without it the default icon carries an English name, and\nslotted content names the button by its text; set it when you slot an icon of your own,\nwhich has no text to be named by.",
+              "fieldName": "label",
+              "parsedType": {
+                "text": "string"
+              },
+              "inheritedFrom": {
+                "name": "TtsButtonBase",
+                "module": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts"
+              }
+            }
+          ],
           "tagName": "test-tts-stop",
           "customElement": true,
           "modulePath": "packages/qti-test/src/components/test-item-to-speech/test-item-to-speech.ts",
