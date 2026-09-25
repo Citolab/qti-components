@@ -1,12 +1,37 @@
 import '@citolab/qti-components';
 
 import { html, render } from 'lit';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import type { QtiExpression } from './qti-expression';
+import { QtiExpression } from './qti-expression';
+
+class TestExpressionCollector extends QtiExpression<unknown> {
+  override getResult() {
+    return this.getVariables();
+  }
+
+  readVariables() {
+    return this.getVariables();
+  }
+}
+
+class TestEmptyIntegerContainer extends QtiExpression<unknown[]> {
+  override getResult() {
+    return [];
+  }
+}
 
 describe('QtiExpression', () => {
   let testContainer: HTMLElement;
+
+  beforeAll(() => {
+    if (!customElements.get('test-expression-collector')) {
+      customElements.define('test-expression-collector', TestExpressionCollector);
+    }
+    if (!customElements.get('test-empty-integer-container')) {
+      customElements.define('test-empty-integer-container', TestEmptyIntegerContainer);
+    }
+  });
 
   beforeEach(() => {
     testContainer = document.createElement('div');
@@ -156,6 +181,24 @@ describe('QtiExpression', () => {
 
     it('reports an expression that evaluated to NULL as a NULL value, not a missing operand', () => {
       expect(calc('<qti-is-null><qti-null></qti-null></qti-is-null>', 'qti-is-null')).toBe(true);
+    });
+
+    it('keeps an empty container typed from its expression inputs', () => {
+      testContainer.innerHTML = `
+        <test-expression-collector>
+          <test-empty-integer-container>
+            <qti-base-value base-type="integer">1</qti-base-value>
+          </test-empty-integer-container>
+        </test-expression-collector>`;
+
+      const variables = (
+        testContainer.querySelector('test-expression-collector') as QtiExpression<unknown> & {
+          readVariables(): { baseType: string; value: string[] }[];
+        }
+      ).readVariables();
+
+      expect(variables[0].baseType).toBe('integer');
+      expect(variables[0].value).toEqual([]);
     });
   });
 

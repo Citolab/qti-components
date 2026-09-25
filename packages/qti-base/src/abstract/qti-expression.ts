@@ -77,6 +77,17 @@ const inferBaseType = (value: unknown): BaseType => {
   return 'string';
 };
 
+const inferContainerBaseType = (expression: QtiExpression<unknown>, value: unknown): BaseType | undefined => {
+  if (!Array.isArray(value) || value.length > 0) {
+    return undefined;
+  }
+
+  return expression
+    .getVariables()
+    .find(variable => variable?.baseType && variable.baseType !== 'record' && variable.cardinality !== 'record')
+    ?.baseType as BaseType | undefined;
+};
+
 export abstract class QtiExpression<T> extends LitElement implements QtiExpressionBase<T> {
   /*
    * Not `@state()`. Nothing renders it any more (see `render` below), so making
@@ -320,7 +331,8 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
             // Every operator without a case of its own lands here.
             try {
               const expression = e as QtiExpression<unknown>;
-              return variableFromValue(expression.getResult(), expression.resultBaseType);
+              const result = expression.getResult();
+              return variableFromValue(result, expression.resultBaseType ?? inferContainerBaseType(expression, result));
             } catch (error) {
               console.warn(`getVariables: could not read a value from <${e.tagName.toLowerCase()}>`, error);
             }
