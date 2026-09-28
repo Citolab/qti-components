@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import { LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { prepareTemplate } from '@heximal/templates';
 
@@ -69,7 +69,7 @@ export class QtiAssessmentItemRef extends LitElement {
   }
 
   @property({ type: Object, attribute: false })
-  xmlDoc!: DocumentFragment; // the XMLDocument
+  xmlDoc: DocumentFragment | null = null;
 
   protected override createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
@@ -143,6 +143,9 @@ export class QtiAssessmentItemRef extends LitElement {
   }
 
   override render() {
+    // Item refs connect before loading, and navigation clears their documents.
+    if (!this.xmlDoc) return nothing;
+
     const xmlDoc = this.xmlDoc.cloneNode(true) as DocumentFragment;
     if (!this.myTemplate) return xmlDoc;
 

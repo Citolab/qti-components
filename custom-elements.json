@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@420: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@588: {  }, length: number }"
               }
             },
             {
@@ -54551,8 +54551,9 @@
               "kind": "field",
               "name": "xmlDoc",
               "type": {
-                "text": "DocumentFragment"
-              }
+                "text": "DocumentFragment | null"
+              },
+              "default": "null"
             }
           ],
           "events": [
@@ -54623,6 +54624,11 @@
           "modulePath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts",
           "definitionPath": "packages/qti-test/src/components/qti-assessment-item-ref/qti-assessment-item-ref.ts",
           "tagName": "qti-assessment-item-ref"
+        },
+        {
+          "kind": "variable",
+          "name": "xmlDoc",
+          "default": "this.xmlDoc.cloneNode(true)"
         }
       ],
       "exports": [
