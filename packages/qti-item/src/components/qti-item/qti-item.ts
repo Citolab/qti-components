@@ -6,6 +6,8 @@ import { computedItemContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 import { qtiContext } from '@qti-components/base';
 
+import { ItemViewMixin } from '../../mixins/item-view.mixin';
+
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { ConfigContext } from '@qti-components/base';
 import type { QtiContext } from '@qti-components/base';
@@ -24,9 +26,18 @@ import type { ComputedItemContext } from '@qti-components/base';
  *   <item-container class="m-4 bg-white" item-url="./path/to/item.xml"></item-container>
  * </qti-item>
  * ```
+ *
+ * `view` selects the audience the item is presented to, which is what reveals `view`-tagged
+ * content such as a scorer's `qti-rubric-block` — see `ItemViewMixin`.
+ *
+ * ```html
+ * <qti-item view="scorer">
+ *   <item-container item-url="./path/to/item.xml"></item-container>
+ * </qti-item>
+ * ```
  */
 
-export class QtiItem extends LitElement {
+export class QtiItem extends ItemViewMixin(LitElement) {
   @state()
   @provide({ context: computedItemContext })
   public computedContext: ComputedItemContext;

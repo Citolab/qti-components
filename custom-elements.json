@@ -35901,6 +35901,33 @@
             },
             {
               "kind": "method",
+              "name": "updateAssessmentItemView",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "assessmentItem",
+                  "type": {
+                    "text": "QtiAssessmentItem"
+                  }
+                },
+                {
+                  "name": "view",
+                  "type": {
+                    "text": "View"
+                  }
+                }
+              ],
+              "description": "Scorer view IS the answer key, the same pairing `QtiTestCorrection` makes at test level.\nA marker switching to `scorer` to read the rubric would otherwise have to ask for the key\nseparately, and the two would drift apart.\n\n`scorer` alone because that is what the test side does — not because no other audience has\na use for a key. An author reviewing their own item plainly wants one, and arguably a tutor\ndoes too. If that is ever granted it has to be granted in both places at once, or the same\nitem answers differently depending on whether it is delivered inside a test.",
+              "type": {
+                "text": "updateAssessmentItemView(assessmentItem: QtiAssessmentItem, view: View) => void"
+              }
+            },
+            {
+              "kind": "method",
               "name": "updateControlState",
               "privacy": "private",
               "return": {
@@ -39925,7 +39952,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "`<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.\nIt can also host some functionalities to interact with the item like scoring, showing feedback, etc.\nPlacing a mandatory `<item-container>` inside '<qti-item>' will load or parse the item and render it.\nSee `<item-container>` for more details.\n\n```html\n<qti-item>\n  <item-container class=\"m-4 bg-white\" item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```",
+          "description": "`<qti-item>` is a custom element designed for rendering a single `qti-assessment-item`.\nIt can also host some functionalities to interact with the item like scoring, showing feedback, etc.\nPlacing a mandatory `<item-container>` inside '<qti-item>' will load or parse the item and render it.\nSee `<item-container>` for more details.\n\n```html\n<qti-item>\n  <item-container class=\"m-4 bg-white\" item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```\n\n`view` selects the audience the item is presented to, which is what reveals `view`-tagged\ncontent such as a scorer's `qti-rubric-block` — see `ItemViewMixin`.\n\n```html\n<qti-item view=\"scorer\">\n  <item-container item-url=\"./path/to/item.xml\"></item-container>\n</qti-item>\n```",
           "name": "QtiItem",
           "members": [
             {
@@ -40025,6 +40052,12 @@
               "privacy": "public",
               "default": "{ QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' } }",
               "description": "Provided so that descendants (e.g. `<item-container>`) can read the QTI runtime\ncontext for standalone item delivery, including the optional shuffle `seed`."
+            }
+          ],
+          "mixins": [
+            {
+              "name": "ItemViewMixin",
+              "module": "/packages/qti-item/src/mixins/item-view.mixin"
             }
           ],
           "superclass": {
