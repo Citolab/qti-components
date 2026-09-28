@@ -36,7 +36,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: 24
+          # Pinned below 24.16: `playwright install` hangs on Node 24.16+ (microsoft/playwright#40724).
+          # Shared pin across the QTI repos; bump together with .nvmrc and the devcontainer.
+          node-version: 24.15.0
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org/'
 

@@ -16521,7 +16521,7 @@
                 "text": "any[] | NodeListOf<QtiAssociableHotspot>"
               },
               "parsedType": {
-                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@588: {  }, length: number }"
+                "text": "any[] | { item: {  }, forEach: {  }, entries: {  }, keys: {  }, values: {  }, __@iterator@590: {  }, length: number }"
               }
             },
             {
@@ -32570,6 +32570,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -32629,6 +32642,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -32734,6 +32760,15 @@
               "privacy": "protected"
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]"
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -32777,6 +32812,15 @@
               "parsedType": {
                 "text": "{  }"
               }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -40755,6 +40799,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -40817,6 +40874,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -40970,6 +41040,19 @@
             },
             {
               "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "baseType",
               "type": {
                 "text": "BaseType"
@@ -41043,6 +41126,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41377,6 +41473,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -41439,6 +41548,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41654,6 +41776,19 @@
               "description": "`ScoringHelper.compareSingleValues` knows how each base type compares — a\n`pair` ignoring the order within it, numbers compared numerically. It\nreturns false for a base type it has no case for, so an unknown one falls\nback to comparing the values as written."
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#toArray",
               "privacy": "private",
@@ -41734,6 +41869,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -41856,6 +42004,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -41923,6 +42084,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42045,6 +42219,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -42116,6 +42303,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42248,6 +42448,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -42310,6 +42523,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42450,6 +42676,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -42512,6 +42751,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42644,6 +42896,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#parseDuration",
               "privacy": "private",
@@ -42724,6 +42989,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -42855,6 +43133,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#parseDuration",
               "privacy": "private",
@@ -42935,6 +43226,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43057,6 +43361,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -43124,6 +43441,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43271,6 +43601,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#withinTolerance",
               "privacy": "private",
@@ -43375,6 +43718,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43655,6 +44011,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -43718,6 +44087,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -43884,6 +44266,19 @@
               "description": "Calculate GCD of two numbers using Euclidean algorithm"
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -43946,6 +44341,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44068,6 +44476,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -44130,6 +44551,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44251,6 +44685,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -44313,6 +44760,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44434,6 +44894,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#lookupVariableValue",
               "privacy": "private",
@@ -44514,6 +44987,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -44749,6 +45235,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#parseCoords",
               "privacy": "private",
@@ -44856,6 +45355,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45022,6 +45534,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -45084,6 +45609,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45224,6 +45762,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -45286,6 +45837,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45408,6 +45972,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -45470,6 +46047,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45592,6 +46182,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -45654,6 +46257,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -45818,6 +46434,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#lcm",
               "privacy": "private",
@@ -45904,6 +46533,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46147,6 +46789,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46209,6 +46864,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46330,6 +46998,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46392,6 +47073,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46513,6 +47207,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46583,6 +47290,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46713,6 +47433,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46783,6 +47516,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -46920,6 +47666,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -46982,6 +47741,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47127,6 +47899,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -47189,6 +47974,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47349,6 +48147,19 @@
               "description": "A function with no finite result at this argument is NULL, not Infinity."
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#performOperation",
               "privacy": "private",
@@ -47435,6 +48246,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47594,6 +48418,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -47656,6 +48493,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47778,6 +48628,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -47840,6 +48703,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -47979,6 +48855,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48041,6 +48930,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48163,6 +49065,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48225,6 +49140,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48346,6 +49274,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48408,6 +49349,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48530,6 +49484,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48592,6 +49559,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48714,6 +49694,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48776,6 +49769,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -48898,6 +49904,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -48960,6 +49979,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -49404,6 +50436,19 @@
               "description": "XML Schema pattern semantics: the pattern has to match the *whole* value,\nnot appear somewhere inside it. Without the anchors a pattern like `[0-9]+`\naccepts \"abc123\". The pattern is wrapped in a group so a top-level `|`\ncannot escape them — `a|b` has to anchor as `^(?:a|b)$`.\n\nCompiled with the unicode flag first, because XML Schema allows `\\p{L}`\ncategory escapes and those only mean anything under `u`. That flag also\nrejects escapes JavaScript otherwise tolerates, so a pattern it refuses is\nretried without it rather than failing the whole comparison."
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -49466,6 +50511,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -49607,6 +50665,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -49669,6 +50740,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50129,6 +51213,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -50191,6 +51288,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50313,6 +51423,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -50389,6 +51512,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50564,6 +51700,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -50626,6 +51775,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -50765,6 +51927,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#resolveRepeatCount",
               "privacy": "private",
@@ -50855,6 +52030,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -51359,6 +52547,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#roundToDecimalPlaces",
               "privacy": "private",
@@ -51480,6 +52681,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -51635,6 +52849,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -51697,6 +52924,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -52282,6 +53522,19 @@
               ]
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "#mean",
               "privacy": "private",
@@ -52405,6 +53658,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -52546,6 +53812,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -52617,6 +53896,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -52748,6 +54040,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -52819,6 +54124,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -53075,6 +54393,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -53137,6 +54468,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -53279,6 +54623,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -53341,6 +54698,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -53463,6 +54833,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "calculate",
               "privacy": "public",
@@ -53525,6 +54908,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -55137,6 +56533,19 @@
             },
             {
               "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#testElement",
               "privacy": "private",
               "type": {
@@ -55208,6 +56617,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
@@ -55806,6 +57228,19 @@
             },
             {
               "kind": "field",
+              "name": "#lastVariables",
+              "privacy": "private",
+              "type": {
+                "text": "ExpressionVariable[]"
+              },
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#testElement",
               "privacy": "private",
               "type": {
@@ -55877,6 +57312,19 @@
               "parsedType": {
                 "text": "{  }"
               },
+              "inheritedFrom": {
+                "name": "QtiExpression",
+                "module": "packages/qti-base/src/abstract/qti-expression.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lastVariables",
+              "type": {
+                "text": "readonly ExpressionVariable[]"
+              },
+              "privacy": "public",
+              "readonly": true,
               "inheritedFrom": {
                 "name": "QtiExpression",
                 "module": "packages/qti-base/src/abstract/qti-expression.ts"
