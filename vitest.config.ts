@@ -40,6 +40,8 @@ export default defineConfig({
   },
 
   test: {
+    // .storybook/preview.ts imports the generated (uncommitted) custom-elements.json.
+    globalSetup: ['./tools/cem/ensure-manifest.mjs'],
     setupFiles: process.env.VRT === '1' ? ['./.storybook/vitest.vrt.setup.ts'] : [],
     /*
      * The `vrt` project loads all story files to tag-filter (the Storybook plugin ignores

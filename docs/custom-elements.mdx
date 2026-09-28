@@ -1,38 +1,39 @@
 # custom element manifest
 
-This project includes a [custom element manifest](./custom-elements.json) that describes the custom elements used in the project.
-This manifest is generated automatically during the build process and provides metadata about the custom elements, such as their properties, methods, events, and slots.
-The manifest is useful for documentation, tooling, and IDE support, as it allows developers to understand how to use the custom elements effectively.
-The `custom-elements.json` file is located in the root directory of the project.
+The project generates a [custom elements manifest](https://github.com/webcomponents/custom-elements-manifest)
+(`custom-elements.json`) that describes every element: its attributes, properties, events, slots,
+CSS parts and custom properties. It is built from the source and its JSDoc by the
+custom-elements-manifest analyzer with the `@wc-toolkit` plugins configured in `cem.config.mjs`.
 
-It is exported through the `package.json` file as follows:
+## Generating it
 
-```json
-{
-  "exports": {
-    "./customElements": "./custom-elements.json"
-  }
-}
+```sh
+pnpm run cem
 ```
 
-then you can import it in your project like this:
+This writes `custom-elements.json` to the repository root and the JSX types to
+`packages/qti-components/dist/qti-components-jsx.d.ts`.
 
-```js
-import manifest from 'https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/custom-elements.json' assert { type: 'json' };
-```
+The manifest is a **build output and is not committed** (it is in `.gitignore`). Everything that
+needs it generates it first:
 
-if you use the https://marketplace.visualstudio.com/items?itemName=wc-toolkit.web-components-language-server extension in VSCode,
+- `pnpm storybook` and `pnpm build-storybook` (Storybook reads it for the controls and API tables;
+  `pnpm storybook` also keeps it up to date with the analyzer in watch mode);
+- the Vitest `stories` and `vrt` projects (a global setup generates it when it is missing);
+- `pnpm lint:vocab`, which reads the tag names from it;
+- `pnpm build`, through the umbrella package's JSX types step.
 
-`wc.config.js` can be configured like this to use the manifest for better autocompletion and documentation:
+If Storybook's API tables look out of date, run `pnpm run cem`.
 
-```javascript
-export default {
-  libraries: {
-    '@citolab/qti-components': {
-      manifestSrc: 'https://cdn.jsdelivr.net/npm/@citolab/qti-components@latest/custom-elements.json'
-    }
-  }
-};
-```
+## Editor support
 
-For more information about the custom element manifest format, see the [Custom Elements Manifest Specification](https://github.com/webcomponents/custom-elements-manifest).
+With the [Web Components Language Server](https://marketplace.visualstudio.com/items?itemName=wc-toolkit.web-components-language-server)
+extension, the root `wc.config.js` points at the generated `./custom-elements.json`, so run
+`pnpm run cem` once after cloning.
+
+## For consumers of `@citolab/qti-components`
+
+The manifest itself is **not published**: its module paths point at this monorepo's sources
+(`packages/qti-base/src/...`), which do not exist in the package. What the package does ship is the
+JSX declarations generated from it, exported as `@citolab/qti-components/react`
+(`dist/qti-components-jsx.d.ts`).

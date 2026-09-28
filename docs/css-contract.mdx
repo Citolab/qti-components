@@ -134,4 +134,5 @@ exception — see `packages/qti-theme/DROP-SIZING.md`.
 The parts table is generated from `custom-elements.json`, which is built from `@csspart` JSDoc.
 That JSDoc can drift from what a component actually renders — `qti-text-entry-interaction` was
 documenting a `correct` part it no longer renders while omitting `answer` and `message`. When you
-add or rename a part, update the JSDoc in the same commit and regenerate with `pnpm cem`.
+add or rename a part, update the JSDoc in the same commit, regenerate the (uncommitted) manifest with
+`pnpm cem` and update the table above from it.

@@ -49,7 +49,7 @@ precommit:
 build:
 	pnpm run build
 
-# Regenerate the custom-elements.json manifests
+# Regenerate custom-elements.json (not committed) and the JSX types
 [group('build')]
 cem:
 	pnpm run cem

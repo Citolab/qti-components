@@ -32,7 +32,7 @@
     "docs:preview": "pnpm --filter @qti-components/site preview",
     "local:workspace-publish:force": "pnpm run build && pnpm -r --filter \"./packages/*\" --filter \"./packages/interactions/*\" --filter \"!./packages/qti-components\" --workspace-concurrency=1 publish --access public --ignore-scripts --no-git-checks",
     "ci:push-quality": "run-s lint madge build test publint attw consumer-types",
-    "storybook": "run-p storybook:dev cem:storybook:watch",
+    "storybook": "pnpm run cem && run-p storybook:dev cem:storybook:watch",
     "lint": "eslint && pnpm run lint:css && pnpm run lint:vocab",
     "test": "node tools/testing/pretest-clean.mjs && pnpm run build && vitest run",
     "test:vrt": "VRT=1 vitest run --project vrt",
@@ -51,7 +51,7 @@
     "commit-msg": "commitlint --edit",
     "build-storybook": "pnpm run cem && storybook build",
     "storybook:dev": "storybook dev -p 6006 --no-open",
-    "storybook:stackblitz": "pnpm run storybook:dev",
+    "storybook:stackblitz": "pnpm run cem && pnpm run storybook:dev",
     "cem:storybook:watch": "custom-elements-manifest analyze --watch --config cem.config.mjs",
     "css": "postcss packages/qti-theme/src/item.css -d dist -m",
     "chromatic": "node chromatic-runner.cjs",
@@ -76,7 +76,7 @@
     "ci:publish:umbrella": "PNPM_GIT_CHECKS=false pnpm --filter \"./packages/qti-components\" run publish",
     "ci:publish:missing": "run-s ci:publish:workspace ci:publish:umbrella",
     "lint:css": "stylelint \"packages/**/src/**/*.{css,scss}\"",
-    "lint:vocab": "node tools/qti-vocabulary/check.mjs"
+    "lint:vocab": "pnpm run cem && node tools/qti-vocabulary/check.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
