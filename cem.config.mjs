@@ -4,6 +4,7 @@ import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
 import { cemValidatorPlugin } from '@wc-toolkit/cem-validator';
+import { stableSymbolNamesPlugin } from './tools/cem/stable-symbol-names-plugin.mjs';
 
 console.log('Building the custom element manifest...');
 
@@ -212,6 +213,7 @@ export default {
         }
       }
     }),
-    removeEmptyClassArraysPlugin()
+    removeEmptyClassArraysPlugin(),
+    stableSymbolNamesPlugin()
   ]
 };
