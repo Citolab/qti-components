@@ -62,9 +62,7 @@ npx lint-staged --allow-empty --hide-unstaged
 # Keep the committed custom-elements.json manifests in sync with source.
 # `cem` (analyzer) is much cheaper than a full `pnpm run build`.
 pnpm run cem
-git add \
-  custom-elements.json \
-  packages/qti-interactions/custom-elements.qti.json
+git add custom-elements.json
 
 # No qti- name that 1EdTech does not define. Whole-repo rather than staged-file, because it is
 # a membership test against a fixed set and costs about a second — and because it reads the
