@@ -58,14 +58,3 @@ restore_merge_state() {
 trap restore_merge_state EXIT
 
 npx lint-staged --allow-empty --hide-unstaged
-
-# custom-elements.json is NOT committed any more (it made every branch conflict on a generated
-# file). `lint:vocab` below regenerates it before reading it.
-
-# No qti- name that 1EdTech does not define. Whole-repo rather than staged-file, because it is
-# a membership test against a fixed set — and because it reads the custom-elements manifest for
-# tag names, which `lint:vocab` regenerates first so it never judges a stale one. lint-staged
-# cannot host it for the same reason: it is not file-scoped. Also runs in CI via `lint` (see
-# ci:push-quality); here for the fast feedback, at the moment someone mints the name rather than
-# a push later.
-pnpm run lint:vocab

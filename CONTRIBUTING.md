@@ -44,8 +44,6 @@ One tier, same on every branch, deliberately **fast** — see `.husky/pre-commit
 
 1. `lint-staged` on **staged files only** — `prettier --write`, `eslint --fix`,
    and `vitest related` (the minimal tests for what you touched).
-2. `lint:vocab`, which regenerates `custom-elements.json` (not committed — it is a build output)
-   and checks every `qti-` tag name against the 1EdTech vocabulary.
 
 Heavy verification — full test suite, `madge`, `attw`, `publint` — is **CI's job**,
 not the commit's. Don't add it here; you'll hate committing.

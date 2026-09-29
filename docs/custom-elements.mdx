@@ -19,8 +19,8 @@ needs it generates it first:
 
 - `pnpm storybook` and `pnpm build-storybook` (Storybook reads it for the controls and API tables;
   `pnpm storybook` also keeps it up to date with the analyzer in watch mode);
-- the Vitest `stories` and `vrt` projects (a global setup generates it when it is missing);
-- `pnpm lint:vocab`, which reads the tag names from it;
+- Vitest (`vitest.config.ts` generates it when it is missing);
+- `pnpm lint`, because ESLint resolves the import in `.storybook/preview.ts`;
 - `pnpm build`, through the umbrella package's JSX types step.
 
 If Storybook's API tables look out of date, run `pnpm run cem`.
