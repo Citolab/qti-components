@@ -104,6 +104,9 @@ export default defineConfig({
           }),
           tsconfigPaths()
         ],
+        // addon-a11y's 'todo' mode never fails a CLI run but runs axe after every story; see
+        // the a11y parameter in .storybook/preview.ts. The Storybook UI keeps its 'todo' default.
+        define: isVitestStorybook ? {} : { 'import.meta.env.QTI_A11Y_TEST': JSON.stringify('off') },
         test: {
           name: 'stories',
           // Full Storybook runs exercise hundreds of browser stories concurrently. PCI and

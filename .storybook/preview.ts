@@ -140,7 +140,10 @@ const preview: Preview = {
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
-      test: 'todo'
+      // CLI Vitest runs define QTI_A11Y_TEST as 'off' (see vitest.config.ts): 'todo' never fails a
+      // run, yet axe after every story costs ~15% of the suite. Storybook dev and its Vitest panel
+      // leave it undefined and keep 'todo'.
+      test: import.meta.env.QTI_A11Y_TEST ?? 'todo'
     }
   },
 

@@ -114,22 +114,18 @@ export const Default: Story = {
     const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
     await pciElement?.waitForReady();
     await step('set first value', async () => {
-      let content = await pciElement.getIFrameContent();
-      await new Promise(resolve => setTimeout(resolve, 500));
-      expect(
-        content.includes(
-          `<div class="font-bold flex items-center justify-center bg-white border-1 text-right h-16 w-16">4</div>`
-        )
-      ).toBeFalsy();
-      await pciElement.iFrameSetValueElement('input', '4');
-      await pciElement.iFrameClickOnElementByText('Berekenen');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      content = await pciElement.getIFrameContent();
-      expect(
-        content.includes(
-          `<div class="font-bold flex items-center justify-center bg-white border-1 text-right h-16 w-16">4</div>`
-        )
-      ).toBeTruthy();
+      const cell = `<div class="font-bold flex items-center justify-center bg-white border-1 text-right h-16 w-16">4</div>`;
+      expect((await pciElement.getIFrameContent()).includes(cell)).toBeFalsy();
+      // The PCI keeps rendering after the handshake and can replace an input that was filled too
+      // early, so fill, calculate and check together until the result shows.
+      await waitFor(
+        async () => {
+          await pciElement.iFrameSetValueElement('input', '4');
+          await pciElement.iFrameClickOnElementByText('Berekenen');
+          expect((await pciElement.getIFrameContent()).includes(cell)).toBeTruthy();
+        },
+        { timeout: 5000 }
+      );
     });
   },
   parameters: {
@@ -210,9 +206,9 @@ export const RestoreFromState: Story = {
       await pciElement.recreateIframe();
 
       // Wait for the PCI to render restored content
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const content = await pciElement.getIFrameContent();
-      expect(content.length).toBeGreaterThan(0);
+      await waitFor(async () => expect((await pciElement.getIFrameContent()).length).toBeGreaterThan(0), {
+        timeout: 5000
+      });
     });
 
     assessmentItem.removeEventListener('qti-item-context-updated', onContextUpdated as any);
@@ -299,20 +295,13 @@ export const FallbackPath = {
     const pciElements = canvasElement.querySelectorAll('qti-portable-custom-interaction-test');
     const secondPciElement = pciElements[1];
     await secondPciElement?.waitForReady();
-    await step('check response without interaction', async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const response = secondPciElement.response;
-      // expect(response).toEqual('0');
-    });
     await step('click More buttons to reveal more rows', async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      await expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy();
-      await new Promise(resolve => setTimeout(resolve, 200));
-      await expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy();
-      await new Promise(resolve => setTimeout(resolve, 200));
-      await expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy();
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // A failed click (button not rendered yet) is retried; a successful one ends the wait.
+      for (let i = 0; i < 3; i++) {
+        await waitFor(() => expect(secondPciElement.iFrameClickOnElementByText('More')).resolves.toBeTruthy(), {
+          timeout: 5000
+        });
+      }
     });
   },
   parameters: {
@@ -382,16 +371,13 @@ export const TapToReveal = {
     const pciElement = canvasElement.querySelector('qti-portable-custom-interaction-test');
     await pciElement?.waitForReady();
     await step('check response without interaction', async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const response = pciElement.response;
-      expect(response).toEqual('0');
+      await waitFor(() => expect(pciElement.response).toEqual('0'), { timeout: 5000 });
     });
     await step('click on the second option and check the response', async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await pciElement.iFrameClickOnElement('.hmh-tap-image');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const response = pciElement.response;
-      expect(response).toEqual('1');
+      await waitFor(() => expect(pciElement.iFrameClickOnElement('.hmh-tap-image')).resolves.toBeTruthy(), {
+        timeout: 5000
+      });
+      await waitFor(() => expect(pciElement.response).toEqual('1'), { timeout: 5000 });
     });
   },
   parameters: {
@@ -483,13 +469,17 @@ export const VerhoudingenRestoreResponse = {
         },
         {
           timeout: 10000,
-          interval: 1000
+          interval: 100
         }
       );
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const content = await pciElement.getIFrameContent();
-      expect(content).toContain('fill="red"');
-      expect(content).toContain('fill="green"');
+      await waitFor(
+        async () => {
+          const content = await pciElement.getIFrameContent();
+          expect(content).toContain('fill="red"');
+          expect(content).toContain('fill="green"');
+        },
+        { timeout: 5000 }
+      );
     });
   },
   parameters: {

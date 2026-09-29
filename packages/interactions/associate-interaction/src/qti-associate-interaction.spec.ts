@@ -11,7 +11,7 @@ import '@qti-components/interactions';
  * also read as a cap on how many drags could be placed, which is a different quantity.
  */
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
 const build = async (maxAssociations: string, choiceCount: number, minAssociations = '1') => {
   const choices = Array.from(
