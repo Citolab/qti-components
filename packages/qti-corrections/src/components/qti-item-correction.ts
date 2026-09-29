@@ -1,5 +1,7 @@
 import { QtiItem } from '@qti-components/item/elements';
 
+import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { View } from '@qti-components/base';
 import type { CorrectResponseMode } from '../context/correction-config';
 
 type CorrectionAssessmentItem = {
@@ -28,6 +30,21 @@ export class QtiItemCorrection extends QtiItem {
       correctResponseMode: (event as CustomEvent<CorrectResponseMode>).detail
     } as typeof this.configContext;
   };
+
+  /**
+   * Scorer view IS the answer key, the same pairing `QtiTestCorrection` makes at test level.
+   * A marker switching to `scorer` to read the rubric would otherwise have to ask for the key
+   * separately, and the two would drift apart.
+   *
+   * `scorer` alone because that is what the test side does — not because no other audience has
+   * a use for a key. An author reviewing their own item plainly wants one, and arguably a tutor
+   * does too. If that is ever granted it has to be granted in both places at once, or the same
+   * item answers differently depending on whether it is delivered inside a test.
+   */
+  override updateAssessmentItemView(assessmentItem: QtiAssessmentItem, view: View): void {
+    (assessmentItem as unknown as Partial<CorrectionAssessmentItem>)?.showCorrectResponse?.(view === 'scorer');
+    this.updateControlState('item-show-correct-response', view === 'scorer');
+  }
 
   constructor() {
     super();

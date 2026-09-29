@@ -3,55 +3,50 @@ import { consume } from '@lit/context';
 import { testContext } from '@qti-components/base';
 import { QtiExpression } from '@qti-components/base';
 
+import { selectItemRefs, selectionFrom } from '../../internal/item-ref-selection';
+
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
 import type { TestContext } from '@qti-components/base';
-import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiExpressionBase } from '@qti-components/base';
 
-// <qti-custom-operator definition="trim">
 export class QtiTestVariables extends QtiExpression<number> {
   @consume({ context: testContext, subscribe: true })
   public _testContext?: TestContext;
 
-  #testElement: QtiAssessmentTest;
+  #connectedTest: QtiAssessmentTest | null = null;
 
   constructor() {
     super();
-    this.addEventListener('qti-assessment-test-connected', (e: CustomEvent) => (this.#testElement = e.detail));
+    this.addEventListener(
+      'qti-assessment-test-connected',
+      (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail)
+    );
+  }
+
+  /**
+   * `qti-assessment-test-connected` bubbles *up* from the test element, and this
+   * expression lives inside that test's `qti-outcome-processing` — so the
+   * listener above only ever fires for a test handed to us directly (a test
+   * harness). Walking up the tree is what resolves the test in a real document.
+   */
+  get #testElement(): QtiAssessmentTest | null {
+    return this.#connectedTest ?? this.closest<QtiAssessmentTest>('qti-assessment-test');
   }
 
   public override getResult() {
-    // children can be a mix of qti-expression and qti-condition-expression
-    const includedCategories = this.getAttribute('include-category')?.split(' ') ?? [];
-    const excludedCategories = this.getAttribute('exclude-category')?.split(' ') ?? [];
+    const testElement = this.#testElement;
+    if (!testElement) {
+      console.warn('qti-test-variables: no enclosing qti-assessment-test, nothing to aggregate');
+      return 0;
+    }
+
     const weightIdentifier = this.getAttribute('weight-identifier') ?? '';
     const itemVariable = this.getAttribute('variable-identifier');
 
-    const itemRefEls = Array.from<QtiAssessmentItemRef>(
-      this.#testElement.querySelectorAll<QtiAssessmentItemRef>(`qti-asssessment-test qti-assessment-item-ref`)
-    );
-
-    const includedItems = itemRefEls
-      .filter(itemRef => {
-        let include = true;
-        if (includedCategories.length > 0) {
-          include = includedCategories.includes(itemRef.category);
-        }
-        if (excludedCategories.length > 0) {
-          include = !excludedCategories.includes(itemRef.category);
-        }
-        return include;
-      })
-      .map(itemRef => {
-        let weight = 1;
-        if (weightIdentifier) {
-          const weightVariable = itemRef.weigths.get(weightIdentifier);
-          if (weightVariable !== null && weightVariable !== undefined) {
-            weight = weightVariable;
-          }
-        }
-        return { item: itemRef.identifier, weight };
-      });
+    const includedItems = selectItemRefs(testElement, selectionFrom(this)).map(itemRef => ({
+      item: itemRef.identifier,
+      weight: (weightIdentifier ? itemRef.weights.get(weightIdentifier) : undefined) ?? 1
+    }));
 
     const logic = new QtiTestVariablesExpression(this._testContext, itemVariable, includedItems);
     const value = logic.calculate();
@@ -71,7 +66,7 @@ export class QtiTestVariablesExpression implements QtiExpressionBase<number> {
   ) {}
 
   calculate(): number {
-    const { items } = this.testContext;
+    const items = this.testContext?.items ?? [];
     let total = 0;
     const uniqueItems = [...new Set(this.includedItems.map(item => item.item))];
     items.forEach(item => {
@@ -79,7 +74,12 @@ export class QtiTestVariablesExpression implements QtiExpressionBase<number> {
         const variable = item.variables.find(vr => vr.identifier === this.itemVariable);
         const weight = this.includedItems.find(i => i.item === item.identifier)?.weight ?? 1;
         if (variable) {
-          total += Number(variable.value) * weight;
+          // An unscored item carries a non-numeric value; counting it as NaN
+          // would poison the whole total rather than just its own contribution.
+          const value = Number(variable.value);
+          if (!Number.isNaN(value)) {
+            total += value * weight;
+          }
         }
       }
     });

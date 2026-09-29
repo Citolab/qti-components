@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="ITM-divide-compare" title="Lorem Numeric" adaptive="false" time-dependent="false">
+  <!--
+    Written for this suite rather than taken from anywhere: no item in this repo
+    computes with qti-divide or qti-math-operator, so nothing here exercised the
+    numeric comparison path end to end.
+
+    The candidate divides: RESPONSE is compared against 7/2 and against 8/2, the
+    second of which is whole. A whole result is inferred as an integer, and an
+    integer comparison used to truncate the other operand — so "4.5" scored as
+    if it were "4". Both halves matter, which is why both are scored.
+  -->
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="float" />
+  <qti-response-declaration identifier="RESPONSE2" cardinality="single" base-type="float" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value><qti-value>0</qti-value></qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value><qti-value>2</qti-value></qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <p>Lorem ipsum dolor sit amet.</p>
+    <qti-text-entry-interaction response-identifier="RESPONSE" expected-length="4" />
+    <qti-text-entry-interaction response-identifier="RESPONSE2" expected-length="4" />
+  </qti-item-body>
+  <qti-response-processing>
+    <!-- 7 / 2 is 3.5: a fractional result. -->
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-equal>
+          <qti-variable identifier="RESPONSE" />
+          <qti-divide>
+            <qti-base-value base-type="float">7</qti-base-value>
+            <qti-base-value base-type="float">2</qti-base-value>
+          </qti-divide>
+        </qti-equal>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-sum>
+            <qti-variable identifier="SCORE" />
+            <qti-base-value base-type="float">1</qti-base-value>
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <!-- 8 / 2 is 4: a whole result, which is where the truncation bit. -->
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-equal>
+          <qti-divide>
+            <qti-base-value base-type="float">8</qti-base-value>
+            <qti-base-value base-type="float">2</qti-base-value>
+          </qti-divide>
+          <qti-variable identifier="RESPONSE2" />
+        </qti-equal>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-sum>
+            <qti-variable identifier="SCORE" />
+            <qti-base-value base-type="float">1</qti-base-value>
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

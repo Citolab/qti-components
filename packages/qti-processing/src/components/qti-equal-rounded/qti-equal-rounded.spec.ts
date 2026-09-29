@@ -135,4 +135,46 @@ describe('qti-equal-rounded', () => {
 
     expect(qtiEqualRounded.calculate()).toBeFalsy();
   });
+  /*
+   * A pair the two rounding modes disagree about: at 3 decimal places 54.598
+   * and 54.608 differ, at 3 significant figures both are 54.6.
+   *
+   * `rounding-mode` never reached the property — Lit derives `roundingmode`
+   * from the property name unless told otherwise — so every comparison used the
+   * `significantFigures` default and an item asking for decimal places got
+   * significant figures. The existing specs above did not catch it because
+   * their values round the same either way.
+   */
+  describe('rounding-mode actually selects the mode', () => {
+    let testContainer: HTMLElement;
+
+    beforeEach(() => {
+      testContainer = document.createElement('div');
+      document.body.appendChild(testContainer);
+    });
+
+    afterEach(() => testContainer.remove());
+
+    const compare = (mode: string) => {
+      testContainer.innerHTML = `
+        <qti-equal-rounded rounding-mode="${mode}" figures="3">
+          <qti-base-value base-type="float">54.598</qti-base-value>
+          <qti-base-value base-type="float">54.608</qti-base-value>
+        </qti-equal-rounded>`;
+      return (testContainer.querySelector('qti-equal-rounded') as QtiEqualRounded).calculate();
+    };
+
+    it('separates values that differ in the third decimal place', () => {
+      expect(compare('decimalPlaces')).toBe(false);
+    });
+
+    it('treats the same values as equal to three significant figures', () => {
+      expect(compare('significantFigures')).toBe(true);
+    });
+
+    it('reads the attribute onto the property', () => {
+      testContainer.innerHTML = `<qti-equal-rounded rounding-mode="decimalPlaces" figures="3"></qti-equal-rounded>`;
+      expect((testContainer.querySelector('qti-equal-rounded') as QtiEqualRounded).roundingMode).toBe('decimalPlaces');
+    });
+  });
 });

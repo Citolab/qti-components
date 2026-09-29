@@ -3,7 +3,6 @@ import { QtiExpression } from '@qti-components/base';
 import type { ResponseVariable, VariableDeclaration } from '@qti-components/base';
 export class QtiMultiple extends QtiExpression<VariableDeclaration<string | string[]>[]> {
   public override getResult(): ResponseVariable[] {
-    console.debug('qti-multiple getResult called', this.innerHTML);
     const variables = this.getVariables() as ResponseVariable[];
 
     if (variables.length === 0) {
@@ -18,7 +17,6 @@ export class QtiMultiple extends QtiExpression<VariableDeclaration<string | stri
     }
 
     // const values = variables.map(v => v.value);
-    // console.log(variables);
     // const flattenedArray = values.reduce((acc: string[], value: string | string[]) => {
     //   return acc.concat(Array.isArray(value) ? [...value] : value);
     // }, []);

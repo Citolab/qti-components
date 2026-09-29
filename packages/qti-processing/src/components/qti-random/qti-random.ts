@@ -3,7 +3,6 @@ import { QtiExpression } from '@qti-components/base';
 export class QtiRandom extends QtiExpression<string> {
   public override getResult() {
     const values = this.getVariables();
-    // console.log(values);
 
     if (values.length === 1) {
       const value = values[0].value;

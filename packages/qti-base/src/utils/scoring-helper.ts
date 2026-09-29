@@ -110,6 +110,23 @@ export class ScoringHelper {
         const int1 = parseInt(value1, 10);
         const int2 = parseInt(value2, 10);
         if (!isNaN(int1) && !isNaN(int2)) {
+          /*
+           * `parseInt` truncates, so on its own it reads "2" and "2.5" as the
+           * same number. That matters because the base type is taken from one
+           * operand: an expression whose result happens to be whole is an
+           * integer, and it was then compared against a fractional value with
+           * the fraction thrown away — `equal(divide(4, 2), 2.5)` was true.
+           *
+           * When either side has a fractional part the two are, by definition,
+           * not the same number. Comparing them in full says so, while the
+           * integer path keeps `parseInt`'s tolerance of a value like "12 euro"
+           * for everything that really is whole.
+           */
+          const float1 = parseFloat(value1);
+          const float2 = parseFloat(value2);
+          if (!Number.isInteger(float1) || !Number.isInteger(float2)) {
+            return float1 === float2;
+          }
           return int1 === int2;
         } else {
           console.error(`Cannot convert ${value1} and/or ${value2} to int.`);
@@ -128,8 +145,17 @@ export class ScoringHelper {
       }
       case 'pair':
       case 'directedPair': {
-        const pair1 = value1.split(' ').sort();
-        const pair2 = value2.split(' ').sort();
+        /*
+         * Only a `pair` is unordered. A `directedPair` is directed — "A B" and
+         * "B A" are different values — so it must be compared as written.
+         *
+         * Both operands used to be sorted the moment they were split, which
+         * made the `baseType === 'pair'` sort below it dead code and every
+         * directedPair comparison order-insensitive: a candidate who matched
+         * the right two identifiers the wrong way round scored as correct.
+         */
+        const pair1 = value1.split(' ');
+        const pair2 = value2.split(' ');
         if (pair1.length === 2 && pair2.length === 2) {
           if (baseType === 'pair') {
             pair1.sort();

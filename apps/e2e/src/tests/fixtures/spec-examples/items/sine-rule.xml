@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<qti-assessment-item
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd"
+  identifier="Example04-feedbackBlock-templateBlock"
+  title="Find side, directly or sine rule"
+  time-dependent="false"
+  adaptive="true"
+  xml:lang="en">
+<!--
+  Shape taken from the worked examples in the QTI 3.0 implementation guide, as
+  supplied in review. Kept because the calculation is the point: template
+  processing computes an answer with qti-divide / qti-math-operator and response
+  processing compares the candidate against it.
+
+  The specs over this file assert the RELATIONSHIPS between the template
+  variables rather than fixed numbers, because the values are randomised on
+  every run.
+-->
+  <qti-response-declaration identifier="RESPONSE1" cardinality="single" base-type="float"/>
+
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE" normal-maximum="10.0" normal-minimum="0.0">
+    <qti-default-value>
+      <qti-value>0.0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+
+  <qti-template-declaration identifier="iA" cardinality="single" base-type="integer" param-variable="false" math-variable="true">
+    <qti-default-value>
+      <qti-value>90</qti-value>
+    </qti-default-value>
+  </qti-template-declaration>
+  <qti-template-declaration identifier="iB" cardinality="single" base-type="integer" param-variable="false" math-variable="true">
+    <qti-default-value>
+      <qti-value>65</qti-value>
+    </qti-default-value>
+  </qti-template-declaration>
+  <qti-template-declaration identifier="ia" cardinality="single" base-type="integer" param-variable="false" math-variable="true"/>
+  <qti-template-declaration identifier="sinA" cardinality="single" base-type="float" param-variable="false" math-variable="true"/>
+  <qti-template-declaration identifier="sinB" cardinality="single" base-type="float" param-variable="false" math-variable="true"/>
+  <qti-template-declaration identifier="fAns" cardinality="single" base-type="float" param-variable="false" math-variable="true"/>
+  <qti-template-declaration identifier="fPiOver180" cardinality="single" base-type="float" param-variable="false" math-variable="true"/>
+
+  <qti-template-processing>
+    <qti-set-template-value identifier="iA">
+      <qti-random>
+        <qti-multiple>
+          <qti-base-value base-type="integer">45</qti-base-value>
+          <qti-base-value base-type="integer">60</qti-base-value>
+          <qti-base-value base-type="integer">75</qti-base-value>
+          <qti-base-value base-type="integer">90</qti-base-value>
+        </qti-multiple>
+      </qti-random>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="iB">
+      <qti-random-integer min="50" max="85" step="5"/>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="ia">
+      <qti-random-integer min="5" max="50"/>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="fPiOver180">
+      <qti-divide>
+        <qti-math-constant name="pi"/>
+        <qti-base-value base-type="integer">180</qti-base-value>
+      </qti-divide>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="sinA">
+      <qti-math-operator name="sin">
+        <qti-product>
+          <qti-variable identifier="iA"/>
+          <qti-variable identifier="fPiOver180"/>
+        </qti-product>
+      </qti-math-operator>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="sinB">
+      <qti-math-operator name="sin">
+        <qti-product>
+          <qti-variable identifier="iB"/>
+          <qti-variable identifier="fPiOver180"/>
+        </qti-product>
+      </qti-math-operator>
+    </qti-set-template-value>
+    <qti-set-template-value identifier="fAns">
+      <qti-divide>
+        <qti-product>
+          <qti-variable identifier="ia"/>
+          <qti-variable identifier="sinB"/>
+        </qti-product>
+        <qti-variable identifier="sinA"/>
+      </qti-divide>
+    </qti-set-template-value>
+  </qti-template-processing>
+
+  <qti-item-body>
+    <p>Lorem ipsum a=<qti-printed-variable identifier="ia"/>, A=<qti-printed-variable identifier="iA"/>, B=<qti-printed-variable identifier="iB"/>.</p>
+    <qti-text-entry-interaction response-identifier="RESPONSE1"/>
+  </qti-item-body>
+
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-is-null>
+          <qti-variable identifier="RESPONSE1"/>
+        </qti-is-null>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-response-condition>
+          <qti-response-if>
+            <qti-equal-rounded rounding-mode="significantFigures" figures="3">
+              <qti-variable identifier="fAns"/>
+              <qti-variable identifier="RESPONSE1"/>
+            </qti-equal-rounded>
+            <qti-set-outcome-value identifier="SCORE">
+              <qti-base-value base-type="float">10.0</qti-base-value>
+            </qti-set-outcome-value>
+          </qti-response-if>
+        </qti-response-condition>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

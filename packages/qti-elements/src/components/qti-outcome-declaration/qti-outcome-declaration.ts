@@ -6,7 +6,7 @@ import { itemContext } from '@qti-components/base';
 import { QtiVariableDeclaration } from '@qti-components/base';
 
 import type { BaseType, Cardinality } from '@qti-components/base';
-import type { OutcomeVariable } from '@qti-components/base';
+import type { InterpolationTableEntry, OutcomeVariable } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 
 export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
@@ -32,24 +32,56 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
     return html`${JSON.stringify(value, null, 2)}`;
   }
 
-  get interpolationTable(): Map<number, number> | null {
+  /**
+   * The entries of a `qti-interpolation-table`, in document order.
+   *
+   * Order is load-bearing: each entry's `source-value` is the lower bound of a
+   * range, and the lookup takes the first entry whose bound the source value
+   * clears. A Map keyed by source value cannot express that.
+   */
+  get interpolationTable(): InterpolationTableEntry[] | null {
     const table = this.querySelector('qti-interpolation-table');
-    if (table) {
-      const entries = new Map<number, number>();
-      for (const entry of table.querySelectorAll('qti-interpolation-table-entry')) {
-        if (!entry.getAttribute('source-value') && entry.getAttribute('target-value')) {
-          console.error('source-value or target-value is missing in qti-interpolation-table-entry');
-        }
-        const sourceValue = parseFloat(entry.getAttribute('source-value'));
-        const targetValue = parseFloat(entry.getAttribute('target-value'));
-        if (isNaN(sourceValue) || isNaN(targetValue)) {
-          console.error('source-value or target-value is not a number in qti-interpolation-table-entry');
-        }
-        entries.set(sourceValue, targetValue);
+    if (!table) return null;
+
+    const entries: InterpolationTableEntry[] = [];
+    for (const entry of table.querySelectorAll('qti-interpolation-table-entry')) {
+      const sourceValue = parseFloat(entry.getAttribute('source-value'));
+      const targetValue = parseFloat(entry.getAttribute('target-value'));
+      if (Number.isNaN(sourceValue) || Number.isNaN(targetValue)) {
+        console.error('source-value or target-value is missing or not a number in qti-interpolation-table-entry');
+        continue;
       }
-      return entries;
+      entries.push({
+        sourceValue,
+        targetValue,
+        // The spec's default is true: the bound itself is in range unless the
+        // entry says otherwise.
+        includeBoundary: entry.getAttribute('include-boundary') !== 'false'
+      });
     }
-    return null;
+    return entries;
+  }
+
+  /**
+   * A qti-match-table maps a source value onto a target exactly, with no
+   * boundaries and no interpolation. Targets keep their authored spelling
+   * because a match table is not restricted to numeric outcomes.
+   */
+  get matchTable(): Map<number, string> | null {
+    const table = this.querySelector('qti-match-table');
+    if (!table) return null;
+
+    const entries = new Map<number, string>();
+    for (const entry of table.querySelectorAll('qti-match-table-entry')) {
+      const sourceValue = parseFloat(entry.getAttribute('source-value'));
+      const targetValue = entry.getAttribute('target-value');
+      if (Number.isNaN(sourceValue) || targetValue === null) {
+        console.error('source-value or target-value is missing or invalid in qti-match-table-entry');
+        continue;
+      }
+      entries.set(sourceValue, targetValue);
+    }
+    return entries;
   }
 
   public override connectedCallback() {
@@ -65,6 +97,7 @@ export class QtiOutcomeDeclaration extends QtiVariableDeclaration {
       type: 'outcome',
       value: null,
       interpolationTable: this.interpolationTable,
+      matchTable: this.matchTable,
       externalScored: this.externalScored
     };
     // At runtime, outcome variables are instantiated as part of an item session.

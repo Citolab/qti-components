@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-divide operator performs numerical division.
@@ -11,6 +11,11 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns NULL if either sub-expression is NULL or if divisor is 0.
  */
 export class QtiDivide extends QtiExpression<number | null> {
+  /** Always a float, even dividing two integers exactly. */
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
+
   public override getResult(): number | null {
     const values = this.#collectNumericValues(this.getVariables() as ResponseVariable[]);
     if (values.length !== 2) {

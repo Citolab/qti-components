@@ -20,7 +20,7 @@ export class QtiGte extends QtiConditionExpression {
         return null;
       }
     }
-    console.log('unexpected number of children in qte');
+    console.error('unexpected number of children in qti gte');
     return null;
   }
 }

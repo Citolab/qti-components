@@ -1,16 +1,20 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-integer-modulus operator returns the remainder of integer division.
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/info/index.html#integerModulus
  *
  * Takes 2 sub-expressions with base-type integer and single cardinality.
- * Returns the remainder (x % y).
+ * Returns the remainder that goes with qti-integer-divide, which rounds down.
  * Special cases: Returns NULL if any argument is NULL or if divisor is 0.
  */
 export class QtiIntegerModulus extends QtiExpression<number | null> {
+  public override get resultBaseType(): BaseType {
+    return 'integer';
+  }
+
   public override getResult(): number | null {
     const values = this.#collectIntegerValues(this.getVariables() as ResponseVariable[]);
 
@@ -24,7 +28,11 @@ export class QtiIntegerModulus extends QtiExpression<number | null> {
       return null;
     }
 
-    return values[0] % values[1];
+    // The remainder has to pair with qti-integer-divide, which rounds *down*
+    // (Math.floor). JavaScript's % truncates towards zero instead, so for a
+    // negative operand the two disagreed: -7 divide 3 gave -3 while -7 % 3 gave
+    // -1, where floored division leaves a remainder of 2.
+    return values[0] - Math.floor(values[0] / values[1]) * values[1];
   }
 
   #collectIntegerValues(variables: ResponseVariable[]): number[] {

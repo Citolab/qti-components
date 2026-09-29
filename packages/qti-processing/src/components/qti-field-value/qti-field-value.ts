@@ -10,35 +10,36 @@ import type { ResponseVariable } from '@qti-components/base';
  * Returns the value of the specified field.
  * Special cases: Returns NULL if sub-expression is NULL or field does not exist.
  */
-export class QtiFieldValue extends QtiExpression<string | string[]> {
+export class QtiFieldValue extends QtiExpression<string | string[] | null> {
+  /**
+   * Every failure here is NULL rather than a thrown error. `qti-is-null` over a
+   * `qti-field-value` is the specified way to ask whether a record carries a
+   * field at all, so a missing one has to be an ordinary value — throwing
+   * aborted the whole response processing run instead.
+   */
   public override getResult() {
     const fieldIdentifier = this.getAttribute('field-identifier');
 
     if (!fieldIdentifier) {
-      throw new Error('field-identifier attribute is required');
+      console.error('qti-field-value requires a field-identifier attribute');
+      return null;
     }
 
-    // Get the result from the child expression (should be a record)
-    const childElements = Array.from(this.children) as QtiExpression<any>[];
-
-    if (childElements.length !== 1) {
-      throw new Error('qti-field-value must have exactly one child expression');
+    if (this.children.length !== 1) {
+      console.error('qti-field-value must have exactly one child expression');
+      return null;
     }
 
     const variable = (this.getVariables() as ResponseVariable[])[0];
 
     // Check if the result is a record/object
-    if (variable.baseType !== 'record' || variable.value === null) {
-      throw new Error('qti-field-value child expression must return a record');
+    if (!variable || variable.baseType !== 'record' || variable.value === null || variable.value === undefined) {
+      console.warn('qti-field-value child expression must return a record');
+      return null;
     }
 
-    // Return the field value
     const fieldValue = (variable.value as Record<string, any>)[fieldIdentifier];
 
-    if (fieldValue === undefined) {
-      throw new Error(`Field "${fieldIdentifier}" not found in record`);
-    }
-
-    return fieldValue;
+    return fieldValue === undefined ? null : fieldValue;
   }
 }

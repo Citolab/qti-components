@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-integer-to-float operator converts an integer to a float.
@@ -11,6 +11,10 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns NULL if sub-expression is NULL.
  */
 export class QtiIntegerToFloat extends QtiExpression<number | null> {
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
+
   public override getResult(): number | null {
     const variables = this.getVariables() as ResponseVariable[];
 

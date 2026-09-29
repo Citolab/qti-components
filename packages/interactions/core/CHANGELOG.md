@@ -1,5 +1,56 @@
 # @qti-components/interactions-core
 
+## 2.1.3
+
+### Patch Changes
+
+- [#215](https://github.com/Citolab/qti-components/pull/215) [`4c59dc6`](https://github.com/Citolab/qti-components/commit/4c59dc6060fe83d0b92dde95e5c28924dbd87f54) Thanks [@BrianCitolab](https://github.com/BrianCitolab)! - Support `shape="default"` area map entries, which neither render nor score.
+
+  A `default` area is the whole image. QTI 3.0 §7.9 ends its coords list with "default: no
+  coordinates should be given", but the XSD makes `coords` `use="required"`, so real items carry
+  filler — `0,0,100%,100%` in Citolab/qti-components#83. Both places that read an area treated that
+  filler as geometry:
+
+  `positionShapes` knew `circle`, `rect`, `ellipse` and `poly`, so a `default` entry fell to its
+  `default:` branch, logged `Unsupported shape: default` and wrote no styles at all — showing the
+  correct response left the area in the DOM with no size, invisible. It now spans the image, and the
+  coords are deliberately not read: HTML, where the vocabulary comes from, settles it with "This area
+  is the whole image. (The coords attribute is not used.)"
+
+  `ScoringHelper.isPointInArea` had a `case 'default'` folded in with `case 'circle'`, which demands
+  exactly three coords, so it rejected every real entry as an `Invalid circle definition` and a click
+  outside the other areas scored nothing. `default` now returns true for any point without reading
+  coords.
+
+  A whole-image area overlaps every other area, which made a missing `break` in
+  `qti-map-response-point` reachable for the first time: a point inside a smaller area scored that
+  area _and_ the catch-all. §7.4 — "each area is tested in turn, with those listed first taking
+  priority in the case where areas overlap and a point falls in the intersection" — so matching now
+  stops at the first area containing the point.
+
+- [#214](https://github.com/Citolab/qti-components/pull/214) [`f08846d`](https://github.com/Citolab/qti-components/commit/f08846d28d4df75bcce80ea443b3c2662f4a7d9b) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - Fix a dropped picture rendering low and hanging out of its hotspot in `qti-graphic-gap-match-interaction` ([#213](https://github.com/Citolab/qti-components/issues/213)).
+
+  `qti-gap-img` never called `super.connectedCallback()`, so Lit never enabled updating and the element had no shadow root — which made `qti-gap-img.styles.ts`, the stylesheet that centres the picture, dead code. The source already carried a note saying exactly that. Without it the authored `<img>` / `<object>` was laid out as an inline replaced element on a text baseline rather than centred: it sat low in the chip with the line box's descender space below it.
+
+  On the 1EdTech "Airport Tags" example, whose hotspot `A` is authored `coords="12,108,39,121"` (27x13) around an 18x9 picture, the picture rendered 7px down from the hotspot top, 2.5px below its centre, with its bottom 3px past the box. The chip also measured 18px tall for a 9px picture, and that measurement feeds `--qti-dropzone-min-height` — so the hotspot itself was inflated to 27x18 and the box on screen was not the box in the item either.
+
+  `qti-gap-img` now calls `super.connectedCallback()` and renders a `<slot part="label">`, matching `qti-gap-text`, the sibling chip that always did this correctly. The chip is the size of its picture, the hotspot keeps the size its `coords` declare, and the picture lands centred inside it.
+
+- [#212](https://github.com/Citolab/qti-components/pull/212) [`ef9793e`](https://github.com/Citolab/qti-components/commit/ef9793ef56ae950989e6d8e1e5b35d2ea3c64606) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - Fix `qti-graphic-order-interaction` on the QTI 3 spec form of an ordering item ([#209](https://github.com/Citolab/qti-components/issues/209)). Two defects, either of which broke it on its own.
+
+  **RESPONSE ignored the candidate's ordering.** The interaction only wrote `aria-ordervalue` on each hotspot; the response itself was published by `ChoicesMixin` as the set of _checked_ choices in **DOM order** — the one thing an ordering must not do. `ChoicesMixin.maxChoices` also defaults to `1`, so each click cleared the previous hotspot and made the interaction a `radiogroup` of `radio`s. Clicking A, D, C, B left `RESPONSE` as the single identifier `"B"` where the `ordered` cardinality declaration expects `["A","D","C","B"]`, so response processing never scored the item — while the pins painted 1-2-3-4 and made it look right.
+
+  The response is now the ordering: `max-choices` defaults to `0` (no limit, QTI's default for an ordering), the interaction publishes the ordered identifier list itself, and pins plus `aria-ordervalue` are derived from the response rather than kept as a second copy of it. Deselecting a hotspot renumbers the rest by falling out of the array, and a response set from anywhere else — a restored attempt, a correct-response display, an author setting the property — now repaints the pins.
+
+  **An `<object>` graphic left every hotspot unpositioned.** QTI 3 carries the graphic as `<object type="image/png" data="…">`, which is what the spec's own graphic interaction examples use, but the hotspots were positioned against `querySelector('img')`. On a spec-form item that is `null`, `positionShapes` threw, and no hotspot got a position — so all of them collapsed onto the theme's `100%x100%` and stacked as one large box below the graphic. Only items that had been through a converter rendered at all.
+
+  `findGraphic` now accepts `<img>` and `<object type="image/*">` alike, and `positionShapes` resolves the coordinate space from either — including the two forms where the attributes cannot supply it. `width`/`height` are **optional** on the QTI `<object>` (only `data` and `type` are required), so a graphic that declares no size falls back to the bitmap's own, probed by loading the same URL and cached per element. And QTI's `LengthDType` is `[0-9]+%?`, so `width="50%"` is valid markup on either form: a percentage is a layout instruction, not a coordinate space, and reading it as `50px` used to push every hotspot off the graphic — it now falls back to the intrinsic size too. A graphic whose size cannot be resolved at all is reported instead of silently writing `NaN%` and leaving the hotspots full-size.
+
+  `qti-hotspot-interaction`, `qti-graphic-associate-interaction` and `qti-select-point-interaction` make the same `img`-only assumption and are not covered here.
+
+- Updated dependencies [[`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`4c59dc6`](https://github.com/Citolab/qti-components/commit/4c59dc6060fe83d0b92dde95e5c28924dbd87f54), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`faf8844`](https://github.com/Citolab/qti-components/commit/faf884461a8fa9ad3a27e1a10e9311f2362595e5), [`4c59dc6`](https://github.com/Citolab/qti-components/commit/4c59dc6060fe83d0b92dde95e5c28924dbd87f54)]:
+  - @qti-components/base@2.3.0
+
 ## 2.1.2
 
 ### Patch Changes

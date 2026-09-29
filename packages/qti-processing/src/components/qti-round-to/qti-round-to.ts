@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-round-to operator rounds a numerical value to specified precision.
@@ -18,6 +18,10 @@ export class QtiRoundTo extends QtiExpression<number | null> {
 
   @property({ type: Number })
   figures: number = 3;
+
+  public override get resultBaseType(): BaseType {
+    return 'float';
+  }
 
   public override getResult(): number | null {
     if (this.children.length !== 1) {

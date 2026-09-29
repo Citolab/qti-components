@@ -1,7 +1,7 @@
 {
   "name": "@citolab/qti-components",
   "description": "QTI component utilities",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "author": "",
   "dependencies": {
     "@heximal/templates": "catalog:",
@@ -93,7 +93,7 @@
     "attw": "attw --pack --profile esm-only --format table",
     "build": "pnpm run clean && run-s cem:react-types cem:react-types:patch-ref build:bundle",
     "build:bundle": "run-p tsup css",
-    "cem:react-types": "CEM_OUTDIR=packages/qti-components/ pnpm -C ../.. run cem:core && node -e \"require('fs').writeFileSync('dist/qti-components-jsx.js','export {};\\n')\"",
+    "cem:react-types": "pnpm -C ../.. run cem && node -e \"require('fs').writeFileSync('dist/qti-components-jsx.js','export {};\\n')\"",
     "cem:react-types:patch-ref": "node ../../tools/build/patch-jsx-react-ref.mjs dist/qti-components-jsx.d.ts",
     "clean": "rm -rf dist cdn",
     "css": "postcss ../qti-theme/src/item.css -d dist -m",

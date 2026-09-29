@@ -4,11 +4,20 @@ import { getTsProgram, typeParserPlugin } from '@wc-toolkit/type-parser';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
 import { cemValidatorPlugin } from '@wc-toolkit/cem-validator';
+import { stableSymbolNamesPlugin } from './tools/cem/stable-symbol-names-plugin.mjs';
 
 console.log('Building the custom element manifest...');
 
-// Allow overriding outdir via environment variable or default to root
-const outdir = process.env.CEM_OUTDIR || './';
+/**
+ * One analyzer run writes both outputs, and it always runs from the repo root:
+ *
+ * - `custom-elements.json` at the root. Generated, never committed (see .gitignore): Storybook,
+ *   the story/VRT tests, the qti- vocabulary lint and editor tooling read it from here, and each
+ *   of those generates it first.
+ * - the JSX types in the umbrella package's `dist/`, which its build bundles and publishes.
+ */
+const outdir = './';
+const jsxTypesOutdir = 'packages/qti-components/dist';
 
 /**
  * Keep CEM output deterministic.
@@ -170,16 +179,14 @@ export default {
 
   /** Custom elements manifest plugins */
   plugins: [
-    typeParserPlugin({
-      outdir: outdir + 'dist'
-    }),
+    typeParserPlugin(),
     cemInheritancePlugin({}),
     elementManifestDefinitionsPlugin(),
     // customElementVsCodePlugin({
     //   outdir: outdir + 'dist'
     // }),
     jsxTypesPlugin({
-      outdir: outdir + 'dist',
+      outdir: jsxTypesOutdir,
       exclude: [],
       fileName: `qti-components-jsx.d.ts`,
       componentTypePath
@@ -212,6 +219,7 @@ export default {
         }
       }
     }),
-    removeEmptyClassArraysPlugin()
+    removeEmptyClassArraysPlugin(),
+    stableSymbolNamesPlugin()
   ]
 };

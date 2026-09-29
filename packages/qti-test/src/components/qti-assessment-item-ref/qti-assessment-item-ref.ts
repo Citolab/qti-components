@@ -1,4 +1,4 @@
-import { LitElement } from 'lit';
+import { LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 import { prepareTemplate } from '@heximal/templates';
@@ -57,10 +57,31 @@ export class QtiAssessmentItemRef extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   protected computedContext?: ComputedContext;
 
-  weigths: Map<string, number> = new Map();
+  /**
+   * The `<qti-weight>` children of this ref, keyed by identifier — what
+   * `qti-test-variables`' `weight-identifier` resolves against.
+   *
+   * Read on access rather than cached: the test document is rendered into this
+   * element's light DOM, so the weights are not in place at construction time,
+   * and outcome processing runs long after they are.
+   */
+  get weights(): Map<string, number> {
+    const weights = new Map<string, number>();
+    for (const weight of this.querySelectorAll(':scope > qti-weight')) {
+      const identifier = weight.getAttribute('identifier');
+      if (!identifier) continue;
+      const value = Number(weight.getAttribute('value'));
+      if (Number.isNaN(value)) {
+        console.warn(`qti-weight "${identifier}" has a non-numeric value, ignoring it`);
+        continue;
+      }
+      weights.set(identifier, value);
+    }
+    return weights;
+  }
 
   @property({ type: Object, attribute: false })
-  xmlDoc!: DocumentFragment; // the XMLDocument
+  xmlDoc: DocumentFragment | null = null;
 
   protected override createRenderRoot(): HTMLElement | DocumentFragment {
     return this;
@@ -119,7 +140,8 @@ export class QtiAssessmentItemRef extends LitElement {
       that varies per item comes through the model (see ItemRefTemplateModel).
     */
     const templateElement = this.#findTestElement()?.querySelector<HTMLTemplateElement>('template[item-ref]');
-    if (templateElement) this.myTemplate = prepareTemplate(templateElement);
+    this.myTemplate = templateElement ? prepareTemplate(templateElement) : null;
+    this.requestUpdate();
 
     await this.updateComplete;
 
@@ -143,10 +165,14 @@ export class QtiAssessmentItemRef extends LitElement {
   }
 
   override render() {
-    if (!this.myTemplate) return this.xmlDoc;
+    // Item refs connect before loading, and navigation clears their documents.
+    if (!this.xmlDoc) return nothing;
+
+    const xmlDoc = this.xmlDoc.cloneNode(true) as DocumentFragment;
+    if (!this.myTemplate) return xmlDoc;
 
     const model: ItemRefTemplateModel = {
-      xmlDoc: this.xmlDoc,
+      xmlDoc,
       identifier: this.identifier,
       href: this.href,
       category: this.category,

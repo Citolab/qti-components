@@ -99,6 +99,42 @@ const computedWith = (item: { index: number; score: number }): ComputedContext =
   }) as unknown as ComputedContext;
 
 describe('qti-assessment-item-ref template hook', () => {
+  it.each([undefined, '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'])(
+    'handles connecting, loading, clearing and reloading with template %s',
+    async template => {
+      const test = document.createElement('qti-test');
+      if (template) test.innerHTML = `<template item-ref>${template}</template>`;
+      document.body.append(test);
+
+      const itemRef = document.createElement('qti-assessment-item-ref');
+      itemRef.identifier = 'ITEM-1';
+      const connected = new Promise<void>(resolve => {
+        itemRef.addEventListener('qti-assessment-item-ref-connected', () => resolve(), { once: true });
+      });
+      test.append(itemRef);
+      await itemRef.updateComplete;
+      await connected;
+      expect(itemRef.textContent).toBe('');
+
+      const doc = itemDoc();
+      itemRef.xmlDoc = doc;
+      await itemRef.updateComplete;
+      expect(itemRef.assessmentItem?.textContent).toBe('ITEM BODY');
+      expect(doc.childNodes).toHaveLength(1);
+      if (template) expect(itemRef.querySelector('.badge')?.textContent).toBe('ITEM-1');
+
+      itemRef.xmlDoc = null;
+      await itemRef.updateComplete;
+      expect(itemRef.assessmentItem).toBeNull();
+      expect(itemRef.textContent).toBe('');
+
+      itemRef.xmlDoc = doc;
+      await itemRef.updateComplete;
+      expect(itemRef.assessmentItem?.textContent).toBe('ITEM BODY');
+      if (template) expect(itemRef.querySelector('.badge')?.textContent).toBe('ITEM-1');
+    }
+  );
+
   it('renders the item on its own when no template is provided', async () => {
     const itemRef = await mount({});
 
@@ -143,6 +179,21 @@ describe('qti-assessment-item-ref template hook', () => {
     const itemRef = await mount({ template: '<div class="badge">x</div>', inTest: false });
 
     expect(itemRef.myTemplate).toBeNull();
+    expect(itemRef.querySelector('qti-assessment-item')?.textContent).toBe('ITEM BODY');
+  });
+
+  it('drops the old template when reconnected under a test without one', async () => {
+    const itemRef = await mount({
+      template: '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'
+    });
+
+    const nextTest = document.createElement('qti-test');
+    document.body.append(nextTest);
+    nextTest.append(itemRef);
+    await itemRef.updateComplete;
+
+    expect(itemRef.myTemplate).toBeNull();
+    expect(itemRef.querySelector('.badge')).toBeNull();
     expect(itemRef.querySelector('qti-assessment-item')?.textContent).toBe('ITEM BODY');
   });
 

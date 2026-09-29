@@ -1,5 +1,7 @@
 import { css, html, LitElement } from 'lit';
 
+import { QtiExitTestSignal } from '@qti-components/base';
+
 import type { QtiRuleBase } from '@qti-components/base';
 
 export class QtiOutcomeProcessing extends LitElement {
@@ -30,8 +32,15 @@ declare global {
 
 export class QtiOutcomeProcessingProcessor {
   public process(rules: QtiRuleBase[]) {
-    for (const rule of rules) {
-      rule.process();
+    try {
+      for (const rule of rules) {
+        rule.process();
+      }
+    } catch (error) {
+      // `qti-exit-test` ends the run from wherever it sits, however deeply
+      // nested. Reaching here is the rule doing its job; anything else is a
+      // real failure and rethrows.
+      if (!(error instanceof QtiExitTestSignal)) throw error;
     }
   }
 }

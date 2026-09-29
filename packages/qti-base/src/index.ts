@@ -27,6 +27,7 @@ export * from './lib/expression-result';
 export * from './lib/interaction.interface';
 export * from './lib/variables';
 export * from './lib/qti-rule-base';
+export * from './lib/custom-operators';
 
 export * from './utils/custom-state-set';
 export * from './utils/scoring-helper';

@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-container-size operator returns the count of items in a container.
@@ -11,6 +11,10 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns 0 if the sub-expression is NULL.
  */
 export class QtiContainerSize extends QtiExpression<number> {
+  public override get resultBaseType(): BaseType {
+    return 'integer';
+  }
+
   public override getResult(): number {
     if (this.children?.length !== 1) {
       console.error('qti-container-size must have exactly one child expression');

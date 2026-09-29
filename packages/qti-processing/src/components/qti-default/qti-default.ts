@@ -52,7 +52,6 @@ export class QtiDefault extends QtiExpression<any> {
     // If item identifier is specified, look in that specific item
     if (itemId) {
       const itemContext = this._testContext.items.find(item => item.identifier === itemId);
-      console.debug(`itemContext: ${JSON.stringify(itemContext)}`);
       if (!this._testContext || !itemContext) {
         console.warn(`qti-default: item "${itemId}" not found in test context`);
         return null;

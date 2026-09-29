@@ -1,6 +1,6 @@
 import { QtiExpression } from '@qti-components/base';
 
-import type { ResponseVariable } from '@qti-components/base';
+import type { BaseType, ResponseVariable } from '@qti-components/base';
 
 /**
  * @summary The qti-round operator rounds a numerical value to the nearest integer.
@@ -11,6 +11,10 @@ import type { ResponseVariable } from '@qti-components/base';
  * Special cases: Returns NULL if input is NULL or NaN.
  */
 export class QtiRound extends QtiExpression<number | null> {
+  public override get resultBaseType(): BaseType {
+    return 'integer';
+  }
+
   public override getResult(): number | null {
     if (this.children.length !== 1) {
       console.error('qti-round must have exactly one child expression');

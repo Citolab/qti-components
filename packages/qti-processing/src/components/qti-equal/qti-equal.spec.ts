@@ -90,4 +90,68 @@ describe('qti-equal', () => {
 
     consoleErrorSpy.mockRestore();
   });
+  // tolerance-mode absolute / relative, which used to log "not supported yet"
+  // and return false regardless of the values.
+  describe('tolerance', () => {
+    const compare = (attributes: Record<string, string>, value: number, reference: number) => {
+      render(
+        html`
+          <qti-equal>
+            <qti-base-value base-type="float">${value}</qti-base-value>
+            <qti-base-value base-type="float">${reference}</qti-base-value>
+          </qti-equal>
+        `,
+        testContainer
+      );
+      const equal = testContainer.querySelector('qti-equal') as QtiEqual;
+      for (const [name, attributeValue] of Object.entries(attributes)) {
+        equal.setAttribute(name, attributeValue);
+      }
+      return equal.calculate();
+    };
+
+    const absolute = (tolerance: string, extra: Record<string, string> = {}) => ({
+      'tolerance-mode': 'absolute',
+      tolerance,
+      ...extra
+    });
+
+    it('accepts a value inside an absolute tolerance', () => {
+      expect(compare(absolute('0.5'), 10.4, 10)).toBe(true);
+    });
+
+    it('rejects a value outside an absolute tolerance', () => {
+      expect(compare(absolute('0.5'), 10.6, 10)).toBe(false);
+    });
+
+    it('accepts a value inside a relative tolerance', () => {
+      // 10% of 200 is 20, so 215 is inside.
+      expect(compare({ 'tolerance-mode': 'relative', tolerance: '10' }, 215, 200)).toBe(true);
+    });
+
+    it('rejects a value outside a relative tolerance', () => {
+      expect(compare({ 'tolerance-mode': 'relative', tolerance: '10' }, 225, 200)).toBe(false);
+    });
+
+    it('applies an asymmetric tolerance to the matching side', () => {
+      expect(compare(absolute('1 3'), 9.5, 10)).toBe(true);
+      expect(compare(absolute('1 3'), 8.5, 10)).toBe(false);
+      expect(compare(absolute('1 3'), 12.5, 10)).toBe(true);
+      expect(compare(absolute('1 3'), 13.5, 10)).toBe(false);
+    });
+
+    it('includes both bounds by default', () => {
+      expect(compare(absolute('1'), 9, 10)).toBe(true);
+      expect(compare(absolute('1'), 11, 10)).toBe(true);
+    });
+
+    it('excludes a bound when told to', () => {
+      expect(compare(absolute('1', { 'include-lower-bound': 'false' }), 9, 10)).toBe(false);
+      expect(compare(absolute('1', { 'include-upper-bound': 'false' }), 11, 10)).toBe(false);
+    });
+
+    it('returns null when a tolerance mode carries no tolerance', () => {
+      expect(compare({ 'tolerance-mode': 'absolute' }, 10, 10)).toBeNull();
+    });
+  });
 });
