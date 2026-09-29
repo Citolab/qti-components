@@ -164,11 +164,30 @@ export class QtiAssessmentItemRef extends LitElement {
     return undefined;
   }
 
+  /**
+   * The clone of `xmlDoc` that is rendered, and what it was cloned for. Cloned
+   * once per document and template, not per render: re-renders from
+   * computed-context changes then hand Lit the same fragment, which it leaves
+   * alone, instead of rebuilding the item (and reloading its PCIs, which
+   * changes the context again).
+   */
+  #rendered: { source: DocumentFragment; template: TemplateFunction | null; doc: DocumentFragment } | null = null;
+
   override render() {
     // Item refs connect before loading, and navigation clears their documents.
-    if (!this.xmlDoc) return nothing;
+    if (!this.xmlDoc) {
+      this.#rendered = null;
+      return nothing;
+    }
 
-    const xmlDoc = this.xmlDoc.cloneNode(true) as DocumentFragment;
+    if (this.#rendered?.source !== this.xmlDoc || this.#rendered.template !== this.myTemplate) {
+      this.#rendered = {
+        source: this.xmlDoc,
+        template: this.myTemplate,
+        doc: this.xmlDoc.cloneNode(true) as DocumentFragment
+      };
+    }
+    const xmlDoc = this.#rendered.doc;
     if (!this.myTemplate) return xmlDoc;
 
     const model: ItemRefTemplateModel = {
