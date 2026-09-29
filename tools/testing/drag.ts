@@ -71,7 +71,9 @@ const dispatchMoveTransition = (
  * @param options.to - The target element or coordinates to drag to.
  * @param options.delta - The delta coordinates to drag by.
  * @param options.steps - The number of steps to perform during the drag.
- * @param options.duration - The duration of the drag in milliseconds.
+ * @param options.duration - Ignored; kept so existing call sites type-check. Synthetic pointer events
+ *   skip the drag activation delay, so each step only yields a task instead of sleeping
+ *   duration / steps (which spent ~90s of the suite in timers).
  * @returns A promise that resolves when the drag operation is complete.
  */
 export default async function drag(
@@ -80,12 +82,12 @@ export default async function drag(
     to,
     delta,
     steps = 20,
-    duration = 100,
     offset = { x: 0, y: 0 }
   }: {
     to?: Element | Coords;
     delta?: { x: number; y: number };
     steps?: number;
+    /** @deprecated Ignored — see the JSDoc above. */
     duration?: number;
     offset?: { x: number; y: number };
   }
@@ -153,7 +155,8 @@ export default async function drag(
       current.clientX += step.x;
       current.clientY += step.y;
     }
-    await sleep(duration / steps);
+    // Yield a task so Lit updates and observers flush between moves.
+    await sleep(0);
 
     const nextHoverTarget = getTargetAtPoint(current.clientX, current.clientY);
     dispatchMoveTransition(currentHoverTarget, nextHoverTarget, current);
@@ -181,5 +184,6 @@ export default async function drag(
   fireEvent.pointerUp(document, { ...release, ...pointerMeta });
   fireEvent.mouseUp(document, release);
   fireEvent.dragEnd(element, release);
-  await sleep(100);
+  // Two frames: lets the drop commit, re-render and start any FLIP animation before the caller asserts.
+  await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 }

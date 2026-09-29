@@ -21,7 +21,7 @@ import '@qti-components/interactions';
  *      the real requester. The provider itself reads `ev.contextTarget ?? ev.composedPath()[0]`.
  */
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 const el = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
 
 /** A stand-in for a Stage-B drop target: it renders a chip into its own shadow root. */

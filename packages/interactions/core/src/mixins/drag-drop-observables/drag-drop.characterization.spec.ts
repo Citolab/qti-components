@@ -20,7 +20,7 @@ import '@qti-components/interactions';
  *   - reset() clearing both response and DOM
  */
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
 type Chip = HTMLElement & { internals: ElementInternals };
 const el = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;

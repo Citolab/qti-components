@@ -20,7 +20,7 @@ import { isDropFilled } from './utils/drag-drop.utils';
  * `isDropFilled` reads whichever spelling a given target uses, so callers never have to care.
  */
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 const el = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
 const byId = (identifier: string) => el(`[identifier="${identifier}"]`);
 

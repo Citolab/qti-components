@@ -33,7 +33,7 @@ import itemCss from '@qti-components/theme/item-css';
  * its own block turned those chips transparent, square and un-grabbable.)
  */
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
 const applyTheme = () => {
   document.querySelectorAll('style[data-chip-vocab]').forEach(s => s.remove());
