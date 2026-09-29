@@ -19,12 +19,37 @@ permissions:
   id-token: write
 
 jobs:
-  deploy:
+  check-release-type:
     runs-on: ubuntu-latest
-    # Manual runs always deploy; release-triggered runs deploy only if the release succeeded.
+    if: github.event_name == 'workflow_run'
+    outputs:
+      is-dry-run: ${{ steps.check.outputs.is-dry-run }}
+    steps:
+      - name: Download release type artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-type
+          path: .
+
+      - name: Check if dry run
+        id: check
+        run: |
+          if [ -f release-type.txt ]; then
+            IS_DRY_RUN=$(grep -q "dry-run" release-type.txt && echo "true" || echo "false")
+          else
+            IS_DRY_RUN="false"
+          fi
+          echo "is-dry-run=$IS_DRY_RUN" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: check-release-type
+    runs-on: ubuntu-latest
+    # Manual runs always deploy; release-triggered runs deploy only if the release succeeded and wasn't a dry run.
     if: >
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+      always() && (
+        github.event_name == 'workflow_dispatch' ||
+        (github.event.workflow_run.conclusion == 'success' && needs.check-release-type.outputs.is-dry-run == 'false')
+      )
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
