@@ -1,5 +1,47 @@
 # @citolab/qti-components
 
+## 9.3.0
+
+### Minor Changes
+
+- [#221](https://github.com/Citolab/qti-components/pull/221) [`c156699`](https://github.com/Citolab/qti-components/commit/c1566999833777e5c95d4759fe72600bcdd0b1ee) Thanks [@herrKlein](https://github.com/herrKlein)! - Add `item` to the `<template item-ref>` model on `qti-assessment-item-ref`.
+
+  `item` is this ref's entry in the computed context — the same object the stamps iterate as `item` —
+  so a template can show `{{ item.index }}`, `{{ item.score }} / {{ item.maxScore }}` and the rest of
+  the item's state. The element subscribes to the context, so the template re-renders as scores come
+  in. Undefined until the test has computed it.
+
+- [#221](https://github.com/Citolab/qti-components/pull/221) [`c156699`](https://github.com/Citolab/qti-components/commit/c1566999833777e5c95d4759fe72600bcdd0b1ee) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls (`test-next`, `test-prev`, `test-item-link`, `test-section-link`,
+  `test-check-item`, `test-end-attempt` and the text-to-speech buttons) share one resting look that
+  reads the qti-theme tokens — `--qti-component-*` for the box, `--qti-bg-active` on hover,
+  `--qti-focus-*` for a `:focus-visible` ring — with the theme's defaults as fallbacks, so they
+  follow a brand and still look the same without qti-theme loaded. This replaces the light-grey
+  fill. `--test-button-*` slots (`background-color`, `color`, `border-color`, `border-radius`,
+  `hover-background-color`, `size`) repaint the test controls alone.
+
+- [#221](https://github.com/Citolab/qti-components/pull/221) [`c156699`](https://github.com/Citolab/qti-components/commit/c1566999833777e5c95d4759fe72600bcdd0b1ee) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-item-to-speech`: speak each element in its own language, a player per item, and pick mode.
+
+  - **Language resolution.** Each reading element is spoken in the language of the nearest `lang`
+    (or `xml:lang`): the element, its closest ancestor — across shadow roots — then `<html lang>`,
+    and only then the `language` attribute, which is now a fallback.
+  - **A player per item.** `item-ref-id` pins a player to one `qti-assessment-item-ref`, so it reads
+    that item whatever the navigation cursor points at. That makes a player per item possible on a
+    section page, for instance from a `<template item-ref>`:
+    `<test-item-to-speech item-ref-id="{{ identifier }}">`. Unset, the player follows
+    `navItemRefId` as before.
+  - **Several players on a page** share the browser's one speech queue: starting one stops any other,
+    a player never cancels speech or clears highlights it does not own, and moving to another section
+    stops every player, pinned or not.
+  - **Pick mode.** `<test-tts-pick>` highlights every reading element; a click on one starts reading
+    from there. The player reflects it as `:state(picking)`.
+  - Reading elements now include `qti-prompt` and `qti-simple-choice`, and nested matches are read
+    once. Prev/next stay enabled before the elements have been collected, and play after the last
+    element starts the item over.
+  - **Icon buttons.** The controls draw SVG icons instead of text glyphs, so every button has the
+    same box, each with an English accessible name. Slotted content still replaces the default, and
+    a slotted `<svg>` is sized like it; `label` (plus `pause-label` on `<test-tts-play>`) names the
+    button, which a slotted icon needs. The controller lays its controls out as a wrapping row.
+
 ## 9.2.0
 
 ### Minor Changes
