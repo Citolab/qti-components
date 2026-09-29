@@ -1,7 +1,11 @@
 import { LitElement, nothing } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 import { prepareTemplate } from '@heximal/templates';
 
+import { computedContext } from '@qti-components/base';
+
+import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { TemplateFunction } from '@heximal/templates';
 
@@ -30,6 +34,12 @@ export interface ItemRefTemplateModel {
   identifier?: string;
   href?: string;
   category?: string;
+  /**
+   * This item's entry in the computed context, the same object the stamps
+   * iterate as `item`: `index` (1-based, null for info items), `score`,
+   * `maxScore`, `completed`, `active`, … Undefined until the test has computed it.
+   */
+  item?: ComputedItem;
   /** The element being rendered. */
   itemRef: QtiAssessmentItemRef;
 }
@@ -42,8 +52,10 @@ export class QtiAssessmentItemRef extends LitElement {
   @property({ type: Boolean, converter: stringToBooleanConverter }) fixed?: boolean;
   @property({ type: String }) href?: string;
 
-  // @consume({ context: computedContext, subscribe: true })
-  // private computedContext: ComputedContext;
+  // Only read by a <template item-ref>; subscribing re-renders it as scores come in
+  @state()
+  @consume({ context: computedContext, subscribe: true })
+  protected computedContext?: ComputedContext;
 
   /**
    * The `<qti-weight>` children of this ref, keyed by identifier — what
@@ -142,11 +154,40 @@ export class QtiAssessmentItemRef extends LitElement {
     );
   }
 
+  #computedItem(): ComputedItem | undefined {
+    for (const testPart of this.computedContext?.testParts ?? []) {
+      for (const section of testPart.sections) {
+        const item = section.items.find(i => i.identifier === this.identifier);
+        if (item) return item;
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * The clone of `xmlDoc` that is rendered, and what it was cloned for. Cloned
+   * once per document and template, not per render: re-renders from
+   * computed-context changes then hand Lit the same fragment, which it leaves
+   * alone, instead of rebuilding the item (and reloading its PCIs, which
+   * changes the context again).
+   */
+  #rendered: { source: DocumentFragment; template: TemplateFunction | null; doc: DocumentFragment } | null = null;
+
   override render() {
     // Item refs connect before loading, and navigation clears their documents.
-    if (!this.xmlDoc) return nothing;
+    if (!this.xmlDoc) {
+      this.#rendered = null;
+      return nothing;
+    }
 
-    const xmlDoc = this.xmlDoc.cloneNode(true) as DocumentFragment;
+    if (this.#rendered?.source !== this.xmlDoc || this.#rendered.template !== this.myTemplate) {
+      this.#rendered = {
+        source: this.xmlDoc,
+        template: this.myTemplate,
+        doc: this.xmlDoc.cloneNode(true) as DocumentFragment
+      };
+    }
+    const xmlDoc = this.#rendered.doc;
     if (!this.myTemplate) return xmlDoc;
 
     const model: ItemRefTemplateModel = {
@@ -154,6 +195,7 @@ export class QtiAssessmentItemRef extends LitElement {
       identifier: this.identifier,
       href: this.href,
       category: this.category,
+      item: this.#computedItem(),
       itemRef: this
     };
     return this.myTemplate(model);

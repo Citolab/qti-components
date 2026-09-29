@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TTS example 1: an English reading passage (lang on the elements) followed by Dutch questions
+     that inherit xml:lang="nl-NL" from the item root. -->
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+	xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+	identifier="ITM-tts-element-lang" title="TTS: element lang" xml:lang="nl-NL" adaptive="false" time-dependent="false">
+	<qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+		<qti-correct-response>
+			<qti-value>ChoiceB</qti-value>
+		</qti-correct-response>
+	</qti-response-declaration>
+	<qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+		<qti-default-value>
+			<qti-value>0</qti-value>
+		</qti-default-value>
+	</qti-outcome-declaration>
+	<qti-item-body>
+		<h2>Lees de tekst en beantwoord de vraag.</h2>
+		<div xml:lang="en-GB">
+			<p>The lighthouse keeper climbed the spiral stairs every evening at dusk.</p>
+			<p>From the top she could see the fishing boats returning to the harbour.</p>
+		</div>
+		<p xml:lang="en-GB">On stormy nights the light was the only thing the sailors could trust.</p>
+		<qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+			<qti-prompt>Wanneer beklom de vuurtorenwachter de trap?</qti-prompt>
+			<qti-simple-choice identifier="ChoiceA">Iedere ochtend bij zonsopgang.</qti-simple-choice>
+			<qti-simple-choice identifier="ChoiceB">Iedere avond bij zonsondergang.</qti-simple-choice>
+			<qti-simple-choice identifier="ChoiceC">Alleen tijdens een storm.</qti-simple-choice>
+		</qti-choice-interaction>
+	</qti-item-body>
+	<qti-response-processing
+		template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

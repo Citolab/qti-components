@@ -5,8 +5,48 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   height: 100%;
 }
 
+/* The current item / section in a stamp. Paint only (a border would resize the link), in the
+   theme's selection colours so a brand re-values it too. */
 .active {
-  border: 2px solid blue;
+  background-color: var(--qti-selected-bg, #0175aa);
+  color: var(--qti-selected-color, #fff);
+}
+
+/* ── Story layout ──
+ * Neutral building blocks for arranging components in a story. They lay out and never paint a
+ * component: its look is the component's own (and the theme's), which is what a story shows. */
+
+/* Children stacked vertically. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Children in a wrapping row, vertically centred. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* A bordered panel, e.g. to set a toolbar or an explanation apart from the item. */
+.card {
+  padding: 0.75rem 1rem;
+  border: var(--qti-border-thickness, 1px) solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: calc(var(--qti-border-radius, 0.2rem) * 2);
+  background-color: var(--qti-bg, #fff);
+}
+
+/* Secondary text: explanations, captions. */
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.muted {
+  color: color-mix(in srgb, currentColor 70%, transparent);
 }
 
 .flex {
@@ -117,4 +157,23 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   .md\:flex {
     display: flex;
   }
+}
+
+/* A story's own control (a toggle that drives the demo, not a component under test), drawn like
+   the test controls so it does not stand out. */
+.story-button {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  padding: 0 0.875rem;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background-color: var(--qti-bg, #fff);
+  border: var(--qti-border-thickness, 1px) solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: var(--qti-border-radius, 0.2rem);
+}
+
+.story-button:hover {
+  background-color: var(--qti-bg-active, #f2f8fb);
 }

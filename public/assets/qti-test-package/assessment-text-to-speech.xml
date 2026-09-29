@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fixture for the test-item-to-speech story: one item per language-resolution rule. -->
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="TextToSpeechTest"
+        title="Text To Speech Test"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <qti-test-part identifier="test-part-1" navigation-mode="nonlinear" submission-mode="individual">
+        <qti-assessment-section identifier="section-tts" title="Text to speech" visible="true">
+            <qti-item-session-control max-attempts="0"/>
+            <qti-assessment-item-ref identifier="ITM-tts-element-lang" href="items/tts_element_lang.xml"/>
+            <qti-assessment-item-ref identifier="ITM-tts-item-lang" href="items/tts_item_lang.xml"/>
+            <qti-assessment-item-ref identifier="ITM-tts-no-lang" href="items/tts_no_lang.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

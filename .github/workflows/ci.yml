@@ -18,6 +18,12 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    # A normal run finishes in ~7-8 minutes. Without a bound, a hung browser/test process (e.g.
+    # a story stuck on an unreachable external fetch) runs until the runner itself is recycled,
+    # tens of minutes later, and surfaces only as "The operation was canceled" instead of a clear
+    # timeout — see run 36547613496, cancelled after 44 minutes with no further log output past
+    # the last completed test file.
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v5
