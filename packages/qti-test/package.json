@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/test",
   "description": "QTI test utilities",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "author": "",
   "dependencies": {
     "@heximal/templates": "catalog:",
