@@ -22,7 +22,7 @@ import itemCss from '@qti-components/theme/item-css';
  * one-sided test and tell a candidate their wrong answer was right.
  */
 
-const settle = () => new Promise(r => setTimeout(r, 150));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
 const CORRECT = 'rgb(43, 131, 14)';
 const INCORRECT = 'rgb(223, 0, 0)';

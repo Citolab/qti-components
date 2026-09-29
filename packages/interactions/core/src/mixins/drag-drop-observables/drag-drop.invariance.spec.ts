@@ -28,7 +28,7 @@ import itemCss from '@qti-components/theme/item-css';
  * A pixel is a much better error message than a wrong response string.
  */
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
 type Chip = HTMLElement & { internals: ElementInternals };
 const el = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;

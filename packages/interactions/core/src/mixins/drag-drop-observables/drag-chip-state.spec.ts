@@ -14,7 +14,7 @@ import '@qti-components/interactions';
 
 type Chip = HTMLElement & { internals: ElementInternals };
 
-const settle = () => new Promise(r => setTimeout(r, 300));
+const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 const chip = (identifier: string) => document.querySelector(`[identifier="${identifier}"]`) as Chip;
 
 describe('drag chip states', () => {
