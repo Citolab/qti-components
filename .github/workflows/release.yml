@@ -176,3 +176,18 @@ jobs:
 
           notes=$(node tools/changesets/release-notes.mjs "$version")
           gh release create "$tag" --title "@citolab/qti-components ${version}" --notes "$notes"
+
+      - name: Report release type
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "dry-run" > release-type.txt
+          else
+            echo "real-release" > release-type.txt
+          fi
+
+      - name: Upload release type artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-type
+          path: release-type.txt
+          retention-days: 1
