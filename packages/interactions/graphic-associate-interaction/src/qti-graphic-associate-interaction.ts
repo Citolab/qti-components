@@ -25,7 +25,7 @@ import type { CSSResultGroup } from 'lit';
 export class QtiGraphicAssociateInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
-  #hotspots: any[] | NodeListOf<QtiAssociableHotspot>;
+  #hotspots: QtiAssociableHotspot[] = [];
   #startPoint: HTMLElement | null = null;
   #endPoint: HTMLElement | null = null;
 
@@ -133,7 +133,7 @@ export class QtiGraphicAssociateInteraction extends Interaction {
 
   override firstUpdated(): void {
     super.firstUpdated();
-    this.#hotspots = this.querySelectorAll('qti-associable-hotspot');
+    this.#hotspots = Array.from(this.querySelectorAll<QtiAssociableHotspot>('qti-associable-hotspot'));
 
     this.addEventListener('mousemove', event => {
       const img = this.grImage[0];
