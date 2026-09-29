@@ -1,3 +1,5 @@
+import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -9,6 +11,11 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
+// .storybook/preview.ts imports the generated (uncommitted) custom-elements.json.
+if (!existsSync(path.join(dirname, 'custom-elements.json'))) {
+  execSync('pnpm run cem', { cwd: dirname, stdio: 'inherit' });
+}
 
 /*
  * True when Vitest is launched from the Storybook UI rather than the CLI.
@@ -40,8 +47,6 @@ export default defineConfig({
   },
 
   test: {
-    // .storybook/preview.ts imports the generated (uncommitted) custom-elements.json.
-    globalSetup: ['./tools/cem/ensure-manifest.mjs'],
     setupFiles: process.env.VRT === '1' ? ['./.storybook/vitest.vrt.setup.ts'] : [],
     /*
      * The `vrt` project loads all story files to tag-filter (the Storybook plugin ignores
