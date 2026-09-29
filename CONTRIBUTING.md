@@ -20,14 +20,22 @@ Everything else is plumbing called by CI or the git hooks. You rarely touch it.
 Same flow either way — a refactor's branch just lives a bit longer. Keep branches
 **short**: rebase on `main` often so you never drift far.
 
+Do each branch of work in its own `git worktree` rather than switching branches in place —
+this keeps multiple in-progress changes (and their installed `node_modules`/build state)
+from colliding:
+
 ```bash
-git switch -c feat/thing            # or fix/…, refactor/…
+git worktree add ../qti-components-feat-thing -b feat/thing   # or fix/…, refactor/…
+cd ../qti-components-feat-thing
+pnpm install
 # …edit…
 git commit -m "feat: thing"         # husky runs the fast checks (below)
 pnpm run changeset                  # only if this changes a published package
 git push -u origin HEAD
 gh pr create --fill
 gh pr merge --auto --squash         # merges itself the moment CI passes
+cd -
+git worktree remove ../qti-components-feat-thing
 ```
 
 `--auto` is the trunk-based trick: you open the PR and move on; GitHub squash-merges
@@ -97,5 +105,5 @@ Releases are **deliberate and manual** — no accidental npm publishes.
 ## TL;DR
 
 ```
-branch → commit (fast hooks) → PR → auto-merge on green → (later) run release → site redeploys itself
+worktree+branch → commit (fast hooks) → PR → auto-merge on green → (later) run release → site redeploys itself
 ```
