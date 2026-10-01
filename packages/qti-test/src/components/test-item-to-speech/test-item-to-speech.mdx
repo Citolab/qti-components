@@ -1,0 +1,139 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as TtsStories from './test-item-to-speech.stories';
+
+<Meta of={TtsStories} />
+
+# test-item-to-speech
+
+`<test-item-to-speech>` reads an item aloud with the Web Speech API. It is a controller: it
+decides what to read and in which language, and provides a `ttsContext` that the button elements
+inside it (`<test-tts-play>`, `<test-tts-stop>`, `<test-tts-prev>`, `<test-tts-next>`,
+`<test-tts-pick>`, …) consume.
+
+```html
+<test-item-to-speech language="nl-NL">
+  <test-tts-play></test-tts-play>
+  <test-tts-prev></test-tts-prev>
+  <test-tts-next></test-tts-next>
+  <test-tts-stop></test-tts-stop>
+</test-item-to-speech>
+```
+
+## Which item is read
+
+The player works out which item to read from **where it is placed**. There are two modes, and
+the player picks one each time it connects to the page:
+
+|                       | 1. Item-ref mode                                                    | 2. Cursor mode                                                              |
+| --------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **When**              | The player is inside a `qti-assessment-item-ref`                    | The player is anywhere else                                                 |
+| **Typical placement** | In a `<template item-ref>` on `<qti-test>` — one player per item    | In a toolbar in the page chrome — one player for the test                   |
+| **Reads**             | The item of its own item-ref (`closest('qti-assessment-item-ref')`) | The item `navItemRefId` points at, from the session context                 |
+| **Navigation**        | Ignored; the player keeps reading its own item                      | Stops speech; the next play starts the new item from the top                |
+| **Speech stops when** | The player leaves the page, together with its item                  | Navigating (`qti-request-navigation`), or moving to another item or section |
+| **Tested by**         | `OnEveryItem`                                                       | `LanguageResolution`                                                        |
+
+Item-ref mode wins: a player inside an item-ref never follows the cursor, even if the test is
+navigated elsewhere. There is no attribute to choose a mode or an item; placement is the only
+input.
+
+Each mode has a story whose play function fails if that mode breaks:
+
+- **`OnEveryItem`** opens section "basic", which shows four items on one page, and plays two of
+  the players. Each must read only text from its own item, and the two must differ — which a
+  player following the cursor could not do.
+- **`LanguageResolution`** has one player in the toolbar. It navigates between three items and
+  checks that every play reads the item navigated to, then links to the item it just read (which
+  re-renders it) and checks that it is read again.
+
+`SkipsHiddenContent` also uses item-ref mode, but it tests what is read, not which item.
+
+### 1. Item-ref mode — a player per item
+
+Put the player in a `<template item-ref>`. Every item-ref renders the template, so every item gets
+its own player, and each player reads only its own item. This also works on a section page with
+several items at once; starting one player stops any other.
+
+```html
+<qti-test>
+  <template item-ref>
+    <test-item-to-speech>…</test-item-to-speech>
+    {{ xmlDoc }}
+  </template>
+  <test-navigation>
+    <test-container test-url="…"></test-container>
+  </test-navigation>
+</qti-test>
+```
+
+The template renders inside `<test-container>`'s shadow root, where page CSS does not reach; the
+player lays out and paints itself.
+
+<Canvas of={TtsStories.OnEveryItem} />
+
+### 2. Cursor mode — one player that follows navigation
+
+Put the player outside any item-ref, e.g. next to the navigation buttons. It reads the item the
+test is navigated to. To find it, the player takes the `navItemRefId` from the session context and
+looks for `qti-assessment-item-ref[identifier="…"] qti-assessment-item` in its own root, in every
+root above it up to the document, and in the `test-container` shadow roots in those. So the
+player has to be inside `<qti-test>` (for the session context) and the item has to be rendered in a
+`test-container` it can reach.
+
+```html
+<qti-test navigate="item">
+  <test-navigation>
+    <header>
+      <test-item-to-speech>…</test-item-to-speech>
+      <test-prev></test-prev>
+      <test-next></test-next>
+    </header>
+    <test-container test-url="…"></test-container>
+  </test-navigation>
+</qti-test>
+```
+
+Cursor mode reads one item — the navigated one. On a page that shows several items at once, use
+item-ref mode instead.
+
+<Canvas of={TtsStories.LanguageResolution} />
+
+### In both modes
+
+- **The item re-renders** — for instance when a link navigates to the item already on screen. The
+  item is replaced by a fresh element without the navigation cursor moving.
+  - _Cursor mode:_ the toolbar player stays. It notices (`qti-assessment-item-connected` for the
+    navigated item) and starts over on the new content, instead of going silent on the detached
+    old one. Tested by the last step of `LanguageResolution`.
+  - _Item-ref mode:_ the item-ref re-renders its template, so the player is replaced along with the
+    item and starts clean. The player also resets when an item reconnects inside its own item-ref,
+    as a safety net for a host that swaps the item's document in place.
+- **Only one item speaks at a time.** Speech synthesis is one global queue: starting a player
+  cancels any other.
+
+## What is read
+
+The player reads the block-level elements in the item's `qti-item-body` that contain text: `p`,
+`h1`–`h6`, `li`, `blockquote`, `figcaption`, `qti-prompt` and `qti-simple-choice`. It keeps only
+the innermost match, so `<li><p>…</p></li>` is read once.
+
+Content that is in the DOM but not rendered is skipped: answer feedback before the response is
+checked, a `<qti-rubric-block view="scorer">` in candidate view, anything else that is
+`display: none`. Visibility is checked on every play, so content that is shown later — view
+switched, answer checked — is read on the next play without reloading the item.
+
+<Canvas of={TtsStories.SkipsHiddenContent} />
+
+## Language
+
+Every element is spoken in the language of the nearest `lang` attribute: the element itself → the
+closest ancestor (including `<qti-assessment-item xml:lang>`) → `<html lang>` → the `language`
+attribute on `<test-item-to-speech>`. `LanguageResolution` has one item per rule.
+
+## Testing the stories
+
+The play functions replace `speechSynthesis.speak` with a mock that records the text and ends each
+sentence at once, so the tests are fast, deterministic and run in headless Playwright. That is why
+nothing is heard while the Interactions panel runs. To listen, use the buttons after the run, or
+open `SkipsHiddenContentManual`, which has no play function.
