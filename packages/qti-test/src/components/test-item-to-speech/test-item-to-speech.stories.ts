@@ -1,7 +1,8 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent, spyOn, waitFor, within } from 'storybook/test';
 import { within as shadowWithin } from 'shadow-dom-testing-library';
-import { html, nothing } from 'lit';
+import { html } from 'lit';
+import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 
 import {
   getAssessmentItemFromTestContainerByDataTitle,
@@ -26,7 +27,10 @@ const meta: Meta<TestItemToSpeech> = {
       description: {
         component: `Every reading element is spoken in the language of the nearest \`lang\` attribute:
 element → closest ancestor (including \`<qti-assessment-item xml:lang>\`) → \`<html lang>\` → the
-\`language\` attribute on \`<test-item-to-speech>\`. The three items in this test each exercise one rule.`
+\`language\` attribute on \`<test-item-to-speech>\`. The three items in this test each exercise one rule.
+
+How the player decides which item to read — inside an item-ref, or following navigation — is
+described on the Docs page.`
       }
     }
   }
@@ -34,6 +38,33 @@ element → closest ancestor (including \`<qti-assessment-item xml:lang>\`) → 
 export default meta;
 
 const TEST_URL = '/assets/qti-test-package/assessment-text-to-speech.xml';
+
+/** The player in the item-ref for `itemId`, inside test-container's shadow root. */
+const playerFor = (canvasElement: HTMLElement, itemId: string) =>
+  canvasElement
+    .querySelector('test-container')
+    ?.shadowRoot?.querySelector<TestItemToSpeech>(
+      `qti-assessment-item-ref[identifier="${itemId}"] test-item-to-speech`
+    ) ?? null;
+
+const playButtonOf = (player: TestItemToSpeech) =>
+  player.querySelector('test-tts-play')?.shadowRoot?.querySelector('button') ?? null;
+
+/**
+ * Press play on `player()` until it speaks, then wait for it to read to the end.
+ * The item — and so the player with it — can re-render right after navigating, so the player is
+ * looked up again on every attempt. (Waiting for :state(playing) instead would race the mock,
+ * which reads a whole item at once.)
+ */
+const playUntilSpoken = async (player: () => TestItemToSpeech | null, spoken: unknown[]) => {
+  spoken.length = 0;
+  await waitFor(() => {
+    const current = player();
+    if (current && !spoken.length) playButtonOf(current)?.click();
+    expect(spoken.length).toBeGreaterThan(0);
+  });
+  await waitFor(() => expect(player()?.matches(':state(idle)')).toBe(true), { timeout: 5000 });
+};
 
 const EXAMPLES = [
   {
@@ -60,6 +91,10 @@ const EXAMPLES = [
 /**
  * All language-resolution examples in one test. Use the item links to switch example,
  * press Play and listen — or toggle the document language with the button to hear example 3 change.
+ *
+ * The player sits in the toolbar, outside any item-ref, so it follows the navigation cursor:
+ * this story is the test for cursor mode. It switches items, and links to the item already on
+ * screen, which re-renders it.
  */
 export const LanguageResolution: Story = {
   render: args => html`
@@ -113,30 +148,26 @@ export const LanguageResolution: Story = {
     });
     const cancel = spyOn(speechSynthesis, 'cancel').mockImplementation(() => {});
 
-    const tts = canvasElement.querySelector('test-item-to-speech') as TestItemToSpeech;
-    const playButton = await waitFor(() => {
-      const button = tts.querySelector('test-tts-play')?.shadowRoot?.querySelector('button');
-      expect(button).toBeTruthy();
-      return button!;
-    });
+    const shownItem = (title: string) =>
+      canvasElement
+        .querySelector('test-container')
+        ?.shadowRoot?.querySelector(`qti-assessment-item[data-title="${title}"]`);
 
     const readItem = async (title: string, itemId: string) => {
-      spokenLangs.length = 0;
+      // Linking to the item already on screen re-renders it, which stops a player mid-sentence:
+      // remember what is shown now, so the wait below only accepts the freshly rendered item.
+      const before = shownItem(title);
       (await canvas.findByText(EXAMPLES.find(e => e.id === itemId)!.label)).click();
       // navigate="item" loads the target item asynchronously; wait until it is the one in the container
       await waitFor(() => {
-        const shadow = canvasElement.querySelector('test-container')?.shadowRoot;
-        expect(shadow?.querySelector(`qti-assessment-item[data-title="${title}"]`)).toBeTruthy();
+        const item = shownItem(title);
+        expect(item).toBeTruthy();
+        expect(item).not.toBe(before);
       });
-      await waitFor(() => expect(tts.matches(':state(idle)')).toBe(true));
-      // Linking to the item already on screen re-renders it, so the container can be briefly
-      // empty after the check above; play finds nothing to read then, so press it until it speaks.
-      // (Waiting for :state(playing) instead would race the mock, which reads a whole item at once.)
-      await waitFor(() => {
-        if (!spokenLangs.length) playButton.click();
-        expect(spokenLangs.length).toBeGreaterThan(0);
-      });
-      await waitFor(() => expect(tts.matches(':state(idle)')).toBe(true), { timeout: 5000 });
+      // One player for the whole test, in the light DOM toolbar — not inside any item-ref.
+      const player = canvasElement.querySelector<TestItemToSpeech>('test-item-to-speech')!;
+      expect(player.closest('qti-assessment-item-ref')).toBeNull();
+      await playUntilSpoken(() => player, spokenLangs);
       return spokenLangs.slice();
     };
 
@@ -168,6 +199,10 @@ export const LanguageResolution: Story = {
       root.removeAttribute('lang');
       await readItem('TTS: item lang', 'ITM-tts-item-lang');
       expect(await readItem('TTS: no lang', 'ITM-tts-no-lang')).toEqual(['fr-FR', 'fr-FR', 'fr-FR', 'fr-FR']);
+
+      // 4. Link to the item just read: it re-renders without the cursor moving. The toolbar player
+      // stays, so it has to drop the detached elements it collected rather than go silent.
+      expect(await readItem('TTS: no lang', 'ITM-tts-no-lang')).toEqual(['fr-FR', 'fr-FR', 'fr-FR', 'fr-FR']);
     } finally {
       if (originalDocumentLang === null) root.removeAttribute('lang');
       else root.setAttribute('lang', originalDocumentLang);
@@ -178,10 +213,9 @@ export const LanguageResolution: Story = {
 };
 
 /**
- * A `<template item-ref>` on `<qti-test>` wraps every item in the test, so each one gets its
- * own text-to-speech toolbar above it instead of one player in the page chrome. `item-ref-id`
- * pins each player to the item it sits on, so this also works on a section page showing several
- * items at once; starting one player stops any other.
+ * The player renders where the `<template item-ref>` puts it: a toolbar above each item. That
+ * also works on a section page showing several items at once — every player reads its own item;
+ * starting one player stops any other.
  *
  * The template renders inside `<test-container>`'s shadow root, where page CSS does not reach;
  * the player lays out and paints itself, so only the row around it needs an inline style.
@@ -195,7 +229,7 @@ export const OnEveryItem: Story = {
           <template type="if" if="{{ item.index }}">
             <strong>{{ item.index }}.</strong>
           </template>
-          <test-item-to-speech item-ref-id="{{ identifier }}">
+          <test-item-to-speech>
             <test-tts-play></test-tts-play>
             <test-tts-pick></test-tts-pick>
             <test-tts-prev></test-tts-prev>
@@ -221,12 +255,39 @@ export const OnEveryItem: Story = {
       const itemRef = item.closest('qti-assessment-item-ref');
       const player = itemRef?.querySelector('test-item-to-speech');
       expect(player).toBeInTheDocument();
-      expect(player?.getAttribute('item-ref-id')).toBe(itemRef?.getAttribute('identifier'));
       expect(player?.compareDocumentPosition(item) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     };
 
     const [firstItem] = await getAssessmentItemsFromTestContainer(canvasElement);
     expectToolbarAboveItem(firstItem);
+
+    // Item-ref mode: section "basic" shows four items on one page, each with its own player.
+    // Every player reads its own item — not the navigated one, and not its neighbour's.
+    const spokenTexts: string[] = [];
+    const speak = spyOn(speechSynthesis, 'speak').mockImplementation((utterance: SpeechSynthesisUtterance) => {
+      spokenTexts.push(utterance.text);
+      setTimeout(() => utterance.onend?.(new Event('end') as SpeechSynthesisEvent), 0);
+    });
+    const cancel = spyOn(speechSynthesis, 'cancel').mockImplementation(() => {});
+    try {
+      await fireEvent.click(await canvas.findByShadowText('basic'));
+      await waitFor(() => expect(playerFor(canvasElement, 'ITM-extended_text')).toBeTruthy());
+
+      const readBy = async (itemId: string) => {
+        await playUntilSpoken(() => playerFor(canvasElement, itemId), spokenTexts);
+        const itemText = playerFor(canvasElement, itemId)!
+          .closest('qti-assessment-item-ref')!
+          .querySelector('qti-item-body')!.textContent!;
+        for (const text of spokenTexts) expect(itemText).toContain(text.trim());
+        return spokenTexts.slice();
+      };
+      const textEntry = await readBy('ITM-text_entry');
+      const choice = await readBy('ITM-choice');
+      expect(choice).not.toEqual(textEntry);
+    } finally {
+      speak.mockRestore();
+      cancel.mockRestore();
+    }
 
     await fireEvent.click(await canvas.findByShadowText('info-end'));
     const lastItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info End');
@@ -234,20 +295,136 @@ export const OnEveryItem: Story = {
   }
 };
 
+/** Shared by `SkipsHiddenContent` and its manual twin. */
+const skipsHiddenContentRender = () => html`
+  <qti-test navigate="item">
+    <template item-ref>
+      <test-item-to-speech>
+        <test-tts-play></test-tts-play>
+        <test-tts-stop></test-tts-stop>
+        <test-tts-pick></test-tts-pick>
+      </test-item-to-speech>
+      {{ xmlDoc }}
+    </template>
+    <test-navigation class="stack">
+      <div class="row">
+        <test-item-link item-id="ITM-tts-hidden-content">Hidden content example</test-item-link>
+        <test-view-toggle role="switch">
+          <template> {{ view === 'scorer' ? 'Scorer view' : 'Candidate view' }} </template>
+        </test-view-toggle>
+        <test-check-item>Check answer</test-check-item>
+      </div>
+      <test-container test-url=${TEST_URL}></test-container>
+    </test-navigation>
+  </qti-test>
+`;
+
+/**
+ * The player only reads what is actually rendered. Content that is present in the DOM but
+ * `display: none` — a scorer-only `<qti-rubric-block view="scorer">` before the view switches,
+ * answer feedback before the response is checked — is skipped, both for playback and for pick
+ * mode. Once the content is shown (view switched, answer checked), it is included on the next
+ * play without needing to reload the item: the candidate set is cached, but visibility is
+ * re-checked live.
+ *
+ * The play function mocks `speechSynthesis`; use `SkipsHiddenContentManual` to try it with real
+ * speech.
+ */
+export const SkipsHiddenContent: Story = {
+  render: () => skipsHiddenContentRender(),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ITEM_ID = 'ITM-tts-hidden-content';
+
+    const spokenTexts: string[] = [];
+    const speak = spyOn(speechSynthesis, 'speak').mockImplementation((utterance: SpeechSynthesisUtterance) => {
+      spokenTexts.push(utterance.text);
+      setTimeout(() => utterance.onend?.(new Event('end') as SpeechSynthesisEvent), 0);
+    });
+    const cancel = spyOn(speechSynthesis, 'cancel').mockImplementation(() => {});
+
+    const play = () => playUntilSpoken(() => playerFor(canvasElement, ITEM_ID), spokenTexts);
+
+    try {
+      await getAssessmentItemsFromTestContainer(canvasElement);
+      (await canvas.findByText('Hidden content example')).click();
+      const item = await waitFor(async () => {
+        const found = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'TTS: hidden content');
+        expect(found).toBeTruthy();
+        return found!;
+      });
+
+      // 1. Scorer rubric and answer feedback are in the DOM already, but hidden: the rubric
+      // block itself is `[view]:not(.show)` (display: none), and the feedback block's shadow
+      // root un-slots the hidden variant. Either way, the actual reading candidate (the inner
+      // `<p>`) is not rendered — asserted the same way the player itself checks, since jest-dom's
+      // `toBeVisible` does not follow slot assignment across the feedback block's shadow root.
+      const rubricText = item.querySelector('qti-rubric-block[view="scorer"] p')!;
+      const correctFeedbackText = item.querySelector('qti-feedback-block[identifier="correct"] p')!;
+      expect(rubricText.checkVisibility()).toBe(false);
+      expect(correctFeedbackText.checkVisibility()).toBe(false);
+
+      await play();
+      expect(spokenTexts).toEqual(['Read this line first.', 'What is the capital of France?', 'Paris', 'Lyon']);
+
+      // 2. Switch to scorer view — the rubric block becomes visible.
+      const viewSwitch = await canvas.findByRole('switch');
+      await fireEvent.click(viewSwitch);
+      await waitFor(() => expect(rubricText.checkVisibility()).toBe(true));
+
+      // 3. Answer correctly and check — response processing sets FEEDBACK, revealing the
+      // matching feedback block; the non-matching one stays hidden.
+      const choiceA = item.querySelector('qti-simple-choice[identifier="ChoiceA"]')!;
+      await fireEvent.click(choiceA);
+      const checkButton = canvasElement.querySelector('test-check-item')!;
+      await fireEvent.click(checkButton);
+      await waitFor(() => expect(correctFeedbackText.checkVisibility()).toBe(true));
+      expect(item.querySelector('qti-feedback-block[identifier="incorrect"] p')!.checkVisibility()).toBe(false);
+
+      // 4. Play again from the top (a finished player restarts): both newly-visible elements are
+      // now read, in document order, still skipping the still-hidden "incorrect" feedback.
+      await play();
+      expect(spokenTexts).toEqual([
+        'Read this line first.',
+        'Scorer note: accept only the capital of France.',
+        'What is the capital of France?',
+        'Paris',
+        'Lyon',
+        'Feedback: that is correct.'
+      ]);
+
+      // 5. Pick mode only offers the elements that were actually spoken above — never the
+      // still-hidden "incorrect" feedback.
+      expect(playerFor(canvasElement, ITEM_ID)!['_ttsContext'].elementCount).toBe(spokenTexts.length);
+
+      // 6. Navigating to the item already shown re-renders it: the player must drop the
+      // now-detached elements it collected, not go silent on them.
+      (await canvas.findByText('Hidden content example')).click();
+      await waitFor(() => expect(item.isConnected).toBe(false));
+      await play();
+      expect(spokenTexts[0]).toBe('Read this line first.');
+    } finally {
+      speak.mockRestore();
+      cancel.mockRestore();
+    }
+  }
+};
+
+/**
+ * Same setup as `SkipsHiddenContent`, without a play function and with real speech, for trying
+ * it by hand: open "Hidden content example", press play (scorer note and feedback are skipped),
+ * switch to scorer view and check the answer, then press play again.
+ */
+export const SkipsHiddenContentManual: Story = {
+  render: () => skipsHiddenContentRender()
+};
+
 /** Outline icons standing in for a host's own icon set (Lucide, Font Awesome, a brand set, …). */
 const ownIcon = (slot: string | undefined, d: string) =>
-  html`<svg
-    slot=${slot ?? nothing}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
-    <path d=${d}></path>
-  </svg>`;
+  unsafeStatic(
+    `<svg ${slot ? `slot="${slot}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"` +
+      ` stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"></path></svg>`
+  );
 
 /**
  * Each control takes its content from its slot, so a host can use its own icon set. The default
@@ -256,9 +433,9 @@ const ownIcon = (slot: string | undefined, d: string) =>
  * slotted `<svg>` is sized like the default icon; `--test-tts-icon-size` resizes both.
  */
 export const WithOwnIcons: Story = {
-  render: () => html`
+  render: () => staticHtml`
     <qti-test navigate="item">
-      <test-navigation class="stack">
+      <template item-ref>
         <test-item-to-speech>
           <test-tts-prev label="Vorige zin">${ownIcon(undefined, 'M18 6v12L9 12zM6 6v12')}</test-tts-prev>
           <test-tts-play label="Voorlezen" pause-label="Pauzeren">
@@ -273,25 +450,34 @@ export const WithOwnIcons: Story = {
           >
           <test-tts-pick label="Voorlezen vanaf hier">${ownIcon(undefined, 'M4 4l6 16 2.5-6.5L19 11z')}</test-tts-pick>
         </test-item-to-speech>
+        {{ xmlDoc }}
+      </template>
+      <test-navigation class="stack">
         <test-container test-url=${TEST_URL}></test-container>
       </test-navigation>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
     const button = (tag: string) =>
-      canvasElement.querySelector(tag)!.shadowRoot!.querySelector<HTMLButtonElement>('button[part="button"]')!;
+      canvasElement
+        .querySelector('test-container')
+        ?.shadowRoot?.querySelector(tag)
+        ?.shadowRoot?.querySelector<HTMLButtonElement>('button[part="button"]') ?? null;
 
     await waitFor(() => expect(button('test-tts-play')).toBeTruthy());
 
     // Every control is named by its label, since the slotted icons carry no text.
-    expect(button('test-tts-prev').getAttribute('aria-label')).toBe('Vorige zin');
-    expect(button('test-tts-play').getAttribute('aria-label')).toBe('Voorlezen');
-    expect(button('test-tts-next').getAttribute('aria-label')).toBe('Volgende zin');
-    expect(button('test-tts-stop').getAttribute('aria-label')).toBe('Stoppen');
-    expect(button('test-tts-pick').getAttribute('aria-label')).toBe('Voorlezen vanaf hier');
+    expect(button('test-tts-prev')!.getAttribute('aria-label')).toBe('Vorige zin');
+    expect(button('test-tts-play')!.getAttribute('aria-label')).toBe('Voorlezen');
+    expect(button('test-tts-next')!.getAttribute('aria-label')).toBe('Volgende zin');
+    expect(button('test-tts-stop')!.getAttribute('aria-label')).toBe('Stoppen');
+    expect(button('test-tts-pick')!.getAttribute('aria-label')).toBe('Voorlezen vanaf hier');
 
     // A slotted icon gets the default icon's size.
-    const icon = canvasElement.querySelector('test-tts-stop svg')!.getBoundingClientRect();
+    const icon = canvasElement
+      .querySelector('test-container')!
+      .shadowRoot!.querySelector('test-tts-stop svg')!
+      .getBoundingClientRect();
     expect(icon.width).toBeCloseTo(18, 0);
     expect(icon.height).toBeCloseTo(18, 0);
   }
