@@ -13,6 +13,7 @@
             <qti-assessment-item-ref identifier="ITM-tts-element-lang" href="items/tts_element_lang.xml"/>
             <qti-assessment-item-ref identifier="ITM-tts-item-lang" href="items/tts_item_lang.xml"/>
             <qti-assessment-item-ref identifier="ITM-tts-no-lang" href="items/tts_no_lang.xml"/>
+            <qti-assessment-item-ref identifier="ITM-tts-hidden-content" href="items/tts_hidden_content.xml"/>
         </qti-assessment-section>
     </qti-test-part>
 </qti-assessment-test>
