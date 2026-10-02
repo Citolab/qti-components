@@ -29,8 +29,8 @@ const meta: Meta<TestItemToSpeech> = {
 element → closest ancestor (including \`<qti-assessment-item xml:lang>\`) → \`<html lang>\` → the
 \`language\` attribute on \`<test-item-to-speech>\`. The three items in this test each exercise one rule.
 
-How the player decides what to read — next to a stimulus placeholder, inside an item-ref, or
-following navigation — is described on the Docs page.`
+How the player decides what to read — next to a stimulus placeholder, next to marked HTML
+(\`data-tts-content\`), inside an item-ref, or following navigation — is described on the Docs page.`
       }
     }
   }
@@ -393,6 +393,120 @@ export const SharedStimulus: Story = {
         '<qti-stimulus-body><h2>A second text</h2><p>Only this is read now.</p></qti-stimulus-body>';
       await playUntilSpoken(() => stimulusPlayerOf(canvasElement), spokenTexts);
       expect(spokenTexts).toEqual(['A second text', 'Only this is read now.']);
+    } finally {
+      speak.mockRestore();
+      cancel.mockRestore();
+    }
+  }
+};
+
+/**
+ * Plain HTML, not QTI: for instance a start screen that a React app renders before the test.
+ * Mark one container with `data-tts-content` and put the player next to it (same parent); the
+ * player reads the readable elements inside, the same way it reads an item body. No `<qti-test>`
+ * is needed.
+ *
+ * Hidden content (`display: none`) and content inside `aria-hidden="true"` are skipped. There is
+ * no observer: text changed inside an element is read as it is when that element is spoken, and
+ * the list of elements is rebuilt when the player starts from the top — so a re-render of the
+ * content never interrupts speech.
+ */
+export const HtmlContent: Story = {
+  render: () =>
+    html` <div class="stack" style="max-width: 40rem">
+      <test-item-to-speech>
+        <test-tts-play></test-tts-play>
+        <test-tts-pick></test-tts-pick>
+        <test-tts-prev></test-tts-prev>
+        <test-tts-next></test-tts-next>
+        <test-tts-stop></test-tts-stop>
+      </test-item-to-speech>
+      <section data-tts-content lang="nl-NL">
+        <h2>Overzicht toets</h2>
+        <dl>
+          <dt>Naam toets</dt>
+          <dd data-testid="name">De bloedsomloop</dd>
+          <dt>Aantal vragen</dt>
+          <dd>22</dd>
+        </dl>
+        <p data-testid="intro">De toets bestaat uit 22 vragen.</p>
+        <table>
+          <caption>
+            Hulpmiddelen
+          </caption>
+          <tr>
+            <th>Zoomen</th>
+            <td>Gebruik de plus- en minknop.</td>
+          </tr>
+        </table>
+        <ul>
+          <li><span aria-hidden="true">🔍</span> Zoom in op de tekst.</li>
+        </ul>
+        <p aria-hidden="true">Alleen decoratie.</p>
+        <p style="display: none">Verborgen tekst.</p>
+      </section>
+    </div>`,
+  play: async ({ canvasElement }) => {
+    const spoken: string[] = [];
+    const langs = new Set<string>();
+    const speak = spyOn(speechSynthesis, 'speak').mockImplementation((utterance: SpeechSynthesisUtterance) => {
+      spoken.push(utterance.text.trim().replace(/\s+/g, ' '));
+      langs.add(utterance.lang);
+      setTimeout(() => utterance.onend?.(new Event('end') as SpeechSynthesisEvent), 0);
+    });
+    const cancel = spyOn(speechSynthesis, 'cancel').mockImplementation(() => {});
+    const player = () => canvasElement.querySelector<TestItemToSpeech>('test-item-to-speech');
+    const content = canvasElement.querySelector('[data-tts-content]')!;
+    try {
+      // 1. Every readable element inside the marked container, in order and in its language;
+      // the hidden paragraph and the aria-hidden one are not read.
+      await playUntilSpoken(player, spoken);
+      expect(spoken).toEqual([
+        'Overzicht toets',
+        'Naam toets',
+        'De bloedsomloop',
+        'Aantal vragen',
+        '22',
+        'De toets bestaat uit 22 vragen.',
+        'Hulpmiddelen',
+        'Zoomen',
+        'Gebruik de plus- en minknop.',
+        'Zoom in op de tekst.'
+      ]);
+      expect([...langs]).toEqual(['nl-NL']);
+
+      // 2. A framework re-render: text changed inside an element, an element replaced and one
+      // added. The next play from the top reads the page as it is now.
+      content.querySelector('[data-testid="name"]')!.textContent = 'Fotosynthese';
+      const intro = content.querySelector('[data-testid="intro"]')!;
+      const replacement = document.createElement('p');
+      replacement.textContent = 'De toets bestaat uit 16 vragen.';
+      intro.replaceWith(replacement);
+      const code = document.createElement('p');
+      code.textContent = 'Herstelcode: BLOED';
+      content.append(code);
+
+      await playUntilSpoken(player, spoken);
+      expect(spoken).toContain('Fotosynthese');
+      expect(spoken).toContain('De toets bestaat uit 16 vragen.');
+      expect(spoken).not.toContain('De toets bestaat uit 22 vragen.');
+      expect(spoken.at(-1)).toBe('Herstelcode: BLOED');
+
+      // 3. Only an addition, nothing removed: no element in the list has left the page, so it is
+      // the play from the top that picks it up.
+      const note = document.createElement('p');
+      note.textContent = 'Succes!';
+      content.append(note);
+      await playUntilSpoken(player, spoken);
+      expect(spoken.at(-1)).toBe('Succes!');
+
+      // 4. Resuming in the middle after a re-render: "next" leaves the player on an element, the
+      // content is rebuilt underneath, then play. The remembered elements are gone from the page,
+      // so the player starts over on the new content instead of reading a detached element.
+      player()!.querySelector('test-tts-next')!.shadowRoot!.querySelector('button')!.click();
+      content.innerHTML = '<h2>Nieuwe pagina</h2><p>Alles is opnieuw getekend.</p>';
+      await playUntilSpoken(player, spoken);
+      expect(spoken).toEqual(['Nieuwe pagina', 'Alles is opnieuw getekend.']);
     } finally {
       speak.mockRestore();
       cancel.mockRestore();
