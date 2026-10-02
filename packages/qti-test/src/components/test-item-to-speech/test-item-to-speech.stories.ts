@@ -29,8 +29,8 @@ const meta: Meta<TestItemToSpeech> = {
 element → closest ancestor (including \`<qti-assessment-item xml:lang>\`) → \`<html lang>\` → the
 \`language\` attribute on \`<test-item-to-speech>\`. The three items in this test each exercise one rule.
 
-How the player decides which item to read — inside an item-ref, or following navigation — is
-described on the Docs page.`
+How the player decides what to read — next to a stimulus placeholder, inside an item-ref, or
+following navigation — is described on the Docs page.`
       }
     }
   }
@@ -292,6 +292,111 @@ export const OnEveryItem: Story = {
     await fireEvent.click(await canvas.findByShadowText('info-end'));
     const lastItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info End');
     expectToolbarAboveItem(lastItem);
+  }
+};
+
+const STIMULUS_TEST_URL = '/assets/qti-test-package-stimulus/assessment.xml';
+
+/** The stimulus player: next to the placeholder in the panel, not inside any item-ref. */
+const stimulusPlayerOf = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<TestItemToSpeech>('[data-stimulus-panel] > test-item-to-speech');
+
+const stimulusBodyOf = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector('[data-stimulus-panel] > [data-stimulus-idref] qti-stimulus-body');
+
+/**
+ * A reading text shared by several questions, shown once in a panel beside them — the layout a
+ * section page with a stimulus typically has. The panel holds a player next to the stimulus
+ * placeholder, and every item gets its own player through the `<template item-ref>`.
+ *
+ * Next to a `[data-stimulus-idref]` placeholder (same parent) the player reads that stimulus,
+ * and only that; the item players read only their own item. When the stimulus is reloaded, or a
+ * host swaps the content, the stimulus player starts over on the new text.
+ *
+ * The player sits beside the placeholder, not in it: loading a stimulus replaces the
+ * placeholder's content. Items in this package declare `<qti-assessment-stimulus-ref>` without
+ * a placeholder of their own, so `<qti-test>` puts the stimulus in the panel.
+ */
+export const SharedStimulus: Story = {
+  render: () =>
+    html` <qti-test navigate="item">
+      <template item-ref>
+        <div style="margin-block-end: 0.75rem">
+          <test-item-to-speech>
+            <test-tts-play></test-tts-play>
+            <test-tts-stop></test-tts-stop>
+          </test-item-to-speech>
+        </div>
+        {{ xmlDoc }}
+      </template>
+      <test-navigation class="stack">
+        <test-section-buttons-stamp class="row">
+          <template>
+            <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+          </template>
+        </test-section-buttons-stamp>
+        <div class="row" style="align-items: flex-start">
+          <aside data-stimulus-panel style="flex: 1; min-width: 0">
+            <test-item-to-speech>
+              <test-tts-play></test-tts-play>
+              <test-tts-pick></test-tts-pick>
+              <test-tts-prev></test-tts-prev>
+              <test-tts-next></test-tts-next>
+              <test-tts-stop></test-tts-stop>
+            </test-item-to-speech>
+            <div data-stimulus-idref="Stimulus1"></div>
+          </aside>
+          <test-container style="flex: 1; min-width: 0" test-url=${STIMULUS_TEST_URL}></test-container>
+        </div>
+      </test-navigation>
+    </qti-test>`,
+  play: async ({ canvasElement }) => {
+    const canvas = shadowWithin(canvasElement);
+
+    const spokenTexts: string[] = [];
+    const spokenLangs: string[] = [];
+    const speak = spyOn(speechSynthesis, 'speak').mockImplementation((utterance: SpeechSynthesisUtterance) => {
+      spokenTexts.push(utterance.text.trim());
+      spokenLangs.push(utterance.lang);
+      setTimeout(() => utterance.onend?.(new Event('end') as SpeechSynthesisEvent), 0);
+    });
+    const cancel = spyOn(speechSynthesis, 'cancel').mockImplementation(() => {});
+    try {
+      await getAssessmentItemsFromTestContainer(canvasElement);
+      // Section "basic" shows four items; three of them reference Stimulus1.
+      await fireEvent.click(await canvas.findByShadowText('basic'));
+      await waitFor(() => expect(stimulusBodyOf(canvasElement)?.textContent).toContain('An Unbelievable Night'), {
+        timeout: 5000
+      });
+      await waitFor(() => expect(playerFor(canvasElement, 'ITM-choice')).toBeTruthy());
+
+      // 1. The panel player reads the stimulus, and nothing from the items beside it.
+      const stimulusPlayer = stimulusPlayerOf(canvasElement)!;
+      expect(stimulusPlayer.closest('qti-assessment-item-ref')).toBeNull();
+      await playUntilSpoken(() => stimulusPlayerOf(canvasElement), spokenTexts);
+      const stimulusText = stimulusBodyOf(canvasElement)!.textContent!;
+      expect(spokenTexts[0]).toBe('An Unbelievable Night');
+      for (const text of spokenTexts) expect(stimulusText).toContain(text);
+      expect(spokenTexts).not.toContain('What does it say?');
+      // The stimulus' own xml:lang applies: <qti-assessment-stimulus> is placed along with its body.
+      expect(new Set(spokenLangs)).toEqual(new Set(['eng']));
+
+      // 2. An item player reads its own item, and not the stimulus.
+      await playUntilSpoken(() => playerFor(canvasElement, 'ITM-choice'), spokenTexts);
+      expect(spokenTexts).toContain('What does it say?');
+      expect(spokenTexts).not.toContain('An Unbelievable Night');
+
+      // 3. The stimulus content is replaced (a reload, or a host swapping it): the player drops
+      // what it collected and reads the new text from the top, not the detached old one.
+      const placeholder = canvasElement.querySelector('[data-stimulus-panel] > [data-stimulus-idref]')!;
+      placeholder.innerHTML =
+        '<qti-stimulus-body><h2>A second text</h2><p>Only this is read now.</p></qti-stimulus-body>';
+      await playUntilSpoken(() => stimulusPlayerOf(canvasElement), spokenTexts);
+      expect(spokenTexts).toEqual(['A second text', 'Only this is read now.']);
+    } finally {
+      speak.mockRestore();
+      cancel.mockRestore();
+    }
   }
 };
 
