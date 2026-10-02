@@ -1,4 +1,5 @@
 import { QtiAssessmentItem } from './components/qti-assessment-item/qti-assessment-item';
+import { QtiAssessmentStimulus } from './components/qti-assessment-stimulus/qti-assessment-stimulus';
 import { QtiAssessmentStimulusRef } from './components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
 import { QtiCompanionMaterialsInfo } from './components/qti-companion-materials-info/qti-companion-materials-info';
 import { QtiContentBody } from './components/qti-content-body/qti-content-body';
@@ -19,6 +20,7 @@ import { QtiTemplateProcessing } from './components/qti-template-processing/qti-
 
 export {
   QtiAssessmentItem,
+  QtiAssessmentStimulus,
   QtiAssessmentStimulusRef,
   QtiCompanionMaterialsInfo,
   QtiContentBody,
@@ -40,6 +42,7 @@ export {
 
 export const qtiContentElements = [
   { tag: 'qti-assessment-item', ctor: QtiAssessmentItem },
+  { tag: 'qti-assessment-stimulus', ctor: QtiAssessmentStimulus },
   { tag: 'qti-assessment-stimulus-ref', ctor: QtiAssessmentStimulusRef },
   { tag: 'qti-companion-materials-info', ctor: QtiCompanionMaterialsInfo },
   { tag: 'qti-content-body', ctor: QtiContentBody },
