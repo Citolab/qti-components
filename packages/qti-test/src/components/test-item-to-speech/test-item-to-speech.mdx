@@ -6,7 +6,7 @@ import * as TtsStories from './test-item-to-speech.stories';
 
 # test-item-to-speech
 
-`<test-item-to-speech>` reads an item aloud with the Web Speech API. It is a controller: it
+`<test-item-to-speech>` reads an item, or a shared reading text (stimulus), aloud with the Web Speech API. It is a controller: it
 decides what to read and in which language, and provides a `ttsContext` that the button elements
 inside it (`<test-tts-play>`, `<test-tts-stop>`, `<test-tts-prev>`, `<test-tts-next>`,
 `<test-tts-pick>`, …) consume.
@@ -20,26 +20,30 @@ inside it (`<test-tts-play>`, `<test-tts-stop>`, `<test-tts-prev>`, `<test-tts-n
 </test-item-to-speech>
 ```
 
-## Which item is read
+## Which item or stimulus is read
 
-The player works out which item to read from **where it is placed**. There are two modes, and
-the player picks one each time it connects to the page:
+The player works out what to read from **where it is placed**. There are three modes, and the
+player picks one each time it connects to the page — the first that matches wins:
 
-|                       | 1. Item-ref mode                                                    | 2. Cursor mode                                                              |
-| --------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| **When**              | The player is inside a `qti-assessment-item-ref`                    | The player is anywhere else                                                 |
-| **Typical placement** | In a `<template item-ref>` on `<qti-test>` — one player per item    | In a toolbar in the page chrome — one player for the test                   |
-| **Reads**             | The item of its own item-ref (`closest('qti-assessment-item-ref')`) | The item `navItemRefId` points at, from the session context                 |
-| **Navigation**        | Ignored; the player keeps reading its own item                      | Stops speech; the next play starts the new item from the top                |
-| **Speech stops when** | The player leaves the page, together with its item                  | Navigating (`qti-request-navigation`), or moving to another item or section |
-| **Tested by**         | `OnEveryItem`                                                       | `LanguageResolution`                                                        |
+|                       | 1. Stimulus mode                                                        | 2. Item-ref mode                                                    | 3. Cursor mode                                                              |
+| --------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **When**              | The player shares its parent with a `[data-stimulus-idref]` placeholder | The player is inside a `qti-assessment-item-ref`                    | The player is anywhere else                                                 |
+| **Typical placement** | In a reading-text panel beside the questions — one player per stimulus  | In a `<template item-ref>` on `<qti-test>` — one player per item    | In a toolbar in the page chrome — one player for the test                   |
+| **Reads**             | The `qti-stimulus-body` in that placeholder                             | The item of its own item-ref (`closest('qti-assessment-item-ref')`) | The item `navItemRefId` points at, from the session context                 |
+| **Navigation**        | Ignored; the player keeps reading its stimulus                          | Ignored; the player keeps reading its own item                      | Stops speech; the next play starts the new item from the top                |
+| **Speech stops when** | The stimulus is reloaded or replaced, or the player leaves the page     | The player leaves the page, together with its item                  | Navigating (`qti-request-navigation`), or moving to another item or section |
+| **Tested by**         | `SharedStimulus`                                                        | `OnEveryItem`                                                       | `LanguageResolution`                                                        |
 
-Item-ref mode wins: a player inside an item-ref never follows the cursor, even if the test is
-navigated elsewhere. There is no attribute to choose a mode or an item; placement is the only
-input.
+Stimulus mode wins over item-ref mode, and item-ref mode over cursor mode: a player inside an
+item-ref never follows the cursor, even if the test is navigated elsewhere. There is no attribute
+to choose a mode, an item or a stimulus; placement is the only input.
 
 Each mode has a story whose play function fails if that mode breaks:
 
+- **`SharedStimulus`** opens section "basic": three of its four items share one reading text,
+  shown once in a panel with its own player. The panel player must read only the stimulus, an
+  item player only its item, and after the stimulus content is replaced the panel player must
+  read the new text from the top.
 - **`OnEveryItem`** opens section "basic", which shows four items on one page, and plays two of
   the players. Each must read only text from its own item, and the two must differ — which a
   player following the cursor could not do.
@@ -49,7 +53,44 @@ Each mode has a story whose play function fails if that mode breaks:
 
 `SkipsHiddenContent` also uses item-ref mode, but it tests what is read, not which item.
 
-### 1. Item-ref mode — a player per item
+### 1. Stimulus mode — a player for a shared reading text
+
+A stimulus (`<qti-assessment-stimulus-ref>`) is loaded into a `[data-stimulus-idref]`
+placeholder. That placeholder can be inside the item, or in the page — for instance one panel
+beside a section page whose questions all refer to the same text. Put the player **next to** the
+placeholder, in the same parent:
+
+```html
+<qti-test>
+  <test-navigation>
+    <aside>
+      <test-item-to-speech>…</test-item-to-speech>
+      <div data-stimulus-idref="Stimulus1"></div>
+    </aside>
+    <test-container test-url="…"></test-container>
+  </test-navigation>
+</qti-test>
+```
+
+- **Not inside the placeholder.** Loading a stimulus replaces the placeholder's content, which
+  would remove the player with it.
+- **Only the direct parent counts.** A player in a toolbar that merely has a panel somewhere below
+  the same ancestor stays in cursor mode.
+- **The content can change.** The player watches its parent: when the stimulus is (re)loaded,
+  the content replaced, or the placeholder element swapped, it stops (if it was speaking) and the
+  next play starts on the new text. It only cancels its own speech, so a stimulus that finishes
+  loading does not silence an item player.
+
+#### How this combines with the item players
+
+An item player reads the item body **as rendered**. A stimulus placed inside the item (the
+placeholder is part of the item body) is read together with the question. A stimulus placed
+outside the item (stimulus mode) is not: the panel player reads the text, the item players read
+the questions, and the reading text is not repeated before every question that refers to it.
+
+<Canvas of={TtsStories.SharedStimulus} />
+
+### 2. Item-ref mode — a player per item
 
 Put the player in a `<template item-ref>`. Every item-ref renders the template, so every item gets
 its own player, and each player reads only its own item. This also works on a section page with
@@ -72,7 +113,7 @@ player lays out and paints itself.
 
 <Canvas of={TtsStories.OnEveryItem} />
 
-### 2. Cursor mode — one player that follows navigation
+### 3. Cursor mode — one player that follows navigation
 
 Put the player outside any item-ref, e.g. next to the navigation buttons. It reads the item the
 test is navigated to. To find it, the player takes the `navItemRefId` from the session context and
@@ -95,11 +136,12 @@ player has to be inside `<qti-test>` (for the session context) and the item has 
 ```
 
 Cursor mode reads one item — the navigated one. On a page that shows several items at once, use
-item-ref mode instead.
+item-ref mode instead: with section navigation `navItemRefId` is not set, so a cursor-mode player
+finds nothing to read.
 
 <Canvas of={TtsStories.LanguageResolution} />
 
-### In both modes
+### In item-ref and cursor mode
 
 - **The item re-renders** — for instance when a link navigates to the item already on screen. The
   item is replaced by a fresh element without the navigation cursor moving.
@@ -114,7 +156,8 @@ item-ref mode instead.
 
 ## What is read
 
-The player reads the block-level elements in the item's `qti-item-body` that contain text: `p`,
+The player reads the block-level elements in the item's `qti-item-body` (in stimulus mode: the
+`qti-stimulus-body`) that contain text: `p`,
 `h1`–`h6`, `li`, `blockquote`, `figcaption`, `qti-prompt` and `qti-simple-choice`. It keeps only
 the innermost match, so `<li><p>…</p></li>` is read once.
 
