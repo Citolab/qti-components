@@ -94,6 +94,10 @@ abstract class TtsButtonBase extends LitElement {
       ${styles.btn};
       min-inline-size: var(--test-button-size, 2.25rem);
       padding-inline: 0.5rem;
+      /* Containing block for the visually hidden .label. Without it the label is placed against
+         the nearest positioned ancestor, which can sit outside a scroll container and make the
+         page as tall as the scrolled content. */
+      position: relative;
     }
     button:hover:not(:disabled) {
       ${styles.btnInteractive};
@@ -203,10 +207,15 @@ abstract class TtsButtonBase extends LitElement {
  *    placeholder: loading a stimulus replaces the placeholder's content. Items and navigation
  *    are ignored; when the stimulus is (re)loaded or the placeholder swapped, the player starts
  *    over on the new content.
- * 2. **Inside a `qti-assessment-item-ref`** — e.g. in a `<template item-ref>` on `<qti-test>`,
+ * 2. **Next to `[data-tts-content]`** — the player shares its parent with an element marked
+ *    `data-tts-content`: any HTML, not QTI, e.g. a start screen rendered by React. The marker goes
+ *    on one container; the player reads the readable elements inside it. Navigation is ignored.
+ *    The reading list is rebuilt when the player starts from the top, and when an element in it
+ *    has left the page — so a re-render of the content never interrupts speech.
+ * 3. **Inside a `qti-assessment-item-ref`** — e.g. in a `<template item-ref>` on `<qti-test>`,
  *    so every item gets a player of its own: the player reads that item, and only that item.
  *    The navigation cursor is ignored; speech stops when the player leaves the page with its item.
- * 3. **Anywhere else** — a toolbar in the page chrome: the player follows the navigation cursor
+ * 4. **Anywhere else** — a toolbar in the page chrome: the player follows the navigation cursor
  *    and reads the item `navItemRefId` (session context) points at, found in any
  *    `test-container` reachable from the player. Navigating stops speech and starts the next
  *    item from the top.
@@ -218,7 +227,13 @@ abstract class TtsButtonBase extends LitElement {
  *   <div data-stimulus-idref="Stimulus1"></div>
  * </aside>
  *
- * <!-- 2. one player per item -->
+ * <!-- 2. a player for any other HTML -->
+ * <div>
+ *   <test-item-to-speech>…</test-item-to-speech>
+ *   <section data-tts-content lang="nl-NL">…</section>
+ * </div>
+ *
+ * <!-- 3. one player per item -->
  * <qti-test>
  *   <template item-ref>
  *     <test-item-to-speech>…</test-item-to-speech>
@@ -227,17 +242,21 @@ abstract class TtsButtonBase extends LitElement {
  *   …
  * </qti-test>
  *
- * <!-- 3. one player in the toolbar, following navigation -->
+ * <!-- 4. one player in the toolbar, following navigation -->
  * <test-navigation>
  *   <header><test-item-to-speech>…</test-item-to-speech></header>
  *   <test-container test-url="…"></test-container>
  * </test-navigation>
  * ```
  *
- * In modes 2 and 3 the item re-rendering (navigating to the item already shown) restarts the
+ * In modes 3 and 4 the item re-rendering (navigating to the item already shown) restarts the
  * player on the fresh content. An item player reads the item body as rendered: a stimulus
  * placed inside the item is read with it, one placed outside (mode 1) is not. Only one player
  * can speak at a time; starting one stops any other.
+ *
+ * Read are `p`, `h1`–`h6`, `li`, `dt`, `dd`, `th`, `td`, `caption`, `blockquote`, `figcaption`,
+ * `qti-prompt` and `qti-simple-choice` — the innermost match only — unless hidden (`display: none`)
+ * or inside `aria-hidden="true"`.
  *
  * ### Starting somewhere in the middle
  *
@@ -278,6 +297,9 @@ export class TestItemToSpeech extends LitElement {
   #stimulusMode = false;
   // Stimulus mode: resets the player when the stimulus content next to it is replaced.
   #stimulusObserver: MutationObserver | null = null;
+  // Content mode: set on connect when a `[data-tts-content]` element sits next to the player.
+  // Any HTML, not QTI. No observer: the reading list is rebuilt on demand (#getReadingElements).
+  #contentMode = false;
   // Item-ref mode: the item-ref this player sits in, resolved on connect. Null means cursor mode.
   #itemRef: QtiAssessmentItemRef | null = null;
   // Where the item-connected (and, in cursor mode, navigation) events are listened for.
@@ -337,8 +359,8 @@ export class TestItemToSpeech extends LitElement {
   // render already under way instead of scheduling a second one (Lit's change-in-update).
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    // Stimulus and item-ref mode: the navigation cursor does not change what this player reads.
-    if (this.#stimulusMode || this.#itemRef) return;
+    // Stimulus, content and item-ref mode: the navigation cursor does not change what this player reads.
+    if (this.#stimulusMode || this.#contentMode || this.#itemRef) return;
     // Cursor mode: moving to another item or section stops speech and starts over (ignore the
     // initial undefined → value transition). Section navigation leaves navItemRefId null, so it
     // needs its own check.
@@ -377,6 +399,10 @@ export class TestItemToSpeech extends LitElement {
       this.#stimulusObserver.observe(this.parentElement!, { childList: true, subtree: true });
       return;
     }
+    // Content mode: plain HTML next to the player. Nothing to listen for: what is read only
+    // depends on that element, and the reading list is rebuilt when it goes stale.
+    this.#contentMode = this.#contentElement() !== null;
+    if (this.#contentMode) return;
     this.#itemRef = this.closest<QtiAssessmentItemRef>('qti-assessment-item-ref');
     // qti-assessment-item-connected is bubbles+composed: it passes the item's own item-ref, and
     // reaches test-navigation / qti-test from inside test-container's shadow root.
@@ -409,6 +435,7 @@ export class TestItemToSpeech extends LitElement {
     this.#stimulusObserver?.disconnect();
     this.#stimulusObserver = null;
     this.#stimulusMode = false;
+    this.#contentMode = false;
   }
 
   override render() {
@@ -457,11 +484,20 @@ export class TestItemToSpeech extends LitElement {
   }
 
   /**
-   * The element whose text is read: the stimulus body next to the player (stimulus mode), or
-   * the item body of the item to read.
+   * Content mode: the `[data-tts-content]` element that shares this player's parent, or null.
+   * The marker goes on one container; the player finds the readable elements inside it.
+   */
+  #contentElement(): Element | null {
+    return this.parentElement?.querySelector(':scope > [data-tts-content]') ?? null;
+  }
+
+  /**
+   * The element whose text is read: the stimulus body next to the player (stimulus mode), the
+   * marked content next to it (content mode), or the item body of the item to read.
    */
   #resolveReadingRoot(): Element | null {
     if (this.#stimulusMode) return this.#stimulusPlaceholder()?.querySelector('qti-stimulus-body') ?? null;
+    if (this.#contentMode) return this.#contentElement();
     return this.#resolveItem()?.querySelector('qti-item-body') ?? null;
   }
 
@@ -529,6 +565,14 @@ export class TestItemToSpeech extends LitElement {
    * without needing to re-collect the candidate set.
    */
   #getReadingElements(): Element[] {
+    // Content mode has no events or observer telling it the content changed (a framework like
+    // React re-renders it at will). Rebuild the list once an element in it has left the page;
+    // text changed inside an element needs nothing, it is read when that element is spoken.
+    if (this.#contentMode && this.#readingElements?.some(el => !el.isConnected)) {
+      this.#readingElements = null;
+      this.#currentElementIndex = 0;
+      this.#finished = false;
+    }
     if (this.#readingElements === null) {
       const root = this.#resolveReadingRoot();
       // Leave the cache empty (rather than `[]`) while the item or stimulus has not rendered yet,
@@ -536,10 +580,13 @@ export class TestItemToSpeech extends LitElement {
       if (!root) return [];
 
       // Collect block-level elements (and QTI prompt / choice elements) that contain readable text.
-      // Keep only the innermost matches so `<li><p>…</p></li>` is not read twice.
-      const selector = 'p, h1, h2, h3, h4, h5, h6, li, blockquote, figcaption, qti-prompt, qti-simple-choice';
+      // Keep only the innermost matches so `<li><p>…</p></li>` is not read twice. Content hidden
+      // from assistive technology (`aria-hidden="true"`, e.g. decorative icons) is not read either.
+      const selector =
+        'p, h1, h2, h3, h4, h5, h6, li, dt, dd, th, td, caption, blockquote, figcaption, qti-prompt, qti-simple-choice';
       this.#readingElements = Array.from(root.querySelectorAll(selector)).filter(
-        el => (el.textContent ?? '').trim().length > 0 && !el.querySelector(selector)
+        el =>
+          (el.textContent ?? '').trim().length > 0 && !el.querySelector(selector) && !el.closest('[aria-hidden="true"]')
       );
     }
 
@@ -577,7 +624,7 @@ export class TestItemToSpeech extends LitElement {
   #playSpeech() {
     const elements = this.#getReadingElements();
     if (!elements.length) {
-      console.warn('test-item-to-speech: no readable elements found in qti-item-body or qti-stimulus-body');
+      console.warn('test-item-to-speech: no readable elements found');
       return;
     }
     this.#stopPicking();
@@ -588,6 +635,9 @@ export class TestItemToSpeech extends LitElement {
       this.#finished = false;
       this.#currentElementIndex = 0;
     }
+    // Content mode: starting from the top rebuilds the list, so elements the page added since
+    // the last read (a framework re-render) are included.
+    if (this.#contentMode && this.#currentElementIndex === 0) this.#readingElements = null;
     this.#speakElement(this.#currentElementIndex);
   }
 
@@ -680,9 +730,11 @@ export class TestItemToSpeech extends LitElement {
 
   /** Highlight every reading element and wait for a click on one of them. */
   #startPicking() {
+    // Content mode: pick from the page as it is now, like starting from the top does.
+    if (this.#contentMode) this.#readingElements = null;
     const elements = this.#getReadingElements();
     if (!elements.length) {
-      console.warn('test-item-to-speech: no readable elements found in qti-item-body or qti-stimulus-body');
+      console.warn('test-item-to-speech: no readable elements found');
       return;
     }
     this.#stop();
@@ -762,7 +814,9 @@ export class TestItemToSpeech extends LitElement {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     let node: Node | null;
     while ((node = walker.nextNode())) {
-      if ((node.textContent ?? '').length > 0) {
+      // Text hidden from assistive technology inside a read element — a decorative icon in a
+      // list item — is not spoken either. Skipped here, so speech and word highlight agree.
+      if ((node.textContent ?? '').length > 0 && !node.parentElement?.closest('[aria-hidden="true"]')) {
         nodes.push(node as Text);
       }
     }
