@@ -53,10 +53,12 @@ export class QtiAssessmentStimulusRef extends LitElement {
     const stimulus = await qtiTransformItem()
       .load(this.href)
       .then(api => api.htmlDoc());
-    if (stimulus) {
-      const elements = stimulus.querySelectorAll('qti-stimulus-body, qti-stylesheet');
+    // Place the whole qti-assessment-stimulus, not just its body: its `lang` is what the stimulus
+    // content inherits its language from.
+    const root = stimulus?.querySelector('qti-assessment-stimulus');
+    if (root) {
       stimulusRef.innerHTML = '';
-      stimulusRef.append(...elements);
+      stimulusRef.append(root);
     }
   }
 }
