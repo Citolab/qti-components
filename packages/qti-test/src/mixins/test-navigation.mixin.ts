@@ -215,7 +215,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private _getDefaultNavigationId(type: 'item' | 'section'): string | undefined {
       if (type === 'section') {
-        return this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
+        return (
+          this.sessionContext?.navSectionId ??
+          this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier
+        );
       }
       return (
         this.sessionContext?.navItemRefId ??

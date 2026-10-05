@@ -1,4 +1,5 @@
 import type { ITestNavigationMixin } from '../mixins/test-navigation.mixin';
+import type { ITestStateMixin } from '../mixins/test-state.mixin';
 import type { LitElement } from 'lit';
 import type { ConfigContext, TestContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
@@ -11,9 +12,9 @@ import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-c
  * compiler then holds the interface and the class together — while the imports still run
  * one way, types -> mixin, which `pnpm madge` requires.
  */
-export type { ITestNavigationMixin };
+export type { ITestNavigationMixin, ITestStateMixin };
 
-export interface IQtiTest extends LitElement, ITestNavigationMixin, ITestProcessingMixin, IMyQtiTest {}
+export interface IQtiTest extends LitElement, ITestNavigationMixin, ITestProcessingMixin, ITestStateMixin, IMyQtiTest {}
 
 export interface IMyQtiTest {
   // Properties from TestBase
