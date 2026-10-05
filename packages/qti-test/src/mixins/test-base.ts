@@ -188,6 +188,11 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
           }
         }
         assessmentItem.variables = newVariables;
+        // Opaque interaction state (a PCI's getState()) is read from the item context when the
+        // interaction initializes, so it has to be in place now, before that happens.
+        if (itemContext.state) {
+          assessmentItem.state = itemContext.state;
+        }
       }
     };
   }

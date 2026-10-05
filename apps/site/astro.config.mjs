@@ -32,6 +32,7 @@ export default defineConfig({
             { label: 'Structure', slug: 'qti-test/structure' },
             { label: 'Navigation', slug: 'qti-test/navigation' },
             { label: 'Scoring & State', slug: 'qti-test/scoring-and-state' },
+            { label: 'Persist & Restore', slug: 'qti-test/persist-and-restore' },
             { label: 'View Helpers', slug: 'qti-test/view-helpers' }
           ]
         },
