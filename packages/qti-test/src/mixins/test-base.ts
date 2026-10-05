@@ -173,6 +173,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
           };
         })
       };
+      // Deprecated for hosts, see `@event` on `qti-test`; kept until the next major.
       this.dispatchEvent(
         new CustomEvent('qti-test-context-updated', { detail: this.testContext, bubbles: false, composed: false })
       );

@@ -22,6 +22,10 @@ export interface ITestStateMixin {
    * has loaded it is held and applied as soon as the test connects — before the first item
    * loads, so items and the initial navigation start from it — and after that it is applied
    * immediately and the test navigates to the restored position.
+   *
+   * Items are matched by item-ref identifier; items the state does not mention start fresh, and
+   * stored items, test outcomes or a position the test no longer has are ignored. Restoring is a
+   * resume, so linear-mode navigation restrictions do not apply.
    */
   state: QtiTestState;
 }
