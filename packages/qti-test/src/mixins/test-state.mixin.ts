@@ -1,8 +1,7 @@
 import { QTI_TEST_STATE_VERSION } from '../types/qti-test-state';
 
 import type { PropertyValues } from 'lit';
-import type { SessionContext, TestContext, VariableDeclaration } from '@qti-components/base';
-import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
+import type { SessionContext, TestContext } from '@qti-components/base';
 import type { QtiTestState, QtiTestStateSession } from '../types/qti-test-state';
 import type { TestBaseInterface } from './test-base';
 
@@ -117,7 +116,6 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
 
       const { navItemRefId, navSectionId } = this.sessionContext;
       this.#apply(value);
-      this.#applyToLoadedItems(value);
 
       const restored = this.sessionContext;
       if (restored.navItemRefId && restored.navItemRefId !== navItemRefId) {
@@ -139,29 +137,13 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     }
 
     #apply(state: QtiTestState): void {
-      const savedItems = new Map(state.test.items.map(item => [item.identifier, item]));
-      const savedOutcomes = new Map(state.test.outcomes.map(outcome => [outcome.identifier, outcome.value]));
+      // Before the items load this only fills the test context; items already on screen are
+      // updated too.
+      for (const saved of state.test.items) this.updateItemVariables(saved.identifier, saved.variables, saved.state);
 
+      const savedOutcomes = new Map(state.test.outcomes.map(outcome => [outcome.identifier, outcome.value]));
       this.testContext = {
         ...this.testContext,
-        items: this.testContext.items.map(item => {
-          const saved = savedItems.get(item.identifier);
-          if (!saved) return item;
-
-          const variables = [...(item.variables ?? [])];
-          for (const savedVariable of saved.variables) {
-            const index = variables.findIndex(v => v.identifier === savedVariable.identifier);
-            const restored = {
-              ...(index >= 0 ? variables[index] : {}),
-              identifier: savedVariable.identifier,
-              ...(savedVariable.type ? { type: savedVariable.type } : {}),
-              value: copy(savedVariable.value)
-            } as VariableDeclaration<Value>;
-            if (index >= 0) variables[index] = restored;
-            else variables.push(restored);
-          }
-          return { ...item, variables, ...(saved.state ? { state: { ...saved.state } } : {}) };
-        }),
         testOutcomeVariables: this.testContext.testOutcomeVariables?.map(v =>
           savedOutcomes.has(v.identifier) ? { ...v, value: copy(savedOutcomes.get(v.identifier)) } : v
         )
@@ -170,17 +152,6 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
       // Written before any navigation request, so the linear-mode restriction — which compares
       // against the current position — sees the restored item as current and lets it load.
       this.sessionContext = { ...this.sessionContext, ...this.#validSession(state.session) };
-    }
-
-    /** Items already on screen synced from the test context when they connected; resync them. */
-    #applyToLoadedItems(state: QtiTestState): void {
-      for (const saved of state.test.items) {
-        const assessmentItem = this.#itemRef(saved.identifier)?.assessmentItem;
-        if (!assessmentItem) continue;
-        const item = this.testContext.items.find(i => i.identifier === saved.identifier);
-        assessmentItem.variables = [...(item?.variables ?? [])];
-        if (saved.state) assessmentItem.state = saved.state;
-      }
     }
 
     /** A stored position may point at an item or section a revised test no longer has. */
@@ -194,14 +165,6 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
           ? { navItemRefId: session.navItemRefId }
           : {})
       };
-    }
-
-    #itemRef(identifier: string): QtiAssessmentItemRef | null {
-      return (
-        this._testElement?.querySelector<QtiAssessmentItemRef>(
-          `qti-assessment-item-ref[identifier="${CSS.escape(identifier)}"]`
-        ) ?? null
-      );
     }
 
     #requestNavigation(type: 'item' | 'section', id: string): void {

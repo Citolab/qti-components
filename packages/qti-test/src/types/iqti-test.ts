@@ -1,9 +1,10 @@
 import type { ITestNavigationMixin } from '../mixins/test-navigation.mixin';
 import type { ITestStateMixin } from '../mixins/test-state.mixin';
+import type { ItemVariableValue } from '../mixins/test-base';
 import type { LitElement } from 'lit';
-import type { ConfigContext, TestContext } from '@qti-components/base';
+import type { ConfigContext, ItemContext, TestContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
-import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
+import type { OutcomeVariable, VariableDeclaration } from '@qti-components/base';
 
 /*
  * `ITestNavigationMixin` is declared beside the class it describes, in
@@ -23,7 +24,8 @@ export interface IMyQtiTest {
   configContext: ConfigContext;
 
   // Methods from TestBase
-  updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void;
+  /** Sets values on one item, keyed by its `qti-assessment-item-ref` identifier. */
+  updateItemVariables(itemRefID: string, variables: readonly ItemVariableValue[], state?: ItemContext['state']): void;
 }
 
 export interface ITestProcessingMixin {
