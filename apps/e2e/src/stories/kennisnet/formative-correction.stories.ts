@@ -1,9 +1,11 @@
 import { html } from 'lit';
+import { ref } from 'lit/directives/ref.js';
 import { waitFor } from 'storybook/test';
 
 import { withCorrection } from './with-correction';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { QtiTestState } from '@qti-components/test';
 
 type Story = StoryObj;
 
@@ -25,6 +27,7 @@ type FormativeState = {
 
 type QtiTestElement = HTMLElement & {
   navigateTo(type: 'item', id: string): void;
+  state: QtiTestState;
   sessionContext?: { navItemRefId?: string | null };
   testContext?: {
     items: {
@@ -67,6 +70,18 @@ const items: ItemDefinition[] = [
 ];
 
 const stateByRoot = new WeakMap<HTMLElement, FormativeState>();
+
+/**
+ * This story plays the host: it saves the candidate's state on every `qti-state-changed` and
+ * assigns it back on load. The library never stores anything itself; sessionStorage here keeps
+ * a session for as long as the tab is open.
+ */
+const STORAGE_KEY = 'kennisnet-formative-correction:state';
+
+const loadState = (): QtiTestState | null => {
+  const stored = sessionStorage.getItem(STORAGE_KEY);
+  return stored ? (JSON.parse(stored) as QtiTestState) : null;
+};
 
 const assessmentXML = `<?xml version="1.0" encoding="UTF-8"?>
 <qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
@@ -487,13 +502,21 @@ export const FormativeCorrection: Story = {
 
         <qti-test
           navigate="item"
+          ${ref(element => {
+            // Assigned before the test connects, so it opens where the candidate left off.
+            const saved = loadState();
+            if (element && saved) {
+              (element as QtiTestElement).state = saved;
+            }
+          })}
           @qti-test-loaded=${(event: Event) => {
             const root = getRoot(event.currentTarget);
             if (root) {
               updateControls(root);
             }
           }}
-          @qti-state-changed=${(event: Event) => {
+          @qti-state-changed=${(event: CustomEvent<QtiTestState>) => {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(event.detail));
             const root = getRoot(event.currentTarget);
             if (root) {
               updateControls(root);
@@ -520,6 +543,17 @@ export const FormativeCorrection: Story = {
         </qti-test>
 
         <div class="controls">
+          <button
+            class="control-button"
+            type="button"
+            data-testid="reset-button"
+            @click=${() => {
+              sessionStorage.removeItem(STORAGE_KEY);
+              location.reload();
+            }}
+          >
+            Opnieuw beginnen
+          </button>
           <button
             class="control-button"
             type="button"
