@@ -493,7 +493,7 @@ export const FormativeCorrection: Story = {
               updateControls(root);
             }
           }}
-          @qti-test-context-updated=${(event: Event) => {
+          @qti-state-changed=${(event: Event) => {
             const root = getRoot(event.currentTarget);
             if (root) {
               updateControls(root);

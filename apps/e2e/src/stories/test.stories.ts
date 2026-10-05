@@ -75,7 +75,9 @@ export const QtiTest: Story = {
         @qti-request-navigation=${(e: CustomEvent) => {
           console.log('qti-request-navigation', e);
         }}
-        @qti-test-context-updated=${() => {}}
+        @qti-state-changed=${(e: CustomEvent) => {
+          console.log('qti-state-changed', e);
+        }}
       >
         <test-navigation
           auto-score-items
