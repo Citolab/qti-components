@@ -3,25 +3,26 @@ title: Persist & restore
 description: Save a candidate's test session and resume it later — qtiTest.state and the qti-state-changed event.
 ---
 
-A `<qti-test>` exposes everything needed to resume a candidate's session as one value, `state`,
-and announces every change to it with one event, `qti-state-changed`. Where you keep it is up to
-you: your backend, `localStorage`, `sessionStorage`.
+A `<qti-test>` has one property and one event for this. Where you store the state is up to you.
 
 ```js
 const qtiTest = document.querySelector('qti-test');
 
-// Resume. Safe to assign before the test has loaded: it is held and applied as soon as the
-// test connects, before the first item loads.
+// Restore. Safe to assign before the test has loaded.
 const saved = await load(candidateId);
 if (saved) qtiTest.state = saved;
 
-// Persist. Fires once per change, never with the empty state of a test that is still loading.
+// Save. Fires on every change, so debounce writes to a backend.
 qtiTest.addEventListener('qti-state-changed', e => save(candidateId, e.detail));
 ```
 
-`qti-state-changed` fires on every answer change, so debounce writes to a backend.
+**Pass the same `seed` in `qtiContext` when resuming**, or items and choices come back in a different
+order. Config, `qtiContext` and `view` are not part of the state; you supply them on every load.
 
-## What is in it
+Assign the state before the test loads where you can: a PCI that is already on screen only picks up
+a new state when its item loads again.
+
+## The state
 
 ```ts
 interface QtiTestState {
@@ -36,40 +37,25 @@ interface QtiTestState {
       }[];
       state?: Record<string, string | null>; // per-interaction state, e.g. a PCI's getState()
     }[];
-    outcomes: { identifier: string; value: string | string[] | null }[]; // test-level outcomes
+    outcomes: { identifier: string; value: string | string[] | null }[];
   };
   session: { navPartId?: string | null; navSectionId?: string | null; navItemRefId?: string | null };
 }
 ```
 
-Only values. Declaration metadata — base type, cardinality, correct response, mapping — comes from
-the item XML on every load, so it is not stored, and the answer key never ends up in the
-candidate's record.
+Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is. A state
+with an unknown `version` is ignored with a console warning.
 
-## What is not in it
+## Setting a single value
 
-These are inputs you supply on every load, not state the candidate produced:
+To change values on one item from outside the session, such as a score from manual scoring, use
+`updateItemVariables`. It also fires `qti-state-changed`.
 
-- **`configContext`** — delivery options.
-- **`qtiContext`** — candidate and environment identifiers, and the shuffle `seed`. **Pass the same
-  seed again when resuming**, or the restored session sees items and choices in a different order.
-- **`sessionContext.view`** — the role you render the test for.
+```js
+qtiTest.updateItemVariables('item-ref-1', [{ identifier: 'SCORE', value: '1' }]);
+```
 
-Computed values (section completion, item `done`, indices) are rederived from the stored state.
+## Replaces
 
-## Restoring
-
-- Items in the state are matched by item-ref identifier; items the test no longer has are ignored,
-  and items the state does not mention start fresh.
-- Test-level outcomes are only restored when the test still declares them.
-- A stored position pointing at an item, section or test part the test no longer has is dropped,
-  and navigation falls back to the start.
-- Assigned before the test loads, `navigate="item"` / `navigate="section"` opens the stored item or
-  section instead of the first one. Assigned after, the test navigates to the stored position if
-  it differs from the current one. Restoring is a resume, so it is not subject to linear-mode
-  navigation restrictions.
-- A state with an unknown `version` is ignored with a console warning.
-
-Assign the state before the test loads where you can. An item that is already on screen receives
-the restored responses, but an interaction that only reads its state while initializing — a PCI —
-will not pick up a new state until the item is loaded again.
+`qti-test-context-updated` and reading or writing `testContext` for persistence are deprecated.
+They expose the full test context, including the answer key.
