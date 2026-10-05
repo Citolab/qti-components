@@ -20,8 +20,12 @@ export interface TestBaseInterface extends LitElement {
   sessionContext: Readonly<SessionContext>;
   configContext?: Readonly<ConfigContext>;
   _testElement: QtiAssessmentTest;
-  updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void;
+  updateItemVariables(itemRefID: string, variables: readonly ItemVariableValue[], state?: ItemContext['state']): void;
 }
+
+/** A value to set on an item; `type` is only needed for a variable the item does not declare. */
+export type ItemVariableValue = Pick<VariableValue<string | string[] | null>, 'identifier' | 'value'> &
+  Partial<Pick<VariableValue<string | string[] | null>, 'type'>>;
 
 export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   abstract class TestBaseClass extends superClass implements TestBaseInterface {
@@ -40,22 +44,46 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
       this._initializeEventListeners();
     }
 
-    updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void {
-      // Update variables in the testContext for the specified itemRefID
-      const itemContext = this.testContext.items.find(item => item.identifier === itemRefID);
-      if (itemContext) {
-        itemContext.variables = itemContext.variables.map(variable => {
-          const updatedVariable = variables.find(v => v.identifier === variable.identifier);
-          return updatedVariable ? { ...variable, ...updatedVariable } : variable;
-        });
-      }
-      // if the qti-assessment-item-ref has a qti-assessment-item, then update this item as well
-      const itemRef = this._testElement.querySelector<QtiAssessmentItemRef>(
-        `qti-assessment-item-ref[identifier="${itemRefID}"]`
-      );
-      if (itemRef && itemRef.assessmentItem) {
-        itemRef.assessmentItem.variables = variables;
-      }
+    /**
+     * Sets values on one item from outside the candidate's session, e.g. a score from manual
+     * scoring. Values are merged into the item's entry in the test context, and into the item
+     * itself if it is on screen; a value the item has not seen yet is added, so this also works
+     * before the item has loaded. To restore a whole session, assign `state` instead.
+     *
+     * The test context is replaced rather than changed in place, so its consumers update and
+     * `qti-state-changed` fires.
+     *
+     * @param itemRefID The `qti-assessment-item-ref` identifier, not the item's own identifier.
+     * @param state Opaque per-interaction state keyed by response identifier, e.g. a PCI's `getState()`.
+     */
+    updateItemVariables(itemRefID: string, values: readonly ItemVariableValue[], state?: ItemContext['state']): void {
+      this.testContext = {
+        ...this.testContext,
+        items: this.testContext.items.map(item => {
+          if (item.identifier !== itemRefID) return item;
+
+          const variables = [...(item.variables ?? [])];
+          for (const { identifier, type, value } of values) {
+            const index = variables.findIndex(v => v.identifier === identifier);
+            const updated = {
+              ...(index >= 0 ? variables[index] : {}),
+              identifier,
+              ...(type ? { type } : {}),
+              value: Array.isArray(value) ? [...value] : value
+            } as VariableDeclaration<string | string[] | null>;
+            if (index >= 0) variables[index] = updated;
+            else variables.push(updated);
+          }
+          return { ...item, variables, ...(state ? { state: { ...state } } : {}) };
+        })
+      };
+
+      const assessmentItem = this._testElement?.querySelector<QtiAssessmentItemRef>(
+        `qti-assessment-item-ref[identifier="${CSS.escape(itemRefID)}"]`
+      )?.assessmentItem;
+      if (!assessmentItem) return;
+      assessmentItem.variables = [...(this.testContext.items.find(i => i.identifier === itemRefID)?.variables ?? [])];
+      if (state) assessmentItem.state = state;
     }
 
     private _initializeEventListeners(): void {

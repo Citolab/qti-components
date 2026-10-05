@@ -224,6 +224,22 @@ describe('qti-test state', () => {
       expect(emitted).toEqual([]);
     });
 
+    it('emits when a host writes a value through updateItemVariables', async () => {
+      await settle();
+      emitted.length = 0;
+
+      // An external score for an item that has not loaded yet, as a manual-scoring host does.
+      qtiTest.updateItemVariables('ITEM-2', [{ identifier: 'SCORE', type: 'outcome', value: '1' }]);
+      await settle();
+
+      expect(variable(qtiTest, 'ITEM-2', 'SCORE')?.value).toBe('1');
+      expect(emitted.at(-1)?.test.items.find(i => i.identifier === 'ITEM-2')?.variables).toContainEqual({
+        identifier: 'SCORE',
+        type: 'outcome',
+        value: '1'
+      });
+    });
+
     it('round-trips: what it emits restores the same state', () => {
       qtiTest.state = savedState({ navItemRefId: null });
       const stored = JSON.parse(JSON.stringify(qtiTest.state)) as QtiTestState;
