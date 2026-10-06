@@ -142,7 +142,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
         this._updateItemVariablesInTestContext(
           e.detail.itemContext.identifier,
           e.detail.itemContext.variables,
-          e.detail.itemContext.state
+          e.detail.itemContext.state,
+          e.detail.itemContext.valid
         );
       });
     }
@@ -150,7 +151,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
     private _updateItemVariablesInTestContext(
       identifier: string,
       variables: readonly VariableDeclaration<string | string[] | null>[],
-      state?: ItemContext['state']
+      state?: ItemContext['state'],
+      valid?: boolean
     ): void {
       // Update the test context with modified variables for the specified item
       this.testContext = {
@@ -171,7 +173,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
               // Merge matching variable with the new one, or use the new variable if no match
               return matchingVariable ? { ...matchingVariable, ...variable } : variable;
             }),
-            ...(state !== undefined ? { state: state ? { ...state } : undefined } : {})
+            ...(state !== undefined ? { state: state ? { ...state } : undefined } : {}),
+            ...(valid !== undefined ? { valid } : {})
           };
         })
       };
@@ -191,7 +194,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
      * @param assessmentItem - The assessment item to update.
      */
     private _updateItemInTestContext = (assessmentItem: QtiAssessmentItem): void => {
-      const context = (assessmentItem as any)._context;
+      const context = assessmentItem.itemContext;
       const identifier = context.identifier;
       const fullVariables = context.variables;
 
@@ -206,7 +209,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
       // Update variables in the test context or sync them to the assessment item
       if (itemContext.variables?.length === 1) {
         // The loaded qti-assessment-item itself has variables which are not in test context yet.
-        this._updateItemVariablesInTestContext(identifier, fullVariables);
+        this._updateItemVariablesInTestContext(identifier, fullVariables, undefined, context.valid);
       } else {
         const newVariables = [...assessmentItem.variables];
         // Sync the assessment item's variables with the test context

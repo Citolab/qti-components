@@ -25,6 +25,16 @@ to call with the same value (no re-render loops, no event dispatch that echoes b
 - The `qti-register-feedback` event is no longer sent; the surveyed imports do not use it.
   Evidence: imports surveyed only, not run
 
+### Item validity is published by the item (PR #TBD)
+
+Status: behaviour change; nothing required for the surveyed code
+Members: `computedContext` (`ComputedItem.valid`)
+Do: nothing if no component reads `valid`. One that does now gets a value that stays right after a
+restore or after coming back to an answered item; before, it stayed `false` until the next update.
+The navigation computed context no longer asks each loaded item to validate on every update.
+Evidence: imports surveyed only, not run. `qti-navigation-bar.ts` consumes `computedContext` and does
+not read `valid`.
+
 ### `state` is available after the upgrade (PR #225)
 
 Status: recommended, once on 9.x

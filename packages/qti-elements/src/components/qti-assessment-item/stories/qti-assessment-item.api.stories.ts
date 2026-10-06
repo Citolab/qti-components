@@ -373,6 +373,63 @@ export const RestoringDefaultsLeavesAHideModalAlone: StoryObj = {
   }
 };
 
+const requiredItem = (adaptive: 'true' | 'false') => html`
+  <qti-assessment-item identifier="required-item" title="Required item" adaptive=${adaptive}>
+    <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    </qti-response-declaration>
+    <qti-item-body>
+      <qti-choice-interaction response-identifier="RESPONSE" min-choices="1" max-choices="1">
+        <qti-simple-choice identifier="a">A</qti-simple-choice>
+        <qti-simple-choice identifier="b">B</qti-simple-choice>
+      </qti-choice-interaction>
+    </qti-item-body>
+  </qti-assessment-item>
+`;
+
+/**
+ * The item publishes whether its interactions are valid, in `itemContext.valid`, so the test never
+ * has to ask. A required choice is invalid until it is answered. An adaptive item does not update
+ * its completion status on every answer, so it is the case where nothing else would publish it.
+ */
+export const PublishesItsValidity: StoryObj = {
+  render: () => html`<div data-testid="host">${requiredItem('false')} ${requiredItem('true')}</div>`,
+  play: async ({ canvasElement }) => {
+    const host = within(canvasElement).getByTestId('host');
+    const items = [...host.querySelectorAll<QtiAssessmentItem>('qti-assessment-item')];
+    await Promise.all(items.map(i => i.updateComplete));
+
+    for (const item of items) {
+      const kind = item.adaptive === 'true' ? 'adaptive' : 'non-adaptive';
+      await waitFor(() => expect(item.itemContext.valid, `${kind} before answering`).toBe(false));
+
+      within(item).getByText('B').click();
+
+      await waitFor(() => expect(item.itemContext.valid, `${kind} after answering`).toBe(true));
+    }
+  }
+};
+
+/**
+ * Answers handed in through `variables` change the verdict too, and the test is told: a different
+ * answer is a different verdict, and the interactions only take it over a moment later.
+ */
+export const RevalidatesWhenVariablesAreAssigned: StoryObj = {
+  render: () => html`<div data-testid="host">${requiredItem('false')}</div>`,
+  play: async ({ canvasElement }) => {
+    const { item } = await readyItem(canvasElement);
+    const announced = fn();
+    item.addEventListener('qti-item-context-updated', (e: Event) =>
+      announced((e as CustomEvent).detail.itemContext.valid)
+    );
+    await waitFor(() => expect(item.itemContext.valid, 'before').toBe(false));
+
+    item.variables = [{ identifier: 'RESPONSE', type: 'response', value: 'a' }];
+
+    await waitFor(() => expect(item.itemContext.valid, 'after').toBe(true));
+    expect(announced).toHaveBeenCalledWith(true);
+  }
+};
+
 /**
  * Inside a test the item's own identifier is not the one the host knows: the item-ref's is. Hosts
  * key their stored data on it, so it has to be settable and readable.

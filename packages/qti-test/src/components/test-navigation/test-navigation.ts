@@ -503,7 +503,8 @@ export class TestNavigation extends LitElement {
 
                 const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
 
-                const valid = this.#assessmentItemFor(computedItem.identifier)?.validate(false) ?? true;
+                // Published by the item. One that is not on screen has nothing to be invalid.
+                const valid = itemContext?.valid ?? true;
 
                 const responseVars = itemContext?.variables?.filter(v => v.type === 'response') || [];
 
