@@ -1,0 +1,98 @@
+---
+title: Extending interactions
+description: Write your own interaction by subclassing Interaction, and what the base class does for you.
+---
+
+An interaction is a form-associated custom element with some wiring to the item around it.
+`Interaction` is that element: it is `formAssociated`, attaches `ElementInternals` and exposes them
+as `internals`, reports validity through them, resets on `formResetCallback`, and has `name` and
+`value`. You add your own interaction by subclassing it and placing it in an item. The contract
+below is pinned by the **Extension API** stories in Storybook (`qti-assessment-item / Extension API`),
+which run exactly this kind of subclass inside a real item.
+
+```ts
+import { Interaction } from '@citolab/qti-components/qti-base';
+
+class MyInteraction extends Interaction {
+  #answer = '';
+
+  // Is the interaction in a valid state? The item asks, and publishes the verdict.
+  validate(): boolean {
+    return this.#answer !== '';
+  }
+
+  get response(): string | null {
+    return this.#answer || null;
+  }
+
+  // Called with a value that was restored or assigned from outside. Not called for your own answer.
+  set response(value: string | string[] | null) {
+    this.#answer = typeof value === 'string' ? value : '';
+    this.requestUpdate();
+  }
+
+  // Your own UI calls this when the candidate answers.
+  #pick(answer: string) {
+    this.#answer = answer;
+    this.saveResponse(answer);
+  }
+}
+
+customElements.define('my-interaction', MyInteraction);
+```
+
+```html
+<qti-assessment-item identifier="item-1" title="My item">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"></qti-response-declaration>
+  <qti-item-body>
+    <my-interaction response-identifier="RESPONSE"></my-interaction>
+  </qti-item-body>
+</qti-assessment-item>
+```
+
+## What you implement
+
+- `validate(): boolean`
+- `get response()` and `set response(value)`
+
+`response` is the compatibility surface the item uses to talk to the interaction today, and the
+project's own rule calls it transitional. The base class does not set the form value for you: if
+the interaction should take part in a `<form>`, call `this.internals.setFormValue(…)` yourself
+when the answer changes.
+
+Leaving out `response` is a compile error (`Non-abstract class … does not implement inherited
+abstract member response`).
+
+## What you call
+
+- `saveResponse(value, state?)` when the candidate answers. It reaches the item's variables and
+  fires `qti-interaction-changed`. Pass `state` for opaque state that should survive a reload, such
+  as a portable custom interaction's `getState()`.
+
+## What the base class does for you
+
+The form-element part (`internals`, `setInteractionValidity` for custom validity, reset) is described
+above. The rest is the wiring to the item:
+
+- **Registers with the enclosing item.** The item then asks your `validate()`, and the verdict is
+  published as `itemContext.valid`.
+- **Hands your `response` setter a value that was restored or assigned from outside**, for example
+  `item.variables = …` or `qtiTest.state = …`. It does so only when the item's value changed to
+  something you did not publish yourself, so the setter never runs for the candidate's own answer.
+- **Follows the item's `readonly` and `disabled`** through the `readonly` and `disabled` properties.
+  An interaction you author with either set stays so inside an item that says nothing about it.
+- **Provides `configContext`**: the delivery options the host set on the test or item.
+
+## Don't
+
+- **Don't redeclare `responseIdentifier`.** The base class binds it to the `response-identifier`
+  attribute. A subclass that declares `@property() responseIdentifier` again loses that binding: the
+  attribute is read as `responseidentifier` and `response-identifier="…"` leaves it unset.
+- **Don't call `saveResponse` from the `response` setter.** The value came from outside and is
+  already in the item. Only update your own state and re-render.
+
+## Components that read the session
+
+The contexts a component can consume (`testContext`, `computedContext`, `configContext`, and the
+item's) are exported from the same entry point, `@citolab/qti-components/qti-base`. Consume them with
+`@consume` from `@lit/context`, with `subscribe: true`.

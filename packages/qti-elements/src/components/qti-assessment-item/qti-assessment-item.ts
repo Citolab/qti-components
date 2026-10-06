@@ -3,11 +3,11 @@ import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { itemContext, itemContextVariables } from '@qti-components/base';
-import { watch } from '@qti-components/utilities';
 
+import type { PropertyValues } from 'lit';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
-import type { QtiFeedback, ResponseInteraction } from '@qti-components/base';
+import type { ResponseInteraction } from '@qti-components/base';
 import type { RegisteredInteraction } from '@qti-components/base';
 import type { VariableDeclaration, VariableValue } from '@qti-components/base';
 import type { OutcomeVariable, ResponseVariable, TemplateVariable } from '@qti-components/base';
@@ -51,16 +51,30 @@ export class QtiAssessmentItem extends LitElement {
     this.setAttribute('data-title', value);
   }
 
+  /**
+   * Locks the item, for example once it is submitted. Published in the item context, which the
+   * interactions inside follow, so the item keeps no list of them to set it on.
+   */
   @property({ type: Boolean }) disabled: boolean;
-  @watch('disabled', { waitUntilFirstUpdate: true })
-  protected _handleDisabledChange = (_: boolean, disabled: boolean) => {
-    this.interactionElements.forEach(ch => (ch.disabled = disabled));
-  };
 
+  /**
+   * Shows the item for reading only. Published in the item context, which the interactions inside
+   * follow, so the item keeps no list of them to set it on.
+   */
   @property({ type: Boolean }) readonly: boolean;
-  @watch('readonly', { waitUntilFirstUpdate: true })
-  protected _handleReadonlyChange = (_: boolean, readonly: boolean) =>
-    this.interactionElements.forEach(ch => (ch.readonly = readonly));
+
+  protected override willUpdate(changed: PropertyValues): void {
+    super.willUpdate(changed);
+    const readonlyChanged = changed.has('readonly') && (this.readonly ?? false) !== (this._context.readonly ?? false);
+    const disabledChanged = changed.has('disabled') && (this.disabled ?? false) !== (this._context.disabled ?? false);
+    if (readonlyChanged || disabledChanged) {
+      this._context = {
+        ...this._context,
+        ...(readonlyChanged ? { readonly: !!this.readonly } : {}),
+        ...(disabledChanged ? { disabled: !!this.disabled } : {})
+      };
+    }
+  }
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
@@ -80,6 +94,14 @@ export class QtiAssessmentItem extends LitElement {
     return this._context.identifier;
   }
 
+  /**
+   * The item's whole context, declarations included, for reading. `variables` is the trimmed view
+   * for hosts; the test needs the declarations too, and used to reach for the private field.
+   */
+  public get itemContext(): Readonly<ItemContext> {
+    return this._context;
+  }
+
   public get variables(): VariableValue<string | string[] | null>[] {
     return this._context.variables.map(v => ({
       identifier: v.identifier,
@@ -97,6 +119,25 @@ export class QtiAssessmentItem extends LitElement {
       console.warn('variables property should be an array of VariableDeclaration');
       return;
     }
+    const previous = this._context.variables;
+    // Recognised by their declaration, or by their own type: a template declaration registers after
+    // its first render, so a test restoring on connect can get here before it has.
+    const restoredTemplates = value.filter(
+      v =>
+        v.value !== null &&
+        v.value !== undefined &&
+        (v.type === 'template' ||
+          previous.some(declared => declared.identifier === v.identifier && declared.type === 'template'))
+    );
+    restoredTemplates.forEach(v =>
+      this.#restoredTemplateValues.set(v.identifier, v.value as Readonly<string | string[]>)
+    );
+    const templatesChanged = restoredTemplates.some(
+      v =>
+        JSON.stringify(previous.find(declared => declared.identifier === v.identifier)?.value) !==
+        JSON.stringify(v.value)
+    );
+
     this._context = {
       ...this._context,
       variables: this._context.variables.map(variable => {
@@ -113,22 +154,14 @@ export class QtiAssessmentItem extends LitElement {
       })
     };
 
-    this._context.variables.forEach(variable => {
-      if (variable.type === 'response') {
-        const interactionElement = this.interactionElements.find(
-          (el: RegisteredInteraction) => el.responseIdentifier === variable.identifier
-        );
-        if (interactionElement) {
-          interactionElement.response = variable.value as string | string[];
-        }
-      }
-    });
+    // Restored after the first processing run: correct responses still follow the values it drew.
+    if (this.#templatesProcessed && templatesChanged) {
+      this.#runTemplateProcessing();
+    }
 
-    this.variables.forEach(variable => {
-      if (variable.type === 'outcome') {
-        this.#feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
-      }
-    });
+    // The interactions take the answers over from the context, some of them a moment from now, and
+    // a different answer can mean a different verdict. Look once they have.
+    void this.updateComplete.then(() => this.#revalidate());
   }
 
   public get state(): ItemContext['state'] {
@@ -143,7 +176,13 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   #initialContext: Readonly<ItemContext> = { ...this._context, variables: this._context.variables };
-  #feedbackElements: QtiFeedback[] = [];
+  /**
+   * Template values handed in through `variables` — drawn in an earlier visit or session. Template
+   * processing keeps them instead of drawing again, so the candidate sees the question they
+   * answered, and still runs, so correct responses are derived from them.
+   */
+  #restoredTemplateValues = new Map<string, Readonly<string | string[]>>();
+  #templatesProcessed = false;
   /** Registered candidate-input interactions. Correction packages may extend their presentation behavior. */
   protected interactionElements: RegisteredInteraction[] = [];
 
@@ -174,6 +213,8 @@ export class QtiAssessmentItem extends LitElement {
     this.#attachEventListeners();
     super.connectedCallback();
     this.updateComplete.then(() => {
+      // The verdict goes in first, so whoever hears the item connect reads it with the rest.
+      this.validate(false);
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
           bubbles: true,
@@ -192,7 +233,6 @@ export class QtiAssessmentItem extends LitElement {
 
   #attachEventListeners() {
     this.addEventListener('qti-register-variable', this.#handleRegisterVariable);
-    this.addEventListener('qti-register-feedback', this.#handleRegisterFeedback);
     this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.addEventListener('end-attempt', this.#handleEndAttempt);
     this.addEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
@@ -203,7 +243,6 @@ export class QtiAssessmentItem extends LitElement {
 
   #removeEventListeners() {
     this.removeEventListener('qti-register-variable', this.#handleRegisterVariable);
-    this.removeEventListener('qti-register-feedback', this.#handleRegisterFeedback);
     this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.removeEventListener('end-attempt', this.#handleEndAttempt);
     this.removeEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
@@ -214,19 +253,12 @@ export class QtiAssessmentItem extends LitElement {
 
   #handleRegisterVariable = (e: QtiRegisterVariable) => {
     e.stopImmediatePropagation();
-    this._context = { ...this._context, variables: [...this._context.variables, e.detail.variable] };
+    const { variable } = e.detail;
+    const restored = variable.type === 'template' ? this.#restoredTemplateValues.get(variable.identifier) : undefined;
+    const registered = restored !== undefined ? { ...variable, value: restored } : variable;
+    this._context = { ...this._context, variables: [...this._context.variables, registered] };
     this.#initialContext = this._context;
     e.stopPropagation();
-  };
-
-  #handleRegisterFeedback = (e: CustomEvent<QtiFeedback>) => {
-    e.stopImmediatePropagation();
-    const feedbackElement = e.detail;
-    this.#feedbackElements.push(feedbackElement);
-    const numAttempts = Number(this._context.variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
-    if (numAttempts > 0) {
-      feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
-    }
   };
 
   #handleRegisterInteraction = (e: CustomEvent<{ interaction: string; interactionElement: RegisteredInteraction }>) => {
@@ -252,7 +284,9 @@ export class QtiAssessmentItem extends LitElement {
   #handleSetTemplateValue = (e: CustomEvent<{ templateIdentifier: string; value: string | string[] | null }>) => {
     e.stopImmediatePropagation();
     const { templateIdentifier, value } = e.detail;
-    this.updateTemplateVariable(templateIdentifier, value ?? undefined);
+    if (!this.#restoredTemplateValues.has(templateIdentifier)) {
+      this.updateTemplateVariable(templateIdentifier, value ?? undefined);
+    }
     e.stopPropagation();
   };
 
@@ -278,6 +312,9 @@ export class QtiAssessmentItem extends LitElement {
       };
     }
 
+    // The interaction has updated its own validity by now; publish the verdict with the answer.
+    this.validate(false);
+
     this.dispatchEvent(
       new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
         bubbles: true,
@@ -295,11 +332,15 @@ export class QtiAssessmentItem extends LitElement {
     }
 
     this.#templateProcessing = this.querySelector<QtiTemplateProcessing>('qti-template-processing');
-    if (this.#templateProcessing) {
-      // Run template processing before first presentation
-      this.#templateProcessing.process();
-      this.#initialContext = { ...this._context, variables: this._context.variables };
-    }
+    this.#templatesProcessed = true;
+    // Run template processing before first presentation
+    this.#runTemplateProcessing();
+  }
+
+  #runTemplateProcessing(): void {
+    if (!this.#templateProcessing) return;
+    this.#templateProcessing.process();
+    this.#initialContext = { ...this._context, variables: this._context.variables };
   }
 
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
@@ -528,7 +569,6 @@ export class QtiAssessmentItem extends LitElement {
         };
       })
     };
-    this.#feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
 
     this.dispatchEvent(
       new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
@@ -545,12 +585,38 @@ export class QtiAssessmentItem extends LitElement {
 
   public validate(reportValidity = true): boolean {
     const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
+    this.#publishValidity(isValid);
 
     if (reportValidity) {
       this.reportValidity();
     }
 
     return isValid;
+  }
+
+  /** Puts the verdict in the item context, where the test and anything else can read it. */
+  #publishValidity(valid: boolean): void {
+    if (this._context.valid !== valid) {
+      this._context = { ...this._context, valid };
+    }
+  }
+
+  /**
+   * Checks again after something the interactions' validity depends on changed without them saying
+   * so (an answer handed in through `variables`), and tells the test if the verdict moved.
+   */
+  #revalidate(): void {
+    const before = this._context.valid;
+    this.validate(false);
+    if (this._context.valid !== before) {
+      this.dispatchEvent(
+        new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+          bubbles: true,
+          composed: true,
+          detail: { itemContext: this._context }
+        })
+      );
+    }
   }
 
   public reportValidity() {

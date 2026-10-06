@@ -1,4 +1,4 @@
-import { consume, provide } from '@lit/context';
+import { ContextConsumer, consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
@@ -6,7 +6,8 @@ import { computedContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
-import { qtiContext } from '@qti-components/base';
+
+import { testHostContext } from '../../internal/test-host.context';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiContext } from '@qti-components/base';
@@ -39,21 +40,67 @@ declare global {
  */
 type ItemOptimality = 'optimal' | 'suboptimal' | 'unscored';
 
+/** A new object each time: a host that mutates the one it read must not change anyone else's. */
+const newQtiContext = (): QtiContext => ({
+  QTI_CONTEXT: { testIdentifier: '', candidateIdentifier: '', environmentIdentifier: 'default' }
+});
+
 export class TestNavigation extends LitElement {
   @property({ type: String }) identifier: string | undefined = undefined;
 
   @state()
   public initContext: { identifier: string; [key: string]: any }[] = [];
 
-  @state()
-  @provide({ context: qtiContext })
-  public qtiContext: QtiContext = {
-    QTI_CONTEXT: {
-      testIdentifier: '',
-      candidateIdentifier: '',
-      environmentIdentifier: 'default'
+  /**
+   * @deprecated Set `qtiContext` on `qti-test`, which provides it. This is an alias for the
+   * enclosing test's: reading returns it, writing replaces it, so a host that has always set the
+   * shuffle seed here keeps working. Removed in the next major.
+   *
+   * Written before the navigation is inside a test, it waits and is handed over on connect.
+   */
+  public get qtiContext(): QtiContext {
+    return this.#owner()?.qtiContext ?? (this.#pendingQtiContext ??= newQtiContext());
+  }
+
+  public set qtiContext(value: QtiContext) {
+    if (!this.#warnedQtiContext) {
+      this.#warnedQtiContext = true;
+      console.warn(
+        '[qti-components] `test-navigation.qtiContext` is deprecated and will be removed in the next major ' +
+          'release. Set `qtiContext` on `<qti-test>` instead; it is the same value.'
+      );
     }
-  };
+    this.#writeQtiContext(value);
+  }
+
+  #pendingQtiContext?: QtiContext;
+  #warnedQtiContext = false;
+
+  /** The write the library itself makes. Not the deprecated setter, so it never warns about itself. */
+  #writeQtiContext(value: QtiContext): void {
+    const owner = this.#owner();
+    if (owner) owner.qtiContext = value;
+    else this.#pendingQtiContext = value;
+  }
+
+  /**
+   * The `qti-test` this navigation is in, found through context so it works across shadow roots.
+   * A write made before it is known waits in `#pendingQtiContext` and is handed over on arrival.
+   */
+  #testHost = new ContextConsumer(this, {
+    context: testHostContext,
+    subscribe: true,
+    callback: host => {
+      if (host && this.#pendingQtiContext) {
+        host.qtiContext = this.#pendingQtiContext;
+        this.#pendingQtiContext = undefined;
+      }
+    }
+  });
+
+  #owner(): { qtiContext: QtiContext } | null {
+    return this.#testHost.value ?? null;
+  }
 
   @state()
   @consume({ context: configContext, subscribe: true })
@@ -212,13 +259,13 @@ export class TestNavigation extends LitElement {
         candidateIdentifier: 'not set',
         environmentIdentifier: 'default'
       };
-      this.qtiContext = {
+      this.#writeQtiContext({
         QTI_CONTEXT: {
           ...currentContext,
           testIdentifier: this.#testElement.identifier,
           environmentIdentifier: currentContext.environmentIdentifier || 'default'
         }
-      };
+      });
     }
 
     // Process qti-context-declaration elements to get default values
@@ -228,12 +275,12 @@ export class TestNavigation extends LitElement {
       const defaultValues = this.#extractDefaultValues(declaration);
       if (Object.keys(defaultValues).length > 0) {
         // Merge default values with current context, but don't override existing runtime values
-        this.qtiContext = {
+        this.#writeQtiContext({
           QTI_CONTEXT: {
             ...defaultValues, // Default values first
             ...this.qtiContext.QTI_CONTEXT // Runtime values override defaults
           }
-        };
+        });
       }
     });
 
@@ -449,7 +496,8 @@ export class TestNavigation extends LitElement {
 
                 const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
 
-                const valid = this.#assessmentItemFor(computedItem.identifier)?.validate(false) ?? true;
+                // Published by the item. One that is not on screen has nothing to be invalid.
+                const valid = itemContext?.valid ?? true;
 
                 const responseVars = itemContext?.variables?.filter(v => v.type === 'response') || [];
 

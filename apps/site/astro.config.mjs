@@ -22,7 +22,8 @@ export default defineConfig({
           label: 'Guides',
           items: [
             { label: 'Authoring Response Processing', slug: 'guides/response-processing' },
-            { label: 'Showing Feedback', slug: 'guides/feedback' }
+            { label: 'Showing Feedback', slug: 'guides/feedback' },
+            { label: 'Extending Interactions', slug: 'guides/extending-interactions' }
           ]
         },
         {
@@ -32,6 +33,7 @@ export default defineConfig({
             { label: 'Structure', slug: 'qti-test/structure' },
             { label: 'Navigation', slug: 'qti-test/navigation' },
             { label: 'Scoring & State', slug: 'qti-test/scoring-and-state' },
+            { label: 'Persist & Restore', slug: 'qti-test/persist-and-restore' },
             { label: 'View Helpers', slug: 'qti-test/view-helpers' }
           ]
         },
@@ -62,6 +64,8 @@ export default defineConfig({
             { label: 'End Attempt', slug: 'interactions/end-attempt' }
           ]
         },
+        { label: 'Public API', slug: 'public-api' },
+        { label: 'Deprecations', slug: 'deprecations' },
         { label: 'Package Reference', slug: 'packages' }
       ]
     })

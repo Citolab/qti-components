@@ -8,7 +8,7 @@ import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '@q
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
-import type { ConfigContext } from '@qti-components/base';
+import type { ConfigContext, QtiContext } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
 import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
@@ -19,9 +19,15 @@ export interface TestBaseInterface extends LitElement {
   testContext: Readonly<TestContext>;
   sessionContext: Readonly<SessionContext>;
   configContext?: Readonly<ConfigContext>;
+  /** Provided by `qti-test`. */
+  qtiContext?: Readonly<QtiContext>;
   _testElement: QtiAssessmentTest;
-  updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void;
+  updateItemVariables(itemRefID: string, variables: readonly ItemVariableValue[], state?: ItemContext['state']): void;
 }
+
+/** A value to set on an item; `type` is only needed for a variable the item does not declare. */
+export type ItemVariableValue = Pick<VariableValue<string | string[] | null>, 'identifier' | 'value'> &
+  Partial<Pick<VariableValue<string | string[] | null>, 'type'>>;
 
 export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) => {
   abstract class TestBaseClass extends superClass implements TestBaseInterface {
@@ -40,22 +46,46 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
       this._initializeEventListeners();
     }
 
-    updateItemVariables(itemRefID: string, variables: VariableValue<string | string[] | null>[]): void {
-      // Update variables in the testContext for the specified itemRefID
-      const itemContext = this.testContext.items.find(item => item.identifier === itemRefID);
-      if (itemContext) {
-        itemContext.variables = itemContext.variables.map(variable => {
-          const updatedVariable = variables.find(v => v.identifier === variable.identifier);
-          return updatedVariable ? { ...variable, ...updatedVariable } : variable;
-        });
-      }
-      // if the qti-assessment-item-ref has a qti-assessment-item, then update this item as well
-      const itemRef = this._testElement.querySelector<QtiAssessmentItemRef>(
-        `qti-assessment-item-ref[identifier="${itemRefID}"]`
-      );
-      if (itemRef && itemRef.assessmentItem) {
-        itemRef.assessmentItem.variables = variables;
-      }
+    /**
+     * Sets values on one item from outside the candidate's session, e.g. a score from manual
+     * scoring. Values are merged into the item's entry in the test context, and into the item
+     * itself if it is on screen; a value the item has not seen yet is added, so this also works
+     * before the item has loaded. To restore a whole session, assign `state` instead.
+     *
+     * The test context is replaced rather than changed in place, so its consumers update and
+     * `qti-state-changed` fires.
+     *
+     * @param itemRefID The `qti-assessment-item-ref` identifier, not the item's own identifier.
+     * @param state Opaque per-interaction state keyed by response identifier, e.g. a PCI's `getState()`.
+     */
+    updateItemVariables(itemRefID: string, values: readonly ItemVariableValue[], state?: ItemContext['state']): void {
+      this.testContext = {
+        ...this.testContext,
+        items: this.testContext.items.map(item => {
+          if (item.identifier !== itemRefID) return item;
+
+          const variables = [...(item.variables ?? [])];
+          for (const { identifier, type, value } of values) {
+            const index = variables.findIndex(v => v.identifier === identifier);
+            const updated = {
+              ...(index >= 0 ? variables[index] : {}),
+              identifier,
+              ...(type ? { type } : {}),
+              value: Array.isArray(value) ? [...value] : value
+            } as VariableDeclaration<string | string[] | null>;
+            if (index >= 0) variables[index] = updated;
+            else variables.push(updated);
+          }
+          return { ...item, variables, ...(state ? { state: { ...state } } : {}) };
+        })
+      };
+
+      const assessmentItem = this._testElement?.querySelector<QtiAssessmentItemRef>(
+        `qti-assessment-item-ref[identifier="${CSS.escape(itemRefID)}"]`
+      )?.assessmentItem;
+      if (!assessmentItem) return;
+      assessmentItem.variables = [...(this.testContext.items.find(i => i.identifier === itemRefID)?.variables ?? [])];
+      if (state) assessmentItem.state = state;
     }
 
     private _initializeEventListeners(): void {
@@ -112,7 +142,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
         this._updateItemVariablesInTestContext(
           e.detail.itemContext.identifier,
           e.detail.itemContext.variables,
-          e.detail.itemContext.state
+          e.detail.itemContext.state,
+          e.detail.itemContext.valid
         );
       });
     }
@@ -120,7 +151,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
     private _updateItemVariablesInTestContext(
       identifier: string,
       variables: readonly VariableDeclaration<string | string[] | null>[],
-      state?: ItemContext['state']
+      state?: ItemContext['state'],
+      valid?: boolean
     ): void {
       // Update the test context with modified variables for the specified item
       this.testContext = {
@@ -141,10 +173,12 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
               // Merge matching variable with the new one, or use the new variable if no match
               return matchingVariable ? { ...matchingVariable, ...variable } : variable;
             }),
-            ...(state !== undefined ? { state: state ? { ...state } : undefined } : {})
+            ...(state !== undefined ? { state: state ? { ...state } : undefined } : {}),
+            ...(valid !== undefined ? { valid } : {})
           };
         })
       };
+      // Deprecated for hosts, see `@event` on `qti-test`; kept until the next major.
       this.dispatchEvent(
         new CustomEvent('qti-test-context-updated', { detail: this.testContext, bubbles: false, composed: false })
       );
@@ -160,7 +194,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
      * @param assessmentItem - The assessment item to update.
      */
     private _updateItemInTestContext = (assessmentItem: QtiAssessmentItem): void => {
-      const context = (assessmentItem as any)._context;
+      const context = assessmentItem.itemContext;
       const identifier = context.identifier;
       const fullVariables = context.variables;
 
@@ -175,7 +209,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
       // Update variables in the test context or sync them to the assessment item
       if (itemContext.variables?.length === 1) {
         // The loaded qti-assessment-item itself has variables which are not in test context yet.
-        this._updateItemVariablesInTestContext(identifier, fullVariables);
+        this._updateItemVariablesInTestContext(identifier, fullVariables, undefined, context.valid);
       } else {
         const newVariables = [...assessmentItem.variables];
         // Sync the assessment item's variables with the test context
@@ -188,6 +222,11 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
           }
         }
         assessmentItem.variables = newVariables;
+        // Opaque interaction state (a PCI's getState()) is read from the item context when the
+        // interaction initializes, so it has to be in place now, before that happens.
+        if (itemContext.state) {
+          assessmentItem.state = itemContext.state;
+        }
       }
     };
   }

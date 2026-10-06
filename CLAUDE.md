@@ -10,18 +10,18 @@ re-exports everything else for consumers who just want one install.
 
 ## Commands
 
-| Command                     | What it does                                                          |
-|------------------------------|-------------------------------------------------------------------------|
-| `pnpm install`               | install deps (msw postinstall writes `public/mockServiceWorker.js`)    |
-| `pnpm run storybook`         | dev server — Storybook + CEM watch, port 6006                          |
-| `pnpm run test`              | full suite: cleans build state, then `vitest run`                     |
-| `pnpm run test:vrt`          | visual regression tests (`VRT=1`, only stories tagged `vrt`)           |
-| `pnpm run test:vrt:update`   | regenerate VRT baseline screenshots                                    |
-| `pnpm run tsc`               | typecheck, no emit                                                     |
-| `pnpm run lint`               | CEM regen + eslint + stylelint                                        |
-| `pnpm run build`             | build all packages (`pnpm -r run build`)                              |
-| `pnpm run changeset`         | describe a version bump (do this in your PR if it touches a package)  |
-| `pnpm run ci:push-quality`   | full CI gate: lint → madge → build → test → publint → attw            |
+| Command                    | What it does                                                         |
+| -------------------------- | -------------------------------------------------------------------- |
+| `pnpm install`             | install deps (msw postinstall writes `public/mockServiceWorker.js`)  |
+| `pnpm run storybook`       | dev server — Storybook + CEM watch, port 6006                        |
+| `pnpm run test`            | full suite: cleans build state, then `vitest run`                    |
+| `pnpm run test:vrt`        | visual regression tests (`VRT=1`, only stories tagged `vrt`)         |
+| `pnpm run test:vrt:update` | regenerate VRT baseline screenshots                                  |
+| `pnpm run tsc`             | typecheck, no emit                                                   |
+| `pnpm run lint`            | CEM regen + eslint + stylelint                                       |
+| `pnpm run build`           | build all packages (`pnpm -r run build`)                             |
+| `pnpm run changeset`       | describe a version bump (do this in your PR if it touches a package) |
+| `pnpm run ci:push-quality` | full CI gate: lint → madge → build → test → publint → attw           |
 
 Run a single test/story: use Vitest's normal filtering, e.g.
 `vitest run --project tests -t "<name>"` or target a spec file path directly.
@@ -33,7 +33,7 @@ stories in a real browser (Playwright/chromium) via `@storybook/addon-vitest`.
 
 - `packages/*` — one package per concern, published individually and re-exported from the
   `qti-components` umbrella (`packages/qti-components/src/{base,elements,interactions,item,test,
-  processing,transformers,loader,corrections}.ts`, one entry point per package):
+processing,transformers,loader,corrections}.ts`, one entry point per package):
   - `qti-base` — shared base classes/utilities used across all other packages.
   - `qti-elements` — QTI non-interaction elements (structural/content tags).
   - `qti-interactions` — interaction components (choice, text-entry, hotspot, etc.) — canonical
@@ -112,6 +112,26 @@ git worktree remove ../qti-components-feat-thing
 
 Heavy verification (`madge`, `attw`, `publint`, full test suite) runs in CI
 (`.github/workflows/ci.yml`), not in the pre-commit hook — don't add it there.
+
+When running inside a VS Code Agent Host session, do not create,
+enter, or switch Git worktrees.
+
+The VS Code Agent session already provides worktree isolation.
+Perform all work in the current working directory.
+
+## Host migration notes
+
+`plans/public-api.md` lists each public member with the hosts that use it (K Kennisnet, C
+CitoTestUit, P PeilingLezen). `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md` say
+what each host must do. In the same commit as the change:
+
+- A change that touches a member in `public-api.md` adds or updates the entries for every host
+  whose letter is in that row, and its changeset links to them.
+- When a change gives hosts a better or simpler way to do something (a new member replacing a
+  workaround), write it into the affected hosts' files as a `recommended` entry, naming the
+  workaround it replaces.
+- When a survey shows a host using a member, add its letter to the row in `public-api.md`.
+- Mark entries found by reading source, not running the host, as such.
 
 ## Releasing
 

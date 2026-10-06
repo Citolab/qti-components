@@ -5,10 +5,12 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sessionContext } from '@qti-components/base';
 
+import { testHostContext } from '../../internal/test-host.context';
 import * as styles from '../styles';
 
 import type { PropertyValues } from 'lit';
 import type { SessionContext } from '@qti-components/base';
+import type { TestHost } from '../../internal/test-host.context';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
 // ─── CSS Custom Highlight ─────────────────────────────────────────────────────
@@ -235,6 +237,10 @@ export class TestItemToSpeech extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
 
+  /** The `qti-test` this player is in, across shadow roots. */
+  @consume({ context: testHostContext, subscribe: true })
+  protected testHost?: TestHost;
+
   @state()
   @provide({ context: ttsContext })
   _ttsContext!: TtsContext;
@@ -334,8 +340,7 @@ export class TestItemToSpeech extends LitElement {
     // NOTE: #ensureHighlightStyles() is called lazily on first highlight use
     // because test-container may not be in the DOM yet at this point.
     // qti-assessment-item-connected is bubbles+composed, so it reaches test-navigation / qti-test
-    this.#eventHost =
-      this.closest('test-navigation') ?? this.closest('qti-test') ?? (this.getRootNode() as EventTarget);
+    this.#eventHost = this.closest('test-navigation') ?? this.testHost ?? (this.getRootNode() as EventTarget);
     this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected as EventListener);
     // qti-request-navigation fires synchronously when the user clicks prev/next — stop immediately
     this.#eventHost.addEventListener('qti-request-navigation', this.#boundHandleNavigation);
@@ -758,7 +763,7 @@ export class TestItemToSpeech extends LitElement {
     const roots = new Set<ShadowRoot>();
     const testContainer =
       this.closest('test-navigation')?.querySelector('test-container') ??
-      this.closest('qti-test')?.querySelector('test-container');
+      this.testHost?.querySelector('test-container');
     if (testContainer?.shadowRoot) roots.add(testContainer.shadowRoot);
     const ownRoot = this.getRootNode();
     if (ownRoot instanceof ShadowRoot) roots.add(ownRoot);
