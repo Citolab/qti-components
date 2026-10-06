@@ -6,7 +6,9 @@ export interface SessionContext {
   navPartId?: string | null;
   navSectionId?: string | null;
   navItemRefId?: string | null;
+  /** @deprecated Never set by the library. Removed in the next major. */
   navItemLoading?: boolean;
+  /** @deprecated Never set by the library. Removed in the next major. */
   navTestLoading?: boolean;
   view?: View;
 }

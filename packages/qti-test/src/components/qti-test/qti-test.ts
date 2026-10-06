@@ -7,6 +7,7 @@ import { configContext } from '@qti-components/base';
 import { TestNavigationMixin, TestViewMixin } from '../../mixins';
 import { TestBaseMixin } from '../../mixins/test-base';
 import { TestProcessingMixin } from '../../mixins/test-processing.mixin';
+import { TestStateMixin } from '../../mixins/test-state.mixin';
 
 import type { ConfigContext } from '@qti-components/base';
 import type { IQtiTest } from '../../types/iqti-test';
@@ -58,9 +59,13 @@ import type { IQtiTest } from '../../types/iqti-test';
  * You can use normal class names to style the elements.
  * And you can use the `test-prev` and `test-next` elements to navigate through the test.
  *
+ * @event qti-state-changed - The candidate's persistable state changed. `detail` is a `QtiTestState`; assign it back to `state` to resume.
+ * @event qti-test-context-updated - Deprecated: listen to `qti-state-changed` to persist a session. `detail` is the full test context, including declaration metadata and the answer key. Removed in the next major.
  */
 
-export class QtiTest extends TestNavigationMixin(TestViewMixin(TestProcessingMixin(TestBaseMixin(LitElement)))) {
+export class QtiTest extends TestNavigationMixin(
+  TestViewMixin(TestProcessingMixin(TestStateMixin(TestBaseMixin(LitElement))))
+) {
   // TODO: Properly implement IQtiTest interface
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
 
