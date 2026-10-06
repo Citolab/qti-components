@@ -37,6 +37,21 @@ Status: behaviour change
 Do: nothing if you restore through `state` or `testContext`. Review screens that set
 `item.variables` for a student now see the template values the student answered.
 
+### Interactions, feedback and `readonly` follow the item context (PR #228)
+
+Status: behaviour change; no API removed, timing kept
+Members: `item.variables` / `item.responses` setters, subclass `Qti*InteractionCorrection`
+Do: check these flows before upgrading.
+
+- Review and replay screens that assign `item.variables` or `item.responses` and read the
+  interactions right after: rendered interactions still take the values synchronously, and one that
+  registers later picks them up. An answer the candidate just gave is not overwritten.
+- An unanswered item no longer overwrites a `response` attribute set on an interaction.
+- `Qti*InteractionCorrection` subclasses and the deep shadow queries and MutationObservers in the
+  admin stats: the base class now adopts values itself, so re-check what they patch.
+- A `readonly` attribute set from the start now applies.
+  Evidence: read, not run
+
 ### Deprecated members (PR #225)
 
 Status: deprecated, removed in next major

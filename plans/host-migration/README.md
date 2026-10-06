@@ -28,12 +28,10 @@ reads from its own version downward.
 
 ## Changes that hit every host
 
-| Change                                                                         | Since   | Status                            |
-| ------------------------------------------------------------------------------ | ------- | --------------------------------- |
-| `qtiTest.state` + `qti-state-changed`                                          | PR #225 | recommended                       |
-| `qti-test-context-updated`, `SessionContext.navItemLoading` / `navTestLoading` | PR #225 | deprecated, removed in next major |
-| Restored template values are kept                                              | PR #226 | behaviour change                  |
-| Session context labelled `sessionContext`                                      | PR #227 | devtools only                     |
-
-Not yet recorded: any `qti-register-feedback`, modal `hide` or `readonly` change. None is in the
-history since 9.3.0; add entries when they land.
+| Change                                                                                         | Since   | Status                            |
+| ---------------------------------------------------------------------------------------------- | ------- | --------------------------------- |
+| `qtiTest.state` + `qti-state-changed`                                                          | PR #225 | recommended                       |
+| `qti-test-context-updated`, `SessionContext.navItemLoading` / `navTestLoading`                 | PR #225 | deprecated, removed in next major |
+| Restored template values are kept                                                              | PR #226 | behaviour change                  |
+| Session context labelled `sessionContext`                                                      | PR #227 | devtools only                     |
+| Interactions, feedback and `readonly` follow the item context; `qti-register-feedback` removed | PR #228 | behaviour change                  |
