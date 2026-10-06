@@ -33,7 +33,11 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
     }
 
     outcomeProcessing(): boolean {
-      const outcomeProcessor = this.querySelector('qti-outcome-processing') as unknown as QtiOutcomeProcessing;
+      // Inside the loaded test: `test-container` renders it into its own shadow root, which a
+      // `querySelector` on this element does not reach. Without a loaded test, look in the light DOM.
+      const outcomeProcessor = (this._testElement ?? this).querySelector(
+        'qti-outcome-processing'
+      ) as unknown as QtiOutcomeProcessing;
       if (!outcomeProcessor) return false;
       outcomeProcessor?.process();
       return true;

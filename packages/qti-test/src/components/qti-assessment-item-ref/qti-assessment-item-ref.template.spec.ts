@@ -3,17 +3,19 @@ import { ContextProvider } from '@lit/context';
 
 import { computedContext } from '@qti-components/base';
 
+import { testHostContext } from '../../internal/test-host.context';
 import { QtiAssessmentItemRef } from './qti-assessment-item-ref';
 
 import type { ComputedContext } from '@qti-components/base';
+import type { TestHost } from '../../internal/test-host.context';
 
 /**
  * `<template item-ref>` lets a host render its own chrome around every item in
  * a test — a bookmark, an index number, a score badge — without replacing the
  * element.
  *
- * Only this element is registered here, deliberately. `<qti-test>` is matched
- * by tag name, so an unupgraded one is enough to exercise the lookup, and
+ * Only this element is registered here, deliberately. An unupgraded `<qti-test>`
+ * stands in for the real one and provides what the real one does (below), and
  * registering the real one would drag a navigation mixin (and its fetches)
  * into a test about template resolution.
  */
@@ -37,7 +39,7 @@ async function mount(options: {
   inTest?: boolean;
   computed?: ComputedContext;
 }): Promise<QtiAssessmentItemRef> {
-  const test = document.createElement(options.inTest === false ? 'div' : 'qti-test');
+  const test = options.inTest === false ? document.createElement('div') : standInTest();
   document.body.append(test);
   // Stands in for the computed context <qti-test> provides.
   const provider = options.computed
@@ -68,9 +70,18 @@ async function mount(options: {
 }
 
 const providers: (ContextProvider<typeof computedContext> | undefined)[] = [];
+const hostProviders: ContextProvider<typeof testHostContext>[] = [];
+
+/** An unupgraded `<qti-test>` that provides itself, as the real one does. */
+const standInTest = (): HTMLElement => {
+  const test = document.createElement('qti-test');
+  hostProviders.push(new ContextProvider(test, { context: testHostContext, initialValue: test as TestHost }));
+  return test;
+};
 
 afterEach(() => {
   providers.length = 0;
+  hostProviders.length = 0;
   document.body.replaceChildren();
 });
 
@@ -102,7 +113,7 @@ describe('qti-assessment-item-ref template hook', () => {
   it.each([undefined, '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'])(
     'handles connecting, loading, clearing and reloading with template %s',
     async template => {
-      const test = document.createElement('qti-test');
+      const test = standInTest();
       if (template) test.innerHTML = `<template item-ref>${template}</template>`;
       document.body.append(test);
 
@@ -187,7 +198,7 @@ describe('qti-assessment-item-ref template hook', () => {
       template: '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'
     });
 
-    const nextTest = document.createElement('qti-test');
+    const nextTest = standInTest();
     document.body.append(nextTest);
     nextTest.append(itemRef);
     await itemRef.updateComplete;
@@ -195,6 +206,20 @@ describe('qti-assessment-item-ref template hook', () => {
     expect(itemRef.myTemplate).toBeNull();
     expect(itemRef.querySelector('.badge')).toBeNull();
     expect(itemRef.querySelector('qti-assessment-item')?.textContent).toBe('ITEM BODY');
+  });
+
+  it("forgets its test, and that test's template, when it is moved out of it", async () => {
+    const itemRef = await mount({
+      template: '<div class="badge">{{ identifier }}</div>{{ xmlDoc }}'
+    });
+    expect(itemRef.myTemplate).not.toBeNull();
+
+    // Somewhere with no test at all: a context consumer would otherwise keep its last value.
+    document.body.append(itemRef);
+    await itemRef.updateComplete;
+
+    expect(itemRef.myTemplate).toBeNull();
+    expect(itemRef.querySelector('.badge')).toBeNull();
   });
 
   it('re-renders the template when the item document changes', async () => {

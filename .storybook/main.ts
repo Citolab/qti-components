@@ -42,6 +42,11 @@ const config: StorybookConfig = {
             titlePrefix: 'E2E'
           },
           {
+            directory: '../packages/qti-base/src',
+            files: '**/*.stories.*',
+            titlePrefix: 'Base'
+          },
+          {
             directory: '../packages/qti-elements/src/components',
             files: '**/*.stories.*',
             titlePrefix: 'QTI Elements'

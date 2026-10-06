@@ -5,10 +5,12 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { sessionContext } from '@qti-components/base';
 
+import { testHostContext } from '../../internal/test-host.context';
 import * as styles from '../styles';
 
 import type { PropertyValues } from 'lit';
 import type { SessionContext } from '@qti-components/base';
+import type { TestHost } from '../../internal/test-host.context';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 
@@ -286,6 +288,10 @@ export class TestItemToSpeech extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
 
+  /** The `qti-test` this player is in, across shadow roots. */
+  @consume({ context: testHostContext, subscribe: true })
+  protected testHost?: TestHost;
+
   @state()
   @provide({ context: ttsContext })
   _ttsContext!: TtsContext;
@@ -407,10 +413,7 @@ export class TestItemToSpeech extends LitElement {
     // qti-assessment-item-connected is bubbles+composed: it passes the item's own item-ref, and
     // reaches test-navigation / qti-test from inside test-container's shadow root.
     this.#eventHost =
-      this.#itemRef ??
-      this.closest('test-navigation') ??
-      this.closest('qti-test') ??
-      (this.getRootNode() as EventTarget);
+      this.#itemRef ?? this.closest('test-navigation') ?? this.testHost ?? (this.getRootNode() as EventTarget);
     this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
     if (!this.#itemRef) {
       // Cursor mode: qti-request-navigation fires synchronously on prev/next — stop right away
@@ -525,7 +528,7 @@ export class TestItemToSpeech extends LitElement {
       return null;
     };
 
-    const test = this.closest('qti-test');
+    const test = this.testHost;
     const inTest = test && search(test);
     if (inTest) return inTest;
 
@@ -918,7 +921,7 @@ export class TestItemToSpeech extends LitElement {
     const roots = new Set<ShadowRoot>();
     const testContainer =
       this.closest('test-navigation')?.querySelector('test-container') ??
-      this.closest('qti-test')?.querySelector('test-container');
+      this.testHost?.querySelector('test-container');
     if (testContainer?.shadowRoot) roots.add(testContainer.shadowRoot);
     const ownRoot = this.getRootNode();
     if (ownRoot instanceof ShadowRoot) roots.add(ownRoot);

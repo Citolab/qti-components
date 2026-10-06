@@ -1,0 +1,61 @@
+---
+title: Persist & restore
+description: Save a candidate's test session and resume it later — qtiTest.state and the qti-state-changed event.
+---
+
+A `<qti-test>` has one property and one event for this. Where you store the state is up to you.
+
+```js
+const qtiTest = document.querySelector('qti-test');
+
+// Restore. Safe to assign before the test has loaded.
+const saved = await load(candidateId);
+if (saved) qtiTest.state = saved;
+
+// Save. Fires on every change, so debounce writes to a backend.
+qtiTest.addEventListener('qti-state-changed', e => save(candidateId, e.detail));
+```
+
+**Pass the same `seed` in `qtiContext` when resuming**, or items and choices come back in a different
+order. Config, `qtiContext` and `view` are not part of the state; you supply them on every load.
+
+Assign the state before the test loads where you can: a PCI that is already on screen only picks up
+a new state when its item loads again.
+
+## The state
+
+```ts
+interface QtiTestState {
+  version: 1;
+  test: {
+    items: {
+      identifier: string; // the qti-assessment-item-ref identifier
+      variables: {
+        identifier: string;
+        type?: 'response' | 'outcome' | 'template' | 'context';
+        value: string | string[] | null;
+      }[];
+      state?: Record<string, string | null>; // per-interaction state, e.g. a PCI's getState()
+    }[];
+    outcomes: { identifier: string; value: string | string[] | null }[];
+  };
+  session: { navPartId?: string | null; navSectionId?: string | null; navItemRefId?: string | null };
+}
+```
+
+Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is. A state
+with an unknown `version` is ignored with a console warning.
+
+## Setting a single value
+
+To change values on one item from outside the session, such as a score from manual scoring, use
+`updateItemVariables`. It also fires `qti-state-changed`.
+
+```js
+qtiTest.updateItemVariables('item-ref-1', [{ identifier: 'SCORE', value: '1' }]);
+```
+
+## Replaces
+
+`qti-test-context-updated` and reading or writing `testContext` for persistence are deprecated.
+They expose the full test context, including the answer key.

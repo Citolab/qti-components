@@ -9,8 +9,8 @@ import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
 import type { QtiTestPart } from '../components/qti-test-part/qti-test-part';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
-import type { TestNavigation } from '../components/test-navigation/test-navigation';
 import type { TestContainer } from '../components/test-container/test-container';
+import type { PostLoadTestTransformCallback } from '../internal/test-host.context';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -20,10 +20,7 @@ export type PostLoadTransformCallback = (
   itemRef: QtiAssessmentItemRef
 ) => transformItemApi | Promise<transformItemApi>;
 
-export type PostLoadTestTransformCallback = (
-  transformer: transformTestApi,
-  testElement: QtiAssessmentTest
-) => transformTestApi | Promise<transformTestApi>;
+export type { PostLoadTestTransformCallback };
 
 export interface NavigationError {
   message: string;
@@ -110,7 +107,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Navigate to a specific item or section
      * @param type - Navigation type ('item' or 'section')
-     * @param id - Target identifier (optional, falls back to first available)
+     * @param id - Target identifier (optional, falls back to the current position, or the first one before there is any)
      */
     public navigateTo(type: 'item' | 'section', id?: string): void {
       const targetId = id || this._getDefaultNavigationId(type);
@@ -215,7 +212,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private _getDefaultNavigationId(type: 'item' | 'section'): string | undefined {
       if (type === 'section') {
-        return this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier;
+        return (
+          this.sessionContext?.navSectionId ??
+          this._testElement?.querySelector<QtiAssessmentSection>('qti-assessment-section')?.identifier
+        );
       }
       return (
         this.sessionContext?.navItemRefId ??
@@ -547,10 +547,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private async _loadSingleItem(itemRef: QtiAssessmentItemRef, navigationId: number, controller: AbortController) {
       try {
-        // The shuffle seed lives on QTI_CONTEXT, which is provided by the descendant
-        // `<test-navigation>`. Since context flows downward, read it from that element
-        // so seeded item shuffling during navigation matches `test-container`.
-        const seed = (this.querySelector('test-navigation') as TestNavigation | null)?.qtiContext?.QTI_CONTEXT?.seed;
+        // The same seed `test-container` shuffled the item order with.
+        const seed = this.qtiContext?.QTI_CONTEXT?.seed;
         let transformer = (await qtiTransformItem().load(itemRef.href, controller.signal)).shuffleInteractions(seed);
 
         if (this.postLoadTransformCallback) {
