@@ -284,7 +284,7 @@ above must cover these first.
       would let drift from it. It must keep working: CitoTestUit writes its per-session seed there.
       Written before the navigation is inside a test, it is handed over on connect. The test now reads
       the seed from itself, not through `querySelector('test-navigation')`.
-- [x] Replace `closest('qti-test')` with context (PR #TBD). `qti-test` provides itself through an
+- [x] Replace `closest('qti-test')` with context (PR #232). `qti-test` provides itself through an
       internal `testHostContext` (not exported, not API) and `test-container`, the item-ref, the
       navigation alias, `test-check-item` and `test-item-to-speech` consume it. Earlier this was
       "undecided, recommend leaving", on the grounds that no context carried a host-set callback and

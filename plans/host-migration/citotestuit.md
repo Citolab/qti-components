@@ -74,7 +74,7 @@ Do:
   move above removes it. Removal of the alias is in the next major: use `qtiTest.qtiContext`.
   Evidence: read from `AssessmentPlayerView.tsx:1481-1490` and `:2173-2218`, not run
 
-### Components inside a test find it through context (PR #TBD)
+### Components inside a test find it through context (PR #232)
 
 Status: behaviour change; nothing required
 Members: `postLoadTestTransformCallback`, `<template item-ref>` on `qti-test`
