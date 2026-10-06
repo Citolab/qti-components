@@ -61,6 +61,20 @@ Do: check these flows before upgrading.
 - A `readonly` attribute set from the start now applies.
   Evidence: read, not run
 
+### `disabled` follows the item context (PR #229)
+
+Status: behaviour change; no API removed
+Members: `item.disabled`
+Do: check the lock on a submitted item. Setting `item.disabled = true` still locks the interactions
+and `false` unlocks them.
+
+- A `disabled` attribute present on the item from the start now applies. Before, only a change after
+  the first render did.
+- An interaction authored `disabled` stays so inside an item that does not mention `disabled`.
+- An interaction that registers after the item was disabled comes up disabled.
+  Evidence: read from `store/actions/submit.ts:147` and `store/events.ts:44`, not run. Entry added
+  after the PR merged; it should have gone in with it.
+
 ### Deprecated members (PR #225)
 
 Status: deprecated, removed in next major

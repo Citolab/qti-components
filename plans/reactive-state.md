@@ -279,9 +279,11 @@ above must cover these first.
 
 ## Phase 3: `qtiContext` on `qti-test`, context instead of `closest()` (C7–C8)
 
-- [ ] Provide `qtiContext` on `qti-test`. Keep `test-navigation`'s provider as a
-      deprecated alias. It must keep working: CitoTestUit writes its
-      per-session seed to `test-navigation.qtiContext`.
+- [x] Provide `qtiContext` on `qti-test`. `test-navigation.qtiContext` is a deprecated alias that
+      reads and writes the enclosing test's value, rather than a second provider that "nearest wins"
+      would let drift from it. It must keep working: CitoTestUit writes its per-session seed there.
+      Written before the navigation is inside a test, it is handed over on connect. The test now reads
+      the seed from itself, not through `querySelector('test-navigation')`.
 - [ ] Replace `closest('qti-test')` in `test-container.ts` and
       `qti-assessment-item-ref.ts` with context.
 - [ ] Remove the `test-base` private-field access (C4–C5) and the per-update
@@ -302,6 +304,9 @@ imports. If base classes and contexts are public (extension tier in
 breaking. Give them proper entry points and contract tests first.
 
 ## Deprecations to schedule for the next major
+
+The published list, with what replaces each and which ones warn, is
+`apps/site/src/content/docs/deprecations.mdx`. Keep it in step with this one.
 
 - `test-navigation.qtiContext` provider (once `qti-test` provides it)
 - `sessionContext.view` (mirrored into config)

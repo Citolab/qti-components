@@ -52,6 +52,28 @@ Do: check these flows before upgrading.
 - A `readonly` attribute set from the start now applies.
   Evidence: read, not run
 
+### `qtiContext` is provided by `qti-test`; `test-navigation.qtiContext` is an alias (Phase 3, PR #230)
+
+Status: deprecated (the alias works unchanged); recommended
+Members: `test-navigation.qtiContext` (the `qtiContext={runtimeQtiContext}` prop and the
+read-then-write that merges the seed), `asSeed`
+Do:
+
+- Nothing breaks on upgrade. React sets the prop on `<test-navigation>` before the element is
+  attached to `<qti-test>`; the alias holds the value and hands it over when the navigation
+  connects, so the seed is in place before `test-container` shuffles. A story builds the elements
+  in React's order and passes on 9.3.0 and on the new code.
+- Recommended: put `qtiContext={runtimeQtiContext}` on `<qti-test>`, next to
+  `configContext={PLAYER_CONFIG_CONTEXT}`, and drop the effect that merges the seed in afterwards.
+  `runtimeQtiContext` already carries the seed. This is the same lesson as config: write on the
+  element that provides it. `<test-navigation>` still fills in `testIdentifier` on load, into the
+  same value.
+- Behaviour change: components inside `<qti-test>` but outside `<test-navigation>` now read the
+  context. Before they got an empty default.
+- Writing the alias prints one console warning per element naming the replacement; the recommended
+  move above removes it. Removal of the alias is in the next major: use `qtiTest.qtiContext`.
+  Evidence: read from `AssessmentPlayerView.tsx:1481-1490` and `:2173-2218`, not run
+
 ### Deprecated members (PR #225)
 
 Status: deprecated, removed in next major
