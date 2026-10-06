@@ -92,7 +92,7 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 | subclass `QtiFeedback`                        | K                 | **S** base class                                                                                                                                        |
 | subclass `Qti*InteractionCorrection`          | C                 | **S** base class                                                                                                                                        |
 | subclass `Interaction`                        | P (~17)           | **S** base class; needs a proper entry point                                                                                                            |
-| consume `testContext` / `computedContext`     | P                 | **S** for component authors; needs a proper entry point instead of `/exports/*.context.js`. `ComputedItem.valid` is published by the item since PR #TBD |
+| consume `testContext` / `computedContext`     | P                 | **S** for component authors; needs a proper entry point instead of `/exports/*.context.js`. `ComputedItem.valid` is published by the item since PR #231 |
 | deep imports (`/exports/*`, `/cdn/exports/*`) | P (+ QTI-Express) | **I**; offer documented entry points                                                                                                                    |
 
 ### Styling tier: currently missing

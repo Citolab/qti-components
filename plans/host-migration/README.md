@@ -42,4 +42,4 @@ reads from its own version downward.
 | -------------------------------------------------------------------------------------- | ------------ | ------- | ---------------------------------- |
 | `disabled` follows the item context                                                    | Kennisnet    | PR #229 | behaviour change                   |
 | `qtiContext` on `qti-test`; `test-navigation.qtiContext` is a deprecated alias         | CitoTestUit  | PR #230 | deprecated alias, recommended move |
-| Item validity published by the item (`ComputedItem.valid` stays right after a restore) | PeilingLezen | PR #TBD | behaviour change                   |
+| Item validity published by the item (`ComputedItem.valid` stays right after a restore) | PeilingLezen | PR #231 | behaviour change                   |

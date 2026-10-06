@@ -25,7 +25,7 @@ to call with the same value (no re-render loops, no event dispatch that echoes b
 - The `qti-register-feedback` event is no longer sent; the surveyed imports do not use it.
   Evidence: imports surveyed only, not run
 
-### Item validity is published by the item (PR #TBD)
+### Item validity is published by the item (PR #231)
 
 Status: behaviour change; nothing required for the surveyed code
 Members: `computedContext` (`ComputedItem.valid`)
