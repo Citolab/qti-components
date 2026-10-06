@@ -8,7 +8,7 @@ import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '@q
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
-import type { ConfigContext } from '@qti-components/base';
+import type { ConfigContext, QtiContext } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
 import type { OutcomeVariable, VariableDeclaration, VariableValue } from '@qti-components/base';
@@ -19,6 +19,8 @@ export interface TestBaseInterface extends LitElement {
   testContext: Readonly<TestContext>;
   sessionContext: Readonly<SessionContext>;
   configContext?: Readonly<ConfigContext>;
+  /** Provided by `qti-test`. */
+  qtiContext?: Readonly<QtiContext>;
   _testElement: QtiAssessmentTest;
   updateItemVariables(itemRefID: string, variables: readonly ItemVariableValue[], state?: ItemContext['state']): void;
 }

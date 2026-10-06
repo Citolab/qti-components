@@ -35,3 +35,10 @@ reads from its own version downward.
 | Restored template values are kept                                                              | PR #226 | behaviour change                  |
 | Session context labelled `sessionContext`                                                      | PR #227 | devtools only                     |
 | Interactions, feedback and `readonly` follow the item context; `qti-register-feedback` removed | PR #228 | behaviour change                  |
+
+## Changes that hit one host
+
+| Change                                                                         | Host        | Since   | Status                             |
+| ------------------------------------------------------------------------------ | ----------- | ------- | ---------------------------------- |
+| `disabled` follows the item context                                            | Kennisnet   | PR #229 | behaviour change                   |
+| `qtiContext` on `qti-test`; `test-navigation.qtiContext` is a deprecated alias | CitoTestUit | Phase 3 | deprecated alias, recommended move |

@@ -10,10 +10,10 @@ Every member below has a contract story in Storybook that uses only the public A
 change shows up as a failing story: **qti-test / Host API**, **qti-test / Persist and restore** and
 **qti-assessment-item / Host API**.
 
-| Status         | Meaning                                                                            |
-| -------------- | ---------------------------------------------------------------------------------- |
-| **Supported**  | Stable. Breaking changes only in a major release, with a deprecation period first. |
-| **Deprecated** | Still works. Has a replacement, and is removed in the next major release.          |
+| Status         | Meaning                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| **Supported**  | Stable. Breaking changes only in a major release, with a deprecation period first.               |
+| **Deprecated** | Still works. Has a replacement. The [Deprecations](/deprecations/) page says when it is removed. |
 
 ## Hosting a test
 
@@ -39,12 +39,13 @@ Everything you call on, listen to or configure around a `<qti-test>`.
 
 ### Configuring delivery
 
-| Member                                            | Status        | Notes                                                                                                                                                                       |
-| ------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `qtiTest.configContext`                           | **Supported** | Reaches every interaction in the loaded items. Options in use today: `disableAfterMaxReached`, `inlineChoicePrompt`, `reportValidityAfterScoring`, `validationDisplayMode`. |
-| `test-navigation.qtiContext` (`QTI_CONTEXT.seed`) | **Supported** | The shuffle seed. Pass the same one when you resume, or choices come back in another order. Build it with `asSeed`.                                                         |
-| `test-container` `test-url`                       | **Supported** |                                                                                                                                                                             |
-| `test-navigation` `auto-score-items`              | **Supported** | Score each item as the candidate leaves it.                                                                                                                                 |
+| Member                                    | Status         | Notes                                                                                                                                                                       |
+| ----------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `qtiTest.configContext`                   | **Supported**  | Reaches every interaction in the loaded items. Options in use today: `disableAfterMaxReached`, `inlineChoicePrompt`, `reportValidityAfterScoring`, `validationDisplayMode`. |
+| `qtiTest.qtiContext` (`QTI_CONTEXT.seed`) | **Supported**  | The shuffle seed. Pass the same one when you resume, or choices come back in another order. Build it with `asSeed`.                                                         |
+| `test-navigation.qtiContext`              | **Deprecated** | An alias of `qtiTest.qtiContext`: reads and writes the same value. Use `qtiTest.qtiContext`.                                                                                |
+| `test-container` `test-url`               | **Supported**  |                                                                                                                                                                             |
+| `test-navigation` `auto-score-items`      | **Supported**  | Score each item as the candidate leaves it.                                                                                                                                 |
 
 ### Lifecycle events
 

@@ -1,5 +1,5 @@
 import { html, render } from 'lit';
-import { expect, fn, waitFor, within } from 'storybook/test';
+import { expect, fn, spyOn, waitFor, within } from 'storybook/test';
 
 import {
   getAssessmentItemFromTestContainerByDataTitle,
@@ -7,6 +7,7 @@ import {
 } from '../../../../../../tools/testing/test-utils';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { QtiContext } from '@qti-components/base';
 import type { QtiTest } from '../qti-test';
 import type { QtiTestState } from '../../../types/qti-test-state';
 
@@ -299,5 +300,172 @@ export const SeedFixesTheShuffle: StoryObj = {
     expect(again).toEqual(first);
     expect(other).not.toEqual(first);
     expect([...other].sort()).toEqual([...first].sort());
+  }
+};
+
+/** The same, set where it now belongs: on `qti-test`. Same seed, same order as through the alias. */
+export const SeedOnQtiTest: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const orderFor = async (seed: string) => {
+      const test = await mountStimulusTest(canvasElement, ({ test }) => {
+        test.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, seed } as QtiContext['QTI_CONTEXT'] };
+      });
+      test.navigateTo('item', 'ITM-choice_multiple');
+      return choiceLabels(await loadedItem(canvasElement, 'Composition of Water'));
+    };
+
+    const onTest = await orderFor('session-one');
+    const throughAlias = await shuffledOrder(canvasElement, 'session-one');
+    const other = await orderFor('session-two');
+
+    expect(onTest).toHaveLength(6);
+    expect(onTest).toEqual(throughAlias);
+    expect(other).not.toEqual(onTest);
+  }
+};
+
+/**
+ * `test-navigation.qtiContext` is the same object as `qti-test`'s, not a copy that can drift: what
+ * either side writes, the other reads, and the test fills in its own identifier on load.
+ */
+export const NavigationQtiContextIsTheTests: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    let navigation: HTMLElement & { qtiContext: QtiContext };
+    const test = await mountStimulusTest(canvasElement, parts => (navigation = parts.navigation));
+
+    expect(navigation.qtiContext).toBe(test.qtiContext);
+    expect(test.qtiContext.QTI_CONTEXT.testIdentifier).toBe('Examples');
+
+    navigation.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'via-alias' } };
+    expect(test.qtiContext.QTI_CONTEXT.candidateIdentifier).toBe('via-alias');
+
+    test.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'via-test' } };
+    expect(navigation.qtiContext.QTI_CONTEXT.candidateIdentifier).toBe('via-test');
+  }
+};
+
+/**
+ * A navigation rendered inside a custom element's shadow root, with the `qti-test` outside it.
+ * Context crosses that boundary and `closest()` does not, so the alias has to climb out of the
+ * shadow root itself or a seed written there would be held for ever.
+ */
+export const NavigationInsideAShadowRoot: StoryObj = {
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const test = document.createElement('qti-test') as QtiTest;
+    const wrapper = document.createElement('div');
+    test.append(wrapper);
+    const navigation = document.createElement('test-navigation') as HTMLElement & { qtiContext: QtiContext };
+    wrapper.attachShadow({ mode: 'open' }).append(navigation);
+    hostOf(canvasElement).append(test);
+
+    navigation.qtiContext = {
+      QTI_CONTEXT: { ...navigation.qtiContext.QTI_CONTEXT, candidateIdentifier: 'from-shadow' }
+    };
+
+    expect(test.qtiContext.QTI_CONTEXT.candidateIdentifier).toBe('from-shadow');
+  }
+};
+
+/** Two navigations that were never in a test must not share one default object. */
+export const UnattachedNavigationsDoNotShareADefault: StoryObj = {
+  render: () => html`<div data-testid="host"></div>`,
+  play: async () => {
+    const make = () => document.createElement('test-navigation') as HTMLElement & { qtiContext: QtiContext };
+    const a = make();
+    const b = make();
+
+    a.qtiContext.QTI_CONTEXT.candidateIdentifier = 'only-a';
+
+    expect(b.qtiContext.QTI_CONTEXT.candidateIdentifier).toBe('');
+  }
+};
+
+/**
+ * How a React host builds it. React sets an element's props before it attaches the element to its
+ * parent, so `<test-navigation qtiContext={…}>` is written while the navigation is not yet in the
+ * `qti-test`. CitoTestUit passes its per-session seed exactly like this, so the write has to be
+ * held and handed over when the navigation connects, early enough for the container to shuffle
+ * with it.
+ */
+export const SeedWrittenBeforeTheNavigationIsInTheTest: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const orderWhenBuiltLikeReact = async (seed: string) => {
+      const host = hostOf(canvasElement);
+      host.replaceChildren();
+
+      const test = document.createElement('qti-test') as QtiTest;
+      test.setAttribute('navigate', 'item');
+      const navigation = document.createElement('test-navigation') as HTMLElement & { qtiContext: QtiContext };
+      navigation.qtiContext = {
+        QTI_CONTEXT: {
+          testIdentifier: '',
+          candidateIdentifier: '',
+          environmentIdentifier: 'default',
+          seed
+        } as QtiContext['QTI_CONTEXT']
+      };
+      const container = document.createElement('test-container');
+      container.setAttribute('test-url', STIMULUS_TEST);
+
+      navigation.append(container);
+      test.append(navigation);
+      const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+      host.append(test);
+      await loaded;
+
+      test.navigateTo('item', 'ITM-choice_multiple');
+      return choiceLabels(await loadedItem(canvasElement, 'Composition of Water'));
+    };
+
+    const first = await orderWhenBuiltLikeReact('session-one');
+    const again = await orderWhenBuiltLikeReact('session-one');
+    const other = await orderWhenBuiltLikeReact('session-two');
+    const throughTest = await shuffledOrder(canvasElement, 'session-one');
+
+    expect(first).toEqual(again);
+    expect(first).toEqual(throughTest);
+    expect(other).not.toEqual(first);
+  }
+};
+
+/**
+ * Writing the deprecated alias says so, once per element and with the replacement named. Reading it
+ * and the library's own writes do not: a host would otherwise be warned about what it never did.
+ */
+export const DeprecatedAliasWarnsOnceOnWrite: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const warn = spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      let navigation: HTMLElement & { qtiContext: QtiContext };
+      const test = await mountStimulusTest(canvasElement, parts => (navigation = parts.navigation));
+
+      // Loading the test makes the navigation fill in the test identifier itself: no warning.
+      expect(test.qtiContext.QTI_CONTEXT.testIdentifier).toBe('Examples');
+      void navigation.qtiContext;
+      expect(warn).not.toHaveBeenCalled();
+
+      navigation.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'a' } };
+      navigation.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'b' } };
+
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain('test-navigation.qtiContext');
+      expect(String(warn.mock.calls[0][0])).toContain('<qti-test>');
+
+      // Setting it on the test, where it belongs, never warns.
+      warn.mockClear();
+      test.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'c' } };
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
   }
 };

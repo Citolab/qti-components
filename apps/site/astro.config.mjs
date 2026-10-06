@@ -64,6 +64,7 @@ export default defineConfig({
           ]
         },
         { label: 'Public API', slug: 'public-api' },
+        { label: 'Deprecations', slug: 'deprecations' },
         { label: 'Package Reference', slug: 'packages' }
       ]
     })

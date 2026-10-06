@@ -2,14 +2,14 @@ import { provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { configContext } from '@qti-components/base';
+import { configContext, qtiContext } from '@qti-components/base';
 
 import { TestNavigationMixin, TestViewMixin } from '../../mixins';
 import { TestBaseMixin } from '../../mixins/test-base';
 import { TestProcessingMixin } from '../../mixins/test-processing.mixin';
 import { TestStateMixin } from '../../mixins/test-state.mixin';
 
-import type { ConfigContext } from '@qti-components/base';
+import type { ConfigContext, QtiContext } from '@qti-components/base';
 import type { IQtiTest } from '../../types/iqti-test';
 
 /**
@@ -72,6 +72,26 @@ export class QtiTest extends TestNavigationMixin(
   @state()
   @provide({ context: configContext })
   public configContext: ConfigContext = {};
+
+  /**
+   * Who is taking which test, and the optional shuffle `seed`. Provided here, at the test, so
+   * everything inside reads one value: the test-container shuffling the item order, the test
+   * shuffling interactions as it navigates, and the expressions that read `QTI_CONTEXT`.
+   *
+   * Pass the same `seed` when resuming a session, or the order comes back different. Replace the
+   * object, do not mutate it: an in-place change does not notify the components inside.
+   *
+   * `test-navigation.qtiContext` is an alias of this.
+   */
+  @state()
+  @provide({ context: qtiContext })
+  public qtiContext: QtiContext = {
+    QTI_CONTEXT: {
+      testIdentifier: '',
+      candidateIdentifier: '',
+      environmentIdentifier: 'default'
+    }
+  };
 
   /**
    * Renders the component's template.
