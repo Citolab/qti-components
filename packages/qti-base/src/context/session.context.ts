@@ -15,4 +15,4 @@ export interface SessionContext {
 
 export const INITIAL_SESSION_CONTEXT: Readonly<SessionContext> = { view: 'candidate' };
 
-export const sessionContext = createContext<Readonly<SessionContext>>(Symbol('testContext'));
+export const sessionContext = createContext<Readonly<SessionContext>>(Symbol('sessionContext'));

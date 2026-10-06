@@ -110,7 +110,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Navigate to a specific item or section
      * @param type - Navigation type ('item' or 'section')
-     * @param id - Target identifier (optional, falls back to first available)
+     * @param id - Target identifier (optional, falls back to the current position, or the first one before there is any)
      */
     public navigateTo(type: 'item' | 'section', id?: string): void {
       const targetId = id || this._getDefaultNavigationId(type);
