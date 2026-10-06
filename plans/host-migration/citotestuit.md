@@ -52,7 +52,7 @@ Do: check these flows before upgrading.
 - A `readonly` attribute set from the start now applies.
   Evidence: read, not run
 
-### `qtiContext` is provided by `qti-test`; `test-navigation.qtiContext` is an alias (Phase 3, PR #TBD)
+### `qtiContext` is provided by `qti-test`; `test-navigation.qtiContext` is an alias (Phase 3, PR #230)
 
 Status: deprecated (the alias works unchanged); recommended
 Members: `test-navigation.qtiContext` (the `qtiContext={runtimeQtiContext}` prop and the

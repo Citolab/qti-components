@@ -41,4 +41,4 @@ reads from its own version downward.
 | Change                                                                         | Host        | Since   | Status                             |
 | ------------------------------------------------------------------------------ | ----------- | ------- | ---------------------------------- |
 | `disabled` follows the item context                                            | Kennisnet   | PR #229 | behaviour change                   |
-| `qtiContext` on `qti-test`; `test-navigation.qtiContext` is a deprecated alias | CitoTestUit | Phase 3 | deprecated alias, recommended move |
+| `qtiContext` on `qti-test`; `test-navigation.qtiContext` is a deprecated alias | CitoTestUit | PR #230 | deprecated alias, recommended move |
