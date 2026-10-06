@@ -113,6 +113,12 @@ git worktree remove ../qti-components-feat-thing
 Heavy verification (`madge`, `attw`, `publint`, full test suite) runs in CI
 (`.github/workflows/ci.yml`), not in the pre-commit hook — don't add it there.
 
+When running inside a VS Code Agent Host session, do not create,
+enter, or switch Git worktrees.
+
+The VS Code Agent session already provides worktree isolation.
+Perform all work in the current working directory.
+
 ## Releasing
 
 Releases are manual and deliberate — no auto-publish on merge to `main`.
