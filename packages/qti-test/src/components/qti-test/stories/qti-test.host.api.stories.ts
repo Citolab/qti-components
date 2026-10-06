@@ -595,3 +595,32 @@ export const PostLoadTestTransformCallbackInsideAShadowRoot: StoryObj = {
     expect(callback).toHaveBeenCalledTimes(1);
   }
 };
+
+/**
+ * `outcomeProcessing()` runs the test's own outcome processing. A host that loads the test through
+ * `test-container` has it in the container's shadow root, where a plain `querySelector` on the
+ * `qti-test` does not reach: the call found nothing and returned `false` without a word.
+ */
+export const OutcomeProcessingInTheContainersShadowRoot: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const host = hostOf(canvasElement);
+    host.replaceChildren();
+    const container = document.createElement('div');
+    render(
+      html`<qti-test navigate="item">
+        <test-navigation>
+          <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
+        </test-navigation>
+      </qti-test>`,
+      container
+    );
+    const test = container.querySelector<QtiTest>('qti-test');
+    const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+    host.append(container);
+    await loaded;
+
+    expect(test.outcomeProcessing(), 'found the test outcome processing').toBe(true);
+  }
+};

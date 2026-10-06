@@ -18,10 +18,11 @@ through context. That is also why restoring a session is fragile.
 
 Line references below are against `main` at `81a5929b`.
 
-Status (2026-10-06): Phase 1 is in PR #225, the template-value fix in PR #226.
-Which members are public, and how the main hosts (Kennisnet, CitoTestUit) use
-them, is in `plans/public-api.md`. Read that before Phase 2: it changes what
-counts as breaking below.
+**Status (2026-10-06): closed.** Phases 1 to 4 are done. Phase 1 is PR #225 and the template-value
+fix #226. The public API inventory and host survey are `plans/public-api.md` (#227). Phase 2 is #228
+and #229, Phase 3 is #230 to #232, and the extension tier is pinned in #233. Phase 4 ended up
+smaller than written: it decided to leave most lookups alone and fixed one real defect (see
+Phase 4). What is left over is listed under "Left over, not part of this plan" at the end.
 
 ## Phase 0: Discovery (done)
 
@@ -303,34 +304,73 @@ above must cover these first.
       coming back to an answered item the computed `valid` stayed `false` (the sweep read it before
       the answer was adopted), which kept `test-end-attempt` disabled in a no-skipping section.
 
-## Phase 4: Child registration and `@query` (B, D)
+## Phase 4: Child registration and `@query` (B, D) (done)
 
-- [ ] Replace B lookups with self-registration or `context-request` handling.
-- [ ] Replace D lookups with `@query` / `ref()`.
-- [ ] Cover choices added after the interaction connects.
+The plan said to replace the B lookups (a parent finding children by selector) with
+self-registration and the D lookups (a component finding things in its own shadow DOM) with
+`@query` / `ref()`. Each was read before anything was changed, and the rule was the one Phase 3
+ended on: change a lookup where it is wrong, not because it is a lookup.
 
-A and E stay as they are.
-
-- [x] Prerequisite, done: the extension contract is pinned by `qti-assessment-item.extension.api.stories.ts`
+- [x] **B lookups: leave, with one fix.**
+  - `qti-assessment-item` finds its `qti-response-processing`, `qti-template-processing` and
+    `qti-template-declaration` children at known moments. They are single known children;
+    self-registration would add a protocol and an ordering risk for no gain.
+  - `ChoicesMixin` (choice, hotspot, hottext, graphic-order) finds its choices with
+    `querySelectorAll`, but is already dynamic: a `MutationObserver` on the subtree plus an initial
+    sync, so choices added or removed after connect are tracked. Nine stories in
+    `qti-choice-interaction.dom.stories.ts` cover add, add several, remove selected or unselected or
+    all, replace, reorder, move to another form, and state preserved. Only choice has such stories;
+    the others share the mixin but not the tests.
+  - The drag-drop mixins' `querySelectorAll` calls read what sits in a droppable. That is content
+    structure (category E), not registration.
+  - Stimulus placement prefers a lookup inside the item itself, which is shadow-safe. Its
+    `this.querySelectorAll` fallbacks and `_clearStimulusRef` only reach light DOM, which is harmless:
+    unloaded items are removed anyway.
+  - **The fix:** `qtiTest.outcomeProcessing()` did `this.querySelector('qti-outcome-processing')`
+    on `qti-test`, but `test-container` renders the test into its own shadow root. Loaded the way a
+    real host loads it, the call found nothing, returned `false` and did nothing. The e2e specs
+    hid it by rendering the test into `qti-test`'s light DOM. It now looks inside the loaded test
+    (`_testElement`). A story that loads a test through `test-container` fails on the old code.
+- [x] **D lookups: not done, on purpose.** 31 sites, all cosmetic. `@query` adds nothing a user or
+      host can see and would touch about a dozen interaction files. Convert one only when its file
+      is being changed for another reason.
+- [x] **Choices added after connect: already covered**, see above.
+- [x] **The extension contract is pinned** by `qti-assessment-item.extension.api.stories.ts`
       (registers with the item, publishes through `saveResponse`, adopts a restored value but not
-      its own, publishes validity, follows `readonly` / `disabled`). Phase 4 changes how children
-      register with `Interaction`, and these stories must keep passing. Each was checked by breaking
-      the code it covers.
-
-Risk found by the host survey: PeilingLezen subclasses `Interaction` about 17
-times and consumes `testContext` / `computedContext` through deep `/exports/*`
-imports. If base classes and contexts are public (extension tier in
-`plans/public-api.md`), changing how children register with `Interaction` is
-breaking. Give them proper entry points and contract tests first.
+      its own, publishes validity, follows `readonly` / `disabled`). Each story was checked by
+      breaking the code it covers. The guide is "Extending interactions" on the site.
 
 ## Deprecations to schedule for the next major
 
 The published list, with what replaces each and which ones warn, is
 `apps/site/src/content/docs/deprecations.mdx`. Keep it in step with this one.
 
-- `test-navigation.qtiContext` provider (once `qti-test` provides it)
+- `test-navigation.qtiContext`: now a deprecated alias of `qtiTest.qtiContext` (#230), warns once on write
 - `sessionContext.view` (mirrored into config)
 - `navItemLoading` / `navTestLoading` (marked `@deprecated` in #225)
 - `qti-test-context-updated` (marked deprecated in #225). Remove only after
   Kennisnet and CitoTestUit are on `state`; Kennisnet still needs item `href`
   from the item-ref.
+
+## Left over, not part of this plan
+
+Nothing here blocks anything. Each is its own small piece of work.
+
+- **On-screen PCIs.** Assigning `state` after load does not re-initialise a PCI that is already
+  displayed; it picks the state up when its item loads again. The docs say so.
+- **Standalone `qti-item` has no `state`.** Neither main host uses it.
+- **Bookmarks and highlights in `state.session`.** CitoTestUit stores bookmarks as `marked` on
+  context items today. Highlights need anchors that survive a reload, which needs a design first.
+- **Seeded template randomness.** `qti-random` and `qti-random-integer` use `Math.random()`. With a
+  seed set they could draw from a generator seeded from the seed and the item identifier.
+- **A skipped spec.** `apps/e2e/src/tests/outcome-processing-lit.spec.ts` has been `describe.skip`
+  since the monorepo refactor (#72). It is test-level outcome processing, the area the Phase 4 fix
+  was in.
+- **Contract stories still missing** for `showCandidateCorrection` (in `qti-corrections`),
+  `test-url`, `auto-score-items`, `qti-outcome-changed`, the view events, and most of the extension
+  tier beyond `Interaction`.
+- **The host check.** Nothing in Phases 2 to 4 has been run against Kennisnet or CitoTestUit. The
+  migration notes under `plans/host-migration/` are read from source. The plan is to try a
+  `pkg.pr.new` build with a new release.
+- **Test confidence.** A separate, parked plan: coverage on the changed files, the remaining
+  contract stories, a `just verify` that runs the whole CI lane locally, and the host check above.
