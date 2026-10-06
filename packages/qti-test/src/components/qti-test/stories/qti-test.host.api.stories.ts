@@ -444,6 +444,8 @@ export const DeprecatedAliasWarnsOnceOnWrite: StoryObj = {
   render: () => html`<div data-testid="host"></div>`,
   play: async ({ canvasElement }) => {
     const warn = spyOn(console, 'warn').mockImplementation(() => {});
+    // Other code warns too while items load in the background; count only this deprecation's.
+    const aliasWarnings = () => warn.mock.calls.filter(call => String(call[0]).includes('test-navigation.qtiContext'));
     try {
       let navigation: HTMLElement & { qtiContext: QtiContext };
       const test = await mountStimulusTest(canvasElement, parts => (navigation = parts.navigation));
@@ -451,19 +453,17 @@ export const DeprecatedAliasWarnsOnceOnWrite: StoryObj = {
       // Loading the test makes the navigation fill in the test identifier itself: no warning.
       expect(test.qtiContext.QTI_CONTEXT.testIdentifier).toBe('Examples');
       void navigation.qtiContext;
-      expect(warn).not.toHaveBeenCalled();
+      expect(aliasWarnings()).toHaveLength(0);
 
       navigation.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'a' } };
       navigation.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'b' } };
 
-      expect(warn).toHaveBeenCalledTimes(1);
-      expect(String(warn.mock.calls[0][0])).toContain('test-navigation.qtiContext');
-      expect(String(warn.mock.calls[0][0])).toContain('<qti-test>');
+      expect(aliasWarnings()).toHaveLength(1);
+      expect(String(aliasWarnings()[0][0])).toContain('<qti-test>');
 
       // Setting it on the test, where it belongs, never warns.
-      warn.mockClear();
       test.qtiContext = { QTI_CONTEXT: { ...test.qtiContext.QTI_CONTEXT, candidateIdentifier: 'c' } };
-      expect(warn).not.toHaveBeenCalled();
+      expect(aliasWarnings()).toHaveLength(1);
     } finally {
       warn.mockRestore();
     }
