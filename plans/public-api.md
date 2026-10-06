@@ -57,7 +57,7 @@ Paths below are relative to each host repo.
 | `asSeed`, `QtiContext`                                                                                                   | —         | ✔          | **S**                    |                                                                                                                                                                                                                                |
 | `updateItemVariables`                                                                                                    | ✔        | —           | **S**                    | external scoring; fixed in #225                                                                                                                                                                                                |
 | `test-container` `testURL` / `test-url`                                                                                  | ✔        | ✔          | **S**                    |                                                                                                                                                                                                                                |
-| `test-navigation` `cache-transform`, `auto-score-items`, `initContext`                                                   | ✔ / ✔   | ✔          | **S**                    | document                                                                                                                                                                                                                       |
+| `test-navigation` `auto-score-items`, `initContext`                                                                      | ✔        | ✔          | **S**                    | document. `cache-transform` no longer exists in the library; Kennisnet and the Playground still set it, which does nothing                                                                                                     |
 | `qti-assessment-test-connected`, `qti-assessment-item-connected`, `qti-assessment-item-ref-connected`, `qti-test-loaded` | ✔        | ✔          | **S**                    | lifecycle                                                                                                                                                                                                                      |
 | `qti-interaction-changed`                                                                                                | ✔        | ✔          | **S**                    | CitoTestUit logs it for interaction replay                                                                                                                                                                                     |
 | `qti-outcome-changed`                                                                                                    | ✔        | —           | **S**                    |                                                                                                                                                                                                                                |
@@ -67,15 +67,15 @@ Paths below are relative to each host repo.
 
 ### Item tier: external scoring and review
 
-| Member                                      | Kennisnet | CitoTestUit        | Status | Notes                                              |
-| ------------------------------------------- | --------- | ------------------ | ------ | -------------------------------------------------- |
-| `item.setOutcomeVariable`                   | ✔        | —                  | **S**  | re-applies stored outcomes so modal feedback shows |
-| `item.processResponse(countAttempts?)`      | ✔        | —                  | **S**  |                                                    |
-| `item.showCandidateCorrection(show)`        | ✔        | —                  | **S**  |                                                    |
-| `item.disabled`                             | ✔        | —                  | **S**  | locks a submitted item                             |
-| `item.assessmentItemRefId`                  | ✔        | —                  | **S**  | item-ref id differs from the item's own id         |
-| `item.variables` / `item.responses` setters | —         | ✔                 | **S**  | review screen shows a student's answers            |
-| `item.resetInteractions`                    | —         | ✔ (optional call) | gone   | no longer exists; host already guards with `?.`    |
+| Member                                      | Kennisnet | CitoTestUit        | Status | Notes                                                                                                                                                  |
+| ------------------------------------------- | --------- | ------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `item.setOutcomeVariable`                   | ✔        | —                  | **S**  | re-applies stored outcomes so modal feedback shows                                                                                                     |
+| `item.processResponse(countAttempts?)`      | ✔        | —                  | **S**  |                                                                                                                                                        |
+| `item.showCandidateCorrection(show)`        | ✔        | —                  | **S**  | not on `qti-assessment-item`: it is on `qti-assessment-item-correction` (`@qti-components/corrections`), so no story in the elements package covers it |
+| `item.disabled`                             | ✔        | —                  | **S**  | locks a submitted item                                                                                                                                 |
+| `item.assessmentItemRefId`                  | ✔        | —                  | **S**  | item-ref id differs from the item's own id                                                                                                             |
+| `item.variables` / `item.responses` setters | —         | ✔                 | **S**  | review screen shows a student's answers                                                                                                                |
+| `item.resetInteractions`                    | —         | ✔ (optional call) | gone   | no longer exists; host already guards with `?.`                                                                                                        |
 
 ### Extension tier: replacing or adding components
 
@@ -125,8 +125,8 @@ Paths below are relative to each host repo.
 
 ## Next steps
 
-- [ ] Astro "Public API" page from the tables above: one section per tier, a status per member.
-- [ ] A contract story per supported host-tier member, like `qti-test.api.stories.ts`.
+- [x] Astro "Public API" page from the tables above: one section per tier, a status per member.
+- [x] A contract story per supported host-tier and item-tier member, like `qti-test.api.stories.ts`. Left: `showCandidateCorrection` (corrections package), `test-container` `test-url`, `auto-score-items`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`, `on-test-switch-view`, `test-show-candidate-correction`, the extension tier.
 - [ ] Migration note for Kennisnet and CitoTestUit: `testContext` → `state`, `href` from the
       item-ref, bookmarks → `state.session`.
 - [ ] Bookmarks and highlights in `state.session` on `feat/test-item-bookmark`, with an anchor

@@ -224,12 +224,20 @@ Removals go together in one later major.
 The host survey (`plans/public-api.md`) showed that Phases 2 and 4 touch
 members hosts depend on. Before changing internals:
 
-- [ ] Contract stories for the host and item tiers, in the style of
-      `qti-test.api.stories.ts`: `navigateTo`, `updateItemVariables`,
-      `configContext`, the seed on `test-navigation.qtiContext`, the lifecycle
-      events, `setOutcomeVariable` / `processResponse` /
-      `showCandidateCorrection`, `variables` / `responses`.
-- [ ] The Astro public API page, from the tables in `plans/public-api.md`.
+- [x] Contract stories for the host and item tiers, in the style of
+      `qti-test.api.stories.ts`:
+  - `qti-test/stories/qti-test.host.api.stories.ts`: `navigateTo`, the
+    `qti-request-navigation` event, the lifecycle events, `qti-interaction-changed`,
+    `updateItemVariables`, `configContext`, the seed on `test-navigation.qtiContext`, and the
+    deprecated `qti-test-context-updated`.
+  - `qti-assessment-item/stories/qti-assessment-item.api.stories.ts`: `setOutcomeVariable` (feedback
+    on synchronously, which Phase 2 must keep), `processResponse`, `variables` / `responses`,
+    `disabled`, `assessmentItemRefId`.
+  - Each was checked by breaking the code it covers. Not covered: `showCandidateCorrection` (lives in
+    `qti-corrections`, see `plans/public-api.md`), and the MutationObserver patching Kennisnet does
+    after a reveal.
+- [x] The Astro public API page, `apps/site/src/content/docs/public-api.mdx`, from the tables in
+      `plans/public-api.md`. Merging it makes those statuses official.
 
 ## Phase 2: Interactions and feedback read from item context (C1–C3)
 
