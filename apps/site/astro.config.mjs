@@ -22,7 +22,8 @@ export default defineConfig({
           label: 'Guides',
           items: [
             { label: 'Authoring Response Processing', slug: 'guides/response-processing' },
-            { label: 'Showing Feedback', slug: 'guides/feedback' }
+            { label: 'Showing Feedback', slug: 'guides/feedback' },
+            { label: 'Extending Interactions', slug: 'guides/extending-interactions' }
           ]
         },
         {
