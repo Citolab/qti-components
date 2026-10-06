@@ -74,6 +74,18 @@ Do:
   move above removes it. Removal of the alias is in the next major: use `qtiTest.qtiContext`.
   Evidence: read from `AssessmentPlayerView.tsx:1481-1490` and `:2173-2218`, not run
 
+### Components inside a test find it through context (PR #232)
+
+Status: behaviour change; nothing required
+Members: `postLoadTestTransformCallback`, `<template item-ref>` on `qti-test`
+Do: nothing. Both are still set on `<qti-test>`. They are now also honoured when `test-container` or
+the item-refs are rendered inside a component's own shadow root, where they used to be skipped
+silently. Also, the library attaches a `ContextRoot` to the page on load, so a component that
+upgrades before the element providing its context still gets the value; nothing changes for code that
+registers in order.
+Evidence: read from `AssessmentPlayerView.tsx:2173-2186` (`<template item-ref>` and the test
+elements in light DOM), not run
+
 ### Deprecated members (PR #225)
 
 Status: deprecated, removed in next major

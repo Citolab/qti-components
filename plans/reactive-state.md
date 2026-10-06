@@ -284,11 +284,17 @@ above must cover these first.
       would let drift from it. It must keep working: CitoTestUit writes its per-session seed there.
       Written before the navigation is inside a test, it is handed over on connect. The test now reads
       the seed from itself, not through `querySelector('test-navigation')`.
-- [ ] Replace `closest('qti-test')` in `test-container.ts` and `qti-assessment-item-ref.ts` with
-      context. **Undecided; recommendation is to leave them.** Both read something the host put on
-      `qti-test` and no context carries: `postLoadTestTransformCallback` (a function) and the
-      `<template item-ref>`. They find their own host, not shared state. Doing it means a new context
-      that exists only for this, which is new API for little gain.
+- [x] Replace `closest('qti-test')` with context (PR #232). `qti-test` provides itself through an
+      internal `testHostContext` (not exported, not API) and `test-container`, the item-ref, the
+      navigation alias, `test-check-item` and `test-item-to-speech` consume it. Earlier this was
+      "undecided, recommend leaving", on the grounds that no context carried a host-set callback and
+      template and a new one would be new API. Making it internal removed the cost, and it fixed a
+      real gap: `test-container` used plain `closest()`, which stops at a shadow root, so
+      `postLoadTestTransformCallback` was silently skipped there.
+- [x] `ContextRoot` on the document (`qti-base`, once per page), so a consumer that upgrades before
+      its provider still gets the value. Attached to `document.documentElement` and not to one of our
+      elements, because the case is the providing element not having upgraded yet. Stories register a
+      consumer and a provider in the wrong order, plain and inside a shadow root.
 - [x] Remove the `test-base` private-field access (C4–C5): the item exposes a read-only
       `itemContext`, and the test reads that. The one-off sync on connect stays a one-off.
 - [x] Remove the per-update `validate()` sweep (C6): the item publishes `ItemContext.valid` whenever

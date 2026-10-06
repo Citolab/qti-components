@@ -1,4 +1,4 @@
-import { consume, provide } from '@lit/context';
+import { ContextConsumer, consume, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
@@ -6,6 +6,8 @@ import { computedContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
+
+import { testHostContext } from '../../internal/test-host.context';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiContext } from '@qti-components/base';
@@ -82,22 +84,22 @@ export class TestNavigation extends LitElement {
   }
 
   /**
-   * The `qti-test` this navigation is in. Climbs out of shadow roots: context reaches across them
-   * and `closest()` does not, so a navigation rendered inside a host's own component would
-   * otherwise never find its test.
+   * The `qti-test` this navigation is in, found through context so it works across shadow roots.
+   * A write made before it is known waits in `#pendingQtiContext` and is handed over on arrival.
    */
-  #owner(): { qtiContext: QtiContext } | null {
-    type Owner = HTMLElement & { qtiContext: QtiContext };
-    const own = this.closest<Owner>('qti-test');
-    if (own) return own;
-
-    let root: Node = this.getRootNode();
-    while (root instanceof ShadowRoot) {
-      const test = root.host.closest<Owner>('qti-test');
-      if (test) return test;
-      root = root.host.getRootNode();
+  #testHost = new ContextConsumer(this, {
+    context: testHostContext,
+    subscribe: true,
+    callback: host => {
+      if (host && this.#pendingQtiContext) {
+        host.qtiContext = this.#pendingQtiContext;
+        this.#pendingQtiContext = undefined;
+      }
     }
-    return null;
+  });
+
+  #owner(): { qtiContext: QtiContext } | null {
+    return this.#testHost.value ?? null;
   }
 
   @state()
@@ -139,15 +141,6 @@ export class TestNavigation extends LitElement {
 
     this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
     this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
-  }
-
-  override connectedCallback(): void {
-    super.connectedCallback();
-    const owner = this.#owner();
-    if (owner && this.#pendingQtiContext) {
-      owner.qtiContext = this.#pendingQtiContext;
-      this.#pendingQtiContext = undefined;
-    }
   }
 
   /**

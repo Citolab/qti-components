@@ -8,7 +8,10 @@ import { watch } from '@qti-components/utilities';
 import { qtiTransformTest } from '@qti-components/transformers';
 import itemCss from '@qti-components/theme/item-css';
 
+import { testHostContext } from '../../internal/test-host.context';
+
 import type { QtiContext } from '@qti-components/base';
+import type { TestHost } from '../../internal/test-host.context';
 
 /**
  * `<test-container>` is a custom element designed for hosting the qti-assessment-item.
@@ -40,6 +43,10 @@ export class TestContainer extends LitElement {
   /** The raw XML string */
   @state()
   testXML: string | null = null;
+
+  /** The `qti-test` this container is in: where the host's `postLoadTestTransformCallback` lives. */
+  @consume({ context: testHostContext, subscribe: true })
+  protected testHost?: TestHost;
 
   @state()
   @consume({ context: qtiContext, subscribe: true })
@@ -75,7 +82,7 @@ export class TestContainer extends LitElement {
       const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
       let api = (await qtiTransformTest().load(this.testURL)).shuffleOrdering(explicitSeed);
       // Apply external transformation if provided
-      const qtiTest = this.closest('qti-test') as any; // Type assertion to access mixin properties
+      const qtiTest = this.testHost;
       if (qtiTest?.postLoadTestTransformCallback) {
         // Create a temporary document to get the test element reference
         const tempDoc = api.htmlDoc(this.#resolvedCustomElementRegistry ?? undefined);

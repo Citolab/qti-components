@@ -1,9 +1,10 @@
-import { provide } from '@lit/context';
+import { ContextProvider, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { configContext, qtiContext } from '@qti-components/base';
 
+import { testHostContext } from '../../internal/test-host.context';
 import { TestNavigationMixin, TestViewMixin } from '../../mixins';
 import { TestBaseMixin } from '../../mixins/test-base';
 import { TestProcessingMixin } from '../../mixins/test-processing.mixin';
@@ -68,6 +69,12 @@ export class QtiTest extends TestNavigationMixin(
 ) {
   // TODO: Properly implement IQtiTest interface
   // export class QtiTest extends TestLoaderMixin(TestNavigationMixin(TestViewMixin(TestBase))) {
+
+  constructor() {
+    super();
+    // The components inside find their test through this, across shadow roots (see TestHost).
+    new ContextProvider(this, { context: testHostContext, initialValue: this });
+  }
 
   @state()
   @provide({ context: configContext })

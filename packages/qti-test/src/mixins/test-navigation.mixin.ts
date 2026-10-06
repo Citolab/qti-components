@@ -10,6 +10,7 @@ import type { QtiAssessmentSection } from '../components/qti-assessment-section/
 import type { QtiTestPart } from '../components/qti-test-part/qti-test-part';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestContainer } from '../components/test-container/test-container';
+import type { PostLoadTestTransformCallback } from '../internal/test-host.context';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -19,10 +20,7 @@ export type PostLoadTransformCallback = (
   itemRef: QtiAssessmentItemRef
 ) => transformItemApi | Promise<transformItemApi>;
 
-export type PostLoadTestTransformCallback = (
-  transformer: transformTestApi,
-  testElement: QtiAssessmentTest
-) => transformTestApi | Promise<transformTestApi>;
+export type { PostLoadTestTransformCallback };
 
 export interface NavigationError {
   message: string;

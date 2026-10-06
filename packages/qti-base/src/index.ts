@@ -1,3 +1,4 @@
+import './context/context-root';
 import './register';
 
 export * from './context/computed-item.context';

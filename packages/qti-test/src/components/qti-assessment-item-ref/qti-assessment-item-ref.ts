@@ -5,8 +5,11 @@ import { prepareTemplate } from '@heximal/templates';
 
 import { computedContext } from '@qti-components/base';
 
+import { testHostContext } from '../../internal/test-host.context';
+
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
+import type { TestHost } from '../../internal/test-host.context';
 import type { TemplateFunction } from '@heximal/templates';
 
 // Converter function to interpret "true" and "false" as booleans
@@ -93,27 +96,15 @@ export class QtiAssessmentItemRef extends LitElement {
 
   myTemplate: TemplateFunction | null = null;
 
-  /**
-   * The `<qti-test>` this ref belongs to, crossing shadow boundaries on the way
-   * up.
-   *
-   * `<test-container>` renders its items into a shadow root, so an item-ref is
-   * usually one hop below one; but it is also valid in plain light DOM, and a
-   * host is free to nest it deeper. Climbing root by root covers all three
-   * without assuming any of them.
-   */
-  #findTestElement(): Element | null {
-    const own = this.closest('qti-test');
-    if (own) return own;
+  /** The `qti-test` this ref belongs to, wherever it renders: light DOM, or any depth of shadow roots. */
+  @consume({ context: testHostContext, subscribe: true })
+  protected testHost?: TestHost;
 
-    let root: Node = this.getRootNode();
-    while (root instanceof ShadowRoot) {
-      const test = root.host.closest('qti-test');
-      if (test) return test;
-      root = root.host.getRootNode();
-    }
-    // A Document, or a fragment that is not attached to one: nowhere left to climb.
-    return null;
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    // A context consumer keeps its last value when it is moved somewhere with no provider, and
+    // `closest()` never did: a ref moved out of a test must not keep that test's template.
+    this.testHost = undefined;
   }
 
   override async connectedCallback(): Promise<void> {
@@ -139,7 +130,7 @@ export class QtiAssessmentItemRef extends LitElement {
       Resolved once, on connect: one template serves every item, and everything
       that varies per item comes through the model (see ItemRefTemplateModel).
     */
-    const templateElement = this.#findTestElement()?.querySelector<HTMLTemplateElement>('template[item-ref]');
+    const templateElement = this.testHost?.querySelector<HTMLTemplateElement>('template[item-ref]');
     this.myTemplate = templateElement ? prepareTemplate(templateElement) : null;
     this.requestUpdate();
 
