@@ -42,6 +42,25 @@ Status: behaviour change
 Do: nothing if you restore through `state` or `testContext`. A resumed or revisited item now shows
 the stored template values instead of drawing new ones.
 
+### Interactions, feedback and `readonly` follow the item context (PR #228)
+
+Status: behaviour change; no API removed, timing kept
+Members: `item.setOutcomeVariable`, `item.processResponse`, `item.disabled`, subclass `QtiFeedback`,
+`qti-register-feedback`
+Do: check these flows before upgrading.
+
+- Modal feedback: restoring variables equal to the declared defaults, with no attempt yet, no longer
+  opens a `show-hide="hide"` modal. If the player relied on that, re-apply stored outcomes with
+  `setOutcomeVariable` as before (it still shows the modal once the outcome changed).
+- The `qti-register-feedback` event is no longer sent. Nothing in the surveyed code listens to it;
+  grep for it in `qti/` to be sure.
+- Subclasses of `QtiFeedback`: `_context` is now a read-only getter, and `checkShowFeedback()` stays
+  public. Remove any write to `_context`.
+- Observers on feedback DOM that run right after `setOutcomeVariable`: `showStatus` is still correct
+  on return, but the element now decides it itself.
+- A `readonly` attribute set from the start now applies.
+  Evidence: read, not run
+
 ### Deprecated members (PR #225)
 
 Status: deprecated, removed in next major
