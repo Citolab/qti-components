@@ -1,5 +1,8 @@
+import { ContextEvent } from '@lit/context';
 import { html, render } from 'lit';
 import { expect, fn, spyOn, waitFor, within } from 'storybook/test';
+
+import { computedContext } from '@qti-components/base';
 
 import {
   getAssessmentItemFromTestContainerByDataTitle,
@@ -7,7 +10,7 @@ import {
 } from '../../../../../../tools/testing/test-utils';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiContext } from '@qti-components/base';
+import type { ComputedContext, QtiContext } from '@qti-components/base';
 import type { QtiTest } from '../qti-test';
 import type { QtiTestState } from '../../../types/qti-test-state';
 
@@ -467,5 +470,102 @@ export const DeprecatedAliasWarnsOnceOnWrite: StoryObj = {
     } finally {
       warn.mockRestore();
     }
+  }
+};
+
+// ─── Item validity in the computed context ─────────────────────────────────────────────────────
+//
+// `computedContext` carries, per item, whether the interactions in it are valid right now. The
+// `test-end-attempt` button reads it to stay disabled until a required answer is given. These
+// stories pin what a reader of that context sees, wherever the value is computed from.
+
+const REQUIRED_TEST = `<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="required" title="Required">
+  <qti-test-part identifier="tp" navigation-mode="nonlinear" submission-mode="individual">
+    <qti-assessment-section identifier="s" title="S" visible="true">
+      <qti-assessment-item-ref identifier="REQ" href="/assets/api/kennisnet/ITEM001.xml"/>
+      <qti-assessment-item-ref identifier="FREE" href="/assets/qti-conformance/Basic/T4-T7/items/text-entry.xml"/>
+    </qti-assessment-section>
+  </qti-test-part>
+</qti-assessment-test>`;
+
+/** Reads the computed context the way a component inside the test does: by asking for it. */
+const computedItems = (canvasElement: HTMLElement) => {
+  const consumer = hostOf(canvasElement).querySelector<HTMLElement>('test-prev');
+  let value: ComputedContext | undefined;
+  consumer.dispatchEvent(new ContextEvent(computedContext, consumer, v => (value = v), false));
+  return Object.fromEntries(
+    (value?.testParts ?? [])
+      .flatMap(part => part.sections.flatMap(section => section.items))
+      .map(i => [i.identifier, i])
+  );
+};
+
+const mountRequiredTest = async (canvasElement: HTMLElement, setup?: (test: QtiTest) => void) => {
+  const host = hostOf(canvasElement);
+  host.replaceChildren();
+  const container = document.createElement('div');
+  render(
+    html`<qti-test navigate="item">
+      <test-navigation>
+        <test-container .testXML=${REQUIRED_TEST}></test-container>
+        <test-prev>Previous</test-prev>
+        <test-next>Next</test-next>
+      </test-navigation>
+    </qti-test>`,
+    container
+  );
+  const test = container.querySelector<QtiTest>('qti-test');
+  setup?.(test);
+  const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+  host.append(container);
+  await loaded;
+  return test;
+};
+
+/**
+ * A required choice is invalid until it is answered, and the computed context says so. An item
+ * that is not on screen yet has nothing to be invalid, so it reads as valid.
+ */
+export const ItemValidityFollowsTheAnswer: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const test = await mountRequiredTest(canvasElement);
+    const item = await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+
+    await waitFor(() => expect(computedItems(canvasElement).REQ.valid, 'REQ before answer').toBe(false));
+    expect(computedItems(canvasElement).FREE.valid, 'FREE not on screen').toBe(true);
+
+    within(item).getByText('Tin (Sn)').click();
+    await waitFor(() => expect(computedItems(canvasElement).REQ.valid, 'REQ after answer').toBe(true));
+
+    // Away and back: the answer is restored, and so is the verdict.
+    test.navigateTo('item', 'FREE');
+    await loadedItem(canvasElement, 'T1 - Text Entry Interaction');
+    test.navigateTo('item', 'REQ');
+    await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+    await waitFor(() => expect(computedItems(canvasElement).REQ.valid, 'REQ after coming back').toBe(true));
+  }
+};
+
+/** A stored answer given to `state` before the test loads: the item opens valid, not invalid. */
+export const ItemValidityAfterRestore: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    await mountRequiredTest(canvasElement, test => {
+      test.state = {
+        version: 1,
+        test: {
+          items: [{ identifier: 'REQ', variables: [{ identifier: 'RESPONSE', type: 'response', value: 'choice1' }] }],
+          outcomes: []
+        },
+        session: { navItemRefId: 'REQ' }
+      };
+    });
+    const item = await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+    await waitFor(() => expect(within(item).getByText('Tin (Sn)').matches(':state(checked)')).toBe(true));
+
+    await waitFor(() => expect(computedItems(canvasElement).REQ.valid).toBe(true), { timeout: 4000 });
   }
 };

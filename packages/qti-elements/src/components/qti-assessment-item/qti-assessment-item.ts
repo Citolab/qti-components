@@ -94,6 +94,14 @@ export class QtiAssessmentItem extends LitElement {
     return this._context.identifier;
   }
 
+  /**
+   * The item's whole context, declarations included, for reading. `variables` is the trimmed view
+   * for hosts; the test needs the declarations too, and used to reach for the private field.
+   */
+  public get itemContext(): Readonly<ItemContext> {
+    return this._context;
+  }
+
   public get variables(): VariableValue<string | string[] | null>[] {
     return this._context.variables.map(v => ({
       identifier: v.identifier,
@@ -150,6 +158,10 @@ export class QtiAssessmentItem extends LitElement {
     if (this.#templatesProcessed && templatesChanged) {
       this.#runTemplateProcessing();
     }
+
+    // The interactions take the answers over from the context, some of them a moment from now, and
+    // a different answer can mean a different verdict. Look once they have.
+    void this.updateComplete.then(() => this.#revalidate());
   }
 
   public get state(): ItemContext['state'] {
@@ -201,6 +213,8 @@ export class QtiAssessmentItem extends LitElement {
     this.#attachEventListeners();
     super.connectedCallback();
     this.updateComplete.then(() => {
+      // The verdict goes in first, so whoever hears the item connect reads it with the rest.
+      this.validate(false);
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
           bubbles: true,
@@ -297,6 +311,9 @@ export class QtiAssessmentItem extends LitElement {
         }
       };
     }
+
+    // The interaction has updated its own validity by now; publish the verdict with the answer.
+    this.validate(false);
 
     this.dispatchEvent(
       new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
@@ -568,12 +585,38 @@ export class QtiAssessmentItem extends LitElement {
 
   public validate(reportValidity = true): boolean {
     const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
+    this.#publishValidity(isValid);
 
     if (reportValidity) {
       this.reportValidity();
     }
 
     return isValid;
+  }
+
+  /** Puts the verdict in the item context, where the test and anything else can read it. */
+  #publishValidity(valid: boolean): void {
+    if (this._context.valid !== valid) {
+      this._context = { ...this._context, valid };
+    }
+  }
+
+  /**
+   * Checks again after something the interactions' validity depends on changed without them saying
+   * so (an answer handed in through `variables`), and tells the test if the verdict moved.
+   */
+  #revalidate(): void {
+    const before = this._context.valid;
+    this.validate(false);
+    if (this._context.valid !== before) {
+      this.dispatchEvent(
+        new CustomEvent<{ itemContext: ItemContext }>('qti-item-context-updated', {
+          bubbles: true,
+          composed: true,
+          detail: { itemContext: this._context }
+        })
+      );
+    }
   }
 
   public reportValidity() {

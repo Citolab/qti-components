@@ -284,10 +284,18 @@ above must cover these first.
       would let drift from it. It must keep working: CitoTestUit writes its per-session seed there.
       Written before the navigation is inside a test, it is handed over on connect. The test now reads
       the seed from itself, not through `querySelector('test-navigation')`.
-- [ ] Replace `closest('qti-test')` in `test-container.ts` and
-      `qti-assessment-item-ref.ts` with context.
-- [ ] Remove the `test-base` private-field access (C4–C5) and the per-update
-      `validate()` sweep (C6): items publish their own validity.
+- [ ] Replace `closest('qti-test')` in `test-container.ts` and `qti-assessment-item-ref.ts` with
+      context. **Undecided; recommendation is to leave them.** Both read something the host put on
+      `qti-test` and no context carries: `postLoadTestTransformCallback` (a function) and the
+      `<template item-ref>`. They find their own host, not shared state. Doing it means a new context
+      that exists only for this, which is new API for little gain.
+- [x] Remove the `test-base` private-field access (C4–C5): the item exposes a read-only
+      `itemContext`, and the test reads that. The one-off sync on connect stays a one-off.
+- [x] Remove the per-update `validate()` sweep (C6): the item publishes `ItemContext.valid` whenever
+      it checks (an answer changes, it connects, answers arrive through `variables`), the test carries
+      it into the test context, and navigation reads it. This also fixed a bug: after a restore or
+      coming back to an answered item the computed `valid` stayed `false` (the sweep read it before
+      the answer was adopted), which kept `test-end-attempt` disabled in a no-skipping section.
 
 ## Phase 4: Child registration and `@query` (B, D)
 

@@ -13,6 +13,12 @@ export interface ItemContext {
   readonly?: boolean;
   /** The item is locked, for example after it was submitted. Interactions follow it; see `qti-assessment-item`'s `disabled`. */
   disabled?: boolean;
+  /**
+   * Whether the interactions in the item are valid right now (a required answer is given, a limit is
+   * respected). Published by the item whenever it checks, so a reader never has to ask the item.
+   * Unset until the item has checked once.
+   */
+  valid?: boolean;
 }
 
 export const itemContextVariables = [

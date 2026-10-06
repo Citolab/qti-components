@@ -83,17 +83,17 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 
 ### Extension tier: replacing or adding components
 
-| Member                                        | Hosts             | Status                                                                                     |
-| --------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------ |
-| `postLoadTransformCallback`                   | K, C              | **S**                                                                                      |
-| `transformer.extendElementName(tag, suffix)`  | K                 | **S**                                                                                      |
-| `postLoadTestTransformCallback`               | C                 | **S**                                                                                      |
-| `<template item-ref>` on `qti-test`           | C                 | **S**                                                                                      |
-| subclass `QtiFeedback`                        | K                 | **S** base class                                                                           |
-| subclass `Qti*InteractionCorrection`          | C                 | **S** base class                                                                           |
-| subclass `Interaction`                        | P (~17)           | **S** base class; needs a proper entry point                                               |
-| consume `testContext` / `computedContext`     | P                 | **S** for component authors; needs a proper entry point instead of `/exports/*.context.js` |
-| deep imports (`/exports/*`, `/cdn/exports/*`) | P (+ QTI-Express) | **I**; offer documented entry points                                                       |
+| Member                                        | Hosts             | Status                                                                                                                                                  |
+| --------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `postLoadTransformCallback`                   | K, C              | **S**                                                                                                                                                   |
+| `transformer.extendElementName(tag, suffix)`  | K                 | **S**                                                                                                                                                   |
+| `postLoadTestTransformCallback`               | C                 | **S**                                                                                                                                                   |
+| `<template item-ref>` on `qti-test`           | C                 | **S**                                                                                                                                                   |
+| subclass `QtiFeedback`                        | K                 | **S** base class                                                                                                                                        |
+| subclass `Qti*InteractionCorrection`          | C                 | **S** base class                                                                                                                                        |
+| subclass `Interaction`                        | P (~17)           | **S** base class; needs a proper entry point                                                                                                            |
+| consume `testContext` / `computedContext`     | P                 | **S** for component authors; needs a proper entry point instead of `/exports/*.context.js`. `ComputedItem.valid` is published by the item since PR #231 |
+| deep imports (`/exports/*`, `/cdn/exports/*`) | P (+ QTI-Express) | **I**; offer documented entry points                                                                                                                    |
 
 ### Styling tier: currently missing
 
