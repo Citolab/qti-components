@@ -9,6 +9,8 @@ export interface ItemContext {
    * Used for interactions that support state save/restore (e.g. PCI).
    */
   state?: Record<string, string | null>;
+  /** The item is shown for reading only. Interactions follow it; see `qti-assessment-item`'s `readonly`. */
+  readonly?: boolean;
 }
 
 export const itemContextVariables = [

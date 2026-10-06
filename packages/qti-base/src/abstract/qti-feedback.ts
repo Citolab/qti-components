@@ -1,4 +1,4 @@
-import { consume } from '@lit/context';
+import { ContextConsumer, consume } from '@lit/context';
 import { LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
@@ -22,23 +22,42 @@ export abstract class QtiFeedback extends LitElement {
   @property({ type: String, attribute: false })
   public showStatus: string;
 
-  @consume({ context: itemContext, subscribe: true })
-  @state()
-  private _context?: ItemContext;
+  /**
+   * The item's variables. Feedback follows them itself: every time the item publishes a new context
+   * this decides, synchronously, whether its own outcome now calls for showing it, so the item has
+   * no list of feedback elements to push to. Synchronous matters. A host that sets an outcome
+   * reads `showStatus` straight after, with no await in between.
+   */
+  #itemContext = new ContextConsumer(this, {
+    context: itemContext,
+    subscribe: true,
+    callback: context => this.#followItem(context)
+  });
+
+  private get _context(): ItemContext | undefined {
+    return this.#itemContext.value;
+  }
+
+  /** What the last context carried that decides this feedback, to tell a relevant update from noise. */
+  #seen?: string;
 
   @consume({ context: computedContext, subscribe: true })
   @state()
   private _computedContext?: ComputedContext;
 
-  public override connectedCallback() {
-    super.connectedCallback();
-    this.dispatchEvent(
-      new CustomEvent<QtiFeedback>('qti-register-feedback', {
-        bubbles: true,
-        composed: true,
-        detail: this
-      })
-    );
+  /**
+   * Re-decide when this feedback's outcome changed, or once an attempt has been made. Before the
+   * first attempt an unchanged outcome says nothing yet: a `hide` feedback would otherwise switch
+   * on for an item nobody has answered.
+   */
+  #followItem(context: ItemContext | undefined) {
+    const variables = context?.variables;
+    if (!variables || !this.outcomeIdentifier) return;
+    const outcome = JSON.stringify(variables.find(v => v.identifier === this.outcomeIdentifier)?.value ?? null);
+    const numAttempts = Number(variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
+    const relevant = this.#seen === undefined ? numAttempts > 0 : this.#seen !== outcome || numAttempts > 0;
+    this.#seen = outcome;
+    if (relevant) this.checkShowFeedback(this.outcomeIdentifier);
   }
 
   public checkShowFeedback(outcomeIdentifier: string) {
