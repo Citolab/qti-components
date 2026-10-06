@@ -311,6 +311,12 @@ above must cover these first.
 
 A and E stay as they are.
 
+- [x] Prerequisite, done: the extension contract is pinned by `qti-assessment-item.extension.api.stories.ts`
+      (registers with the item, publishes through `saveResponse`, adopts a restored value but not
+      its own, publishes validity, follows `readonly` / `disabled`). Phase 4 changes how children
+      register with `Interaction`, and these stories must keep passing. Each was checked by breaking
+      the code it covers.
+
 Risk found by the host survey: PeilingLezen subclasses `Interaction` about 17
 times and consumes `testContext` / `computedContext` through deep `/exports/*`
 imports. If base classes and contexts are public (extension tier in

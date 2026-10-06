@@ -13,6 +13,23 @@ Members: `testContext`, `computedContext`, `Interaction`
 Do: no change from PR #225–#227. The consumed contexts are unchanged, and the session context
 label change (`sessionContext`) does not affect components that consume it.
 
+### Writing your own interaction on 9.x (documentation and stories only)
+
+Status: upgrade facts, not a change; PeilingLezen is not a priority host
+Members: subclass `Interaction` (~17 custom interactions), the deep `/exports/interaction.js` import
+Do, when upgrading from 7.14:
+
+- Import `Interaction` from `@citolab/qti-components/qti-base`. The `/exports/*` paths no longer
+  exist.
+- Add `get response()` and `set response(value)` to every subclass; they are abstract now, so a
+  subclass without them does not compile.
+- Delete the `@property() responseIdentifier` redeclaration. The base class binds it to the
+  `response-identifier` attribute and a redeclaration drops that binding.
+  Evidence: the `response` and `responseIdentifier` points checked in this repo (a subclass without
+  `response` fails `tsc`; a redeclared property leaves `response-identifier` unset); the import path
+  and the redeclaration read from `wielrennen-3.ts`. Which of these already applied between 7.14 and
+  9.3.0 is not covered. Guide: Extending interactions.
+
 ### Interactions follow the item context (PR #228)
 
 Status: behaviour change; the highest impact of the three for this host
