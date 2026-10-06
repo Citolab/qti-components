@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { expect, fn, waitFor, within } from 'storybook/test';
+import { expect, fn, spyOn, waitFor, within } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '../qti-assessment-item';
@@ -127,6 +127,69 @@ export const VariablesRoundTrip: StoryObj = {
   }
 };
 
+/**
+ * An interaction adopts what the item holds for its response, but only when that changed to
+ * something other than what the interaction itself last published. The candidate's own answer
+ * therefore never comes back at them as a write.
+ */
+export const OwnAnswerIsNotEchoed: StoryObj = {
+  render,
+  play: async ({ canvasElement }) => {
+    const { host } = await readyItem(canvasElement);
+    const interaction = host.querySelector<HTMLElement & { response: unknown }>('qti-choice-interaction');
+    const adopted = spyOn(interaction, 'response', 'set');
+
+    choice(host, 'Incorrect').click();
+
+    await waitFor(() => expect(choice(host, 'Incorrect').matches(':state(checked)')).toBe(true));
+    await new Promise(resolve => setTimeout(resolve, 50));
+    // The choice interaction sets its own response once while handling the click. An echo from the
+    // item would be a second call.
+    expect(adopted.mock.calls.length).toBeLessThanOrEqual(1);
+  }
+};
+
+/** Only a change to this response counts: another variable moving must not rewrite the answer. */
+export const UnrelatedUpdateLeavesTheAnswerAlone: StoryObj = {
+  render,
+  play: async ({ canvasElement }) => {
+    const { host, item } = await readyItem(canvasElement);
+    const interaction = host.querySelector<HTMLElement & { response: unknown }>('qti-choice-interaction');
+    choice(host, 'Incorrect').click();
+    await waitFor(() => expect(choice(host, 'Incorrect').matches(':state(checked)')).toBe(true));
+    const adopted = spyOn(interaction, 'response', 'set');
+
+    item.setOutcomeVariable('SCORE', '3');
+    await item.updateComplete;
+
+    expect(adopted).not.toHaveBeenCalled();
+    expect(choice(host, 'Incorrect').matches(':state(checked)')).toBe(true);
+  }
+};
+
+/** Unanswered in the item must not wipe a `response` the author put on the interaction. */
+export const AuthoredResponseSurvivesAnEmptyItem: StoryObj = {
+  render: () =>
+    html`<div data-testid="host">
+      <qti-assessment-item identifier="authored" title="Authored">
+        <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+        </qti-response-declaration>
+        <qti-item-body>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="1" response="b">
+            <qti-simple-choice identifier="a">A</qti-simple-choice>
+            <qti-simple-choice identifier="b">B</qti-simple-choice>
+          </qti-choice-interaction>
+        </qti-item-body>
+      </qti-assessment-item>
+    </div>`,
+  play: async ({ canvasElement }) => {
+    const { host } = await readyItem(canvasElement);
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    expect(choice(host, 'B').matches(':state(checked)')).toBe(true);
+  }
+};
+
 /** The older, per-interaction form of the same thing. Deprecated, but CitoTestUit still reads it. */
 export const ResponsesSetter: StoryObj = {
   render,
@@ -151,6 +214,127 @@ export const Disabled: StoryObj = {
 
     item.disabled = false;
     await waitFor(() => expect(interaction.hasAttribute('disabled')).toBe(false));
+  }
+};
+
+/** `readonly` on the item reaches its interactions, and turning it off reaches them again. */
+export const Readonly: StoryObj = {
+  render,
+  play: async ({ canvasElement }) => {
+    const { host, item } = await readyItem(canvasElement);
+    const interaction = host.querySelector<HTMLElement>('qti-choice-interaction');
+
+    item.readonly = true;
+    await waitFor(() => expect(interaction.hasAttribute('readonly')).toBe(true));
+
+    item.readonly = false;
+    await waitFor(() => expect(interaction.hasAttribute('readonly')).toBe(false));
+  }
+};
+
+/** Set from the start, as an attribute: the interactions come up readonly. */
+export const ReadonlyFromTheStart: StoryObj = {
+  render: () => html`<div data-testid="host">${item()}</div>`,
+  play: async ({ canvasElement }) => {
+    const host = within(canvasElement).getByTestId('host');
+    const el = host.querySelector<QtiAssessmentItem>('qti-assessment-item');
+    el.setAttribute('readonly', '');
+    await el.updateComplete;
+
+    await waitFor(() => expect(host.querySelector('qti-choice-interaction').hasAttribute('readonly')).toBe(true));
+  }
+};
+
+const feedbackItem = () => html`
+  <qti-assessment-item identifier="feedback-item" title="Feedback item">
+    <qti-outcome-declaration
+      identifier="FEEDBACK"
+      cardinality="single"
+      base-type="identifier"
+    ></qti-outcome-declaration>
+    <qti-item-body>
+      <qti-feedback-block data-kind="show" show-hide="show" outcome-identifier="FEEDBACK" identifier="correct"
+        >Shown for correct</qti-feedback-block
+      >
+      <qti-feedback-block data-kind="hide" show-hide="hide" outcome-identifier="FEEDBACK" identifier="correct"
+        >Hidden for correct</qti-feedback-block
+      >
+    </qti-item-body>
+  </qti-assessment-item>
+`;
+
+const feedbackStatus = (item: HTMLElement) => ({
+  show: item.querySelector<HTMLElement & { showStatus: string }>('[data-kind="show"]').showStatus,
+  hide: item.querySelector<HTMLElement & { showStatus: string }>('[data-kind="hide"]').showStatus
+});
+
+/**
+ * Feedback follows its outcome. Setting the same outcome again leaves it where it was, and
+ * changing it moves both kinds: `show` follows the match, `hide` is its inverse.
+ */
+export const FeedbackFollowsItsOutcome: StoryObj = {
+  render: () => html`<div data-testid="host">${feedbackItem()}</div>`,
+  play: async ({ canvasElement }) => {
+    const { item } = await readyItem(canvasElement);
+
+    item.setOutcomeVariable('FEEDBACK', 'correct');
+    expect(feedbackStatus(item)).toEqual({ show: 'on', hide: 'off' });
+
+    item.setOutcomeVariable('FEEDBACK', 'correct');
+    expect(feedbackStatus(item)).toEqual({ show: 'on', hide: 'off' });
+
+    item.setOutcomeVariable('FEEDBACK', 'incorrect');
+    expect(feedbackStatus(item)).toEqual({ show: 'off', hide: 'on' });
+  }
+};
+
+/**
+ * Nothing decides feedback for an item nobody has answered. Restoring variables that equal the
+ * declared defaults is not an answer either, so a `hide` feedback is not switched on by it.
+ */
+export const RestoringDefaultsBeforeAnAttemptShowsNothing: StoryObj = {
+  render: () => html`<div data-testid="host">${feedbackItem()}</div>`,
+  play: async ({ canvasElement }) => {
+    const { item } = await readyItem(canvasElement);
+    const before = feedbackStatus(item);
+
+    item.variables = [{ identifier: 'FEEDBACK', type: 'outcome', value: null }];
+    await item.updateComplete;
+
+    expect(feedbackStatus(item)).toEqual(before);
+  }
+};
+
+/**
+ * The modal feedback does not decide on connect the way the block and inline ones do, so this is
+ * where restoring defaults used to differ. The item switched a `hide` modal on for an item nobody
+ * had answered, which opened a dialog on a restore of nothing. That is deliberately gone: no
+ * attempt, no outcome change, no decision.
+ */
+export const RestoringDefaultsLeavesAHideModalAlone: StoryObj = {
+  render: () =>
+    html`<div data-testid="host">
+      <qti-assessment-item identifier="modal-item" title="Modal item">
+        <qti-outcome-declaration
+          identifier="FEEDBACK"
+          cardinality="single"
+          base-type="identifier"
+        ></qti-outcome-declaration>
+        <qti-item-body></qti-item-body>
+        <qti-modal-feedback show-hide="hide" outcome-identifier="FEEDBACK" identifier="correct">
+          <qti-content-body>Hidden for correct</qti-content-body>
+        </qti-modal-feedback>
+      </qti-assessment-item>
+    </div>`,
+  play: async ({ canvasElement }) => {
+    const { item } = await readyItem(canvasElement);
+    const modal = item.querySelector<HTMLElement & { showStatus: string }>('qti-modal-feedback');
+    const before = modal.showStatus;
+
+    item.variables = [{ identifier: 'FEEDBACK', type: 'outcome', value: null }];
+    await item.updateComplete;
+
+    expect(modal.showStatus).toBe(before);
   }
 };
 

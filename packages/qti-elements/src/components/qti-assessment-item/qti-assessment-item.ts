@@ -5,9 +5,10 @@ import { property } from 'lit/decorators.js';
 import { itemContext, itemContextVariables } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 
+import type { PropertyValues } from 'lit';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
-import type { QtiFeedback, ResponseInteraction } from '@qti-components/base';
+import type { ResponseInteraction } from '@qti-components/base';
 import type { RegisteredInteraction } from '@qti-components/base';
 import type { VariableDeclaration, VariableValue } from '@qti-components/base';
 import type { OutcomeVariable, ResponseVariable, TemplateVariable } from '@qti-components/base';
@@ -57,10 +58,18 @@ export class QtiAssessmentItem extends LitElement {
     this.interactionElements.forEach(ch => (ch.disabled = disabled));
   };
 
+  /**
+   * Shows the item for reading only. Published in the item context, which the interactions inside
+   * follow, so the item keeps no list of them to set it on.
+   */
   @property({ type: Boolean }) readonly: boolean;
-  @watch('readonly', { waitUntilFirstUpdate: true })
-  protected _handleReadonlyChange = (_: boolean, readonly: boolean) =>
-    this.interactionElements.forEach(ch => (ch.readonly = readonly));
+
+  protected override willUpdate(changed: PropertyValues): void {
+    super.willUpdate(changed);
+    if (changed.has('readonly') && (this.readonly ?? false) !== (this._context.readonly ?? false)) {
+      this._context = { ...this._context, readonly: !!this.readonly };
+    }
+  }
 
   @provide({ context: itemContext })
   private _context: ItemContext = {
@@ -136,23 +145,6 @@ export class QtiAssessmentItem extends LitElement {
     if (this.#templatesProcessed && templatesChanged) {
       this.#runTemplateProcessing();
     }
-
-    this._context.variables.forEach(variable => {
-      if (variable.type === 'response') {
-        const interactionElement = this.interactionElements.find(
-          (el: RegisteredInteraction) => el.responseIdentifier === variable.identifier
-        );
-        if (interactionElement) {
-          interactionElement.response = variable.value as string | string[];
-        }
-      }
-    });
-
-    this.variables.forEach(variable => {
-      if (variable.type === 'outcome') {
-        this.#feedbackElements.forEach(fe => fe.checkShowFeedback(variable.identifier));
-      }
-    });
   }
 
   public get state(): ItemContext['state'] {
@@ -174,7 +166,6 @@ export class QtiAssessmentItem extends LitElement {
    */
   #restoredTemplateValues = new Map<string, Readonly<string | string[]>>();
   #templatesProcessed = false;
-  #feedbackElements: QtiFeedback[] = [];
   /** Registered candidate-input interactions. Correction packages may extend their presentation behavior. */
   protected interactionElements: RegisteredInteraction[] = [];
 
@@ -223,7 +214,6 @@ export class QtiAssessmentItem extends LitElement {
 
   #attachEventListeners() {
     this.addEventListener('qti-register-variable', this.#handleRegisterVariable);
-    this.addEventListener('qti-register-feedback', this.#handleRegisterFeedback);
     this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.addEventListener('end-attempt', this.#handleEndAttempt);
     this.addEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
@@ -234,7 +224,6 @@ export class QtiAssessmentItem extends LitElement {
 
   #removeEventListeners() {
     this.removeEventListener('qti-register-variable', this.#handleRegisterVariable);
-    this.removeEventListener('qti-register-feedback', this.#handleRegisterFeedback);
     this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.removeEventListener('end-attempt', this.#handleEndAttempt);
     this.removeEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
@@ -251,16 +240,6 @@ export class QtiAssessmentItem extends LitElement {
     this._context = { ...this._context, variables: [...this._context.variables, registered] };
     this.#initialContext = this._context;
     e.stopPropagation();
-  };
-
-  #handleRegisterFeedback = (e: CustomEvent<QtiFeedback>) => {
-    e.stopImmediatePropagation();
-    const feedbackElement = e.detail;
-    this.#feedbackElements.push(feedbackElement);
-    const numAttempts = Number(this._context.variables.find(v => v.identifier === 'numAttempts')?.value) || 0;
-    if (numAttempts > 0) {
-      feedbackElement.checkShowFeedback(feedbackElement.outcomeIdentifier);
-    }
   };
 
   #handleRegisterInteraction = (e: CustomEvent<{ interaction: string; interactionElement: RegisteredInteraction }>) => {
@@ -568,7 +547,6 @@ export class QtiAssessmentItem extends LitElement {
         };
       })
     };
-    this.#feedbackElements.forEach(fe => fe.checkShowFeedback(identifier));
 
     this.dispatchEvent(
       new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {

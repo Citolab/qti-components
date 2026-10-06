@@ -241,13 +241,32 @@ members hosts depend on. Before changing internals:
 
 ## Phase 2: Interactions and feedback read from item context (C1–C3)
 
-- [ ] Interactions adopt their response from `itemContext` in `willUpdate`,
-      skipping values equal to what they last emitted (see the caveat above),
-      and keep working without an enclosing item.
-- [ ] `qti-feedback` derives `showStatus` from `itemContext`. `checkShowFeedback()`
-      stays public.
-- [ ] `readonly` flows through context instead of being copied by hand.
-- [ ] Changelog note about the timing change.
+- [x] Interactions adopt their response from `itemContext` (`Interaction`, `qti-base`). Done
+      with a `ContextConsumer` callback, not `willUpdate`: a subclass overriding `willUpdate`
+      without `super` would silently skip it, and a callback keeps the timing the item's push
+      had, so there is no timing change for a rendered interaction. The rules that keep it from
+      fighting the candidate:
+  - it reacts only to a change in _this_ response's value, not to any context update;
+  - it skips a value equal to what the interaction last published. That is tracked from the
+    interaction's own `qti-interaction-response` events, which every emitter dispatches on the
+    interaction, and not by reading `response` back: the getter has no common shape (the
+    drag-drop interactions return one comma-joined string where they publish an array), and
+    comparing against it broke the associate interaction;
+  - the first value is adopted only when it is non-empty, so an unanswered item does not wipe a
+    `response` attribute;
+  - before the first render it waits, then looks at the latest value.
+- [x] `qti-feedback` decides its own `showStatus` from `itemContext` (`ContextConsumer`
+      callback, synchronous), when its outcome changed or once an attempt was made.
+      `checkShowFeedback()` stays public. The item no longer keeps a list of feedback elements and
+      the `qti-register-feedback` event is gone.
+- [x] `readonly` flows through context (`ItemContext.readonly`). A `readonly` attribute on the item
+      from the start now applies; before, only a change after first render did.
+- [ ] `disabled` is still pushed by the item, the same way `readonly` was. Same treatment, not done.
+- [x] Changeset with the notes above.
+
+Not changed after all: a host that sets `item.variables` and reads `interaction.response` straight
+after still sees the new value, because the adoption is synchronous for a rendered interaction.
+The contract stories (`qti-assessment-item.api.stories.ts`) pin that, plus the three adopt rules.
 
 Risk found by the host survey: the timing change is not only about reading
 `interaction.response` after setting `variables`. Kennisnet calls
