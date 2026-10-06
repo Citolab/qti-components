@@ -3,7 +3,6 @@ import { LitElement, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import { itemContext, itemContextVariables } from '@qti-components/base';
-import { watch } from '@qti-components/utilities';
 
 import type { PropertyValues } from 'lit';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
@@ -52,11 +51,11 @@ export class QtiAssessmentItem extends LitElement {
     this.setAttribute('data-title', value);
   }
 
+  /**
+   * Locks the item, for example once it is submitted. Published in the item context, which the
+   * interactions inside follow, so the item keeps no list of them to set it on.
+   */
   @property({ type: Boolean }) disabled: boolean;
-  @watch('disabled', { waitUntilFirstUpdate: true })
-  protected _handleDisabledChange = (_: boolean, disabled: boolean) => {
-    this.interactionElements.forEach(ch => (ch.disabled = disabled));
-  };
 
   /**
    * Shows the item for reading only. Published in the item context, which the interactions inside
@@ -66,8 +65,14 @@ export class QtiAssessmentItem extends LitElement {
 
   protected override willUpdate(changed: PropertyValues): void {
     super.willUpdate(changed);
-    if (changed.has('readonly') && (this.readonly ?? false) !== (this._context.readonly ?? false)) {
-      this._context = { ...this._context, readonly: !!this.readonly };
+    const readonlyChanged = changed.has('readonly') && (this.readonly ?? false) !== (this._context.readonly ?? false);
+    const disabledChanged = changed.has('disabled') && (this.disabled ?? false) !== (this._context.disabled ?? false);
+    if (readonlyChanged || disabledChanged) {
+      this._context = {
+        ...this._context,
+        ...(readonlyChanged ? { readonly: !!this.readonly } : {}),
+        ...(disabledChanged ? { disabled: !!this.disabled } : {})
+      };
     }
   }
 
