@@ -261,7 +261,9 @@ members hosts depend on. Before changing internals:
       the `qti-register-feedback` event is gone.
 - [x] `readonly` flows through context (`ItemContext.readonly`). A `readonly` attribute on the item
       from the start now applies; before, only a change after first render did.
-- [ ] `disabled` is still pushed by the item, the same way `readonly` was. Same treatment, not done.
+- [x] `disabled` is published in `ItemContext.disabled` and followed like `readonly` (PR after #228). The
+      item keeps no interaction list for it anymore. An interaction authored `disabled` stays so inside an
+      item that does not mention it.
 - [x] Changeset with the notes above.
 
 Not changed after all: a host that sets `item.variables` and reads `interaction.response` straight

@@ -11,6 +11,8 @@ export interface ItemContext {
   state?: Record<string, string | null>;
   /** The item is shown for reading only. Interactions follow it; see `qti-assessment-item`'s `readonly`. */
   readonly?: boolean;
+  /** The item is locked, for example after it was submitted. Interactions follow it; see `qti-assessment-item`'s `disabled`. */
+  disabled?: boolean;
 }
 
 export const itemContextVariables = [

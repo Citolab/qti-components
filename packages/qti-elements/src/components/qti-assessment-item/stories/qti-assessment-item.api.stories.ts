@@ -217,6 +217,41 @@ export const Disabled: StoryObj = {
   }
 };
 
+/** Set from the start, as an attribute: the interactions come up disabled. */
+export const DisabledFromTheStart: StoryObj = {
+  render,
+  play: async ({ canvasElement }) => {
+    const { host, item } = await readyItem(canvasElement);
+    item.setAttribute('disabled', '');
+    await item.updateComplete;
+
+    await waitFor(() => expect(host.querySelector('qti-choice-interaction').hasAttribute('disabled')).toBe(true));
+  }
+};
+
+/** An interaction the author disabled stays so inside an item that says nothing about it. */
+export const AuthoredDisabledSurvivesAnItemThatSaysNothing: StoryObj = {
+  render: () =>
+    html`<div data-testid="host">
+      <qti-assessment-item identifier="authored" title="Authored">
+        <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+        </qti-response-declaration>
+        <qti-item-body>
+          <qti-choice-interaction response-identifier="RESPONSE" max-choices="1" disabled>
+            <qti-simple-choice identifier="a">A</qti-simple-choice>
+          </qti-choice-interaction>
+        </qti-item-body>
+      </qti-assessment-item>
+    </div>`,
+  play: async ({ canvasElement }) => {
+    const { host, item } = await readyItem(canvasElement);
+    item.setOutcomeVariable('SCORE', '1');
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    expect(host.querySelector('qti-choice-interaction').hasAttribute('disabled')).toBe(true);
+  }
+};
+
 /** `readonly` on the item reaches its interactions, and turning it off reaches them again. */
 export const Readonly: StoryObj = {
   render,

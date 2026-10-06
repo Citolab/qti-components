@@ -35,16 +35,21 @@ export abstract class Interaction extends LitElement implements ValidatableInter
   }
 
   #seenReadonly?: boolean;
+  #seenDisabled?: boolean;
 
   /**
-   * Follows the item: its `readonly`, and the value it holds for this response. `readonly` is only
-   * taken when the item says something, so an interaction authored `readonly` stays so inside an
-   * item that does not mention it.
+   * Follows the item: its `readonly` and `disabled`, and the value it holds for this response.
+   * `readonly` and `disabled` are only taken when the item says something, so an interaction
+   * authored with either stays so inside an item that does not mention it.
    */
   #followItem(context: ItemContext | undefined) {
     if (context?.readonly !== undefined && context.readonly !== this.#seenReadonly) {
       this.#seenReadonly = context.readonly;
       this.readonly = context.readonly;
+    }
+    if (context?.disabled !== undefined && context.disabled !== this.#seenDisabled) {
+      this.#seenDisabled = context.disabled;
+      this.disabled = context.disabled;
     }
     this.#adoptResponse(context);
   }
