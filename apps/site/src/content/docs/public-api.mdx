@@ -37,6 +37,12 @@ Everything you call on, listen to or configure around a `<qti-test>`.
 | `navigate="item"` / `navigate="section"`     | **Supported** | What one screen shows: a single item, or every item of a section. |
 | `qti-request-navigation` (dispatched by you) | **Supported** | The event `navigateTo` sends. Use it where you only have the DOM. |
 
+### Scoring the test
+
+| Member                        | Status        | Notes                                                                                                                         |
+| ----------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `qtiTest.outcomeProcessing()` | **Supported** | Runs the test's own outcome processing and returns whether it found any. See [Scoring & State](/qti-test/scoring-and-state/). |
+
 ### Configuring delivery
 
 | Member                                    | Status         | Notes                                                                                                                                                                       |
