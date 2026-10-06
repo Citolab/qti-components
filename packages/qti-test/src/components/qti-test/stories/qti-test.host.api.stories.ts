@@ -569,3 +569,29 @@ export const ItemValidityAfterRestore: StoryObj = {
     await waitFor(() => expect(computedItems(canvasElement).REQ.valid).toBe(true), { timeout: 4000 });
   }
 };
+
+/**
+ * `postLoadTestTransformCallback` is set on `qti-test` and applied by the `test-container`. A host
+ * that renders its navigation and container inside a component's own shadow root still expects it
+ * to run: context crosses a shadow root, and looking the test up with `closest()` does not.
+ */
+export const PostLoadTestTransformCallbackInsideAShadowRoot: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const test = document.createElement('qti-test') as QtiTest;
+    test.setAttribute('navigate', 'item');
+    const callback = fn(async (transformer: unknown) => transformer);
+    test.postLoadTestTransformCallback = callback as unknown as QtiTest['postLoadTestTransformCallback'];
+
+    const wrapper = document.createElement('div');
+    const root = wrapper.attachShadow({ mode: 'open' });
+    root.innerHTML = `<test-navigation><test-container test-url="${STIMULUS_TEST}"></test-container></test-navigation>`;
+    test.append(wrapper);
+    const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+    hostOf(canvasElement).append(test);
+    await loaded;
+
+    expect(callback).toHaveBeenCalledTimes(1);
+  }
+};
