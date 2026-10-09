@@ -105,6 +105,63 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 | read `internals.states` / set `internals.ariaChecked`                                  | K (`draggables.ts:65`), C (stats)                         | **I**                                             |
 | internal class names `.full-correct-response`, `span.correct-option`, `part~="point"`  | K                                                         | **I** unless promoted to `::part` / custom states |
 
+### Plugin tier: test plugins
+
+A test plugin is a set of elements placed inside `<test-navigation>` that uses only this tier;
+the test does not import, register or refer to it (guide: Storybook "Guides / Test plugins";
+first plugin: `@qti-components/test/tts`). Hosts do not use contexts (only PeilingLezen consumes
+`computedContext`/`testContext`); they use properties and events. So this tier is small on purpose.
+
+| Member                                                                 | Hosts       | Status                                                                                                                                                                       |
+| ---------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| consume `computedContext`                                              | P           | **S**: the one read model: structure, position (`active`), item state, `view`. Provided by `test-navigation`, so plugins live inside it                                      |
+| `computedContext.itemElement(identifier)`                              | —           | **S**, new: the rendered `qti-assessment-item`, looked up when called. Replaces `testItemsContext` (never released). A function, so `JSON.stringify` skips it                |
+| request: navigate, end attempt, update an outcome, switch view         | K, C (some) | **S** under the new names below                                                                                                                                              |
+| notification: navigated                                                | —           | **S**, new: sent only after a navigation succeeded and rendered. Hosts now treat `qti-request-navigation` as "navigated", which is wrong when linear mode refuses it         |
+| consume `sessionContext`, `testContext`, `configContext`, `qtiContext` | P (`test`)  | **not plugin API**: `sessionContext` duplicates position and `view`; `testContext` is the responses/outcomes model for hosts and persistence; config and seed are host input |
+
+### Event naming: public or internal
+
+The name of an event says whether it is public. Today `qti-` covers both plumbing
+(`qti-register-variable`, `qti-item-context-updated`) and supported events (`qti-state-changed`),
+and `test-`/`item-` are used by elements and by internal or deprecated requests
+(`test-show-correct-response`, `item-switch-view`), so neither prefix tells you.
+
+- **Public events use one prefix that nothing else uses.** Decided: `cito-`, in line with the
+  namespace policy (`qti-` belongs to 1EdTech; ours are `cito-`). The scope follows the prefix:
+  `cito-test-*`, `cito-item-*`. Alternatives considered: `test-`/`item-` (shares the prefix with
+  element tags and internal requests).
+- **Everything else is internal** and keeps its name (`qti-*`, `register-*`, `activate-*`, …).
+  Internal names may change in any release and are not documented.
+- **Public is checkable, not only a convention:** one module declares the public events (name,
+  `detail` type, scope, kind) and augments `HTMLElementEventMap`; a spec fails when a `cito-` event
+  is dispatched that is not in it, or a declared one is removed.
+- **Requests are verbs, notifications are past tense.** All public events bubble and are composed.
+  No `on-` prefix (frameworks read `on` as a handler prefix) and no `:` (Angular reads `(a:b)` as a
+  target).
+
+| Today                                             | Public name                                                | Kind         | Hosts                  | Path                                                                       |
+| ------------------------------------------------- | ---------------------------------------------------------- | ------------ | ---------------------- | -------------------------------------------------------------------------- |
+| `qti-request-navigation` `{type,id}`              | `cito-test-navigate`                                       | request      | K, C, P, Playground, … | old name **D**, both handled until the next major                          |
+| `test-end-attempt`                                | `cito-test-end-attempt`                                    | request      | —                      | old name **D**, both handled: no host uses it, but topic pages document it |
+| `test-update-outcome-variable`                    | `cito-test-update-outcome`                                 | request      | —                      | old name **D**, both handled: no host uses it, but topic pages document it |
+| `on-test-switch-view`                             | `cito-test-switch-view`                                    | request      | K, C, Playground, …    | old name **D**; decision 6 adds the `view` property too                    |
+| — (new)                                           | `cito-test-navigated` `{type,id}`                          | notification | —                      | new                                                                        |
+| `qti-navigation-loading-started`                  | `cito-test-navigation-started`                             | notification | C, Playground          | old name **D**, both sent                                                  |
+| `qti-navigation-error`                            | `cito-test-navigation-failed`                              | notification | Playground             | old name **D**, both sent                                                  |
+| `qti-navigation-loading-ended`                    | — (use navigated / failed)                                 | —            | Playground             | **D**: it also fires on failure and cancellation                           |
+| `qti-test-loaded` `[{identifier,element}]`        | `cito-test-rendered`                                       | notification | K, C, P, Playground, … | old name **D**, both sent                                                  |
+| `qti-assessment-test-connected`                   | `cito-test-loaded`                                         | notification | all                    | old name **D**, both sent                                                  |
+| `qti-assessment-item-connected`                   | `cito-item-rendered`                                       | notification | all                    | old name stays as internal plumbing; **D** for hosts                       |
+| `qti-assessment-item-ref-connected`               | `cito-item-ref-connected`                                  | notification | K                      | old name **D**, both sent                                                  |
+| `qti-state-changed`                               | `cito-test-state-changed`                                  | notification | —                      | old name **D**, both sent                                                  |
+| `qti-interaction-changed` / `qti-outcome-changed` | `cito-item-response-changed` / `cito-item-outcome-changed` | notification | K, C, P, examenkompas  | old names **D**, both sent                                                 |
+| `qti-rubric:discretionary-placement`              | `cito-item-rubric-placement`                               | notification | K, qti-player          | old name **D**, both sent                                                  |
+| `qti-test-context-updated`                        | —                                                          | —            | K, C                   | stays **D** (decision 8); no new name                                      |
+
+"Both sent / both handled" means one helper dispatches (or listens for) the old and the new name
+for one minor; the old name goes in the next major, with `plans/host-migration/*` entries.
+
 ## Decisions and gaps
 
 1. **State contract.** `QtiTestState` is right for both hosts. Neither needs config, view or
@@ -127,6 +184,22 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
    proposes element names, custom states and parts as the styling contract; check the patches
    above against it.
 8. **`qti-test-context-updated` stays (deprecated)** until both main hosts are on `state`.
+9. **Plugins read one context.** `computedContext` gains `itemElement(identifier)`;
+   `testItemsContext` is removed before it is released. Plugins live inside `<test-navigation>`
+   (open question: whether `test-navigation` becomes mandatory). `testContext` stays the host's
+   model of responses and outcomes.
+10. **A real "navigated" notification.** Hosts listen to the navigation request, or to
+    `qti-navigation-loading-ended`, which also fires on failure and cancellation.
+11. **Hosts patch our DOM because two hooks are missing:** "rendered, here are the elements" and a
+    supported way to style inside `test-container`. Hosts use MutationObservers and shadow-root
+    queries for both (K, C, Playground); the library should not add observers, it should offer the
+    hooks (`cito-test-rendered`, `itemElement`, the styling tier).
+12. **Highlights become a native test plugin** (now `dep-textmarker` in C, Playground and
+    examenkompas, stored in localStorage per item). It needs per-item plugin state in
+    `state.session` and the anchors from decision 4.
+13. **The public prefix is `cito-`** (decided 2026-10-09). Nothing else uses it, so the name alone
+    says an event is public; `test-`/`item-` were rejected because elements and internal requests
+    already use them.
 
 ## Next steps
 
@@ -140,3 +213,10 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 - [ ] Styling tier: map what Kennisnet and CitoTestUit patch onto `plans/css-contract-audit.md`,
       then decide parts and states.
 - [ ] Optional: survey PeilingLezen in depth, and the 2.x–6.x hosts if their usage still matters.
+- [x] Decide the public event prefix: `cito-` (decision 13).
+- [ ] Public-events module + spec, rename the
+      unreleased and unused names, dual-dispatch the host-used ones, migration entries per host.
+- [x] `computedContext.itemElement`; remove `testItemsContext`; text-to-speech reads only
+      `computedContext`.
+- [ ] `cito-test-navigated`.
+- [ ] Highlight plugin, after per-item plugin state in `state.session`.

@@ -84,15 +84,16 @@ Members of `<qti-assessment-item>`, for hosts that score outside the browser or 
 
 ## Extending
 
-| Member                                       | Status        | Notes                                                                                      |
-| -------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------ |
-| `postLoadTransformCallback`                  | **Supported** | Change an item's DOM after it is transformed.                                              |
-| `postLoadTestTransformCallback`              | **Supported** | The same for a test document.                                                              |
-| `transformer.extendElementName(tag, suffix)` | **Supported** | Register your own subclass under a suffixed tag name.                                      |
-| `<template item-ref>` on `qti-test`          | **Supported** | Wrap each item in your own markup.                                                         |
-| Subclassing `Interaction`                    | **Supported** | Write your own interaction. See [Extending interactions](/guides/extending-interactions/). |
-| Subclassing `QtiFeedback`                    | **Supported** | A base class.                                                                              |
-| Subclassing `Qti*InteractionCorrection`      | **Supported** | A base class.                                                                              |
+| Member                                       | Status        | Notes                                                                                                                                                                                                        |
+| -------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `postLoadTransformCallback`                  | **Supported** | Change an item's DOM after it is transformed.                                                                                                                                                                |
+| `postLoadTestTransformCallback`              | **Supported** | The same for a test document.                                                                                                                                                                                |
+| `transformer.extendElementName(tag, suffix)` | **Supported** | Register your own subclass under a suffixed tag name.                                                                                                                                                        |
+| `<template item-ref>` on `qti-test`          | **Supported** | Wrap each item in your own markup.                                                                                                                                                                           |
+| Subclassing `Interaction`                    | **Supported** | Write your own interaction. See [Extending interactions](/guides/extending-interactions/).                                                                                                                   |
+| Subclassing `QtiFeedback`                    | **Supported** | A base class.                                                                                                                                                                                                |
+| Subclassing `Qti*InteractionCorrection`      | **Supported** | A base class.                                                                                                                                                                                                |
+| Test plugins reading `computedContext`       | **Supported** | Elements inside `test-navigation`; `computedContext.itemElement(identifier)` gives the rendered item. See the [Test plugins guide](https://qti-components.citolab.nl/?path=/docs/guides-test-plugins--docs). |
 
 The base classes (`Interaction`, `QtiFeedback`) and the contexts (`testContext`, `computedContext`,
 `configContext`) are exported from `@citolab/qti-components/qti-base`. The old deep `/exports/*`

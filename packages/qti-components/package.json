@@ -62,6 +62,10 @@
       "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
     },
+    "./tts": {
+      "types": "./dist/tts.d.ts",
+      "import": "./dist/tts.js"
+    },
     "./item.css": "./dist/item.css",
     "./cdn/*": "./cdn/*",
     "./package.json": "./package.json",

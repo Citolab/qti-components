@@ -1,3 +1,4 @@
+import remarkGfm from 'remark-gfm';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import type { StorybookConfig } from '@storybook/web-components-vite';
@@ -71,6 +72,31 @@ const config: StorybookConfig = {
             titlePrefix: 'Test'
           },
           {
+            directory: '../packages/qti-test/src/components',
+            files: '**/*.mdx',
+            titlePrefix: 'Test'
+          },
+          {
+            directory: '../packages/qti-test/src/guides',
+            files: '**/*.stories.*',
+            titlePrefix: 'Guides'
+          },
+          {
+            directory: '../packages/qti-test/src/guides',
+            files: '**/*.mdx',
+            titlePrefix: 'Guides'
+          },
+          {
+            directory: '../packages/qti-test/src/tts',
+            files: '**/*.stories.*',
+            titlePrefix: 'Test'
+          },
+          {
+            directory: '../packages/qti-test/src/tts',
+            files: '**/*.mdx',
+            titlePrefix: 'Test'
+          },
+          {
             directory: '../packages/qti-theme/src',
             files: '**/*.stories.*',
             titlePrefix: 'Theme'
@@ -82,7 +108,11 @@ const config: StorybookConfig = {
     '@storybook/addon-themes',
     '@chromatic-com/storybook',
     '@storybook/addon-vitest',
-    '@storybook/addon-docs'
+    {
+      name: '@storybook/addon-docs',
+      // GitHub-flavoured Markdown (tables, strikethrough, task lists) in .mdx docs pages.
+      options: { mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } } }
+    }
   ],
   framework: {
     name: '@storybook/web-components-vite',

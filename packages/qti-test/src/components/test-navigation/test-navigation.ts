@@ -190,10 +190,13 @@ export class TestNavigation extends LitElement {
   #assessmentItemFor(identifier: string | undefined): QtiAssessmentItem | undefined {
     if (!identifier) return undefined;
     const itemRef = this.#testElement?.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${identifier}"]`
+      `qti-assessment-item-ref[identifier="${CSS.escape(identifier)}"]`
     );
     return itemRef?.assessmentItem ?? undefined;
   }
+
+  /** `computedContext.itemElement`: one function for the life of this element, carried along by every update. */
+  #itemElement = (identifier: string): HTMLElement | null => this.#assessmentItemFor(identifier) ?? null;
 
   /** The currently active assessment item, exposed for optional presentation extensions. */
   protected get activeAssessmentItem(): QtiAssessmentItem | undefined {
@@ -286,6 +289,7 @@ export class TestNavigation extends LitElement {
 
     const testPartElements = Array.from(this.#testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
+      itemElement: this.#itemElement,
       identifier: this.#testElement.identifier,
       title: this.#testElement.title,
       view: this._sessionContext?.view,

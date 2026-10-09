@@ -127,6 +127,7 @@ function elementManifestDefinitionsPlugin() {
 function componentTypePath(_name, _tag, modulePath = '') {
   const entryByPrefix = [
     ['packages/interactions/', './interactions.js'],
+    ['packages/qti-test/src/tts/', './tts.js'],
     ['packages/qti-test/', './test.js'],
     ['packages/qti-item/', './item.js'],
     ['packages/qti-elements/', './elements.js'],
@@ -145,6 +146,7 @@ export default {
     'packages/qti-base/src/**/*.ts',
     'packages/qti-item/src/components/**/*.ts',
     'packages/qti-test/src/components/**/*.ts',
+    'packages/qti-test/src/tts/**/*.ts',
     'packages/qti-elements/src/components/**/*.ts',
     'packages/interactions/*/src/**/*.ts',
     'packages/interactions/core/src/elements/**/*.ts',

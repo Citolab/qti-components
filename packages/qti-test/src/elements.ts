@@ -12,16 +12,6 @@ import { TestCheckItem } from './components/test-check-item/test-check-item';
 import { TestContainer } from './components/test-container/test-container';
 import { TestEndAttempt } from './components/test-end-attempt/test-end-attempt';
 import { TestItemLink } from './components/test-item-link/test-item-link';
-import {
-  TestItemToSpeech,
-  TestTtsNext,
-  TestTtsPause,
-  TestTtsPick,
-  TestTtsPlay,
-  TestTtsPrev,
-  TestTtsResume,
-  TestTtsStop
-} from './components/test-item-to-speech/test-item-to-speech';
 import { TestNavigation } from './components/test-navigation/test-navigation';
 import { TestNext } from './components/test-next/test-next';
 import { TestPagingButtonsStamp } from './components/test-paging-buttons-stamp/test-paging-buttons-stamp';
@@ -35,6 +25,11 @@ import { TestSectionLink } from './components/test-section-link/test-section-lin
 import { TestStamp } from './components/test-stamp/test-stamp';
 import { TestView } from './components/test-view-toggle/test-view';
 import { TestViewToggle } from './components/test-view-toggle/test-view-toggle';
+// tts-plugin: Step-A compatibility, remove in the next major. Text-to-speech is the opt-in
+// plugin `@qti-components/test/tts`; it is still listed here so this release does not break.
+import { ttsElements } from './tts/elements'; // tts-plugin: Step-A compatibility
+
+export * from './tts/elements'; // tts-plugin: Step-A compatibility (deprecated here; removed in the next major)
 
 export {
   QtiAssessmentItemRef,
@@ -51,7 +46,6 @@ export {
   TestContainer,
   TestEndAttempt,
   TestItemLink,
-  TestItemToSpeech,
   TestNavigation,
   TestNext,
   TestPagingButtonsStamp,
@@ -63,13 +57,6 @@ export {
   TestSectionButtonsStamp,
   TestSectionLink,
   TestStamp,
-  TestTtsNext,
-  TestTtsPause,
-  TestTtsPick,
-  TestTtsPlay,
-  TestTtsPrev,
-  TestTtsResume,
-  TestTtsStop,
   TestView,
   TestViewToggle
 };
@@ -89,7 +76,6 @@ export const qtiTestElements = [
   { tag: 'test-container', ctor: TestContainer },
   { tag: 'test-end-attempt', ctor: TestEndAttempt },
   { tag: 'test-item-link', ctor: TestItemLink },
-  { tag: 'test-item-to-speech', ctor: TestItemToSpeech },
   { tag: 'test-navigation', ctor: TestNavigation },
   { tag: 'test-next', ctor: TestNext },
   { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },
@@ -101,13 +87,7 @@ export const qtiTestElements = [
   { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },
   { tag: 'test-section-link', ctor: TestSectionLink },
   { tag: 'test-stamp', ctor: TestStamp },
-  { tag: 'test-tts-next', ctor: TestTtsNext },
-  { tag: 'test-tts-pause', ctor: TestTtsPause },
-  { tag: 'test-tts-pick', ctor: TestTtsPick },
-  { tag: 'test-tts-play', ctor: TestTtsPlay },
-  { tag: 'test-tts-prev', ctor: TestTtsPrev },
-  { tag: 'test-tts-resume', ctor: TestTtsResume },
-  { tag: 'test-tts-stop', ctor: TestTtsStop },
   { tag: 'test-view', ctor: TestView },
-  { tag: 'test-view-toggle', ctor: TestViewToggle }
+  { tag: 'test-view-toggle', ctor: TestViewToggle },
+  ...ttsElements // tts-plugin: Step-A compatibility
 ] as const;
