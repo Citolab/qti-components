@@ -439,11 +439,12 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         return;
       }
 
-      const elements = stimulus.querySelectorAll('qti-stimulus-body, qti-stylesheet');
-      console.info(`Found ${elements.length} stimulus elements to apply for ${element.identifier}`);
+      // Place the whole qti-assessment-stimulus, not just its body: its `lang` is what the stimulus
+      // content inherits its language from.
+      const root = stimulus.querySelector('qti-assessment-stimulus');
 
-      if (elements.length === 0) {
-        console.warn('No qti-stimulus-body or qti-stylesheet elements found in stimulus');
+      if (!root) {
+        console.warn('No qti-assessment-stimulus element found in stimulus');
         return;
       }
 
@@ -480,8 +481,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       // Apply content to all targets
       targets.forEach((target, index) => {
         target.innerHTML = '';
-        const clonedElements = Array.from(elements).map(el => el.cloneNode(true) as Element);
-        target.append(...clonedElements);
+        target.append(root.cloneNode(true));
         console.info(`Applied stimulus content to target ${index + 1}/${targets.length}`);
       });
     } // ===========================================

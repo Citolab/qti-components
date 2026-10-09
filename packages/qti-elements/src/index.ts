@@ -1,6 +1,7 @@
 import './register';
 
 export * from './components/qti-assessment-item/qti-assessment-item';
+export * from './components/qti-assessment-stimulus/qti-assessment-stimulus';
 export * from './components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';
 export * from './components/qti-companion-materials-info/qti-companion-materials-info';
 export * from './components/qti-custom-operator/qti-custom-operator';
