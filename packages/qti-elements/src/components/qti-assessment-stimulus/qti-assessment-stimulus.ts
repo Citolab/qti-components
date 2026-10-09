@@ -15,10 +15,19 @@ import type { CSSResultGroup } from 'lit';
  * `xml:lang` (transformed to `lang`): the content inherits its language from here, which is what
  * text-to-speech and screen readers use to pick a voice.
  *
+ * Its QTI `title` is removed on connect: it names the stimulus for authors browsing a repository,
+ * and as an HTML `title` it would show as a tooltip over the whole passage and be announced by
+ * screen readers.
+ *
  * @slot - stimulus content: `qti-stylesheet`, `qti-stimulus-body` and `qti-catalog-info` (hidden).
  */
 export class QtiAssessmentStimulus extends LitElement {
   static override styles: CSSResultGroup = styles;
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.removeAttribute('title');
+  }
 
   override render() {
     return html`<slot></slot>`;

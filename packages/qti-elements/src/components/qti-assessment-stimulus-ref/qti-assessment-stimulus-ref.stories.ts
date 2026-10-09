@@ -111,6 +111,43 @@ export const StimulusLoadedByTestPlacedInTest: Story = {
   }
 };
 
+/*
+ * The whole qti-assessment-stimulus is placed, so its content inherits the stimulus' language
+ * (xml:lang="eng" in the fixture). Its required QTI title must not come along as an HTML title,
+ * or it would show as a tooltip over the whole passage.
+ */
+export const StimulusContentTakesLangButNotTitle: Story = {
+  render: _args =>
+    html`<qti-test>
+      <qti-assessment-test>
+        <qti-assessment-item-ref identifier="Item1">
+          <qti-assessment-item identifier="Item1">
+            <qti-assessment-stimulus-ref
+              identifier="Stimulus1"
+              href="assets/qti-assessment-stimulus-ref/unbelievableNight.xml"
+              title="An Unbelievable Night"
+            ></qti-assessment-stimulus-ref>
+            <qti-item-body>
+              <div class="qti-base-stimulus" data-stimulus-idref="Stimulus1"></div>
+            </qti-item-body>
+          </qti-assessment-item>
+        </qti-assessment-item-ref>
+      </qti-assessment-test>
+    </qti-test>`,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const passage = await canvas.findByText(/was ten years old/, {}, { timeout: 5000 });
+
+    await step('Passage inherits the stimulus language', async () => {
+      expect(passage.closest('[lang]')).toHaveAttribute('lang', 'eng');
+    });
+
+    await step('Passage has no title tooltip from the stimulus', async () => {
+      expect(passage.closest('[title]')).toBeNull();
+    });
+  }
+};
+
 export const ItemAndStimulusLoadedByTestWithPlacement: Story = {
   render: _args =>
     html` <style>
