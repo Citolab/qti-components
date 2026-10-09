@@ -1,0 +1,27 @@
+From 8b066001aeb5e0e321354a44422315231ac14cd2 Mon Sep 17 00:00:00 2001
+From: qti-components-migration <migration@local>
+Date: Fri, 9 Oct 2026 17:29:27 +0200
+Subject: [PATCH 4/6] qti: drop cache-transform; the attribute was removed in
+ 8.0
+
+---
+ projects/shared/src/lib/qti/test-navigation.ts | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/projects/shared/src/lib/qti/test-navigation.ts b/projects/shared/src/lib/qti/test-navigation.ts
+index 2c2d8c4..5da086d 100644
+--- a/projects/shared/src/lib/qti/test-navigation.ts
++++ b/projects/shared/src/lib/qti/test-navigation.ts
+@@ -6,9 +6,6 @@ import { store } from '../player/store/player-store';
+ @Directive({
+   // eslint-disable-next-line @angular-eslint/directive-selector
+   selector: 'test-navigation',
+-  host: {
+-    'cache-transform': 'true',
+-  },
+ })
+ export class TestNavigationDirective implements AfterViewInit, OnDestroy {
+   private mo?: MutationObserver;
+-- 
+2.47.0
+
