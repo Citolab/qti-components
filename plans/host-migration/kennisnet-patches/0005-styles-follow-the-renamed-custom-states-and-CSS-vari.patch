@@ -1,0 +1,176 @@
+From ddab5223ac24ceaef0538bb70f8f961614ebc21d Mon Sep 17 00:00:00 2001
+From: qti-components-migration <migration@local>
+Date: Fri, 9 Oct 2026 17:29:27 +0200
+Subject: [PATCH 5/6] styles: follow the renamed custom states and CSS
+ variables (8.0)
+
+:state(--checked) -> :state(checked); --qti-form-size -> --qti-control-size; --qti-gap-size -> --qti-gap; --qti-drop-min-width -> --qti-dropzone-min-width.
+---
+ .../lib/styles/qti/choice-interaction.scss    | 28 +++++++++----------
+ .../lib/styles/qti/hottext-interaction.scss   |  6 ++--
+ .../src/lib/styles/qti/order-interaction.scss |  2 +-
+ .../shell/src/lib/styles/qti/qti-vars.scss    |  4 +--
+ 4 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/projects/shell/src/lib/styles/qti/choice-interaction.scss b/projects/shell/src/lib/styles/qti/choice-interaction.scss
+index 6997132..7eb3374 100644
+--- a/projects/shell/src/lib/styles/qti/choice-interaction.scss
++++ b/projects/shell/src/lib/styles/qti/choice-interaction.scss
+@@ -9,20 +9,20 @@ qti-choice-interaction {
+       background-color: white;
+     }
+ 
+-    &:state(radio):state(--checked)::part(ch) {
++    &:state(radio):state(checked)::part(ch) {
+       border-color: var(--bs-primary);
+       background-color: var(--bs-primary);
+     }
+-    &:state(radio):state(--checked)::part(cha) {
++    &:state(radio):state(checked)::part(cha) {
+       background-color: white;
+-      width: calc(var(--qti-form-size) - 8px);
+-      height: calc(var(--qti-form-size) - 8px);
++      width: calc(var(--qti-control-size) - 8px);
++      height: calc(var(--qti-control-size) - 8px);
+     }
+ 
+-    &:state(checkbox):state(--checked)::part(ch) {
++    &:state(checkbox):state(checked)::part(ch) {
+       background-color: var(--bs-primary);
+     }
+-    &:state(checkbox):state(--checked)::part(cha) {
++    &:state(checkbox):state(checked)::part(cha) {
+       background-color: white;
+     }
+ 
+@@ -31,12 +31,12 @@ qti-choice-interaction {
+     }
+ 
+     &:state(candidate-correct) {
+-      &:state(radio):state(--checked)::part(ch) {
++      &:state(radio):state(checked)::part(ch) {
+         border-color: var(--qti-correct);
+         background-color: var(--qti-correct);
+       }
+ 
+-      &:state(checkbox):state(--checked)::part(ch) {
++      &:state(checkbox):state(checked)::part(ch) {
+         border-color: var(--qti-correct);
+         background-color: var(--qti-correct);
+       }
+@@ -45,12 +45,12 @@ qti-choice-interaction {
+     }
+ 
+     &:state(candidate-incorrect) {
+-      &:state(radio):state(--checked)::part(ch) {
++      &:state(radio):state(checked)::part(ch) {
+         border-color: var(--qti-incorrect);
+         background-color: var(--qti-incorrect);
+       }
+ 
+-      &:state(checkbox):state(--checked)::part(ch) {
++      &:state(checkbox):state(checked)::part(ch) {
+         border-color: var(--qti-incorrect);
+         background-color: var(--qti-incorrect);
+       }
+@@ -61,7 +61,7 @@ qti-choice-interaction {
+ 
+   &.qti-input-control-hidden {
+     & qti-simple-choice {
+-      &:state(--checked),
++      &:state(checked),
+       &[aria-checked='true'] {
+         color: var(--qti-selected-color);
+         background-color: var(--qti-selected-bg);
+@@ -85,19 +85,19 @@ qti-choice-interaction {
+ .full-correct-response {
+   qti-choice-interaction {
+     qti-simple-choice {
+-      &:state(radio):state(--checked)::part(ch) {
++      &:state(radio):state(checked)::part(ch) {
+         border-color: var(--info-color);
+         background-color: var(--info-color);
+       }
+ 
+-      &:state(checkbox):state(--checked)::part(ch) {
++      &:state(checkbox):state(checked)::part(ch) {
+         background-color: var(--info-color);
+       }
+     }
+ 
+     &.qti-input-control-hidden {
+       & qti-simple-choice {
+-        &:state(--checked),
++        &:state(checked),
+         &[aria-checked='true'] {
+           border-color: var(--info-color);
+           background-color: var(--info-color);
+diff --git a/projects/shell/src/lib/styles/qti/hottext-interaction.scss b/projects/shell/src/lib/styles/qti/hottext-interaction.scss
+index 5b04344..fc9c376 100644
+--- a/projects/shell/src/lib/styles/qti/hottext-interaction.scss
++++ b/projects/shell/src/lib/styles/qti/hottext-interaction.scss
+@@ -6,7 +6,7 @@ qti-hottext-interaction {
+     padding: 0.2rem 0.5rem;
+     margin: 0.1rem 0;
+ 
+-    &:state(--checked) {
++    &:state(checked) {
+       background-color: var(--qti-selected-bg);
+       color: var(--qti-selected-color);
+     }
+@@ -44,7 +44,7 @@ qti-hottext-interaction {
+ 
+ qti-hottext-interaction.qti-unselected-hidden {
+   qti-hottext {
+-    &:not(:state(--checked)) {
++    &:not(:state(checked)) {
+       border: none;
+       padding: 0.2rem 0;
+       margin-top: calc(0.1rem + var(--qti-border-thickness));
+@@ -57,7 +57,7 @@ qti-hottext-interaction.qti-unselected-hidden {
+ div.full-correct-response {
+   qti-hottext-interaction {
+     qti-hottext {
+-      &:state(--checked) {
++      &:state(checked) {
+         background-color: var(--info-color);
+         border-color: var(--info-color);
+ 
+diff --git a/projects/shell/src/lib/styles/qti/order-interaction.scss b/projects/shell/src/lib/styles/qti/order-interaction.scss
+index 31b9766..2ae2f07 100644
+--- a/projects/shell/src/lib/styles/qti/order-interaction.scss
++++ b/projects/shell/src/lib/styles/qti/order-interaction.scss
+@@ -109,7 +109,7 @@ qti-order-interaction {
+     &::part(drops) {
+       display: grid;
+       grid-auto-flow: row;
+-      grid-template-columns: repeat(auto-fit, minmax(var(--qti-drop-min-width, 120px), 1fr));
++      grid-template-columns: repeat(auto-fit, minmax(var(--qti-dropzone-min-width, 120px), 1fr));
+       gap: 0.5rem;
+     }
+   }
+diff --git a/projects/shell/src/lib/styles/qti/qti-vars.scss b/projects/shell/src/lib/styles/qti/qti-vars.scss
+index 3700bf8..62cad8c 100644
+--- a/projects/shell/src/lib/styles/qti/qti-vars.scss
++++ b/projects/shell/src/lib/styles/qti/qti-vars.scss
+@@ -17,7 +17,7 @@ test-container {
+   --qti-validation-text: var(--bs-warning-text-emphasis);
+ 
+   /* Gap size */
+-  --qti-gap-size: 1rem;
++  --qti-gap: 1rem;
+ 
+   /* Base colors */
+   --qti-bg: #fff;
+@@ -39,7 +39,7 @@ test-container {
+   --qti-drop-border-radius: calc(var(--qti-border-radius) + var(--qti-border-thickness));
+ 
+   /* Form elements */
+-  --qti-form-size: 1rem;
++  --qti-control-size: 1rem;
+ 
+   /* Order buttons */
+   --qti-order-size: 2rem;
+-- 
+2.47.0
+

@@ -1,0 +1,28 @@
+From a31f950260e2212900db513e425eb366309dcc8b Mon Sep 17 00:00:00 2001
+From: qti-components-migration <migration@local>
+Date: Fri, 9 Oct 2026 17:29:27 +0200
+Subject: [PATCH 2/6] qti: register the elements from the corrections entry
+
+Since 8.0 correction behaviour (showCandidateCorrection, test-show-candidate-correction, correctResponseMode, the answer-key clone) lives in the corrections package. The root entry registers the elements without it, and says nothing.
+---
+ projects/player/src/app/app.ts | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/projects/player/src/app/app.ts b/projects/player/src/app/app.ts
+index cd90307..4bbc2a7 100644
+--- a/projects/player/src/app/app.ts
++++ b/projects/player/src/app/app.ts
+@@ -1,6 +1,9 @@
+ import { Component, signal } from '@angular/core';
+ import { RouterOutlet } from '@angular/router';
+-import '@kennisnet/qti-components';
++// The corrections entry registers every element, with the correction variants on the standard
++// tags: showCandidateCorrection, test-show-candidate-correction, correctResponseMode and the
++// answer-key clone only work when the elements come from here. Import this OR the root, not both.
++import '@kennisnet/qti-components/corrections';
+ 
+ @Component({
+   selector: 'player-app',
+-- 
+2.47.0
+
