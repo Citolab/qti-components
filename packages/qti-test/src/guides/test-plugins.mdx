@@ -34,45 +34,37 @@ does).
 This is the code the story above runs, and its play test is the check that the API it uses still
 works. Three things to notice:
 
-1. **It asks, it does not search.** Which item: `sessionContext.navItemRefId`. Where it is
-   rendered: `testItems.itemElement(identifier)`. It never calls `closest('qti-test')` or looks
-   inside `test-container` — `closest` stops at shadow roots, and where the test keeps its items
-   is the test's business.
-2. **It recounts when the item arrives.** Navigation changes the session context before the new
-   item is rendered, so it also listens for `qti-assessment-item-connected` — on
-   `testItems.eventTarget`, the element where the test's events can be heard.
-3. **It imports only public API**: `lit`, `@lit/context`, and contexts from `@qti-components/base`
-   (`@citolab/qti-components/qti-base` for umbrella users).
+1. **It reads one context.** `computedContext` says which item is active (`active`) and where it
+   is rendered (`itemElement(identifier)`). It never calls `closest('qti-test')` or looks inside
+   `test-container` — `closest` stops at shadow roots, and where the test keeps its items is the
+   test's business.
+2. **It has nothing to listen for.** The context updates on navigation, and again once the new
+   item has rendered, so `render()` simply runs again with the right item.
+3. **It imports only public API**: `lit`, `@lit/context`, and `computedContext` from
+   `@qti-components/base` (`@citolab/qti-components/qti-base` for umbrella users).
 
 ## The public test API
 
-### Contexts
+### One context: `computedContext`
 
-Consume these with `@consume({ context, subscribe: true })`. A context reaches the element only
-when the element sits inside its provider.
+A plugin reads `computedContext` with `@consume({ context: computedContext, subscribe: true })`.
+`test-navigation` provides it, so **a plugin lives inside `<test-navigation>`** — anywhere inside
+it, also inside the item-ref templates, because a context request crosses shadow roots.
 
-| Context            | Provided by       | Gives                                                                                                  |
-| ------------------ | ----------------- | ------------------------------------------------------------------------------------------------------ |
-| `sessionContext`   | `qti-test`        | Where navigation is: `navPartId`, `navSectionId`, `navItemRefId`; and the `view`                       |
-| `testContext`      | `qti-test`        | The items with their variables, and the test's outcome variables                                       |
-| `testItemsContext` | `qti-test`        | `itemElement(identifier)`: the rendered `qti-assessment-item`; `eventTarget`: where test events arrive |
-| `computedContext`  | `test-navigation` | The test's parts, sections and items with their state: `active`, `index`, `valid`, `done`, score, …    |
-| `configContext`    | `qti-test`        | The test's configuration                                                                               |
-| `qtiContext`       | `qti-test`        | `QTI_CONTEXT`: test, candidate and environment identifiers                                             |
+| Member                                                        | Gives                                                                     |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `identifier`, `title`, `view`                                 | The test, and who is looking (`candidate`, `scorer`, …)                   |
+| `testParts[].sections[].items[]`                              | The structure, with `active` on the part, section and item that are shown |
+| an item: `index`, `valid`, `done`, `completionStatus`, score… | The state of each item                                                    |
+| `itemElement(identifier)`                                     | The rendered `qti-assessment-item`, or `null` when it is not on the page  |
 
-Read data from the data contexts (`session`, `test`, `computed`). Use `testItemsContext` only when
-you need the rendered item itself — its text, its elements — and ask again after every navigation:
-the element for an identifier is replaced when the item is rendered again.
+`itemElement` looks the item up when you call it, so ask again after each update: an item that is
+rendered again is a new element. It is a function, so `JSON.stringify` of the context leaves it
+out.
 
-### Events to listen for
-
-Listen on `testItems.eventTarget`.
-
-| Event                           | `detail`                          | When                      |
-| ------------------------------- | --------------------------------- | ------------------------- |
-| `qti-assessment-item-connected` | the `qti-assessment-item`         | An item has been rendered |
-| `qti-assessment-test-connected` | the `qti-assessment-test`         | A test document is loaded |
-| `qti-request-navigation`        | `{ type: 'item'\|'section', id }` | Someone asked to navigate |
+The other contexts are not for plugins. `sessionContext` holds the same position and `view` as
+ids; `testContext` is the responses and outcomes model that hosts persist; `configContext` and
+`qtiContext` are what a host sets up.
 
 ### Events to send
 
@@ -90,6 +82,7 @@ Dispatch with `bubbles: true, composed: true`. The element that handles it must 
 Do not use these from a plugin; they change without notice:
 
 - anything under `@qti-components/test/internal` (such as `testHostContext`);
+- `sessionContext`, `testContext`, `configContext` and `qtiContext` (see above);
 - `test-container`'s shadow root, or any other component's;
 - the private styles module of `@qti-components/test`.
 
@@ -127,5 +120,4 @@ It is what keeps a plugin a plugin: without it, the first convenient import from
 the plugin, or from the plugin into the test's internals, goes unnoticed.
 
 A plugin outside this repository needs none of this: depend on `@qti-components/base`, define
-your elements, and place them inside `<qti-test>` (and inside `<test-navigation>` when you use
-`computedContext` or send its events).
+your elements, and place them inside `<test-navigation>`.

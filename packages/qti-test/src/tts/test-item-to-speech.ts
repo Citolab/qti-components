@@ -3,12 +3,12 @@ import { consume, provide, createContext } from '@lit/context';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { sessionContext, testItemsContext } from '@qti-components/base';
+import { computedContext } from '@qti-components/base';
 
 import * as styles from '../components/styles';
 
 import type { PropertyValues } from 'lit';
-import type { SessionContext, TestItems } from '@qti-components/base';
+import type { ComputedContext } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 
@@ -215,9 +215,9 @@ abstract class TtsButtonBase extends LitElement {
  * 3. **Inside a `qti-assessment-item-ref`** — e.g. in a `<template item-ref>` on `<qti-test>`,
  *    so every item gets a player of its own: the player reads that item, and only that item.
  *    The navigation cursor is ignored; speech stops when the player leaves the page with its item.
- * 4. **Anywhere else** — a toolbar in the page chrome: the player follows the navigation cursor
- *    and reads the item `navItemRefId` (session context) points at, as rendered by the
- *    `<qti-test>` it sits in. Navigating stops speech and starts the next item from the top.
+ * 4. **Anywhere else inside `<test-navigation>`** — e.g. a toolbar: the player follows the
+ *    navigation cursor and reads the active item of the computed context. Navigating stops
+ *    speech and starts the next item from the top.
  *
  * ```html
  * <!-- 1. a player for the shared reading text -->
@@ -282,12 +282,12 @@ export class TestItemToSpeech extends LitElement {
   /** Fallback language when neither the item content nor the document declares one. */
   @property({ type: String }) language = 'nl-NL';
 
-  @consume({ context: sessionContext, subscribe: true })
-  protected _sessionContext?: SessionContext;
-
-  /** The items of the `qti-test` this player is in, across shadow roots. */
-  @consume({ context: testItemsContext, subscribe: true })
-  protected testItems?: TestItems;
+  /**
+   * The test as `test-navigation` computes it: which item is active, and where it is rendered
+   * (`itemElement`). Updated on navigation and whenever an item is rendered.
+   */
+  @consume({ context: computedContext, subscribe: true })
+  protected _computedContext?: ComputedContext;
 
   @state()
   @provide({ context: ttsContext })
@@ -305,7 +305,8 @@ export class TestItemToSpeech extends LitElement {
   #contentMode = false;
   // Item-ref mode: the item-ref this player sits in, resolved on connect. Null means cursor mode.
   #itemRef: QtiAssessmentItemRef | null = null;
-  // Where the item-connected (and, in cursor mode, navigation) events are listened for.
+  // Item-ref mode: our item-ref, for its item-connected event. Cursor mode: where prev/next's
+  // navigation request is heard.
   #eventHost: EventTarget | null = null;
   #boundHandleItemConnected = this.#handleItemConnected.bind(this);
   #boundHandleNavigation = () => this.#stop();
@@ -314,8 +315,9 @@ export class TestItemToSpeech extends LitElement {
   #prevNavItemRefId: string | null | undefined = undefined;
   #prevNavSectionId: string | null | undefined = undefined;
 
-  // Current set of block-level reading elements for the item
+  // Current set of block-level reading elements for the item, and the root they were collected from
   #readingElements: Element[] | null = null;
+  #readingRoot: Element | null = null;
   #currentElementIndex = 0;
 
   // Text nodes of the element currently being spoken (for word-boundary highlight)
@@ -365,13 +367,16 @@ export class TestItemToSpeech extends LitElement {
     // Stimulus, content and item-ref mode: the navigation cursor does not change what this player reads.
     if (this.#stimulusMode || this.#contentMode || this.#itemRef) return;
     // Cursor mode: moving to another item or section stops speech and starts over (ignore the
-    // initial undefined → value transition). Section navigation leaves navItemRefId null, so it
+    // initial undefined → value transition). Section navigation leaves no item active, so it
     // needs its own check.
-    const item = this._sessionContext?.navItemRefId ?? null;
-    const section = this._sessionContext?.navSectionId ?? null;
+    const { item, section } = this.#activePosition();
     const itemChanged = this.#prevNavItemRefId !== undefined && this.#prevNavItemRefId !== item;
     const sectionChanged = this.#prevNavSectionId !== undefined && this.#prevNavSectionId !== section;
-    if (itemChanged || sectionChanged) this.#resetReadingPosition();
+    // The same item rendered again (e.g. linking to the item already shown): the elements
+    // collected earlier are detached. The context updates when an item renders, so check here.
+    const rerendered =
+      this.#readingElements !== null && this.#readingRoot !== null && this.#readingRoot !== this.#resolveReadingRoot();
+    if (itemChanged || sectionChanged || rerendered) this.#resetReadingPosition();
     this.#prevNavItemRefId = item;
     this.#prevNavSectionId = section;
   }
@@ -407,17 +412,15 @@ export class TestItemToSpeech extends LitElement {
     this.#contentMode = this.#contentElement() !== null;
     if (this.#contentMode) return;
     this.#itemRef = this.closest<QtiAssessmentItemRef>('qti-assessment-item-ref');
-    // qti-assessment-item-connected is bubbles+composed: it passes the item's own item-ref, and
-    // reaches test-navigation / qti-test from inside test-container's shadow root.
-    this.#eventHost =
-      this.#itemRef ??
-      this.closest('test-navigation') ??
-      this.testItems?.eventTarget ??
-      (this.getRootNode() as EventTarget);
-    this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
-    if (!this.#itemRef) {
+    if (this.#itemRef) {
+      // Item-ref mode: qti-assessment-item-connected (bubbles+composed) passes our own item-ref
+      // when our item renders again.
+      this.#eventHost = this.#itemRef;
+      this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
+    } else {
       // Cursor mode: qti-request-navigation fires synchronously on prev/next — stop right away
-      // instead of waiting for the new position to arrive through the session context.
+      // instead of waiting for the new position to arrive through the computed context.
+      this.#eventHost = this.closest('test-navigation') ?? (this.getRootNode() as EventTarget);
       this.#eventHost.addEventListener('qti-request-navigation', this.#boundHandleNavigation);
     }
   }
@@ -445,16 +448,20 @@ export class TestItemToSpeech extends LitElement {
     return html`<slot></slot>`;
   }
 
-  /**
-   * An item (re)rendered. If it is ours — e.g. after navigating to the item already shown — the
-   * elements collected earlier are detached now. That does not move the navigation cursor, so
-   * the check in updated() does not catch it.
-   */
-  #handleItemConnected(event: Event) {
-    if (this.#readingElements === null) return;
-    // In item-ref mode the event came through our own item-ref, so it is always ours.
-    const identifier = (event as CustomEvent<QtiAssessmentItem>).detail?.identifier;
-    if (this.#itemRef || identifier === this._sessionContext?.navItemRefId) this.#resetReadingPosition();
+  /** Item-ref mode: our item rendered again, so the elements collected earlier are detached. */
+  #handleItemConnected() {
+    if (this.#readingElements !== null) this.#resetReadingPosition();
+  }
+
+  /** Cursor mode: the active item and section, from the computed context. */
+  #activePosition(): { item: string | null; section: string | null } {
+    for (const part of this._computedContext?.testParts ?? []) {
+      for (const section of part.sections) {
+        if (!section.active) continue;
+        return { item: section.items.find(item => item.active)?.identifier ?? null, section: section.identifier };
+      }
+    }
+    return { item: null, section: null };
   }
 
   /**
@@ -505,14 +512,14 @@ export class TestItemToSpeech extends LitElement {
   }
 
   /**
-   * The item to read: our item-ref's (item-ref mode), or the navigated one (cursor mode). The test
-   * looks the navigated one up in its own items, so a page with several tests showing the same
-   * item still reads the right one.
+   * The item to read: our item-ref's (item-ref mode), or the active one (cursor mode). The test
+   * looks the active one up in its own items (`computedContext.itemElement`), so a page with
+   * several tests showing the same item still reads the right one.
    */
   #resolveItem(): QtiAssessmentItem | null {
     if (this.#itemRef) return this.#itemRef.assessmentItem;
-    const identifier = this._sessionContext?.navItemRefId;
-    return identifier ? ((this.testItems?.itemElement(identifier) as QtiAssessmentItem | null) ?? null) : null;
+    const { item } = this.#activePosition();
+    return item ? ((this._computedContext?.itemElement?.(item) as QtiAssessmentItem | null) ?? null) : null;
   }
 
   /** Update speech state on both the context (notifies children) and the host's CSS custom states. */
@@ -554,6 +561,7 @@ export class TestItemToSpeech extends LitElement {
       // Leave the cache empty (rather than `[]`) while the item or stimulus has not rendered yet,
       // so the next call retries instead of getting stuck on an empty result forever.
       if (!root) return [];
+      this.#readingRoot = root;
 
       // Collect block-level elements (and QTI prompt / choice elements) that contain readable text.
       // Keep only the innermost matches so `<li><p>…</p></li>` is not read twice. Content hidden
