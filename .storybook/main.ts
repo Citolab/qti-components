@@ -77,6 +77,16 @@ const config: StorybookConfig = {
             titlePrefix: 'Test'
           },
           {
+            directory: '../packages/qti-test/src/tts',
+            files: '**/*.stories.*',
+            titlePrefix: 'Test'
+          },
+          {
+            directory: '../packages/qti-test/src/tts',
+            files: '**/*.mdx',
+            titlePrefix: 'Test'
+          },
+          {
             directory: '../packages/qti-theme/src',
             files: '**/*.stories.*',
             titlePrefix: 'Theme'

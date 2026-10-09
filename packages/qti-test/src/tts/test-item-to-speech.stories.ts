@@ -7,9 +7,9 @@ import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer
-} from '../../../../../tools/testing/test-utils';
+} from '../../../../tools/testing/test-utils';
 
-import '../../../../../.storybook/utilities.css';
+import '../../../../.storybook/utilities.css';
 import type { TestItemToSpeech } from './test-item-to-speech';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 

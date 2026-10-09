@@ -11,6 +11,17 @@ decides what to read and in which language, and provides a `ttsContext` that the
 inside it (`<test-tts-play>`, `<test-tts-stop>`, `<test-tts-prev>`, `<test-tts-next>`,
 `<test-tts-pick>`, …) consume.
 
+Text-to-speech is an opt-in plugin of the test. Import it once; that registers the player and its
+buttons:
+
+```js
+import '@qti-components/test/tts'; // or '@citolab/qti-components/tts'
+```
+
+It uses only public API of the test — `sessionContext`, `testItemsContext` (which item is rendered
+where), the bubbling item and navigation events — and nothing in the test refers to it. Until the
+next major `@qti-components/test` still registers it too, so existing pages keep working.
+
 ```html
 <test-item-to-speech language="nl-NL">
   <test-tts-play></test-tts-play>

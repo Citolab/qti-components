@@ -12,6 +12,7 @@ export * from './context/types/item.types';
 export * from './context/qti.context';
 export * from './context/session.context';
 export * from './context/test.context';
+export * from './context/test-items.context';
 
 export * from './styles/box-sizing.styles';
 export * from './styles/drop-region.styles';

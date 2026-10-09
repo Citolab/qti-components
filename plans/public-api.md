@@ -93,6 +93,7 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 | subclass `QtiFeedback`                        | K                 | **S** base class                                                                                                                                             |
 | subclass `Qti*InteractionCorrection`          | C                 | **S** base class                                                                                                                                             |
 | subclass `Interaction`                        | P (~17)           | **S** base class; entry point is `@citolab/qti-components/qti-base`. Pinned by `qti-assessment-item.extension.api.stories.ts`; guide: Extending interactions |
+| consume `testItemsContext` (plugins)          | —                 | **S** for plugin authors; `qti-test` provides the rendered item per item-ref and the element its events reach. Used by `@qti-components/test/tts`            |
 | consume `testContext` / `computedContext`     | P                 | **S** for component authors; exported from `@citolab/qti-components/qti-base`. `ComputedItem.valid` is published by the item since PR #231                   |
 | deep imports (`/exports/*`, `/cdn/exports/*`) | P (+ QTI-Express) | **I**; gone: the entry points are `qti-base` and the other package paths                                                                                     |
 

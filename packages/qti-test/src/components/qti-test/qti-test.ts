@@ -2,7 +2,7 @@ import { ContextProvider, provide } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
-import { configContext, qtiContext } from '@qti-components/base';
+import { configContext, qtiContext, testItemsContext } from '@qti-components/base';
 
 import { testHostContext } from '../../internal/test-host.context';
 import { TestNavigationMixin, TestViewMixin } from '../../mixins';
@@ -10,7 +10,8 @@ import { TestBaseMixin } from '../../mixins/test-base';
 import { TestProcessingMixin } from '../../mixins/test-processing.mixin';
 import { TestStateMixin } from '../../mixins/test-state.mixin';
 
-import type { ConfigContext, QtiContext } from '@qti-components/base';
+import type { ConfigContext, QtiContext, TestItems } from '@qti-components/base';
+import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { IQtiTest } from '../../types/iqti-test';
 
 /**
@@ -74,6 +75,15 @@ export class QtiTest extends TestNavigationMixin(
     super();
     // The components inside find their test through this, across shadow roots (see TestHost).
     new ContextProvider(this, { context: testHostContext, initialValue: this });
+    // The public counterpart, for what is added to a test from outside (e.g. text-to-speech).
+    const testItems: TestItems = {
+      eventTarget: this,
+      itemElement: identifier =>
+        this._testElement?.querySelector<QtiAssessmentItemRef>(
+          `qti-assessment-item-ref[identifier="${CSS.escape(identifier)}"]`
+        )?.assessmentItem ?? null
+    };
+    new ContextProvider(this, { context: testItemsContext, initialValue: testItems });
   }
 
   @state()

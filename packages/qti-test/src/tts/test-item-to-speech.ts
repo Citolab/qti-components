@@ -3,16 +3,14 @@ import { consume, provide, createContext } from '@lit/context';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
-import { sessionContext } from '@qti-components/base';
+import { sessionContext, testItemsContext } from '@qti-components/base';
 
-import { testHostContext } from '../../internal/test-host.context';
-import * as styles from '../styles';
+import * as styles from '../components/styles';
 
 import type { PropertyValues } from 'lit';
-import type { SessionContext } from '@qti-components/base';
-import type { TestHost } from '../../internal/test-host.context';
+import type { SessionContext, TestItems } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
-import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
+import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 
 // ─── CSS Custom Highlight ─────────────────────────────────────────────────────
 
@@ -218,9 +216,8 @@ abstract class TtsButtonBase extends LitElement {
  *    so every item gets a player of its own: the player reads that item, and only that item.
  *    The navigation cursor is ignored; speech stops when the player leaves the page with its item.
  * 4. **Anywhere else** — a toolbar in the page chrome: the player follows the navigation cursor
- *    and reads the item `navItemRefId` (session context) points at, found in any
- *    `test-container` reachable from the player. Navigating stops speech and starts the next
- *    item from the top.
+ *    and reads the item `navItemRefId` (session context) points at, as rendered by the
+ *    `<qti-test>` it sits in. Navigating stops speech and starts the next item from the top.
  *
  * ```html
  * <!-- 1. a player for the shared reading text -->
@@ -288,9 +285,9 @@ export class TestItemToSpeech extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
 
-  /** The `qti-test` this player is in, across shadow roots. */
-  @consume({ context: testHostContext, subscribe: true })
-  protected testHost?: TestHost;
+  /** The items of the `qti-test` this player is in, across shadow roots. */
+  @consume({ context: testItemsContext, subscribe: true })
+  protected testItems?: TestItems;
 
   @state()
   @provide({ context: ttsContext })
@@ -393,7 +390,7 @@ export class TestItemToSpeech extends LitElement {
     super.connectedCallback();
     this.#setSpeechState('idle');
     // NOTE: #ensureHighlightStyles() is called lazily on first highlight use
-    // because test-container may not be in the DOM yet at this point.
+    // because the item to read may not be in the DOM yet at this point.
     this.#stimulusMode = this.#stimulusPlaceholder() !== null;
     if (this.#stimulusMode) {
       // Stimulus mode: neither items nor navigation decide what is read, only the content of the
@@ -413,7 +410,10 @@ export class TestItemToSpeech extends LitElement {
     // qti-assessment-item-connected is bubbles+composed: it passes the item's own item-ref, and
     // reaches test-navigation / qti-test from inside test-container's shadow root.
     this.#eventHost =
-      this.#itemRef ?? this.closest('test-navigation') ?? this.testHost ?? (this.getRootNode() as EventTarget);
+      this.#itemRef ??
+      this.closest('test-navigation') ??
+      this.testItems?.eventTarget ??
+      (this.getRootNode() as EventTarget);
     this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
     if (!this.#itemRef) {
       // Cursor mode: qti-request-navigation fires synchronously on prev/next — stop right away
@@ -504,42 +504,15 @@ export class TestItemToSpeech extends LitElement {
     return this.#resolveItem()?.querySelector('qti-item-body') ?? null;
   }
 
-  /** The item to read: our item-ref's (item-ref mode), or the navigated one (cursor mode). */
+  /**
+   * The item to read: our item-ref's (item-ref mode), or the navigated one (cursor mode). The test
+   * looks the navigated one up in its own items, so a page with several tests showing the same
+   * item still reads the right one.
+   */
   #resolveItem(): QtiAssessmentItem | null {
     if (this.#itemRef) return this.#itemRef.assessmentItem;
     const identifier = this._sessionContext?.navItemRefId;
-    return identifier ? this.#findItemInDom(identifier) : null;
-  }
-
-  /**
-   * Cursor mode: find the rendered item for an item-ref identifier. Our own `<qti-test>` first —
-   * a page can hold several tests showing the same item — then every root from here up to the
-   * document; each scope directly and in the `test-container` shadow roots inside it.
-   */
-  #findItemInDom(identifier: string): QtiAssessmentItem | null {
-    const selector = `qti-assessment-item-ref[identifier="${CSS.escape(identifier)}"] qti-assessment-item`;
-    const search = (scope: ParentNode): QtiAssessmentItem | null => {
-      const direct = scope.querySelector<QtiAssessmentItem>(selector);
-      if (direct) return direct;
-      for (const container of Array.from(scope.querySelectorAll('test-container'))) {
-        const inShadow = container.shadowRoot?.querySelector<QtiAssessmentItem>(selector);
-        if (inShadow) return inShadow;
-      }
-      return null;
-    };
-
-    const test = this.testHost;
-    const inTest = test && search(test);
-    if (inTest) return inTest;
-
-    let root: Node = this.getRootNode();
-    for (;;) {
-      const found = search(root as ParentNode);
-      if (found) return found;
-      const host = (root as ShadowRoot).host;
-      if (!host) return null;
-      root = host.getRootNode();
-    }
+    return identifier ? ((this.testItems?.itemElement(identifier) as QtiAssessmentItem | null) ?? null) : null;
   }
 
   /** Update speech state on both the context (notifies children) and the host's CSS custom states. */
@@ -902,10 +875,9 @@ export class TestItemToSpeech extends LitElement {
   }
 
   /**
-   * Add ::highlight() rules both to test-container's shadow root (where highlighted
-   * text lives) and to the document (safety net — spec allows document rules to apply
-   * across shadow DOM). Called lazily on first highlight use so test-container is
-   * guaranteed to be in the DOM by the time navigation or speech starts.
+   * Add ::highlight() rules both to the shadow root the highlighted text lives in and to the
+   * document (safety net — spec allows document rules to apply across shadow DOM). Called lazily
+   * on first highlight use, once the reading elements have been collected.
    */
   #ensureHighlightStyles() {
     if (!('highlights' in CSS)) return;
@@ -916,13 +888,10 @@ export class TestItemToSpeech extends LitElement {
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
     }
 
-    // 2. Shadow roots the highlighted text may live in: test-container's, and the player's own
-    //    root when the player itself sits inside a shadow tree (e.g. built into an item card).
+    // 2. Shadow roots the highlighted text may live in: the item's (e.g. test-container's), and
+    //    the player's own root when the player itself sits inside a shadow tree (e.g. built into
+    //    an item card).
     const roots = new Set<ShadowRoot>();
-    const testContainer =
-      this.closest('test-navigation')?.querySelector('test-container') ??
-      this.testHost?.querySelector('test-container');
-    if (testContainer?.shadowRoot) roots.add(testContainer.shadowRoot);
     const ownRoot = this.getRootNode();
     if (ownRoot instanceof ShadowRoot) roots.add(ownRoot);
     const itemRoot = this.#readingElements?.[0]?.getRootNode();
