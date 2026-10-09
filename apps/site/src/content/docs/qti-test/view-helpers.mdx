@@ -29,6 +29,8 @@ This is what makes a `qti-rubric-block view="scorer"` — the answer model a mar
 
 ## Text-to-speech: `<test-item-to-speech>`
 
+An opt-in plugin: `import '@citolab/qti-components/tts';` (or `@qti-components/test/tts`) registers it. The plain package entry still registers it until the next major.
+
 A controller + `@lit/context` provider for reading an item's body aloud via the Web Speech API. It collects block-level text elements (`p`, `h1`–`h6`, `li`, `blockquote`, `figcaption`, prompts and choices) from the item's `qti-item-body`, skipping anything that is not rendered (hidden feedback, a scorer-only rubric block), and exposes a `ttsContext` (`state: 'idle' | 'playing' | 'paused'`, `currentElementIndex`, `elementCount`, plus `play`/`pause`/`resume`/`stop`/`prevElement`/`nextElement`) for child controls to consume.
 
 Which item it reads depends on where the player is placed:

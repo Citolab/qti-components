@@ -36,6 +36,14 @@
       "types": "./dist/register.d.ts",
       "import": "./dist/register.js"
     },
+    "./tts": {
+      "types": "./dist/tts/index.d.ts",
+      "import": "./dist/tts/index.js"
+    },
+    "./tts/elements": {
+      "types": "./dist/tts/elements.d.ts",
+      "import": "./dist/tts/elements.js"
+    },
     "./*": "./dist/*"
   },
   "peerDependencies": {
