@@ -1,0 +1,131 @@
+import { Meta, Canvas, Source } from '@storybook/addon-docs/blocks';
+
+import * as TestPluginStories from './test-plugins.stories';
+import storiesSource from './test-plugins.stories.ts?raw';
+
+export const exampleSource = storiesSource
+  .slice(storiesSource.indexOf('export class ExampleReadingTime'), storiesSource.indexOf('const meta'))
+  .trim();
+
+<Meta of={TestPluginStories} />
+
+# Test plugins
+
+A **test plugin** is a set of custom elements you add to a `<qti-test>` that use only the test's
+public API. The test does not know about it: it is not imported, registered or referred to by the
+test. Leave it out and the test works as before; delete it and nothing in the test needs to change.
+
+Text-to-speech is the first one: `import '@qti-components/test/tts';` registers
+`<test-item-to-speech>` and its buttons.
+
+Write a plugin when you add something _to_ a test — reading aloud, a scoring aid, a debug panel.
+When you need to change how the test itself behaves, a plugin is the wrong tool: that is a change
+to the test, or a subclass registered under the same tag (as `@citolab/qti-components/corrections`
+does).
+
+## Example
+
+`example-reading-time` shows how long the item on screen takes to read. Navigate and it follows.
+
+<Canvas of={TestPluginStories.ReadingTime} />
+
+<Source code={exampleSource} language="ts" />
+
+This is the code the story above runs, and its play test is the check that the API it uses still
+works. Three things to notice:
+
+1. **It asks, it does not search.** Which item: `sessionContext.navItemRefId`. Where it is
+   rendered: `testItems.itemElement(identifier)`. It never calls `closest('qti-test')` or looks
+   inside `test-container` — `closest` stops at shadow roots, and where the test keeps its items
+   is the test's business.
+2. **It recounts when the item arrives.** Navigation changes the session context before the new
+   item is rendered, so it also listens for `qti-assessment-item-connected` — on
+   `testItems.eventTarget`, the element where the test's events can be heard.
+3. **It imports only public API**: `lit`, `@lit/context`, and contexts from `@qti-components/base`
+   (`@citolab/qti-components/qti-base` for umbrella users).
+
+## The public test API
+
+### Contexts
+
+Consume these with `@consume({ context, subscribe: true })`. A context reaches the element only
+when the element sits inside its provider.
+
+| Context            | Provided by       | Gives                                                                                                  |
+| ------------------ | ----------------- | ------------------------------------------------------------------------------------------------------ |
+| `sessionContext`   | `qti-test`        | Where navigation is: `navPartId`, `navSectionId`, `navItemRefId`; and the `view`                       |
+| `testContext`      | `qti-test`        | The items with their variables, and the test's outcome variables                                       |
+| `testItemsContext` | `qti-test`        | `itemElement(identifier)`: the rendered `qti-assessment-item`; `eventTarget`: where test events arrive |
+| `computedContext`  | `test-navigation` | The test's parts, sections and items with their state: `active`, `index`, `valid`, `done`, score, …    |
+| `configContext`    | `qti-test`        | The test's configuration                                                                               |
+| `qtiContext`       | `qti-test`        | `QTI_CONTEXT`: test, candidate and environment identifiers                                             |
+
+Read data from the data contexts (`session`, `test`, `computed`). Use `testItemsContext` only when
+you need the rendered item itself — its text, its elements — and ask again after every navigation:
+the element for an identifier is replaced when the item is rendered again.
+
+### Events to listen for
+
+Listen on `testItems.eventTarget`.
+
+| Event                           | `detail`                          | When                      |
+| ------------------------------- | --------------------------------- | ------------------------- |
+| `qti-assessment-item-connected` | the `qti-assessment-item`         | An item has been rendered |
+| `qti-assessment-test-connected` | the `qti-assessment-test`         | A test document is loaded |
+| `qti-request-navigation`        | `{ type: 'item'\|'section', id }` | Someone asked to navigate |
+
+### Events to send
+
+Dispatch with `bubbles: true, composed: true`. The element that handles it must be an ancestor.
+
+| Event                          | `detail`                                            | Handled by        | Sent by (for reference)       |
+| ------------------------------ | --------------------------------------------------- | ----------------- | ----------------------------- |
+| `qti-request-navigation`       | `{ type: 'item' \| 'section', id }`                 | `qti-test`        | `test-next`, `test-item-link` |
+| `test-end-attempt`             | —                                                   | `test-navigation` | `test-end-attempt`            |
+| `test-update-outcome-variable` | `{ assessmentItemRefId, outcomeVariableId, value }` | `test-navigation` | `test-scoring-buttons`        |
+| `on-test-switch-view`          | the `View`                                          | `qti-test`        | `test-view`                   |
+
+### Not public
+
+Do not use these from a plugin; they change without notice:
+
+- anything under `@qti-components/test/internal` (such as `testHostContext`);
+- `test-container`'s shadow root, or any other component's;
+- the private styles module of `@qti-components/test`.
+
+## Naming
+
+Tags starting with `qti-` belong to the 1EdTech QTI vocabulary — never use them. Plugins in this
+repository use `test-`. Your own use your own prefix.
+
+## Packaging a plugin in this repository
+
+A plugin is one folder, and only that folder knows it exists. Text-to-speech
+(`packages/qti-test/src/tts/`) is the reference:
+
+```text
+packages/qti-test/src/<plugin>/
+  <element>.ts               the elements
+  elements.ts                export const <plugin>Elements = [{ tag, ctor }, …] as const — defines nothing
+  register.ts                for each entry: if (!customElements.get(tag)) customElements.define(tag, ctor)
+  index.ts                   import './register.js'; export * from the elements
+  plugin-boundary.spec.ts    fails on a reference from outside the folder, or an import of internals
+  <element>.stories.ts / .mdx
+```
+
+Then expose it — these are the only lines outside the folder:
+
+- `packages/qti-test/package.json` `exports`: `./<plugin>` → `dist/<plugin>/index.js` and
+  `./<plugin>/elements` → `dist/<plugin>/elements.js`;
+- the umbrella: `packages/qti-components/src/<plugin>.ts` (`export * from '@qti-components/test/<plugin>'`)
+  and its `exports` entry;
+- tooling: a `directory` entry in `.storybook/main.ts`, and a glob plus a `componentTypePath` row in
+  `cem.config.mjs`.
+
+Copy `plugin-boundary.spec.ts` from the text-to-speech folder and change its paths and patterns.
+It is what keeps a plugin a plugin: without it, the first convenient import from the test into
+the plugin, or from the plugin into the test's internals, goes unnoticed.
+
+A plugin outside this repository needs none of this: depend on `@qti-components/base`, define
+your elements, and place them inside `<qti-test>` (and inside `<test-navigation>` when you use
+`computedContext` or send its events).
