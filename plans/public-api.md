@@ -216,7 +216,7 @@ for one minor; the old name goes in the next major, with `plans/host-migration/*
 - [x] Decide the public event prefix: `cito-` (decision 13).
 - [ ] Public-events module + spec, rename the
       unreleased and unused names, dual-dispatch the host-used ones, migration entries per host.
-- [ ] `computedContext.itemElement`; remove `testItemsContext`; text-to-speech reads only
+- [x] `computedContext.itemElement`; remove `testItemsContext`; text-to-speech reads only
       `computedContext`.
 - [ ] `cito-test-navigated`.
 - [ ] Highlight plugin, after per-item plugin state in `state.session`.

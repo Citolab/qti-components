@@ -18,8 +18,8 @@ buttons:
 import '@qti-components/test/tts'; // or '@citolab/qti-components/tts'
 ```
 
-It uses only public API of the test — `sessionContext`, `testItemsContext` (which item is rendered
-where), the bubbling item and navigation events — and nothing in the test refers to it. Until the
+It uses only public API of the test — `computedContext` (which item is active, and where it is
+rendered) and the navigation request — and nothing in the test refers to it. Until the
 next major `@qti-components/test` still registers it too, so existing pages keep working.
 
 ```html
@@ -169,11 +169,9 @@ player lays out and paints itself.
 ### 4. Cursor mode — one player that follows navigation
 
 Put the player outside any item-ref, e.g. next to the navigation buttons. It reads the item the
-test is navigated to. To find it, the player takes the `navItemRefId` from the session context and
-looks for `qti-assessment-item-ref[identifier="…"] qti-assessment-item` in its own root, in every
-root above it up to the document, and in the `test-container` shadow roots in those. So the
-player has to be inside `<qti-test>` (for the session context) and the item has to be rendered in a
-`test-container` it can reach.
+test is navigated to: the active item of the computed context, looked up with
+`computedContext.itemElement`. So the player has to be inside `<test-navigation>`, which provides
+that context.
 
 ```html
 <qti-test navigate="item">

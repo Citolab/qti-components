@@ -39,4 +39,11 @@ export type ComputedContext = {
       allowSkipping?: boolean;
     }[];
   }[];
+  /**
+   * The rendered `qti-assessment-item` for an item-ref identifier, or null when it is not on the
+   * page. Looked up when called, so it is never a stale element; ask again after the context
+   * updates (it does when an item is rendered). A function, so `JSON.stringify` leaves it out.
+   * Set by `test-navigation`; for plugins that read an item's content (e.g. text-to-speech).
+   */
+  itemElement?: (identifier: string) => HTMLElement | null;
 };

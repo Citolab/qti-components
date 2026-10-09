@@ -3,65 +3,35 @@ import { consume } from '@lit/context';
 import { state } from 'lit/decorators.js';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { sessionContext, testItemsContext } from '@qti-components/base';
+import { computedContext } from '@qti-components/base';
 
-import type { PropertyValues } from 'lit';
-import type { SessionContext, TestItems } from '@qti-components/base';
+import type { ComputedContext } from '@qti-components/base';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 /**
  * The example plugin from the "Test plugins" guide, defined here so the guide's code is tested
- * rather than just shown. It imports nothing but `lit`, `@lit/context` and public contexts from
+ * rather than just shown. It imports nothing but `lit`, `@lit/context` and `computedContext` from
  * `@qti-components/base` — if that public API changes, this story fails.
  *
- * It shows how long the item on screen takes to read: the item comes from `sessionContext`
- * (which item) and `testItemsContext` (where it is rendered), and it recounts when the test
- * renders an item, heard on `testItems.eventTarget`.
+ * It shows how long the item on screen takes to read. Everything comes from `computedContext`:
+ * which item is active, and the rendered item (`itemElement`). The context updates on navigation
+ * and again when the item has rendered, so there is nothing to listen for.
  */
 export class ExampleReadingTime extends LitElement {
   @state()
-  @consume({ context: sessionContext, subscribe: true })
-  session?: SessionContext;
-
-  @state()
-  @consume({ context: testItemsContext, subscribe: true })
-  testItems?: TestItems;
-
-  @state() private words = 0;
-
-  #listeningOn: EventTarget | null = null;
-  #recount = () => {
-    const identifier = this.session?.navItemRefId;
-    const item = identifier ? this.testItems?.itemElement(identifier) : null;
-    const text = item?.querySelector('qti-item-body')?.textContent ?? '';
-    this.words = text.split(/\s+/).filter(Boolean).length;
-  };
-
-  override willUpdate(changed: PropertyValues<this>) {
-    // Navigation moved: count the item now on screen (it may not be rendered yet; see below).
-    if (changed.has('session') || changed.has('testItems')) this.#recount();
-  }
-
-  override updated(changed: PropertyValues<this>) {
-    // The test rendered an item: count again. Listen where the test says its events arrive.
-    if (changed.has('testItems') && this.#listeningOn !== this.testItems?.eventTarget) {
-      this.#listeningOn?.removeEventListener('qti-assessment-item-connected', this.#recount);
-      this.#listeningOn = this.testItems?.eventTarget ?? null;
-      this.#listeningOn?.addEventListener('qti-assessment-item-connected', this.#recount);
-    }
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    this.#listeningOn?.removeEventListener('qti-assessment-item-connected', this.#recount);
-    this.#listeningOn = null;
-  }
+  @consume({ context: computedContext, subscribe: true })
+  computed?: ComputedContext;
 
   override render() {
-    const minutes = Math.max(1, Math.round(this.words / 200));
-    return html`<output data-item=${this.session?.navItemRefId ?? ''}>
-      ${this.words} words · about ${minutes} min
-    </output>`;
+    const active = this.computed?.testParts
+      .flatMap(part => part.sections)
+      .flatMap(section => section.items)
+      .find(item => item.active);
+    const item = active ? this.computed?.itemElement?.(active.identifier) : null;
+    const text = item?.querySelector('qti-item-body')?.textContent ?? '';
+    const words = text.split(/\s+/).filter(Boolean).length;
+    const minutes = Math.max(1, Math.round(words / 200));
+    return html`<output data-item=${active?.identifier ?? ''}>${words} words · about ${minutes} min</output>`;
   }
 }
 
