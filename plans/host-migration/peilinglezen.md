@@ -71,6 +71,20 @@ Do: nothing. If the host listens for `qti-request-navigation` to learn that the 
 `cito-test-navigated` instead; it is sent only after the navigation succeeded and rendered.
 Evidence: imports surveyed only, not run
 
+### Public item events get the `cito-` prefix (public events)
+
+Status: recommended; nothing breaks on upgrade (old names are sent and handled until the next major)
+Members: `qti-interaction-changed`, `qti-outcome-changed`, `qti-assessment-item-connected`
+Do: rename as you touch them: `cito-item-response-changed`, `cito-item-outcome-changed`,
+`cito-item-rendered`. `detail` is unchanged. Listening for both names runs your handler twice;
+pick one.
+
+- `assessment-test.component.tsx:144-148` listens for the first two on the content window.
+  `:162-` removes `qti-interaction-changed` but never `qti-outcome-changed`: fix that when renaming.
+- `player/src/main.ts:107` and `:233` use `qti-assessment-item-connected` and an empty
+  `qti-outcome-changed` handler.
+  Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

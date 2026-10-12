@@ -1,4 +1,7 @@
+import { dispatchDeclared, listenDeclared } from '@qti-components/elements/public-events';
+
 import type { View } from '@qti-components/base';
+import type { PublicEventDeclaration } from '@qti-components/elements/public-events';
 import type { QtiAssessmentTest } from './components/qti-assessment-test/qti-assessment-test';
 import type { QtiTestState } from './types/qti-test-state';
 
@@ -44,13 +47,6 @@ export interface PublicEventMap {
 
 export type PublicEventName = keyof PublicEventMap;
 
-export interface PublicEventDeclaration {
-  kind: 'request' | 'notification';
-  scope: 'test' | 'item';
-  /** The name before it was public. Dispatched and handled alongside the new one. */
-  deprecated?: string;
-}
-
 export const PUBLIC_EVENTS: Record<PublicEventName, PublicEventDeclaration> = {
   'cito-test-navigate': { kind: 'request', scope: 'test', deprecated: 'qti-request-navigation' },
   'cito-test-end-attempt': { kind: 'request', scope: 'test', deprecated: 'test-end-attempt' },
@@ -82,33 +78,17 @@ export function dispatchPublic<K extends PublicEventName>(
   name: K,
   detail: PublicEventMap[K] extends CustomEvent<infer D> ? D : never
 ): void {
-  const init = { detail: detail ?? {}, bubbles: true, composed: true };
-  target.dispatchEvent(new CustomEvent(name, init));
-  const { deprecated } = PUBLIC_EVENTS[name];
-  if (deprecated) target.dispatchEvent(new CustomEvent(deprecated, init));
+  dispatchDeclared(target, PUBLIC_EVENTS, name, detail);
 }
 
 /**
- * Listen for a public event and its deprecated name. `dispatchPublic` sends the new name first,
- * then the old one with the same `detail`, synchronously: the old one straight after is skipped, so
- * the handler runs once. A host that sends only the old name is handled too.
+ * Listen for a public event and its deprecated name; the handler runs once for a sender that
+ * dispatched both. See `listenDeclared`.
  */
 export function listenPublic<K extends PublicEventName>(
   target: EventTarget,
   name: K,
   handler: (e: PublicEventMap[K]) => void
 ): void {
-  let justHandled: unknown;
-  target.addEventListener(name, e => {
-    justHandled = (e as CustomEvent).detail;
-    queueMicrotask(() => (justHandled = undefined));
-    handler(e as PublicEventMap[K]);
-  });
-  const { deprecated } = PUBLIC_EVENTS[name];
-  if (deprecated) {
-    target.addEventListener(deprecated, e => {
-      if (justHandled !== undefined && (e as CustomEvent).detail === justHandled) return;
-      handler(e as PublicEventMap[K]);
-    });
-  }
+  listenDeclared(target, PUBLIC_EVENTS, name, handler as (e: Event) => void);
 }

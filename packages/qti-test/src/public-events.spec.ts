@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { PUBLIC_ITEM_EVENTS } from '@qti-components/elements/public-events';
+
 import { dispatchPublic, listenPublic, PUBLIC_EVENTS } from './public-events';
 
 const raw = import.meta.glob<string>('/packages/qti-test/src/**/*.ts', {
@@ -16,7 +18,8 @@ describe('public events', () => {
 
   it('every cito- name in the source is declared', () => {
     const used = new Set(text.match(/'cito-[a-z-]+'/g)?.map(n => n.slice(1, -1)));
-    for (const name of used) expect(Object.keys(PUBLIC_EVENTS), name).toContain(name);
+    for (const name of used)
+      expect([...Object.keys(PUBLIC_EVENTS), ...Object.keys(PUBLIC_ITEM_EVENTS)], name).toContain(name);
   });
 
   it('every declared event is still used by the source', () => {
