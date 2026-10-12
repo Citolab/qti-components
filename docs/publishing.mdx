@@ -14,11 +14,11 @@ on 2026-08-11 it walked into the release pipeline unannounced, including `change
 which rewrites every package version and changelog. Keep it in the lockfile and move it
 deliberately.
 
-- Release workflow: `.github/workflows/release-changesets.yml`
+- Release workflow: `.github/workflows/release.yml`
 - Primary CI release scripts:
   - `pnpm run ci:release:changesets:dry`
   - `pnpm run ci:release:changesets`
-  - `pnpm run ci:publish:missing`
+  - `pnpm run ci:publish`
 
 ## Local Commands
 
@@ -43,16 +43,17 @@ pnpm run changeset:version
 Publish locally (when needed):
 
 ```bash
-pnpm run ci:publish:missing
+pnpm run ci:publish
 ```
 
-This runs `tools/publish-if-needed.mjs` for every package: it publishes a version only when
-that version is not already on npm, so it is safe to re-run after a partial release.
+This is `pnpm -r publish`: it publishes every workspace package whose version is not yet on npm and
+skips the rest, so it is safe to re-run after a partial release. On `next`, where changesets is in
+pre mode, pass the dist-tag: `pnpm run ci:publish --tag next` (the release workflow does this from
+`.changeset/pre.json`).
 
 `changeset publish` is deliberately not used. @changesets/cli 3.0.1 crashes in
 `getUnpublishedPackages` on this workspace — it reads `response.info.versions` without
-checking it exists, and its pnpm path can return a response without one — and it would only
-duplicate what the script above already does.
+checking it exists, and its pnpm path can return a response without one.
 
 ## Pull Request StackBlitz Links
 

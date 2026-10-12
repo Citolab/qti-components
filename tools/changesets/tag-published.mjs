@@ -1,9 +1,8 @@
 // Create git tags for every public workspace package at its current version.
 //
-// `changeset publish` tags only what it publishes itself, and the reconcile step
-// (`ci:publish:missing`) publishes via pnpm, which tags nothing. Deriving the tags
-// from the versioned package.json files instead keeps tagging correct no matter
-// which of the two paths actually pushed a package to npm.
+// `changeset publish` tags only what it publishes itself, and `ci:publish` publishes via
+// pnpm, which tags nothing. Deriving the tags from the versioned package.json files instead
+// keeps tagging correct no matter which tool actually pushed a package to npm.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
