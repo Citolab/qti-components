@@ -115,7 +115,9 @@ When unsure, put the issue in "Next major" and decide at triage.
    `major` when the change breaks, otherwise `minor`/`patch`.
 4. Open the PR **into the same lane's branch**. The title is a conventional commit
    (`feat(test): …`); it becomes the squash commit.
-5. CI must pass. On `main`, a review is required. Squash-merge.
+5. CI must pass. On `main`, a review is required. Squash-merge. A change that is only docs, plans,
+   changesets or workflows CI cannot test skips the heavy CI jobs, on the PR and on the push after
+   the merge; the pre-commit hook skips VRT and the tests for it too.
 6. Remove the worktree and the local branch; delete the remote branch after merge.
 
 Always name the branch, the worktree and the PR number together when talking about any one of them.

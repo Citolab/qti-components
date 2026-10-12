@@ -24,8 +24,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # A pull request that only touches docs and changesets skips the heavy jobs. The `ci` job below
-  # still reports, so the required check is satisfied. Pushes to main and next always run in full.
+  # A change that only touches docs, changesets, plans or workflows CI cannot test skips the heavy
+  # jobs. The `ci` job below still reports, so the required check is satisfied. That holds for pull
+  # requests and for the push that follows a merge, so a docs or chore merge finishes in seconds
+  # instead of re-running a 4-minute pipeline. A push that changes code always runs in full: it is
+  # the safety net for two PRs that were green alone and break each other. `ci.yml` and
+  # `.github/actions/` are code on purpose: only a full run tests an edit to CI itself.
   changes:
     runs-on: ubuntu-latest
     outputs:
@@ -36,18 +40,23 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Does this PR touch more than docs?
+      - name: Does this change touch more than docs and workflows CI cannot test?
         id: diff
         run: |
-          if [ "${{ github.event_name }}" != "pull_request" ]; then
+          # Manual runs always run everything; so does a push we cannot diff (a new branch).
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || ! git rev-parse -q --verify HEAD^1 >/dev/null; then
             echo "code=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          # HEAD is the merge commit; its first parent is the base branch.
-          other=$(git diff --name-only HEAD^1 HEAD | grep -vE '^(plans/|docs/|\.changeset/)|\.md$' || true)
+          # Pull request: HEAD is the merge commit, its first parent is the base branch.
+          # Push: HEAD is the merged commit, its first parent is the branch as it was before.
+          other=$(git diff --name-only HEAD^1 HEAD \
+            | grep -vE '^(plans/|docs/|\.changeset/)|\.md$' \
+            | grep -vE '^\.github/(workflows/(release|deploy-site|pr-preview)\.yml|skills/|ISSUE_TEMPLATE/)' \
+            || true)
           if [ -n "$other" ]; then
             echo "code=true" >> "$GITHUB_OUTPUT"
           else
-            echo "code=false" >> "$GITHUB_OUTPUT"; echo "Docs-only change: heavy jobs skipped."
+            echo "code=false" >> "$GITHUB_OUTPUT"; echo "Docs and untestable workflow changes only: heavy jobs skipped."
           fi
 
   # Static checks: cheap, and the fastest feedback on a typo.

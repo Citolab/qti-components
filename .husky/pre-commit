@@ -16,8 +16,18 @@ fi
 # change can't slip through unnoticed. Compare-only (never --update): a browser run of a handful of
 # stories, a few seconds. If this fails on an INTENTIONAL visual change, refresh the baselines with
 # `pnpm test:vrt:update` and stage them, then commit again.
-echo "→ Checking VRT screenshots…"
-pnpm run test:vrt
+#
+# Skipped when every staged file is docs, plans, a changeset or under .github/: none of those can
+# change a screenshot, and a docs commit should not wait on a browser. Anything else, including an
+# empty commit, runs it. CI skips docs-only changes by a similar rule (see ci.yml `changes`).
+staged="$(git diff --cached --name-only)"
+code_staged="$(printf '%s\n' "$staged" | grep -vE '^(plans/|docs/|\.changeset/|\.github/)|\.md$' || true)"
+if [ -n "$staged" ] && [ -z "$code_staged" ]; then
+  echo "→ Skipping VRT: only docs, plans, changesets and workflow files are staged."
+else
+  echo "→ Checking VRT screenshots…"
+  pnpm run test:vrt
+fi
 
 # One tier, same on every branch. Fast by design — heavier verification
 # (attw, madge, publint, full test suite) is the CI gate's job, not the commit's.
