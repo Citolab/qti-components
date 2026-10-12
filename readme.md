@@ -34,10 +34,6 @@ To use @citolab/qti-components, you need to register the web components. By regi
 import '@citolab/qti-components';
 ```
 
-## Storybook
-
-Explore the complete description of supported QTI tags, examples, and the ability to interactively play with changing attributes of the QTI items in our [Storybook](https://qti-components.citolab.nl/).
-
 ## Branch Preview Via StackBlitz
 
 For pull requests, a bot comment includes one-click StackBlitz links that open the PR branch and start Storybook in-browser. Setup details and manual URL templates are documented in [docs/publishing.mdx](docs/publishing.mdx#pull-request-stackblitz-links).
