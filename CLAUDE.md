@@ -90,6 +90,55 @@ Applies to `packages/interactions/**` (see its local `AGENTS.md` for the full po
 - Interactions must be form-associated custom elements exposing a11y state via
   `ElementInternals`; `response` is a transitional/compatibility API only.
 
+## Working agreement
+
+Two lanes, one backlog.
+
+- **`main`** is the current major. Always releasable. Fixes and non-breaking features land here.
+- **`next`** is the integration branch for the next major. Breaking and architectural changes land here.
+- **The backlog is GitHub issues.** Nothing else holds open work. `plans/` is for design
+  decisions only (e.g. `public-api.md`); a plan with open tasks turns those tasks into issues and
+  is deleted when it ships.
+
+### Choosing the lane
+
+Ask: would this break an existing user of a published package (removed or renamed member, changed
+behaviour, new required import)? No: `main`, no milestone. Yes: `next`, milestone "Next major".
+When unsure, put the issue in "Next major" and decide at triage.
+
+### One change, start to finish
+
+1. Open or pick an issue. Say which lane it is in.
+2. Make a worktree off that lane's branch (`origin/main` or `origin/next`), named after the branch:
+   branch `fix/foo` → `.claude/worktrees/fix-foo`. Unset the upstream after `-b … origin/<base>`.
+3. Add a changeset if a published package changes (`pnpm run changeset`). On `next` it is a
+   `major` when the change breaks, otherwise `minor`/`patch`.
+4. Open the PR **into the same lane's branch**. The title is a conventional commit
+   (`feat(test): …`); it becomes the squash commit.
+5. CI must pass. On `main`, a review is required. Squash-merge.
+6. Remove the worktree and the local branch; delete the remote branch after merge.
+
+Always name the branch, the worktree and the PR number together when talking about any one of them.
+
+### Releasing
+
+- **`main`:** manual, as in "Releasing" below.
+- **After every `main` release, merge `main` into `next`.** _(Planned: a GitHub Action does this
+  and opens a PR when it conflicts. Until it exists, do it by hand the same day: it keeps
+  `package.json` versions and `CHANGELOG.md` conflicts small.)_
+- **`next`:** prereleases publish as `@next` on npm so hosts can install and test them.
+  _(Planned: changesets pre-mode, plus a dist-tag change in `tools/publish-if-needed.mjs`. Not
+  built; do not release from `next` until it is.)_
+- **Shipping the major:** cut a `9.x` maintenance branch from the last release, merge `next` into
+  `main`, leave pre-mode, release.
+
+### Rules that bind Claude
+
+- Ask before every commit, push, branch deletion and release. "Do what you think is best" is not
+  permission.
+- Never use `--admin` to get past a ruleset.
+- Work in a worktree, not by switching branches in place.
+
 ## Git workflow
 
 `main` is always releasable; changes land through short-lived branches merged on green CI.
