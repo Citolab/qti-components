@@ -1,5 +1,89 @@
 # @qti-components/test
 
+## 1.9.0
+
+### Minor Changes
+
+- [#231](https://github.com/Citolab/qti-components/pull/231) [`7786381`](https://github.com/Citolab/qti-components/commit/7786381f03a20ab5a28d86dedbbeae34e50aaac9) Thanks [@herrKlein](https://github.com/herrKlein)! - Items publish whether their interactions are valid, as `ItemContext.valid`, and the test reads it from there instead of asking every loaded item to validate on each update. The item checks when an answer changes, when it connects, and after answers are handed in through `variables`. `qti-assessment-item` also exposes a read-only `itemContext` (the whole context, declarations included), which the test used to reach for as a private field.
+
+  This fixes a bug: after a restore (`qtiTest.state`) or after coming back to an answered item, `ComputedItem.valid` stayed `false` until some later update, because it was read before the answer was adopted. In a section with `allow-skipping="false"` that kept `test-end-attempt` disabled on an item that was already answered.
+
+  What to check in a host:
+
+  - Components that read `ComputedItem.valid` from `computedContext`: it now settles after a restore and after navigating back.
+  - `test-end-attempt` in sections that do not allow skipping.
+  - Inline validation messages. Read from the code, not observed: `validate()` on an interaction can update its inline message, and the test used to call it on every update of the test. It is now called when the item's answers change.
+
+  Covered by this repo's stories; not run against a host application. Host migration: [PeilingLezen](plans/host-migration/peilinglezen.md), the only surveyed host that consumes `computedContext`.
+
+- [#230](https://github.com/Citolab/qti-components/pull/230) [`7937fd5`](https://github.com/Citolab/qti-components/commit/7937fd52870a18938f24c3f835d591f6b644cc3c) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiContext` (the `QTI_CONTEXT` variable: test, candidate and environment identifiers plus the optional shuffle `seed`) is now provided by `qti-test`, and the test reads the seed from itself instead of reaching into `test-navigation`. Set it with `qtiTest.qtiContext = …`.
+
+  `test-navigation.qtiContext` is deprecated and kept as an alias: reading it returns the enclosing test's value and writing it replaces that value, so hosts that set the seed there keep working. It is removed in the next major, and writing it prints one console warning per element naming the replacement. Reading it does not warn, and neither does the library's own writing. Before this change it was a second provider; now there is one value, so the two can no longer disagree. The alias finds the test across shadow roots. Set before the navigation is inside a `qti-test` (a React host sets props before attaching the element), a write is held and handed over when it connects.
+
+  Covered by this repo's stories: the seed through both routes gives the same shuffle order, including a story that builds the elements in the order React does, which also passes on the previous release. Not run against a host application. CitoTestUit, which passes its per-session seed as the `qtiContext` prop of `<test-navigation>`, is the flow to check.
+
+  Host migration: [CitoTestUit](plans/host-migration/citotestuit.md).
+
+  Everything deprecated, and what is planned for the next major: the new Deprecations page.
+
+- [#225](https://github.com/Citolab/qti-components/pull/225) [`6e87e20`](https://github.com/Citolab/qti-components/commit/6e87e20ddb86495c08d3469fdb6e6de61675c108) Thanks [@herrKlein](https://github.com/herrKlein)! - Add `qtiTest.state` and the `qti-state-changed` event: one value to persist and restore a candidate's test session (item variables, per-interaction state, test outcomes, position) without declaration metadata or the answer key. The state can be assigned before the test loads and is applied before the first item does. Also restores per-interaction state (e.g. a PCI's `getState()`) into an item when it loads, and makes `navigate="section"` start at the restored section.
+
+  `updateItemVariables()` now updates the test context immutably, so components reading it update and `qti-state-changed` fires; values for items that have not loaded yet are kept instead of dropped. Its values no longer need a `type` (only for a variable the item does not declare), and an optional third argument sets per-interaction state.
+
+  Deprecated, to be removed in the next major: the `qti-test-context-updated` event (listen to `qti-state-changed` instead), and `SessionContext.navItemLoading` / `navTestLoading`, which were never set.
+
+  ## Migration for hosts
+
+  No breaking change: `testContext`, `qti-test-context-updated` and `navigateTo` still work, so nothing has to change on upgrade. Recommended, because it removes workarounds:
+
+  - **Persist** from `qti-state-changed` (or read `qtiTest.state`) instead of `qti-test-context-updated`. The payload is built after the update, so it is never stale, and it no longer carries declaration metadata or the answer key.
+  - **Restore** by assigning `qtiTest.state = saved`, before or after load, instead of assigning `testContext` and calling `navigateTo`. The restored position is applied for you, and assigning no longer needs a guard against a late restore overwriting newer answers.
+  - **Keep your own fields** (current item, pages, manual scores) next to the stored `state`.
+  - **Pass the shuffle seed again on every load.** It is deliberately not part of `state`: set it through `test-navigation.qtiContext` (`asSeed`) as before, or the restored order changes.
+  - **`href` is not in `state`.** Read it from the `qti-assessment-item-ref` instead of from the context.
+  - **Bookmarks are not in `state` yet.** A host that stores them as `marked` on context items must keep using `testContext` for those until `state.session` carries them.
+
+  Per host (read from source, not run):
+
+  - **Kennisnet** (7.28.1, own republish): replace the `qti-test-context-updated` save and the `testContext` restore in `store/events.ts`, and drop the by-hand store rebuild in `mutators.ts`, which existed because assigning emitted nothing. `updateItemVariables` now fires `qti-state-changed`, so the "doesn't fire reliably" workaround in `check-item.ts` can go. Take `href` from the item-ref (`check-item.ts`).
+  - **CitoTestUit** (9.3.0): replace the save in `AssessmentPlayerView.tsx` with `qti-state-changed`, and the guarded one-time `testContext` restore plus `navigateTo` with `state`. The live `qtiTest.testContext` read for stale payloads is no longer needed. Keep the `qtiContext` seed. Bookmarks (`marked`) stay on `testContext` for now.
+  - **PeilingLezen** (7.1–7.14, imports surveyed only): its components consume `testContext` / `computedContext`, which are unchanged. Nothing to do; `state` is available once it upgrades.
+
+  `SessionContext.navItemLoading` / `navTestLoading` were never set. Stop reading them before the next major.
+
+- [#232](https://github.com/Citolab/qti-components/pull/232) [`c572724`](https://github.com/Citolab/qti-components/commit/c572724b9f2a57cabac632354b49f6caf8911533) Thanks [@herrKlein](https://github.com/herrKlein)! - Components inside a `qti-test` now find it through context instead of `closest('qti-test')`. `closest()` stops at the first shadow root, so a `test-container` or item-ref that a host renders inside its own component skipped `postLoadTestTransformCallback` and `<template item-ref>` without a word; context crosses shadow roots. The context is internal to `@qti-components/test` and not exported.
+
+  A `ContextRoot` is attached to `document.documentElement`, once per page, when `@qti-components/base` loads. It holds a context request nobody answered and asks again when a provider connects, so a component that upgrades before the element providing its context still gets the value. It holds subscribing requests only, which every `@consume` in the library is, and holds them weakly. Code that registers elements in order is not affected.
+
+  What to check in a host:
+
+  - Anything that renders `test-navigation`, `test-container` or items inside a custom element's shadow root under a `qti-test`: `postLoadTestTransformCallback` and `<template item-ref>` now apply there.
+  - Pages that run other Lit contexts of their own: the root is page-wide and sees their unanswered requests too. It only replays them when a provider shows up, so nothing changes unless one was being missed.
+
+  Covered by this repo's stories and specs; not run against a host application. Host migration: [CitoTestUit](plans/host-migration/citotestuit.md).
+
+- [#254](https://github.com/Citolab/qti-components/pull/254) [`24337a8`](https://github.com/Citolab/qti-components/commit/24337a83f98677b5f5152009ca215f70d6fa611a) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-item-to-speech>`:
+
+  - Skips content that is not rendered (hidden feedback, a scorer-only rubric block) and reads it once it is shown.
+  - Decides which item to read from where it is placed: inside a `qti-assessment-item-ref` (e.g. a `<template item-ref>`) it reads that item; anywhere else it follows the navigation cursor, as before.
+  - Keeps working after navigating to the item already on screen.
+
+  `item-ref-id` is removed: a player in a `<template item-ref>` already reads its own item without it. A player outside any item ref that used `item-ref-id` to pin one item now follows navigation instead.
+
+### Patch Changes
+
+- [#253](https://github.com/Citolab/qti-components/pull/253) [`614c666`](https://github.com/Citolab/qti-components/commit/614c666eb28117e9dd8d432c00465793704448a2) Thanks [@herrKlein](https://github.com/herrKlein)! - A shared stimulus is placed as its whole `qti-assessment-stimulus` instead of only its `qti-stimulus-body`, so the content inherits the stimulus' `xml:lang` and text-to-speech and screen readers read it in the right language. The new `qti-assessment-stimulus` element generates no box (`display: contents`), so layout is unchanged. It drops the stimulus' QTI `title` when placed, which would otherwise show as a tooltip over the whole passage.
+
+- [#234](https://github.com/Citolab/qti-components/pull/234) [`aeda9f1`](https://github.com/Citolab/qti-components/commit/aeda9f10f7a816a90b671632957b96cce3502d90) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTest.outcomeProcessing()` now finds the test's own outcome processing when the test is loaded through `test-container`. The container renders the test into its own shadow root, which the old lookup on `qti-test` could not see, so the call found nothing, returned `false` and did nothing. With a test rendered straight into `qti-test` it behaved as before.
+
+  No surveyed host calls it. If one does, it now runs where it used to be a silent no-op, so check what it was relied on to do.
+
+  Covered by a story that loads a test with an `<qti-outcome-processing>` through `test-container`, which fails on the old code.
+
+- Updated dependencies [[`614c666`](https://github.com/Citolab/qti-components/commit/614c666eb28117e9dd8d432c00465793704448a2), [`b0f1c6d`](https://github.com/Citolab/qti-components/commit/b0f1c6d4cc885d361247ac41973874659f6494e0), [`c5d80aa`](https://github.com/Citolab/qti-components/commit/c5d80aa2a5e2e1e09853931cc758a3677ed42593), [`7786381`](https://github.com/Citolab/qti-components/commit/7786381f03a20ab5a28d86dedbbeae34e50aaac9), [`6e87e20`](https://github.com/Citolab/qti-components/commit/6e87e20ddb86495c08d3469fdb6e6de61675c108), [`9e52bb7`](https://github.com/Citolab/qti-components/commit/9e52bb7720ab9b47895e57fd80410486bacf29b1), [`0fe97cf`](https://github.com/Citolab/qti-components/commit/0fe97cf00fa96710ce38754c05282b1eb03ef53d), [`c572724`](https://github.com/Citolab/qti-components/commit/c572724b9f2a57cabac632354b49f6caf8911533)]:
+  - @qti-components/elements@1.9.0
+  - @qti-components/base@2.4.0
+
 ## 1.8.0
 
 ### Minor Changes

@@ -1,5 +1,60 @@
 # @qti-components/elements
 
+## 1.9.0
+
+### Minor Changes
+
+- [#228](https://github.com/Citolab/qti-components/pull/228) [`b0f1c6d`](https://github.com/Citolab/qti-components/commit/b0f1c6d4cc885d361247ac41973874659f6494e0) Thanks [@herrKlein](https://github.com/herrKlein)! - Interactions, feedback and `readonly` now follow the item context instead of being pushed to by the item. The public members are unchanged, and the timing was kept on purpose: `item.variables = …` shows the values in rendered interactions straight away, and `setOutcomeVariable` / `processResponse` leave `showStatus` correct when they return. This is covered by this repo's own stories and specs. It has not been run against a host application, so hosts should check the flows below before upgrading.
+
+  What changes:
+
+  - An interaction adopts the item's value for its response when that value changes to something other than what the interaction last published. A score or timer updating, or the candidate's own answer coming back, does not rewrite it. An interaction that registers after the variables were set now picks them up, and an unanswered item no longer overwrites a `response` attribute on the interaction.
+  - `QtiFeedback` decides its own `showStatus` from the item context. `checkShowFeedback()` stays public. The `qti-register-feedback` event is no longer sent. Nothing in this repo or in the host code we looked at listened to it, but a listener would now hear nothing.
+  - Feedback is only decided when its outcome changed or an attempt was made. The one visible difference: restoring variables equal to the declared defaults, on an item with no attempt yet, no longer switches on a `show-hide="hide"` modal feedback (it used to open on a restore of nothing). Block and inline feedback decide when they connect and are unchanged. A custom feedback that extends `QtiFeedback` directly behaves like the modal.
+  - `readonly` on `qti-assessment-item` is published in the item context (`ItemContext.readonly`) and the interactions follow it. A `readonly` attribute present from the start now applies; before, only a change after the first render did.
+
+  To check in a host:
+
+  - Review or replay screens that assign `item.variables` or `item.responses` and read the interactions right after.
+  - Code that sets an outcome and reads or patches the feedback straight after, including observers on the feedback's DOM.
+  - Custom interactions whose `response` setter is not safe to call again with the same value. The base class calls it when the item's value changes and the interaction did not publish that value itself.
+  - Custom feedback that reached into `QtiFeedback`'s private `_context`. It is now a read-only getter.
+
+- [#229](https://github.com/Citolab/qti-components/pull/229) [`c5d80aa`](https://github.com/Citolab/qti-components/commit/c5d80aa2a5e2e1e09853931cc758a3677ed42593) Thanks [@herrKlein](https://github.com/herrKlein)! - `disabled` on `qti-assessment-item` is now published in the item context (`ItemContext.disabled`) and the interactions follow it, the same way they already follow `readonly`. The item no longer sets it on each registered interaction. Setting `item.disabled` still locks and unlocks the interactions.
+
+  What changes:
+
+  - A `disabled` attribute present on the item from the start now applies. Before, only a change after the first render did.
+  - An interaction that was authored `disabled` stays so inside an item that does not mention `disabled`. The item only touches it when `item.disabled` is set.
+  - An interaction that registers after the item was disabled now comes up disabled.
+
+  Covered by this repo's stories; not run against a host application. Hosts that lock submitted items by setting `item.disabled` (Kennisnet) should check that flow.
+
+- [#231](https://github.com/Citolab/qti-components/pull/231) [`7786381`](https://github.com/Citolab/qti-components/commit/7786381f03a20ab5a28d86dedbbeae34e50aaac9) Thanks [@herrKlein](https://github.com/herrKlein)! - Items publish whether their interactions are valid, as `ItemContext.valid`, and the test reads it from there instead of asking every loaded item to validate on each update. The item checks when an answer changes, when it connects, and after answers are handed in through `variables`. `qti-assessment-item` also exposes a read-only `itemContext` (the whole context, declarations included), which the test used to reach for as a private field.
+
+  This fixes a bug: after a restore (`qtiTest.state`) or after coming back to an answered item, `ComputedItem.valid` stayed `false` until some later update, because it was read before the answer was adopted. In a section with `allow-skipping="false"` that kept `test-end-attempt` disabled on an item that was already answered.
+
+  What to check in a host:
+
+  - Components that read `ComputedItem.valid` from `computedContext`: it now settles after a restore and after navigating back.
+  - `test-end-attempt` in sections that do not allow skipping.
+  - Inline validation messages. Read from the code, not observed: `validate()` on an interaction can update its inline message, and the test used to call it on every update of the test. It is now called when the item's answers change.
+
+  Covered by this repo's stories; not run against a host application. Host migration: [PeilingLezen](plans/host-migration/peilinglezen.md), the only surveyed host that consumes `computedContext`.
+
+### Patch Changes
+
+- [#253](https://github.com/Citolab/qti-components/pull/253) [`614c666`](https://github.com/Citolab/qti-components/commit/614c666eb28117e9dd8d432c00465793704448a2) Thanks [@herrKlein](https://github.com/herrKlein)! - A shared stimulus is placed as its whole `qti-assessment-stimulus` instead of only its `qti-stimulus-body`, so the content inherits the stimulus' `xml:lang` and text-to-speech and screen readers read it in the right language. The new `qti-assessment-stimulus` element generates no box (`display: contents`), so layout is unchanged. It drops the stimulus' QTI `title` when placed, which would otherwise show as a tooltip over the whole passage.
+
+- [#226](https://github.com/Citolab/qti-components/pull/226) [`9e52bb7`](https://github.com/Citolab/qti-components/commit/9e52bb7720ab9b47895e57fd80410486bacf29b1) Thanks [@herrKlein](https://github.com/herrKlein)! - Keep restored template values. An item handed template values through `variables` — when it is revisited in a test, or a session is resumed — no longer draws new ones in template processing, so the candidate sees the question they answered. Template processing still runs, so correct responses are derived from the restored values, and values restored after processing re-derive them. Values restored before a template declaration has registered are kept too.
+
+  ## Migration for hosts
+
+  No API change. A behaviour change for hosts that resume sessions: an item revisited or restored with template values now shows those values instead of drawing new ones. A host that relied on a fresh draw on every visit must clear the item's template values before restoring. Hosts that restore through `qtiTest.state` (or `testContext`) need no change: **Kennisnet**, **CitoTestUit** and **PeilingLezen** all benefit without code changes.
+
+- Updated dependencies [[`b0f1c6d`](https://github.com/Citolab/qti-components/commit/b0f1c6d4cc885d361247ac41973874659f6494e0), [`c5d80aa`](https://github.com/Citolab/qti-components/commit/c5d80aa2a5e2e1e09853931cc758a3677ed42593), [`7786381`](https://github.com/Citolab/qti-components/commit/7786381f03a20ab5a28d86dedbbeae34e50aaac9), [`6e87e20`](https://github.com/Citolab/qti-components/commit/6e87e20ddb86495c08d3469fdb6e6de61675c108), [`0fe97cf`](https://github.com/Citolab/qti-components/commit/0fe97cf00fa96710ce38754c05282b1eb03ef53d), [`c572724`](https://github.com/Citolab/qti-components/commit/c572724b9f2a57cabac632354b49f6caf8911533)]:
+  - @qti-components/base@2.4.0
+
 ## 1.8.0
 
 ### Minor Changes
