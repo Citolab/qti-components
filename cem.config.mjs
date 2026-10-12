@@ -155,6 +155,7 @@ export default {
     'packages/qti-corrections/src/components/**/*.ts',
     'packages/qti-item/src/elements.ts',
     'packages/qti-test/src/elements.ts',
+    'packages/qti-test/src/plugins/elements.ts',
     'packages/qti-elements/src/elements.ts',
     'packages/qti-processing/src/elements.ts',
     'packages/qti-corrections/src/elements.ts'
