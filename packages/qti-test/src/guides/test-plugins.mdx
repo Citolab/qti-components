@@ -70,12 +70,15 @@ ids; `testContext` is the responses and outcomes model that hosts persist; `conf
 
 Dispatch with `bubbles: true, composed: true`. The element that handles it must be an ancestor.
 
-| Event                          | `detail`                                            | Handled by        | Sent by (for reference)       |
-| ------------------------------ | --------------------------------------------------- | ----------------- | ----------------------------- |
-| `qti-request-navigation`       | `{ type: 'item' \| 'section', id }`                 | `qti-test`        | `test-next`, `test-item-link` |
-| `test-end-attempt`             | —                                                   | `test-navigation` | `test-end-attempt`            |
-| `test-update-outcome-variable` | `{ assessmentItemRefId, outcomeVariableId, value }` | `test-navigation` | `test-scoring-buttons`        |
-| `on-test-switch-view`          | the `View`                                          | `qti-test`        | `test-view`                   |
+| Event                      | `detail`                                            | Handled by        | Sent by (for reference)       |
+| -------------------------- | --------------------------------------------------- | ----------------- | ----------------------------- |
+| `cito-test-navigate`       | `{ type: 'item' \| 'section', id }`                 | `qti-test`        | `test-next`, `test-item-link` |
+| `cito-test-end-attempt`    | —                                                   | `test-navigation` | `test-end-attempt`            |
+| `cito-test-update-outcome` | `{ assessmentItemRefId, outcomeVariableId, value }` | `test-navigation` | `test-scoring-buttons`        |
+| `cito-test-switch-view`    | the `View`                                          | `qti-test`        | `test-view`                   |
+
+`dispatchPublic` and `listenPublic` (`packages/qti-test/src/public-events.ts`) send and handle the old
+names (`qti-request-navigation`, `test-end-attempt`, …) alongside these until the next major.
 
 ### Not public
 
@@ -111,6 +114,11 @@ nothing and gives `{ tag, ctor }` entries, for registering into a scoped `Custom
 (a plugin placed inside an item-ref template is stamped into `test-container`'s shadow root, which
 uses the registry you give it). Use one of the two, not both: when a tag is already taken, the
 global entry leaves it alone and warns in the console.
+
+Several plugins? `@qti-components/test/plugins` (umbrella: `@citolab/qti-components/plugins`) registers all of
+them in one import, and `@qti-components/test/plugins/elements` lists all their `{ tag, ctor }` entries.
+A plugin added to the repo is added to both lists in `plugins/`. Hosts that care about bundle size import
+the plugins they use one by one.
 
 Then expose it — these are the only lines outside the folder:
 

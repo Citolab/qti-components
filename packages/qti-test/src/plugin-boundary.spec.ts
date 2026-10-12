@@ -96,6 +96,8 @@ const sources = import.meta.glob<string>('/packages/**/src/**/*.ts', {
   eager: true
 });
 
+/** The convenience entry that registers every plugin; it names each one by design. */
+const PLUGINS_ENTRY = '/packages/qti-test/src/plugins/';
 const SELF = '/packages/qti-test/src/plugin-boundary.spec.ts';
 const folderOf = (plugin: Plugin) => `/packages/qti-test/src/${plugin.name}/`;
 
@@ -114,6 +116,7 @@ describe.each(PLUGINS)('plugin boundary: $name', plugin => {
           path !== plugin.umbrellaEntry &&
           path !== SELF &&
           !plugin.consumers?.some(prefix => path.startsWith(prefix)) &&
+          !path.startsWith(PLUGINS_ENTRY) &&
           !path.endsWith('.stories.ts')
       )
       .flatMap(([path, source]) =>

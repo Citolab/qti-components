@@ -304,7 +304,8 @@ the code behind them is not yet verified against it.
    Grouping: `stamp` (done: `test-stamp` and the two deprecated stamp buttons), `print`
    (`test-print-context`, `test-print-item-variables`), `scoring` (`test-scoring-buttons`,
    `test-scoring-feedback`), `view` (`test-view-toggle`, `test-view`, `test-check-item`).
-   `qti-test-feedback` stays in core: it is a QTI element, not a plugin. Navigation controls stay
+   All four are moved, each with its entries and boundary spec; a convenience entry
+   `@qti-components/test/plugins` (umbrella `…/plugins`) registers every plugin in one import. `qti-test-feedback` stays in core: it is a QTI element, not a plugin. Navigation controls stay
    in core. Each plugin is Step A (core still registers it, on `<name>-plugin: Step-A compatibility`
    lines) until Step B.
 6. **Step B**: remove the `tts-plugin: Step-A compatibility` lines and make the changeset `major`

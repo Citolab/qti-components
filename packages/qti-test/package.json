@@ -40,6 +40,14 @@
       "types": "./dist/tts/index.d.ts",
       "import": "./dist/tts/index.js"
     },
+    "./plugins": {
+      "types": "./dist/plugins/index.d.ts",
+      "import": "./dist/plugins/index.js"
+    },
+    "./plugins/elements": {
+      "types": "./dist/plugins/elements.d.ts",
+      "import": "./dist/plugins/elements.js"
+    },
     "./print": {
       "types": "./dist/print/index.d.ts",
       "import": "./dist/print/index.js"
