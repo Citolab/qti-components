@@ -141,8 +141,9 @@ Releases are manual and deliberate — no auto-publish on merge to `main`.
 1. Changesets accumulate in `.changeset/` as PRs land (`pnpm run changeset`).
 2. Run the `Manual: release and publish packages (changesets)` GitHub Actions workflow, or
    `gh workflow run release.yml -f branch=main` (`-f dry_run=true` to preview).
-3. On success, `deploy-sb.yml` auto-deploys the Storybook site (chained via `workflow_run`); a
-   failed release does not deploy. Manual redeploy: `gh workflow run deploy-sb.yml`.
+3. On success, `deploy-site.yml` auto-deploys the Astro docs site (chained via `workflow_run`); a
+   failed release does not deploy. Manual redeploy: `gh workflow run deploy-site.yml`. Storybook
+   is no longer published; it is a local dev tool (`pnpm run storybook`).
 
 `changeset publish` is intentionally not used (crashes on this workspace's pnpm registry
 responses); `pnpm run ci:publish:missing` runs `tools/publish-if-needed.mjs` instead, which only
