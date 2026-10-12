@@ -103,7 +103,8 @@ Two lanes, one backlog.
 ### Choosing the lane
 
 Ask: would this break an existing user of a published package (removed or renamed member, changed
-behaviour, new required import)? No: `main`, no milestone. Yes: `next`, milestone "Next major".
+behaviour, new required import)? No: `main`, milestone "9.x". Yes: `next`, milestone "Next major".
+An issue that fits neither lane yet (docs, chores, ideas) stays without a milestone: unscheduled.
 When unsure, put the issue in "Next major" and decide at triage.
 
 ### One change, start to finish
