@@ -17,7 +17,6 @@ on:
   push:
     branches:
       - main
-      - ci/sync-main-into-next # TEMPORARY: live test before merge, removed in the next commit
   workflow_dispatch:
 
 # One sync at a time, in order: a second push to main waits for the first.
