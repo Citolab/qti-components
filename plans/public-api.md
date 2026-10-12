@@ -301,6 +301,12 @@ the code behind them is not yet verified against it.
 4. **`test-check-item`** reveals `[view]` elements without reaching into `test-container` (#280). **Done**: it switches the session `view`.
 5. **Move the other optional components into plugins** (#275, was #281), one per commit, host
    letters first (K, C, P); a plugin a host uses needs a migration entry. Related: #249.
+   Grouping: `stamp` (done: `test-stamp` and the two deprecated stamp buttons), `print`
+   (`test-print-context`, `test-print-item-variables`), `scoring` (`test-scoring-buttons`,
+   `test-scoring-feedback`), `view` (`test-view-toggle`, `test-view`, `test-check-item`).
+   `qti-test-feedback` stays in core: it is a QTI element, not a plugin. Navigation controls stay
+   in core. Each plugin is Step A (core still registers it, on `<name>-plugin: Step-A compatibility`
+   lines) until Step B.
 6. **Step B**: remove the `tts-plugin: Step-A compatibility` lines and make the changeset `major`
    (PR #261). Do it with 5 so the breaking change lands once. Also #245 (core unaware of the
    corrections package).

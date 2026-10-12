@@ -14,22 +14,23 @@ import { TestEndAttempt } from './components/test-end-attempt/test-end-attempt';
 import { TestItemLink } from './components/test-item-link/test-item-link';
 import { TestNavigation } from './components/test-navigation/test-navigation';
 import { TestNext } from './components/test-next/test-next';
-import { TestPagingButtonsStamp } from './components/test-paging-buttons-stamp/test-paging-buttons-stamp';
 import { TestPrev } from './components/test-prev/test-prev';
 import { TestPrintContext } from './components/test-print-context/test-print-context';
 import { TestPrintVariables } from './components/test-print-item-variables/test-print-item-variables';
 import { TestScoringButtons } from './components/test-scoring-buttons/test-scoring-buttons';
 import { TestScoringFeedback } from './components/test-scoring-feedback/test-scoring-feedback';
-import { TestSectionButtonsStamp } from './components/test-section-buttons-stamp/test-section-buttons-stamp';
 import { TestSectionLink } from './components/test-section-link/test-section-link';
-import { TestStamp } from './components/test-stamp/test-stamp';
 import { TestView } from './components/test-view-toggle/test-view';
 import { TestViewToggle } from './components/test-view-toggle/test-view-toggle';
 // tts-plugin: Step-A compatibility, remove in the next major. Text-to-speech is the opt-in
 // plugin `@qti-components/test/tts`; it is still listed here so this release does not break.
 import { ttsElements } from './tts/elements'; // tts-plugin: Step-A compatibility
+// stamp-plugin: Step-A compatibility, remove in the next major. The stamps are the opt-in plugin
+// `@qti-components/test/stamp`; they are still listed here so this release does not break.
+import { stampElements } from './stamp/elements'; // stamp-plugin: Step-A compatibility
 
 export * from './tts/elements'; // tts-plugin: Step-A compatibility (deprecated here; removed in the next major)
+export * from './stamp/elements'; // stamp-plugin: Step-A compatibility (deprecated here; removed in the next major)
 
 export {
   QtiAssessmentItemRef,
@@ -48,15 +49,12 @@ export {
   TestItemLink,
   TestNavigation,
   TestNext,
-  TestPagingButtonsStamp,
   TestPrev,
   TestPrintContext,
   TestPrintVariables,
   TestScoringButtons,
   TestScoringFeedback,
-  TestSectionButtonsStamp,
   TestSectionLink,
-  TestStamp,
   TestView,
   TestViewToggle
 };
@@ -78,16 +76,14 @@ export const qtiTestElements = [
   { tag: 'test-item-link', ctor: TestItemLink },
   { tag: 'test-navigation', ctor: TestNavigation },
   { tag: 'test-next', ctor: TestNext },
-  { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },
   { tag: 'test-prev', ctor: TestPrev },
   { tag: 'test-print-context', ctor: TestPrintContext },
   { tag: 'test-print-item-variables', ctor: TestPrintVariables },
   { tag: 'test-scoring-buttons', ctor: TestScoringButtons },
   { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },
-  { tag: 'test-section-buttons-stamp', ctor: TestSectionButtonsStamp },
   { tag: 'test-section-link', ctor: TestSectionLink },
-  { tag: 'test-stamp', ctor: TestStamp },
   { tag: 'test-view', ctor: TestView },
   { tag: 'test-view-toggle', ctor: TestViewToggle },
-  ...ttsElements // tts-plugin: Step-A compatibility
+  ...ttsElements, // tts-plugin: Step-A compatibility
+  ...stampElements // stamp-plugin: Step-A compatibility
 ] as const;

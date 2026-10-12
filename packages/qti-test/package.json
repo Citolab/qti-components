@@ -40,6 +40,14 @@
       "types": "./dist/tts/index.d.ts",
       "import": "./dist/tts/index.js"
     },
+    "./stamp": {
+      "types": "./dist/stamp/index.d.ts",
+      "import": "./dist/stamp/index.js"
+    },
+    "./stamp/elements": {
+      "types": "./dist/stamp/elements.d.ts",
+      "import": "./dist/stamp/elements.js"
+    },
     "./tts/elements": {
       "types": "./dist/tts/elements.d.ts",
       "import": "./dist/tts/elements.js"

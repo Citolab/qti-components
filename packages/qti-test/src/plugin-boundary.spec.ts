@@ -8,6 +8,9 @@ import { describe, expect, it } from 'vitest';
  *
  * Adding a plugin means adding one entry to `PLUGINS`.
  *
+ * Stories may show plugins side by side, so a `.stories.ts` file outside the folder may name a
+ * plugin's tags; production code may not.
+ *
  * Lines marked `<name>-plugin: Step-A compatibility` are the deliberate exception: the core still
  * registers and re-exports that plugin until the next major.
  */
@@ -33,6 +36,16 @@ const PLUGINS: Plugin[] = [
       /^\.\.\/components\/qti-assessment-item-ref\/qti-assessment-item-ref$/, // public element, type only
       /^\.\.\/public-events$/ // the public event names and helpers
     ]
+  },
+  {
+    name: 'stamp',
+    umbrellaEntry: '/packages/qti-components/src/stamp.ts',
+    reference:
+      /test-stamp|TestStamp|test-paging-buttons-stamp|TestPagingButtonsStamp|test-section-buttons-stamp|TestSectionButtonsStamp|stampContext|\/stamp['/]/,
+    allow: [
+      /^\.\.\/public-events$/,
+      /^\.\.\/components\/test-print-context\/test-print-context$/ // a story shows it next to the stamp
+    ]
   }
 ];
 
@@ -40,6 +53,7 @@ const COMMON_ALLOWED = [
   /^\.\//, // its own files
   /^lit(\/|$)/,
   /^@lit\//,
+  /^@heximal\/templates$/,
   /^@qti-components\/(base|elements)$/,
   /^storybook\//,
   /^@storybook\//,
@@ -68,7 +82,13 @@ describe.each(PLUGINS)('plugin boundary: $name', plugin => {
   it('is not referred to from outside its folder', () => {
     const marker = `${plugin.name}-plugin: Step-A compatibility`;
     const residue = Object.entries(sources)
-      .filter(([path]) => !path.startsWith(folderOf(plugin)) && path !== plugin.umbrellaEntry && path !== SELF)
+      .filter(
+        ([path]) =>
+          !path.startsWith(folderOf(plugin)) &&
+          path !== plugin.umbrellaEntry &&
+          path !== SELF &&
+          !path.endsWith('.stories.ts')
+      )
       .flatMap(([path, source]) =>
         source
           .split('\n')

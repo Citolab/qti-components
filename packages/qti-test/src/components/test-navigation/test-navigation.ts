@@ -240,7 +240,6 @@ export class TestNavigation extends LitElement {
   }
 
   override render() {
-    // return this.myTemplate ? this.myTemplate(this.stampContext) : nothing;
     return html`<slot></slot>`;
   }
 

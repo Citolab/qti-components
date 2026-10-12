@@ -62,6 +62,10 @@
       "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
     },
+    "./stamp": {
+      "types": "./dist/stamp.d.ts",
+      "import": "./dist/stamp.js"
+    },
     "./tts": {
       "types": "./dist/tts.d.ts",
       "import": "./dist/tts.js"
