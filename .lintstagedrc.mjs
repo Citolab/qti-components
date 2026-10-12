@@ -39,6 +39,12 @@
  * an export named 'applyDropzoneAutoSizing'" — the mixin had been reverted by the hide, the spec
  * had not. The fix is ordering, not configuration: commit a new test alongside the code it tests.
  */
+import { relative } from 'node:path';
+
+// Files that cannot change what a test or a screenshot sees. Same split as the VRT gate in
+// .husky/pre-commit and the `changes` job in ci.yml.
+const NON_CODE = /^(plans|docs|\.changeset|\.github)\/|\.md$/;
+
 export default {
   '*.{js,jsx,ts,tsx,mjs,cjs}': ['prettier --write', 'eslint --fix'],
 
@@ -53,6 +59,11 @@ export default {
    * A function returning a plain string is what stops lint-staged appending the matched filenames —
    * `vitest --changed` derives its own set from git and would treat a file list as a name filter,
    * which silently narrows the run to nothing.
+   *
+   * A commit of only docs, plans, changesets and workflow files runs no tests: starting a browser
+   * to find nothing changed is the slowest part of committing a note. Returning an empty list is
+   * how a function task says "nothing to run".
    */
-  '*': () => 'vitest run --changed --passWithNoTests'
+  '*': files =>
+    files.every(file => NON_CODE.test(relative(process.cwd(), file))) ? [] : 'vitest run --changed --passWithNoTests'
 };
