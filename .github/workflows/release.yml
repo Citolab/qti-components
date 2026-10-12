@@ -66,8 +66,11 @@ jobs:
       - name: Dry-run release status
         if: ${{ inputs.dry_run }}
         run: |
-          if ls .changeset/*.md >/dev/null 2>&1; then
-            pnpm run changeset:status
+          # README.md lives in .changeset/ but is not a changeset. `--since` names the branch being
+          # released: without it changeset status runs `git merge-base main HEAD`, and a checkout of
+          # next has no local main to compare against.
+          if ls .changeset/*.md 2>/dev/null | grep -qv 'README\.md'; then
+            pnpm exec changeset status --since="origin/${{ inputs.branch || 'main' }}"
           else
             echo "No pending changesets."
           fi
@@ -79,7 +82,7 @@ jobs:
           # so the preview needs the same token the real version step uses.
           GITHUB_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          if ! ls .changeset/*.md >/dev/null 2>&1; then
+          if ! ls .changeset/*.md 2>/dev/null | grep -qv 'README\.md'; then
             exit 0
           fi
 
