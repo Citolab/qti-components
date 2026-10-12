@@ -1,5 +1,7 @@
 import './register';
 
+export * from './public-events';
+
 export * from './components/qti-assessment-item/qti-assessment-item';
 export * from './components/qti-assessment-stimulus/qti-assessment-stimulus';
 export * from './components/qti-assessment-stimulus-ref/qti-assessment-stimulus-ref';

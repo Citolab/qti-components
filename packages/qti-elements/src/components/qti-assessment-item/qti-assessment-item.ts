@@ -4,6 +4,8 @@ import { property } from 'lit/decorators.js';
 
 import { itemContext, itemContextVariables } from '@qti-components/base';
 
+import { dispatchPublic } from '../../public-events';
+
 import type { PropertyValues } from 'lit';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
@@ -215,6 +217,8 @@ export class QtiAssessmentItem extends LitElement {
     this.updateComplete.then(() => {
       // The verdict goes in first, so whoever hears the item connect reads it with the rest.
       this.validate(false);
+      dispatchPublic(this, 'cito-item-rendered', this);
+      // Internal plumbing: the test and the item container listen for this name.
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
           bubbles: true,
@@ -421,17 +425,11 @@ export class QtiAssessmentItem extends LitElement {
 
     this.afterResponseVariableUpdated();
 
-    this.dispatchEvent(
-      new CustomEvent<InteractionChangedDetails>('qti-interaction-changed', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          item: this.identifier,
-          responseIdentifier: identifier,
-          response: Array.isArray(value) ? [...value] : value
-        }
-      })
-    );
+    dispatchPublic(this, 'cito-item-response-changed', {
+      item: this.identifier,
+      responseIdentifier: identifier,
+      response: Array.isArray(value) ? [...value] : value
+    });
 
     if (this.adaptive === 'false') {
       // if adaptive, completionStatus is set by the processing template
@@ -570,17 +568,11 @@ export class QtiAssessmentItem extends LitElement {
       })
     };
 
-    this.dispatchEvent(
-      new CustomEvent<OutcomeChangedDetails>('qti-outcome-changed', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          item: this.identifier,
-          outcomeIdentifier: identifier,
-          value: this._context.variables.find(v => v.identifier === identifier)?.value
-        }
-      })
-    );
+    dispatchPublic(this, 'cito-item-outcome-changed', {
+      item: this.identifier,
+      outcomeIdentifier: identifier,
+      value: this._context.variables.find(v => v.identifier === identifier)?.value
+    });
   }
 
   public validate(reportValidity = true): boolean {
@@ -663,5 +655,12 @@ export class QtiAssessmentItem extends LitElement {
 declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-item': QtiAssessmentItem;
+  }
+}
+
+declare module '../../public-events' {
+  interface PublicItemEventMap {
+    /** The item rendered: its interactions are in the DOM and its validity is known. */
+    'cito-item-rendered': CustomEvent<QtiAssessmentItem>;
   }
 }

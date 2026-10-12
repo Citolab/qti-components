@@ -3,6 +3,8 @@ import { property } from 'lit/decorators.js';
 
 import { watch } from '@qti-components/utilities';
 
+import { dispatchPublic } from '../../public-events';
+
 export class QtiRubricBlock extends LitElement {
   @property({ type: String }) override id: string; // ="qtiAspectInhoudRubricBlock"
 
@@ -18,13 +20,7 @@ export class QtiRubricBlock extends LitElement {
       switch (className) {
         case 'qti-rubric-discretionary-placement':
           {
-            const event = new CustomEvent('qti-rubric:discretionary-placement', {
-              detail: { className, element: this },
-              bubbles: true,
-              composed: true,
-              cancelable: true
-            });
-            const notCancelled = this.dispatchEvent(event);
+            const notCancelled = dispatchPublic(this, 'cito-item-rubric-placement', { className, element: this }, true);
             if (!notCancelled) return;
             this.setAttribute('slot', 'qti-rubric-block');
           }

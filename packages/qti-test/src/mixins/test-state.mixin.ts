@@ -1,4 +1,5 @@
 import { QTI_TEST_STATE_VERSION } from '../types/qti-test-state';
+import { dispatchPublic, listenPublic } from '../public-events';
 
 import type { PropertyValues } from 'lit';
 import type { SessionContext, TestContext } from '@qti-components/base';
@@ -95,7 +96,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
         this.#ready = false;
         this.#lastEmitted = null;
       });
-      this.addEventListener('qti-assessment-test-connected', () => {
+      listenPublic(this, 'cito-test-loaded', () => {
         if (this.#pending) {
           this.#apply(this.#pending);
           this.#pending = null;
@@ -137,7 +138,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
       const serialized = JSON.stringify(state);
       if (serialized === this.#lastEmitted) return;
       this.#lastEmitted = serialized;
-      this.dispatchEvent(new CustomEvent('qti-state-changed', { detail: state, bubbles: true, composed: true }));
+      dispatchPublic(this, 'cito-test-state-changed', state);
     }
 
     #apply(state: QtiTestState): void {
@@ -172,9 +173,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     }
 
     #requestNavigation(type: 'item' | 'section', id: string): void {
-      this.dispatchEvent(
-        new CustomEvent('qti-request-navigation', { detail: { type, id }, bubbles: true, composed: true })
-      );
+      dispatchPublic(this, 'cito-test-navigate', { type, id });
     }
   }
 
