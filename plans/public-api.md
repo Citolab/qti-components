@@ -108,8 +108,8 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 ### Plugin tier: test plugins
 
 A test plugin is a set of elements placed inside `<test-navigation>` that uses only this tier;
-the test does not import, register or refer to it (guide: Storybook "Guides / Test plugins";
-first plugin: `@qti-components/test/tts`). Hosts do not use contexts (only PeilingLezen consumes
+the test's own code does not import or refer to it (guide: Storybook "Guides / Test plugins";
+first plugin: `tts`). Hosts do not use contexts (only PeilingLezen consumes
 `computedContext`/`testContext`); they use properties and events. So this tier is small on purpose.
 
 | Member                                                                 | Hosts       | Status                                                                                                                                                                       |
@@ -123,23 +123,25 @@ first plugin: `@qti-components/test/tts`). Hosts do not use contexts (only Peili
 ### Plugin architecture: every optional piece of `qti-test` is a plugin
 
 Branch `feat/test-plugin-architecture`, PR #261, target `next`. A plugin is a folder that uses
-only public API, that the core does not refer to, and that a host opts into with one import.
+only public API and that the core does not refer to. `@qti-components/test` ships and registers all
+of them (decided: no per-plugin opt-in import; a host that wants a test without them builds on the
+packages underneath).
 Text-to-speech (`packages/qti-test/src/tts/`) is the first plugin and the reference
 implementation.
 
 **What exists (verified in code 2026-10-12)**
 
-- Entry points per plugin: `@qti-components/test/tts` (registers), `…/tts/elements` (classes
-  only), umbrella `@citolab/qti-components/tts`.
+- Five plugins, a folder each under `packages/qti-test/src/`: `print`, `scoring`, `stamp`, `tts`,
+  `view`. `plugins/elements.ts` is the one place that composes them (`pluginElements`); the core's
+  `elements.ts` spreads it. Entry for scoped registries: `@qti-components/test/plugins/elements`.
 - A plugin reads one context, `computedContext`, plus the request events. `itemElement` is in
   `computed.types.ts` and set by `test-navigation`.
-- `tts/plugin-boundary.spec.ts` fails on a reference to the plugin from outside its folder and on
-  an import of test internals. It covers TTS only.
+- `plugin-boundary.spec.ts` has a `PLUGINS` list and fails on a reference to a plugin from outside
+  its folder (except `plugins/`, stories, and `qti-corrections`, which extends `test-check-item`) and
+  on an import of test internals.
 - Guide: `packages/qti-test/src/guides/test-plugins.{mdx,stories.ts}`.
-- **Step A (compatibility)** is what `next` has: the core still registers and re-exports TTS, on
-  lines marked `tts-plugin: Step-A compatibility` (`qti-test/src/elements.ts`, `index.ts`).
-  **Step B** removes those lines, which is the breaking change; the changeset
-  (`.changeset/tts-plugin.md`, now `minor`) becomes `major`.
+- No per-plugin entry points, no umbrella entries, no Step B: the compatibility lines are gone and
+  nothing breaks for hosts, so the changeset (`.changeset/tts-plugin.md`) stays `minor`.
 
 **Survey of the optional components** (`packages/qti-test/src/components/`, 2026-10-12). Most are
 already plugin-shaped: they read only `computedContext` (or `sessionContext`) and talk to the test
@@ -170,20 +172,18 @@ children.
 **Decided** (issue #275)
 
 - Plugins are folders inside `@qti-components/test` (one install, one version), not packages (#276).
-- `register.ts` side-effect registration stays, next to `elements.ts`. `elements.ts`
-  (`{ tag, ctor }[]`, defines nothing) is the contract for scoped registries, because plugin
-  elements inside item-ref templates land in `test-container`'s scoped registry; `register.ts` is
-  the one-import global case. `qti-corrections` does the same. Follow-ups: warn in `register.ts`
-  when a tag is already registered (as `corrections.ts` does), and document in the guide that
-  `/<plugin>/elements` is for scoped registries and `/<plugin>` for the global one.
+- Plugins ship registered with `@qti-components/test`; there are no per-plugin entry points and no
+  umbrella entries (host decision, 2026-10-12: one install, with or without the whole package).
+  Each plugin's `elements.ts` (`{ tag, ctor }[]`, defines nothing) feeds `plugins/elements.ts`,
+  which is the list for scoped registries, because plugin elements inside item-ref templates land
+  in `test-container`'s scoped registry.
 
 **Open questions**
 
 - Do the navigation controls join the plugins? (owner decides at triage)
 
-**Conventions to write down once** (today only visible by reading `tts/`): folder layout
-(`index.ts`, `elements.ts`, `register.ts`), the three entry points, the package.json export
-entries, how the umbrella re-exports it. Prefer widening a context over exposing an element. Plugin
+**Conventions** (written in the guide): folder layout, the line in `plugins/elements.ts`, the
+`PLUGINS` entry. Prefer widening a context over exposing an element. Plugin
 tags and events do not use `qti-` (see Event naming). Before moving a plugin a host uses, add its
 `plans/host-migration/` entry in the same commit.
 
@@ -281,7 +281,7 @@ Checked against the code on 2026-10-12.
 - Contract stories for most host-tier and item-tier members.
 - Public event prefix decided: `cito-` (decision 13).
 - `computedContext.itemElement`; `testItemsContext` removed; text-to-speech reads only `computedContext`.
-- TTS is a plugin with three entry points, a guide, an executable contract story and a boundary spec (Step A).
+- Five plugins (`print`, `scoring`, `stamp`, `tts`, `view`) with a guide, an executable contract story and a boundary spec.
 - Survey of the optional test components (above).
 
 ### Next todos
@@ -296,21 +296,13 @@ the code behind them is not yet verified against it.
    ones, one migration entry per host. **Done** for both tiers (`qti-test/src/public-events.ts`, `qti-elements/src/public-events.ts`,
    their specs, changesets, host entries); `qti-test-context-updated` stays as decided.
 2. **`cito-test-navigated`**, part of 1. **Done**: sent with `cito-test-rendered`, never on a refused or cancelled navigation.
-3. **One boundary spec for all plugins** (#275, was #278; spec done, convention write-up open): a list of plugin folders with the same
-   two rules. The spec lives in `tts/` today. Plus the plugin convention write-up (was #277).
+3. **One boundary spec for all plugins**: **Done**, with the convention write-up in the guide.
 4. **`test-check-item`** reveals `[view]` elements without reaching into `test-container` (#280). **Done**: it switches the session `view`.
-5. **Move the other optional components into plugins** (#275, was #281), one per commit, host
-   letters first (K, C, P); a plugin a host uses needs a migration entry. Related: #249.
-   Grouping: `stamp` (done: `test-stamp` and the two deprecated stamp buttons), `print`
-   (`test-print-context`, `test-print-item-variables`), `scoring` (`test-scoring-buttons`,
-   `test-scoring-feedback`), `view` (`test-view-toggle`, `test-view`, `test-check-item`).
-   All four are moved, each with its entries and boundary spec; a convenience entry
-   `@qti-components/test/plugins` (umbrella `…/plugins`) registers every plugin in one import. `qti-test-feedback` stays in core: it is a QTI element, not a plugin. Navigation controls stay
-   in core. Each plugin is Step A (core still registers it, on `<name>-plugin: Step-A compatibility`
-   lines) until Step B.
-6. **Step B**: remove the `tts-plugin: Step-A compatibility` lines and make the changeset `major`
-   (PR #261). Do it with 5 so the breaking change lands once. Also #245 (core unaware of the
-   corrections package).
+5. **Move the other optional components into plugins** (#275, was #281): **Done** as `stamp`, `print`,
+   `scoring` and `view` next to `tts`. `qti-test-feedback` stays in core: it is a QTI element, not
+   a plugin. Navigation controls stay in core.
+6. **No Step B.** The plugins ship with `@qti-components/test`, so nothing is removed and nothing
+   breaks. Still open from it: #245 (core unaware of the corrections package).
 7. **Remaining contract stories**: `showCandidateCorrection` (corrections package), `test-url`,
    `auto-score-items`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`,
    `on-test-switch-view`, `test-show-candidate-correction`, the extension tier, and the four

@@ -15,24 +15,9 @@ import { TestNavigation } from './components/test-navigation/test-navigation';
 import { TestNext } from './components/test-next/test-next';
 import { TestPrev } from './components/test-prev/test-prev';
 import { TestSectionLink } from './components/test-section-link/test-section-link';
-// tts-plugin: Step-A compatibility, remove in the next major. Text-to-speech is the opt-in
-// plugin `@qti-components/test/tts`; it is still listed here so this release does not break.
-import { ttsElements } from './tts/elements'; // tts-plugin: Step-A compatibility
-// stamp-plugin: Step-A compatibility, remove in the next major. The stamps are the opt-in plugin
-// `@qti-components/test/stamp`; they are still listed here so this release does not break.
-import { stampElements } from './stamp/elements'; // stamp-plugin: Step-A compatibility
-// view-plugin: Step-A compatibility, remove in the next major. See `@qti-components/test/view`.
-import { viewElements } from './view/elements'; // view-plugin: Step-A compatibility
-// scoring-plugin: Step-A compatibility, remove in the next major. See `@qti-components/test/scoring`.
-import { scoringElements } from './scoring/elements'; // scoring-plugin: Step-A compatibility
-// print-plugin: Step-A compatibility, remove in the next major. See `@qti-components/test/print`.
-import { printElements } from './print/elements'; // print-plugin: Step-A compatibility
+import { pluginElements } from './plugins/elements';
 
-export * from './tts/elements'; // tts-plugin: Step-A compatibility (deprecated here; removed in the next major)
-export * from './stamp/elements'; // stamp-plugin: Step-A compatibility (deprecated here; removed in the next major)
-export * from './view/elements'; // view-plugin: Step-A compatibility (deprecated here; removed in the next major)
-export * from './scoring/elements'; // scoring-plugin: Step-A compatibility (deprecated here; removed in the next major)
-export * from './print/elements'; // print-plugin: Step-A compatibility (deprecated here; removed in the next major)
+export * from './plugins/elements';
 
 export {
   QtiAssessmentItemRef,
@@ -72,7 +57,5 @@ export const qtiTestElements = [
   { tag: 'test-next', ctor: TestNext },
   { tag: 'test-prev', ctor: TestPrev },
   { tag: 'test-section-link', ctor: TestSectionLink },
-  ...ttsElements, // tts-plugin: Step-A compatibility
-  ...stampElements, // stamp-plugin: Step-A compatibility
-  ...printElements // print-plugin: Step-A compatibility
+  ...pluginElements
 ] as const;

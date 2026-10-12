@@ -35,7 +35,6 @@ import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedR
 import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
 import { webComponentInspectDecorator, webComponentInspectGlobalTypes } from './extensions/webcomponent-inspect';
 import '../packages/qti-components/src';
-import '../packages/qti-components/src/tts';
 
 import type { Preview } from '@storybook/web-components-vite';
 

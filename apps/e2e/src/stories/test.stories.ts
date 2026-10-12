@@ -2,7 +2,6 @@ import { html } from 'lit';
 import { useArgs } from 'storybook/preview-api';
 
 import { getManifestInfo } from '@qti-components/loader';
-import '@qti-components/test/tts';
 
 import packages from '../assets/packages.json';
 

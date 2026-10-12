@@ -4,9 +4,7 @@
 '@citolab/qti-components': minor
 ---
 
-Text-to-speech is now an opt-in plugin: `import '@qti-components/test/tts'` (or `@citolab/qti-components/tts`) registers `<test-item-to-speech>` and the `test-tts-*` controls; `@qti-components/test/tts/elements` gives the classes without defining them.
+The optional pieces of `qti-test` become plugins: a folder each under `packages/qti-test/src/` (`print`, `scoring`, `stamp`, `tts`, `view`) that uses only the test's public API, with nothing in the core referring to it. `@qti-components/test` still registers and exports all of them, so nothing changes for hosts. The new entry `@qti-components/test/plugins/elements` lists every plugin's `{ tag, ctor }` entries for a scoped registry. A boundary spec (`plugin-boundary.spec.ts`) fails on a reference to a plugin from outside its folder and on an import of test internals; guide: Storybook "Guides / Test plugins".
 
 - **`computedContext.itemElement(identifier)`** (`@qti-components/base` type, set by `test-navigation`): the rendered `qti-assessment-item` for an item-ref identifier, looked up when called. Text-to-speech now reads only `computedContext`; it no longer uses the session context, reaches into `test-container`'s shadow root, or uses the test's internal context. A player that follows navigation must sit inside `<test-navigation>` (CitoTestUit and qti-player already place it there).
-- **Deprecated:** `@qti-components/test` (and so `@citolab/qti-components`) still registers and re-exports text-to-speech, so nothing changes for existing pages. In the next major it no longer does: import `@qti-components/test/tts` / `@citolab/qti-components/tts` then.
-
-No surveyed host uses text-to-speech (checked in `plans/public-api.md`, by reading source), so no host migration entries.
+- `test-check-item` switches the session view; see its own changeset.

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 /**
  * A plugin is a folder that knows the test; the test does not know the folder. Delete the folder
- * and its `exports` entries and nothing else may refer to it. These checks keep it that way for
+ * and the line for it in `plugins/elements.ts` and nothing else may refer to it. These checks keep it that way for
  * every plugin in `PLUGINS` — a new reference from outside, or a reach from inside into the
  * test's internals, fails here instead of quietly turning the plugin back into part of the core.
  *
@@ -10,15 +10,10 @@ import { describe, expect, it } from 'vitest';
  *
  * Stories may show plugins side by side, so a `.stories.ts` file outside the folder may name a
  * plugin's tags; production code may not.
- *
- * Lines marked `<name>-plugin: Step-A compatibility` are the deliberate exception: the core still
- * registers and re-exports that plugin until the next major.
  */
 interface Plugin {
-  /** Folder name under `packages/qti-test/src/`, also the prefix of the compatibility marker. */
+  /** Folder name under `packages/qti-test/src/`. */
   name: string;
-  /** The umbrella entry that may re-export it. */
-  umbrellaEntry: string;
   /** Anything that names the plugin: tags, classes, contexts, attributes, import paths. */
   reference: RegExp;
   /** Imports the plugin may use beyond the common ones below. */
@@ -30,7 +25,6 @@ interface Plugin {
 const PLUGINS: Plugin[] = [
   {
     name: 'tts',
-    umbrellaEntry: '/packages/qti-components/src/tts.ts',
     reference:
       /test-item-to-speech|test-tts-|ttsContext|ttsElements|TestItemToSpeech|TestTts|data-tts-content|\/tts['/]/,
     allow: [
@@ -41,7 +35,6 @@ const PLUGINS: Plugin[] = [
   },
   {
     name: 'stamp',
-    umbrellaEntry: '/packages/qti-components/src/stamp.ts',
     reference:
       /test-stamp|TestStamp|test-paging-buttons-stamp|TestPagingButtonsStamp|test-section-buttons-stamp|TestSectionButtonsStamp|stampContext|\/stamp['/]/,
     allow: [
@@ -51,19 +44,16 @@ const PLUGINS: Plugin[] = [
   },
   {
     name: 'print',
-    umbrellaEntry: '/packages/qti-components/src/print.ts',
     reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables|\/print['/]/,
     allow: [/^\.\.\/public-events$/]
   },
   {
     name: 'scoring',
-    umbrellaEntry: '/packages/qti-components/src/scoring.ts',
     reference: /test-scoring-buttons|TestScoringButtons|test-scoring-feedback|TestScoringFeedback|\/scoring['/]/,
     allow: [/^\.\.\/public-events$/]
   },
   {
     name: 'view',
-    umbrellaEntry: '/packages/qti-components/src/view.ts',
     reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b|test-check-item|TestCheckItem|\/view['/]/,
     consumers: ['/packages/qti-corrections/'], // overrides test-check-item with the correction behaviour
     allow: [
@@ -96,7 +86,7 @@ const sources = import.meta.glob<string>('/packages/**/src/**/*.ts', {
   eager: true
 });
 
-/** The convenience entry that registers every plugin; it names each one by design. */
+/** The one place that composes the plugins; it names each one by design. */
 const PLUGINS_ENTRY = '/packages/qti-test/src/plugins/';
 const SELF = '/packages/qti-test/src/plugin-boundary.spec.ts';
 const folderOf = (plugin: Plugin) => `/packages/qti-test/src/${plugin.name}/`;
@@ -108,12 +98,10 @@ describe.each(PLUGINS)('plugin boundary: $name', plugin => {
   });
 
   it('is not referred to from outside its folder', () => {
-    const marker = `${plugin.name}-plugin: Step-A compatibility`;
     const residue = Object.entries(sources)
       .filter(
         ([path]) =>
           !path.startsWith(folderOf(plugin)) &&
-          path !== plugin.umbrellaEntry &&
           path !== SELF &&
           !plugin.consumers?.some(prefix => path.startsWith(prefix)) &&
           !path.startsWith(PLUGINS_ENTRY) &&
@@ -123,7 +111,7 @@ describe.each(PLUGINS)('plugin boundary: $name', plugin => {
         source
           .split('\n')
           .map((line, index) => ({ path, line: index + 1, text: line.trim() }))
-          .filter(({ text }) => plugin.reference.test(text) && !text.includes(marker))
+          .filter(({ text }) => plugin.reference.test(text))
       )
       .map(({ path, line, text }) => `${path}:${line}  ${text}`);
 

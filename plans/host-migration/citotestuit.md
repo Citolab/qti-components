@@ -121,23 +121,6 @@ unchanged. Listening for both names runs your handler twice; pick one.
 - `qti-interaction-changed`: `AssessmentPlayerView.tsx:966` (interaction replay log).
   Evidence: read, not run
 
-### The stamps become a plugin: `@qti-components/test/stamp` (test plugin architecture)
-
-Status: nothing breaks on upgrade; required in the next major, when `@qti-components/test` stops registering `test-stamp`
-Members: `test-stamp`
-Do: add `import '@citolab/qti-components/stamp'` next to the library import. In a scoped registry use
-`stampElements` from `…/stamp/elements`. Used in `AssessmentPlayerView.tsx:2220,2281,2503,2524`.
-Evidence: read, not run
-
-### The scoring controls become a plugin: `@qti-components/test/scoring` (test plugin architecture)
-
-Status: nothing breaks on upgrade; required in the next major, when `@qti-components/test` stops registering them
-Members: `test-scoring-buttons`, `test-scoring-feedback`
-Do: add `import '@citolab/qti-components/scoring'` next to the library import (and `…/stamp`, above).
-In a scoped registry use `scoringElements` from `…/scoring/elements`. Used in
-`apps/student/src/features/assessment/components/templates/scorer-template.html:10,21`.
-Evidence: read, not run
-
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.

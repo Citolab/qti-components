@@ -62,30 +62,6 @@
       "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
     },
-    "./plugins": {
-      "types": "./dist/plugins.d.ts",
-      "import": "./dist/plugins.js"
-    },
-    "./print": {
-      "types": "./dist/print.d.ts",
-      "import": "./dist/print.js"
-    },
-    "./scoring": {
-      "types": "./dist/scoring.d.ts",
-      "import": "./dist/scoring.js"
-    },
-    "./view": {
-      "types": "./dist/view.d.ts",
-      "import": "./dist/view.js"
-    },
-    "./stamp": {
-      "types": "./dist/stamp.d.ts",
-      "import": "./dist/stamp.js"
-    },
-    "./tts": {
-      "types": "./dist/tts.d.ts",
-      "import": "./dist/tts.js"
-    },
     "./item.css": "./dist/item.css",
     "./cdn/*": "./cdn/*",
     "./package.json": "./package.json",

@@ -112,24 +112,6 @@ Do: rename as you touch them: `cito-item-response-changed`, `cito-item-outcome-c
 unchanged. Listening for both names runs your handler twice; pick one.
 Evidence: read, not run
 
-### The stamps become a plugin: `@qti-components/test/stamp` (test plugin architecture)
-
-Status: nothing breaks on upgrade; required in the next major, when `@qti-components/test` stops registering `test-stamp`
-Members: `test-stamp`
-Do: add `import '@citolab/qti-components/stamp'` (or `@qti-components/test/stamp`) where you load
-the library. In a scoped registry use `stampElements` from `…/stamp/elements`. Used in
-`frontend/player.html:64,67`.
-Evidence: read, not run
-
-### The view controls become a plugin: `@qti-components/test/view` (test plugin architecture)
-
-Status: nothing breaks on upgrade; required in the next major, when `@qti-components/test` stops registering them
-Members: `test-view-toggle`, `test-view`, `test-check-item`
-Do: add `import '@citolab/qti-components/view'` next to the library import. In a scoped registry use
-`viewElements` from `…/view/elements`. `test-view-toggle` is used in `frontend/player.html:296`;
-`test-check-item` is not used, and now switches the session view (see its changeset).
-Evidence: read, not run
-
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.
