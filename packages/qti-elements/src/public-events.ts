@@ -68,10 +68,13 @@ export function dispatchDeclared(
   return target.dispatchEvent(new CustomEvent(deprecated, init)) && notCancelled;
 }
 
+const warned = new Set<string>();
+
 /**
  * Listen for `name` and its deprecated name. `dispatchDeclared` sends the old name straight after
  * the new one, synchronously, with the same `detail`: that one is skipped, so the handler runs
- * once. A host that sends only the old name is handled too.
+ * once. A host that sends only the old name is handled too, and warned once per name in the
+ * console: only a sender outside our own components gets here without the new name before it.
  */
 export function listenDeclared(
   target: EventTarget,
@@ -89,6 +92,10 @@ export function listenDeclared(
   if (deprecated) {
     target.addEventListener(deprecated, e => {
       if (justHandled !== undefined && (e as CustomEvent).detail === justHandled) return;
+      if (!warned.has(deprecated)) {
+        warned.add(deprecated);
+        console.warn(`[qti-components] The event "${deprecated}" is deprecated; dispatch "${name}" instead.`);
+      }
       handler(e);
     });
   }

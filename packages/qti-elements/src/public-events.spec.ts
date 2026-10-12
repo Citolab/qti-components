@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { dispatchPublic, listenPublic, PUBLIC_ITEM_EVENTS } from './public-events';
 
@@ -50,5 +50,21 @@ describe('dispatchPublic / listenPublic (item)', () => {
     const el2 = document.createElement('div');
     el2.addEventListener('cito-item-rubric-placement', e => e.preventDefault());
     expect(dispatchPublic(el2, 'cito-item-rubric-placement', { className: 'x', element: el2 }, true)).toBe(false);
+  });
+
+  it('warns once when a host sends the old name alone, and never for our own dual dispatch', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const el = document.createElement('div');
+    listenPublic(el, 'cito-item-response-changed', () => {});
+
+    dispatchPublic(el, 'cito-item-response-changed', { item: 'i1', responseIdentifier: 'R', response: 'a' } as never);
+    expect(warn).not.toHaveBeenCalled();
+
+    el.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: { item: 'i1' } }));
+    el.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: { item: 'i2' } }));
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain('qti-interaction-changed');
+    expect(String(warn.mock.calls[0][0])).toContain('cito-item-response-changed');
+    warn.mockRestore();
   });
 });
