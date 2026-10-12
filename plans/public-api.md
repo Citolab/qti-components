@@ -309,7 +309,7 @@ the code behind them is not yet verified against it.
    `auto-score-items`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`,
    `on-test-switch-view`, `test-show-candidate-correction`, the extension tier, and the four
    write-path events. Issue #240; host-shaped tests #251.
-8. **Bookmarks and highlights in `state.session`**: #237 (state), #246 (bookmark component), #247
+8. **Bookmarks and highlights in `state.session`**: #237 (state: **done** as `session.plugins`, #286), #246 (bookmark component: **done** as `<test-bookmark>`), #247
    (highlights); all unblocked by #275. Highlights need the anchor design first (decision 4), and
    become a plugin (decision 12). `feat/test-item-bookmark` is the branch for bookmarks.
 9. **Styling tier**: map what Kennisnet and CitoTestUit patch onto the parts and states the theme

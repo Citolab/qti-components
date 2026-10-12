@@ -29,6 +29,19 @@ const STYLES_FROM_COMPONENTS = /^\.\.\/styles$/; // the shared look of the test 
 
 const PLUGINS: Plugin[] = [
   {
+    name: 'bookmark',
+    folders: ['components/test-bookmark/'],
+    reference: /test-bookmark|TestBookmark|bookmarkedItems/,
+    allow: [
+      PUBLIC_EVENTS_FROM_COMPONENTS,
+      STYLES_FROM_COMPONENTS,
+      /^\.\.\/\.\.\/plugin-state$/, // the typed read of a plugin's entry
+      /^\.\.\/\.\.\/types\/qti-test-state$/, // the public state type
+      /^\.\.\/qti-test\/qti-test$/, // the spec drives a test through its public element
+      /^@citolab\/qti-components$/ // the spec registers everything the way a host does
+    ]
+  },
+  {
     name: 'tts',
     folders: ['tts/'],
     reference:

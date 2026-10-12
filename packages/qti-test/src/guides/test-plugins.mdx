@@ -99,6 +99,10 @@ state, under its own name, and does not store anything itself:
 - **Type it:** augment `QtiTestPluginState` with your entry (`interface QtiTestPluginState { bookmarks: string[] }`
   in a `declare module` on `types/qti-test-state`); the test itself never reads an entry.
 
+`<test-bookmark>` (`packages/qti-test/src/components/test-bookmark/`) is the worked example: it reads
+`bookmarks` with `pluginState`, writes the new list with `cito-test-update-plugin-state`, and types its entry
+by augmenting `QtiTestPluginState`.
+
 Keep an entry small and plain: it is stored with the candidate's data, so it is not for the answer key or
 for anything the host should rederive.
 
