@@ -51,12 +51,50 @@ Text-to-speech (`packages/qti-test/src/tts/`) is the first plugin and the refere
    `plans/public-api.md` for host letters (K, C, P) before moving anything; a plugin that a host
    uses needs a `plans/host-migration/` entry in the same commit.
 
+## Survey results (2026-10-12)
+
+Done against `next` after the sync, for the components in `packages/qti-test/src/components/`.
+
+**Most optional components are already plugin-shaped.** They read only `computedContext` (or
+`sessionContext`) and talk to the test through events. Nothing in the core imports them except
+`elements.ts` (registration) and `components/index.ts` (re-export), exactly as TTS was before it
+moved. Splitting them out is mostly moving registration into plugin entry points.
+
+| Component                                                                           | Reads                                         | Writes (events dispatched)                   | Verdict                                                                      |
+| ----------------------------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
+| `test-print-context`, `test-print-item-variables`, `test-scoring-feedback`          | `computedContext`                             | none                                         | plugin as is                                                                 |
+| `test-scoring-buttons`                                                              | `computedContext`                             | `test-update-outcome-variable`               | plugin as is; the write path is that event                                   |
+| `test-stamp`, `test-paging-buttons-stamp`, `test-section-buttons-stamp`             | `computedContext`                             | `qti-stamp-context-updated` (`test-stamp`)   | plugin as is                                                                 |
+| `test-view-toggle`, `test-view`                                                     | `sessionContext`                              | `on-test-switch-view` (`detail` is the view) | plugin as is                                                                 |
+| `qti-test-feedback`                                                                 | none                                          | none                                         | plugin as is (20 lines)                                                      |
+| `test-check-item`                                                                   | internal `testHostContext`                    | `test-end-attempt`                           | **outlier**, see below                                                       |
+| `test-next`, `test-prev`, `test-end-attempt`, `test-item-link`, `test-section-link` | `computedContext` or none                     | `qti-request-navigation`, `test-end-attempt` | navigation controls: keep in core, or one `navigation` plugin; owner decides |
+| `qti-number-selected`, `qti-test-variables`                                         | `testContext` + `internal/item-ref-selection` | none                                         | QTI spec elements and internals: core                                        |
+
+**The write path is already an API: four events.** `qti-request-navigation` (go to an item, section
+or step), `test-end-attempt` (score the active item) and `test-update-outcome-variable`
+(`{ assessmentItemRefId, outcomeVariableId, value }`, sets an outcome on an item) are handled by
+`test-navigation`; `on-test-switch-view` (`detail` is the view) switches the view. A plugin never
+needs a method on the test. These events, plus `computedContext` and `sessionContext`, are most of
+what the plugin API has to document and pin.
+
+**The one outlier: `test-check-item`.** It ends the attempt (an event, fine) and then reaches into
+`test-container`'s shadow root through the internal `testHostContext` to add `.show` to every
+`[view]` element. That is the same reaching TTS had to give up. It needs a public way to say "reveal
+the view elements", most likely a change to the session `view` (which `test-view-toggle` already
+drives) or a small event, not a DOM walk. This is the main design question left.
+
+**Own `<template>` lookups are fine.** The `querySelector('template')` calls in the stamp and button
+components read the element's own children, not the test's internals.
+
 ## Open questions
 
-- Which components are plugins? (Candidates above; the owner decides.)
-- Does a plugin ever need to *write* to the test (e.g. scoring buttons set outcomes)? Today the
-  contexts are read-only for plugins except the navigation request. A write path is the main
-  design risk.
+- Which components are plugins? The survey says every candidate except `test-check-item` already
+  qualifies; the owner decides whether the navigation controls join them.
+- How does `test-check-item` reveal `[view]` elements without reaching into `test-container`?
+  (Change the session `view`, or a small event.)
+- Write path: answered by the survey. The four events above are the API; they need contract stories
+  and entries in `plans/public-api.md`.
 - One package per plugin, or folders inside `@qti-components/test`? Folders keep one install and
   one version; packages allow independent versions but multiply the release plumbing.
 - Does `register.ts` side-effect registration stay, given scoped registries elsewhere
