@@ -44,8 +44,14 @@ const PLUGINS: Plugin[] = [
       /test-stamp|TestStamp|test-paging-buttons-stamp|TestPagingButtonsStamp|test-section-buttons-stamp|TestSectionButtonsStamp|stampContext|\/stamp['/]/,
     allow: [
       /^\.\.\/public-events$/,
-      /^\.\.\/components\/test-print-context\/test-print-context$/ // a story shows it next to the stamp
+      /^\.\.\/print\/test-print-context$/ // a story shows it next to the stamp
     ]
+  },
+  {
+    name: 'print',
+    umbrellaEntry: '/packages/qti-components/src/print.ts',
+    reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables|\/print['/]/,
+    allow: [/^\.\.\/public-events$/]
   }
 ];
 

@@ -62,6 +62,10 @@
       "types": "./dist/transformers.d.ts",
       "import": "./dist/transformers.js"
     },
+    "./print": {
+      "types": "./dist/print.d.ts",
+      "import": "./dist/print.js"
+    },
     "./stamp": {
       "types": "./dist/stamp.d.ts",
       "import": "./dist/stamp.js"

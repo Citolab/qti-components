@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestStamp } from './test-stamp';
 
 import './test-stamp';
-import '../components/test-print-context/test-print-context';
+import '../print/test-print-context';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-stamp');
 

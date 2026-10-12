@@ -15,8 +15,6 @@ import { TestItemLink } from './components/test-item-link/test-item-link';
 import { TestNavigation } from './components/test-navigation/test-navigation';
 import { TestNext } from './components/test-next/test-next';
 import { TestPrev } from './components/test-prev/test-prev';
-import { TestPrintContext } from './components/test-print-context/test-print-context';
-import { TestPrintVariables } from './components/test-print-item-variables/test-print-item-variables';
 import { TestScoringButtons } from './components/test-scoring-buttons/test-scoring-buttons';
 import { TestScoringFeedback } from './components/test-scoring-feedback/test-scoring-feedback';
 import { TestSectionLink } from './components/test-section-link/test-section-link';
@@ -28,9 +26,12 @@ import { ttsElements } from './tts/elements'; // tts-plugin: Step-A compatibilit
 // stamp-plugin: Step-A compatibility, remove in the next major. The stamps are the opt-in plugin
 // `@qti-components/test/stamp`; they are still listed here so this release does not break.
 import { stampElements } from './stamp/elements'; // stamp-plugin: Step-A compatibility
+// print-plugin: Step-A compatibility, remove in the next major. See `@qti-components/test/print`.
+import { printElements } from './print/elements'; // print-plugin: Step-A compatibility
 
 export * from './tts/elements'; // tts-plugin: Step-A compatibility (deprecated here; removed in the next major)
 export * from './stamp/elements'; // stamp-plugin: Step-A compatibility (deprecated here; removed in the next major)
+export * from './print/elements'; // print-plugin: Step-A compatibility (deprecated here; removed in the next major)
 
 export {
   QtiAssessmentItemRef,
@@ -50,8 +51,6 @@ export {
   TestNavigation,
   TestNext,
   TestPrev,
-  TestPrintContext,
-  TestPrintVariables,
   TestScoringButtons,
   TestScoringFeedback,
   TestSectionLink,
@@ -77,13 +76,12 @@ export const qtiTestElements = [
   { tag: 'test-navigation', ctor: TestNavigation },
   { tag: 'test-next', ctor: TestNext },
   { tag: 'test-prev', ctor: TestPrev },
-  { tag: 'test-print-context', ctor: TestPrintContext },
-  { tag: 'test-print-item-variables', ctor: TestPrintVariables },
   { tag: 'test-scoring-buttons', ctor: TestScoringButtons },
   { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },
   { tag: 'test-section-link', ctor: TestSectionLink },
   { tag: 'test-view', ctor: TestView },
   { tag: 'test-view-toggle', ctor: TestViewToggle },
   ...ttsElements, // tts-plugin: Step-A compatibility
-  ...stampElements // stamp-plugin: Step-A compatibility
+  ...stampElements, // stamp-plugin: Step-A compatibility
+  ...printElements // print-plugin: Step-A compatibility
 ] as const;
