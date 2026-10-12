@@ -121,6 +121,18 @@
       margin: 0;
       padding: 0;
     }
+    /*
+     * The background graphic narrows with its container; the drop areas are percentages of it
+     * (positionShapes), so they scale along — see qti-graphic-gap-match-interaction.styles.ts.
+     * reset.css gives every picture inside an interaction `max-width: none`, which outranks that
+     * component's ::slotted() rule, so the fluid sizing is restated here for the graphic alone: a
+     * direct child, never a chip's picture, which must keep its size in the bank and the hotspot.
+     */
+    & > img,
+    & > object {
+      max-width: 100%;
+      height: auto;
+    }
   }
 }
 
