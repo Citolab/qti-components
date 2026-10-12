@@ -64,7 +64,7 @@ Repository skill catalog for agents and contributors.
 ## Skill: `qti-interactions-story-authoring`
 
 - Path: `.codex/skills/qti-interactions-story-authoring/SKILL.md`
-- Use when: creating/refactoring stories for `packages/qti-interactions`.
+- Use when: creating/refactoring stories for `packages/interactions/*`.
 - Typical triggers:
   - "create stories for qti-interactions"
   - "split interaction stories"

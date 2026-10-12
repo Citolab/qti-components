@@ -36,9 +36,11 @@ stories in a real browser (Playwright/chromium) via `@storybook/addon-vitest`.
 processing,transformers,loader,corrections}.ts`, one entry point per package):
   - `qti-base` — shared base classes/utilities used across all other packages.
   - `qti-elements` — QTI non-interaction elements (structural/content tags).
-  - `qti-interactions` — interaction components (choice, text-entry, hotspot, etc.) — canonical
-    location; `packages/interactions/*` (per-interaction subpackages) is a legacy/parallel layout
-    being migrated away from — both currently carry duplicate `AGENTS.md` rules.
+  - `interactions/*` — the interaction components, one subpackage each (`choice-interaction`,
+    `text-entry-interaction`, `hotspot-interaction`, …) plus `interactions/core` for the shared
+    mixins. This is where interaction code and its stories live; `AGENTS.md` here holds the rules.
+  - `qti-interactions` — thin aggregator: re-registers every `interactions/*` subpackage
+    (`elements.ts`, `register-all.ts`) for the umbrella package. No component code of its own.
   - `qti-item` — assembles elements/interactions into a renderable `qti-item`.
   - `qti-test` — assessment-test level components: navigation, sections, scoring, outcome
     processing, item-ref selection.
@@ -73,8 +75,7 @@ publish` rewrite `catalog:` correctly; `npm pack` does not, so packing must go t
 
 ## Story architecture (interaction packages)
 
-Applies to `packages/qti-interactions/**` and `packages/interactions/**` (see their local
-`AGENTS.md` for the full policy):
+Applies to `packages/interactions/**` (see its local `AGENTS.md` for the full policy):
 
 - Exactly one main docs story per component: `qti-*-interaction.stories.ts`; only that file uses
   `getStorybookHelpers(...)` and `tags: ['autodocs']`.

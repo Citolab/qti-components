@@ -11,7 +11,7 @@
 - Monorepo package roots: `packages/*`
 - Storybook config: `.storybook/`
 - Shared tooling: `tools/`
-- QTI interaction package: `packages/qti-interactions/`
+- QTI interaction packages: `packages/interactions/*` (aggregated by `packages/qti-interactions/`)
 - Theme package: `packages/qti-theme/`
 
 ## Canonical Commands
