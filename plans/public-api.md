@@ -48,7 +48,7 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 ### Host tier: embedding a test
 
 | Member                                                                                                                   | Hosts | Status           | Notes                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------ | ----- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| ------------------------------------------------------------------------------------------------------------------------ | ----- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `qtiTest.state`, `qti-state-changed`                                                                                     | —     | **S**            | new; the persistence contract                                                                                                                                                                                                  |
 | `qti-test-context-updated`                                                                                               | K, C  | **D**            | both depend on it; keep until both migrate                                                                                                                                                                                     |
 | assigning `qtiTest.testContext`                                                                                          | K, C  | **D** for hosts  | still the context provider internally                                                                                                                                                                                          |
@@ -60,7 +60,7 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 | `test-navigation.qtiContext`                                                                                             | C     | **D** alias      | reads and writes `qtiTest.qtiContext`; removed in the next major                                                                                                                                                               |
 | `asSeed`, `QtiContext`                                                                                                   | C     | **S**            |                                                                                                                                                                                                                                |
 | `updateItemVariables`                                                                                                    | K     | **S**            | external scoring; fixed in #225                                                                                                                                                                                                |
-| `outcomeProcessing()`                                                                                                    | —     | —                | **S**                                                                                                                                                                                                                          | documented on Scoring & State; finds the test inside `test-container`'s shadow root, which it did not before Phase 4 |
+| `outcomeProcessing()`                                                                                                    | —     | **S**            | documented on Scoring & State; finds the test inside `test-container`'s shadow root, which it did not before Phase 4                                                                                                           |
 | `test-container` `testURL` / `test-url`                                                                                  | K, C  | **S**            |                                                                                                                                                                                                                                |
 | `test-navigation` `auto-score-items`, `initContext`                                                                      | K, C  | **S**            | document. `cache-transform` no longer exists in the library; Kennisnet and the Playground still set it, which does nothing                                                                                                     |
 | `qti-assessment-test-connected`, `qti-assessment-item-connected`, `qti-assessment-item-ref-connected`, `qti-test-loaded` | K, C  | **S**            | lifecycle                                                                                                                                                                                                                      |
@@ -119,6 +119,74 @@ first plugin: `@qti-components/test/tts`). Hosts do not use contexts (only Peili
 | request: navigate, end attempt, update an outcome, switch view         | K, C (some) | **S** under the new names below                                                                                                                                              |
 | notification: navigated                                                | —           | **S**, new: sent only after a navigation succeeded and rendered. Hosts now treat `qti-request-navigation` as "navigated", which is wrong when linear mode refuses it         |
 | consume `sessionContext`, `testContext`, `configContext`, `qtiContext` | P (`test`)  | **not plugin API**: `sessionContext` duplicates position and `view`; `testContext` is the responses/outcomes model for hosts and persistence; config and seed are host input |
+
+### Plugin architecture: every optional piece of `qti-test` is a plugin
+
+Branch `feat/test-plugin-architecture`, PR #261, target `next`. A plugin is a folder that uses
+only public API, that the core does not refer to, and that a host opts into with one import.
+Text-to-speech (`packages/qti-test/src/tts/`) is the first plugin and the reference
+implementation.
+
+**What exists (verified in code 2026-10-12)**
+
+- Entry points per plugin: `@qti-components/test/tts` (registers), `…/tts/elements` (classes
+  only), umbrella `@citolab/qti-components/tts`.
+- A plugin reads one context, `computedContext`, plus the request events. `itemElement` is in
+  `computed.types.ts` and set by `test-navigation`.
+- `tts/plugin-boundary.spec.ts` fails on a reference to the plugin from outside its folder and on
+  an import of test internals. It covers TTS only.
+- Guide: `packages/qti-test/src/guides/test-plugins.{mdx,stories.ts}`.
+- **Step A (compatibility)** is what `next` has: the core still registers and re-exports TTS, on
+  lines marked `tts-plugin: Step-A compatibility` (`qti-test/src/elements.ts`, `index.ts`).
+  **Step B** removes those lines, which is the breaking change; the changeset
+  (`.changeset/tts-plugin.md`, now `minor`) becomes `major`.
+
+**Survey of the optional components** (`packages/qti-test/src/components/`, 2026-10-12). Most are
+already plugin-shaped: they read only `computedContext` (or `sessionContext`) and talk to the test
+through events. Nothing in the core imports them except `elements.ts` (registration) and
+`components/index.ts` (re-export), exactly as TTS was before it moved.
+
+| Component                                                                           | Reads                                         | Writes (events dispatched)                   | Verdict                                                                                           |
+| ----------------------------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `test-print-context`, `test-print-item-variables`, `test-scoring-feedback`          | `computedContext`                             | none                                         | plugin as is                                                                                      |
+| `test-scoring-buttons`                                                              | `computedContext`                             | `test-update-outcome-variable`               | plugin as is; the write path is that event                                                        |
+| `test-stamp`, `test-paging-buttons-stamp`, `test-section-buttons-stamp`             | `computedContext`                             | `qti-stamp-context-updated` (`test-stamp`)   | plugin as is                                                                                      |
+| `test-view-toggle`, `test-view`                                                     | `sessionContext`                              | `on-test-switch-view` (`detail` is the view) | plugin as is                                                                                      |
+| `qti-test-feedback`                                                                 | none                                          | none                                         | plugin as is (20 lines)                                                                           |
+| `test-check-item`                                                                   | internal `testHostContext`                    | `test-end-attempt`                           | **outlier**: reaches into `test-container`'s shadow root to add `.show` to every `[view]` element |
+| `test-next`, `test-prev`, `test-end-attempt`, `test-item-link`, `test-section-link` | `computedContext` or none                     | `qti-request-navigation`, `test-end-attempt` | navigation controls: keep in core, or one `navigation` plugin; owner decides                      |
+| `qti-number-selected`, `qti-test-variables`                                         | `testContext` + `internal/item-ref-selection` | none                                         | QTI spec elements and internals: core                                                             |
+
+**The write path is already an API: four events** (`qti-request-navigation`, `test-end-attempt`,
+`test-update-outcome-variable`, `on-test-switch-view`), plus `computedContext` and
+`sessionContext`. A plugin never needs a method on the test. The events get their public `cito-`
+names in the next section.
+
+`test-check-item` needs a public way to say "reveal the view elements": most likely a change to
+the session `view` (which `test-view-toggle` already drives), or a small event, not a DOM walk.
+Own `<template>` lookups in the stamp and button components are fine; they read the element's own
+children.
+
+**Decided** (issue #275)
+
+- Plugins are folders inside `@qti-components/test` (one install, one version), not packages (#276).
+- `register.ts` side-effect registration stays, next to `elements.ts`. `elements.ts`
+  (`{ tag, ctor }[]`, defines nothing) is the contract for scoped registries, because plugin
+  elements inside item-ref templates land in `test-container`'s scoped registry; `register.ts` is
+  the one-import global case. `qti-corrections` does the same. Follow-ups: warn in `register.ts`
+  when a tag is already registered (as `corrections.ts` does), and document in the guide that
+  `/<plugin>/elements` is for scoped registries and `/<plugin>` for the global one.
+
+**Open questions**
+
+- Do the navigation controls join the plugins? (owner decides at triage)
+- `test-check-item`: session `view` change or small event? (#280)
+
+**Conventions to write down once** (today only visible by reading `tts/`): folder layout
+(`index.ts`, `elements.ts`, `register.ts`), the three entry points, the package.json export
+entries, how the umbrella re-exports it. Prefer widening a context over exposing an element. Plugin
+tags and events do not use `qti-` (see Event naming). Before moving a plugin a host uses, add its
+`plans/host-migration/` entry in the same commit.
 
 ### Event naming: public or internal
 
@@ -201,22 +269,53 @@ for one minor; the old name goes in the next major, with `plans/host-migration/*
     says an event is public; `test-`/`item-` were rejected because elements and internal requests
     already use them.
 
-## Next steps
+## Status
 
-- [x] Astro "Public API" page from the tables above: one section per tier, a status per member.
-- [x] A contract story per supported host-tier and item-tier member, like `qti-test.api.stories.ts`. Left: `showCandidateCorrection` (corrections package), `test-container` `test-url`, `auto-score-items`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`, `on-test-switch-view`, `test-show-candidate-correction`, the extension tier.
-- [x] Migration note for Kennisnet and CitoTestUit (see `plans/host-migration/`): `testContext` → `state`, `href` from the
-      item-ref, bookmarks → `state.session`.
-- [ ] Bookmarks and highlights in `state.session` on `feat/test-item-bookmark`, with an anchor
-      design for highlights.
-- [x] Entry points for `Interaction` and the contexts: they already exist as `@citolab/qti-components/qti-base`; the old `/exports/*` paths are gone. Now documented, with the extension contract pinned by stories.
-- [ ] Styling tier: map what Kennisnet and CitoTestUit patch onto the parts and states the theme already exposes
-      (the old audit is `git show 614c666e:plans/css-contract-audit.md`), then decide parts and states.
-- [ ] Optional: survey PeilingLezen in depth, and the 2.x–6.x hosts if their usage still matters.
-- [x] Decide the public event prefix: `cito-` (decision 13).
-- [ ] Public-events module + spec, rename the
-      unreleased and unused names, dual-dispatch the host-used ones, migration entries per host.
-- [x] `computedContext.itemElement`; remove `testItemsContext`; text-to-speech reads only
-      `computedContext`.
-- [ ] `cito-test-navigated`.
-- [ ] Highlight plugin, after per-item plugin state in `state.session`.
+Checked against the code on 2026-10-12.
+
+### Done
+
+- Astro "Public API" page, one section per tier.
+- Migration notes for Kennisnet and CitoTestUit (`testContext` → `state`, `href` from the item-ref, bookmarks → `state.session`).
+- `qtiTest.state` and `qti-state-changed` (#225); `qtiContext` provided by `qti-test`.
+- Entry points for `Interaction` and the contexts (`@citolab/qti-components/qti-base`); `/exports/*` is gone; extension contract pinned by stories.
+- Contract stories for most host-tier and item-tier members.
+- Public event prefix decided: `cito-` (decision 13).
+- `computedContext.itemElement`; `testItemsContext` removed; text-to-speech reads only `computedContext`.
+- TTS is a plugin with three entry points, a guide, an executable contract story and a boundary spec (Step A).
+- Survey of the optional test components (above).
+
+### Next todos
+
+Tracking issue: **#275** (PR #261 is its first task). Open work lives in issues; this list is the
+order and the gaps. Issues #276–#279, #281 and #282 are closed and folded into #275's task list;
+the code behind them is not yet verified against it.
+
+1. **Public events** (#275, "Public plugin API"; no issue of its own). One module declares the
+   public events and augments `HTMLElementEventMap`; a spec fails on an undeclared `cito-` dispatch
+   or a removed declared one. Rename the unreleased and unused names, dual-dispatch the host-used
+   ones, one migration entry per host. Nothing in `packages/` uses `cito-` yet.
+2. **`cito-test-navigated`**, part of 1. Sent only after a navigation succeeded and rendered.
+3. **One boundary spec for all plugins** (#275, was #278): a list of plugin folders with the same
+   two rules. The spec lives in `tts/` today. Plus the plugin convention write-up (was #277).
+4. **`test-check-item`** reveals `[view]` elements without reaching into `test-container` (#280).
+5. **Move the other optional components into plugins** (#275, was #281), one per commit, host
+   letters first (K, C, P); a plugin a host uses needs a migration entry. Related: #249.
+6. **Step B**: remove the `tts-plugin: Step-A compatibility` lines and make the changeset `major`
+   (PR #261). Do it with 5 so the breaking change lands once. Also #245 (core unaware of the
+   corrections package).
+7. **Remaining contract stories**: `showCandidateCorrection` (corrections package), `test-url`,
+   `auto-score-items`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`,
+   `on-test-switch-view`, `test-show-candidate-correction`, the extension tier, and the four
+   write-path events. Issue #240; host-shaped tests #251.
+8. **Bookmarks and highlights in `state.session`**: #237 (state), #246 (bookmark component), #247
+   (highlights); all unblocked by #275. Highlights need the anchor design first (decision 4), and
+   become a plugin (decision 12). `feat/test-item-bookmark` is the branch for bookmarks.
+9. **Styling tier**: map what Kennisnet and CitoTestUit patch onto the parts and states the theme
+   already exposes (old audit: `git show 614c666e:plans/css-contract-audit.md`), then decide parts
+   and states. No issue yet.
+10. **Host check**: try a pkg.pr.new build in Kennisnet and CitoTestUit (#241).
+11. Optional: survey PeilingLezen in depth, and the 2.x–6.x hosts if their usage still matters.
+
+Not in this branch: any change to `main` (behaviour fixes go there and are merged into `next`),
+and the Kennisnet 9.x material in `plans/host-migration/`.
