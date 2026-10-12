@@ -38,8 +38,9 @@ jobs:
       - name: Check if dry run
         id: check
         run: |
+          # The docs describe the stable release: a dry run or a prerelease from next does not deploy.
           if [ -f release-type.txt ]; then
-            IS_DRY_RUN=$(grep -q "dry-run" release-type.txt && echo "true" || echo "false")
+            IS_DRY_RUN=$(grep -qE "dry-run|prerelease" release-type.txt && echo "true" || echo "false")
           else
             IS_DRY_RUN="false"
           fi
