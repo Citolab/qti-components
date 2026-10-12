@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - main
+      - qti-components-10.x
   push:
     branches:
       - main
+      - qti-components-10.x
   workflow_dispatch:
     inputs:
       branch:
@@ -96,7 +98,7 @@ jobs:
 
       - name: Check for changesets
         run: |
-          if pnpm exec changeset status --since=origin/main; then
+          if pnpm exec changeset status --since=origin/${{ github.base_ref || 'main' }}; then
             echo "✅ Changeset found."
           else
             echo "⚠️ No changeset found. If this PR changes published package behavior, a maintainer will add one before merging."
