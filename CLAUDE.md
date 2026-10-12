@@ -53,7 +53,7 @@ processing,transformers,loader,corrections}.ts`, one entry point per package):
   - `qti-utilities` — generic shared helpers with no QTI-specific semantics.
 - `apps/*` — the docs/Storybook site app (`pnpm run docs`).
 - `tools/` — build/test tooling (e.g. `tools/testing/pretest-clean.mjs`,
-  `tools/changesets/*`, `tools/publish-if-needed.mjs`).
+  `tools/changesets/*`).
 - `.storybook/` — Storybook config; `cem.config.mjs` drives the custom-elements-manifest
   generator that Storybook docs and `custom-elements.json` depend on.
 
@@ -126,9 +126,9 @@ Always name the branch, the worktree and the PR number together when talking abo
 - **After every `main` release, merge `main` into `next`.** _(Planned: a GitHub Action does this
   and opens a PR when it conflicts. Until it exists, do it by hand the same day: it keeps
   `package.json` versions and `CHANGELOG.md` conflicts small.)_
-- **`next`:** prereleases publish as `@next` on npm so hosts can install and test them.
-  _(Planned: changesets pre-mode, plus a dist-tag change in `tools/publish-if-needed.mjs`. Not
-  built; do not release from `next` until it is.)_
+- **`next`:** prereleases publish as `@next` on npm so hosts can install and test them; see
+  "Prereleases from `next`" under Releasing below. _(Pre mode is not entered on `next` yet: until
+  `.changeset/pre.json` exists there, the release workflow refuses to release from `next`.)_
 - **Shipping the major:** cut a `9.x` maintenance branch from the last release, merge `next` into
   `main`, leave pre-mode, release.
 
@@ -194,9 +194,26 @@ Releases are manual and deliberate — no auto-publish on merge to `main`.
    failed release does not deploy. Manual redeploy: `gh workflow run deploy-site.yml`. Storybook
    is no longer published; it is a local dev tool (`pnpm run storybook`).
 
+### Prereleases from `next` (`@next` on npm)
+
+`next` releases through the same workflow, in changesets pre-release mode. Versions look like
+`10.0.0-next.3` and publish under the `next` dist-tag, so `npm i @citolab/qti-components` still gets
+the last stable release and `npm i @citolab/qti-components@next` gets the prerelease.
+
+1. Once, on `next` (through a PR into `next`): `pnpm exec changeset pre enter next`, which commits
+   `.changeset/pre.json`. This needs this release tooling merged into `next` first.
+2. Each prerelease: `gh workflow run release.yml -f branch=next -f dry_run=true`, then the same
+   without `dry_run`. The GitHub release is marked as a prerelease and the docs site is not deployed.
+3. Shipping the major: `pnpm exec changeset pre exit` on `next`, merge `next` into `main`, release
+   from `main`.
+
+The workflow refuses a mismatch (`tools/changesets/check-release-lane.mjs`): a branch other than
+`main` without `pre.json` would publish stable versions to `latest`, and `main` with `pre.json`
+would publish a prerelease. The publish step reads the dist-tag from `.changeset/pre.json`.
+
 `changeset publish` is intentionally not used (crashes on this workspace's pnpm registry
-responses); `pnpm run ci:publish:missing` runs `tools/publish-if-needed.mjs` instead, which only
-publishes versions not already on npm and is safe to re-run.
+responses); `pnpm run ci:publish` runs `pnpm -r publish`, which only publishes versions not already
+on npm and is safe to re-run.
 
 ## Committed generated files
 

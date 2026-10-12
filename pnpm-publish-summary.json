@@ -1,0 +1,24 @@
+{
+	"publishedPackages": [
+		{
+			"id": "@qti-components/utilities@1.3.3-next.0",
+			"name": "@qti-components/utilities",
+			"version": "1.3.3-next.0",
+			"size": 12621,
+			"unpackedSize": 35955,
+			"shasum": "cc13a373777523a2c656f90bc991f91e586ddb26",
+			"integrity": "sha512-W32D6B9t13inpYwtx978xG9Qj3lPgUia7U4N86KpcXoNHJ2sMEt2r6PTqS0b7/Qjzuxfrn3nQ+wbu6ipK/h4Sg==",
+			"filename": "qti-components-utilities-1.3.3-next.0.tgz",
+			"files": [
+				{
+					"path": "LICENSE.md"
+				},
+				{
+					"path": "package.json"
+				}
+			],
+			"entryCount": 2,
+			"bundled": []
+		}
+	]
+}
