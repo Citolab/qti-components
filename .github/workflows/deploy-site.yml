@@ -14,6 +14,7 @@ on:
         type: string
 
 permissions:
+  actions: read # download the release run's artifact
   contents: read
   pages: write
   id-token: write
@@ -30,6 +31,9 @@ jobs:
         with:
           name: release-type
           path: .
+          # The artifact belongs to the release run that triggered this one, not to this run.
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check if dry run
         id: check
