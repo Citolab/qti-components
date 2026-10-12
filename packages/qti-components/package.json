@@ -70,6 +70,10 @@
       "types": "./dist/scoring.d.ts",
       "import": "./dist/scoring.js"
     },
+    "./view": {
+      "types": "./dist/view.d.ts",
+      "import": "./dist/view.js"
+    },
     "./stamp": {
       "types": "./dist/stamp.d.ts",
       "import": "./dist/stamp.js"

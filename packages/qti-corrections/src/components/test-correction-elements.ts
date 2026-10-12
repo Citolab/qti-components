@@ -1,4 +1,5 @@
-import { QtiTest, TestCheckItem, TestNavigation } from '@qti-components/test/elements';
+import { QtiTest, TestNavigation } from '@qti-components/test/elements';
+import { TestCheckItem } from '@qti-components/test/view/elements';
 
 import type { ComputedItem, View } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';

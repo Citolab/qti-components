@@ -23,6 +23,8 @@ interface Plugin {
   reference: RegExp;
   /** Imports the plugin may use beyond the common ones below. */
   allow?: RegExp[];
+  /** Path prefixes of packages that build on the plugin's `/elements` entry (an override, an extension). */
+  consumers?: string[];
 }
 
 const PLUGINS: Plugin[] = [
@@ -58,6 +60,16 @@ const PLUGINS: Plugin[] = [
     umbrellaEntry: '/packages/qti-components/src/scoring.ts',
     reference: /test-scoring-buttons|TestScoringButtons|test-scoring-feedback|TestScoringFeedback|\/scoring['/]/,
     allow: [/^\.\.\/public-events$/]
+  },
+  {
+    name: 'view',
+    umbrellaEntry: '/packages/qti-components/src/view.ts',
+    reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b|test-check-item|TestCheckItem|\/view['/]/,
+    consumers: ['/packages/qti-corrections/'], // overrides test-check-item with the correction behaviour
+    allow: [
+      /^\.\.\/public-events$/,
+      /^\.\.\/components\/styles$/ // the shared look of the test controls
+    ]
   }
 ];
 
@@ -65,6 +77,8 @@ const COMMON_ALLOWED = [
   /^\.\//, // its own files
   /^lit(\/|$)/,
   /^@lit\//,
+  /^@open-wc\/lit-helpers$/,
+  /^@qti-components\/utilities$/, // generic helpers, no QTI semantics
   /^@heximal\/templates$/,
   /^@qti-components\/(base|elements)$/,
   /^storybook\//,
@@ -99,6 +113,7 @@ describe.each(PLUGINS)('plugin boundary: $name', plugin => {
           !path.startsWith(folderOf(plugin)) &&
           path !== plugin.umbrellaEntry &&
           path !== SELF &&
+          !plugin.consumers?.some(prefix => path.startsWith(prefix)) &&
           !path.endsWith('.stories.ts')
       )
       .flatMap(([path, source]) =>

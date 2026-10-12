@@ -4,7 +4,7 @@ import { prepareTemplate } from '@heximal/templates';
 
 import { sessionContext } from '@qti-components/base';
 
-import { dispatchPublic } from '../../public-events';
+import { dispatchPublic } from '../public-events';
 
 import type { PropertyValues } from 'lit';
 import type { SessionContext } from '@qti-components/base';

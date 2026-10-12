@@ -56,6 +56,14 @@
       "types": "./dist/scoring/elements.d.ts",
       "import": "./dist/scoring/elements.js"
     },
+    "./view": {
+      "types": "./dist/view/index.d.ts",
+      "import": "./dist/view/index.js"
+    },
+    "./view/elements": {
+      "types": "./dist/view/elements.d.ts",
+      "import": "./dist/view/elements.js"
+    },
     "./stamp": {
       "types": "./dist/stamp/index.d.ts",
       "import": "./dist/stamp/index.js"

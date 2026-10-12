@@ -5,7 +5,7 @@ import { consume } from '@lit/context';
 import { watch } from '@qti-components/utilities';
 import { sessionContext } from '@qti-components/base';
 
-import { dispatchPublic } from '../../public-events';
+import { dispatchPublic } from '../public-events';
 
 import type { SessionContext } from '@qti-components/base';
 import type { View } from '@qti-components/base';
