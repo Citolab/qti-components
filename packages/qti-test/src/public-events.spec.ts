@@ -58,4 +58,14 @@ describe('dispatchPublic / listenPublic', () => {
     dispatchPublic(el, 'cito-test-navigated', { type: 'item', id: 'i1' });
     expect(seen).toEqual(['cito-test-navigated']);
   });
+
+  it('a second dispatch with the same detail object is handled again', () => {
+    const el = document.createElement('div');
+    let handled = 0;
+    listenPublic(el, 'cito-test-loaded', () => handled++);
+    const test = document.createElement('div') as never;
+    dispatchPublic(el, 'cito-test-loaded', test);
+    dispatchPublic(el, 'cito-test-loaded', test);
+    expect(handled).toBe(2);
+  });
 });

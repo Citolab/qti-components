@@ -38,9 +38,7 @@ export const selectItemRefs = (
   { sectionIdentifier, includeCategories, excludeCategories }: ItemRefSelection
 ): QtiAssessmentItemRef[] => {
   const scopes = sectionIdentifier
-    ? Array.from(
-        testElement.querySelectorAll(`qti-assessment-section[identifier="${CSS.escape(sectionIdentifier)}"]`)
-      )
+    ? Array.from(testElement.querySelectorAll(`qti-assessment-section[identifier="${CSS.escape(sectionIdentifier)}"]`))
     : [testElement];
   if (scopes.length === 0) {
     console.warn(`no qti-assessment-section with identifier "${sectionIdentifier}"`);

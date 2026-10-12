@@ -1,4 +1,6 @@
 import type { View } from '@qti-components/base';
+import type { QtiAssessmentTest } from './components/qti-assessment-test/qti-assessment-test';
+import type { QtiTestState } from './types/qti-test-state';
 
 /**
  * The public events of the test. The name tells you it is public: everything here starts with
@@ -35,13 +37,16 @@ export interface PublicEventMap {
   'cito-test-navigation-started': CustomEvent<NavigationTarget>;
   'cito-test-navigation-failed': CustomEvent<NavigationFailure>;
   'cito-test-rendered': CustomEvent<{ identifier: string; element: Element }[]>;
+  'cito-test-loaded': CustomEvent<QtiAssessmentTest>;
+  'cito-test-state-changed': CustomEvent<QtiTestState>;
+  'cito-item-ref-connected': CustomEvent<{ identifier: string; href: string; category: string }>;
 }
 
 export type PublicEventName = keyof PublicEventMap;
 
 export interface PublicEventDeclaration {
   kind: 'request' | 'notification';
-  scope: 'test';
+  scope: 'test' | 'item';
   /** The name before it was public. Dispatched and handled alongside the new one. */
   deprecated?: string;
 }
@@ -58,7 +63,10 @@ export const PUBLIC_EVENTS: Record<PublicEventName, PublicEventDeclaration> = {
     deprecated: 'qti-navigation-loading-started'
   },
   'cito-test-navigation-failed': { kind: 'notification', scope: 'test', deprecated: 'qti-navigation-error' },
-  'cito-test-rendered': { kind: 'notification', scope: 'test', deprecated: 'qti-test-loaded' }
+  'cito-test-rendered': { kind: 'notification', scope: 'test', deprecated: 'qti-test-loaded' },
+  'cito-test-loaded': { kind: 'notification', scope: 'test', deprecated: 'qti-assessment-test-connected' },
+  'cito-test-state-changed': { kind: 'notification', scope: 'test', deprecated: 'qti-state-changed' },
+  'cito-item-ref-connected': { kind: 'notification', scope: 'item', deprecated: 'qti-assessment-item-ref-connected' }
 };
 
 declare global {
@@ -81,24 +89,26 @@ export function dispatchPublic<K extends PublicEventName>(
 }
 
 /**
- * Listen for a public event and its deprecated name. A sender that dispatched both (our own
- * `dispatchPublic`) runs the handler once; a host that still sends only the old name runs it too.
+ * Listen for a public event and its deprecated name. `dispatchPublic` sends the new name first,
+ * then the old one with the same `detail`, synchronously: the old one straight after is skipped, so
+ * the handler runs once. A host that sends only the old name is handled too.
  */
 export function listenPublic<K extends PublicEventName>(
   target: EventTarget,
   name: K,
   handler: (e: PublicEventMap[K]) => void
 ): void {
-  const seen = new WeakSet<object>();
-  const listener = (e: Event) => {
-    const { detail } = e as CustomEvent;
-    if (detail && typeof detail === 'object') {
-      if (seen.has(detail)) return;
-      seen.add(detail);
-    }
+  let justHandled: unknown;
+  target.addEventListener(name, e => {
+    justHandled = (e as CustomEvent).detail;
+    queueMicrotask(() => (justHandled = undefined));
     handler(e as PublicEventMap[K]);
-  };
-  target.addEventListener(name, listener);
+  });
   const { deprecated } = PUBLIC_EVENTS[name];
-  if (deprecated) target.addEventListener(deprecated, listener);
+  if (deprecated) {
+    target.addEventListener(deprecated, e => {
+      if (justHandled !== undefined && (e as CustomEvent).detail === justHandled) return;
+      handler(e as PublicEventMap[K]);
+    });
+  }
 }

@@ -1,6 +1,7 @@
 import { QtiExpression } from '@qti-components/base';
 
 import { selectItemRefs, selectionFrom } from '../../internal/item-ref-selection';
+import { listenPublic } from '../../public-events';
 
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
 
@@ -21,10 +22,7 @@ export class QtiNumberSelected extends QtiExpression<number> {
 
   constructor() {
     super();
-    this.addEventListener(
-      'qti-assessment-test-connected',
-      (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail)
-    );
+    listenPublic(this, 'cito-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail));
   }
 
   /**

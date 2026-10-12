@@ -294,9 +294,12 @@ the code behind them is not yet verified against it.
 1. **Public events** (#275, "Public plugin API"; no issue of its own). One module declares the
    public events and augments `HTMLElementEventMap`; a spec fails on an undeclared `cito-` dispatch
    or a removed declared one. Rename the unreleased and unused names, dual-dispatch the host-used
-   ones, one migration entry per host. Nothing in `packages/` uses `cito-` yet.
-2. **`cito-test-navigated`**, part of 1. Sent only after a navigation succeeded and rendered.
-3. **One boundary spec for all plugins** (#275, was #278): a list of plugin folders with the same
+   ones, one migration entry per host. **Done for the test tier** (`qti-test/src/public-events.ts`,
+   `public-events.spec.ts`, changeset, host entries); the item tier (`qti-interaction-changed`,
+   `qti-outcome-changed`, `qti-assessment-item-connected`, `qti-rubric:discretionary-placement`,
+   in `qti-elements`) is not.
+2. **`cito-test-navigated`**, part of 1. **Done**: sent with `cito-test-rendered`, never on a refused or cancelled navigation.
+3. **One boundary spec for all plugins** (#275, was #278; spec done, convention write-up open): a list of plugin folders with the same
    two rules. The spec lives in `tts/` today. Plus the plugin convention write-up (was #277).
 4. **`test-check-item`** reveals `[view]` elements without reaching into `test-container` (#280).
 5. **Move the other optional components into plugins** (#275, was #281), one per commit, host
