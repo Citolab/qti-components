@@ -2,7 +2,6 @@ import { dispatchDeclared, listenDeclared } from '@qti-components/elements/publi
 
 import type { View } from '@qti-components/base';
 import type { PublicEventDeclaration } from '@qti-components/elements/public-events';
-import type { QtiAssessmentTest } from './components/qti-assessment-test/qti-assessment-test';
 import type { QtiTestState } from './types/qti-test-state';
 
 /**
@@ -40,7 +39,8 @@ export interface PublicEventMap {
   'cito-test-navigation-started': CustomEvent<NavigationTarget>;
   'cito-test-navigation-failed': CustomEvent<NavigationFailure>;
   'cito-test-rendered': CustomEvent<{ identifier: string; element: Element }[]>;
-  'cito-test-loaded': CustomEvent<QtiAssessmentTest>;
+  // `cito-test-loaded` (detail: the `QtiAssessmentTest`) is added by qti-assessment-test.ts, so this
+  // module imports no element: that import would be a cycle.
   'cito-test-state-changed': CustomEvent<QtiTestState>;
   'cito-item-ref-connected': CustomEvent<{ identifier: string; href: string; category: string }>;
 }

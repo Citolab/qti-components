@@ -1,4 +1,3 @@
-import type { QtiAssessmentItem } from './components/qti-assessment-item/qti-assessment-item';
 import type { InteractionChangedDetails, OutcomeChangedDetails } from './internal/event-types';
 
 /**
@@ -23,8 +22,8 @@ export interface RubricPlacement {
 }
 
 export interface PublicItemEventMap {
-  /** The item rendered: its interactions are in the DOM and its validity is known. */
-  'cito-item-rendered': CustomEvent<QtiAssessmentItem>;
+  // `cito-item-rendered` (detail: the `QtiAssessmentItem`) is added by qti-assessment-item.ts, so this
+  // module imports no element: that import would be a cycle.
   'cito-item-response-changed': CustomEvent<InteractionChangedDetails>;
   'cito-item-outcome-changed': CustomEvent<OutcomeChangedDetails>;
   /** Cancelable: `preventDefault()` keeps the rubric block where it is. */

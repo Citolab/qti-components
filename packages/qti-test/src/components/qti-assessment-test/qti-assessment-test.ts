@@ -40,3 +40,9 @@ declare global {
     'qti-assessment-test': QtiAssessmentTest;
   }
 }
+
+declare module '../../public-events' {
+  interface PublicEventMap {
+    'cito-test-loaded': CustomEvent<QtiAssessmentTest>;
+  }
+}

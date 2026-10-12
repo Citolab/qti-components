@@ -657,3 +657,10 @@ declare global {
     'qti-assessment-item': QtiAssessmentItem;
   }
 }
+
+declare module '../../public-events' {
+  interface PublicItemEventMap {
+    /** The item rendered: its interactions are in the DOM and its validity is known. */
+    'cito-item-rendered': CustomEvent<QtiAssessmentItem>;
+  }
+}
