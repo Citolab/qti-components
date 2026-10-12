@@ -102,7 +102,6 @@ packages/qti-test/src/<plugin>/
   elements.ts                export const <plugin>Elements = [{ tag, ctor }, …] as const — defines nothing
   register.ts                warn for a tag already registered by something else, then for each entry: if (!customElements.get(tag)) customElements.define(tag, ctor)
   index.ts                   import './register.js'; export * from the elements
-  plugin-boundary.spec.ts    fails on a reference from outside the folder, or an import of internals
   <element>.stories.ts / .mdx
 ```
 
@@ -121,10 +120,11 @@ Then expose it — these are the only lines outside the folder:
   and its `exports` entry;
 - tooling: a `directory` entry in `.storybook/main.ts`, and a glob plus a `componentTypePath` row in
   `cem.config.mjs`.
+- the boundary spec: one entry in `PLUGINS` in `packages/qti-test/src/plugin-boundary.spec.ts` (folder
+  name, umbrella entry, and a pattern that matches anything naming the plugin).
 
-Copy `plugin-boundary.spec.ts` from the text-to-speech folder and change its paths and patterns.
-It is what keeps a plugin a plugin: without it, the first convenient import from the test into
-the plugin, or from the plugin into the test's internals, goes unnoticed.
+That entry is what keeps a plugin a plugin: without it, the first convenient import from the test
+into the plugin, or from the plugin into the test's internals, goes unnoticed.
 
 A plugin outside this repository needs none of this: depend on `@qti-components/base`, define
 your elements, and place them inside `<test-navigation>`.
