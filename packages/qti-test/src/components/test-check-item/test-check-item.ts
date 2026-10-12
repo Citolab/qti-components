@@ -1,8 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import * as styles from '../components/styles';
-import { dispatchPublic } from '../public-events';
+import * as styles from '../styles';
+import { dispatchPublic } from '../../public-events';
 
 import type { View } from '@qti-components/base';
 

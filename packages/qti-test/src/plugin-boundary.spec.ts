@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 /**
- * A plugin is a folder that knows the test; the test does not know the folder. Delete the folder
- * and the line for it in `plugins/elements.ts` and nothing else may refer to it. These checks keep it that way for
+ * A plugin is a set of files that knows the test; the test does not know them. Delete the files
+ * and their line in `plugins/elements.ts` and nothing else may refer to them. These checks keep it that way for
  * every plugin in `PLUGINS` — a new reference from outside, or a reach from inside into the
  * test's internals, fails here instead of quietly turning the plugin back into part of the core.
  *
@@ -12,8 +12,10 @@ import { describe, expect, it } from 'vitest';
  * plugin's tags; production code may not.
  */
 interface Plugin {
-  /** Folder name under `packages/qti-test/src/`. */
+  /** The plugin's name, for the report. */
   name: string;
+  /** Its folders under `packages/qti-test/src/`, with a trailing slash. A plugin is these files. */
+  folders: string[];
   /** Anything that names the plugin: tags, classes, contexts, attributes, import paths. */
   reference: RegExp;
   /** Imports the plugin may use beyond the common ones below. */
@@ -22,43 +24,56 @@ interface Plugin {
   consumers?: string[];
 }
 
+const PUBLIC_EVENTS_FROM_COMPONENTS = /^\.\.\/\.\.\/public-events$/; // the public event names and helpers
+const STYLES_FROM_COMPONENTS = /^\.\.\/styles$/; // the shared look of the test controls
+
 const PLUGINS: Plugin[] = [
   {
     name: 'tts',
+    folders: ['tts/'],
     reference:
       /test-item-to-speech|test-tts-|ttsContext|ttsElements|TestItemToSpeech|TestTts|data-tts-content|\/tts['/]/,
     allow: [
-      /^\.\.\/components\/styles$/, // the shared look of the test controls
+      /^\.\.\/components\/styles$/,
       /^\.\.\/components\/qti-assessment-item-ref\/qti-assessment-item-ref$/, // public element, type only
-      /^\.\.\/public-events$/ // the public event names and helpers
+      /^\.\.\/public-events$/
     ]
   },
   {
     name: 'stamp',
+    folders: [
+      'components/test-stamp/',
+      'components/test-paging-buttons-stamp/',
+      'components/test-section-buttons-stamp/'
+    ],
     reference:
-      /test-stamp|TestStamp|test-paging-buttons-stamp|TestPagingButtonsStamp|test-section-buttons-stamp|TestSectionButtonsStamp|stampContext|\/stamp['/]/,
+      /test-stamp|TestStamp|test-paging-buttons-stamp|TestPagingButtonsStamp|test-section-buttons-stamp|TestSectionButtonsStamp|stampContext/,
     allow: [
-      /^\.\.\/public-events$/,
-      /^\.\.\/print\/test-print-context$/ // a story shows it next to the stamp
+      PUBLIC_EVENTS_FROM_COMPONENTS,
+      /^\.\.\/test-print-context\/test-print-context$/ // a story shows it next to the stamp
     ]
   },
   {
     name: 'print',
-    reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables|\/print['/]/,
-    allow: [/^\.\.\/public-events$/]
+    folders: ['components/test-print-context/', 'components/test-print-item-variables/'],
+    reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables/,
+    allow: [PUBLIC_EVENTS_FROM_COMPONENTS]
   },
   {
     name: 'scoring',
-    reference: /test-scoring-buttons|TestScoringButtons|test-scoring-feedback|TestScoringFeedback|\/scoring['/]/,
-    allow: [/^\.\.\/public-events$/]
+    folders: ['components/test-scoring-buttons/', 'components/test-scoring-feedback/'],
+    reference: /test-scoring-buttons|TestScoringButtons|test-scoring-feedback|TestScoringFeedback/,
+    allow: [PUBLIC_EVENTS_FROM_COMPONENTS]
   },
   {
     name: 'view',
-    reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b|test-check-item|TestCheckItem|\/view['/]/,
+    folders: ['components/test-view-toggle/', 'components/test-view/', 'components/test-check-item/'],
+    reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b|test-check-item|TestCheckItem/,
     consumers: ['/packages/qti-corrections/'], // overrides test-check-item with the correction behaviour
     allow: [
-      /^\.\.\/public-events$/,
-      /^\.\.\/components\/styles$/ // the shared look of the test controls
+      PUBLIC_EVENTS_FROM_COMPONENTS,
+      STYLES_FROM_COMPONENTS,
+      /^\.\.\/test-view-toggle\/test-view$/ // a story types the element next to the toggle
     ]
   }
 ];
@@ -89,19 +104,21 @@ const sources = import.meta.glob<string>('/packages/**/src/**/*.ts', {
 /** The one place that composes the plugins; it names each one by design. */
 const PLUGINS_ENTRY = '/packages/qti-test/src/plugins/';
 const SELF = '/packages/qti-test/src/plugin-boundary.spec.ts';
-const folderOf = (plugin: Plugin) => `/packages/qti-test/src/${plugin.name}/`;
+const foldersOf = (plugin: Plugin) => plugin.folders.map(folder => `/packages/qti-test/src/${folder}`);
+const isInside = (path: string, plugin: Plugin) => foldersOf(plugin).some(folder => path.startsWith(folder));
 
 describe.each(PLUGINS)('plugin boundary: $name', plugin => {
-  it('has a folder with sources (a rename must not leave this check empty)', () => {
-    const inside = Object.keys(sources).filter(path => path.startsWith(folderOf(plugin)));
-    expect(inside.length).toBeGreaterThan(0);
+  it('has sources in every listed folder (a rename must not leave this check empty)', () => {
+    for (const folder of foldersOf(plugin)) {
+      expect(Object.keys(sources).filter(path => path.startsWith(folder)).length, folder).toBeGreaterThan(0);
+    }
   });
 
-  it('is not referred to from outside its folder', () => {
+  it('is not referred to from outside its folders', () => {
     const residue = Object.entries(sources)
       .filter(
         ([path]) =>
-          !path.startsWith(folderOf(plugin)) &&
+          !isInside(path, plugin) &&
           path !== SELF &&
           !plugin.consumers?.some(prefix => path.startsWith(prefix)) &&
           !path.startsWith(PLUGINS_ENTRY) &&
@@ -121,7 +138,7 @@ describe.each(PLUGINS)('plugin boundary: $name', plugin => {
   it('uses only public API of the test', () => {
     const allowed = [...COMMON_ALLOWED, ...(plugin.allow ?? [])];
     const imports = Object.entries(sources)
-      .filter(([path]) => path.startsWith(folderOf(plugin)))
+      .filter(([path]) => isInside(path, plugin))
       .flatMap(([path, source]) =>
         [
           ...source.matchAll(/^\s*(?:import|export)\b[^'"]*?from\s+['"]([^'"]+)['"]|^\s*import\s+['"]([^'"]+)['"]/gm)

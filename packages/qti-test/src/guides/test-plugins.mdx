@@ -98,18 +98,12 @@ repository use `test-`. Your own use your own prefix.
 
 ## Packaging a plugin in this repository
 
-A plugin is one folder, and only that folder and one line in `plugins/elements.ts` know it exists.
-Text-to-speech (`packages/qti-test/src/tts/`) is the reference:
-
-```text
-packages/qti-test/src/<plugin>/
-  <element>.ts               the elements
-  elements.ts                export const <plugin>Elements = [{ tag, ctor }, …] as const — defines nothing
-  <element>.stories.ts / .mdx
-```
+A plugin is a set of files, and only those files and one line in `plugins/elements.ts` know it exists.
+The elements stay where they are in `components/<element>/`; text-to-speech
+(`packages/qti-test/src/tts/`) is the reference and has its own folder.
 
 `plugins/elements.ts` is the one place that composes them: it re-exports each plugin's classes and
-spreads each `<plugin>Elements` into `pluginElements`. `qti-test`'s own `elements.ts` spreads
+lists their `{ tag, ctor }` entries as `pluginElements`. `qti-test`'s own `elements.ts` spreads
 `pluginElements`, and `register.ts` defines them with everything else. A scoped
 `CustomElementRegistry` (a plugin placed inside an item-ref template is stamped into
 `test-container`'s shadow root, which uses the registry you give it) takes the entries from
@@ -117,11 +111,11 @@ spreads each `<plugin>Elements` into `pluginElements`. `qti-test`'s own `element
 
 Wiring a new plugin:
 
-- `packages/qti-test/src/plugins/elements.ts`: its `export *` and its spread into `pluginElements`;
-- tooling: a `directory` entry in `.storybook/main.ts`, and a glob plus a `componentTypePath` row in
-  `cem.config.mjs`;
-- the boundary spec: one entry in `PLUGINS` in `packages/qti-test/src/plugin-boundary.spec.ts` (folder
-  name and a pattern that matches anything naming the plugin).
+- `packages/qti-test/src/plugins/elements.ts`: its import, export and entry in `pluginElements`;
+- tooling, when it has its own folder: a `directory` entry in `.storybook/main.ts`, and a glob plus a
+  `componentTypePath` row in `cem.config.mjs`;
+- the boundary spec: one entry in `PLUGINS` in `packages/qti-test/src/plugin-boundary.spec.ts` (its
+  folders and a pattern that matches anything naming the plugin).
 
 That entry is what keeps a plugin a plugin: without it, the first convenient import from the test
 into the plugin, or from the plugin into the test's internals, goes unnoticed.

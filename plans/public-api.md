@@ -122,7 +122,7 @@ first plugin: `tts`). Hosts do not use contexts (only PeilingLezen consumes
 
 ### Plugin architecture: every optional piece of `qti-test` is a plugin
 
-Branch `feat/test-plugin-architecture`, PR #261, target `next`. A plugin is a folder that uses
+Branch `feat/test-plugin-architecture`, PR #261, target `next`. A plugin is a set of files that use
 only public API and that the core does not refer to. `@qti-components/test` ships and registers all
 of them (decided: no per-plugin opt-in import; a host that wants a test without them builds on the
 packages underneath).
@@ -131,13 +131,14 @@ implementation.
 
 **What exists (verified in code 2026-10-12)**
 
-- Five plugins, a folder each under `packages/qti-test/src/`: `print`, `scoring`, `stamp`, `tts`,
-  `view`. `plugins/elements.ts` is the one place that composes them (`pluginElements`); the core's
+- Five plugins: `print`, `scoring`, `stamp`, `tts`, `view`. `tts` has its own folder; the others
+  stay in `components/` (decided: moving them made every `main` fix to those files conflict with
+  `next`). `plugins/elements.ts` is the one place that composes them (`pluginElements`); the core's
   `elements.ts` spreads it. Entry for scoped registries: `@qti-components/test/plugins/elements`.
 - A plugin reads one context, `computedContext`, plus the request events. `itemElement` is in
   `computed.types.ts` and set by `test-navigation`.
-- `plugin-boundary.spec.ts` has a `PLUGINS` list and fails on a reference to a plugin from outside
-  its folder (except `plugins/`, stories, and `qti-corrections`, which extends `test-check-item`) and
+- `plugin-boundary.spec.ts` has a `PLUGINS` list (each with its folders) and fails on a reference to a
+  plugin from outside them (except `plugins/`, stories, and `qti-corrections`, which extends `test-check-item`) and
   on an import of test internals.
 - Guide: `packages/qti-test/src/guides/test-plugins.{mdx,stories.ts}`.
 - No per-plugin entry points, no umbrella entries, no Step B: the compatibility lines are gone and
@@ -171,7 +172,7 @@ children.
 
 **Decided** (issue #275)
 
-- Plugins are folders inside `@qti-components/test` (one install, one version), not packages (#276).
+- Plugins are files inside `@qti-components/test` (one install, one version), not packages (#276).
 - Plugins ship registered with `@qti-components/test`; there are no per-plugin entry points and no
   umbrella entries (host decision, 2026-10-12: one install, with or without the whole package).
   Each plugin's `elements.ts` (`{ tag, ctor }[]`, defines nothing) feeds `plugins/elements.ts`,
@@ -182,7 +183,7 @@ children.
 
 - Do the navigation controls join the plugins? (owner decides at triage)
 
-**Conventions** (written in the guide): folder layout, the line in `plugins/elements.ts`, the
+**Conventions** (written in the guide): where the files live, the line in `plugins/elements.ts`, the
 `PLUGINS` entry. Prefer widening a context over exposing an element. Plugin
 tags and events do not use `qti-` (see Event naming). Before moving a plugin a host uses, add its
 `plans/host-migration/` entry in the same commit.

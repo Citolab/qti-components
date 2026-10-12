@@ -8,9 +8,9 @@ import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer,
   getTestContainer
-} from '../../../../tools/testing/test-utils.js';
+} from '../../../../../tools/testing/test-utils.js';
 
-import '../../../../.storybook/utilities.css';
+import '../../../../../.storybook/utilities.css';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestSectionButtonsStamp } from './test-section-buttons-stamp';
 import type { QtiAssessmentStimulusRef } from '@qti-components/elements';

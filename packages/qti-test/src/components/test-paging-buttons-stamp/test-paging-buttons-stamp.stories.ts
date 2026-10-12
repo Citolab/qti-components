@@ -6,7 +6,7 @@ import { within } from 'shadow-dom-testing-library';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestPagingButtonsStamp } from './test-paging-buttons-stamp';
 
-import '../../../../.storybook/utilities.css';
+import '../../../../../.storybook/utilities.css';
 
 const { events, args, argTypes, template } = getStorybookHelpers('test-paging-buttons-stamp');
 
