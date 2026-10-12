@@ -15,8 +15,6 @@ import { TestItemLink } from './components/test-item-link/test-item-link';
 import { TestNavigation } from './components/test-navigation/test-navigation';
 import { TestNext } from './components/test-next/test-next';
 import { TestPrev } from './components/test-prev/test-prev';
-import { TestScoringButtons } from './components/test-scoring-buttons/test-scoring-buttons';
-import { TestScoringFeedback } from './components/test-scoring-feedback/test-scoring-feedback';
 import { TestSectionLink } from './components/test-section-link/test-section-link';
 import { TestView } from './components/test-view-toggle/test-view';
 import { TestViewToggle } from './components/test-view-toggle/test-view-toggle';
@@ -26,11 +24,14 @@ import { ttsElements } from './tts/elements'; // tts-plugin: Step-A compatibilit
 // stamp-plugin: Step-A compatibility, remove in the next major. The stamps are the opt-in plugin
 // `@qti-components/test/stamp`; they are still listed here so this release does not break.
 import { stampElements } from './stamp/elements'; // stamp-plugin: Step-A compatibility
+// scoring-plugin: Step-A compatibility, remove in the next major. See `@qti-components/test/scoring`.
+import { scoringElements } from './scoring/elements'; // scoring-plugin: Step-A compatibility
 // print-plugin: Step-A compatibility, remove in the next major. See `@qti-components/test/print`.
 import { printElements } from './print/elements'; // print-plugin: Step-A compatibility
 
 export * from './tts/elements'; // tts-plugin: Step-A compatibility (deprecated here; removed in the next major)
 export * from './stamp/elements'; // stamp-plugin: Step-A compatibility (deprecated here; removed in the next major)
+export * from './scoring/elements'; // scoring-plugin: Step-A compatibility (deprecated here; removed in the next major)
 export * from './print/elements'; // print-plugin: Step-A compatibility (deprecated here; removed in the next major)
 
 export {
@@ -51,8 +52,6 @@ export {
   TestNavigation,
   TestNext,
   TestPrev,
-  TestScoringButtons,
-  TestScoringFeedback,
   TestSectionLink,
   TestView,
   TestViewToggle
@@ -76,8 +75,6 @@ export const qtiTestElements = [
   { tag: 'test-navigation', ctor: TestNavigation },
   { tag: 'test-next', ctor: TestNext },
   { tag: 'test-prev', ctor: TestPrev },
-  { tag: 'test-scoring-buttons', ctor: TestScoringButtons },
-  { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },
   { tag: 'test-section-link', ctor: TestSectionLink },
   { tag: 'test-view', ctor: TestView },
   { tag: 'test-view-toggle', ctor: TestViewToggle },

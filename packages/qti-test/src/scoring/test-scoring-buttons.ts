@@ -5,7 +5,7 @@ import { prepareTemplate } from '@heximal/templates';
 
 import { computedContext } from '@qti-components/base';
 
-import { dispatchPublic } from '../../public-events';
+import { dispatchPublic } from '../public-events';
 
 import type { TemplateFunction } from '@heximal/templates';
 import type { OutcomeVariable } from '@qti-components/base';

@@ -18,7 +18,5 @@ export * from './test-item-link/test-item-link';
 export * from './test-end-attempt/test-end-attempt';
 export * from './test-container/test-container';
 export * from './test-section-link/test-section-link';
-export * from './test-scoring-buttons/test-scoring-buttons';
 export * from './test-view-toggle/test-view-toggle';
-export * from './test-scoring-feedback/test-scoring-feedback';
 export * from './test-check-item/test-check-item';

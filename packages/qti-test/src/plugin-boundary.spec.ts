@@ -52,6 +52,12 @@ const PLUGINS: Plugin[] = [
     umbrellaEntry: '/packages/qti-components/src/print.ts',
     reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables|\/print['/]/,
     allow: [/^\.\.\/public-events$/]
+  },
+  {
+    name: 'scoring',
+    umbrellaEntry: '/packages/qti-components/src/scoring.ts',
+    reference: /test-scoring-buttons|TestScoringButtons|test-scoring-feedback|TestScoringFeedback|\/scoring['/]/,
+    allow: [/^\.\.\/public-events$/]
   }
 ];
 

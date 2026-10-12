@@ -66,6 +66,10 @@
       "types": "./dist/print.d.ts",
       "import": "./dist/print.js"
     },
+    "./scoring": {
+      "types": "./dist/scoring.d.ts",
+      "import": "./dist/scoring.js"
+    },
     "./stamp": {
       "types": "./dist/stamp.d.ts",
       "import": "./dist/stamp.js"

@@ -48,6 +48,14 @@
       "types": "./dist/print/elements.d.ts",
       "import": "./dist/print/elements.js"
     },
+    "./scoring": {
+      "types": "./dist/scoring/index.d.ts",
+      "import": "./dist/scoring/index.js"
+    },
+    "./scoring/elements": {
+      "types": "./dist/scoring/elements.d.ts",
+      "import": "./dist/scoring/elements.js"
+    },
     "./stamp": {
       "types": "./dist/stamp/index.d.ts",
       "import": "./dist/stamp/index.js"
