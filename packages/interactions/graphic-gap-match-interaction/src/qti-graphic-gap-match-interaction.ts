@@ -1,15 +1,15 @@
 import { html } from 'lit';
 
 import { Interaction } from '@qti-components/base';
+import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 import {
   DragDropSlottedMixin,
   DragDropSlottedSortableMixin
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
-// import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-graphic-gap-match-interaction.styles';
 
-import type { QtiHotspotChoice } from '@qti-components/interactions-core/elements/qti-hotspot-choice';
+import type { Graphic } from '@qti-components/interactions-core/internal/hotspots/hotspot';
 import type { CSSResultGroup } from 'lit';
 const SlottedBase = DragDropSlottedMixin(
   Interaction,
@@ -43,41 +43,67 @@ export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(
     return true;
   }
 
-  #positionHotspotOnRegister(e: CustomEvent<null>): void {
-    const hotspot = e.target as QtiHotspotChoice;
+  /**
+   * The background graphic: a direct child, as QTI places it. Not `findGraphic(this)`, which
+   * searches every descendant and would pick up a `qti-gap-img`'s picture (or one in the prompt)
+   * when it comes first.
+   */
+  #graphic(): Graphic | null {
+    return this.querySelector<Graphic>(':scope > img, :scope > object[type^="image"]');
+  }
+
+  /**
+   * Pins the graphic's box to the aspect ratio its width/height attributes declare: the coordinate
+   * space the drop areas are percentages of. With the fluid `height: auto` (see the styles) the box
+   * would otherwise follow the bitmap — an `<object>` gets no ratio from its attributes at all, and
+   * an `<img>` only `auto w / h`, where the loaded bitmap's own ratio wins. Either way a picture
+   * whose pixels differ from its declared size would slide out from under its drop areas. Pinned,
+   * it fills the declared box as it does at its fixed size.
+   */
+  #keepDeclaredRatio(graphic: Graphic): void {
+    if (graphic.style.aspectRatio) return;
+    const length = (name: 'width' | 'height') => {
+      const raw = (graphic.getAttribute(name) ?? '').trim();
+      const value = parseFloat(raw);
+      return raw.endsWith('%') || !(value > 0) ? null : value;
+    };
+    const width = length('width');
+    const height = length('height');
+    if (width && height) graphic.style.aspectRatio = `${width} / ${height}`;
+  }
+
+  /**
+   * Places a drop area over the graphic with `positionShapes`, the hotspot interaction's helper:
+   * percentages of the coordinate space the `coords` were authored in, so the areas scale with the
+   * graphic when it is narrower than its declared width (see the styles). They used to be written
+   * in pixels, which only held while the graphic rendered at exactly that width.
+   */
+  #positionHotspot(hotspot: HTMLElement): void {
+    const graphic = this.#graphic();
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
-    const coordsNumber = coords.split(',').map(s => parseInt(s));
-
-    // positionHotspots(shape, coordsNumber, img, hotspot);
-    switch (shape) {
-      case 'circle':
-        {
-          const [centerX, centerY, radius] = coordsNumber;
-          hotspot.style.left = centerX - radius + 'px';
-          hotspot.style.top = centerY - radius + 'px';
-          hotspot.style.width = hotspot.style.height = 2 * radius + 'px';
-        }
-        break;
-
-      case 'rect':
-        {
-          const [leftX, topY, rightX, bottomY] = coordsNumber;
-          hotspot.style.left = leftX + 'px';
-          hotspot.style.top = topY + 'px';
-          hotspot.style.width = rightX - leftX + 'px';
-          hotspot.style.height = bottomY - topY + 'px';
-        }
-        break;
-
-      default:
-        break;
-    }
+    if (!graphic || !coords || !shape) return;
+    this.#keepDeclaredRatio(graphic);
+    positionShapes(
+      shape,
+      coords.split(',').map(s => parseFloat(s)),
+      graphic,
+      hotspot
+    );
   }
+
+  #positionHotspotOnRegister = (e: Event): void => {
+    this.#positionHotspot(e.target as HTMLElement);
+  };
 
   override connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('qti-register-hotspot', this.#positionHotspotOnRegister);
+    // A hotspot that connected before this element was upgraded has already dispatched its
+    // register event (the hotspot interaction has the same catch-up).
+    this.querySelectorAll<HTMLElement>(':scope > qti-associable-hotspot').forEach(hotspot =>
+      this.#positionHotspot(hotspot)
+    );
   }
   override disconnectedCallback() {
     super.disconnectedCallback();
