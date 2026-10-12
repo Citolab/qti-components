@@ -100,11 +100,18 @@ A plugin is one folder, and only that folder knows it exists. Text-to-speech
 packages/qti-test/src/<plugin>/
   <element>.ts               the elements
   elements.ts                export const <plugin>Elements = [{ tag, ctor }, …] as const — defines nothing
-  register.ts                for each entry: if (!customElements.get(tag)) customElements.define(tag, ctor)
+  register.ts                warn for a tag already registered by something else, then for each entry: if (!customElements.get(tag)) customElements.define(tag, ctor)
   index.ts                   import './register.js'; export * from the elements
   plugin-boundary.spec.ts    fails on a reference from outside the folder, or an import of internals
   <element>.stories.ts / .mdx
 ```
+
+Two entry points, two uses: `@qti-components/test/<plugin>` registers the elements globally, which is
+what you want when one import should just work. `@qti-components/test/<plugin>/elements` defines
+nothing and gives `{ tag, ctor }` entries, for registering into a scoped `CustomElementRegistry`
+(a plugin placed inside an item-ref template is stamped into `test-container`'s shadow root, which
+uses the registry you give it). Use one of the two, not both: when a tag is already taken, the
+global entry leaves it alone and warns in the console.
 
 Then expose it — these are the only lines outside the folder:
 
