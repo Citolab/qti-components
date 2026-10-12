@@ -3,6 +3,7 @@ import { css, html, LitElement } from 'lit';
 
 import { testHostContext } from '../../internal/test-host.context';
 import * as styles from '../styles';
+import { dispatchPublic } from '../../public-events';
 
 import type { TestHost } from '../../internal/test-host.context';
 import type { TestContainer } from '../test-container/test-container';
@@ -29,7 +30,7 @@ export class TestCheckItem extends LitElement {
   constructor() {
     super();
     this.addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('test-end-attempt', { bubbles: true }));
+      dispatchPublic(this, 'cito-test-end-attempt', {});
       const testContainer = this.testHost?.querySelector<TestContainer>('test-container');
       if (!testContainer) return;
 

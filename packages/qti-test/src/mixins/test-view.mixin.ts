@@ -1,3 +1,5 @@
+import { listenPublic } from '../public-events';
+
 import type { View } from '@qti-components/base';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentItem } from '@qti-components/elements';
@@ -15,7 +17,7 @@ export const TestViewMixin = <T extends Constructor<TestBaseInterface>>(superCla
       super(...args);
       this.sessionContext = { ...this.sessionContext, view: 'candidate' };
 
-      this.addEventListener('on-test-switch-view', (e: CustomEvent<View>) => {
+      listenPublic(this, 'cito-test-switch-view', e => {
         this.sessionContext = { ...this.sessionContext, view: e.detail };
         this._updateElementView();
       });

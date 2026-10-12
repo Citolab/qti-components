@@ -4,8 +4,11 @@ import { prepareTemplate } from '@heximal/templates';
 
 import { sessionContext } from '@qti-components/base';
 
+import { dispatchPublic } from '../../public-events';
+
 import type { PropertyValues } from 'lit';
 import type { SessionContext } from '@qti-components/base';
+import type { View } from '@qti-components/base';
 
 export class TestViewToggle extends LitElement {
   myTemplate: any;
@@ -28,13 +31,7 @@ export class TestViewToggle extends LitElement {
   }
 
   _switchView(view: string) {
-    this.dispatchEvent(
-      new CustomEvent('on-test-switch-view', {
-        composed: true,
-        bubbles: true,
-        detail: view
-      })
-    );
+    dispatchPublic(this, 'cito-test-switch-view', view as View);
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {
