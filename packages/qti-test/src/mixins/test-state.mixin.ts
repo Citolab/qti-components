@@ -1,4 +1,5 @@
 import { QTI_TEST_STATE_VERSION } from '../types/qti-test-state';
+import { dispatchPublic } from '../public-events';
 
 import type { PropertyValues } from 'lit';
 import type { SessionContext, TestContext } from '@qti-components/base';
@@ -172,9 +173,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     }
 
     #requestNavigation(type: 'item' | 'section', id: string): void {
-      this.dispatchEvent(
-        new CustomEvent('qti-request-navigation', { detail: { type, id }, bubbles: true, composed: true })
-      );
+      dispatchPublic(this, 'cito-test-navigate', { type, id });
     }
   }
 

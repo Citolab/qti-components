@@ -6,6 +6,7 @@ import { watch } from '@qti-components/utilities';
 import { computedContext } from '@qti-components/base';
 
 import * as styles from '../styles';
+import { dispatchPublic } from '../../public-events';
 
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 
@@ -81,16 +82,7 @@ export class TestPrev extends LitElement {
   }
 
   protected _requestItem(identifier: string): void {
-    this.dispatchEvent(
-      new CustomEvent('qti-request-navigation', {
-        composed: true,
-        bubbles: true,
-        detail: {
-          type: 'item',
-          id: identifier
-        }
-      })
-    );
+    dispatchPublic(this, 'cito-test-navigate', { type: 'item', id: identifier });
   }
 
   override render() {

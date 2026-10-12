@@ -418,10 +418,11 @@ export class TestItemToSpeech extends LitElement {
       this.#eventHost = this.#itemRef;
       this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
     } else {
-      // Cursor mode: qti-request-navigation fires synchronously on prev/next — stop right away
+      // Cursor mode: cito-test-navigate fires synchronously on prev/next — stop right away
       // instead of waiting for the new position to arrive through the computed context.
       this.#eventHost = this.closest('test-navigation') ?? (this.getRootNode() as EventTarget);
-      this.#eventHost.addEventListener('qti-request-navigation', this.#boundHandleNavigation);
+      this.#eventHost.addEventListener('cito-test-navigate', this.#boundHandleNavigation);
+      this.#eventHost.addEventListener('qti-request-navigation', this.#boundHandleNavigation); // deprecated name, still sent by hosts
     }
   }
 
@@ -435,6 +436,7 @@ export class TestItemToSpeech extends LitElement {
     this.#stopPicking();
     this.#clearAllHighlights();
     this.#eventHost?.removeEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
+    this.#eventHost?.removeEventListener('cito-test-navigate', this.#boundHandleNavigation);
     this.#eventHost?.removeEventListener('qti-request-navigation', this.#boundHandleNavigation);
     this.#eventHost = null;
     this.#itemRef = null;

@@ -6,6 +6,7 @@ import { computedContext } from '@qti-components/base';
 import { watch } from '@qti-components/utilities';
 
 import * as styles from '../styles';
+import { dispatchPublic } from '../../public-events';
 
 import type { ComputedContext } from '@qti-components/base';
 
@@ -44,7 +45,7 @@ export class TestEndAttempt extends LitElement {
     this.addEventListener('click', e => {
       e.preventDefault();
       if (!this._internalDisabled) {
-        this.dispatchEvent(new CustomEvent('test-end-attempt', { bubbles: true }));
+        dispatchPublic(this, 'cito-test-end-attempt', {});
       }
     });
   }

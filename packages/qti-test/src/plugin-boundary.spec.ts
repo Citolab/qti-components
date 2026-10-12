@@ -30,7 +30,8 @@ const PLUGINS: Plugin[] = [
       /test-item-to-speech|test-tts-|ttsContext|ttsElements|TestItemToSpeech|TestTts|data-tts-content|\/tts['/]/,
     allow: [
       /^\.\.\/components\/styles$/, // the shared look of the test controls
-      /^\.\.\/components\/qti-assessment-item-ref\/qti-assessment-item-ref$/ // public element, type only
+      /^\.\.\/components\/qti-assessment-item-ref\/qti-assessment-item-ref$/, // public element, type only
+      /^\.\.\/public-events$/ // the public event names and helpers
     ]
   }
 ];

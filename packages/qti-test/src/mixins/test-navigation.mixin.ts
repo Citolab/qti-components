@@ -2,6 +2,8 @@ import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
+import { dispatchPublic, listenPublic } from '../public-events';
+
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
@@ -113,13 +115,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const targetId = id || this._getDefaultNavigationId(type);
 
       if (targetId) {
-        this.dispatchEvent(
-          new CustomEvent('qti-request-navigation', {
-            detail: { type, id: targetId },
-            bubbles: true,
-            composed: true
-          })
-        );
+        dispatchPublic(this, 'cito-test-navigate', { type, id: targetId });
       }
     }
 
@@ -128,7 +124,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     private _bindEventHandlers(): void {
-      this.addEventListener('qti-request-navigation', this._handleNavigationRequest.bind(this));
+      listenPublic(this, 'cito-test-navigate', this._handleNavigationRequest.bind(this));
       this.addEventListener('qti-assessment-test-connected', this._handleTestConnected.bind(this));
       this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
       this.addEventListener('qti-assessment-stimulus-ref-connected', this._handleStimulusRefConnected.bind(this));
@@ -333,7 +329,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       await this._waitForLoadingComplete(navigationId, controller);
       if (this._isStaleNavigation(navigationId, controller)) return;
 
-      this._dispatchTestLoaded(this._loadResults);
+      this._dispatchTestLoaded(this._loadResults, 'item', itemId);
     }
 
     /**
@@ -363,7 +359,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       await this._waitForLoadingComplete(navigationId, controller);
       if (this._isStaleNavigation(navigationId, controller)) return;
 
-      this._dispatchTestLoaded(this._loadResults);
+      this._dispatchTestLoaded(this._loadResults, 'section', sectionId);
     }
 
     // ===========================================
@@ -655,13 +651,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     private _dispatchLoadingStarted(type: string, id: string): void {
-      this.dispatchEvent(
-        new CustomEvent('qti-navigation-loading-started', {
-          detail: { type, id },
-          bubbles: true,
-          composed: true
-        })
-      );
+      dispatchPublic(this, 'cito-test-navigation-started', { type: type as 'item' | 'section', id });
     }
 
     private _dispatchLoadingEnded(type: string, id: string): void {
@@ -675,27 +665,21 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     }
 
     private _dispatchError(error: NavigationError): void {
-      this.dispatchEvent(
-        new CustomEvent('qti-navigation-error', {
-          detail: error,
-          bubbles: true,
-          composed: true
-        })
-      );
+      dispatchPublic(this, 'cito-test-navigation-failed', error);
     }
 
-    private _dispatchTestLoaded(results: any[]): void {
+    /** The items are in the DOM: tell hosts the new position rendered (`cito-test-navigated`) and which items it holds. */
+    private _dispatchTestLoaded(results: any[], type: 'item' | 'section', id: string): void {
       requestAnimationFrame(() => {
-        this.dispatchEvent(
-          new CustomEvent('qti-test-loaded', {
-            detail: results.map(({ itemRef }) => ({
-              identifier: itemRef?.identifier,
-              element: itemRef
-            })),
-            bubbles: true,
-            composed: true
-          })
+        dispatchPublic(
+          this,
+          'cito-test-rendered',
+          results.map(({ itemRef }) => ({
+            identifier: itemRef?.identifier,
+            element: itemRef
+          }))
         );
+        dispatchPublic(this, 'cito-test-navigated', { type, id });
       });
     }
   }
