@@ -17,47 +17,122 @@ on:
         default: 'main'
         type: string
 
+# A newer push to the same PR makes the older run pointless. Never cancel runs on main or next:
+# each push there is a commit someone may need a green result for.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-  ci:
+  # A pull request that only touches docs and changesets skips the heavy jobs. The `ci` job below
+  # still reports, so the required check is satisfied. Pushes to main and next always run in full.
+  changes:
     runs-on: ubuntu-latest
-    # A normal run finishes in ~7-8 minutes. Without a bound, a hung browser/test process (e.g.
-    # a story stuck on an unreachable external fetch) runs until the runner itself is recycled,
-    # tens of minutes later, and surfaces only as "The operation was canceled" instead of a clear
-    # timeout — see run 36547613496, cancelled after 44 minutes with no further log output past
-    # the last completed test file.
-    timeout-minutes: 20
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Does this PR touch more than docs?
+        id: diff
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          # HEAD is the merge commit; its first parent is the base branch.
+          other=$(git diff --name-only HEAD^1 HEAD | grep -vE '^(plans/|docs/|\.changeset/)|\.md$' || true)
+          if [ -n "$other" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"; echo "Docs-only change: heavy jobs skipped."
+          fi
+
+  # Static checks: cheap, and the fastest feedback on a typo.
+  static:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           # `github.ref`, not 'main'. `inputs` is empty on anything but workflow_dispatch, so the
-          # fallback is what every pull_request and push actually used — and it was the literal
-          # string 'main'. This job therefore tested main on every PR, never the PR's own code:
-          # run 33399522449 reported main's 1166 tests against a head SHA whose branch has 1169,
-          # and failed on an assertion the branch fixes.
-          #
-          # A green check was worth nothing either, which is the more dangerous half: a broken main
-          # at least made it visible. On pull_request `github.ref` is refs/pull/N/merge, so this
-          # tests the merge result, which is the thing being asked about. workflow_dispatch still
-          # gets its branch input.
+          # fallback is what every pull_request and push actually used. On pull_request
+          # `github.ref` is refs/pull/N/merge, so this tests the merge result, which is the thing
+          # being asked about. (A literal 'main' here once made every PR test main, never its own
+          # code: run 33399522449.) workflow_dispatch still gets its branch input.
           ref: ${{ inputs.branch || github.ref }}
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
+      - uses: ./.github/actions/setup
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Circular dependencies
+        run: pnpm run madge
+
+  # The published surface: build, then check what was built.
+  package:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
-          # Pinned below 24.16: `playwright install` hangs after the browser
-          # download completes (silent extraction-worker death) on Node 24.16+.
-          # See microsoft/playwright#40724. Bump once that's resolved upstream.
-          node-version: 24.15.0
-          cache: 'pnpm'
+          # `github.ref`, not 'main'. `inputs` is empty on anything but workflow_dispatch, so the
+          # fallback is what every pull_request and push actually used. On pull_request
+          # `github.ref` is refs/pull/N/merge, so this tests the merge result, which is the thing
+          # being asked about. (A literal 'main' here once made every PR test main, never its own
+          # code: run 33399522449.) workflow_dispatch still gets its branch input.
+          ref: ${{ inputs.branch || github.ref }}
 
-      - name: Install dependencies
-        run: |
-          echo "📦 Installing dependencies..."
-          pnpm install
+      - uses: ./.github/actions/setup
+
+      - name: Build
+        run: pnpm run build
+
+      - name: publint
+        run: pnpm run publint
+
+      - name: attw
+        run: pnpm run attw
+
+      - name: Consumer types
+        run: pnpm run consumer-types
+
+  # Tests are the slow part (several minutes of browser stories), so they are sharded: the test
+  # files are split into 3 groups that run on 3 machines at once. Each shard builds first, as the
+  # sequential lane did.
+  test:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    # Without a bound, a hung browser/test process (e.g. a story stuck on an unreachable external
+    # fetch) runs until the runner itself is recycled, tens of minutes later, and surfaces only as
+    # "The operation was canceled" instead of a clear timeout (run 36547613496).
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          # `github.ref`, not 'main'. `inputs` is empty on anything but workflow_dispatch, so the
+          # fallback is what every pull_request and push actually used. On pull_request
+          # `github.ref` is refs/pull/N/merge, so this tests the merge result, which is the thing
+          # being asked about. (A literal 'main' here once made every PR test main, never its own
+          # code: run 33399522449.) workflow_dispatch still gets its branch input.
+          ref: ${{ inputs.branch || github.ref }}
+
+      - uses: ./.github/actions/setup
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -68,12 +143,26 @@ jobs:
             playwright-${{ runner.os }}-
 
       - name: Install Playwright
-        run: |
-          echo "🎭 Installing Playwright browsers..."
-          npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
-      - name: Run ci:push-quality lane
-        run: pnpm run ci:push-quality
+      - name: Build
+        run: pnpm run build
+
+      - name: Test (shard ${{ matrix.shard }}/3)
+        run: |
+          node tools/testing/pretest-clean.mjs
+          pnpm exec vitest run --shard=${{ matrix.shard }}/3
+
+  # The one check branch protection requires. It stays named `ci`, whatever the jobs above are.
+  ci:
+    needs: [changes, static, package, test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: All required jobs passed or were skipped
+        run: |
+          echo '${{ toJSON(needs) }}'
+          if echo '${{ join(needs.*.result, ' ') }}' | grep -qE 'failure|cancelled'; then exit 1; fi
 
   changeset-check:
     if: github.event_name == 'pull_request'

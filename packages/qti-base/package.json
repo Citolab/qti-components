@@ -43,8 +43,7 @@
     "build": "pnpm run clean && tsc --paths null",
     "clean": "rm -rf dist",
     "yalc": "yalc publish",
-    "yalc:push": "yalc push",
-    "publish": "node ../../tools/publish-if-needed.mjs"
+    "yalc:push": "yalc push"
   },
   "type": "module",
   "types": "dist/index.d.ts",
