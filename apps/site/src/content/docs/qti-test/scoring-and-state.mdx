@@ -36,15 +36,14 @@ same way.
 
 A "submit this attempt" button. On click it:
 
-1. Dispatches `test-end-attempt` (bubbles) — picked up by `<test-navigation>`, which calls `processResponse(true, ...)` on the active item.
-2. Dispatches `test-show-correct-response` with `detail: true` — reveals the item's correct response.
-3. Toggles `.show` on every `[view]`-tagged element inside the current `<test-container>`, making scorer-only content visible immediately.
+1. Dispatches `cito-test-end-attempt` (bubbles), picked up by `<test-navigation>`, which calls `processResponse(true, ...)` on the active item.
+2. Dispatches `cito-test-switch-view` with its `view` attribute (default `scorer`), so the test switches to that view and shows the `[view]` content for it, such as a scorer's rubric. The view stays until something switches it back, for example `<test-view-toggle>`.
 
 ## `test-scoring-buttons`
 
 Renders a human-scoring UI for the active item, driven by a `<template>` child (via [Heximal templates](https://github.com/heximal/templates)) so the markup is fully up to you — the component only supplies the data: `{ scores, score, disabled }`, where `scores` is `[0..MAXSCORE]` and `disabled` is `true` unless the item's `SCORE` outcome has `externalScored === 'human'`.
 
-Clicking an `<input>` inside the template dispatches `test-update-outcome-variable` with `{ assessmentItemRefId, outcomeVariableId: 'SCORE', value }`, which `<test-navigation>` applies to the active item.
+Clicking an `<input>` inside the template dispatches `cito-test-update-outcome` with `{ assessmentItemRefId, outcomeVariableId: 'SCORE', value }`, which `<test-navigation>` applies to the active item.
 
 ```html
 <test-scoring-buttons>
