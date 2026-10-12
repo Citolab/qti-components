@@ -1,5 +1,7 @@
 import type { BaseType } from '../lib/expression-result';
 
+const SCORING_BOOLEANS: Record<string, boolean | undefined> = { true: true, '1': true, false: false, '0': false };
+
 export class ScoringHelper {
   /**
    * Checks if a given point is within a specified area.
@@ -106,6 +108,11 @@ export class ScoringHelper {
       case 'identifier':
       case 'string':
         return value1 === value2;
+      case 'boolean': {
+        // XML Schema booleans: "true" / "1" and "false" / "0"
+        const bool1 = SCORING_BOOLEANS[value1.trim().toLowerCase()];
+        return bool1 !== undefined && bool1 === SCORING_BOOLEANS[value2.trim().toLowerCase()];
+      }
       case 'integer': {
         const int1 = parseInt(value1, 10);
         const int2 = parseInt(value2, 10);

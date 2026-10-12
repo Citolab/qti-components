@@ -2,6 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
+import { idOf, resolveNextItem } from '../internal/item-sequencing';
 import { dispatchPublic, listenPublic } from '../public-events';
 
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';
@@ -269,10 +270,40 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     /**
      * Main navigation request handler with proper lifecycle management
      */
+    /**
+     * A "next" step in a linear test part (a request for item i+1 while item i is active) goes
+     * through the branch rules and pre-conditions. Deep links, item links and nonlinear parts are
+     * left alone: the spec ignores both in nonlinear mode.
+     *
+     * @returns the item to present instead, `null` when the test has no eligible item left, or
+     *   `undefined` when the request is not a "next" step.
+     */
+    private _resolveLinearNext(type: 'item' | 'section', id: string): { id: string | null } | undefined {
+      if (type !== 'item' || !this._testElement) return undefined;
+
+      const refs = [...this._testElement.querySelectorAll('qti-assessment-item-ref')];
+      const current = refs.findIndex(ref => idOf(ref) === this.sessionContext?.navItemRefId);
+      if (current < 0 || !refs[current + 1] || idOf(refs[current + 1]) !== id) return undefined;
+      if (refs[current].closest('qti-test-part')?.getAttribute('navigation-mode') !== 'linear') return undefined;
+
+      const next = resolveNextItem(refs, current);
+      if (next.id === id) return undefined;
+
+      if (next.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: next.skipped });
+      return { id: next.id };
+    }
+
     private async _handleNavigationRequest({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) {
       if (!detail?.id) return;
 
-      if (this._isLinearNavigationRestricted(detail.type, detail.id)) {
+      const resolved = this._resolveLinearNext(detail.type, detail.id);
+      if (resolved?.id === null) {
+        dispatchPublic(this, 'cito-test-end-reached', {});
+        return;
+      }
+      const target = resolved?.id ?? detail.id;
+      // a resolved jump is not a free choice by the candidate, so the linear restriction does not apply to it
+      if (!resolved && this._isLinearNavigationRestricted(detail.type, target)) {
         this._handleNavigationError(new Error('Navigation restricted in linear mode'), detail.type, detail.id);
         return;
       }
@@ -282,17 +313,17 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const controller = new AbortController();
 
       try {
-        this._dispatchLoadingStarted(detail.type, detail.id);
+        this._dispatchLoadingStarted(detail.type, target);
         this._activeController = controller;
 
-        await this._executeNavigation(detail.type, detail.id, navigationId, controller);
+        await this._executeNavigation(detail.type, target, navigationId, controller);
       } catch (error) {
-        this._handleNavigationError(error, detail.type, detail.id);
+        this._handleNavigationError(error, detail.type, target);
       } finally {
         if (this._activeController === controller) {
           this._activeController = null;
         }
-        this._dispatchLoadingEnded(detail.type, detail.id);
+        this._dispatchLoadingEnded(detail.type, target);
       }
     }
 
