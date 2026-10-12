@@ -5,7 +5,10 @@ import { consume } from '@lit/context';
 import { watch } from '@qti-components/utilities';
 import { sessionContext } from '@qti-components/base';
 
+import { dispatchPublic } from '../../public-events';
+
 import type { SessionContext } from '@qti-components/base';
+import type { View } from '@qti-components/base';
 
 export class TestView extends LitElement {
   static DEFAULT_VIEW_OPTIONS = ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'];
@@ -42,13 +45,7 @@ export class TestView extends LitElement {
   }
 
   protected _switchView(view: string) {
-    this.dispatchEvent(
-      new CustomEvent('on-test-switch-view', {
-        composed: true,
-        bubbles: true,
-        detail: view
-      })
-    );
+    dispatchPublic(this, 'cito-test-switch-view', view as View);
   }
 
   override render() {

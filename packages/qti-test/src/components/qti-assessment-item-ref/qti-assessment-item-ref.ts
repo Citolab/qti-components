@@ -6,6 +6,7 @@ import { prepareTemplate } from '@heximal/templates';
 import { computedContext } from '@qti-components/base';
 
 import { testHostContext } from '../../internal/test-host.context';
+import { dispatchPublic } from '../../public-events';
 
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
@@ -136,13 +137,11 @@ export class QtiAssessmentItemRef extends LitElement {
 
     await this.updateComplete;
 
-    this.dispatchEvent(
-      new CustomEvent('qti-assessment-item-ref-connected', {
-        bubbles: true,
-        composed: true,
-        detail: { identifier: this.identifier, href: this.href, category: this.category }
-      })
-    );
+    dispatchPublic(this, 'cito-item-ref-connected', {
+      identifier: this.identifier,
+      href: this.href,
+      category: this.category
+    });
   }
 
   #computedItem(): ComputedItem | undefined {

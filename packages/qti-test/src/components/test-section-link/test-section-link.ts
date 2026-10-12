@@ -2,6 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import * as styles from '../styles';
+import { dispatchPublic } from '../../public-events';
 
 export class TestSectionLink extends LitElement {
   static override styles = css`
@@ -23,16 +24,7 @@ export class TestSectionLink extends LitElement {
   private sectionId: string = null;
 
   #requestItem(identifier: string) {
-    this.dispatchEvent(
-      new CustomEvent('qti-request-navigation', {
-        composed: true,
-        bubbles: true,
-        detail: {
-          type: 'section',
-          id: identifier
-        }
-      })
-    );
+    dispatchPublic(this, 'cito-test-navigate', { type: 'section', id: identifier });
   }
 
   constructor() {

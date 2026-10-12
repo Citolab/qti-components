@@ -6,8 +6,10 @@ import { computedContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
+import { listenPublic as listenItemPublic } from '@qti-components/elements/public-events';
 
 import { testHostContext } from '../../internal/test-host.context';
+import { listenPublic } from '../../public-events';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiContext } from '@qti-components/base';
@@ -24,14 +26,6 @@ import type { SessionContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 import type { ResponseVariable } from '@qti-components/base';
-
-type CustomEventMap = {
-  'test-end-attempt': CustomEvent;
-};
-
-declare global {
-  interface GlobalEventHandlersEventMap extends CustomEventMap {}
-}
 
 /**
  * Whether an item's ended attempt reached the best achievable outcome:
@@ -133,14 +127,14 @@ export class TestNavigation extends LitElement {
 
   constructor() {
     super();
-    this.addEventListener('qti-assessment-test-connected', this.#handleTestConnected.bind(this));
+    listenPublic(this, 'cito-test-loaded', this.#handleTestConnected.bind(this));
     this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
-    this.addEventListener('qti-interaction-changed', this.#handleInteractionChanged.bind(this));
+    listenItemPublic(this, 'cito-item-response-changed', this.#handleInteractionChanged.bind(this));
     this.addEventListener('qti-item-context-updated', this.#handleItemContextUpdated.bind(this));
 
-    this.addEventListener('test-end-attempt', this.#handleTestEndAttempt.bind(this));
-    this.addEventListener('test-update-outcome-variable', this.#handleTestUpdateOutcomeVariable.bind(this));
+    listenPublic(this, 'cito-test-end-attempt', this.#handleTestEndAttempt.bind(this));
+    listenPublic(this, 'cito-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
   }
 
   /**

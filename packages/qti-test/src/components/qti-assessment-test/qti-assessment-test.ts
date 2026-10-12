@@ -4,6 +4,8 @@ import { property } from 'lit/decorators.js';
 
 import { testContext } from '@qti-components/base';
 
+import { dispatchPublic } from '../../public-events';
+
 import type { TestContext } from '@qti-components/base';
 
 export class QtiAssessmentTest extends LitElement {
@@ -25,13 +27,7 @@ export class QtiAssessmentTest extends LitElement {
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     await this.updateComplete;
-    this.dispatchEvent(
-      new CustomEvent('qti-assessment-test-connected', {
-        detail: this,
-        bubbles: true,
-        composed: true
-      })
-    );
+    dispatchPublic(this, 'cito-test-loaded', this);
   }
 
   override render() {
@@ -42,5 +38,11 @@ export class QtiAssessmentTest extends LitElement {
 declare global {
   interface HTMLElementTagNameMap {
     'qti-assessment-test': QtiAssessmentTest;
+  }
+}
+
+declare module '../../public-events' {
+  interface PublicEventMap {
+    'cito-test-loaded': CustomEvent<QtiAssessmentTest>;
   }
 }

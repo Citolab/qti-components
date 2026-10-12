@@ -4,6 +4,7 @@ import { testContext } from '@qti-components/base';
 import { QtiExpression } from '@qti-components/base';
 
 import { selectItemRefs, selectionFrom } from '../../internal/item-ref-selection';
+import { listenPublic } from '../../public-events';
 
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
 import type { TestContext } from '@qti-components/base';
@@ -17,10 +18,7 @@ export class QtiTestVariables extends QtiExpression<number> {
 
   constructor() {
     super();
-    this.addEventListener(
-      'qti-assessment-test-connected',
-      (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail)
-    );
+    listenPublic(this, 'cito-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail));
   }
 
   /**

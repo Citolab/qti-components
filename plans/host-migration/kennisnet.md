@@ -81,6 +81,32 @@ Status: deprecated, removed in next major
 Do: stop depending on `qti-test-context-updated`; `navItemLoading` / `navTestLoading` were never
 set.
 
+### Public test events get the `cito-` prefix (public events)
+
+Status: recommended; nothing breaks on upgrade (old names are sent and handled until the next major)
+Members: `qti-request-navigation`, `on-test-switch-view`, `qti-test-loaded`, `qti-assessment-test-connected`,
+`qti-assessment-item-ref-connected`, `qti-state-changed`, `qti-navigation-loading-started`, `qti-navigation-error`
+Do:
+
+- Listen for `cito-test-navigated` where you used `qti-request-navigation` as "the item changed":
+  it is sent only after the navigation succeeded and rendered. In linear mode a refused navigation
+  still fires `qti-request-navigation` but never `cito-test-navigated`.
+- Rename the rest as you touch them: `cito-test-navigate`, `cito-test-switch-view`,
+  `cito-test-rendered`, `cito-test-loaded`, `cito-item-ref-connected`, `cito-test-state-changed`,
+  `cito-test-navigation-started`, `cito-test-navigation-failed`. Table: `plans/public-api.md`, "Event naming".
+- `qti-navigation-loading-ended` stays for now but also fires on failure and cancellation; use
+  navigated / failed instead.
+  Evidence: read, not run
+
+### Public item events get the `cito-` prefix (public events)
+
+Status: recommended; nothing breaks on upgrade (old names are sent and handled until the next major)
+Members: `qti-interaction-changed`, `qti-outcome-changed`, `qti-assessment-item-connected`, `qti-rubric:discretionary-placement`
+Do: rename as you touch them: `cito-item-response-changed`, `cito-item-outcome-changed`,
+`cito-item-rendered`, `cito-item-rubric-placement` (cancelable, like the old one). `detail` is
+unchanged. Listening for both names runs your handler twice; pick one.
+Evidence: read, not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

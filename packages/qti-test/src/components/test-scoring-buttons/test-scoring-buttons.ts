@@ -5,6 +5,8 @@ import { prepareTemplate } from '@heximal/templates';
 
 import { computedContext } from '@qti-components/base';
 
+import { dispatchPublic } from '../../public-events';
+
 import type { TemplateFunction } from '@heximal/templates';
 import type { OutcomeVariable } from '@qti-components/base';
 import type { ComputedContext } from '@qti-components/base';
@@ -36,16 +38,11 @@ export class TestScoringButtons extends LitElement {
     const sectionItems = testPart.sections.flatMap(section => section.items);
     const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
 
-    this.dispatchEvent(
-      new CustomEvent('test-update-outcome-variable', {
-        detail: {
-          assessmentItemRefId: currentItemIdentifier,
-          outcomeVariableId: 'SCORE',
-          value
-        },
-        bubbles: true
-      })
-    );
+    dispatchPublic(this, 'cito-test-update-outcome', {
+      assessmentItemRefId: currentItemIdentifier,
+      outcomeVariableId: 'SCORE',
+      value
+    });
   }
 
   override render() {
