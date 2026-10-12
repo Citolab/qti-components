@@ -1,0 +1,74 @@
+name: "Sync: merge main into next"
+
+# Every push to main is merged into next with a merge commit, so the two lanes never drift apart.
+# It is mechanical on purpose: no judgment is involved until there is a conflict.
+#
+# - Up to date or a clean merge: pushed straight to next, no PR. (tools/ci/sync-main-into-next.sh)
+# - Conflict: nothing is pushed and a pull request main -> next is opened. Resolve it in the GitHub
+#   conflict editor or locally, and merge it with a MERGE COMMIT, never squash: a squash drops the
+#   ancestry and the same changes conflict again at the next sync.
+#
+# The push uses RELEASE_BOT_TOKEN when it exists. A push made with the default GITHUB_TOKEN does not
+# start other workflows, so CI would not run on next after a sync. The version commit that
+# release.yml pushes to main is synced like any other; it is also where a conflict is most likely
+# (package versions and CHANGELOG.md).
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# One sync at a time, in order: a second push to main waits for the first.
+concurrency:
+  group: sync-main-into-next
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Check out the ref that triggered this run (main), not next: next may not have the script
+      # yet, since this very sync is how it gets there. The script switches to next itself.
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into next
+        id: merge
+        run: |
+          set +e
+          # Run a copy: the script checks out next, which replaces the working tree under it.
+          cp tools/ci/sync-main-into-next.sh "$RUNNER_TEMP/sync.sh"
+          bash "$RUNNER_TEMP/sync.sh"
+          code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          # 10 is a conflict: handled below, not a failure of this job.
+          if [ "$code" -eq 10 ]; then exit 0; fi
+          exit "$code"
+
+      - name: Open a pull request for the conflict
+        if: steps.merge.outputs.code == '10'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          existing=$(gh pr list --base next --head main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            echo "Pull request #$existing already covers it."
+            exit 0
+          fi
+          gh pr create --base next --head main \
+            --title "sync: merge main into next (conflicts)" \
+            --body "Merging \`main\` into \`next\` conflicts, so nothing was pushed. Resolve the conflicts (GitHub's conflict editor works) and **merge this PR with a merge commit, not squash**. After that the automatic sync takes over again."
