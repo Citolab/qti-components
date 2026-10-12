@@ -8,15 +8,52 @@ private packages (`@kennisnet/*`, FontAwesome Pro), so we could only typecheck t
 (`projects/shared/src/lib/qti`, `projects/shared/src/lib/player`, `projects/player/src/app/qti`).
 **Nothing here has been run in a browser.** Verify every step as described.
 
-## Part 1 — already applied (patches 0001–0005 in `kennisnet-patches/`; 0006 adds this guide)
+## Part 1 — the first steps (mechanical; do these first)
 
-| Commit                                                       | What                                                                                                                                                                    | Verify                                                                                                                            |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `deps: use @citolab/qti-components …`                        | `"@kennisnet/qti-components": "npm:@citolab/qti-components@^9.3.0"`. All imports keep their name.                                                                       | `npm install` (regenerates `package-lock.json`); `ng build`                                                                       |
-| `qti: register the elements from the corrections entry`      | `app.ts` imports `@kennisnet/qti-components/corrections` instead of the root.                                                                                           | After "Nakijken" and after submit, the candidate correction and the answer key show as before. Without this they silently do not. |
-| `qti: type the test config …`                                | `configContext` typed `ConfigContext & CorrectionConfig`; `disableAfterMaxReached`.                                                                                     | `tsc` passes (it did for us on the QTI layer).                                                                                    |
-| `qti: drop cache-transform`                                  | The attribute was removed in 8.0 and did nothing.                                                                                                                       | —                                                                                                                                 |
-| `styles: follow the renamed custom states and CSS variables` | `:state(--checked)` → `:state(checked)`, `--qti-form-size` → `--qti-control-size`, `--qti-gap-size` → `--qti-gap`, `--qti-drop-min-width` → `--qti-dropzone-min-width`. | Checked choices and hottext look selected.                                                                                        |
+These five changes are small and were checked by typecheck only. Do them in this order, one commit
+each. Paths are relative to the Kennisnet repository root, from the source snapshot of 2026-10-09.
+
+### 1.1 Dependency
+
+`package.json`: `"@kennisnet/qti-components": "^7.28.1"` becomes
+`"@kennisnet/qti-components": "npm:@citolab/qti-components@^9.3.0"`. All imports keep their name.
+Verify: `npm install` (regenerates `package-lock.json`); `ng build`.
+
+### 1.2 Register the elements from the corrections entry
+
+`projects/player/src/app/app.ts`: replace `import '@kennisnet/qti-components';` with
+`import '@kennisnet/qti-components/corrections';`. The corrections entry registers every element,
+with the correction variants on the standard tags: `showCandidateCorrection`,
+`test-show-candidate-correction`, `correctResponseMode` and the answer-key clone only work when the
+elements come from there. Import this OR the root, not both. Verify: after "Nakijken" and after
+submit, the candidate correction and the answer key show as before. Without this they silently do not.
+
+### 1.3 Type the test config
+
+`projects/shared/src/lib/qti/qti-test.ts`: import `ConfigContext` and `CorrectionConfig` from
+`@kennisnet/qti-components`, build the config as `const config: ConfigContext & CorrectionConfig = { … }`
+and assign `el.configContext = config`. `correctResponseMode` and `fullCorrectResponseOnlyWhenIncorrect`
+belong to the corrections package (`CorrectionConfig`) since 8.0; the library still reads them from
+`configContext`. Rename `disableAfterIfMaxChoicesReached` to `disableAfterMaxReached`. Verify: `tsc` passes.
+
+### 1.4 Drop `cache-transform`
+
+`projects/shared/src/lib/qti/test-navigation.ts`: remove `host: { 'cache-transform': 'true' }`. The
+attribute was removed in 8.0 and did nothing.
+
+### 1.5 Follow the renamed custom states and CSS variables
+
+In `projects/shell/src/lib/styles/qti/` (`choice-interaction.scss`, `hottext-interaction.scss`,
+`order-interaction.scss`, `qti-vars.scss`):
+
+| Old                    | New                        |
+| ---------------------- | -------------------------- |
+| `:state(--checked)`    | `:state(checked)`          |
+| `--qti-form-size`      | `--qti-control-size`       |
+| `--qti-gap-size`       | `--qti-gap`                |
+| `--qti-drop-min-width` | `--qti-dropzone-min-width` |
+
+Verify: checked choices and hottext look selected.
 
 ## Part 2 — replace the workarounds (not applied; do one at a time and check visually)
 
