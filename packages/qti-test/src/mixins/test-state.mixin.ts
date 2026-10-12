@@ -62,6 +62,7 @@ const toState = (test: Readonly<TestContext>, session: Readonly<SessionContext>)
     outcomes: (test?.testOutcomeVariables ?? []).map(v => ({ identifier: v.identifier, value: copy(v.value) }))
   },
   session: {
+    ...(session?.plugins && Object.keys(session.plugins).length > 0 ? { plugins: { ...session.plugins } } : {}),
     ...(session?.navPartId !== undefined ? { navPartId: session.navPartId } : {}),
     ...(session?.navSectionId !== undefined ? { navSectionId: session.navSectionId } : {}),
     ...(session?.navItemRefId !== undefined ? { navItemRefId: session.navItemRefId } : {})
@@ -96,6 +97,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
         this.#ready = false;
         this.#lastEmitted = null;
       });
+      listenPublic(this, 'cito-test-update-plugin-state', ({ detail }) => this.#updatePluginState(detail));
       listenPublic(this, 'cito-test-loaded', () => {
         if (this.#pending) {
           this.#apply(this.#pending);
@@ -103,6 +105,22 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
         }
         this.#ready = true;
       });
+    }
+
+    /** One plugin's entry, as JSON: the test stores it without reading it. `null` removes it. */
+    #updatePluginState({ plugin, value }: { plugin: string; value: unknown }): void {
+      if (typeof plugin !== 'string' || plugin === '') return;
+      const { [plugin]: _removed, ...others } = this.sessionContext.plugins ?? {};
+      let next: Record<string, unknown> = others;
+      if (value !== null && value !== undefined) {
+        try {
+          next = { ...others, [plugin]: JSON.parse(JSON.stringify(value)) };
+        } catch {
+          console.warn(`[qti-test] Ignoring plugin state for "${plugin}": it is not JSON.`);
+          return;
+        }
+      }
+      this.sessionContext = { ...this.sessionContext, plugins: next };
     }
 
     get state(): QtiTestState {
@@ -156,7 +174,13 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
 
       // Written before any navigation request, so the linear-mode restriction — which compares
       // against the current position — sees the restored item as current and lets it load.
-      this.sessionContext = { ...this.sessionContext, ...this.#validSession(state.session) };
+      this.sessionContext = {
+        ...this.sessionContext,
+        ...this.#validSession(state.session),
+        ...(state.session.plugins && typeof state.session.plugins === 'object'
+          ? { plugins: { ...state.session.plugins } }
+          : {})
+      };
     }
 
     /** A stored position may point at an item or section a revised test no longer has. */

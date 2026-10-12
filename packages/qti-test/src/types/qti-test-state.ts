@@ -37,8 +37,20 @@ export interface QtiTestStateValue {
   value: string | string[] | null;
 }
 
-/** Where the candidate is. */
+/**
+ * What each plugin keeps in the state, by plugin name. Empty here: a plugin adds its own entry by
+ * augmenting this interface (`declare module` on the module that declares it, with
+ * `interface QtiTestPluginState { bookmarks: string[] }`), and reads it with
+ * `pluginState(computedContext, 'bookmarks')`. The test never reads an entry; it
+ * stores and restores it, so a value must survive `JSON.stringify`.
+ */
+ 
+export interface QtiTestPluginState {}
+
+/** Where the candidate is, and what plugins keep. */
 export interface QtiTestStateSession {
+  /** Plugin entries by plugin name. Entries of plugins that are not loaded are kept as they are. */
+  plugins?: Partial<QtiTestPluginState> & Record<string, unknown>;
   navPartId?: string | null;
   navSectionId?: string | null;
   navItemRefId?: string | null;

@@ -35,6 +35,8 @@ export interface PublicEventMap {
     value: number | string;
   }>;
   'cito-test-switch-view': CustomEvent<View>;
+  /** `value` is JSON; `null` or `undefined` removes the plugin's entry. */
+  'cito-test-update-plugin-state': CustomEvent<{ plugin: string; value: unknown }>;
   'cito-test-navigated': CustomEvent<NavigationTarget>;
   'cito-test-navigation-started': CustomEvent<NavigationTarget>;
   'cito-test-navigation-failed': CustomEvent<NavigationFailure>;
@@ -51,6 +53,7 @@ export const PUBLIC_EVENTS: Record<PublicEventName, PublicEventDeclaration> = {
   'cito-test-navigate': { kind: 'request', scope: 'test', deprecated: 'qti-request-navigation' },
   'cito-test-end-attempt': { kind: 'request', scope: 'test', deprecated: 'test-end-attempt' },
   'cito-test-update-outcome': { kind: 'request', scope: 'test', deprecated: 'test-update-outcome-variable' },
+  'cito-test-update-plugin-state': { kind: 'request', scope: 'test' },
   'cito-test-switch-view': { kind: 'request', scope: 'test', deprecated: 'on-test-switch-view' },
   'cito-test-navigated': { kind: 'notification', scope: 'test' },
   'cito-test-navigation-started': {

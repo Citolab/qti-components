@@ -82,6 +82,26 @@ Dispatch with `bubbles: true, composed: true`. The element that handles it must 
 `dispatchPublic` and `listenPublic` (`packages/qti-test/src/public-events.ts`) send and handle the old
 names (`qti-request-navigation`, `test-end-attempt`, …) alongside these until the next major.
 
+### Keeping state
+
+A plugin that must remember something across a reload (bookmarks, notes) keeps it in the test's
+state, under its own name, and does not store anything itself:
+
+- **Write:** dispatch `cito-test-update-plugin-state` with `{ plugin: 'bookmarks', value: [...] }`.
+  The value is stored as JSON (a copy, so changing it afterwards changes nothing); `null` removes the
+  entry. A value that is not JSON is ignored with a warning.
+- **Read:** `computedContext.plugins` (or `pluginState(computedContext, 'bookmarks')`, typed). It is
+  `{}` until a plugin has written.
+- **Persist:** nothing to do for the plugin. The entry is part of `qtiTest.state.session.plugins`, so a
+  host that already stores `state` (and listens to `cito-test-state-changed`) stores it, and assigning
+  that state back restores it. Entries of plugins that are not loaded are kept, so a round trip never
+  drops another plugin's data.
+- **Type it:** augment `QtiTestPluginState` with your entry (`interface QtiTestPluginState { bookmarks: string[] }`
+  in a `declare module` on `types/qti-test-state`); the test itself never reads an entry.
+
+Keep an entry small and plain: it is stored with the candidate's data, so it is not for the answer key or
+for anything the host should rederive.
+
 ### Not public
 
 Do not use these from a plugin; they change without notice:

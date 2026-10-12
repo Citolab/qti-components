@@ -286,6 +286,7 @@ export class TestNavigation extends LitElement {
       identifier: this.#testElement.identifier,
       title: this.#testElement.title,
       view: this._sessionContext?.view,
+      plugins: this._sessionContext?.plugins ?? {},
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
         const testPartSessionControl = testPart.querySelector<QtiItemSessionControl>(
@@ -457,6 +458,7 @@ export class TestNavigation extends LitElement {
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
+      plugins: this._sessionContext?.plugins ?? {},
       testParts: this.computedContext.testParts.map(testPart => {
         return {
           ...testPart,
