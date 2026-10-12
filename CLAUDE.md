@@ -125,12 +125,14 @@ Always name the branch, the worktree and the PR number together when talking abo
 ### Releasing
 
 - **`main`:** manual, as in "Releasing" below.
-- **After every `main` release, merge `main` into `next`.** _(Planned: a GitHub Action does this
-  and opens a PR when it conflicts. Until it exists, do it by hand the same day: it keeps
-  `package.json` versions and `CHANGELOG.md` conflicts small.)_
+- **Every push to `main` is merged into `next` automatically** (`.github/workflows/sync-main-into-next.yml`,
+  logic in `tools/ci/sync-main-into-next.sh`): a merge commit, pushed straight to `next`. On a
+  conflict it pushes nothing and opens a PR `main` → `next`; resolve it and **merge it with a merge
+  commit, never squash**, or the same changes conflict again. The release's version commit is the
+  likeliest conflict (package versions, `CHANGELOG.md`).
 - **`next`:** prereleases publish as `@next` on npm so hosts can install and test them; see
-  "Prereleases from `next`" under Releasing below. _(Pre mode is not entered on `next` yet: until
-  `.changeset/pre.json` exists there, the release workflow refuses to release from `next`.)_
+  "Prereleases from `next`" under Releasing below. `next` is in changesets pre mode
+  (`.changeset/pre.json`); the release workflow refuses to release from a branch that is not.
 - **Shipping the major:** cut a `9.x` maintenance branch from the last release, merge `next` into
   `main`, leave pre-mode, release.
 
