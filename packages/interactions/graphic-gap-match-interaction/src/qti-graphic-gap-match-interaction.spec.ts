@@ -157,3 +157,70 @@ describe.each([['object'], ['img']] as const)('graphic gap match, graphic as <%s
     expect(placedRect.height).toBeCloseTo(bankRect.height, 0);
   });
 });
+
+/**
+ * A graphic declared wider than its container (a full-resolution picture in a two-column layout).
+ * It used to render at its declared 1600px and overflow, with the drop areas written in pixels; now
+ * it narrows to the container and the drop areas, percentages of it, stay on the same spot.
+ */
+describe.each([['object'], ['img']] as const)('graphic gap match, a wide graphic as <%s>', tag => {
+  let host: HTMLElement;
+  let style: HTMLStyleElement;
+  let interaction: HTMLElement;
+
+  // Authored on a 1600x900 picture; the hotspot covers x 400–800, y 450–675 (25–50%, 50–75%).
+  const graphic =
+    tag === 'object'
+      ? `<object type="image/png" data="${PNG}" width="1600" height="900">map</object>`
+      : `<img src="${PNG}" width="1600" height="900" alt="map"/>`;
+
+  beforeEach(async () => {
+    style = document.createElement('style');
+    style.textContent = itemCss as unknown as string;
+    document.head.appendChild(style);
+
+    host = document.createElement('div');
+    host.style.cssText = 'width:400px;background:#fff';
+    document.body.appendChild(host);
+    host.innerHTML = `
+      <qti-assessment-item identifier="wide" title="Wide graphic">
+        <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair"></qti-response-declaration>
+        <qti-item-body>
+          <qti-graphic-gap-match-interaction response-identifier="RESPONSE">
+            ${graphic}
+            ${gapImg('A', 20, tag)}
+            <qti-associable-hotspot identifier="H1" match-max="1" shape="rect" coords="400,450,800,675"></qti-associable-hotspot>
+          </qti-graphic-gap-match-interaction>
+        </qti-item-body>
+      </qti-assessment-item>`;
+
+    const item = host.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    interaction = host.querySelector('qti-graphic-gap-match-interaction') as HTMLElement;
+    await item.updateComplete;
+    await (interaction as HTMLElement & { updateComplete: Promise<unknown> }).updateComplete;
+    await new Promise(resolve => setTimeout(resolve, 200));
+  });
+
+  afterEach(() => {
+    host.remove();
+    style.remove();
+  });
+
+  const picture = () => interaction.querySelector(`:scope > ${tag}`) as HTMLElement;
+  const hotspot = () => interaction.querySelector('qti-associable-hotspot') as HTMLElement;
+
+  it('narrows the graphic to its container and keeps its aspect ratio', () => {
+    const rect = picture().getBoundingClientRect();
+    expect(rect.width).toBeCloseTo(400, 0);
+    expect(rect.height).toBeCloseTo(225, 0);
+  });
+
+  it('keeps the drop area on the same part of the picture', () => {
+    const graphicRect = picture().getBoundingClientRect();
+    const rect = hotspot().getBoundingClientRect();
+    expect(rect.left - graphicRect.left).toBeCloseTo(100, 0);
+    expect(rect.top - graphicRect.top).toBeCloseTo(112.5, 0);
+    expect(rect.width).toBeCloseTo(100, 0);
+    expect(rect.height).toBeCloseTo(56.25, 0);
+  });
+});
