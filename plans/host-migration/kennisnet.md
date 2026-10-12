@@ -103,6 +103,15 @@ Do:
   navigated / failed instead.
   Evidence: read, not run
 
+### Public item events get the `cito-` prefix (public events)
+
+Status: recommended; nothing breaks on upgrade (old names are sent and handled until the next major)
+Members: `qti-interaction-changed`, `qti-outcome-changed`, `qti-assessment-item-connected`, `qti-rubric:discretionary-placement`
+Do: rename as you touch them: `cito-item-response-changed`, `cito-item-outcome-changed`,
+`cito-item-rendered`, `cito-item-rubric-placement` (cancelable, like the old one). `detail` is
+unchanged. Listening for both names runs your handler twice; pick one.
+Evidence: read, not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

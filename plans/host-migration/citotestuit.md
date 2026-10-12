@@ -109,6 +109,18 @@ Do:
   navigated / failed instead.
   Evidence: read, not run
 
+### Public item events get the `cito-` prefix (public events)
+
+Status: recommended; nothing breaks on upgrade (old names are sent and handled until the next major)
+Members: `qti-interaction-changed`, `qti-assessment-item-connected`
+Do: rename as you touch them: `cito-item-response-changed` and `cito-item-rendered`. `detail` is
+unchanged. Listening for both names runs your handler twice; pick one.
+
+- `qti-assessment-item-connected`: `ItemPreview.tsx:80,196`, `ScalingItemPreview.tsx:224`,
+  `AssessmentPlayerView.tsx:1319`, `ScreenshotPreviewPage.tsx:440`.
+- `qti-interaction-changed`: `AssessmentPlayerView.tsx:966` (interaction replay log).
+  Evidence: read, not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.

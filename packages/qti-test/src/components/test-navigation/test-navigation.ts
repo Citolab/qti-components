@@ -6,6 +6,7 @@ import { computedContext } from '@qti-components/base';
 import { configContext } from '@qti-components/base';
 import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
+import { listenPublic as listenItemPublic } from '@qti-components/elements/public-events';
 
 import { testHostContext } from '../../internal/test-host.context';
 import { listenPublic } from '../../public-events';
@@ -129,7 +130,7 @@ export class TestNavigation extends LitElement {
     listenPublic(this, 'cito-test-loaded', this.#handleTestConnected.bind(this));
     this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
-    this.addEventListener('qti-interaction-changed', this.#handleInteractionChanged.bind(this));
+    listenItemPublic(this, 'cito-item-response-changed', this.#handleInteractionChanged.bind(this));
     this.addEventListener('qti-item-context-updated', this.#handleItemContextUpdated.bind(this));
 
     listenPublic(this, 'cito-test-end-attempt', this.#handleTestEndAttempt.bind(this));
