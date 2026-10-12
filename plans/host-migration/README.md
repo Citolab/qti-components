@@ -31,6 +31,7 @@ reads from its own version downward.
 | Change                                                                                         | Since   | Status                            |
 | ---------------------------------------------------------------------------------------------- | ------- | --------------------------------- |
 | `qtiTest.state` + `qti-state-changed`                                                          | PR #225 | recommended                       |
+| Public test events renamed `cito-*`; new `cito-test-navigated`                                 | PR #261 | recommended, old names sent       |
 | `qti-test-context-updated`, `SessionContext.navItemLoading` / `navTestLoading`                 | PR #225 | deprecated, removed in next major |
 | Restored template values are kept                                                              | PR #226 | behaviour change                  |
 | Session context labelled `sessionContext`                                                      | PR #227 | devtools only                     |

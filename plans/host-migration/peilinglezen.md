@@ -63,6 +63,14 @@ Do: PeilingLezen is a candidate first user of bookmarks and highlights in `state
 Status: behaviour change
 Do: nothing unless a custom interaction relied on template values being redrawn on revisit.
 
+### Public test events get the `cito-` prefix (public events)
+
+Status: none required (old names are sent and handled until the next major)
+Members: `qti-request-navigation`, `qti-test-loaded`
+Do: nothing. If the host listens for `qti-request-navigation` to learn that the item changed, use
+`cito-test-navigated` instead; it is sent only after the navigation succeeded and rendered.
+Evidence: imports surveyed only, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

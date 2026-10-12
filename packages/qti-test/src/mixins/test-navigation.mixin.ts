@@ -125,7 +125,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private _bindEventHandlers(): void {
       listenPublic(this, 'cito-test-navigate', this._handleNavigationRequest.bind(this));
-      this.addEventListener('qti-assessment-test-connected', this._handleTestConnected.bind(this));
+      listenPublic(this, 'cito-test-loaded', this._handleTestConnected.bind(this));
       this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
       this.addEventListener('qti-assessment-stimulus-ref-connected', this._handleStimulusRefConnected.bind(this));
     }

@@ -5,6 +5,8 @@ import { property } from 'lit/decorators.js';
 import { INITIAL_TEST_CONTEXT, testContext } from '@qti-components/base';
 import { INITIAL_SESSION_CONTEXT, type SessionContext, sessionContext } from '@qti-components/base';
 
+import { listenPublic } from '../public-events';
+
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
@@ -109,7 +111,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
        * Registrations from the document's children are already present on the
        * context reset above, so this must preserve what is there.
        */
-      this.addEventListener('qti-assessment-test-connected', (e: CustomEvent<QtiAssessmentTest>) => {
+      listenPublic(this, 'cito-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => {
         this._testElement = e.detail;
         const items = Array.from(this._testElement.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
           return {
