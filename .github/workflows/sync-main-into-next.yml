@@ -34,10 +34,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout next
+      # Check out the ref that triggered this run (main), not next: next may not have the script
+      # yet, since this very sync is how it gets there. The script switches to next itself.
+      - name: Checkout
         uses: actions/checkout@v5
         with:
-          ref: next
           fetch-depth: 0
           token: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
 
@@ -50,7 +51,9 @@ jobs:
         id: merge
         run: |
           set +e
-          bash tools/ci/sync-main-into-next.sh
+          # Run a copy: the script checks out next, which replaces the working tree under it.
+          cp tools/ci/sync-main-into-next.sh "$RUNNER_TEMP/sync.sh"
+          bash "$RUNNER_TEMP/sync.sh"
           code=$?
           echo "code=$code" >> "$GITHUB_OUTPUT"
           # 10 is a conflict: handled below, not a failure of this job.
