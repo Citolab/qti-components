@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="LinearBranchRule"
+        title="Linear test with a branch rule"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <!-- One attempt per item, so ending the attempt is enough to unlock Next, right or wrong. -->
+    <qti-test-part identifier="test-part-1" navigation-mode="linear" submission-mode="individual">
+        <qti-item-session-control max-attempts="1" />
+        <qti-assessment-section identifier="section-1" title="Section 1" visible="true">
+            <!-- After this item: jump to ITM-extended_text when the answer was right, skipping the remedial item. -->
+            <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml">
+                <qti-branch-rule target="ITM-extended_text">
+                    <qti-match>
+                        <qti-variable identifier="ITM-choice.SCORE" />
+                        <qti-base-value base-type="float">1</qti-base-value>
+                    </qti-match>
+                </qti-branch-rule>
+            </qti-assessment-item-ref>
+            <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
+            <qti-assessment-item-ref identifier="ITM-extended_text" href="items/extended_text.xml" />
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>
