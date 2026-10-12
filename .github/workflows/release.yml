@@ -72,7 +72,7 @@ jobs:
             echo "No pending changesets."
           fi
 
-      - name: Dry-run version preview (snapshot)
+      - name: Dry-run version preview
         if: ${{ inputs.dry_run }}
         env:
           # @changesets/changelog-github resolves PR and author links through the API,
@@ -83,13 +83,21 @@ jobs:
             exit 0
           fi
 
-          pnpm exec changeset version --snapshot dryrun
+          if [ -f .changeset/pre.json ]; then
+            # `--snapshot` is refused in pre mode ("Snapshot release is not allowed in pre mode"), so
+            # preview the real prerelease versioning (e.g. 10.0.0-next.1) instead.
+            pnpm exec changeset version
+          else
+            pnpm exec changeset version --snapshot dryrun
+          fi
 
           echo "Preview of version/changelog changes:"
           git --no-pager diff -- .changeset packages || true
 
-          # Revert preview mutations; dry-run should not leave repository changes behind.
+          # Revert preview mutations; dry-run should not leave repository changes behind. Pre mode
+          # also writes new files under .changeset/pre/, which checkout does not remove.
           git checkout -- .changeset packages
+          git clean -fdq .changeset
 
       - name: Apply changeset versions
         id: version
