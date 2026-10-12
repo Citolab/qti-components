@@ -6,8 +6,8 @@ Decide the public API from what third-party hosts actually use, not from what ha
 reachable. The rule we adopt: **what is documented on the Astro site is public; everything else
 may change in a minor.** This file is the inventory that page is written from.
 
-Related: `plans/reactive-state.md` (phases), PR #225 (`qtiTest.state` + `qti-state-changed`),
-PR #226 (restored template values), `plans/css-contract-audit.md` (styling tier).
+Related: the reactive-state work (PRs #225 to #233; its plan is retired, the left-overs are issues #235 to #241), PR #225 (`qtiTest.state` + `qti-state-changed`),
+PR #226 (restored template values), the styling-tier audit (retired; read it with `git show 614c666e:plans/css-contract-audit.md`, partly stale after the single-theme pivot).
 
 ## Sources
 
@@ -123,8 +123,8 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
    become a `view` property and a `showCandidateCorrection` method. The events stay as a
    deprecated path.
 7. **The styling tier is the biggest gap.** Both hosts patch our shadow DOM. Offer `::part`,
-   CSS custom states and a theming hook so they can stop. `plans/css-contract-audit.md` already
-   proposes element names, custom states and parts as the styling contract; check the patches
+   CSS custom states and a theming hook so they can stop. The retired CSS contract audit (`git show 614c666e:plans/css-contract-audit.md`)
+   proposed element names, custom states and parts as the styling contract; check the patches
    above against it.
 8. **`qti-test-context-updated` stays (deprecated)** until both main hosts are on `state`.
 
@@ -137,6 +137,6 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 - [ ] Bookmarks and highlights in `state.session` on `feat/test-item-bookmark`, with an anchor
       design for highlights.
 - [x] Entry points for `Interaction` and the contexts: they already exist as `@citolab/qti-components/qti-base`; the old `/exports/*` paths are gone. Now documented, with the extension contract pinned by stories.
-- [ ] Styling tier: map what Kennisnet and CitoTestUit patch onto `plans/css-contract-audit.md`,
-      then decide parts and states.
+- [ ] Styling tier: map what Kennisnet and CitoTestUit patch onto the parts and states the theme already exposes
+      (the old audit is `git show 614c666e:plans/css-contract-audit.md`), then decide parts and states.
 - [ ] Optional: survey PeilingLezen in depth, and the 2.x–6.x hosts if their usage still matters.
