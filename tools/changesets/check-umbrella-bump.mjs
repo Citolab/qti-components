@@ -32,10 +32,9 @@
  * first ships ten copies of code that is already inside `dist`, the second makes consumers
  * install them by hand. So the policy lives here.
  *
- * A stale version number is not the failure mode. `tools/publish-if-needed.mjs` asks npm
- * whether `@citolab/qti-components@<version>` exists and exits 0 when it does, so an
- * unbumped umbrella is silently **not published** — by `changeset publish` and by
- * `ci:publish:umbrella` alike. The changes ship to the `@qti-components/*` scope and reach
+ * A stale version number is not the failure mode. `pnpm -r publish` skips a package whose
+ * version is already on npm, so an unbumped umbrella is silently **not published** — by
+ * `changeset publish` and by `ci:publish` alike. The changes ship to the `@qti-components/*` scope and reach
  * no `@citolab/qti-components` consumer, while every step of the release run reports success.
  *
  * The rule: the umbrella's bump must be at least as large as the largest bump any other
@@ -47,7 +46,7 @@
  *
  * Patch is deliberately included. It is the easiest case to wave away and the one that
  * actually bit: a patch-only release leaves the umbrella on its published version, and
- * publish-if-needed skips it.
+ * `pnpm publish` skips it.
  *
  * The release plan comes from Changesets' own `getReleasePlan`, so this file holds the policy
  * and nothing else — no changeset parsing, no workspace globbing, no guess at what is
@@ -136,7 +135,7 @@ console.error(
 );
 console.error('');
 console.error('   The umbrella bundles these packages into its own dist, so their change ships inside it,');
-console.error('   but a devDependency link does not bump a dependent and tools/publish-if-needed.mjs skips');
+console.error('   but a devDependency link does not bump a dependent and pnpm publish skips');
 console.error(`   a version already on npm — so without this the change never reaches ${UMBRELLA}.`);
 console.error('');
 console.error('   Fix: add this line to one changeset in .changeset/, or write a new one for it:');

@@ -105,8 +105,7 @@
     "tsup": "NODE_OPTIONS=--max-old-space-size=8192 tsup",
     "yalc": "yalc publish",
     "yalc:push": "yalc push",
-    "deploy": "cd ../interactions/core && pnpm run build && cd ../../qti-components && pnpm run build && yalc push",
-    "publish": "node ../../tools/publish-if-needed.mjs"
+    "deploy": "cd ../interactions/core && pnpm run build && cd ../../qti-components && pnpm run build && yalc push"
   },
   "sideEffects": true,
   "type": "module"

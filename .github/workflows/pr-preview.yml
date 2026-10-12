@@ -1,0 +1,64 @@
+name: "PR: preview (pkg.pr.new)"
+
+# Every pull request gets installable builds of all workspace packages, and the pkg.pr.new bot
+# comments the install URLs on the PR. A host can try a change before it is merged, or after it is
+# merged and before the next release: the URL keeps working.
+#
+# Requirements (one-time): the pkg.pr.new GitHub App is installed on Citolab/qti-components
+# (https://github.com/apps/pkg-pr-new). No tokens or secrets are needed.
+# pkg.pr.new only works inside a CI workflow, never locally.
+
+on:
+  pull_request:
+    branches:
+      - main
+      - next
+    # Nothing to install from a docs-only change.
+    paths-ignore:
+      - '**/*.md'
+      - 'plans/**'
+      - 'docs/**'
+      - '.changeset/**'
+  workflow_dispatch:
+
+# A newer push to the same PR replaces the older preview.
+concurrency:
+  group: pr-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write # lets pkg.pr.new post the install-URL comment
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24.15.0
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
+        run: pnpm run build
+
+      # Use the installed binary (pnpm exec), NOT pnpm dlx / npx: required in CI.
+      #
+      # `--pnpm` is load-bearing, not a preference. pkg-pr-new packs each package by shelling out
+      # to `<pm> pack`, and that pm defaults to npm. Workspace manifests declare their shared
+      # runtime deps as `"lit": "catalog:"`, which pnpm resolves to a real range while packing and
+      # npm copies through verbatim. Packed by npm, every tarball would declare `"lit": "catalog:"`,
+      # which is not a version range, and fail to install in a host.
+      - name: Publish previews to pkg.pr.new
+        run: pnpm exec pkg-pr-new publish --pnpm './packages/*' './packages/interactions/*'

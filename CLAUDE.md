@@ -53,7 +53,7 @@ processing,transformers,loader,corrections}.ts`, one entry point per package):
   - `qti-utilities` — generic shared helpers with no QTI-specific semantics.
 - `apps/*` — the docs/Storybook site app (`pnpm run docs`).
 - `tools/` — build/test tooling (e.g. `tools/testing/pretest-clean.mjs`,
-  `tools/changesets/*`, `tools/publish-if-needed.mjs`).
+  `tools/changesets/*`).
 - `.storybook/` — Storybook config; `cem.config.mjs` drives the custom-elements-manifest
   generator that Storybook docs and `custom-elements.json` depend on.
 
@@ -89,6 +89,60 @@ Applies to `packages/interactions/**` (see its local `AGENTS.md` for the full po
   (e.g. `qti-item`).
 - Interactions must be form-associated custom elements exposing a11y state via
   `ElementInternals`; `response` is a transitional/compatibility API only.
+
+## Working agreement
+
+Two lanes, one backlog.
+
+- **`main`** is the current major. Always releasable. Fixes and non-breaking features land here.
+- **`next`** is the integration branch for the next major. Breaking and architectural changes land here.
+- **The backlog is GitHub issues.** Nothing else holds open work. `plans/` is for design
+  decisions only (e.g. `public-api.md`); a plan with open tasks turns those tasks into issues and
+  is deleted when it ships.
+
+### Choosing the lane
+
+Ask: would this break an existing user of a published package (removed or renamed member, changed
+behaviour, new required import)? No: `main`, milestone "9.x". Yes: `next`, milestone "Next major".
+An issue that fits neither lane yet (docs, chores, ideas) stays without a milestone: unscheduled.
+When unsure, put the issue in "Next major" and decide at triage.
+
+### One change, start to finish
+
+1. Open or pick an issue. Say which lane it is in.
+2. Make a worktree off that lane's branch (`origin/main` or `origin/next`), named after the branch:
+   branch `fix/foo` → `.claude/worktrees/fix-foo`. Unset the upstream after `-b … origin/<base>`.
+3. Add a changeset if a published package changes (`pnpm run changeset`). On `next` it is a
+   `major` when the change breaks, otherwise `minor`/`patch`.
+4. Open the PR **into the same lane's branch**. The title is a conventional commit
+   (`feat(test): …`); it becomes the squash commit.
+5. CI must pass. On `main`, a review is required. Squash-merge. A change that is only docs, plans,
+   changesets or workflows CI cannot test skips the heavy CI jobs, on the PR and on the push after
+   the merge; the pre-commit hook skips VRT and the tests for it too.
+6. Remove the worktree and the local branch; delete the remote branch after merge.
+
+Always name the branch, the worktree and the PR number together when talking about any one of them.
+
+### Releasing
+
+- **`main`:** manual, as in "Releasing" below.
+- **Every push to `main` is merged into `next` automatically** (`.github/workflows/sync-main-into-next.yml`,
+  logic in `tools/ci/sync-main-into-next.sh`): a merge commit, pushed straight to `next`. On a
+  conflict it pushes nothing and opens a PR `main` → `next`; resolve it and **merge it with a merge
+  commit, never squash**, or the same changes conflict again. The release's version commit is the
+  likeliest conflict (package versions, `CHANGELOG.md`).
+- **`next`:** prereleases publish as `@next` on npm so hosts can install and test them; see
+  "Prereleases from `next`" under Releasing below. `next` is in changesets pre mode
+  (`.changeset/pre.json`); the release workflow refuses to release from a branch that is not.
+- **Shipping the major:** cut a `9.x` maintenance branch from the last release, merge `next` into
+  `main`, leave pre-mode, release.
+
+### Rules that bind Claude
+
+- Ask before every commit, push, branch deletion and release. "Do what you think is best" is not
+  permission.
+- Never use `--admin` to get past a ruleset.
+- Work in a worktree, not by switching branches in place.
 
 ## Git workflow
 
@@ -141,12 +195,30 @@ Releases are manual and deliberate — no auto-publish on merge to `main`.
 1. Changesets accumulate in `.changeset/` as PRs land (`pnpm run changeset`).
 2. Run the `Manual: release and publish packages (changesets)` GitHub Actions workflow, or
    `gh workflow run release.yml -f branch=main` (`-f dry_run=true` to preview).
-3. On success, `deploy-sb.yml` auto-deploys the Storybook site (chained via `workflow_run`); a
-   failed release does not deploy. Manual redeploy: `gh workflow run deploy-sb.yml`.
+3. On success, `deploy-site.yml` auto-deploys the Astro docs site (chained via `workflow_run`); a
+   failed release does not deploy. Manual redeploy: `gh workflow run deploy-site.yml`. Storybook
+   is no longer published; it is a local dev tool (`pnpm run storybook`).
+
+### Prereleases from `next` (`@next` on npm)
+
+`next` releases through the same workflow, in changesets pre-release mode. Versions look like
+`10.0.0-next.3` and publish under the `next` dist-tag, so `npm i @citolab/qti-components` still gets
+the last stable release and `npm i @citolab/qti-components@next` gets the prerelease.
+
+1. Once, on `next` (through a PR into `next`): `pnpm exec changeset pre enter next`, which commits
+   `.changeset/pre.json`. This needs this release tooling merged into `next` first.
+2. Each prerelease: `gh workflow run release.yml -f branch=next -f dry_run=true`, then the same
+   without `dry_run`. The GitHub release is marked as a prerelease and the docs site is not deployed.
+3. Shipping the major: `pnpm exec changeset pre exit` on `next`, merge `next` into `main`, release
+   from `main`.
+
+The workflow refuses a mismatch (`tools/changesets/check-release-lane.mjs`): a branch other than
+`main` without `pre.json` would publish stable versions to `latest`, and `main` with `pre.json`
+would publish a prerelease. The publish step reads the dist-tag from `.changeset/pre.json`.
 
 `changeset publish` is intentionally not used (crashes on this workspace's pnpm registry
-responses); `pnpm run ci:publish:missing` runs `tools/publish-if-needed.mjs` instead, which only
-publishes versions not already on npm and is safe to re-run.
+responses); `pnpm run ci:publish` runs `pnpm -r publish`, which only publishes versions not already
+on npm and is safe to re-run.
 
 ## Committed generated files
 
