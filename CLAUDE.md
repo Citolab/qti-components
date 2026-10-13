@@ -190,7 +190,8 @@ what each host must do. In the same commit as the change:
 
 ## Releasing
 
-Releases are manual and deliberate — no auto-publish on merge to `main`.
+Releases from `main` are manual and deliberate — no auto-publish on merge to `main`. `next` is the
+exception: it publishes a `@next` prerelease by itself (see "Prereleases from `next`").
 
 1. Changesets accumulate in `.changeset/` as PRs land (`pnpm run changeset`).
 2. Run the `Manual: release and publish packages (changesets)` GitHub Actions workflow, or
@@ -207,8 +208,12 @@ the last stable release and `npm i @citolab/qti-components@next` gets the prerel
 
 1. Once, on `next` (through a PR into `next`): `pnpm exec changeset pre enter next`, which commits
    `.changeset/pre.json`. This needs this release tooling merged into `next` first.
-2. Each prerelease: `gh workflow run release.yml -f branch=next -f dry_run=true`, then the same
-   without `dry_run`. The GitHub release is marked as a prerelease and the docs site is not deployed.
+2. Each prerelease is automatic: when CI succeeds on a push to `next`, `release.yml` runs (via
+   `workflow_run`, so it lives on `main`) and publishes whatever changesets are pending. A push
+   without a changeset releases nothing. The release commit is `[skip ci]`, so it starts no CI run and
+   no second release. To run one by hand: `gh workflow run release.yml -f branch=next -f dry_run=true`,
+   then the same without `dry_run`. The GitHub release is marked as a prerelease and the docs site is
+   not deployed.
 3. Shipping the major: `pnpm exec changeset pre exit` on `next`, merge `next` into `main`, release
    from `main`.
 
