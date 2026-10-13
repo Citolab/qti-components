@@ -42,6 +42,8 @@ export interface PublicEventMap {
   // `cito-test-loaded` (detail: the `QtiAssessmentTest`) is added by qti-assessment-test.ts, so this
   // module imports no element: that import would be a cycle.
   'cito-test-state-changed': CustomEvent<QtiTestState>;
+  'cito-test-items-skipped': CustomEvent<{ ids: string[] }>;
+  'cito-test-end-reached': CustomEvent<Record<string, never>>;
   'cito-item-ref-connected': CustomEvent<{ identifier: string; href: string; category: string }>;
 }
 
@@ -62,6 +64,8 @@ export const PUBLIC_EVENTS: Record<PublicEventName, PublicEventDeclaration> = {
   'cito-test-rendered': { kind: 'notification', scope: 'test', deprecated: 'qti-test-loaded' },
   'cito-test-loaded': { kind: 'notification', scope: 'test', deprecated: 'qti-assessment-test-connected' },
   'cito-test-state-changed': { kind: 'notification', scope: 'test', deprecated: 'qti-state-changed' },
+  'cito-test-items-skipped': { kind: 'notification', scope: 'test' },
+  'cito-test-end-reached': { kind: 'notification', scope: 'test' },
   'cito-item-ref-connected': { kind: 'notification', scope: 'item', deprecated: 'qti-assessment-item-ref-connected' }
 };
 

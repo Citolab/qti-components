@@ -1,8 +1,10 @@
 import { QtiAssessmentItemRef } from './components/qti-assessment-item-ref/qti-assessment-item-ref';
 import { QtiAssessmentSection } from './components/qti-assessment-section/qti-assessment-section';
 import { QtiAssessmentTest } from './components/qti-assessment-test/qti-assessment-test';
+import { QtiBranchRule } from './components/qti-branch-rule/qti-branch-rule';
 import { QtiItemSessionControl } from './components/qti-item-session-control/qti-item-session-control';
 import { QtiNumberSelected } from './components/qti-number-selected/qti-number-selected';
+import { QtiPreCondition } from './components/qti-pre-condition/qti-pre-condition';
 import { QtiOutcomeProcessing } from './components/qti-outcome-processing/qti-outcome-processing';
 import { QtiTestFeedback } from './components/qti-test-feedback/qti-test-feedback';
 import { QtiTestPart } from './components/qti-test-part/qti-test-part';
@@ -40,9 +42,11 @@ export {
   QtiAssessmentItemRef,
   QtiAssessmentSection,
   QtiAssessmentTest,
+  QtiBranchRule,
   QtiItemSessionControl,
   QtiNumberSelected,
   QtiOutcomeProcessing,
+  QtiPreCondition,
   QtiTest,
   QtiTestFeedback,
   QtiTestPart,
@@ -78,9 +82,11 @@ export const qtiTestElements = [
   { tag: 'qti-assessment-item-ref', ctor: QtiAssessmentItemRef },
   { tag: 'qti-assessment-section', ctor: QtiAssessmentSection },
   { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },
+  { tag: 'qti-branch-rule', ctor: QtiBranchRule },
   { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },
   { tag: 'qti-number-selected', ctor: QtiNumberSelected },
   { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },
+  { tag: 'qti-pre-condition', ctor: QtiPreCondition },
   { tag: 'qti-test', ctor: QtiTest },
   { tag: 'qti-test-feedback', ctor: QtiTestFeedback },
   { tag: 'qti-test-part', ctor: QtiTestPart },
