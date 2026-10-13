@@ -281,9 +281,6 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     }
 
     /**
-     * Main navigation request handler with proper lifecycle management
-     */
-    /**
      * A "next" step in a linear test part (a request for item i+1 while item i is active) goes
      * through the branch rules and pre-conditions. Deep links, item links and nonlinear parts are
      * left alone: the spec ignores both in nonlinear mode.
@@ -308,6 +305,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       return next;
     }
 
+    /**
+     * Main navigation request handler with proper lifecycle management
+     */
     private async _handleNavigationRequest({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) {
       if (!detail?.id) return;
 

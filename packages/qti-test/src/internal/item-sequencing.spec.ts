@@ -174,6 +174,28 @@ describe('resolveNextItem', () => {
     expect(next(refs)).toEqual({ id: 'B', skipped: [] });
   });
 
+  it('a pre-condition that gives NULL (an unknown variable) is false, one without an expression fails open', () => {
+    const refs = mount(`
+      <qti-assessment-section identifier="S">
+        <qti-assessment-item-ref identifier="A"></qti-assessment-item-ref>
+        <qti-assessment-item-ref identifier="B">
+          <qti-pre-condition><qti-variable identifier="NOPE.SCORE"></qti-variable></qti-pre-condition>
+        </qti-assessment-item-ref>
+        <qti-assessment-item-ref identifier="C"><qti-pre-condition></qti-pre-condition></qti-assessment-item-ref>
+      </qti-assessment-section>`);
+    expect(next(refs)).toEqual({ id: 'C', skipped: ['B'] });
+  });
+
+  it('a branch rule without an expression does not branch', () => {
+    const refs = mount(`
+      <qti-assessment-section identifier="S">
+        <qti-assessment-item-ref identifier="A"><qti-branch-rule target="C"></qti-branch-rule></qti-assessment-item-ref>
+        <qti-assessment-item-ref identifier="B"></qti-assessment-item-ref>
+        <qti-assessment-item-ref identifier="C"></qti-assessment-item-ref>
+      </qti-assessment-section>`);
+    expect(next(refs)).toEqual({ id: 'B', skipped: [] });
+  });
+
   it('resolveFirstItem skips leading items and sections with a false pre-condition', () => {
     const refs = mount(`
       <qti-assessment-section identifier="S1">${preCondition(false)}
