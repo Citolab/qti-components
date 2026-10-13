@@ -1,4 +1,5 @@
 import type { QtiOutcomeProcessing } from '../components/qti-outcome-processing/qti-outcome-processing';
+import type { QtiTestFeedback } from '../components/qti-test-feedback/qti-test-feedback';
 import type { OutcomeVariable, VariableDeclaration } from '@qti-components/base';
 import type { TestBaseInterface } from './test-base';
 
@@ -9,6 +10,7 @@ declare class TestProcessingInterface {
   getOutcome(identifier: string): Readonly<OutcomeVariable>;
   getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>>;
   outcomeProcessing(): boolean;
+  getTestFeedback(access?: 'atEnd' | 'during'): QtiTestFeedback[];
 }
 export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
   abstract class TestProcessingElement extends superClass implements TestProcessingInterface {
@@ -41,6 +43,20 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
       if (!outcomeProcessor) return false;
       outcomeProcessor?.process();
       return true;
+    }
+
+    /**
+     * The `qti-test-feedback` elements that apply now, read from the test outcomes: run
+     * `outcomeProcessing()` first. `access` narrows them to the end of the test (`atEnd`) or to
+     * while it runs (`during`); without it, both.
+     */
+    getTestFeedback(access?: 'atEnd' | 'during'): QtiTestFeedback[] {
+      const feedback = Array.from(
+        (this._testElement ?? this).querySelectorAll<QtiTestFeedback>('qti-test-feedback') ?? []
+      );
+      return feedback.filter(
+        fb => (!access || fb.access === access) && fb.matches(this.getOutcome(fb.outcomeIdentifier)?.value)
+      );
     }
 
     /* --------------------------- ENABLED WHEN UNIT TESTING OUTCOME PROCESSING ------------------------------------ */
