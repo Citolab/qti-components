@@ -1,6 +1,13 @@
 name: "Manual: release and publish packages (changesets)"
 
 on:
+  # `next` publishes a @next prerelease by itself once CI has passed on a push to it. workflow_run
+  # always runs the workflow file from the default branch, so this lives on main. The release commit
+  # is `[skip ci]`: it starts no CI run, so it cannot start another release.
+  workflow_run:
+    workflows: ['CI: push-quality']
+    types: [completed]
+    branches: [next]
   workflow_dispatch:
     inputs:
       branch:
@@ -19,15 +26,25 @@ permissions:
   pull-requests: write
   id-token: write
 
+# Two merges to next in a row must not version and publish at the same time.
+concurrency:
+  group: release-${{ github.event.workflow_run.head_branch || inputs.branch || 'main' }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_BRANCH: ${{ github.event.workflow_run.head_branch || inputs.branch || 'main' }}
+
 jobs:
   release:
+    # Automatic runs: only a push to next whose CI succeeded. Manual runs always go through.
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           token: ${{ secrets.RELEASE_BOT_TOKEN || secrets.GITHUB_TOKEN }}
-          ref: ${{ inputs.branch || 'main' }}
+          ref: ${{ env.RELEASE_BRANCH }}
           fetch-depth: 0
 
       - name: Install pnpm
@@ -56,7 +73,7 @@ jobs:
       # Runs for dry-run and for real. A stable release only comes from main, a prerelease only from
       # a branch in changesets pre mode (next); anything else would publish to the wrong dist-tag.
       - name: Check the release lane
-        run: node tools/changesets/check-release-lane.mjs "${{ inputs.branch || 'main' }}"
+        run: node tools/changesets/check-release-lane.mjs "${{ env.RELEASE_BRANCH }}"
 
       # Runs for dry-run and for real: this is the point where a missing umbrella bump turns
       # into a release that silently skips publishing @citolab/qti-components.
@@ -70,7 +87,7 @@ jobs:
           # released: without it changeset status runs `git merge-base main HEAD`, and a checkout of
           # next has no local main to compare against.
           if ls .changeset/*.md 2>/dev/null | grep -qv 'README\.md'; then
-            pnpm exec changeset status --since="origin/${{ inputs.branch || 'main' }}"
+            pnpm exec changeset status --since="origin/${{ env.RELEASE_BRANCH }}"
           else
             echo "No pending changesets."
           fi
@@ -200,7 +217,7 @@ jobs:
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "dry-run" > release-type.txt
-          elif [ "${{ inputs.branch || 'main' }}" != "main" ]; then
+          elif [ "${{ env.RELEASE_BRANCH }}" != "main" ]; then
             echo "prerelease" > release-type.txt
           else
             echo "real-release" > release-type.txt
