@@ -32,6 +32,24 @@ same set `qti-test-variables` aggregates over, and right before any item has bee
 `section-identifier` works on `qti-test-variables` too — both elements select their item refs the
 same way.
 
+## `qti-number-presented`
+
+A test-level **expression** returning how many of those item references have been presented to the
+candidate. It takes the same `section-identifier`, `include-category` and `exclude-category`
+attributes as `qti-number-selected`.
+
+An item counts as presented once its `completionStatus` has left `not_attempted`: presenting an item
+starts its first attempt. Items a linear test part passed over (a false `qti-pre-condition`, a
+`qti-branch-rule` that jumped past them) and items the candidate has not reached are not counted.
+Use it for totals over the candidate's own route — for example a maximum score of one point per
+presented item, so branched-over items do not count against the candidate:
+
+```xml
+<qti-set-outcome-value identifier="MAXSCORE">
+  <qti-number-presented exclude-category="unscored" />
+</qti-set-outcome-value>
+```
+
 ## `<test-check-item>`
 
 A "submit this attempt" button. On click it:

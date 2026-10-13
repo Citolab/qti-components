@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="LinearNumberPresented"
+        title="Linear test that counts the presented items"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <qti-outcome-declaration identifier="PRESENTED" base-type="integer" cardinality="single">
+        <qti-default-value><qti-value>0</qti-value></qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="SELECTED" base-type="integer" cardinality="single">
+        <qti-default-value><qti-value>0</qti-value></qti-default-value>
+    </qti-outcome-declaration>
+
+    <!-- One attempt per item, so ending the attempt is enough to unlock Next, right or wrong. -->
+    <qti-test-part identifier="test-part-1" navigation-mode="linear" submission-mode="individual">
+        <qti-item-session-control max-attempts="1" />
+        <qti-assessment-section identifier="section-1" title="Section 1" visible="true">
+            <!-- A right answer jumps to ITM-extended_text: ITM-text_entry is never presented. -->
+            <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml">
+                <qti-branch-rule target="ITM-extended_text">
+                    <qti-match>
+                        <qti-variable identifier="ITM-choice.SCORE" />
+                        <qti-base-value base-type="float">1</qti-base-value>
+                    </qti-match>
+                </qti-branch-rule>
+            </qti-assessment-item-ref>
+            <qti-assessment-item-ref identifier="ITM-text_entry" href="items/text_entry.xml" />
+            <qti-assessment-item-ref identifier="ITM-extended_text" href="items/extended_text.xml" />
+        </qti-assessment-section>
+    </qti-test-part>
+
+    <qti-outcome-processing>
+        <qti-set-outcome-value identifier="PRESENTED">
+            <qti-number-presented />
+        </qti-set-outcome-value>
+        <qti-set-outcome-value identifier="SELECTED">
+            <qti-number-selected />
+        </qti-set-outcome-value>
+    </qti-outcome-processing>
+</qti-assessment-test>

@@ -3,6 +3,7 @@ import { QtiAssessmentSection } from './components/qti-assessment-section/qti-as
 import { QtiAssessmentTest } from './components/qti-assessment-test/qti-assessment-test';
 import { QtiBranchRule } from './components/qti-branch-rule/qti-branch-rule';
 import { QtiItemSessionControl } from './components/qti-item-session-control/qti-item-session-control';
+import { QtiNumberPresented } from './components/qti-number-presented/qti-number-presented';
 import { QtiNumberSelected } from './components/qti-number-selected/qti-number-selected';
 import { QtiPreCondition } from './components/qti-pre-condition/qti-pre-condition';
 import { QtiOutcomeProcessing } from './components/qti-outcome-processing/qti-outcome-processing';
@@ -44,6 +45,7 @@ export {
   QtiAssessmentTest,
   QtiBranchRule,
   QtiItemSessionControl,
+  QtiNumberPresented,
   QtiNumberSelected,
   QtiOutcomeProcessing,
   QtiPreCondition,
@@ -84,6 +86,7 @@ export const qtiTestElements = [
   { tag: 'qti-assessment-test', ctor: QtiAssessmentTest },
   { tag: 'qti-branch-rule', ctor: QtiBranchRule },
   { tag: 'qti-item-session-control', ctor: QtiItemSessionControl },
+  { tag: 'qti-number-presented', ctor: QtiNumberPresented },
   { tag: 'qti-number-selected', ctor: QtiNumberSelected },
   { tag: 'qti-outcome-processing', ctor: QtiOutcomeProcessing },
   { tag: 'qti-pre-condition', ctor: QtiPreCondition },
