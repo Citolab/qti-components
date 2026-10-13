@@ -5,7 +5,7 @@ import { Interaction } from '@qti-components/base';
 
 import styles from './qti-slider-interaction.styles';
 
-import type { CSSResultGroup } from 'lit';
+import type { CSSResultGroup, PropertyValues } from 'lit';
 /**
  * Slider interaction: candidates pick a numeric value along a rail.
  *
@@ -22,7 +22,12 @@ import type { CSSResultGroup } from 'lit';
 export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
 
-  #value = 0;
+  /**
+   * The value the slider shows, or `null` before there is one. A slider has no initial position of
+   * its own (QTI 3): it starts at the response declaration's default, which reaches it through
+   * `response` like any other value the item holds, or it starts empty.
+   */
+  #value: number | null = null;
 
   @query('#rail') private _rail!: HTMLElement;
 
@@ -36,24 +41,33 @@ export class QtiSliderInteraction extends Interaction {
 
   override connectedCallback() {
     super.connectedCallback();
-    // Only seed with `min` if no explicit response was set via attribute/property.
-    if (!this.hasAttribute('response')) {
-      this.#updateValue(this.min);
-    }
     this.setAttribute('tabindex', '0');
     this.setAttribute('role', 'slider');
   }
 
+  override willUpdate(changed: PropertyValues): void {
+    super.willUpdate(changed);
+    this._internals.ariaValueMin = String(this.min);
+    this._internals.ariaValueMax = String(this.max);
+  }
+
+  /**
+   * Shows the value without publishing it: it came from the item (a default or a restored answer) or
+   * from the host, which hold it already. Only the candidate's input is published.
+   */
   @property({ attribute: 'response', reflect: false, noAccessor: true })
-  get response(): string {
-    return this.#value.toString();
+  get response(): string | null {
+    return this.#value === null ? null : this.#value.toString();
   }
 
   set response(val: string | null) {
-    if (val === null || val === '') return;
+    if (val === null || val === undefined || val === '') {
+      this.#show(null);
+      return;
+    }
     const newValue = parseFloat(val);
     if (!isNaN(newValue)) {
-      this.#updateValue(newValue);
+      this.#show(newValue);
     }
   }
 
@@ -62,17 +76,32 @@ export class QtiSliderInteraction extends Interaction {
     return nothing;
   }
 
-  #updateValue(newValue: number) {
+  /** Moves the knob to `newValue`, clamped to the bounds, or empties the slider. Returns whether it moved. */
+  #show(newValue: number | null): boolean {
     const oldValue = this.#value;
-    this.#value = Math.min(this.max, Math.max(this.min, newValue));
+    this.#value = newValue === null ? null : Math.min(this.max, Math.max(this.min, newValue));
     if (this.#value === oldValue) {
-      return; // Do not update if the value is the same as before
+      return false;
     }
-    const valuePercentage = ((this.#value - this.min) / (this.max - this.min)) * 100;
-    this.style.setProperty('--value-percentage', `${valuePercentage}%`);
-    this._internals.setFormValue(this.value); // Update form value
-    this.saveResponse(this.response);
+    if (this.#value === null) {
+      this.style.removeProperty('--value-percentage');
+      this._internals.setFormValue(null);
+      this._internals.ariaValueNow = null;
+    } else {
+      const valuePercentage = ((this.#value - this.min) / (this.max - this.min)) * 100;
+      this.style.setProperty('--value-percentage', `${valuePercentage}%`);
+      this._internals.setFormValue(this.value);
+      this._internals.ariaValueNow = String(this.#value);
+    }
     this.requestUpdate();
+    return true;
+  }
+
+  /** The candidate's input: shows it and publishes it. */
+  #commit(newValue: number) {
+    if (this.#show(newValue)) {
+      this.saveResponse(this.response);
+    }
   }
 
   override render() {
@@ -88,7 +117,7 @@ export class QtiSliderInteraction extends Interaction {
 
         <div id="rail" part="rail" @mousedown=${this.#onMouseDown} @touchstart=${this.#onTouchStart}>
           <div id="knob" part="knob">
-            <div id="value" part="value">${this.response}</div>
+            ${this.#value === null ? nothing : html`<div id="value" part="value">${this.#value}</div>`}
           </div>
 
           ${this.renderRailSupplement()}
@@ -132,7 +161,7 @@ export class QtiSliderInteraction extends Interaction {
     const diffX = pageX - railRect.left;
     const percentage = Math.min(1, Math.max(0, diffX / railRect.width));
     const steppedValue = this.min + Math.round((percentage * (this.max - this.min)) / this.step) * this.step;
-    this.#updateValue(steppedValue);
+    this.#commit(steppedValue);
   }
 
   #onDragEnd() {
