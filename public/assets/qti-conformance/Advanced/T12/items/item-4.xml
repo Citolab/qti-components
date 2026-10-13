@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd " identifier="t12-sections-item-4" title="T12 - Sections - Item 4" adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single"/>
+  <qti-item-body>
+    <h2>T12 - Sections - Item 4</h2>
+    <qti-choice-interaction response-identifier="RESPONSE">
+        <qti-prompt>Select a response</qti-prompt>
+        <qti-simple-choice identifier="choice-1">Choice 1</qti-simple-choice>
+        <qti-simple-choice identifier="choice-2">Choice 2</qti-simple-choice>
+    </qti-choice-interaction>
+  </qti-item-body>
+</qti-assessment-item>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                     identifier="t5-test-parts-item-session-control" title="T5 - Test Parts - Item Session Control" 
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd">
+    <qti-test-part identifier="testPart-1" navigation-mode="nonlinear" submission-mode="individual">
+        <qti-item-session-control max-attempts="0"/>
+        <qti-assessment-section identifier="assessmentSection-1" title="Section 1" visible="true">
+            <qti-assessment-item-ref identifier="t5-item-session-control-item-1" href="items/item-1.xml"/>
+            <qti-assessment-item-ref identifier="t5-item-session-control-item-2" href="items/item-2.xml"/>
+            <qti-assessment-item-ref identifier="t5-item-session-control-item-3" href="items/item-3.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

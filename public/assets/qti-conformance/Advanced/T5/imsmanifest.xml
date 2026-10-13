@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          identifier="level2-T5-Test-Parts-Item-Session-Control" 
+          xsi:schemaLocation="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd">
+    <metadata>
+        <schema>QTI Package</schema>
+        <schemaversion>3.0.1</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+        <resource identifier="t5-item-session-control-item-1" type="imsqti_item_xmlv3p0" href="items/item-1.xml">   
+            <file href="items/item-1.xml"/>
+        </resource>
+        <resource identifier="t5-item-session-control-item-2" type="imsqti_item_xmlv3p0" href="items/item-2.xml">   
+            <file href="items/item-2.xml"/>
+        </resource>
+        <resource identifier="t5-item-session-control-item-3" type="imsqti_item_xmlv3p0" href="items/item-3.xml">   
+            <file href="items/item-3.xml"/>
+        </resource>
+    
+        <resource identifier="t5-test-parts-item-session-control" type="imsqti_test_xmlv3p0" href="assessment.xml">
+            <file href="assessment.xml"/>
+        </resource>
+    </resources>
+</manifest>
