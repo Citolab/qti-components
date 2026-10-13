@@ -1,5 +1,6 @@
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { html } from 'lit';
+import { findByShadowText, queryAllByShadowText } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
@@ -71,5 +72,42 @@ export const BookmarkFollowsTheItem: Story = {
     // 4 Back on the first item the mark is still there
     await fireEvent.click(canvasElement.querySelector('test-prev')!);
     await waitFor(() => expect(bookmark).toHaveAttribute('aria-pressed', 'true'));
+  }
+};
+
+/** In `<template item-ref>` every item gets its own button, which marks that item. */
+export const InItemRefTemplate: Story = {
+  render: () => html`
+    <qti-test navigate="item">
+      <template item-ref>
+        <test-bookmark>Bookmark</test-bookmark>
+        {{ xmlDoc }}
+      </template>
+      <test-navigation>
+        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
+        <test-next>Volgende</test-next>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement }) => {
+    const qtiTest = canvasElement.querySelector('qti-test') as QtiTest;
+
+    const info = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
+    const itemRef = info.closest('qti-assessment-item-ref')!;
+    const bookmark = itemRef.querySelector<TestBookmark>('test-bookmark')!;
+    expect(bookmark).toBeInTheDocument();
+    expect(bookmark).not.toHaveAttribute('disabled');
+
+    await fireEvent.click(bookmark);
+    await waitFor(() => expect(bookmark).toHaveAttribute('aria-pressed', 'true'));
+    expect(qtiTest.state.session.plugins?.bookmarks).toEqual([itemRef.getAttribute('identifier')]);
+
+    // The next item has its own button, not marked
+    await fireEvent.click(await findByShadowText(canvasElement, 'Volgende'));
+    await waitFor(() => {
+      const next = queryAllByShadowText(canvasElement, 'Bookmark').find(b => b !== bookmark);
+      expect(next).toBeTruthy();
+      expect(next).toHaveAttribute('aria-pressed', 'false');
+    });
   }
 };

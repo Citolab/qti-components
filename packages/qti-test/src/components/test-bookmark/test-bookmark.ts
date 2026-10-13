@@ -21,14 +21,24 @@ declare module '../../types/qti-test-state' {
 export const bookmarkedItems = (context: Pick<ComputedContext, 'plugins'> | undefined): string[] =>
   pluginState(context, 'bookmarks') ?? [];
 
+/** The identifier of the item-ref an element is stamped into (`<template item-ref>`), looking out through shadow roots. */
+const itemRefOf = (element: Element): string | undefined => {
+  const itemRef = element.closest('qti-assessment-item-ref');
+  if (itemRef) return itemRef.getAttribute('identifier') ?? undefined;
+  const root = element.getRootNode();
+  return root instanceof ShadowRoot ? itemRefOf(root.host) : undefined;
+};
+
 /**
  * A toggle that marks the item on screen to come back to. The marks live in the test's state under
  * `bookmarks` (`session.plugins.bookmarks`), so a host that stores `state` stores them, and a
  * reloaded test shows them again.
  *
- * Put it inside `<test-navigation>`. It is a button (`role="button"`, `aria-pressed`) and reflects
- * `bookmarked` on the host for styling; its content is the label. Without an item on screen it is
- * `disabled`. A host's own navigation reads the marks with `bookmarkedItems(computedContext)`.
+ * Put it inside `<test-navigation>`, either in the toolbar, where it marks the item on screen, or in
+ * the `<template item-ref>`, where each item gets its own and it marks that item. It is a button
+ * (`role="button"`, `aria-pressed`) and reflects `bookmarked` on the host for styling; its content is
+ * the label. In the toolbar it is `disabled` while no item is on screen. A host's own navigation reads
+ * the marks with `bookmarkedItems(computedContext)`.
  *
  * @slot - The label.
  * @attr bookmarked - Reflected: the item on screen is bookmarked.
@@ -74,11 +84,14 @@ export class TestBookmark extends LitElement {
     if (!this.hasAttribute('tabindex')) this.setAttribute('tabindex', '0');
   }
 
-  /** The identifier of the item on screen, if any. */
+  /** The item this button marks: its own, or else the one on screen. */
   get #activeItem(): string | undefined {
-    return this.computedContext?.testParts
-      ?.flatMap(part => part.sections.flatMap(section => section.items))
-      .find(item => item.active)?.identifier;
+    return (
+      itemRefOf(this) ??
+      this.computedContext?.testParts
+        ?.flatMap(part => part.sections.flatMap(section => section.items))
+        .find(item => item.active)?.identifier
+    );
   }
 
   protected override willUpdate(): void {

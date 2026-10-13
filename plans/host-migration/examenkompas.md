@@ -74,7 +74,7 @@ Do: rename as you touch them (`assessment.tsx:199-212`, and `qtiinteractionchang
 
 Status: recommended; nothing breaks on upgrade
 Members: `<test-bookmark>`, `bookmarkedItems`, `state.session.plugins.bookmarks`
-Do: put `<test-bookmark>` in the toolbar instead of the own toggle (`assessment.tsx:686-690`), drop the
+Do: put `<test-bookmark>` in the toolbar (or in `<template item-ref>`, one per item) instead of the own toggle (`assessment.tsx:686-690`), drop the
 `bookmarks` set and its `bookmarkStorageKey` read and write (`:148-174`), and mark the lists and thumbnails from
 `bookmarkedItems(computedContext)` instead of `item.bookmarked` passed through `initContext`
 (`:390, 452-458`; `item-list.tsx`, `item-thumbs.tsx`, `item-navigation.tsx`). The marks are part of `state`, which you

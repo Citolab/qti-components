@@ -129,4 +129,39 @@ describe('test-bookmark', () => {
     expect(bookmarkedItems({ plugins: qtiTest.sessionContext.plugins })).toEqual(['ITEM-2']);
     expect(bookmarkedItems(undefined)).toEqual([]);
   });
+
+  describe('stamped into an item-ref (<template item-ref>)', () => {
+    let own: TestBookmark;
+
+    beforeEach(async () => {
+      own = document.createElement('test-bookmark') as TestBookmark;
+      own.textContent = 'Bookmark';
+      host.querySelector('qti-assessment-item-ref[identifier="ITEM-2"]')!.append(own);
+      await show('ITEM-1');
+    });
+
+    it('marks its own item, not the one on screen, and is never disabled', async () => {
+      expect(own.hasAttribute('disabled')).toBe(false);
+
+      own.click();
+      await settle();
+
+      expect(qtiTest.state.session.plugins).toEqual({ bookmarks: ['ITEM-2'] });
+      expect(own.hasAttribute('bookmarked')).toBe(true);
+      // The toolbar button follows the item on screen (ITEM-1), which is not marked.
+      expect(bookmark.hasAttribute('bookmarked')).toBe(false);
+    });
+
+    it('is bookmarked when its own item is, whichever item is on screen', async () => {
+      qtiTest.state = {
+        version: 1,
+        test: { items: [], outcomes: [] },
+        session: { plugins: { bookmarks: ['ITEM-2'] } }
+      };
+      await show('ITEM-1');
+
+      expect(own.hasAttribute('bookmarked')).toBe(true);
+      expect(own.getAttribute('aria-pressed')).toBe('true');
+    });
+  });
 });
