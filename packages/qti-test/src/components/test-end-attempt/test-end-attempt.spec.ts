@@ -364,6 +364,52 @@ describe('TestEndAttempt', () => {
     expect(el).toBeEnabled();
   });
 
+  it('should be disabled for an adaptive item once it is completed', async () => {
+    const el = document.createElement('test-end-attempt') as TestEndAttempt;
+    container.appendChild(el);
+
+    const context: ComputedContext = {
+      view: 'candidate',
+      identifier: 'test',
+      title: 'Test',
+      testParts: [
+        {
+          active: true,
+          identifier: 'part1',
+          navigationMode: 'nonlinear',
+          submissionMode: 'individual',
+          sections: [
+            {
+              active: true,
+              identifier: 'section1',
+              title: 'Section 1',
+              navigationMode: 'nonlinear',
+              submissionMode: 'individual',
+              items: [
+                {
+                  identifier: 'item1',
+                  active: true,
+                  allowSkipping: true,
+                  valid: true,
+                  isDefaultResponse: false,
+                  adaptive: true,
+                  completionStatus: 'completed',
+                  numAttempts: 2,
+                  maxAttempts: 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    } as any;
+
+    (el as any).computedContext = context;
+    await el.updateComplete;
+
+    expect(el).toBeDisabled();
+  });
+
   it('should not disable when maxAttempts is 0 (unlimited)', async () => {
     const el = document.createElement('test-end-attempt') as TestEndAttempt;
     container.appendChild(el);
