@@ -93,7 +93,8 @@ export const PreConditionSkipsItem: StoryObj = {
     next.click();
 
     await waitFor(() => expect(activeItemRef(canvasElement)).toBe('ITM-extended_text'));
-    expect(skipped).toEqual(['ITM-text_entry']);
+    // announced once the jump went through, which can be a moment after the item changes
+    await waitFor(() => expect(skipped).toEqual(['ITM-text_entry']));
   }
 };
 
@@ -123,7 +124,8 @@ export const BranchRuleJumpsToItem: StoryObj = {
     next.click();
 
     await waitFor(() => expect(activeItemRef(canvasElement)).toBe('ITM-extended_text'));
-    expect(skipped).toEqual(['ITM-text_entry']);
+    // announced once the jump went through, which can be a moment after the item changes
+    await waitFor(() => expect(skipped).toEqual(['ITM-text_entry']));
   }
 };
 
@@ -157,7 +159,8 @@ export const BranchRuleExitsTest: StoryObj = {
     next.click();
 
     await waitFor(() => expect(ended).toBe(true));
-    expect(skipped).toEqual(['ITM-text_entry']);
+    // announced once the jump went through, which can be a moment after the item changes
+    await waitFor(() => expect(skipped).toEqual(['ITM-text_entry']));
     expect(activeItemRef(canvasElement)).toBe('ITM-choice');
   }
 };
