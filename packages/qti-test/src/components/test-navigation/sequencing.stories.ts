@@ -164,3 +164,62 @@ export const BranchRuleExitsTest: StoryObj = {
     expect(activeItemRef(canvasElement)).toBe('ITM-choice');
   }
 };
+
+/** The `qti-test` of the story, for its outcome processing and outcomes. */
+const testOf = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector('qti-test') as unknown as {
+    outcomeProcessing(): boolean;
+    getOutcome(id: string): { value: unknown } | null;
+    updateItemVariables(id: string, values: { identifier: string; value: string; type?: 'outcome' }[]): void;
+  };
+
+const outcomesAfterProcessing = (canvasElement: HTMLElement) => {
+  const test = testOf(canvasElement);
+  test.outcomeProcessing();
+  return {
+    presented: Number(test.getOutcome('PRESENTED')?.value),
+    selected: Number(test.getOutcome('SELECTED')?.value)
+  };
+};
+
+/**
+ * Test: the branch-rule test, with `qti-number-presented` and `qti-number-selected` in its outcome processing.
+ *
+ * All three items are selected, but a right first answer jumps over `ITM-text_entry`: it is never
+ * presented, so only two are counted.
+ */
+export const NumberPresentedCountsTheRoute: StoryObj = {
+  render: () => render('/assets/qti-test-package/assessment-linear-number-presented.xml'),
+  play: async ({ canvasElement }) => {
+    await getAssessmentItemsFromTestContainer(canvasElement);
+    await waitFor(() => expect(outcomesAfterProcessing(canvasElement)).toEqual({ presented: 1, selected: 3 }));
+
+    const next = await answerFirstItem(canvasElement, CORRECT);
+    next.click();
+    await waitFor(() => expect(activeItemRef(canvasElement)).toBe('ITM-extended_text'));
+
+    await waitFor(() => expect(outcomesAfterProcessing(canvasElement)).toEqual({ presented: 2, selected: 3 }));
+  }
+};
+
+/**
+ * Same test, but the host gave `ITM-extended_text` a value before the candidate reached it (a restored
+ * session, manual scoring). The item still counts as presented once it is on screen: presenting it
+ * starts its first attempt, so its `completionStatus` leaves `not_attempted`.
+ */
+export const NumberPresentedWithValuesSetBeforehand: StoryObj = {
+  render: () => render('/assets/qti-test-package/assessment-linear-number-presented.xml'),
+  play: async ({ canvasElement }) => {
+    await getAssessmentItemsFromTestContainer(canvasElement);
+    testOf(canvasElement).updateItemVariables('ITM-extended_text', [
+      { identifier: 'SCORE', value: '0', type: 'outcome' }
+    ]);
+    await waitFor(() => expect(outcomesAfterProcessing(canvasElement)).toEqual({ presented: 1, selected: 3 }));
+
+    const next = await answerFirstItem(canvasElement, CORRECT);
+    next.click();
+    await waitFor(() => expect(activeItemRef(canvasElement)).toBe('ITM-extended_text'));
+
+    await waitFor(() => expect(outcomesAfterProcessing(canvasElement)).toEqual({ presented: 2, selected: 3 }));
+  }
+};
