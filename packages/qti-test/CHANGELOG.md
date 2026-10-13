@@ -1,5 +1,15 @@
 # @qti-components/test
 
+## 1.10.0-next.3
+
+### Minor Changes
+
+- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - New test-level expression `qti-number-presented`: the number of selected item refs that have been presented to the candidate, with the same `section-identifier`, `include-category` and `exclude-category` filters as `qti-number-selected`. An item is presented once its `completionStatus` has left `not_attempted`, so items a linear test part passed over (pre-conditions, branch rules) and items not reached yet are not counted. Use it for totals over the candidate's own route, such as a maximum score of one point per presented item.
+
+  - A presented item no longer keeps a `not_attempted` the test context held for it (a restored session, or values set with `updateItemVariables` before the item was reached): presenting an item starts its first attempt, so it takes the item's own status.
+
+- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTest.getTestFeedback(access?)` returns the `qti-test-feedback` elements that apply after outcome processing, so a host no longer filters them by hand. `qti-test-feedback` reads its `access` attribute (`atEnd`, the default, or `during`) and gets `matches(value)`: whether it applies for a value of its `outcome-identifier`, honouring `show-hide` and container values. It still renders nothing where it is declared: where and when to show it stays up to the host.
+
 ## 1.10.0-next.2
 
 ### Patch Changes
