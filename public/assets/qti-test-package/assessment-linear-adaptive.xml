@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="LinearAdaptive"
+        title="Linear test with an adaptive item"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <!-- max-attempts="1" applies to the non-adaptive item only; the adaptive item ends itself through completionStatus. -->
+    <qti-test-part identifier="test-part-1" navigation-mode="linear" submission-mode="individual">
+        <qti-item-session-control max-attempts="1" />
+        <qti-assessment-section identifier="section-1" title="Section 1" visible="true">
+            <qti-assessment-item-ref identifier="ITM-adaptive" href="items/adaptive.xml" />
+            <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml" />
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

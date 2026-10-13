@@ -153,10 +153,11 @@ export class TestNavigation extends LitElement {
 
     const computedItem = this.computedItemFor(itemContext.identifier);
     const numAttempts = Number(itemContext.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
+    const completionStatus = itemContext.variables?.find(v => v.identifier === 'completionStatus')?.value as string;
     this.afterAttemptEnded(
       (event.composedPath()[0] as HTMLElement)?.closest<QtiAssessmentItem>('qti-assessment-item'),
       computedItem,
-      this.#isItemDone(numAttempts, optimality, computedItem?.maxAttempts)
+      this.#isItemDone(numAttempts, optimality, computedItem?.maxAttempts, computedItem?.adaptive, completionStatus)
     );
   }
 
@@ -551,7 +552,13 @@ export class TestNavigation extends LitElement {
                   if (numAttempts > 0) this.#optimality.set(computedItem.identifier, optimality);
                 }
 
-                const done = this.#isItemDone(numAttempts, optimality, computedItem.maxAttempts);
+                const done = this.#isItemDone(
+                  numAttempts,
+                  optimality,
+                  computedItem.maxAttempts,
+                  computedItem.adaptive,
+                  completionStatus
+                );
 
                 return {
                   ...computedItem,
@@ -604,9 +611,21 @@ export class TestNavigation extends LitElement {
    * `optimality` reflects the last *ended attempt* (see #optimality), not the
    * live selection — so a freshly-picked optimal answer doesn't count as done
    * until test-end-attempt evaluates it.
+   *
+   * Adaptive items decide this themselves: max-attempts does not apply to them
+   * (QTI 3, itemSessionControl), and a wrong attempt may be the step that leads
+   * on to the next part of the item. They are done once their response
+   * processing sets completionStatus to 'completed'.
    */
-  #isItemDone(numAttempts: number, optimality: ItemOptimality, maxAttempts: number | undefined): boolean {
+  #isItemDone(
+    numAttempts: number,
+    optimality: ItemOptimality,
+    maxAttempts: number | undefined,
+    adaptive?: boolean,
+    completionStatus?: string
+  ): boolean {
     if (numAttempts === 0) return false;
+    if (adaptive) return completionStatus === 'completed';
     if (optimality !== 'suboptimal') return true;
     const max = maxAttempts ?? 1;
     return max > 0 && numAttempts >= max;
