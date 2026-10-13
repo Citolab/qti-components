@@ -1,5 +1,14 @@
 # @citolab/qti-components
 
+## 10.0.0-next.2
+
+### Patch Changes
+
+- [#298](https://github.com/Citolab/qti-components/pull/298) [`54ad14e`](https://github.com/Citolab/qti-components/commit/54ad14e4cf57ea95ccbc917ed734e46c6184c528) Thanks [@herrKlein](https://github.com/herrKlein)! - Adaptive items (`adaptive="true"`) are done when their response processing sets `completionStatus` to `completed`, not when `max-attempts` is reached. QTI 3 does not apply `max-attempts` to adaptive items, but the player did, so in a linear test with `max-attempts="1"` Next unlocked after a wrong first attempt while the item still had its next phase to show.
+
+  - `test-navigation`: `done` for an adaptive item is `completionStatus === 'completed'`.
+  - `test-end-attempt` is disabled once an adaptive item is completed.
+
 ## 10.0.0-next.1
 
 ### Minor Changes
