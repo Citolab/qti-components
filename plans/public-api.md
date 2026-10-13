@@ -3,7 +3,7 @@
 ## Goal
 
 Decide the public API from what third-party hosts actually use, not from what happens to be
-reachable. The rule we adopt: **what is documented on the Astro site is public; everything else
+reachable. The rule we adopt: **what is documented on the Public API page (Storybook, `docs/public-api.mdx`) is public; everything else
 may change in a minor.** This file is the inventory that page is written from.
 
 Related: the reactive-state work (PRs #225 to #233; its plan is retired, the left-overs are issues #235 to #241), PR #225 (`qtiTest.state` + `qti-state-changed`),
