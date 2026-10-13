@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
-import { idOf, resolveNextItem } from '../internal/item-sequencing';
+import { idOf, resolveFirstItem, resolveNextItem } from '../internal/item-sequencing';
 import { dispatchPublic, listenPublic } from '../public-events';
 
 import type { QtiAssessmentStimulusRefConnectedEvent } from '@qti-components/elements';
@@ -223,7 +223,20 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     private _initializeNavigation(): void {
       if (!this.navigate) return;
 
-      const id = this._getDefaultNavigationId(this.navigate);
+      let id = this._getDefaultNavigationId(this.navigate);
+      if (this.navigate === 'item' && this._testElement && !this.sessionContext?.navItemRefId) {
+        // a fresh start: the first item of a linear part may itself have a false pre-condition
+        const refs = [...this._testElement.querySelectorAll('qti-assessment-item-ref')];
+        if (refs[0]?.closest('qti-test-part')?.getAttribute('navigation-mode') === 'linear') {
+          const first = resolveFirstItem(refs);
+          if (first.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: first.skipped });
+          if (first.id === null) {
+            dispatchPublic(this, 'cito-test-end-reached', {});
+            return;
+          }
+          id = first.id;
+        }
+      }
       if (id) {
         this.navigateTo(this.navigate, id);
       }
@@ -278,7 +291,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
      * @returns the item to present instead, `null` when the test has no eligible item left, or
      *   `undefined` when the request is not a "next" step.
      */
-    private _resolveLinearNext(type: 'item' | 'section', id: string): { id: string | null } | undefined {
+    private _resolveLinearNext(
+      type: 'item' | 'section',
+      id: string
+    ): { id: string | null; skipped: string[] } | undefined {
       if (type !== 'item' || !this._testElement) return undefined;
 
       const refs = [...this._testElement.querySelectorAll('qti-assessment-item-ref')];
@@ -289,8 +305,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const next = resolveNextItem(refs, current);
       if (next.id === id) return undefined;
 
-      if (next.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: next.skipped });
-      return { id: next.id };
+      return next;
     }
 
     private async _handleNavigationRequest({ detail }: CustomEvent<{ type: 'item' | 'section'; id: string }>) {
@@ -298,6 +313,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
       const resolved = this._resolveLinearNext(detail.type, detail.id);
       if (resolved?.id === null) {
+        if (resolved.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: resolved.skipped });
         dispatchPublic(this, 'cito-test-end-reached', {});
         return;
       }
@@ -317,6 +333,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         this._activeController = controller;
 
         await this._executeNavigation(detail.type, target, navigationId, controller);
+        // only tell hosts about skipped items once the jump went through
+        if (resolved?.skipped.length && navigationId === this._navigationId && !controller.signal.aborted) {
+          dispatchPublic(this, 'cito-test-items-skipped', { ids: resolved.skipped });
+        }
       } catch (error) {
         this._handleNavigationError(error, detail.type, target);
       } finally {

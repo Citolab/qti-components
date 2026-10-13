@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import '@qti-components/processing/register';
 import '../register';
 
-import { idOf, resolveNextItem } from './item-sequencing';
+import { idOf, resolveFirstItem, resolveNextItem } from './item-sequencing';
 
 const bool = (value: boolean) => `<qti-base-value base-type="boolean">${value}</qti-base-value>`;
 const preCondition = (value: boolean) => `<qti-pre-condition>${bool(value)}</qti-pre-condition>`;
@@ -152,5 +152,37 @@ describe('resolveNextItem', () => {
       </qti-assessment-section>`);
     expect(next(refs, 'A')).toEqual({ id: 'B', skipped: [] });
     expect(next(refs, 'B')).toEqual({ id: 'C', skipped: [] });
+  });
+  it('EXIT_SECTION on a nested section leaves that section, not the outer one', () => {
+    const refs = mount(`
+      <qti-assessment-section identifier="OUTER">
+        <qti-assessment-section identifier="INNER">${branch('EXIT_SECTION')}
+          <qti-assessment-item-ref identifier="A"></qti-assessment-item-ref>
+          <qti-assessment-item-ref identifier="B"></qti-assessment-item-ref>
+        </qti-assessment-section>
+        <qti-assessment-item-ref identifier="C"></qti-assessment-item-ref>
+      </qti-assessment-section>`);
+    expect(next(refs, 'B')).toEqual({ id: 'C', skipped: [] });
+  });
+
+  it('a target with selector characters is not found instead of throwing', () => {
+    const refs = mount(`
+      <qti-assessment-section identifier="S">
+        <qti-assessment-item-ref identifier="A">${branch('x"]')}</qti-assessment-item-ref>
+        <qti-assessment-item-ref identifier="B"></qti-assessment-item-ref>
+      </qti-assessment-section>`);
+    expect(next(refs)).toEqual({ id: 'B', skipped: [] });
+  });
+
+  it('resolveFirstItem skips leading items and sections with a false pre-condition', () => {
+    const refs = mount(`
+      <qti-assessment-section identifier="S1">${preCondition(false)}
+        <qti-assessment-item-ref identifier="A"></qti-assessment-item-ref>
+      </qti-assessment-section>
+      <qti-assessment-section identifier="S2">
+        <qti-assessment-item-ref identifier="B">${preCondition(false)}</qti-assessment-item-ref>
+        <qti-assessment-item-ref identifier="C"></qti-assessment-item-ref>
+      </qti-assessment-section>`);
+    expect(resolveFirstItem(refs)).toEqual({ id: 'C', skipped: ['A', 'B'] });
   });
 });

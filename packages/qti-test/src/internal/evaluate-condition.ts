@@ -9,9 +9,10 @@ interface Calculable extends Element {
 }
 
 /**
- * Evaluate the single expression child of a pre-condition or branch rule. NULL counts as false.
+ * Evaluate the single expression child of a pre-condition or branch rule. NULL counts as false (a
+ * variable that does not resolve gives NULL, so a misspelled `ITEMREF.VAR` is false, not an error).
  *
- * `onError` is what an expression that cannot be run means: a pre-condition fails open (`true`,
+ * `onError` is what an expression that throws (or has no expression child) means: a pre-condition fails open (`true`,
  * the item is shown) so a malformed package never hides content silently; a branch rule does not
  * branch (`false`).
  */

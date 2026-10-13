@@ -49,9 +49,7 @@ let warnedAboutXhtml = false;
  *   element renders a single textarea bound to one variable, so there is nothing for the bounds
  *   to count: reading them as a word or paragraph limit would invent a rule QTI does not state.
  *   Implement alongside multi-string rendering, not before it.
- * @attr {number} [min-strings=0] - Whether a response is required. Below 1 an empty field is valid;
- *   from 1 it must hold a value. Only that threshold is read: the field is a single string, so the
- *   count itself (see `max-strings`) has nothing to bound.
+ * @attr {number} min-strings - Not implemented. See `max-strings`.
  * @attr {'plain'|'preformatted'|'xhtml'} [format=plain] - How the response is presented.
  *   `preformatted` renders the field monospaced; `xhtml` is accepted but downgraded to plain,
  *   because the field is a textarea with no rich-text editor behind it.
@@ -98,9 +96,6 @@ export class QtiExtendedTextInteraction extends Interaction {
         'The interaction has no rich-text editor; the recorded response will contain no markup.'
     );
   };
-
-  /** Below 1 an empty field is valid; from 1 it must hold a value. */
-  @property({ type: Number, attribute: 'min-strings' }) minStrings = 0;
 
   @property({ type: String, attribute: 'pattern-mask' }) patternMask: string;
 
@@ -206,7 +201,7 @@ export class QtiExtendedTextInteraction extends Interaction {
       isValid = textarea.checkValidity();
     }
 
-    if (isValid && !this.response && this.minStrings >= 1) {
+    if (isValid && !this.response) {
       isValid = false;
     }
 

@@ -47,6 +47,19 @@ export function resolveNextItem(refs: Element[], current: number): NextItem {
   return { id: null, skipped };
 }
 
+/**
+ * The first item to present when a linear test starts: the first item ref whose pre-conditions
+ * (and those of every section / test part it enters) pass. `null` when none is eligible.
+ */
+export function resolveFirstItem(refs: Element[]): NextItem {
+  const skipped: string[] = [];
+  for (const ref of refs) {
+    if (preConditionsPass(ref, null)) return { id: idOf(ref), skipped };
+    skipped.push(idOf(ref));
+  }
+  return { id: null, skipped };
+}
+
 function firstFiringBranchRule(itemRef: Element, refs: Element[], current: number): QtiBranchRule | null {
   const owners: Element[] = [itemRef];
   for (
@@ -80,16 +93,15 @@ function branchTargetIndex(rule: QtiBranchRule, refs: Element[], current: number
     case QtiBranchRule.EXIT_TESTPART:
       return firstAfter(owner.closest(TEST_PART));
     case QtiBranchRule.EXIT_SECTION: {
-      const section =
-        owner.localName === SECTION ? (owner.parentElement?.closest(SECTION) ?? owner) : owner.closest(SECTION);
+      const section = owner.localName === SECTION ? owner : owner.closest(SECTION);
       return firstAfter(section ?? owner);
     }
     default: {
       const byRef = refs.findIndex(ref => idOf(ref) === rule.target);
       if (byRef >= 0) return byRef;
-      const container = owner
-        .closest('qti-assessment-test')
-        ?.querySelector(`${SECTION}[identifier="${rule.target}"], ${TEST_PART}[identifier="${rule.target}"]`);
+      const container = [
+        ...(owner.closest('qti-assessment-test')?.querySelectorAll(`${SECTION}, ${TEST_PART}`) ?? [])
+      ].find(el => el.getAttribute('identifier') === rule.target);
       const inside = container ? refs.findIndex(ref => container.contains(ref)) : -1;
       if (inside >= 0) return inside;
       console.warn(`qti-branch-rule target "${rule.target}" not found`);
@@ -98,14 +110,14 @@ function branchTargetIndex(rule: QtiBranchRule, refs: Element[], current: number
   }
 }
 
-function preConditionsPass(itemRef: Element, from: Element): boolean {
+function preConditionsPass(itemRef: Element, from: Element | null): boolean {
   const owners: Element[] = [itemRef];
   for (
     let el = itemRef.parentElement;
     el && (el.localName === SECTION || el.localName === TEST_PART);
     el = el.parentElement
   ) {
-    if (!el.contains(from)) owners.push(el);
+    if (!from || !el.contains(from)) owners.push(el);
   }
   return owners.every(owner =>
     [...owner.querySelectorAll<Condition>(':scope > qti-pre-condition')].every(
