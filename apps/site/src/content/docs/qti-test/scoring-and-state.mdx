@@ -50,6 +50,48 @@ presented item, so branched-over items do not count against the candidate:
 </qti-set-outcome-value>
 ```
 
+## Totals over items that were not presented
+
+Items load when the candidate reaches them. Until then the test context holds no outcome values for
+them, so a sum such as `MAXSCORE` over `qti-test-variables` only covers the items seen so far. QTI
+gives an item that was not presented its declared defaults, but nothing at test level carries those
+defaults: `qti-weight` only multiplies, `qti-variable-mapping` only renames, and `qti-outcome-maximum`
+reads the item too. Fetching every item at results time just to read its declarations is a request per
+item; prefer, in this order:
+
+1. **Put the total in the content.** Declare it as the test outcome's default, which outcome processing
+   resets to before every run:
+
+   ```xml
+   <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+     <qti-default-value><qti-value>20</qti-value></qti-default-value>
+   </qti-outcome-declaration>
+   ```
+
+   When every item is worth the same, count instead of sum: `qti-number-selected` for the whole test, or
+   `qti-number-presented` for the candidate's own route through a test with branch rules.
+
+2. **Prepare it with the package.** Read the item declarations once when the package is built or served,
+   and hand them to the test before the first item loads: as `variables` of the items in a `state` you
+   assign to `qtiTest.state`, or with `qtiTest.updateItemVariables(itemRefId, values)` on
+   `cito-test-loaded`. Outcome processing then reads them like any other value. (`initContext` on
+   `test-navigation` cannot carry them: it only feeds the computed context.)
+
+## `qti-test-feedback`
+
+Test-level feedback, declared in `<qti-assessment-test>`. It renders nothing where it is declared: where
+and when to show it is the host's decision. After `outcomeProcessing()`, `qtiTest.getTestFeedback(access)`
+returns the ones that apply — `access` is `atEnd` (the default) or `during`, and leaving it out returns
+both:
+
+```js
+qtiTest.outcomeProcessing();
+const atEnd = qtiTest.getTestFeedback('atEnd').map(feedback => feedback.innerHTML);
+```
+
+A feedback applies when its `outcome-identifier` holds its `identifier` (`show-hide="show"`), or does not
+(`show-hide="hide"`); `feedback.matches(value)` answers that for any value.
+
 ## `<test-check-item>`
 
 A "submit this attempt" button. On click it:
