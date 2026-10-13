@@ -84,10 +84,9 @@ const inferContainerBaseType = (expression: QtiExpression<unknown>, value: unkno
     return undefined;
   }
 
-  return expression
-    .lastVariables
-    .find(variable => variable?.baseType && variable.baseType !== 'record' && variable.cardinality !== 'record')
-    ?.baseType as BaseType | undefined;
+  return expression.lastVariables.find(
+    variable => variable?.baseType && variable.baseType !== 'record' && variable.cardinality !== 'record'
+  )?.baseType as BaseType | undefined;
 };
 
 export abstract class QtiExpression<T> extends LitElement implements QtiExpressionBase<T> {
@@ -225,8 +224,21 @@ export abstract class QtiExpression<T> extends LitElement implements QtiExpressi
     return (
       this.context?.variables.find(v => v.identifier === identifier) ??
       this._testContext?.testOutcomeVariables?.find(v => v.identifier === identifier) ??
-      null
+      this.resolveItemVariable(identifier)
     );
+  }
+
+  /**
+   * `ITEMREF.VAR`: a variable of an individual item session, looked up by prefixing the variable
+   * with the identifier the item ref gave the item (QTI 3 `qti-variable`), e.g. `Q01.SCORE`. An
+   * item that was never presented has no variables, which resolves to NULL. Instances of a cloned
+   * item (`Q01.2.SCORE`) are not supported: the item itself is used.
+   */
+  private resolveItemVariable(identifier: string): VariableDeclaration<string | string[] | null> | null {
+    if (!identifier?.includes('.')) return null;
+    const parts = identifier.split('.');
+    const item = this._testContext?.items?.find(i => i.identifier === parts[0]);
+    return item?.variables?.find(v => v.identifier === parts[parts.length - 1]) ?? null;
   }
 
   getVariables = (): ExpressionVariable[] => {

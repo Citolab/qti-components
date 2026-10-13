@@ -58,7 +58,7 @@ export default [
       transform: translateX(-50%);
       cursor: pointer;
       border-radius: 9999px; /* rounded-full */
-      left: var(--value-percentage);
+      left: var(--value-percentage, 0%);
     }
     [part='value'] {
       position: absolute;

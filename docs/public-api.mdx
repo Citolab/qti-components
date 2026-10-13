@@ -1,0 +1,136 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Public API" />
+
+# Public API
+
+What you can depend on when you embed qti-components in a host application, and what may change in a minor release.
+
+The rule: **what is on this page is public. Everything else may change in a minor release.** If you
+depend on something that isn't here, tell us, so it can be added or replaced.
+
+Every member below has a contract story in Storybook that uses only the public API, so a breaking
+change shows up as a failing story: **qti-test / Host API**, **qti-test / Persist and restore** and
+**qti-assessment-item / Host API**.
+
+| Status         | Meaning                                                                                         |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| **Supported**  | Stable. Breaking changes only in a major release, with a deprecation period first.              |
+| **Deprecated** | Still works. Has a replacement. The Deprecations page on the docs site says when it is removed. |
+
+## Hosting a test
+
+Everything you call on, listen to or configure around a `<qti-test>`.
+
+### Persisting a session
+
+| Member                                     | Status         | Notes                                                                                          |
+| ------------------------------------------ | -------------- | ---------------------------------------------------------------------------------------------- |
+| `qtiTest.state`                            | **Supported**  | Assign to resume. Safe before or after the test loads. See Persist & restore on the docs site. |
+| `cito-test-state-changed`                  | **Supported**  | Fires on every change. `detail` is the state to save. Debounce your writes.                    |
+| `qti-state-changed`                        | **Deprecated** | Use `cito-test-state-changed`. Same `detail`.                                                  |
+| `qtiTest.updateItemVariables(ref, values)` | **Supported**  | Write a value you computed elsewhere, such as a backend score. It reaches `state`.             |
+| `qti-test-context-updated`                 | **Deprecated** | Use `cito-test-state-changed`. The payload includes the answer key.                            |
+| Assigning `qtiTest.testContext`            | **Deprecated** | Use `state`.                                                                                   |
+
+### Navigating
+
+| Member                                   | Status         | Notes                                                             |
+| ---------------------------------------- | -------------- | ----------------------------------------------------------------- |
+| `navigateTo('item' \| 'section', id?)`   | **Supported**  | Without an id it stays at the current position.                   |
+| `navigate="item"` / `navigate="section"` | **Supported**  | What one screen shows: a single item, or every item of a section. |
+| `cito-test-navigate` (dispatched by you) | **Supported**  | The event `navigateTo` sends. Use it where you only have the DOM. |
+| `qti-request-navigation`                 | **Deprecated** | Use `cito-test-navigate`. Same `detail`.                          |
+
+### Scoring the test
+
+| Member                        | Status        | Notes                                                                                                          |
+| ----------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------- |
+| `qtiTest.outcomeProcessing()` | **Supported** | Runs the test's own outcome processing and returns whether it found any. See Scoring & State on the docs site. |
+
+### Configuring delivery
+
+| Member                                    | Status         | Notes                                                                                                                                                                       |
+| ----------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `qtiTest.configContext`                   | **Supported**  | Reaches every interaction in the loaded items. Options in use today: `disableAfterMaxReached`, `inlineChoicePrompt`, `reportValidityAfterScoring`, `validationDisplayMode`. |
+| `qtiTest.qtiContext` (`QTI_CONTEXT.seed`) | **Supported**  | The shuffle seed. Pass the same one when you resume, or choices come back in another order. Build it with `asSeed`.                                                         |
+| `test-navigation.qtiContext`              | **Deprecated** | An alias of `qtiTest.qtiContext`: reads and writes the same value. Use `qtiTest.qtiContext`.                                                                                |
+| `test-container` `test-url`               | **Supported**  |                                                                                                                                                                             |
+| `test-navigation` `auto-score-items`      | **Supported**  | Score each item as the candidate leaves it.                                                                                                                                 |
+
+### Public events
+
+The name tells you an event is public: every one starts with `cito-`. Any other event is internal
+plumbing and may change in any release. All of them bubble and are composed, so one listener on
+`qti-test` hears them. **Requests** are verbs: you dispatch them at the test. **Notifications** are
+past tense: the test dispatches them.
+
+| Event                          | Kind         | `detail`                                             | Replaces (deprecated)               |
+| ------------------------------ | ------------ | ---------------------------------------------------- | ----------------------------------- |
+| `cito-test-navigate`           | Request      | `{ type: 'item' \| 'section', id }`                  | `qti-request-navigation`            |
+| `cito-test-end-attempt`        | Request      | none                                                 | `test-end-attempt`                  |
+| `cito-test-update-outcome`     | Request      | `{ assessmentItemRefId, outcomeVariableId, value }`  | `test-update-outcome-variable`      |
+| `cito-test-switch-view`        | Request      | the view                                             | `on-test-switch-view`               |
+| `cito-test-navigated`          | Notification | `{ type, id }`                                       | new                                 |
+| `cito-test-navigation-started` | Notification | `{ type, id }`                                       | `qti-navigation-loading-started`    |
+| `cito-test-navigation-failed`  | Notification | `{ message, details?, itemId?, sectionId? }`         | `qti-navigation-error`              |
+| `cito-test-rendered`           | Notification | `{ identifier, element }[]`, the items just rendered | `qti-test-loaded`                   |
+| `cito-test-loaded`             | Notification | the `QtiAssessmentTest`                              | `qti-assessment-test-connected`     |
+| `cito-test-state-changed`      | Notification | the state to save                                    | `qti-state-changed`                 |
+| `cito-item-ref-connected`      | Notification | `{ identifier, href, category }`                     | `qti-assessment-item-ref-connected` |
+
+`cito-test-navigated` is sent only after a navigation succeeded and rendered. In linear mode a
+refused navigation still fires the deprecated `qti-request-navigation` but never
+`cito-test-navigated`. Until the next major, the test sends both names with the same `detail`, and a
+request sent under an old name logs a one-time `console.warn` naming the new one.
+`qti-navigation-loading-ended` has no replacement: it also fires on failure and cancellation, so use
+`cito-test-navigated` or `cito-test-navigation-failed`.
+
+### Other lifecycle events
+
+These two do not have a `cito-` name yet. Both bubble and are composed.
+
+| Event                           | Status        | Notes                                                                       |
+| ------------------------------- | ------------- | --------------------------------------------------------------------------- |
+| `qti-assessment-item-connected` | **Supported** | `detail` is the item element.                                               |
+| `qti-interaction-changed`       | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`. |
+| `qti-outcome-changed`           | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`.                             |
+
+## Scoring and reviewing a single item
+
+Members of `<qti-assessment-item>`, for hosts that score outside the browser or show answers back.
+
+| Member                                 | Status         | Notes                                                                                         |
+| -------------------------------------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `item.setOutcomeVariable(id, value)`   | **Supported**  | Replays a stored outcome. Feedback that depends on it is shown by the time the call returns.  |
+| `item.processResponse(countAttempts?)` | **Supported**  | Scores the candidate's answer.                                                                |
+| `item.variables`                       | **Supported**  | Read and assign. Assigning shows the values in the interactions, possibly on the next update. |
+| `item.responses`                       | **Deprecated** | Use `variables`.                                                                              |
+| `item.disabled`                        | **Supported**  | Locks a submitted item.                                                                       |
+| `item.assessmentItemRefId`             | **Supported**  | The item-ref's identifier, which differs from the item's own.                                 |
+
+`qti-assessment-item-correction` (package `@qti-components/corrections`) adds
+`showCorrectResponse(show)` and `showCandidateCorrection(show)`.
+
+## Extending
+
+| Member                                       | Status        | Notes                                                                                                                                                                                                        |
+| -------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `postLoadTransformCallback`                  | **Supported** | Change an item's DOM after it is transformed.                                                                                                                                                                |
+| `postLoadTestTransformCallback`              | **Supported** | The same for a test document.                                                                                                                                                                                |
+| `transformer.extendElementName(tag, suffix)` | **Supported** | Register your own subclass under a suffixed tag name.                                                                                                                                                        |
+| `<template item-ref>` on `qti-test`          | **Supported** | Wrap each item in your own markup.                                                                                                                                                                           |
+| Subclassing `Interaction`                    | **Supported** | Write your own interaction. See Extending interactions on the docs site.                                                                                                                                     |
+| Subclassing `QtiFeedback`                    | **Supported** | A base class.                                                                                                                                                                                                |
+| Subclassing `Qti*InteractionCorrection`      | **Supported** | A base class.                                                                                                                                                                                                |
+| Test plugins reading `computedContext`       | **Supported** | Elements inside `test-navigation`; `computedContext.itemElement(identifier)` gives the rendered item. See the [Test plugins guide](https://qti-components.citolab.nl/?path=/docs/guides-test-plugins--docs). |
+
+The base classes (`Interaction`, `QtiFeedback`) and the contexts (`testContext`, `computedContext`,
+`configContext`) are exported from `@citolab/qti-components/qti-base`. The old deep `/exports/*`
+imports no longer exist.
+
+## Styling
+
+There is no supported way to restyle our shadow DOM yet. Hosts that inject stylesheets into a
+shadow root, patch it with `MutationObserver`s or read `ElementInternals` are depending on internals
+that can change in any release. A styling contract based on `::part` and custom states is planned.

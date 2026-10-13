@@ -8,6 +8,22 @@ import { ScoringHelper } from './scoring-helper';
  * A mistake here is a mistake in all of them at once.
  */
 describe('ScoringHelper.compareSingleValues', () => {
+  describe('boolean', () => {
+    it('matches equal booleans, in either XML Schema spelling', () => {
+      expect(ScoringHelper.compareSingleValues('true', 'true', 'boolean')).toBe(true);
+      expect(ScoringHelper.compareSingleValues('1', 'true', 'boolean')).toBe(true);
+      expect(ScoringHelper.compareSingleValues('false', '0', 'boolean')).toBe(true);
+    });
+
+    it('distinguishes true from false', () => {
+      expect(ScoringHelper.compareSingleValues('true', 'false', 'boolean')).toBe(false);
+    });
+
+    it('never matches something that is not a boolean', () => {
+      expect(ScoringHelper.compareSingleValues('yes', 'yes', 'boolean')).toBe(false);
+    });
+  });
+
   describe('pair', () => {
     it('ignores the order within the pair', () => {
       expect(ScoringHelper.compareSingleValues('A B', 'B A', 'pair')).toBe(true);

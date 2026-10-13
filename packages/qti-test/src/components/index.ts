@@ -8,6 +8,8 @@ export * from '../components/qti-test-feedback/qti-test-feedback';
 export * from '../components/qti-outcome-processing/qti-outcome-processing';
 export * from '../components/qti-test-variables/qti-test-variables';
 export * from '../components/qti-number-selected/qti-number-selected';
+export * from '../components/qti-pre-condition/qti-pre-condition';
+export * from '../components/qti-branch-rule/qti-branch-rule';
 export * from '../components/qti-item-session-control/qti-item-session-control';
 
 export * from './test-navigation/test-navigation';

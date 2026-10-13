@@ -9,6 +9,21 @@ import { stableSymbolNamesPlugin } from './tools/cem/stable-symbol-names-plugin.
 console.log('Building the custom element manifest...');
 
 /**
+ * type-parser warns for every type it declines to expand (huge DOM types such as HTMLImageElement,
+ * or QtiAssessmentItem with its ~385 inherited members). Skipping those is the intended outcome and
+ * the plugin has no option to silence it, so drop just those lines. Raising maxParseProperties is
+ * not an alternative: it expands the DOM types until the depth cap and logs ~900 warnings instead.
+ *
+ * Remove this once upstream stops warning for DOM/Lit base types: wc-toolkit/type-parser#38
+ * (https://github.com/wc-toolkit/type-parser/issues/38).
+ */
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  if (args.some(arg => typeof arg === 'string' && arg.startsWith('[type-parser] - Skipped parsing type'))) return;
+  originalWarn(...args);
+};
+
+/**
  * One analyzer run writes both outputs, and it always runs from the repo root:
  *
  * - `custom-elements.json` at the root. Generated, never committed (see .gitignore): Storybook,
