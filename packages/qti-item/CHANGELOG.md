@@ -1,5 +1,16 @@
 # @qti-components/item
 
+## 1.5.1-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
+  - @qti-components/theme@2.3.0-next.1
+  - @qti-components/base@2.5.0-next.2
+  - @qti-components/elements@1.10.0-next.3
+  - @qti-components/processing@1.6.1-next.2
+  - @qti-components/interactions@1.10.5-next.3
+
 ## 1.5.1-next.2
 
 ### Patch Changes

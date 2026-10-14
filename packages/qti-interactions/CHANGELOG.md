@@ -1,5 +1,13 @@
 # @qti-components/interactions
 
+## 1.10.5-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
+  - @qti-components/portable-custom-interaction@1.3.0-next.2
+  - @qti-components/base@2.5.0-next.2
+
 ## 1.10.5-next.2
 
 ### Patch Changes
