@@ -1,10 +1,25 @@
 import { html, css, LitElement } from 'lit';
 import { consume } from '@lit/context';
 
-import { computedContext } from '@qti-components/base';
+import { computedContext, isRecordValue } from '@qti-components/base';
 
 import type { ResponseVariable } from '@qti-components/base';
 import type { ComputedContext } from '@qti-components/base';
+
+/**
+ * A variable value as text: a list as `a, b`, a record (e.g. the response of a PCI) as `time: 3.6, point: 455 250`.
+ * Without this a record printed as "[object Object]".
+ */
+export const formatVariableValue = (value: unknown): string => {
+  if (value === null || value === undefined) return '';
+  if (Array.isArray(value)) return value.map(formatVariableValue).join(', ');
+  if (isRecordValue(value)) {
+    return Object.entries(value)
+      .map(([field, fieldValue]) => `${field}: ${formatVariableValue(fieldValue)}`)
+      .join(', ');
+  }
+  return String(value);
+};
 
 export class TestPrintVariables extends LitElement {
   @consume({ context: computedContext, subscribe: true })
@@ -57,11 +72,7 @@ export class TestPrintVariables extends LitElement {
         </thead>
         <tbody>
           ${variables.map(v => {
-            const correctResponse = v.correctResponse
-              ? Array.isArray(v.correctResponse)
-                ? v.correctResponse.join(', ')
-                : v.correctResponse
-              : '';
+            const correctResponse = formatVariableValue(v.correctResponse);
 
             const mapEntries = v.mapping?.mapEntries?.map(m => `${m.mapKey}=${m.mappedValue}pt`).join(', ') || '';
 
@@ -71,7 +82,7 @@ export class TestPrintVariables extends LitElement {
             return html`
               <tr>
                 <td>${v.identifier}</td>
-                <td>${Array.isArray(v.value) ? v.value.join(', ') : v.value}</td>
+                <td>${formatVariableValue(v.value)}</td>
                 <td>${v.cardinality}</td>
                 <td>${v.baseType}</td>
                 <td>${correctResponse || mapEntries || areaMapEntries}</td>
