@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/processing",
   "description": "QTI processing utilities",
-  "version": "1.6.1-next.0",
+  "version": "1.6.1-next.1",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",
