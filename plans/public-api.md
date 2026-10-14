@@ -309,8 +309,8 @@ the code behind them is not yet verified against it.
    breaks. Still open from it: #245 (core unaware of the corrections package).
 7. **Remaining contract stories**: `showCandidateCorrection` (corrections package), `test-url`,
    `auto-score-items`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`,
-   `on-test-switch-view`, `test-show-candidate-correction`, the extension tier, and the four
-   write-path events. Issue #240; host-shaped tests #251.
+   `on-test-switch-view`, `test-show-candidate-correction` and the extension tier. The four plugin
+   requests are **done**: `guides/test-plugins.requests.stories.ts` (Test plugins/Requests). Issue #240; host-shaped tests #251.
 8. **Bookmarks and highlights in `state.session`**: #237 (state: **done** as `session.plugins`, #286), #246 (bookmark component: **done** as `<test-bookmark>`), #247
    (highlights); all unblocked by #275. Highlights need the anchor design first (decision 4), and
    become a plugin (decision 12). `feat/test-item-bookmark` is the branch for bookmarks.
