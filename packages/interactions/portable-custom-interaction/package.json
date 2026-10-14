@@ -6,11 +6,13 @@
   "dependencies": {
     "@qti-components/base": "workspace:^",
     "@qti-components/interactions-core": "workspace:^",
+    "@qti-components/theme": "workspace:^",
     "@qti-components/utilities": "workspace:^"
   },
   "devDependencies": {
     "@lit/context": "catalog:",
-    "lit": "catalog:"
+    "lit": "catalog:",
+    "requirejs": "2.3.8"
   },
   "keywords": [
     "interactions",
@@ -30,6 +32,7 @@
     "attw": "attw --profile esm-only --pack",
     "build": "pnpm run clean && tsc --paths null",
     "clean": "rm -rf dist",
+    "vendor:requirejs": "node ../../../tools/build/vendor-requirejs.mjs",
     "yalc": "yalc publish",
     "yalc:push": "yalc push"
   },

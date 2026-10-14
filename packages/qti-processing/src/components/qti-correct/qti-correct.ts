@@ -18,6 +18,10 @@ export class QtiCorrect extends QtiExpression<string | string[]> {
   override getResult() {
     const identifier = this.getAttribute('identifier') || '';
     const responseVariable: ResponseVariable = this.context.variables.find(v => v.identifier === identifier) || null;
+    if (responseVariable.cardinality === 'record') {
+      // A record's correct response is its field map; there is no first value to take.
+      return responseVariable.correctResponse ?? null;
+    }
     if (responseVariable.cardinality !== 'single') {
       return responseVariable.correctResponse.length > 0 ? responseVariable.correctResponse[0] : '';
     } else {

@@ -666,6 +666,9 @@ importers:
       '@qti-components/interactions-core':
         specifier: workspace:^
         version: link:../core
+      '@qti-components/theme':
+        specifier: workspace:^
+        version: link:../../qti-theme
       '@qti-components/utilities':
         specifier: workspace:^
         version: link:../../qti-utilities
@@ -676,6 +679,9 @@ importers:
       lit:
         specifier: 'catalog:'
         version: 3.3.3
+      requirejs:
+        specifier: 2.3.8
+        version: 2.3.8
 
   packages/interactions/position-object-interaction:
     dependencies:
