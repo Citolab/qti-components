@@ -3,11 +3,11 @@ import { css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { itemContext } from '@qti-components/base';
-import { QtiVariableDeclaration } from '@qti-components/base';
+import { QtiVariableDeclaration, readRecordFieldValues } from '@qti-components/base';
 
 import type { QtiAreaMapping } from '@qti-components/base';
 import type { BaseType, Cardinality } from '@qti-components/base';
-import type { ResponseVariable } from '@qti-components/base';
+import type { RecordValue, ResponseVariable } from '@qti-components/base';
 import type { QtiMapping } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
 
@@ -37,12 +37,18 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
 
   public override connectedCallback() {
     super.connectedCallback();
-    const defaultValue = this.defaultValues(this.cardinality);
+    // A record value is its field map; the variable types only spell out string | string[].
+    const defaultValue =
+      this.cardinality === 'record'
+        ? (this.#recordDefaultValue as unknown as string | string[] | null)
+        : this.defaultValues(this.cardinality);
+    const { correctResponse, fieldBaseTypes } = this.#readCorrectResponse();
 
     const responseVariable: ResponseVariable = {
       baseType: this.baseType,
       identifier: this.identifier,
-      correctResponse: this.#correctResponse,
+      correctResponse,
+      ...(fieldBaseTypes ? { fieldBaseTypes } : {}),
       cardinality: this.cardinality || 'single',
       mapping: this.#mapping,
       defaultValue,
@@ -60,6 +66,39 @@ export class QtiResponseDeclaration extends QtiVariableDeclaration {
         detail: { variable: responseVariable }
       })
     );
+  }
+
+  /**
+   * The correct response, and for `record` cardinality the declared base type of each field.
+   *
+   * A record's correct response is a field map, `{ time: '4.0', point: '460 245' }`, read from
+   * `qti-value field-identifier="…" base-type="…"`. The field base types are kept beside it, since
+   * the record declaration itself has no `base-type` to say how a field is to be compared.
+   */
+  #readCorrectResponse(): { correctResponse: string | string[]; fieldBaseTypes?: ResponseVariable['fieldBaseTypes'] } {
+    if (this.cardinality !== 'record') {
+      return { correctResponse: this.#correctResponse };
+    }
+    const correctResponse = this.querySelector('qti-correct-response');
+    if (!correctResponse) {
+      return { correctResponse: undefined };
+    }
+    const values = Array.from(correctResponse.querySelectorAll('qti-value'));
+    const { value, baseTypes } = readRecordFieldValues(values);
+    values.forEach(element => element.remove());
+    return {
+      // The variable types hold string | string[]; a record is stored as its field map.
+      correctResponse: (Object.keys(value).length ? value : undefined) as unknown as string | string[],
+      fieldBaseTypes: baseTypes
+    };
+  }
+
+  /** A record's `qti-default-value`, as a field map like its correct response. */
+  get #recordDefaultValue(): RecordValue | null {
+    const values = this.querySelectorAll('qti-default-value > qti-value');
+    if (values.length === 0) return null;
+    const { value } = readRecordFieldValues(values);
+    return Object.keys(value).length ? value : null;
   }
 
   get #correctResponse(): string | string[] {

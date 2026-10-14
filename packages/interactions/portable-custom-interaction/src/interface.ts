@@ -11,10 +11,11 @@ export type PciInteractionStatus = 'interacting' | 'suspended' | 'closed' | 'sol
  * Correct response of a response declaration, mirroring `qti-correct-response`.
  *
  * `value` holds the authored `qti-value` content: a single value for `single`
- * cardinality, an array of values for every other cardinality.
+ * cardinality, a field map (`{ time: '4.0', point: '460 245' }`) for `record`
+ * cardinality, and an array of values for every other cardinality.
  */
 export interface PciCorrectResponse {
-  value: string | string[];
+  value: string | string[] | Record<string, string | string[] | null>;
 }
 
 /**
