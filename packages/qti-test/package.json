@@ -36,7 +36,11 @@
       "types": "./dist/register.d.ts",
       "import": "./dist/register.js"
     },
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    "./plugins/elements": {
+      "types": "./dist/plugins/elements.d.ts",
+      "import": "./dist/plugins/elements.js"
+    }
   },
   "peerDependencies": {
     "@lit/context": "catalog:",

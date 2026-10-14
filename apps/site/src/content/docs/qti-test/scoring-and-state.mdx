@@ -103,7 +103,7 @@ A "submit this attempt" button. On click it:
 
 Renders a human-scoring UI for the active item, driven by a `<template>` child (via [Heximal templates](https://github.com/heximal/templates)) so the markup is fully up to you — the component only supplies the data: `{ scores, score, disabled }`, where `scores` is `[0..MAXSCORE]` and `disabled` is `true` unless the item's `SCORE` outcome has `externalScored === 'human'`.
 
-Clicking an `<input>` inside the template dispatches `test-update-outcome-variable` with `{ assessmentItemRefId, outcomeVariableId: 'SCORE', value }`, which `<test-navigation>` applies to the active item.
+Clicking an `<input>` inside the template dispatches `cito-test-update-outcome` with `{ assessmentItemRefId, outcomeVariableId: 'SCORE', value }`, which `<test-navigation>` applies to the active item.
 
 ```html
 <test-scoring-buttons>

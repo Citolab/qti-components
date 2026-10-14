@@ -73,10 +73,6 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   padding: 0.5rem;
 }
 
-.m-2 {
-  margin: 0.5rem;
-}
-
 .block {
   display: block;
 }
@@ -97,10 +93,6 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   height: 100%;
 }
 
-.h-dvh {
-  height: 100dvh;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -109,54 +101,72 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   overflow: auto;
 }
 
-.absolute {
-  position: absolute;
-}
-
 .relative {
   position: relative;
-}
-
-.left-2 {
-  left: 0.5rem /* 8px */;
-}
-
-.top-2 {
-  top: 0.5rem /* 8px */;
 }
 
 .flex-col {
   flex-direction: column;
 }
 
-.rounded-circle {
-  border-radius: 9999px !important;
-}
-
 .flex-wrap {
   flex-wrap: wrap;
 }
 
-.columns-1 {
-  columns: 1;
+/* ── More utilities, for mini players ──
+ * Single-purpose and unpainted by the theme, so a story can lay out a small player (header, body,
+ * footer) with `flex`, `flex-col`, `justify-between`, … and no one-off class. */
+
+.gap-3 {
+  gap: 0.75rem;
 }
 
-.bottom-0 {
-  bottom: 0;
+.px-3 {
+  padding-inline: 0.75rem;
 }
 
-.hidden {
-  display: none;
+.py-2 {
+  padding-block: 0.5rem;
 }
 
-@media (width >= 768px) {
-  .md\:columns-4 {
-    columns: 4;
-  }
+.p-4 {
+  padding: 1rem;
+}
 
-  .md\:flex {
-    display: flex;
-  }
+.p-0 {
+  padding: 0;
+}
+
+.min-h-0 {
+  min-height: 0;
+}
+
+.h-dvh-padded {
+  height: calc(100dvh - 2rem); /* the viewport inside a story's default padding */
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.border {
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.border-b {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.border-t {
+  border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.bg-white {
+  background-color: var(--qti-bg, #fff);
 }
 
 /* A story's own control (a toggle that drives the demo, not a component under test), drawn like

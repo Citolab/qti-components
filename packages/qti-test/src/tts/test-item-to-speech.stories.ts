@@ -7,9 +7,9 @@ import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer
-} from '../../../../../tools/testing/test-utils';
+} from '../../../../tools/testing/test-utils';
 
-import '../../../../../.storybook/utilities.css';
+import '../../../../.storybook/utilities.css';
 import type { TestItemToSpeech } from './test-item-to-speech';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -18,6 +18,7 @@ const { events, args, argTypes } = getStorybookHelpers('test-item-to-speech');
 type Story = StoryObj<TestItemToSpeech & typeof args>;
 
 const meta: Meta<TestItemToSpeech> = {
+  title: 'Plugins/Text to speech/test-item-to-speech',
   component: 'test-item-to-speech',
   args: { ...args, language: 'fr-FR' },
   argTypes,
@@ -240,11 +241,13 @@ export const OnEveryItem: Story = {
         {{ xmlDoc }}
       </template>
       <test-navigation class="stack">
-        <test-section-buttons-stamp class="row">
+        <test-stamp class="row">
           <template>
-            <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            <template type="repeat" repeat="{{ activeTestpart.sections }}">
+              <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            </template>
           </template>
-        </test-section-buttons-stamp>
+        </test-stamp>
         <test-container test-url="/assets/qti-test-package-stimulus/assessment.xml"></test-container>
       </test-navigation>
     </qti-test>`,
@@ -330,11 +333,13 @@ export const SharedStimulus: Story = {
         {{ xmlDoc }}
       </template>
       <test-navigation class="stack">
-        <test-section-buttons-stamp class="row">
+        <test-stamp class="row">
           <template>
-            <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            <template type="repeat" repeat="{{ activeTestpart.sections }}">
+              <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            </template>
           </template>
-        </test-section-buttons-stamp>
+        </test-stamp>
         <div class="row" style="align-items: flex-start">
           <aside data-stimulus-panel style="flex: 1; min-width: 0">
             <test-item-to-speech>
