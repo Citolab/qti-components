@@ -45,6 +45,6 @@ What it reads depends on where you place it. See the [Storybook docs](https://qt
 - **`<test-end-attempt>`** — a plain button that dispatches `test-end-attempt` on click (see [Scoring & State](/qti-test/scoring-and-state/)).
 - **`<qti-test-feedback>`** — extends the item-level `QtiModalFeedback` for test-level modal feedback (e.g. an end-of-test message).
 
-## Deprecated stamp components
+## Stamp components
 
-`<test-stamp>`, `<test-paging-buttons-stamp>`, and `<test-section-buttons-stamp>` are all marked `@deprecated` in source. They predate the `<template>`-driven pattern (`test-scoring-buttons`, `test-view-toggle`) and render item/section lists via a `<template>` child, iterating `computedContext`. No direct replacement is documented in source — check with the team before building on these.
+`<test-stamp>` renders its `<template>` child with the active item, section, test part and test (`activeItem`, `activeSection`, `activeTestpart`, `test`). Use `<template type="repeat" repeat="{{ activeTestpart.items }}">` for one entry per item, or `activeTestpart.sections` for one per section. `<test-paging-buttons-stamp>` and `<test-section-buttons-stamp>` are removed: use `<test-stamp>` with a `repeat` as above.

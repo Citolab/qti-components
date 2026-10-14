@@ -54,13 +54,8 @@ const PLUGINS: Plugin[] = [
   },
   {
     name: 'stamp',
-    folders: [
-      'components/test-stamp/',
-      'components/test-paging-buttons-stamp/',
-      'components/test-section-buttons-stamp/'
-    ],
-    reference:
-      /test-stamp|TestStamp|test-paging-buttons-stamp|TestPagingButtonsStamp|test-section-buttons-stamp|TestSectionButtonsStamp|stampContext/,
+    folders: ['components/test-stamp/'],
+    reference: /test-stamp|TestStamp|stampContext/,
     allow: [
       PUBLIC_EVENTS_FROM_COMPONENTS,
       /^\.\.\/test-print-context\/test-print-context$/ // a story shows it next to the stamp
