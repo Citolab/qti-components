@@ -1,5 +1,63 @@
 # @citolab/qti-components
 
+## 9.5.0
+
+### Minor Changes
+
+- [#289](https://github.com/Citolab/qti-components/pull/289) [`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7) Thanks [@herrKlein](https://github.com/herrKlein)! - Sequencing in linear test parts: new `qti-pre-condition` and `qti-branch-rule` elements (`target` is an item ref, section or test part, or `EXIT_SECTION` / `EXIT_TESTPART` / `EXIT_TEST`). A "next" step in a linear part now skips items, sections and test parts whose pre-condition is false and follows the first branch rule that is true; nonlinear parts, deep links and item links are untouched. An expression that throws fails open for a pre-condition and does not branch for a rule; one that gives NULL (e.g. an unknown variable) is false. The first item of a linear part is checked against its pre-conditions too.
+
+  - New public notifications: `cito-test-items-skipped` (`detail.ids`: the item refs passed over) and `cito-test-end-reached` (`EXIT_TEST`, or no eligible item left).
+  - `qti-variable` can read an item session with `ITEMREF.VAR` (e.g. `Q01.SCORE`); an item that was never presented gives NULL.
+  - `qti-match` and the other comparisons now work on `boolean` values (they were always false), so the `qti-end-attempt-interaction` pattern can be matched.
+
+- [#285](https://github.com/Citolab/qti-components/pull/285) [`b1ea89b`](https://github.com/Citolab/qti-components/commit/b1ea89b72109f8acc7f73b88fce920cb453c21a3) Thanks [@herrKlein](https://github.com/herrKlein)! - The test's public events get the `cito-` prefix, declared in one module (`public-events.ts`): requests `cito-test-navigate`, `cito-test-end-attempt`, `cito-test-update-outcome`, `cito-test-switch-view`; notifications `cito-test-navigated` (new: sent only after a navigation succeeded and rendered), `cito-test-navigation-started`, `cito-test-navigation-failed`, `cito-test-rendered`, `cito-test-loaded`, `cito-test-state-changed`, `cito-item-ref-connected`.
+
+  - **Deprecated:** the old names (`qti-request-navigation`, `test-end-attempt`, `test-update-outcome-variable`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-navigation-error`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-state-changed`, `qti-assessment-item-ref-connected`) are still sent and handled, with the same `detail`. They go in the next major. A request sent under an old name (`qti-request-navigation`, `test-end-attempt`, …) logs a one-time `console.warn` naming the new one.
+  - `qti-navigation-loading-ended` is unchanged and deprecated without a replacement: it also fires on failure and cancellation. Use navigated / failed.
+
+  Host entries: `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md`.
+
+- [#285](https://github.com/Citolab/qti-components/pull/285) [`b1ea89b`](https://github.com/Citolab/qti-components/commit/b1ea89b72109f8acc7f73b88fce920cb453c21a3) Thanks [@herrKlein](https://github.com/herrKlein)! - The item's public events get the `cito-` prefix, declared in `public-events.ts` and exported from `@qti-components/elements`: `cito-item-response-changed`, `cito-item-outcome-changed`, `cito-item-rendered` and `cito-item-rubric-placement` (cancelable). `detail` is unchanged.
+
+  - **Deprecated:** `qti-interaction-changed`, `qti-outcome-changed` and `qti-rubric:discretionary-placement` are still sent and handled next to the new names, and go in the next major. An old name sent into the test logs a one-time `console.warn` naming the new one. A rubric listener that cancels either name keeps the block where it is.
+  - `qti-assessment-item-connected` stays: it is internal plumbing for the test and item container. Hosts use `cito-item-rendered`.
+
+  Host entries: `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md`.
+
+- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - New test-level expression `qti-number-presented`: the number of selected item refs that have been presented to the candidate, with the same `section-identifier`, `include-category` and `exclude-category` filters as `qti-number-selected`. An item is presented once its `completionStatus` has left `not_attempted`, so items a linear test part passed over (pre-conditions, branch rules) and items not reached yet are not counted. Use it for totals over the candidate's own route, such as a maximum score of one point per presented item.
+
+  - A presented item no longer keeps a `not_attempted` the test context held for it (a restored session, or values set with `updateItemVariables` before the item was reached): presenting an item starts its first attempt, so it takes the item's own status.
+
+- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTest.getTestFeedback(access?)` returns the `qti-test-feedback` elements that apply after outcome processing, so a host no longer filters them by hand. `qti-test-feedback` reads its `access` attribute (`atEnd`, the default, or `during`) and gets `matches(value)`: whether it applies for a value of its `outcome-identifier`, honouring `show-hide` and container values. It still renders nothing where it is declared: where and when to show it stays up to the host.
+
+### Patch Changes
+
+- [#298](https://github.com/Citolab/qti-components/pull/298) [`54ad14e`](https://github.com/Citolab/qti-components/commit/54ad14e4cf57ea95ccbc917ed734e46c6184c528) Thanks [@herrKlein](https://github.com/herrKlein)! - Adaptive items (`adaptive="true"`) are done when their response processing sets `completionStatus` to `completed`, not when `max-attempts` is reached. QTI 3 does not apply `max-attempts` to adaptive items, but the player did, so in a linear test with `max-attempts="1"` Next unlocked after a wrong first attempt while the item still had its next phase to show.
+
+  - `test-navigation`: `done` for an adaptive item is `completionStatus === 'completed'`.
+  - `test-end-attempt` is disabled once an adaptive item is completed.
+
+- [#283](https://github.com/Citolab/qti-components/pull/283) [`4476095`](https://github.com/Citolab/qti-components/commit/4476095f7cb1939ce780980f3a7a3317fc86c5c0) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - Make `qti-graphic-gap-match-interaction` fit its container, with its drop areas scaling along — as `qti-hotspot-interaction` already does.
+
+  **The graphic overflowed, and its drop areas could not follow it.** An item declares the graphic at the size its `coords` were authored in — often a full-resolution picture, `width="1600"`. The interaction rendered it at exactly that size, so in a two-column layout or on a phone it ran far past its column. Capping the picture alone would not have helped: the drop areas were written as pixel offsets (`left: 79px`), so a narrower picture would have left them on the wrong part of it.
+
+  The drop areas are now placed with `positionShapes`, the helper the hotspot interaction uses: percentages of the graphic's declared size, inside a slot that is exactly the graphic's box. The graphic takes `max-width: 100%; height: auto` and keeps the aspect ratio its width/height attributes declare (pinned as `aspect-ratio`, because an `<object>` derives none from its attributes and an `<img>` defers to its bitmap's). It never upscales. `ellipse` and `poly` drop areas, which the pixel code skipped, are positioned too.
+
+  The theme restates the fluid sizing for the graphic (a direct child of the interaction), because `reset.css` gives every picture inside an interaction `max-width: none`, which outranks the component's `::slotted()` rule. A draggable's own picture is untouched and keeps the same size in the bank and in its drop area.
+
+  With `qti-choices-left` / `qti-choices-right` the image slot is now capped at 75% instead of forced to it, so it stays the graphic's box.
+
+  Not covered: a drop area still grows to fit the largest draggable (`--qti-dropzone-min-*`), so on a heavily scaled graphic a small drop area can be larger than its authored shape. `qti-hotspot-interaction` has the same `reset.css` override issue and is left for a separate change.
+
+- [#291](https://github.com/Citolab/qti-components/pull/291) [`0fb1914`](https://github.com/Citolab/qti-components/commit/0fb19146d8015e6b76a576671adea0d92051d891) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-slider-interaction` starts at the response declaration's `qti-default-value`, and no longer saves its lower bound as the response before the candidate moves it ([#290](https://github.com/Citolab/qti-components/issues/290)).
+
+  QTI 3 gives a slider no initial position of its own: it starts at the default of its response variable, or has no value. The slider used to seed itself with `lower-bound` on connect and publish that, which overwrote a declared default, and let a candidate pass `allow-skipping="false"` with a value they never chose. Now:
+
+  - With a `qti-default-value`, the slider shows it and the response is that value.
+  - Without one, the response is `null` until the candidate moves the slider. The knob rests at the lower bound with no value label. (With `lower-bound="0"` nothing was saved before either.)
+  - Setting `response` (or `reset()`, which used to do nothing) shows the value without publishing it; only the candidate's input is published.
+  - The slider exposes `aria-valuemin`, `aria-valuemax` and `aria-valuenow` through `ElementInternals`.
+
 ## 9.4.0
 
 ### Minor Changes
