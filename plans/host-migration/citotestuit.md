@@ -104,7 +104,7 @@ Do:
   still fires `qti-request-navigation` but never `cito-test-navigated`.
 - Rename the rest as you touch them: `cito-test-navigate`, `cito-test-switch-view`,
   `cito-test-rendered`, `cito-test-loaded`, `cito-test-state-changed`,
-  `cito-test-navigation-started`, `cito-test-navigation-failed`. Table: `plans/public-api.md`, "Event naming".
+  `cito-test-navigation-started`, `cito-test-navigation-failed`. Table: `docs/public-api.mdx`, "Public events".
 - `qti-navigation-loading-ended` stays for now but also fires on failure and cancellation; use
   navigated / failed instead.
   Evidence: read, not run

@@ -3,7 +3,7 @@
 ## Goal
 
 Decide the public API from what third-party hosts actually use, not from what happens to be
-reachable. The rule we adopt: **what is documented on the Astro site is public; everything else
+reachable. The rule we adopt: **what is documented on the Public API page (Storybook, `docs/public-api.mdx`) is public; everything else
 may change in a minor.** This file is the inventory that page is written from.
 
 Related: the reactive-state work (PRs #225 to #233; its plan is retired, the left-overs are issues #235 to #241), PR #225 (`qtiTest.state` + `qti-state-changed`),
@@ -55,6 +55,7 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 | `navigateTo(type, id)`                                                                                                   | K, C  | **S**            |                                                                                                                                                                                                                                |
 | `navigate="item" \| "section"`                                                                                           | K, C  | **S**            |                                                                                                                                                                                                                                |
 | `qti-request-navigation` (host dispatches)                                                                               | K, C  | **S** or replace | both use it as a fallback for `navigateTo`                                                                                                                                                                                     |
+| `cito-test-items-skipped`, `cito-test-end-reached`                                                                       | —     | **S**            | new (PR #289); linear sequencing: items passed over by a pre-condition or branch rule, and the end of the test                                                                                                                 |
 | `configContext`                                                                                                          | K, C  | **S**            | document the options in use: `disableAfterIfMaxChoicesReached`, `correctResponseMode`, `inlineChoicePrompt`, `fullCorrectResponseOnlyWhenIncorrect`, `reportValidityAfterScoring`, `validationDisplayMode`, info-item category |
 | `qtiTest.qtiContext` (seed)                                                                                              | C     | **S**            | provided by `qti-test` since Phase 3; CitoTestUit should move its prop here (see `host-migration/citotestuit.md`)                                                                                                              |
 | `test-navigation.qtiContext`                                                                                             | C     | **D** alias      | reads and writes `qtiTest.qtiContext`; removed in the next major                                                                                                                                                               |
