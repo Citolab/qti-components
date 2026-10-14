@@ -40,7 +40,12 @@ const itemRefOf = (element: Element): string | undefined => {
  * the label. In the toolbar it is `disabled` while no item is on screen. A host's own navigation reads
  * the marks with `bookmarkedItems(computedContext)`.
  *
+ * Give it an `item` (an item-ref identifier) to mark that item instead, wherever the button sits: in a
+ * stamp template that lists the items of a section, `<test-bookmark item="{{ item.identifier }}">`
+ * puts a button next to each one.
+ *
  * @slot - The label.
+ * @attr item - The item-ref identifier this button marks; without it, the item it is stamped into, or else the one on screen.
  * @attr bookmarked - Reflected: the item on screen is bookmarked.
  * @attr disabled - Reflected: there is no item on screen.
  */
@@ -48,6 +53,8 @@ export class TestBookmark extends LitElement {
   @consume({ context: computedContext, subscribe: true })
   @property({ attribute: false })
   protected computedContext?: ComputedContext;
+
+  @property({ reflect: true }) item?: string;
 
   @property({ type: Boolean, reflect: true }) bookmarked = false;
 
@@ -59,6 +66,26 @@ export class TestBookmark extends LitElement {
     }
     :host(:hover:not([disabled])) {
       ${styles.btnInteractive};
+    }
+    :host {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    svg {
+      width: 1.1em;
+      height: 1.1em;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linejoin: round;
+    }
+    :host([bookmarked]) {
+      color: var(--qti-bookmark-color, #b45309);
+    }
+    :host([bookmarked]) svg {
+      fill: currentColor;
     }
     :host(:focus-visible) {
       ${styles.focusRing};
@@ -87,10 +114,11 @@ export class TestBookmark extends LitElement {
   /** The item this button marks: its own, or else the one on screen. */
   get #activeItem(): string | undefined {
     return (
-      itemRefOf(this) ??
-      this.computedContext?.testParts
-        ?.flatMap(part => part.sections.flatMap(section => section.items))
-        .find(item => item.active)?.identifier
+      this.item ||
+      (itemRefOf(this) ??
+        this.computedContext?.testParts
+          ?.flatMap(part => part.sections.flatMap(section => section.items))
+          .find(item => item.active)?.identifier)
     );
   }
 
@@ -118,7 +146,7 @@ export class TestBookmark extends LitElement {
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return html`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg><slot></slot>`;
   }
 }
 
