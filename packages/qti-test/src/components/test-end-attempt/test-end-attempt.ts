@@ -77,6 +77,13 @@ export class TestEndAttempt extends LitElement {
       return;
     }
 
+    // An adaptive item ends itself: once its response processing set completionStatus
+    // to 'completed', there is no next attempt.
+    if (activeItem.adaptive && activeItem.completionStatus === 'completed') {
+      this._internalDisabled = true;
+      return;
+    }
+
     // For non-adaptive items, disable when max attempts have been reached
     if (!activeItem.adaptive && maxAttempts > 0 && numAttempts >= maxAttempts) {
       this._internalDisabled = true;

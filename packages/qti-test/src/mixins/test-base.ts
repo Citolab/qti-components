@@ -216,6 +216,9 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
         const newVariables = [...assessmentItem.variables];
         // Sync the assessment item's variables with the test context
         for (const variable of itemContext.variables) {
+          // Presenting an item starts its first attempt, so it is no longer `not_attempted` once it
+          // is on screen: the item keeps its own status (`unknown`) — `qti-number-presented` reads it.
+          if (variable.identifier === 'completionStatus' && variable.value === 'not_attempted') continue;
           const currentVariable = newVariables.find(v => v.identifier === variable.identifier);
           if (currentVariable) {
             currentVariable.value = variable.value;
@@ -224,6 +227,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
           }
         }
         assessmentItem.variables = newVariables;
+        this.#leaveNotAttempted(identifier, newVariables.find(v => v.identifier === 'completionStatus')?.value);
         // Opaque interaction state (a PCI's getState()) is read from the item context when the
         // interaction initializes, so it has to be in place now, before that happens.
         if (itemContext.state) {
@@ -231,6 +235,25 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
         }
       }
     };
+
+    /** Write the presented item's own status over a `not_attempted` the test context still holds for it. */
+    #leaveNotAttempted(identifier: string, status: Readonly<string | string[] | null> | undefined): void {
+      if (typeof status !== 'string' || status === 'not_attempted') return;
+      const item = this.testContext.items.find(i => i.identifier === identifier);
+      const current = item?.variables.find(v => v.identifier === 'completionStatus');
+      if (current?.value !== 'not_attempted') return;
+      this.testContext = {
+        ...this.testContext,
+        items: this.testContext.items.map(i =>
+          i.identifier !== identifier
+            ? i
+            : {
+                ...i,
+                variables: i.variables.map(v => (v.identifier === 'completionStatus' ? { ...v, value: status } : v))
+              }
+        )
+      };
+    }
   }
 
   return TestBaseClass as Constructor<TestBaseInterface> & T;
