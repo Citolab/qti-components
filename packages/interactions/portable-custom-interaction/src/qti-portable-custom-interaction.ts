@@ -4,40 +4,55 @@ import { consume } from '@lit/context';
 
 import {
   Interaction,
+  isRecordValue,
   itemContext,
   qtiContext,
+  readRecordFieldValues,
   removeDoubleSlashes,
   responseAttributeConverter
 } from '@qti-components/base';
+import nativeCss from '@qti-components/theme/native-css';
 
 import styles from './qti-portable-custom-interaction.styles';
+import {
+  coerceBaseValue,
+  recordFromQtiVariableJSON,
+  recordResponseToQtiVariableJSON,
+  recordToQtiVariableJSON
+} from './record-response';
+import requireJsSource from './vendor/require-js';
 
 import type { CSSResultGroup } from 'lit';
-import type { BaseType, Cardinality, ItemContext, QtiContext } from '@qti-components/base';
-import type {
-  PciInteractionStatus,
-  PciResponseDeclaration,
-  QtiRecordItem,
-  QtiVariableJSON,
-  ResponseVariableType
-} from './interface';
+import type { BaseType, Cardinality, ItemContext, QtiContext, RecordValue } from '@qti-components/base';
+import type { PciInteractionStatus, PciResponseDeclaration, QtiVariableJSON, ResponseVariableType } from './interface';
+
+/** Text for an inline `<script>`: a `</script` inside it would end the element early. */
+export const inlineScriptText = (text: string) => text.replace(/<\/(script)/gi, '<\\/$1');
+
+/** Text for an inline `<style>`: a `</style` inside it would end the element early. */
+export const inlineStyleText = (text: string) => text.replace(/<\/(style)/gi, '<\\/$1');
 
 /** Statuses in which the item is showing the correct response, so a PCI may legitimately see it. */
 const STATUSES_SHOWING_CORRECT_RESPONSE: PciInteractionStatus[] = ['solution', 'review'];
+
+/** A response value as this interaction holds it: a record response is its field map. */
+type PciResponseValue = string | string[] | RecordValue;
 
 /**
  * Whether a response variable actually declares a correct response.
  *
  * Non-single cardinality yields `[]` for an empty `<qti-correct-response>`, which is "no correct
- * response" and must not be reported as one.
+ * response" and must not be reported as one. A record's correct response is a field map.
  */
-function hasCorrectResponseValue(value: string | string[] | null | undefined): boolean {
+function hasCorrectResponseValue(value: PciResponseValue | null | undefined): boolean {
   if (value === null || value === undefined) return false;
-  return Array.isArray(value) ? value.length > 0 : value !== '';
+  if (Array.isArray(value)) return value.length > 0;
+  if (isRecordValue(value)) return Object.keys(value).length > 0;
+  return value !== '';
 }
 
 export class QtiPortableCustomInteraction extends Interaction {
-  #value: string | string[];
+  #value: PciResponseValue;
 
   protected _iframeLoaded = false;
   protected _interactionReady = false;
@@ -69,8 +84,9 @@ export class QtiPortableCustomInteraction extends Interaction {
   @property({ type: String, attribute: 'data-require-shim' })
   requireShimJson: string = '';
 
+  /** A RequireJS to load in the iframe instead of the inlined copy (src/vendor/require-js.ts). */
   @property({ type: String, attribute: 'data-require-js-url' })
-  requireJsUrl: string = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js';
+  requireJsUrl: string = '';
 
   @property({ type: String, attribute: 'data-base-url' })
   baseUrl: string = '';
@@ -115,7 +131,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       cardinality: variable.cardinality
     };
 
-    const correctResponse = variable.correctResponse;
+    const correctResponse = variable.correctResponse as PciResponseValue | null | undefined;
     if (hasCorrectResponseValue(correctResponse)) {
       declaration.correctResponse = { value: correctResponse };
     }
@@ -218,9 +234,13 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   /**
-   * Converts QtiVariableJSON to a string or string array
+   * Converts QtiVariableJSON to a string, a string array, or for a record its field map
    */
-  #convertQtiVariableJSON(input: QtiVariableJSON): string | string[] {
+  #convertQtiVariableJSON(input: QtiVariableJSON): PciResponseValue | null {
+    if (input && Array.isArray(input.record)) {
+      const record = recordFromQtiVariableJSON(input.record);
+      return Object.keys(record).length ? record : null;
+    }
     for (const topLevelKey in input) {
       // eslint-disable-next-line no-prototype-builtins
       if (input.hasOwnProperty(topLevelKey)) {
@@ -252,40 +272,6 @@ export class QtiPortableCustomInteraction extends Interaction {
   }
 
   /**
-   * Coerce a scalar value to the expected base-type when possible
-   */
-  private coerceBaseValue(value: unknown, baseType: BaseType): unknown {
-    if (value === null || value === undefined) return value;
-
-    switch (baseType) {
-      case 'integer': {
-        if (typeof value === 'number') return value;
-        const parsed = parseInt(String(value), 10);
-        return Number.isNaN(parsed) ? value : parsed;
-      }
-      case 'float':
-      case 'duration': {
-        if (typeof value === 'number') return value;
-        const parsed = parseFloat(String(value));
-        return Number.isNaN(parsed) ? value : parsed;
-      }
-      case 'boolean': {
-        if (typeof value === 'boolean') return value;
-        if (typeof value === 'string') {
-          const lowered = value.toLowerCase();
-          if (lowered === 'true') return true;
-          if (lowered === 'false') return false;
-        }
-        return value;
-      }
-      case 'string':
-      case 'identifier':
-      default:
-        return String(value);
-    }
-  }
-
-  /**
    * Normalize an input into a list form
    */
   private normalizeListValue(value: unknown): unknown[] {
@@ -298,75 +284,15 @@ export class QtiPortableCustomInteraction extends Interaction {
    */
   private variableToQtiVariableJSON(value: unknown, cardinality: Cardinality, baseType: BaseType): QtiVariableJSON {
     if (cardinality === 'record' || baseType === 'record') {
-      return this.recordToQtiVariableJSON(value);
+      return recordToQtiVariableJSON(value);
     }
 
     if (cardinality !== 'single') {
-      const listValues = this.normalizeListValue(value).map(v => this.coerceBaseValue(v, baseType));
+      const listValues = this.normalizeListValue(value).map(v => coerceBaseValue(v, baseType));
       return { list: { [baseType]: listValues } };
     }
 
-    return { base: { [baseType]: this.coerceBaseValue(value, baseType) } };
-  }
-
-  /**
-   * Convert a record object into QtiVariableJSON
-   */
-  private recordToQtiVariableJSON(value: unknown): QtiVariableJSON {
-    if (!value || typeof value !== 'object') {
-      return { record: [] };
-    }
-
-    const recordEntries: QtiRecordItem[] = [];
-    for (const [name, entryValue] of Object.entries(value as Record<string, unknown>)) {
-      recordEntries.push(this.recordEntryFromValue(name, entryValue));
-    }
-
-    return { record: recordEntries };
-  }
-
-  /**
-   * Build a record entry from an arbitrary value
-   */
-  private recordEntryFromValue(name: string, entryValue: unknown): QtiRecordItem {
-    if (Array.isArray(entryValue)) {
-      const filtered = entryValue.filter(v => v !== null && v !== undefined);
-
-      if (filtered.length && filtered.every(v => typeof v === 'boolean')) {
-        return { name, list: { boolean: filtered as boolean[] } };
-      }
-
-      if (filtered.length && filtered.every(v => typeof v === 'number')) {
-        const numbers = filtered as number[];
-        const isIntegers = numbers.every(n => Number.isInteger(n));
-        return { name, list: { [isIntegers ? 'integer' : 'float']: numbers } };
-      }
-
-      return { name, list: { string: entryValue.map(v => (v === null || v === undefined ? '' : String(v))) } };
-    }
-
-    if (typeof entryValue === 'boolean') {
-      return { name, base: { boolean: entryValue } };
-    }
-
-    if (typeof entryValue === 'number') {
-      if (Number.isInteger(entryValue)) return { name, base: { integer: entryValue } };
-      return { name, base: { float: entryValue } };
-    }
-
-    if (entryValue === null || entryValue === undefined) {
-      return { name, base: { string: '' } };
-    }
-
-    if (typeof entryValue === 'object') {
-      try {
-        return { name, base: { string: JSON.stringify(entryValue) } };
-      } catch {
-        return { name, base: { string: String(entryValue) } };
-      }
-    }
-
-    return { name, base: { string: String(entryValue) } };
+    return { base: { [baseType]: coerceBaseValue(value, baseType) } };
   }
 
   /**
@@ -383,15 +309,10 @@ export class QtiPortableCustomInteraction extends Interaction {
       const defaultValueElement = declaration.querySelector('qti-default-value');
       if (!defaultValueElement) return;
 
-      const valueElements = defaultValueElement.querySelectorAll('qti-value[field-identifier]');
-      valueElements.forEach(valueElement => {
-        const fieldIdentifier = valueElement.getAttribute('field-identifier');
-        if (!fieldIdentifier) return;
-
-        const baseType = (valueElement.getAttribute('base-type') || 'string') as BaseType;
-        const textContent = valueElement.textContent?.trim() || '';
-        defaults[fieldIdentifier] = this.coerceBaseValue(textContent, baseType);
-      });
+      const { value, baseTypes } = readRecordFieldValues(defaultValueElement.querySelectorAll('qti-value'));
+      for (const [fieldIdentifier, textContent] of Object.entries(value)) {
+        defaults[fieldIdentifier] = coerceBaseValue(textContent, baseTypes[fieldIdentifier] ?? 'string');
+      }
     });
 
     return defaults;
@@ -413,7 +334,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       ...merged
     };
 
-    return this.recordToQtiVariableJSON(normalized);
+    return recordToQtiVariableJSON(normalized);
   }
 
   /**
@@ -521,10 +442,15 @@ export class QtiPortableCustomInteraction extends Interaction {
    * Converts response variables to QtiVariableJSON
    */
   protected responseVariablesToQtiVariableJSON(
-    input: string | string[],
+    input: PciResponseValue,
     cardinality: Cardinality,
-    baseType: BaseType
+    baseType: BaseType,
+    fieldBaseTypes?: Record<string, BaseType>
   ): QtiVariableJSON {
+    if (cardinality === 'record') {
+      // A record declaration has no base-type: the fields carry their own, declared or inferred.
+      return recordResponseToQtiVariableJSON(input, fieldBaseTypes);
+    }
     if (cardinality !== 'single') {
       const list = { list: {} };
       list.list[baseType] = input;
@@ -538,6 +464,9 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   #hasNonEmptyResponse(): boolean {
     if (this.response === null || this.response === undefined) return false;
+    if (isRecordValue(this.response)) {
+      return Object.values(this.response).some(v => v !== '' && v !== null && v !== undefined);
+    }
     if (Array.isArray(this.response)) {
       if (this.response.length === 0) return false;
       return this.response.some(v => v !== '' && v !== null && v !== undefined);
@@ -569,6 +498,7 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   override get value(): string | null {
     if (this.#value === null || this.#value === undefined) return null;
+    if (isRecordValue(this.#value)) return JSON.stringify(this.#value);
     return Array.isArray(this.#value) ? this.#value.join(',') : String(this.#value);
   }
 
@@ -583,19 +513,18 @@ export class QtiPortableCustomInteraction extends Interaction {
     // No direct call to setResponse - PCI will handle this during initialization
     // through the boundTo property in the config
 
-    this.saveResponse(value);
+    this.saveResponse(value as string | string[]);
   }
 
   get boundTo(): Record<string, QtiVariableJSON> {
     const responseVariable: Record<string, QtiVariableJSON> = {};
     const variable = this.context?.variables?.find(v => v.identifier === this.responseIdentifier);
     if (variable) {
-      const cardinality =
-        this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.cardinality || 'single';
-      const baseType =
-        this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.baseType || 'string';
-      const value = this.context?.variables?.find(v => v.identifier === this.responseIdentifier)?.value || null;
-      const responseVal = this.responseVariablesToQtiVariableJSON(value as string | string[], cardinality, baseType);
+      const cardinality = variable.cardinality || 'single';
+      const baseType = variable.baseType || 'string';
+      const value = (variable.value || null) as PciResponseValue;
+      const fieldBaseTypes = (variable as { fieldBaseTypes?: Record<string, BaseType> }).fieldBaseTypes;
+      const responseVal = this.responseVariablesToQtiVariableJSON(value, cardinality, baseType, fieldBaseTypes);
       responseVariable[this.responseIdentifier] = responseVal;
     }
 
@@ -762,16 +691,20 @@ export class QtiPortableCustomInteraction extends Interaction {
         // Treat null/undefined or unconvertible responses as "cleared".
         // The iframe side is responsible for not emitting an initial clear on load.
         if (converted === null) {
-          const emptyResponse = this.responseVariable?.cardinality === 'single' ? '' : [];
+          const cardinality = this.responseVariable?.cardinality;
+          // A record has no empty literal: a cleared record is NULL.
+          const emptyResponse = cardinality === 'record' ? null : cardinality === 'single' ? '' : [];
           this.response = emptyResponse;
           this.validate();
           this.saveResponse(emptyResponse, state);
           break;
         }
 
-        this.response = converted;
+        // A record response travels as its field map; the shared response types only say string | string[].
+        const response = converted as string | string[];
+        this.response = response;
         this.validate();
-        this.saveResponse(converted, state);
+        this.saveResponse(response, state);
         break;
       }
       case 'error':
@@ -949,15 +882,15 @@ export class QtiPortableCustomInteraction extends Interaction {
         : `${iframeBaseUrl}/`
       : `${window.location.origin}/`;
     const forwardConsole = this.dataset.forwardConsole === 'true';
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const defaultComponentsCdnUrl = isLocalhost
-      ? `${window.location.origin}/cdn/index.js`
-      : 'https://unpkg.com/@citolab/qti-components/cdn';
-    const defaultComponentsCssUrl = isLocalhost
-      ? `${window.location.origin}/dist/item.css`
-      : 'https://unpkg.com/@citolab/qti-components@latest/dist/item.css';
-    const componentsCdnUrl = this.dataset.componentsCdnUrl || defaultComponentsCdnUrl;
-    const componentsCssUrl = this.dataset.componentsCssUrl || defaultComponentsCssUrl;
+    // Everything the iframe needs is inline: RequireJS (it loads the PCI module) and the QTI 3 shared vocabulary
+    // (qti-layout-row, qti-well, …) that interaction markup may use, both from this version of qti-components. No
+    // public CDN is involved. The qti-components bundle and the full item.css are not needed to run a PCI (the markup
+    // is plain HTML); a host that wants them in the iframe anyway names its own copy with these attributes.
+    const componentsCdnUrl = this.dataset.componentsCdnUrl;
+    const componentsCssUrl = this.dataset.componentsCssUrl;
+    const requireJsTag = this.requireJsUrl
+      ? `<script src="${this.requireJsUrl}"></script>`
+      : `<script>${inlineScriptText(requireJsSource)}</script>`;
 
     // Extract just the font-related properties you want to copy
     const fontStyles = `
@@ -968,15 +901,22 @@ export class QtiPortableCustomInteraction extends Interaction {
     color: ${parentStyles.getPropertyValue('color')};
   `;
 
+    // The language of the interaction (the item's xml:lang, or the page's lang), so a PCI that reads
+    // `lang` in its iframe shows its own texts in the item's language.
+    const langHost = this.closest('[lang], [xml\\:lang]');
+    const iframeLang =
+      [langHost?.getAttribute('lang'), langHost?.getAttribute('xml:lang'), document.documentElement.lang]
+        .map(l => (l ?? '').trim())
+        .find(l => /^[A-Za-z]{1,8}(-[A-Za-z0-9]{1,8})*$/.test(l)) ?? 'en';
+
     return /* html */ `<!DOCTYPE html>
-      <html lang="en">
+      <html lang="${iframeLang}">
         <head>
           <meta charset="utf-8" />
           <title>QTI PCI Container</title>
           <base href="${iframeBaseHref}" />
-          <script type="module">
-            import '${componentsCdnUrl}';
-          </script>
+          ${componentsCdnUrl ? `<script type="module">import '${componentsCdnUrl}';</script>` : ''}
+          <style>${inlineStyleText(nativeCss)}</style>
           <style>
             body, html {
               margin: 0;
@@ -1000,8 +940,8 @@ export class QtiPortableCustomInteraction extends Interaction {
               min-height: 50px;
             }
           </style>
-          <link href="${componentsCssUrl}" rel="stylesheet" />
-          <script src="${this.requireJsUrl}"></script>
+          ${componentsCssUrl ? `<link href="${componentsCssUrl}" rel="stylesheet" />` : ''}
+          ${requireJsTag}
           <script>
             const forwardConsole = ${forwardConsole ? 'true' : 'false'};
             if (forwardConsole) {

@@ -28,6 +28,7 @@ export type BaseType =
   | 'string'
   | 'identifier'
   | 'pair'
+  | 'point'
   | 'record'; // record is a special type for QTI context variables
 
 export type Multiple = string | string[][];

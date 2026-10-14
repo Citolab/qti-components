@@ -17,9 +17,15 @@ No live example on this page yet. Real PCI packages *do* exist in this repo (e.g
 | `custom-interaction-type-identifier` | The PCI's type identifier (spec prefers a URN, e.g. `urn:fdc:hmhco.com:pci:shading`). |
 | `data-require-paths` | JSON object of RequireJS `paths` overrides. |
 | `data-require-shim` | JSON object of RequireJS `shim` config. |
-| `data-require-js-url` | RequireJS library URL loaded inside the iframe. Defaults to a CDN copy. |
+| `data-require-js-url` | A RequireJS to load inside the iframe instead of the inlined copy. |
+| `data-components-cdn-url` | A qti-components bundle (ES module) to import inside the iframe, e.g. your own copy of `@citolab/qti-components/cdn/index.js`. Not loaded when absent. |
+| `data-components-css-url` | A stylesheet to link inside the iframe, e.g. your own copy of `@citolab/qti-components/item.css`. Not loaded when absent. |
 | `data-base-url` | Base URL prefix used to resolve module paths and assets. |
 | any other `data-*` | Forwarded (hyphenated key, normalized) into the PCI's `properties` object. |
+
+The PCI runs in a `srcdoc` iframe that loads nothing from a public CDN: RequireJS and the QTI 3 shared vocabulary
+stylesheet (`qti-layout-row`, `qti-well`, `qti-padding-*`, …) are inlined from this version of qti-components. The item's
+`qti-stylesheet`s are added to the iframe as well. The only other request is the PCI module itself, from the item.
 
 ## Child elements
 

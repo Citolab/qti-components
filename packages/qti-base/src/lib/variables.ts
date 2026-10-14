@@ -65,6 +65,12 @@ export interface ResponseVariable extends VariableDeclaration<string | string[] 
   mapping?: QtiMapping;
   areaMapping?: QtiAreaMapping; // Optional property for area mappings
   correctResponse?: string | string[] | null;
+  /**
+   * For `record` cardinality: the base type of each field, by field identifier, as declared on the
+   * `qti-value` elements of the correct response. A record declaration has no `base-type` of its
+   * own, so this is the only place the field types are known once the value is stored.
+   */
+  fieldBaseTypes?: Record<string, BaseType>;
 }
 
 export interface TemplateVariable extends VariableDeclaration<string | string[] | number | boolean | null> {

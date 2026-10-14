@@ -17,3 +17,6 @@ Justfile
 # Written by msw's postinstall on every install, in msw's own style, and asks not
 # to be modified. Formatting it makes every subsequent install dirty the tree.
 public/mockServiceWorker.js
+
+# Generated from the requirejs package by tools/build/vendor-requirejs.mjs (one minified string).
+packages/interactions/portable-custom-interaction/src/vendor/require-js.ts
