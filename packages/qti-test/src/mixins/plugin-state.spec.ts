@@ -137,6 +137,20 @@ describe('plugin state', () => {
     expect(qtiTest.state.session.plugins).toEqual({ 'probe-notes': ['x'], 'not-loaded': { kept: true } });
   });
 
+  it('is replaced, not merged, when a later state is assigned', async () => {
+    await connect();
+    qtiTest.state = baseState({ 'probe-notes': ['x'], other: 1 });
+    await settle();
+    qtiTest.state = baseState({ 'probe-notes': ['y'] });
+    await settle();
+    expect(qtiTest.state.session.plugins).toEqual({ 'probe-notes': ['y'] });
+
+    qtiTest.state = baseState();
+    await settle();
+    expect(pluginState(probe.computed, 'probe-notes')).toBeUndefined();
+    expect(qtiTest.state.session.plugins).toBeUndefined();
+  });
+
   it('round-trips: what one test stores, another resumes from', async () => {
     await connect();
     dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: ['a', 'b'] });

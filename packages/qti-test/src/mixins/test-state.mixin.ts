@@ -174,12 +174,11 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
 
       // Written before any navigation request, so the linear-mode restriction — which compares
       // against the current position — sees the restored item as current and lets it load.
+      // Plugins are replaced, not merged: a state without them clears what an earlier one left.
       this.sessionContext = {
         ...this.sessionContext,
         ...this.#validSession(state.session),
-        ...(state.session.plugins && typeof state.session.plugins === 'object'
-          ? { plugins: { ...state.session.plugins } }
-          : {})
+        plugins: state.session.plugins && typeof state.session.plugins === 'object' ? { ...state.session.plugins } : {}
       };
     }
 
