@@ -1,4 +1,5 @@
 import { TestBookmark } from '../components/test-bookmark/test-bookmark';
+import { TestCheckItem } from '../components/test-check-item/test-check-item';
 import { TestPagingButtonsStamp } from '../components/test-paging-buttons-stamp/test-paging-buttons-stamp';
 import { TestPrintContext } from '../components/test-print-context/test-print-context';
 import { TestPrintVariables } from '../components/test-print-item-variables/test-print-item-variables';
@@ -15,6 +16,7 @@ export * from '../tts/elements';
 export { bookmarkedItems } from '../components/test-bookmark/test-bookmark';
 
 export {
+  TestCheckItem,
   TestBookmark,
   TestPagingButtonsStamp,
   TestPrintContext,
@@ -35,6 +37,7 @@ export {
  * the one place that names them all.
  */
 export const pluginElements = [
+  { tag: 'test-check-item', ctor: TestCheckItem },
   { tag: 'test-bookmark', ctor: TestBookmark },
   { tag: 'test-paging-buttons-stamp', ctor: TestPagingButtonsStamp },
   { tag: 'test-print-context', ctor: TestPrintContext },

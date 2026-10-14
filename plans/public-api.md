@@ -140,7 +140,7 @@ implementation.
 - A plugin reads one context, `computedContext`, plus the request events. `itemElement` is in
   `computed.types.ts` and set by `test-navigation`.
 - `plugin-boundary.spec.ts` has a `PLUGINS` list (each with its folders) and fails on a reference to a
-  plugin from outside them (except `plugins/` and stories) and on an import of test internals.
+  plugin from outside them (except `plugins/`, stories, and `qti-corrections`, which extends `test-check-item`) and on an import of test internals.
 - Guide: `packages/qti-test/src/guides/test-plugins.{mdx,stories.ts}`.
 - No per-plugin entry points, no umbrella entries, no Step B. The changeset
   (`.changeset/tts-plugin.md`) is `major`: a text-to-speech player must now sit inside
@@ -151,25 +151,25 @@ already plugin-shaped: they read only `computedContext` (or `sessionContext`) an
 through events. Nothing in the core imports them except `elements.ts` (registration) and
 `components/index.ts` (re-export), exactly as TTS was before it moved.
 
-| Component                                                                           | Reads                                         | Writes (events dispatched)                   | Verdict                                                                                              |
-| ----------------------------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `test-print-context`, `test-print-item-variables`, `test-scoring-feedback`          | `computedContext`                             | none                                         | plugin as is                                                                                         |
-| `test-scoring-buttons`                                                              | `computedContext`                             | `test-update-outcome-variable`               | plugin as is; the write path is that event                                                           |
-| `test-stamp`, `test-paging-buttons-stamp`, `test-section-buttons-stamp`             | `computedContext`                             | `qti-stamp-context-updated` (`test-stamp`)   | plugin as is                                                                                         |
-| `test-view-toggle`, `test-view`                                                     | `sessionContext`                              | `on-test-switch-view` (`detail` is the view) | plugin as is                                                                                         |
-| `qti-test-feedback`                                                                 | none                                          | none                                         | plugin as is (20 lines)                                                                              |
-| `test-check-item`                                                                   | none                                          | `cito-test-end-attempt`                      | core for now: reaches into `test-container`; joins `view` once it switches the session `view` (#280) |
-| `test-next`, `test-prev`, `test-end-attempt`, `test-item-link`, `test-section-link` | `computedContext` or none                     | `qti-request-navigation`, `test-end-attempt` | navigation controls: keep in core, or one `navigation` plugin; owner decides                         |
-| `qti-number-selected`, `qti-test-variables`                                         | `testContext` + `internal/item-ref-selection` | none                                         | QTI spec elements and internals: core                                                                |
+| Component                                                                           | Reads                                         | Writes (events dispatched)                       | Verdict                                                                                                |
+| ----------------------------------------------------------------------------------- | --------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `test-print-context`, `test-print-item-variables`, `test-scoring-feedback`          | `computedContext`                             | none                                             | plugin as is                                                                                           |
+| `test-scoring-buttons`                                                              | `computedContext`                             | `test-update-outcome-variable`                   | plugin as is; the write path is that event                                                             |
+| `test-stamp`, `test-paging-buttons-stamp`, `test-section-buttons-stamp`             | `computedContext`                             | `qti-stamp-context-updated` (`test-stamp`)       | plugin as is                                                                                           |
+| `test-view-toggle`, `test-view`                                                     | `sessionContext`                              | `on-test-switch-view` (`detail` is the view)     | plugin as is                                                                                           |
+| `qti-test-feedback`                                                                 | none                                          | none                                             | plugin as is (20 lines)                                                                                |
+| `test-check-item`                                                                   | none                                          | `cito-test-end-attempt`, `cito-test-switch-view` | plugin (`view`): switches the session `view` instead of reaching into `test-container` (#280, PR #302) |
+| `test-next`, `test-prev`, `test-end-attempt`, `test-item-link`, `test-section-link` | `computedContext` or none                     | `qti-request-navigation`, `test-end-attempt`     | navigation controls: keep in core, or one `navigation` plugin; owner decides                           |
+| `qti-number-selected`, `qti-test-variables`                                         | `testContext` + `internal/item-ref-selection` | none                                             | QTI spec elements and internals: core                                                                  |
 
 **The write path is already an API: four events** (`qti-request-navigation`, `test-end-attempt`,
 `test-update-outcome-variable`, `on-test-switch-view`), plus `computedContext` and
 `sessionContext`. A plugin never needs a method on the test. The events get their public `cito-`
 names in the next section.
 
-`test-check-item` will reveal the view elements by switching the session `view` (decided; its `view`
-attribute, default `scorer`), as `test-view-toggle` does, not by walking `test-container`'s shadow root.
-That is a behaviour change, so it is its own PR (#280); once it lands, `test-check-item` joins `view`.
+`test-check-item` reveals the view elements by switching the session `view` (its `view` attribute,
+default `scorer`), as `test-view-toggle` does, not by walking `test-container`'s shadow root (#280,
+PR #302). It is part of the `view` plugin.
 Own `<template>` lookups in the stamp and button components are fine; they read the element's own
 children.
 
@@ -301,7 +301,7 @@ the code behind them is not yet verified against it.
    their specs, changesets, host entries); `qti-test-context-updated` stays as decided.
 2. **`cito-test-navigated`**, part of 1. **Done**: sent with `cito-test-rendered`, never on a refused or cancelled navigation.
 3. **One boundary spec for all plugins**: **Done**, with the convention write-up in the guide.
-4. **`test-check-item`** reveals `[view]` elements without reaching into `test-container` (#280). Own PR (behaviour change); joins the `view` plugin after it lands.
+4. **`test-check-item`** reveals `[view]` elements without reaching into `test-container` (#280). **Done** in PR #302: it switches the session `view`; part of the `view` plugin.
 5. **Move the other optional components into plugins** (#275, was #281): **Done** as `stamp`, `print`,
    `scoring` and `view` next to `tts`. `qti-test-feedback` stays in core: it is a QTI element, not
    a plugin. Navigation controls stay in core.

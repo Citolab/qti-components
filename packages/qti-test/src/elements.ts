@@ -11,7 +11,6 @@ import { QtiTestFeedback } from './components/qti-test-feedback/qti-test-feedbac
 import { QtiTestPart } from './components/qti-test-part/qti-test-part';
 import { QtiTestVariables } from './components/qti-test-variables/qti-test-variables';
 import { QtiTest } from './components/qti-test/qti-test';
-import { TestCheckItem } from './components/test-check-item/test-check-item';
 import { TestContainer } from './components/test-container/test-container';
 import { TestEndAttempt } from './components/test-end-attempt/test-end-attempt';
 import { TestItemLink } from './components/test-item-link/test-item-link';
@@ -37,7 +36,6 @@ export {
   QtiTestFeedback,
   QtiTestPart,
   QtiTestVariables,
-  TestCheckItem,
   TestContainer,
   TestEndAttempt,
   TestItemLink,
@@ -61,7 +59,6 @@ export const qtiTestElements = [
   { tag: 'qti-test-feedback', ctor: QtiTestFeedback },
   { tag: 'qti-test-part', ctor: QtiTestPart },
   { tag: 'qti-test-variables', ctor: QtiTestVariables },
-  { tag: 'test-check-item', ctor: TestCheckItem },
   { tag: 'test-container', ctor: TestContainer },
   { tag: 'test-end-attempt', ctor: TestEndAttempt },
   { tag: 'test-item-link', ctor: TestItemLink },
