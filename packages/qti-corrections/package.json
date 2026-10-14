@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/corrections",
   "description": "Formative-assessment correction overlays for QTI interactions",
-  "version": "0.4.1-next.1",
+  "version": "0.4.1-next.2",
   "author": "",
   "dependencies": {
     "@qti-components/associate-interaction": "workspace:^",

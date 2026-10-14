@@ -1,5 +1,12 @@
 # @qti-components/corrections
 
+## 0.4.1-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`c585b34`](https://github.com/Citolab/qti-components/commit/c585b346a510c533ae253c22335f7d6f578dda42)]:
+  - @qti-components/test@2.0.0-next.4
+
 ## 0.4.1-next.1
 
 ### Patch Changes

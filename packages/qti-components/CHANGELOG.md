@@ -1,5 +1,13 @@
 # @citolab/qti-components
 
+## 10.0.0-next.4
+
+### Major Changes
+
+- [#302](https://github.com/Citolab/qti-components/pull/302) [`c585b34`](https://github.com/Citolab/qti-components/commit/c585b346a510c533ae253c22335f7d6f578dda42) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-check-item>` no longer reaches into `<test-container>`'s shadow root. After ending the attempt it switches the test to a view, named by its new `view` attribute (default `scorer`), through `cito-test-switch-view`.
+
+  Behaviour change: `[view]` content for other views, including `candidate`, is hidden while that view is active; before, every `[view]` element was shown. Use `<test-view-toggle>` to switch back. No surveyed host uses `<test-check-item>`.
+
 ## 10.0.0-next.3
 
 ### Minor Changes
