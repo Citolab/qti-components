@@ -1,16 +1,20 @@
-import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 
-import { testHostContext } from '../../internal/test-host.context';
 import * as styles from '../styles';
 import { dispatchPublic } from '../../public-events';
 
-import type { TestHost } from '../../internal/test-host.context';
-import type { TestContainer } from '../test-container/test-container';
+import type { View } from '@qti-components/base';
 
+/**
+ * Ends the attempt on the current item and switches the test to `view` (default `scorer`), which
+ * reveals the `[view]` content for that view, such as a scorer's rubric. The view stays until
+ * something switches it back (`test-view-toggle`).
+ *
+ * @attr view - The view to switch to after the attempt ended.
+ */
 export class TestCheckItem extends LitElement {
-  @consume({ context: testHostContext, subscribe: true })
-  protected testHost?: TestHost;
+  @property({ type: String }) view: View = 'scorer';
 
   static override styles = css`
     :host {
@@ -31,14 +35,7 @@ export class TestCheckItem extends LitElement {
     super();
     this.addEventListener('click', () => {
       dispatchPublic(this, 'cito-test-end-attempt', {});
-      const testContainer = this.testHost?.querySelector<TestContainer>('test-container');
-      if (!testContainer) return;
-
-      const viewElements = Array.from(testContainer.shadowRoot.querySelectorAll('[view]'));
-
-      viewElements.forEach((element: HTMLElement) => {
-        element.classList.toggle('show', true);
-      });
+      dispatchPublic(this, 'cito-test-switch-view', this.view);
     });
   }
 
