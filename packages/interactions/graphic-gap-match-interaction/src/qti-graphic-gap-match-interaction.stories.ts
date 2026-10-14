@@ -546,3 +546,109 @@ export const ResetAndProgrammaticResponse: Story = {
     });
   }
 };
+
+/** An SVG image as a data URL, so a story needs no asset file. */
+const svgImage = (width: number, height: number, body: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${body}</svg>`)}`;
+
+/** A 1600x893 "map" with four places, each marked where its 275x126 drop area is drawn. */
+const WIDE_MAP = svgImage(
+  1600,
+  893,
+  `<rect width="1600" height="893" fill="#a9d3ee"/><path d="M60 120 L1300 60 L1340 820 L80 860 Z" fill="#d7e3b5" stroke="#555" stroke-width="4"/>` +
+    [
+      [79, 322, 'Place 1'],
+      [241, 478, 'Place 2'],
+      [716, 288, 'Place 3'],
+      [1008, 689, 'Place 4']
+    ]
+      .map(
+        ([x, y, name]) =>
+          `<rect x="${x}" y="${y}" width="275" height="126" fill="none" stroke="#888" stroke-dasharray="12 8" stroke-width="3"/><text x="${Number(x) + 137}" y="${Number(y) + 75}" font-family="Arial" font-size="40" text-anchor="middle">${name}</text>`
+      )
+      .join('')
+);
+
+/** A text tile, drawn at twice its 275x126 display size. */
+const tile = (text: string) =>
+  svgImage(
+    550,
+    252,
+    `<rect x="2" y="2" width="546" height="248" rx="12" fill="#fff" stroke="#4b5563" stroke-width="4"/><text x="275" y="140" font-family="Arial" font-weight="bold" font-size="48" text-anchor="middle">${text}</text>`
+  );
+
+/**
+ * A graphic declared wider than its column (1600px in 480px), each drop area drawn for a tile of the same size: the
+ * drop areas and the tiles scale with the graphic, in the bank and in a hotspot, and a drop lands where it is aimed.
+ */
+export const TilesScaleWithTheGraphic: Story = {
+  name: 'Behavior: tiles scale with a wide graphic',
+  render: () => html`
+    <div style="width: 480px">
+      <qti-graphic-gap-match-interaction
+        data-testid="graphic-gap-match-interaction"
+        response-identifier="RESPONSE"
+        max-associations="0"
+      >
+        <img alt="A map with four places" src=${WIDE_MAP} width="1600" height="893" />
+        ${[1, 2, 3, 4].map(
+          n =>
+            html`<qti-gap-img identifier=${`T${n}`} match-max="1"
+              ><img src=${tile(`Tile ${n}`)} alt=${`Tile ${n}`} width="275" height="126"
+            /></qti-gap-img>`
+        )}
+        <qti-associable-hotspot
+          identifier="H1"
+          match-max="1"
+          shape="rect"
+          coords="79,322,354,448"
+        ></qti-associable-hotspot>
+        <qti-associable-hotspot
+          identifier="H2"
+          match-max="1"
+          shape="rect"
+          coords="241,478,516,604"
+        ></qti-associable-hotspot>
+        <qti-associable-hotspot
+          identifier="H3"
+          match-max="1"
+          shape="rect"
+          coords="716,288,991,414"
+        ></qti-associable-hotspot>
+        <qti-associable-hotspot
+          identifier="H4"
+          match-max="1"
+          shape="rect"
+          coords="1008,689,1283,815"
+        ></qti-associable-hotspot>
+      </qti-graphic-gap-match-interaction>
+    </div>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const interaction = canvasElement.querySelector(
+      '[data-testid="graphic-gap-match-interaction"]'
+    ) as QtiGraphicGapMatchInteraction;
+    await settleInteraction(interaction);
+    const scale = (interaction.querySelector(':scope > img') as HTMLElement).getBoundingClientRect().width / 1600;
+    const hotspot = (id: string) =>
+      interaction.querySelector(`qti-associable-hotspot[identifier="${id}"]`) as HTMLElement;
+    const chip = (id: string) => interaction.querySelector(`qti-gap-img[identifier="${id}"]`) as HTMLElement;
+
+    await step('the drop areas and the tiles scale with the graphic', async () => {
+      expect(scale).toBeLessThan(0.5);
+      for (const element of [hotspot('H1'), hotspot('H4'), chip('T1'), chip('T4')]) {
+        const rect = element.getBoundingClientRect();
+        expect(rect.width).toBeCloseTo(275 * scale, 0);
+        expect(rect.height).toBeCloseTo(126 * scale, 0);
+      }
+    });
+
+    await step('a tile dropped on a place lands there, at the size of its drop area', async () => {
+      await drag(chip('T1'), { to: hotspot('H2'), duration: 300 });
+      await new Promise(resolve => setTimeout(resolve, 200));
+      expect((interaction as QtiGraphicGapMatchInteraction & { response: unknown }).response).toEqual('T1 H2');
+      const placed = hotspot('H2').shadowRoot!.querySelector('qti-gap-img') as HTMLElement;
+      expect(placed.getBoundingClientRect().width).toBeCloseTo(275 * scale, 0);
+    });
+  }
+};

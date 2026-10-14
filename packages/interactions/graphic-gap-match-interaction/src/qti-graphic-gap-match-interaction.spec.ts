@@ -224,3 +224,98 @@ describe.each([['object'], ['img']] as const)('graphic gap match, a wide graphic
     expect(rect.height).toBeCloseTo(56.25, 0);
   });
 });
+
+/**
+ * Tiles authored to fill their hotspots, on a graphic declared wider than its column — a 1600x893
+ * map in half of a two-column layout, each 275x126 hotspot drawn for a 275x126 tile.
+ *
+ * The map narrowed, but the hotspots did not: the measured chip size, published as
+ * `--qti-dropzone-min-*`, was each hotspot's `min-width`/`min-height` and beat its percentage box.
+ * And the tiles stayed 275px wide over a map drawn at 30%, far too big for the places they belong.
+ */
+describe.each([['object'], ['img']] as const)('graphic gap match, tiles sized to a wide graphic as <%s>', tag => {
+  let host: HTMLElement;
+  let style: HTMLStyleElement;
+  let interaction: HTMLElement;
+
+  const COLUMN = 480;
+  const SCALE = COLUMN / 1600;
+
+  const graphic =
+    tag === 'object'
+      ? `<object type="image/png" data="${PNG}" width="1600" height="893">map</object>`
+      : `<img src="${PNG}" width="1600" height="893" alt="map"/>`;
+  const tile = (id: string) =>
+    `<qti-gap-img identifier="${id}" match-max="1">${graphicFor(tag, 275, 126, id)}</qti-gap-img>`;
+
+  beforeEach(async () => {
+    style = document.createElement('style');
+    style.textContent = itemCss as unknown as string;
+    document.head.appendChild(style);
+
+    host = document.createElement('div');
+    host.style.cssText = `width:${COLUMN}px;background:#fff`;
+    document.body.appendChild(host);
+    host.innerHTML = `
+      <qti-assessment-item identifier="tiles" title="Tiles">
+        <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair"></qti-response-declaration>
+        <qti-item-body>
+          <qti-graphic-gap-match-interaction response-identifier="RESPONSE">
+            ${graphic}
+            ${tile('A')}
+            ${tile('B')}
+            <qti-associable-hotspot identifier="H1" match-max="1" shape="rect" coords="79,322,354,448"></qti-associable-hotspot>
+            <qti-associable-hotspot identifier="H2" match-max="1" shape="rect" coords="1008,689,1283,815"></qti-associable-hotspot>
+          </qti-graphic-gap-match-interaction>
+        </qti-item-body>
+      </qti-assessment-item>`;
+
+    const item = host.querySelector('qti-assessment-item') as QtiAssessmentItem;
+    interaction = host.querySelector('qti-graphic-gap-match-interaction') as HTMLElement;
+    await item.updateComplete;
+    await (interaction as HTMLElement & { updateComplete: Promise<unknown> }).updateComplete;
+    await new Promise(resolve => setTimeout(resolve, 200));
+  });
+
+  afterEach(() => {
+    host.remove();
+    style.remove();
+  });
+
+  const chip = (id: string) => interaction.querySelector(`qti-gap-img[identifier="${id}"]`) as HTMLElement;
+  const hotspot = (id: string) =>
+    interaction.querySelector(`qti-associable-hotspot[identifier="${id}"]`) as HTMLElement;
+
+  it('scales every hotspot with the graphic, whatever the size of the tiles', () => {
+    for (const id of ['H1', 'H2']) {
+      const rect = hotspot(id).getBoundingClientRect();
+      expect(rect.width, `${id} width`).toBeCloseTo(275 * SCALE, 0);
+      expect(rect.height, `${id} height`).toBeCloseTo(126 * SCALE, 0);
+    }
+  });
+
+  it('scales the tiles in the bank by the same factor', () => {
+    const rect = chip('A').getBoundingClientRect();
+    expect(rect.width).toBeCloseTo(275 * SCALE, 0);
+    expect(rect.height).toBeCloseTo(126 * SCALE, 0);
+  });
+
+  it('keeps a placed tile the size of the hotspot it was authored for', async () => {
+    const bankRect = chip('A').getBoundingClientRect();
+    await drag(chip('A'), { to: hotspot('H2'), duration: 300 });
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    expect((interaction as HTMLElement & { response: unknown }).response).toEqual('A H2');
+    const placed = hotspot('H2').shadowRoot!.querySelector('qti-gap-img') as HTMLElement;
+    const placedRect = placed.getBoundingClientRect();
+    expect(placedRect.width).toBeCloseTo(bankRect.width, 0);
+    expect(placedRect.height).toBeCloseTo(bankRect.height, 0);
+
+    const hotspotRect = hotspot('H2').getBoundingClientRect();
+    expect(hotspotRect.width, 'the hotspot grew to hold the tile').toBeCloseTo(275 * SCALE, 0);
+    // On the hotspot, give or take its 2px border: a tile exactly the hotspot's size starts at the
+    // content box, as it does at full size.
+    expect(Math.abs(placedRect.left - hotspotRect.left)).toBeLessThanOrEqual(2);
+    expect(Math.abs(placedRect.top - hotspotRect.top)).toBeLessThanOrEqual(2);
+  });
+});
