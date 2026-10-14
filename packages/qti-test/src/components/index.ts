@@ -19,4 +19,5 @@ export * from './test-prev/test-prev';
 export * from './test-item-link/test-item-link';
 export * from './test-end-attempt/test-end-attempt';
 export * from './test-container/test-container';
+export * from './test-check-item/test-check-item';
 export * from './test-section-link/test-section-link';

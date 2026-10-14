@@ -3,10 +3,6 @@
 Baseline: `@kennisnet/qti-components` 7.28.1, most likely a republish of ours. Survey is read-only
 (2026-10-05): `projects/shared/src/lib/{qti,player}`, `projects/player`. Nothing here was run.
 
-Build and test check of 2026-10-09 (typecheck of the QTI layer, nothing run in a browser):
-`kennisnet-rapport-bouwen-en-testen.md` (report for Kennisnet, Dutch),
-`kennisnet-migration-guide-9x.md` (step-by-step guide for a developer or coding agent).
-
 ## Unreleased after 9.3.0
 
 ### `state` replaces the `testContext` round trip (PR #225)

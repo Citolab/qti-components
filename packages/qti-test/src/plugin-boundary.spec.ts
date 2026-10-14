@@ -80,9 +80,8 @@ const PLUGINS: Plugin[] = [
   },
   {
     name: 'view',
-    folders: ['components/test-view-toggle/', 'components/test-view/', 'components/test-check-item/'],
-    reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b|test-check-item|TestCheckItem/,
-    consumers: ['/packages/qti-corrections/'], // overrides test-check-item with the correction behaviour
+    folders: ['components/test-view-toggle/', 'components/test-view/'],
+    reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b/,
     allow: [
       PUBLIC_EVENTS_FROM_COMPONENTS,
       STYLES_FROM_COMPONENTS,
