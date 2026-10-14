@@ -126,7 +126,8 @@
      * (positionShapes), so they scale along — see qti-graphic-gap-match-interaction.styles.ts.
      * reset.css gives every picture inside an interaction `max-width: none`, which outranks that
      * component's ::slotted() rule, so the fluid sizing is restated here for the graphic alone: a
-     * direct child, never a chip's picture, which must keep its size in the bank and the hotspot.
+     * direct child, never a chip's picture: a chip scales by the graphic's factor as a whole
+     * (`--qti-graphic-scale`, qti-gap-img.styles.ts), the same in the bank and the hotspot.
      */
     & > img,
     & > object {

@@ -134,6 +134,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     /** Coordinate space of the current clone's host; identity while nothing above it scales. */
     private cloneFrame: FixedFrame = IDENTITY_FIXED_FRAME;
 
+    /** The current clone's own `zoom`, e.g. a graphic-gap-match chip scaled with its graphic. */
+    private cloneZoom = 1;
+
     private subscriptions: Array<{ unsubscribe: () => void }> = [];
     private dragSubscriptions: Array<{ unsubscribe: () => void }> = [];
     private lastPointerDownAt = 0;
@@ -997,7 +1000,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       // hotspot's own shadow root, and cloning it there would append the clone inside the very
       // element it is being dragged out of. The interaction's root is the same node for both.
       const host = resolveDragCloneHost(element.isConnected ? element : this, this.dragCloneRoot());
-      this.cloneFrame = measureFixedFrame(host);
+      this.cloneZoom = parseFloat(computedStyles.zoom) || 1;
+      this.cloneFrame = measureFixedFrame(host, this.cloneZoom);
 
       clone.style.position = 'fixed';
       // `rect` is in viewport pixels; the host may lay its fixed children out in a scaled space.
@@ -1071,7 +1075,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         if (host === dragClone.parentNode) return;
 
         host.appendChild(dragClone);
-        this.cloneFrame = measureFixedFrame(host);
+        this.cloneFrame = measureFixedFrame(host, this.cloneZoom);
         if (lastCoordinates) {
           this.updateClonePosition(lastCoordinates.x, lastCoordinates.y);
         }
@@ -1137,6 +1141,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       });
       this.dragSubscriptions = [];
       this.cloneFrame = IDENTITY_FIXED_FRAME;
+      this.cloneZoom = 1;
 
       this.dragState = {
         dragging: false,

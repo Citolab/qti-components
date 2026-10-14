@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { state } from 'lit/decorators.js';
 
 import { Interaction } from '@qti-components/base';
 import { positionShapes } from '@qti-components/interactions-core/internal/hotspots/hotspot';
@@ -32,10 +33,30 @@ const SlottedBase = DragDropSlottedMixin(
 export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
 
+  /**
+   * A hotspot's box is its authored `coords`, always (CONFIGURABILITY.md §4). The measured
+   * `--qti-dropzone-min-*` reservation is a floor on the hotspot's `min-width`/`min-height`, and it
+   * beat the percentage box from `positionShapes` as soon as the graphic rendered narrower than its
+   * declared width: a 275px chip kept a 17% hotspot at 275px over a 482px map. Chips are sized to
+   * their hotspots through `--qti-graphic-scale` instead.
+   */
+  public override autoSizeDropzones = false;
+
+  /**
+   * Rendered width of the graphic over its declared width: the factor the drop areas are scaled by.
+   * Published as `--qti-graphic-scale` on both slots, so it reaches a chip in the bank and one placed
+   * in a hotspot (qti-gap-img.styles.ts), without writing to the light-DOM host.
+   */
+  @state() private _graphicScale = 1;
+
+  #graphicObserver: ResizeObserver | null = null;
+  #observedGraphic: Graphic | null = null;
+
   override render() {
+    const scale = `--qti-graphic-scale: ${this._graphicScale}`;
     return html` <slot name="prompt"></slot>
-      <slot part="image"></slot>
-      <slot part="drags" name="drags" class="hover-border"></slot>
+      <slot part="image" style=${scale}></slot>
+      <slot part="drags" name="drags" class="hover-border" style=${scale}></slot>
       <div role="alert" part="message" id="validation-message"></div>`;
   }
 
@@ -84,12 +105,33 @@ export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(
     const shape = hotspot.getAttribute('shape');
     if (!graphic || !coords || !shape) return;
     this.#keepDeclaredRatio(graphic);
+    this.#observeGraphic(graphic);
     positionShapes(
       shape,
       coords.split(',').map(s => parseFloat(s)),
       graphic,
       hotspot
     );
+  }
+
+  /**
+   * Tracks the graphic's rendered width. The authored chip sizes live in the same coordinate space
+   * as the `coords` — an item that draws a 275x126 hotspot for a 275x126 tile means the tile to fill
+   * it — so the chips scale by the same factor as the drop areas.
+   */
+  #observeGraphic(graphic: Graphic): void {
+    if (this.#observedGraphic === graphic) return;
+    this.#graphicObserver?.disconnect();
+    this.#observedGraphic = graphic;
+    this.#graphicObserver = new ResizeObserver(() => {
+      const declared = parseFloat(graphic.getAttribute('width') ?? '');
+      const rendered = graphic.getBoundingClientRect().width;
+      const scale = declared > 0 && rendered > 0 ? Math.min(1, rendered / declared) : 1;
+      // Rounded, so sub-pixel jitter does not re-render on every observation.
+      const rounded = Math.round(scale * 1000) / 1000;
+      if (rounded !== this._graphicScale) this._graphicScale = rounded;
+    });
+    this.#graphicObserver.observe(graphic);
   }
 
   #positionHotspotOnRegister = (e: Event): void => {
@@ -108,6 +150,9 @@ export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('qti-register-hotspot', this.#positionHotspotOnRegister);
+    this.#graphicObserver?.disconnect();
+    this.#graphicObserver = null;
+    this.#observedGraphic = null;
   }
 }
 
