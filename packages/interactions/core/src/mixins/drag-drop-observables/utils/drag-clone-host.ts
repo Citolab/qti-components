@@ -107,7 +107,7 @@ export const resolveDragCloneHost = (dragSource: Node, preferredHost?: DragClone
  * Measures the frame a `position: fixed` child of `host` is laid out in, using a throwaway probe so
  * the clone's own `transform` / `rotate` cannot skew the reading. Costs one layout per drag start.
  */
-export const measureFixedFrame = (host: DragCloneHost): FixedFrame => {
+export const measureFixedFrame = (host: DragCloneHost, ownZoom = 1): FixedFrame => {
   const ownerDocument = host.ownerDocument ?? document;
   const probe = ownerDocument.createElement('div');
   probe.style.cssText =
@@ -120,7 +120,9 @@ export const measureFixedFrame = (host: DragCloneHost): FixedFrame => {
 
   return {
     origin: { x: rect.left, y: rect.top },
-    scale: { x: rect.width / PROBE_SIZE || 1, y: rect.height / PROBE_SIZE || 1 }
+    // The clone's own `zoom` (copied from the chip with the rest of its computed style) multiplies
+    // its left/top/width/height on top of whatever scales the host, so it is part of the frame.
+    scale: { x: (rect.width / PROBE_SIZE || 1) * ownZoom, y: (rect.height / PROBE_SIZE || 1) * ownZoom }
   };
 };
 

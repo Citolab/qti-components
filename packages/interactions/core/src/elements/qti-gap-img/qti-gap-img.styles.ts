@@ -12,6 +12,10 @@ export default [
       align-items: center;
       justify-content: center;
       user-select: none;
+      /* In graphic-gap-match the picture's authored size is in the graphic's coordinate space, so it
+         scales with the graphic and keeps fitting its hotspot. The interaction publishes the factor;
+         anywhere else it is unset and the chip keeps its size. */
+      zoom: var(--qti-graphic-scale, 1);
     }
   `
 ];
