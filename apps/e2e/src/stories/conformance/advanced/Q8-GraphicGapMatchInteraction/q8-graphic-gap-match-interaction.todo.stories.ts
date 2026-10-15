@@ -7,12 +7,12 @@ type Story = StoryObj;
 /**
  * Criteria of the suite's "Q8 - Graphic Gap Match Interaction" sample (Advanced profile) that nothing tests yet. Each story is an
  * empty placeholder named by its criterion ID. To test one, give it a `play` that asserts what the
- * criterion says and remove the `conformance-todo` and `no-tests` tags: the QTI 3 conformance page counts
+ * criterion says and remove the `todo` tag: the QTI 3 conformance page counts
  * it as tested from then on.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/Q8 - Graphic Gap Match Interaction - to do',
-  tags: ['conformance-todo', 'no-tests'],
+  title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction',
+  tags: ['todo'],
   parameters: { controls: { disable: true }, a11y: { test: 'off' } }
 };
 export default meta;

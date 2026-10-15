@@ -8,7 +8,8 @@ import type { CSSProperties, ReactNode } from 'react';
  * by its ID (`Q2-L1-D51`), and is in one of three states:
  *
  * - asserted: it has a `play` (the index tags it `play-fn`). CI runs every such story, so on main it passes.
- * - to do: an empty placeholder, tagged `conformance-todo`. It is the criterion nobody tests yet.
+ * - to do: an empty placeholder, tagged `todo`. It is the criterion nobody tests yet.
+ * - failing: a test that is written and known to fail, tagged `xfail`. Not run in CI, so not counted as asserting.
  * - shown: it renders something to check by eye and asserts nothing.
  *
  * Plain React JSX (`jsx: react-jsx` in the root tsconfig).
@@ -24,7 +25,7 @@ interface Entry {
   tags: string[];
 }
 
-type State = 'asserted' | 'todo' | 'shown';
+type State = 'asserted' | 'todo' | 'xfail' | 'shown';
 interface Item {
   /** What the chip shows: the first criterion ID, with how many more the story covers. */
   criterion: string;
@@ -46,7 +47,7 @@ const CAPABILITIES = [
   { key: 'I', label: 'Import', proves: 'The item is read and stored correctly' },
   { key: 'other', label: 'Other', proves: 'Stories whose name is not a 1EdTech criterion ID' }
 ];
-const MARK: Record<State, string> = { asserted: '✓', todo: '◻', shown: '○' };
+const MARK: Record<State, string> = { asserted: '✓', todo: '◻', xfail: '✗', shown: '○' };
 
 const capabilityOf = (criterion: string) => /-([EIAD])\d+$/.exec(criterion)?.[1] ?? 'other';
 const prettify = (folder: string) =>
@@ -64,7 +65,7 @@ const storyHref = (id: string) => {
 };
 
 const stateOf = (tags: string[]): State =>
-  tags.includes('conformance-todo') ? 'todo' : tags.includes('play-fn') ? 'asserted' : 'shown';
+  tags.includes('todo') ? 'todo' : tags.includes('xfail') ? 'xfail' : tags.includes('play-fn') ? 'asserted' : 'shown';
 
 const ID = /[A-Z]{1,2}\d+[a-z]?-L\d-[EIAD]\d+/g;
 const idsIn = (text: string) => [...new Set(text.replaceAll('_', '-').match(ID) ?? [])];
@@ -108,6 +109,7 @@ const groupsOf = (entries: Entry[]): Group[] => {
 const count = (items: Item[]) => ({
   asserted: items.filter(i => i.state === 'asserted').length,
   todo: items.filter(i => i.state === 'todo').length,
+  xfail: items.filter(i => i.state === 'xfail').length,
   total: items.length
 });
 
@@ -122,7 +124,7 @@ const cellStyle = ({ asserted, total }: { asserted: number; total: number }): CS
 export const ConformanceMatrix = () => {
   const [entries, setEntries] = useState<Entry[] | null>(null);
   const [error, setError] = useState<string>();
-  /** The cell last clicked: its row, and which of the row's stories it counts (a capability, `all` or `todo`). */
+  /** The cell last clicked: its row, and which of the row's stories it counts (a capability, `all`, `todo` or `xfail`). */
   const [picked, setPicked] = useState<{ group: string; filter: string } | null>(null);
 
   useEffect(() => {
@@ -142,7 +144,11 @@ export const ConformanceMatrix = () => {
 
   const groupKey = (group: Group) => `${group.profile}/${group.folder}`;
   const counts = (item: Item, filter: string) =>
-    filter === 'all' ? true : filter === 'todo' ? item.state === 'todo' : item.capability === filter;
+    filter === 'all'
+      ? true
+      : filter === 'todo' || filter === 'xfail'
+        ? item.state === filter
+        : item.capability === filter;
 
   /** A number in the table opens its row's stories below and marks the ones it counts. Again to clear. */
   const pick = (group: Group, filter: string) => {
@@ -196,6 +202,11 @@ export const ConformanceMatrix = () => {
                 To do
               </th>
             )}
+            {all.xfail > 0 && (
+              <th style={center} title="Written and known to fail: not run in CI">
+                Failing
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -208,6 +219,7 @@ export const ConformanceMatrix = () => {
                 {CAPABILITIES.map(c => cell(group, c.key))}
                 <td style={cellStyle(total)}>{link(group, 'all', text(total))}</td>
                 {all.todo > 0 && <td style={center}>{total.todo ? link(group, 'todo', total.todo) : '–'}</td>}
+                {all.xfail > 0 && <td style={center}>{total.xfail ? link(group, 'xfail', total.xfail) : '–'}</td>}
               </tr>
             );
           })}
@@ -225,6 +237,7 @@ export const ConformanceMatrix = () => {
             })}
             <th style={center}>{text(all)}</th>
             {all.todo > 0 && <th style={center}>{all.todo}</th>}
+            {all.xfail > 0 && <th style={center}>{all.xfail}</th>}
           </tr>
         </tfoot>
       </table>
@@ -264,7 +277,11 @@ export const ConformanceMatrix = () => {
     <div>
       <p>
         {`${all.asserted} of ${all.total} conformance stories assert something` +
-          (all.todo ? `; ${all.todo} are placeholders for criteria nothing tests yet.` : '.')}
+          (all.todo
+            ? `; ${all.todo} ${all.todo === 1 ? 'is a placeholder' : 'are placeholders'} for criteria nothing tests yet`
+            : '') +
+          (all.xfail ? `; ${all.xfail} ${all.xfail === 1 ? 'is' : 'are'} written and known to fail` : '') +
+          '.'}
       </p>
       {table}
       <h3>Every story</h3>

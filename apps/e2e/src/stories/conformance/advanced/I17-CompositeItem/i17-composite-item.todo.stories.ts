@@ -7,12 +7,12 @@ type Story = StoryObj;
 /**
  * Criteria of the suite's "I17 - Composite Item" sample (Advanced profile) that nothing tests yet. Each story is an
  * empty placeholder named by its criterion ID. To test one, give it a `play` that asserts what the
- * criterion says and remove the `conformance-todo` and `no-tests` tags: the QTI 3 conformance page counts
+ * criterion says and remove the `todo` tag: the QTI 3 conformance page counts
  * it as tested from then on.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/I17 - Composite Item - to do',
-  tags: ['conformance-todo', 'no-tests'],
+  title: 'qti-conformance/advanced/I17 - Composite Item',
+  tags: ['todo'],
   parameters: { controls: { disable: true }, a11y: { test: 'off' } }
 };
 export default meta;
