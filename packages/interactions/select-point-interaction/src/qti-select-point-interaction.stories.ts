@@ -20,7 +20,7 @@ type Story = StoryObj<QtiSelectPointInteraction & typeof args>;
  */
 const meta: Meta<QtiSelectPointInteraction> = {
   component: 'qti-select-point-interaction',
-  title: '17 Select Point',
+  title: 'Interactions/Select Point',
   args,
   argTypes,
   parameters: {

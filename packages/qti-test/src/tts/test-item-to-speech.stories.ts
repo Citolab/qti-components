@@ -18,7 +18,7 @@ const { events, args, argTypes } = getStorybookHelpers('test-item-to-speech');
 type Story = StoryObj<TestItemToSpeech & typeof args>;
 
 const meta: Meta<TestItemToSpeech> = {
-  title: 'Plugins/Text to speech/test-item-to-speech',
+  title: 'QTI Test/Plugins/Text to speech',
   component: 'test-item-to-speech',
   args: { ...args, language: 'fr-FR' },
   argTypes,

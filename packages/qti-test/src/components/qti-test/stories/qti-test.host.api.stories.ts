@@ -22,7 +22,7 @@ import type { QtiTestState } from '../../../types/qti-test-state';
  * Persistence (`state`, `qti-state-changed`) has its own story: Persist and restore.
  */
 const meta: Meta = {
-  title: 'qti-test/Host API',
+  title: 'API Reference/Test host API',
   component: 'qti-test'
 };
 export default meta;

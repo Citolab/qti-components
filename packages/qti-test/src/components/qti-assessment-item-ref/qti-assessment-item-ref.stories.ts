@@ -9,6 +9,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj<QtiAssessmentItemRef>;
 
 const meta: Meta<QtiAssessmentItemRef & { 'test-url': string }> = {
+  title: 'QTI Test/Building blocks/qti-assessment-item-ref',
   component: 'qti-assessment-item-ref',
   args: { 'test-url': '/assets/qti-conformance/Basic/T4-T7/assessment.xml' }
 };

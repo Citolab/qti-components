@@ -31,7 +31,7 @@ type Story = StoryObj<TestBookmark & typeof args>;
  */
 const meta: Meta<TestBookmark> = {
   tags: ['autodocs'],
-  title: 'Plugins/Bookmark',
+  title: 'QTI Test/Plugins/Bookmark',
   component: 'test-bookmark',
   args,
   argTypes,

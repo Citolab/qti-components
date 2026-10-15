@@ -18,7 +18,7 @@ type Story = StoryObj<QtiTextEntryInteraction>;
  */
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
-  title: '03 Text Entry Interaction/API',
+  title: 'Testing/Interactions/Text Entry/API',
   tags: ['api', 'iol']
 };
 export default meta;

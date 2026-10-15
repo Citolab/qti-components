@@ -96,7 +96,7 @@ const assessmentXML = `<?xml version="1.0" encoding="UTF-8"?>
 </qti-assessment-test>`;
 
 const meta: Meta = {
-  title: 'kennisnet/formative correction',
+  title: 'Cookbook/Kennisnet/Formative correction',
   decorators: [withCorrection],
   parameters: {
     layout: 'fullscreen'

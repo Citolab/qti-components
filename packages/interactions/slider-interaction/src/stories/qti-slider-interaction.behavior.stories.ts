@@ -10,7 +10,7 @@ import type { QtiSliderInteraction } from '../qti-slider-interaction';
 
 const meta: Meta<QtiSliderInteraction> = {
   component: 'qti-slider-interaction',
-  title: '18 Slider/Behavior',
+  title: 'Testing/Interactions/Slider/Behavior',
   tags: ['behavior', 'specific']
 };
 export default meta;

@@ -15,6 +15,7 @@ type Story = StoryObj<QtiFeedbackInline & typeof args>;
  * # qti-feedback-inline
  */
 const meta: Meta<QtiFeedbackInline> = {
+  title: 'QTI Item/Elements/qti-feedback-inline',
   component: 'qti-feedback-inline',
   args,
   argTypes,

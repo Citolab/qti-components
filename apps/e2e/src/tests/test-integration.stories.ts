@@ -8,6 +8,7 @@ import '../../../../.storybook/utilities.css';
 type Story = StoryObj;
 
 const meta: Meta = {
+  title: 'Testing/E2E/test-integration',
   component: 'test-integration',
   tags: ['skip-test'],
   render: () => {

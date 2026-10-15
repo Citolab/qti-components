@@ -8,6 +8,7 @@ import type { QtiChoiceInteraction } from '@qti-components/interactions';
 type Story = StoryObj<QtiTest>;
 
 const meta: Meta<QtiTest> = {
+  title: 'QTI Test/Overview',
   component: 'qti-test',
   subcomponents: { testContainer: 'test-container' },
   args: {},

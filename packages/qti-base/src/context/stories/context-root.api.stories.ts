@@ -17,7 +17,7 @@ import type { QtiContext } from '../qti.context';
  * per run because a custom element can only be defined once.
  */
 const meta: Meta = {
-  title: 'qti-base/Context root',
+  title: 'Testing/Base/Context root',
   parameters: { testTimeout: 15000 }
 };
 export default meta;

@@ -10,6 +10,7 @@ const { events, args, argTypes } = getStorybookHelpers('item-print-variables');
 type Story = StoryObj<ItemPrintVariables & typeof args>;
 
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
+  title: 'QTI Item/item-print-variables',
   component: 'item-container',
   args: { ...args, 'item-url': '/qti-item/example-choice-item.xml' },
   argTypes,

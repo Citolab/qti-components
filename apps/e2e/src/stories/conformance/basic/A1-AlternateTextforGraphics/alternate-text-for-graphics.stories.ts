@@ -10,7 +10,7 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics/A1-L1-D1'
+  title: 'Testing/Conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics/A1-L1-D1'
 };
 export default meta;
 

@@ -12,7 +12,7 @@ type Story = StoryObj<QtiOrderInteraction>;
 
 const meta: Meta<QtiOrderInteraction> = {
   component: 'qti-order-interaction',
-  title: '10 Order/Config Context',
+  title: 'Testing/Interactions/Order/Config Context',
   tags: ['configuration', 'specific', 'iol']
 };
 export default meta;

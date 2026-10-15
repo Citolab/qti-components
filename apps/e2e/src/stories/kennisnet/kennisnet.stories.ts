@@ -5,7 +5,7 @@ import { withCorrection } from './with-correction';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Kennisnet',
+  title: 'Cookbook/Kennisnet/Suite',
   tags: ['autodocs', 'no-tests', 'vrt'],
   decorators: [withCorrection],
   parameters: {

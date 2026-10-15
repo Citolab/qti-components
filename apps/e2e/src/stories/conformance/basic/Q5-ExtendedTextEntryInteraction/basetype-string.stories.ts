@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/Q5 - Extended Text Interaction/baseType-string',
+  title: 'Testing/Conformance/basic/Q5 - Extended Text Interaction/baseType-string',
   beforeEach: async () => {}
 };
 export default meta;

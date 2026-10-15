@@ -18,88 +18,72 @@ const config: StorybookConfig = {
       ? [
           // The single Kennisnet suite now registers the correction element variants and applies the
           // brand itself (see kennisnet/kennisnet.stories.ts), so this one file is the whole VRT set.
-          { directory: '../apps/e2e/src', files: '**/kennisnet.stories.ts', titlePrefix: 'E2E' }
+          { directory: '../apps/e2e/src', files: '**/kennisnet.stories.ts' }
         ]
       : [
           {
             directory: '../docs',
-            files: '**/*.stories.*',
-            titlePrefix: 'Docs'
+            files: '**/*.stories.*'
           },
           {
             directory: '../docs',
-            files: '**/*.mdx',
-            titlePrefix: 'Docs'
+            files: '**/*.mdx'
           },
           {
             directory: '../apps/e2e/src',
-            files: '**/*.stories.*',
-            titlePrefix: 'E2E'
+            files: '**/*.stories.*'
           },
           {
             directory: '../apps/e2e/stories',
-            files: '**/*.stories.*',
-            titlePrefix: 'E2E'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-base/src',
-            files: '**/*.stories.*',
-            titlePrefix: 'Base'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-elements/src/components',
-            files: '**/*.stories.*',
-            titlePrefix: 'QTI Elements'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/interactions',
-            files: '*/src/**/*.stories.*',
-            titlePrefix: 'QTI Interactions'
+            files: '*/src/**/*.stories.*'
           },
           {
             directory: '../packages/qti-item/src/components',
-            files: '**/*.stories.*',
-            titlePrefix: 'Item'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-processing/src/components',
-            files: '**/*.stories.*',
-            titlePrefix: 'QTI Processing'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-test/src/components',
-            files: '**/*.stories.*',
-            titlePrefix: 'Test'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-test/src/components',
-            files: '**/*.mdx',
-            titlePrefix: 'Test'
+            files: '**/*.mdx'
           },
           {
             directory: '../packages/qti-test/src/guides',
-            files: '**/*.stories.*',
-            titlePrefix: 'Guides'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-test/src/guides',
-            files: '**/*.mdx',
-            titlePrefix: 'Guides'
+            files: '**/*.mdx'
           },
           {
             directory: '../packages/qti-test/src/tts',
-            files: '**/*.stories.*',
-            titlePrefix: 'Test'
+            files: '**/*.stories.*'
           },
           {
             directory: '../packages/qti-test/src/tts',
-            files: '**/*.mdx',
-            titlePrefix: 'Test'
+            files: '**/*.mdx'
           },
           {
             directory: '../packages/qti-theme/src',
-            files: '**/*.stories.*',
-            titlePrefix: 'Theme'
+            files: '**/*.stories.*'
           }
         ],
   addons: [

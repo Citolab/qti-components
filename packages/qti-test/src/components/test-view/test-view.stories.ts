@@ -12,7 +12,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-view');
 type Story = StoryObj<TestViewClass & typeof args>;
 
 const meta: Meta<TestViewClass> = {
-  title: 'Plugins/View/test-view',
+  title: 'QTI Test/Plugins/View/test-view',
   component: 'test-view',
   args,
   argTypes,

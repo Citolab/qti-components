@@ -38,7 +38,7 @@ export class ExampleReadingTime extends LitElement {
 if (!customElements.get('example-reading-time')) customElements.define('example-reading-time', ExampleReadingTime);
 
 const meta: Meta = {
-  title: 'Test plugins',
+  title: 'QTI Test/Plugins/Guide',
   parameters: { layout: 'padded' }
 };
 export default meta;
