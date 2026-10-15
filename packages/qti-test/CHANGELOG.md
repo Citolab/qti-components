@@ -1,5 +1,11 @@
 # @qti-components/test
 
+## 2.0.0-next.7
+
+### Patch Changes
+
+- [#310](https://github.com/Citolab/qti-components/pull/310) [`16a7f1d`](https://github.com/Citolab/qti-components/commit/16a7f1d92be2a25dcb866460ccc2cb7dfdc94609) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - `test-print-item-variables` prints a record value field by field (`time: 3.6, point: 455 250`, e.g. the response of a portable custom interaction) instead of `[object Object]`, for the value and the correct response. A correct response of `0` is printed instead of left out.
+
 ## 2.0.0-next.6
 
 ### Patch Changes
