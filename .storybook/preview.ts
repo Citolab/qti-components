@@ -155,6 +155,7 @@ const preview: Preview = {
           // reference). Written out because Storybook reads storySort statically. A new interaction sorts
           // alphabetically after these.
           [
+            'Evidence',
             'Choice',
             [
               'Overview',

@@ -64,7 +64,7 @@ export const TextBesideItsQuestions: StoryObj = {
     const container = canvasElement.querySelector('test-container')!;
     const target = canvasElement.querySelector('[data-stimulus-idref="Stimulus1"]')!;
 
-    await waitFor(() => expect(canvas.getByText('An Unbelievable Night', {}, undefined)).toBeTruthy(), {
+    await waitFor(() => expect(canvas.getByText('An Unbelievable Night')).toBeTruthy(), {
       timeout: 15000
     });
     expect(target).toContainElement(canvas.getByText('An Unbelievable Night'));
