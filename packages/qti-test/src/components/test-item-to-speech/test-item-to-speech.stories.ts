@@ -18,6 +18,7 @@ const { events, args, argTypes } = getStorybookHelpers('test-item-to-speech');
 type Story = StoryObj<TestItemToSpeech & typeof args>;
 
 const meta: Meta<TestItemToSpeech> = {
+  title: 'Cookbook/TTS/Item to speech',
   component: 'test-item-to-speech',
   args: { ...args, language: 'fr-FR' },
   argTypes,

@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/Q20 - Text Entry Interaction/baseType-string',
+  title: 'Testing/Conformance/basic/Q20 - Text Entry Interaction/baseType-string',
   beforeEach: async () => {}
 };
 export default meta;

@@ -17,7 +17,7 @@ type Story = StoryObj<QtiPortableCustomInteraction>;
  */
 const meta: Meta<QtiPortableCustomInteraction> = {
   component: 'qti-portable-custom-interaction',
-  title: '23 Portable Custom Interaction (PCI)/API',
+  title: 'Testing/Interactions/Portable Custom Interaction/API',
   tags: ['api']
 };
 export default meta;

@@ -18,7 +18,7 @@ type Story = StoryObj<QtiUploadInteraction & typeof args>;
  */
 const meta: Meta<QtiUploadInteraction> = {
   component: 'qti-upload-interaction',
-  title: '19 Upload',
+  title: 'Interactions/Upload',
   args,
   argTypes,
   parameters: {

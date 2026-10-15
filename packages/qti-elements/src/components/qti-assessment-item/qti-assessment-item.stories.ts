@@ -13,6 +13,7 @@ type Story = StoryObj<QtiAssessmentItem & typeof args>;
  * # qti-assessment-item
  */
 const meta: Meta<QtiAssessmentItem> = {
+  title: 'QTI Item/Elements/qti-assessment-item',
   component: 'qti-assessment-item',
   args: {
     ...args,

@@ -20,6 +20,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-section-b
 type Story = StoryObj<TestSectionButtonsStamp & typeof args>;
 
 const meta: Meta<TestSectionButtonsStamp> = {
+  title: 'QTI Test/Building blocks/test-section-buttons-stamp',
   component: 'test-section-buttons-stamp',
   args,
   argTypes,

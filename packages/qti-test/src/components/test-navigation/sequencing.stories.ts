@@ -28,7 +28,7 @@ import type { QtiSimpleChoice } from '@qti-components/interactions-core';
  *   running out of items (or `EXIT_TEST`) with `cito-test-end-reached`.
  */
 const meta: Meta = {
-  title: 'test-navigation/Sequencing',
+  title: 'QTI Test/Navigation/Sequencing',
   component: 'qti-test',
   parameters: { testTimeout: 30000 }
 };

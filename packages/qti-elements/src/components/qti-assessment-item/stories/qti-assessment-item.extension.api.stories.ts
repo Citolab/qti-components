@@ -16,7 +16,7 @@ import type { QtiAssessmentItem } from '../qti-assessment-item';
  * `@citolab/qti-components/qti-base`.
  */
 const meta: Meta = {
-  title: 'qti-elements/qti-assessment-item/Extension API',
+  title: 'API Reference/Extension API',
   component: 'qti-assessment-item'
 };
 export default meta;

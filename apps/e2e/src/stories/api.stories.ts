@@ -8,6 +8,7 @@ import type { QtiItem } from '@qti-components/item';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
+  title: 'Testing/E2E/api',
   argTypes: {
     scoreBackend: { control: { type: 'boolean' } },
     packages: {

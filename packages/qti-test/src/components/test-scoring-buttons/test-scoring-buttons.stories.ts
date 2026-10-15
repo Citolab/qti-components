@@ -13,6 +13,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-scoring-b
 type Story = StoryObj<TestScoringButtons & typeof args>;
 
 const meta: Meta<TestScoringButtons> = {
+  title: 'QTI Test/Building blocks/test-scoring-buttons',
   component: 'test-scoring-buttons',
   args,
   argTypes,

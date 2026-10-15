@@ -29,7 +29,7 @@ type Story = StoryObj<QtiMatchInteraction & typeof args>;
  */
 const meta: Meta<QtiMatchInteraction & { class: InputType; 'response-identifier': string }> = {
   component: 'qti-match-interaction',
-  title: '09 Match',
+  title: 'Interactions/Match',
 
   subcomponents: { QtiSimpleAssociableChoice: 'qti-simple-associable-choice' },
   args: { ...args, 'response-identifier': 'RESPONSE' } /* set default value for response-identifier */,

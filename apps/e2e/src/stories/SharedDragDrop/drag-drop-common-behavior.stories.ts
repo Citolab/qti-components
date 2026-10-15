@@ -9,7 +9,7 @@ import type { QtiAssessmentItem } from '@citolab/qti-components';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Shared Drag Drop Behavior'
+  title: 'Testing/Conformance/advanced/Shared Drag Drop Behavior'
 };
 export default meta;
 

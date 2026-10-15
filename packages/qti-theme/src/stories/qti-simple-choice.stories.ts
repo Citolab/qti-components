@@ -4,7 +4,7 @@ import type { Meta } from '@storybook/web-components-vite';
 const html = String.raw;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'theme/qti-simple-choice',
+  title: 'Theming/Simple choice',
   parameters: {
     backgrounds: {
       // 👇 Set default background value for all component stories

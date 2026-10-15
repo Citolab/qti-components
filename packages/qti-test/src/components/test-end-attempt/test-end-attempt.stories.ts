@@ -17,6 +17,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-end-attem
 type Story = StoryObj<TestEndAttempt & typeof args>;
 
 const meta: Meta<TestEndAttempt> = {
+  title: 'QTI Test/Building blocks/test-end-attempt',
   component: 'test-end-attempt',
   args,
   argTypes,

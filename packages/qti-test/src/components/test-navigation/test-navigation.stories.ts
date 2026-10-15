@@ -9,6 +9,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-navigatio
 type Story = StoryObj<TestNavigation & typeof args>;
 
 const meta: Meta<TestNavigation> = {
+  title: 'QTI Test/Navigation/Overview',
   component: 'test-navigation',
   args,
   argTypes,

@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q12 - Inline Choice Interaction',
+  title: 'Testing/Conformance/advanced/Q12 - Inline Choice Interaction',
   tags: ['autodocs'],
   beforeEach: async () => {}
 };

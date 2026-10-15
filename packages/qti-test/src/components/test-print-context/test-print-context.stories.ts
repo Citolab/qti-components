@@ -11,6 +11,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-print-con
 type Story = StoryObj<TestPrintContext & typeof args>;
 
 const meta: Meta<TestPrintContext> = {
+  title: 'QTI Test/Building blocks/test-print-context',
   component: 'test-print-context',
   args,
   argTypes,

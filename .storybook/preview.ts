@@ -133,7 +133,23 @@ const preview: Preview = {
     },
 
     options: {
-      storySort: { method: 'alphabetical' }
+      storySort: {
+        method: 'alphabetical',
+        // Sidebar order = reading order; 'Testing' and 'Maintainers' are last. See plans/storybook-toc.md.
+        order: [
+          'Introduction',
+          'Concepts',
+          'QTI Test',
+          ['Overview', 'Navigation', 'Examples', 'Persist and restore', 'Plugins', 'Building blocks'],
+          'QTI Item',
+          'Interactions',
+          'Theming',
+          'API Reference',
+          'Cookbook',
+          'Testing',
+          'Maintainers'
+        ]
+      }
     },
 
     a11y: {

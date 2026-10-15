@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import '../../../../.storybook/utilities.css';
 
 const meta: Meta = {
-  title: 'Qti Test',
+  title: 'QTI Test/Examples',
   argTypes: {
     packages: {
       options: packages.packages,

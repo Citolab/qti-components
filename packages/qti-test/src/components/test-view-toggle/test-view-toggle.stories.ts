@@ -12,6 +12,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-view-togg
 type Story = StoryObj<TestViewToggle & typeof args>;
 
 const meta: Meta<TestViewToggle> = {
+  title: 'QTI Test/Building blocks/test-view-toggle',
   component: 'test-view-toggle',
   args,
   argTypes,

@@ -45,7 +45,7 @@ type RestoreStoryOptions = {
 };
 
 const meta: Meta = {
-  title: 'qti-conformance/portable-custom-interaction'
+  title: 'Testing/Conformance/portable-custom-interaction'
 };
 export default meta;
 
