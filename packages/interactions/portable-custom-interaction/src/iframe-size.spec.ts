@@ -8,15 +8,20 @@ const waitFor = async (check: () => boolean, timeout = 3000) => {
   }
 };
 
-/** A PCI element in a host of the given width, with its iframe document loaded. */
+/**
+ * A PCI element in a host of the given width, with its iframe initialized. `container` is the
+ * interaction markup the PCI renders into: initializing adds it to #pci-container, so content set
+ * before that would end up next to it and the iframe would be its 50px min-height higher.
+ */
 const mountPci = async (width: number) => {
   const host = document.createElement('div');
   host.style.width = `${width}px`;
   document.body.appendChild(host);
   host.appendChild(document.createElement('qti-portable-custom-interaction'));
-  await waitFor(() => !!host.querySelector('iframe')?.contentDocument?.getElementById('pci-container'));
-  const iframe = host.querySelector('iframe')!;
-  return { host, iframe, container: iframe.contentDocument!.getElementById('pci-container')! };
+  const markup = () =>
+    host.querySelector('iframe')?.contentDocument?.querySelector<HTMLElement>('#pci-container qti-interaction-markup');
+  await waitFor(() => !!markup());
+  return { host, iframe: host.querySelector('iframe')!, container: markup()! };
 };
 
 describe('the size of the PCI iframe', () => {
