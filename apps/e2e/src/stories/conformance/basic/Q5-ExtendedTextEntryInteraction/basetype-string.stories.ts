@@ -166,8 +166,8 @@ Wish you could see it too!`;
   ]
 };
 
-export const Q5L1D104: Story = {
-  name: 'Q5_L1_D104',
+export const Q5_L1_D104: Story = {
+  name: 'Q5-L1-D104',
   render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {

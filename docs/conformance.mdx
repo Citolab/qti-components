@@ -26,6 +26,8 @@ there is nothing to run or generate: add a story and it appears here.
 - **To do** (shown once a placeholder exists) counts placeholder stories: criteria of the suite that nothing
   tests yet. Each is an empty story tagged `conformance-todo` and `no-tests`, with the criterion's text in
   its docs.
+- A story's criteria are the IDs in its name (a name may list several, `T4-L1-D1, T7-L1-D2`), else the ID in its
+  export name, else the one in its title. A story that lists several IDs counts once and covers each.
 - Click a number in the table to open its row's stories below, with the ones that number counts marked and
   the rest dimmed. Click it again to clear. Click a story to open it.
 

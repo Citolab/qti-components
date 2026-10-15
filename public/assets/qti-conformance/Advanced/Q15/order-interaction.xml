@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
     identifier="q10-order-interaction"
-    title="Q10 - Order Interaction"
+    title="Q15 - Order Interaction"
     adaptive="false" time-dependent="false">
     <qti-response-declaration identifier="RESPONSE" cardinality="ordered" base-type="identifier"></qti-response-declaration>
     <qti-item-body>

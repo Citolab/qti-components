@@ -20,12 +20,18 @@ interface Entry {
   name: string;
   exportName: string;
   importPath: string;
+  title: string;
   tags: string[];
 }
 
 type State = 'asserted' | 'todo' | 'shown';
 interface Item {
+  /** What the chip shows: the first criterion ID, with how many more the story covers. */
   criterion: string;
+  /** Every criterion ID the story covers. */
+  criteria: string[];
+  /** Delivery, import, ... : the capability of the story's criteria (the first one's when they differ). */
+  capability: string;
   state: State;
   storyId: string;
 }
@@ -60,9 +66,20 @@ const storyHref = (id: string) => {
 const stateOf = (tags: string[]): State =>
   tags.includes('conformance-todo') ? 'todo' : tags.includes('play-fn') ? 'asserted' : 'shown';
 
-/** The criterion ID is the story's name, or its export name (`Q2_L1_D51`). */
-const criterionOf = (entry: Entry) =>
-  /^[A-Z]{1,2}\d+[a-z]?-L\d-[EIAD]\d+$/.test(entry.name) ? entry.name : entry.exportName.replaceAll('_', '-');
+const ID = /[A-Z]{1,2}\d+[a-z]?-L\d-[EIAD]\d+/g;
+const idsIn = (text: string) => [...new Set(text.replaceAll('_', '-').match(ID) ?? [])];
+
+/**
+ * The criteria a story covers: every ID in its name (`Q2-L1-D51`, `Q5_L1_D104`, or a list such as
+ * `T4-L1-D1, T7-L1-D2`), else the ID in its export name, else the one in its title.
+ */
+const criteriaOf = (entry: Entry) => {
+  const named = idsIn(entry.name);
+  if (named.length) return named;
+  const exported = idsIn(entry.exportName);
+  if (exported.length) return exported;
+  return idsIn(entry.title);
+};
 
 const groupsOf = (entries: Entry[]): Group[] => {
   const groups = new Map<string, Group>();
@@ -71,7 +88,16 @@ const groupsOf = (entries: Entry[]): Group[] => {
     if (entry.type !== 'story' || !profile) continue;
     const key = `${profile}/${folder}`;
     const group = groups.get(key) ?? { profile, folder: folder.endsWith('.ts') ? profile : folder, items: [] };
-    group.items.push({ criterion: criterionOf(entry), state: stateOf(entry.tags), storyId: entry.id });
+    const criteria = criteriaOf(entry);
+    // No suite ID (the PCI stories are `Q16-PCI-D11`): the export name still ends in a capability and number.
+    const label = criteria[0] ?? entry.exportName.replaceAll('_', '-');
+    group.items.push({
+      criterion: criteria.length > 1 ? `${criteria[0]} +${criteria.length - 1}` : label,
+      criteria,
+      capability: capabilityOf(label),
+      state: stateOf(entry.tags),
+      storyId: entry.id
+    });
     groups.set(key, group);
   }
   return [...groups.values()].sort(
@@ -116,7 +142,7 @@ export const ConformanceMatrix = () => {
 
   const groupKey = (group: Group) => `${group.profile}/${group.folder}`;
   const counts = (item: Item, filter: string) =>
-    filter === 'all' ? true : filter === 'todo' ? item.state === 'todo' : capabilityOf(item.criterion) === filter;
+    filter === 'all' ? true : filter === 'todo' ? item.state === 'todo' : item.capability === filter;
 
   /** A number in the table opens its row's stories below and marks the ones it counts. Again to clear. */
   const pick = (group: Group, filter: string) => {
@@ -144,7 +170,7 @@ export const ConformanceMatrix = () => {
   );
 
   const cell = (group: Group, key: string) => {
-    const n = count(group.items.filter(i => capabilityOf(i.criterion) === key));
+    const n = count(group.items.filter(i => i.capability === key));
     return (
       <td key={key} style={cellStyle(n)}>
         {n.total ? link(group, key, text(n)) : text(n)}
@@ -190,7 +216,7 @@ export const ConformanceMatrix = () => {
           <tr>
             <th colSpan={2}>All conformance stories</th>
             {CAPABILITIES.map(c => {
-              const n = count(groups.flatMap(g => g.items.filter(i => capabilityOf(i.criterion) === c.key)));
+              const n = count(groups.flatMap(g => g.items.filter(i => i.capability === c.key)));
               return (
                 <th key={c.key} style={center}>
                   {text(n)}
@@ -214,7 +240,7 @@ export const ConformanceMatrix = () => {
             key={item.storyId}
             href={storyHref(item.storyId)}
             target="_top"
-            title={item.state}
+            title={`${item.state}${item.criteria.length ? ': ' + item.criteria.join(', ') : ''}`}
             style={{
               padding: '0 0.4rem',
               border: '1px solid currentColor',
