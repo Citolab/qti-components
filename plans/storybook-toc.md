@@ -1,79 +1,80 @@
-# Storybook table of contents (and docs split)
+# Storybook table of contents
 
 ## Context
-Storybook has 143 story files under 10+ unrelated prefixes (`Docs`, `E2E`, `Base`, `QTI Elements`, `QTI Interactions`, `Item`, `QTI Processing`, `Test`, `Theme`) plus stray titles (`Meerkeuzevraag`, `Test title 2`, `Stories/shuffle`, `Qti Test`, `TTS: no lang`, ~17× `QTI Kennisnet/Regression`, `qti-conformance/...`). Most are tests, not things a person reads. Goal: a sidebar that answers "what can I do" for a human, with tests moved out, and a subset publishable as a docs Storybook.
+Storybook had 143 story files under 10+ unrelated prefixes (`Docs`, `E2E`, `Base`, `QTI Elements`,
+`QTI Interactions`, `Item`, `QTI Processing`, `Test`, `Theme`) plus stray titles (`Meerkeuzevraag`,
+`Test title 2`, `Stories/shuffle`, `TTS: no lang`, ~17x `QTI Kennisnet/Regression`, ...). The sidebar
+now answers "what can I do" for a developer, and keeps the tests visible as evidence.
+
+Storybook serves two purposes at once: documentation and a GUI for developers, and a testing
+ground. Both stay in one Storybook; the structure keeps them apart.
 
 ## Split of responsibility
 | Surface | Audience | Content |
 | --- | --- | --- |
-| Astro site | integrator who has QTI XML | Markup only: build a `qti-test`, items, TTS, info items, item links; a handful of CSS variables; events out / state back in; maybe `configurationContext`. No JS API. |
-| Storybook (published docs build) | developer extending or hosting | Full public API, extending interactions (can / cannot), qti-test plugins, per-component demos, cookbook. |
-| Storybook (dev only) | us | Conformance, regression, VRT, diagnostics. |
-| Spec files (`*.spec.ts`, `tests` project) | CI | Everything that has no visual value. |
+| Astro site | integrator who has QTI XML | Markup, plus a handful of CSS variables, events out and state back in. No JavaScript API. Not touched by the Storybook work. |
+| Storybook | developer hosting, extending or working on components | Concepts, the public API, extending, cookbook, every component with its evidence, conformance and regression. |
+| Spec files (`*.spec.ts`, `tests` project) | CI | Logic with nothing to look at. Not the evidence stories. |
 
-## Proposed sidebar (top level, in this order)
+## Sidebar (top level, in this order)
 ```
-1  Introduction            (mdx, one page: what is where, link to Astro site)
-2  Concepts                (mdx: item vs test, host/state flow — short)
-3  QTI Test                ← hero section, most-read
-     Overview              (qti-test, minimal full test)
-     Navigation            (linear, nonlinear, sequencing, adaptive)
-     Scoring & outcomes
-     Persist & restore
-     Plugins               (creating plugins for qti-test; existing plugin stories)
-     Building blocks       (test-container, test-next/prev, test-item-link, section links, stamps, view toggle, paging buttons)
-4  QTI Item                (qti-item, item-container, print variables, feedback, modal feedback)
-5  Interactions            (one folder per interaction, NUMBERING DROPPED; sorted alphabetically)
-     Choice
-       Overview            (the single autodocs story; only file with getStorybookHelpers)
-       Examples            (a few variants: cardinality, orientation, shuffle, vocabulary)
-     …Text Entry, Extended Text, Match, Order, Gap Match, Hotspot, …
-6  Extending QTI          (three topics, in this order)
-     Creating an extended interaction   (subclass Interaction; extend a built-in via class="type:…" + transformer)
-     Creating a plugin                  (guide + requests; the built-in plugins stay under QTI Test/Plugins as reference)
-     Public API                         (what extenders may depend on; links to API Reference)
-7  Theming                 (CSS variables contract, themes, parts/states; replaces `Theme`, `css-contract`)
-8  API Reference           (public-api.mdx, custom-elements, Host API, Extension API, configuration context, events, ElementInternals/a11y state)
-9  Cookbook                (how the implementation projects use it — one story per host scenario)
-     Kennisnet             (formative correction, retry, show answer)
-     CitoTestUit           (fullscreen wrapper, persist/restore, scoring)
-     PeilingLezen          (extended interactions, custom interaction)
-     TTS                   (lang variants: element/item/none)
-10 Testing  [dev only, tag `!docs`]
-     Conformance           (current `qti-conformance/*`)
-     Regression            (item001–017, VRT; was `QTI Kennisnet/Regression`)
-     Diagnostics           (layout invariance)
-11 Maintainers (publishing.mdx, hi-qti)
+Introduction
+Concepts                  how it fits together: item and test, variables, context, host in/out
+QTI Test
+  Overview, Navigation (Linear, Adaptive, Sequencing), Examples, Persist and restore
+  Plugins                 the built-in plugins as reference: Text to speech, Bookmark, Print, Scoring, Stamp, View
+  Building blocks         test-container, test-next/prev, test-item-link, section links, end attempt, ...
+QTI Item                  qti-item, item-container, print variables, elements (feedback, stimulus-ref, stylesheet)
+Interactions
+  Evidence                generated matrix: interaction x topic, story counts
+  <Name>/Overview         one per interaction, the only file with autodocs and getStorybookHelpers
+  <Name>/<Topic>          Accessibility, API, Behavior, Configuration, Config Context, DOM Manipulation,
+                          Forms, Theming, Validation, Vocabulary (Choice is the reference)
+Extending QTI
+  Creating an extended interaction   subclass Interaction; extend a built-in via class="type:..." + transformer
+  Creating a plugin                  guide and requests
+  Public API                         what extenders may depend on; links to API Reference
+Theming                   CSS variable contract, theme
+API Reference             Public API, custom elements manifest, Host API, Extension API, Test host API
+Cookbook                  one recipe per host scenario: save and resume, bookmarks, review, backend scoring,
+                          text beside its questions, plus the Kennisnet suite and corrections
+Testing                   Conformance, Regression (VRT), Diagnostics, Shuffle, Base, Processing, E2E
+Maintainers               Publishing
 ```
 Rules behind it:
-- Sort by task, not by package. Package structure (`Base`, `QTI Processing`, `QTI Elements`) disappears from navigation.
-- Exactly one story per interaction is the "Overview"; the scenario stories (a11y, api, forms, validation, behavior, config) sit next to it in the same folder. Keep the file taxonomy from `AGENTS.md`.
+- Sort by task, not by package. Package names (`Base`, `QTI Processing`, `QTI Elements`) are gone from navigation.
+- Every story file has an explicit `title:`; there are no `titlePrefix` globs. `storySort` in
+  `.storybook/preview.ts` is written out in full because Storybook reads it statically.
 - Names are English, no numeric prefixes, no brand names outside Cookbook.
 
-## Evidence stays visible (decision, replaces "move to spec")
+## Evidence stays visible
 Scenario stories (accessibility, API, behavior, configuration, config context, DOM, forms, theming,
 validation, vocabulary) are evidence a human can read, so they stay stories, in the interaction's own
-folder: `Interactions/<Name>/Overview`, then the topics. Choice is the reference; the other
-interactions copy its topics. Only logic with nothing to look at is a spec (the `*.spec.ts` helpers).
-A generated evidence matrix (interaction x topic, story counts from `index.json`) shows the gaps.
+folder. Choice is the reference; the other interactions copy its topics. The Evidence page shows the
+gaps. Only logic with nothing to look at is a spec.
 
-## Docs build
-- Tag-driven: stories tagged `dev` or `test` are excluded from the published build via `tags.exclude` (`storybook build --test`-style or a `STORYBOOK_DOCS=1` env in `.storybook/main.ts`, same pattern as the existing `VRT=1` branch).
-- Replace the 9 `titlePrefix` globs in `.storybook/main.ts` with explicit `title:` per file (autotitle) so the tree above is stable; set `storySort` in `.storybook/preview.ts` with the top-level order above.
-- Play functions: separate follow-up (disable auto-run via a global `parameters.test`/`tags` toggle; run only in `test-runner`/vitest). The TOC doesn't depend on it.
+The Overview of an interaction holds demos: a `Default` driven by controls and render-only variants.
+Stories whose `play` is a behavior test live in the `Behavior` topic. A `play` that merely replays a
+scripted demo (QTI Test navigation, plugins) stays where it is: it changes nothing a reader would not
+choose to see, and text-to-speech stubs `speechSynthesis`, so browsing makes no sound.
 
-## Open decisions for you
-1. Does Kennisnet/CitoTestUit/PeilingLezen material belong in the public Cookbook, or in dev-only Testing? (affects the docs build)
-2. Keep `Concepts` as its own page, or fold into Introduction?
-3. Conformance + 17 regression stories: stay as stories (VRT needs them) in a hidden `Testing` branch — OK?
+## Decisions
+- Kennisnet, CitoTestUit and PeilingLezen material is public: it is the Cookbook.
+- `Concepts` is its own page.
+- Conformance and the 17 regression stories stay stories (VRT needs them) under `Testing`.
+- No docs-only Storybook build, no `!docs` tag.
+- No global switch for autoplay. The audit found the Overview files, where people browse, hold at
+  most 7 mutating stories left across 21 interactions, and the QTI Test sections are scripted demos
+  or harmless tests.
 
-## Verification (when implemented)
+## Verification
 - `pnpm run storybook` and walk the tree top to bottom; no orphan titles.
-- `pnpm run test` (stories + tests projects) and `pnpm run test:vrt` must still pass — VRT globs `apps/e2e/src/**/kennisnet.stories.ts` and the titlePrefix `E2E`; changing that title breaks baseline names, so re-title must keep baseline filenames or regenerate them deliberately.
-- Build the docs-only Storybook and confirm `Testing` is absent.
-- Not yet done: counting which stories have play functions (103 files do) and which of them assert only — needed before the spec migration.
+- `pnpm run test` (stories and tests projects) and `pnpm run test:vrt` pass. VRT globs
+  `apps/e2e/src/**/kennisnet.stories.ts`; its baselines are keyed by file, not by title.
+- Open `Interactions/Evidence` and check that the counts match the sidebar.
 
-## Next steps (separate plans)
-1. Astro trim (remove JS/API pages; keep markup + CSS variables + events/state).
-2. Story → spec migration list.
-3. Play-function opt-in.
+## Open
+- Replicate Choice's evidence topics in the other interactions (see the Evidence page for the gaps).
+- Decide whether `transformer.extendElementsWithClass` joins the Public API: the extended-interaction
+  guide uses it, and only `extendElementName` is listed today.
+- The Astro site still documents JavaScript; trimming it is a separate piece of work.
