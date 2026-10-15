@@ -28,19 +28,22 @@ Storybook has 143 story files under 10+ unrelated prefixes (`Docs`, `E2E`, `Base
        Overview            (the single autodocs story; only file with getStorybookHelpers)
        Examples            (a few variants: cardinality, orientation, shuffle, vocabulary)
      …Text Entry, Extended Text, Match, Order, Gap Match, Hotspot, …
-   Extending Interactions  (what you can / can't do; mirrors peilinglezen usage; custom + PCI)
-6  Theming                 (CSS variables contract, themes, parts/states; replaces `Theme`, `css-contract`)
-7  API Reference           (public-api.mdx, custom-elements, Host API, Extension API, configuration context, events, ElementInternals/a11y state)
-8  Cookbook                (how the implementation projects use it — one story per host scenario)
+6  Extending QTI          (three topics, in this order)
+     Creating an extended interaction   (subclass Interaction; extend a built-in via class="type:…" + transformer)
+     Creating a plugin                  (guide + requests; the built-in plugins stay under QTI Test/Plugins as reference)
+     Public API                         (what extenders may depend on; links to API Reference)
+7  Theming                 (CSS variables contract, themes, parts/states; replaces `Theme`, `css-contract`)
+8  API Reference           (public-api.mdx, custom-elements, Host API, Extension API, configuration context, events, ElementInternals/a11y state)
+9  Cookbook                (how the implementation projects use it — one story per host scenario)
      Kennisnet             (formative correction, retry, show answer)
      CitoTestUit           (fullscreen wrapper, persist/restore, scoring)
      PeilingLezen          (extended interactions, custom interaction)
      TTS                   (lang variants: element/item/none)
-9  Testing  [dev only, tag `!docs`]
+10 Testing  [dev only, tag `!docs`]
      Conformance           (current `qti-conformance/*`)
      Regression            (item001–017, VRT; was `QTI Kennisnet/Regression`)
      Diagnostics           (layout invariance)
-10 Publishing / Maintainers (publishing.mdx, hi-qti)
+11 Maintainers (publishing.mdx, hi-qti)
 ```
 Rules behind it:
 - Sort by task, not by package. Package structure (`Base`, `QTI Processing`, `QTI Elements`) disappears from navigation.

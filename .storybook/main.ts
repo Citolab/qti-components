@@ -50,6 +50,10 @@ const config: StorybookConfig = {
             files: '*/src/**/*.stories.*'
           },
           {
+            directory: '../packages/qti-interactions/src/guides',
+            files: '**/*.@(stories.*|mdx)'
+          },
+          {
             directory: '../packages/qti-item/src/components',
             files: '**/*.stories.*'
           },
