@@ -22,7 +22,7 @@ import {
 } from './record-response';
 import requireJsSource from './vendor/require-js';
 
-import type { CSSResultGroup } from 'lit';
+import type { CSSResultGroup, PropertyValues } from 'lit';
 import type { BaseType, Cardinality, ItemContext, QtiContext, RecordValue } from '@qti-components/base';
 import type { PciInteractionStatus, PciResponseDeclaration, QtiVariableJSON, ResponseVariableType } from './interface';
 
@@ -93,6 +93,31 @@ export class QtiPortableCustomInteraction extends Interaction {
 
   @property({ type: Boolean, attribute: 'data-use-default-paths' })
   useDefaultPaths = false;
+
+  /**
+   * Run the PCI in a sandboxed iframe: `sandbox="allow-scripts"`, without `allow-same-origin`.
+   *
+   * By default the iframe is a plain `srcdoc` frame, which is same-origin with the page: the PCI's
+   * code can reach the host's DOM, storage, cookies and anything else on that origin. A host that
+   * runs PCIs it does not trust sets `sandboxed`; the frame then gets an opaque origin and talks
+   * to the host only through the postMessage bridge, which works either way.
+   *
+   * Opt-in because an opaque origin changes what the PCI can load: it is no longer controlled by
+   * the page's Service Worker, `fetch`/XHR of its own files become cross-origin (CORS, `Origin:
+   * null`), `localStorage`/`sessionStorage`/IndexedDB/cookies throw, and popups, modal dialogs,
+   * forms and downloads are blocked. `<script src>`, `<img>`, `<video>`/`<audio>` and `<link
+   * rel=stylesheet>` load cross-origin without CORS, so a PCI that loads its resources by tag
+   * keeps working.
+   *
+   * Not a `data-*` attribute: those are the PCI's own properties and are handed to it in its
+   * configuration, and this is the host's decision, not the item's. Not `sandbox` either: on an
+   * iframe that is a token list where the empty value also blocks scripts; this is a plain switch.
+   *
+   * Reflected, so a clone (the correct-response viewer) is sandboxed too. Changing it on a
+   * connected interaction rebuilds the iframe.
+   */
+  @property({ type: Boolean, reflect: true })
+  sandboxed = false;
 
   /**
    * Item lifecycle status handed to the PCI in its `getInstance` configuration.
@@ -728,6 +753,10 @@ export class QtiPortableCustomInteraction extends Interaction {
     this.iframe.style.width = '100%';
     this.iframe.style.border = 'none';
     this.iframe.style.display = 'block';
+    // Before `srcdoc`: the sandboxing flags of a frame are fixed when it navigates.
+    if (this.sandboxed) {
+      this.iframe.setAttribute('sandbox', 'allow-scripts');
+    }
 
     // Handle iframe load event
     this.iframe.onload = () => {
@@ -750,7 +779,8 @@ export class QtiPortableCustomInteraction extends Interaction {
     // every request made from inside the PCI - module scripts, images, media, stylesheets, fetches -
     // bypass it and hit the network instead. An `srcdoc` frame inherits this document's URL and
     // stays controlled by the same Service Worker. It is same-origin either way, and messages are
-    // posted with a `'*'` target origin, so nothing about postMessage changes.
+    // posted with a `'*'` target origin, so nothing about postMessage changes. A `sandboxed` frame
+    // has an opaque origin instead, and so is not controlled by the Service Worker (see `sandboxed`).
     this.iframe.srcdoc = iframeContent;
 
     // Append iframe to component
@@ -854,6 +884,28 @@ export class QtiPortableCustomInteraction extends Interaction {
       this.response = (this.responseVariable?.value as string | string[] | null) ?? null;
     }
     window.addEventListener('message', this.handleIframeMessage);
+    this.createIframe();
+  }
+
+  override updated(changedProperties: PropertyValues<this>): void {
+    super.updated(changedProperties);
+    // A frame's sandboxing flags only apply when it navigates, so a change after the iframe exists
+    // needs a new one. Set before connecting (the usual case), the iframe already matches.
+    if (
+      changedProperties.has('sandboxed') &&
+      this.isConnected &&
+      this.iframe &&
+      this.iframe.hasAttribute('sandbox') !== this.sandboxed
+    ) {
+      this.#rebuildIframe();
+    }
+  }
+
+  #rebuildIframe() {
+    this.iframe.remove();
+    this._iframeLoaded = false;
+    // The new frame may post from another origin (`null` when sandboxed): pin it afresh.
+    this._iframeMessageOrigin = null;
     this.createIframe();
   }
 

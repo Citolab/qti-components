@@ -168,3 +168,83 @@ export const ShowCorrectResponse: Story = {
     });
   }
 };
+
+/**
+ * The sandboxed frame's document is out of reach of the host, so its content comes over the PCI
+ * bridge: the `getContent` message the iframe runtime answers.
+ */
+const iframeHtmlByMessage = (pci: HTMLElement): Promise<string> =>
+  new Promise(resolve => {
+    const messageId = `get-content-${Math.random()}`;
+    const onMessage = (event: MessageEvent) => {
+      if (event.data?.method === 'getContentResponse' && event.data?.messageId === messageId) {
+        window.removeEventListener('message', onMessage);
+        resolve(event.data.content as string);
+      }
+    };
+    window.addEventListener('message', onMessage);
+    (pci as unknown as { sendMessageToIframe(method: string, params: unknown): void }).sendMessageToIframe(
+      'getContent',
+      { messageId }
+    );
+    setTimeout(() => {
+      window.removeEventListener('message', onMessage);
+      resolve('');
+    }, 2000);
+  });
+
+/**
+ * With `sandboxed` on the interaction, the correct-response viewer, a clone, runs sandboxed too
+ * and still paints the correct response it is handed by postMessage.
+ */
+export const ShowCorrectResponseSandboxed: Story = {
+  render: () => html`
+    <qti-item>
+      <item-container
+        .itemXML=${itemXML.replace('<qti-portable-custom-interaction', '<qti-portable-custom-interaction sandboxed=""')}
+      ></item-container>
+    </qti-item>
+  `,
+  play: async ({ canvasElement }) => {
+    const assessmentItem = await waitFor(
+      () => {
+        const itemContainer = storyRoot(canvasElement).querySelector('item-container') as HTMLElement | null;
+        const item = itemContainer?.shadowRoot?.querySelector<CorrectionAssessmentItem>('qti-assessment-item');
+        if (!item) throw new Error('assessmentItem is not defined');
+        if (!item.querySelector('qti-portable-custom-interaction > iframe')) {
+          throw new Error('interaction not rendered');
+        }
+        return item;
+      },
+      { timeout: 10000, interval: 500 }
+    );
+    expect(assessmentItem.querySelector('qti-portable-custom-interaction > iframe')?.getAttribute('sandbox')).toBe(
+      'allow-scripts'
+    );
+
+    assessmentItem.showCorrectResponse(true);
+    const viewer = await waitFor(
+      () => {
+        const element = assessmentItem.querySelector(
+          '[id^="correct-response-container-"] qti-portable-custom-interaction'
+        );
+        if (!element) throw new Error('correct response viewer not found');
+        return element as HTMLElement;
+      },
+      { timeout: 10000, interval: 500 }
+    );
+    const viewerFrame = viewer.querySelector('iframe') as HTMLIFrameElement;
+    expect(viewerFrame.getAttribute('sandbox')).toBe('allow-scripts');
+    expect(viewerFrame.contentDocument).toBeNull();
+
+    await waitFor(
+      async () => {
+        const viewerHtml = await iframeHtmlByMessage(viewer);
+        expect(viewerHtml).toContain('fill="red"');
+        expect(viewerHtml).toContain('fill="blue"');
+        expect(viewerHtml).toContain('fill="green"');
+      },
+      { timeout: 10000, interval: 500 }
+    );
+  }
+};
