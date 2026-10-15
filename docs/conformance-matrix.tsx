@@ -1,4 +1,4 @@
-import { createElement as h, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { CSSProperties, ReactNode } from 'react';
 
@@ -11,7 +11,7 @@ import type { CSSProperties, ReactNode } from 'react';
  * - to do: an empty placeholder, tagged `conformance-todo`. It is the criterion nobody tests yet.
  * - shown: it renders something to check by eye and asserts nothing.
  *
- * Written with `createElement` because the repo's tsconfig has no `jsx` setting.
+ * Plain React JSX (`jsx: react-jsx` in the root tsconfig).
  */
 
 interface Entry {
@@ -106,8 +106,8 @@ export const ConformanceMatrix = () => {
       .catch(e => setError(String(e)));
   }, []);
 
-  if (error) return h('p', null, `Could not read the story index: ${error}`);
-  if (!entries) return h('p', null, 'Reading the story index…');
+  if (error) return <p>Could not read the story index: {error}</p>;
+  if (!entries) return <p>Reading the story index…</p>;
 
   const groups = groupsOf(entries);
   const all = count(groups.flatMap(g => g.items));
@@ -129,130 +129,121 @@ export const ConformanceMatrix = () => {
       details.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }, 0);
   };
-  const link = (group: Group, filter: string, label: ReactNode): ReactNode =>
-    h(
-      'a',
-      {
-        href: '#',
-        onClick: (event: { preventDefault: () => void }) => {
-          event.preventDefault();
-          pick(group, filter);
-        },
-        title: 'Show these stories',
-        style: { color: 'inherit', textDecoration: 'underline dotted', cursor: 'pointer' }
-      },
-      label
-    );
+  const link = (group: Group, filter: string, label: ReactNode) => (
+    <a
+      href="#"
+      onClick={event => {
+        event.preventDefault();
+        pick(group, filter);
+      }}
+      title="Show these stories"
+      style={{ color: 'inherit', textDecoration: 'underline dotted', cursor: 'pointer' }}
+    >
+      {label}
+    </a>
+  );
 
-  const cell = (group: Group, key: string): ReactNode => {
+  const cell = (group: Group, key: string) => {
     const n = count(group.items.filter(i => capabilityOf(i.criterion) === key));
-    return h('td', { key, style: cellStyle(n) }, n.total ? link(group, key, text(n)) : text(n));
+    return (
+      <td key={key} style={cellStyle(n)}>
+        {n.total ? link(group, key, text(n)) : text(n)}
+      </td>
+    );
   };
 
-  const table = h(
-    'div',
-    { style: { overflowX: 'auto' } },
-    h(
-      'table',
-      null,
-      h(
-        'thead',
-        null,
-        h(
-          'tr',
-          null,
-          h('th', null, 'Profile'),
-          h('th', null, 'Feature'),
-          ...CAPABILITIES.map(c => h('th', { key: c.key, title: c.proves, style: center }, c.label)),
-          h('th', { style: center }, 'Total'),
-          ...(all.todo
-            ? [h('th', { key: 'todo', style: center, title: 'Placeholders for criteria nothing tests yet' }, 'To do')]
-            : [])
-        )
-      ),
-      h(
-        'tbody',
-        null,
-        ...groups.map(group => {
-          const total = count(group.items);
-          return h(
-            'tr',
-            { key: `${group.profile}/${group.folder}` },
-            h('td', null, group.profile),
-            h('td', null, prettify(group.folder)),
-            ...CAPABILITIES.map(c => cell(group, c.key)),
-            h('td', { style: cellStyle(total) }, link(group, 'all', text(total))),
-            ...(all.todo
-              ? [h('td', { key: 'todo', style: center }, total.todo ? link(group, 'todo', total.todo) : '–')]
-              : [])
-          );
-        })
-      ),
-      h(
-        'tfoot',
-        null,
-        h(
-          'tr',
-          null,
-          h('th', { colSpan: 2 }, 'All conformance stories'),
-          ...CAPABILITIES.map(c => {
-            const n = count(groups.flatMap(g => g.items.filter(i => capabilityOf(i.criterion) === c.key)));
-            return h('th', { key: c.key, style: center }, text(n));
-          }),
-          h('th', { style: center }, text(all)),
-          ...(all.todo ? [h('th', { key: 'todo', style: center }, all.todo)] : [])
-        )
-      )
-    )
+  const table = (
+    <div style={{ overflowX: 'auto' }}>
+      <table>
+        <thead>
+          <tr>
+            <th>Profile</th>
+            <th>Feature</th>
+            {CAPABILITIES.map(c => (
+              <th key={c.key} title={c.proves} style={center}>
+                {c.label}
+              </th>
+            ))}
+            <th style={center}>Total</th>
+            {all.todo > 0 && (
+              <th style={center} title="Placeholders for criteria nothing tests yet">
+                To do
+              </th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {groups.map(group => {
+            const total = count(group.items);
+            return (
+              <tr key={groupKey(group)}>
+                <td>{group.profile}</td>
+                <td>{prettify(group.folder)}</td>
+                {CAPABILITIES.map(c => cell(group, c.key))}
+                <td style={cellStyle(total)}>{link(group, 'all', text(total))}</td>
+                {all.todo > 0 && <td style={center}>{total.todo ? link(group, 'todo', total.todo) : '–'}</td>}
+              </tr>
+            );
+          })}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colSpan={2}>All conformance stories</th>
+            {CAPABILITIES.map(c => {
+              const n = count(groups.flatMap(g => g.items.filter(i => capabilityOf(i.criterion) === c.key)));
+              return (
+                <th key={c.key} style={center}>
+                  {text(n)}
+                </th>
+              );
+            })}
+            <th style={center}>{text(all)}</th>
+            {all.todo > 0 && <th style={center}>{all.todo}</th>}
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   );
 
-  const lists = groups.map(group =>
-    h(
-      'details',
-      { key: groupKey(group), id: `conformance-${groupKey(group)}` },
-      h('summary', null, `${group.profile} · ${prettify(group.folder)} (${group.items.length})`),
-      h(
-        'p',
-        { style: { display: 'flex', flexWrap: 'wrap', gap: '0.25rem' } },
-        ...group.items.map(item =>
-          h(
-            'a',
-            {
-              key: item.storyId,
-              href: storyHref(item.storyId),
-              target: '_top',
-              title: item.state,
-              style: {
-                padding: '0 0.4rem',
-                border: '1px solid currentColor',
-                borderRadius: '0.25rem',
-                fontSize: '0.8em',
-                ...(picked?.group === groupKey(group)
-                  ? counts(item, picked.filter)
-                    ? { fontWeight: 700, outline: '2px solid currentColor' }
-                    : { opacity: 0.3 }
-                  : { opacity: item.state === 'asserted' ? 1 : 0.6 })
-              }
-            },
-            `${MARK[item.state]} ${item.criterion}`
-          )
-        )
-      )
-    )
-  );
+  const lists = groups.map(group => (
+    <details key={groupKey(group)} id={`conformance-${groupKey(group)}`}>
+      <summary>{`${group.profile} · ${prettify(group.folder)} (${group.items.length})`}</summary>
+      <p style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+        {group.items.map(item => (
+          <a
+            key={item.storyId}
+            href={storyHref(item.storyId)}
+            target="_top"
+            title={item.state}
+            style={{
+              padding: '0 0.4rem',
+              border: '1px solid currentColor',
+              borderRadius: '0.25rem',
+              fontSize: '0.8em',
+              ...(picked?.group === groupKey(group)
+                ? counts(item, picked.filter)
+                  ? { fontWeight: 700, outline: '2px solid currentColor' }
+                  : { opacity: 0.3 }
+                : { opacity: item.state === 'asserted' ? 1 : 0.6 })
+            }}
+          >
+            {`${MARK[item.state]} ${item.criterion}`}
+          </a>
+        ))}
+      </p>
+    </details>
+  ));
 
-  return h(
-    'div',
-    null,
-    h(
-      'p',
-      null,
-      `${all.asserted} of ${all.total} conformance stories assert something` +
-        (all.todo ? `; ${all.todo} are placeholders for criteria nothing tests yet.` : '.')
-    ),
-    table,
-    h('h3', null, 'Every story'),
-    h('p', null, '✓ asserts it · ○ shows it, no assertion · ◻ placeholder, to do'),
-    ...lists
+  return (
+    <div>
+      <p>
+        {`${all.asserted} of ${all.total} conformance stories assert something` +
+          (all.todo ? `; ${all.todo} are placeholders for criteria nothing tests yet.` : '.')}
+      </p>
+      {table}
+      <h3>Every story</h3>
+      <p>✓ asserts it · ○ shows it, no assertion · ◻ placeholder, to do</p>
+      {lists}
+    </div>
   );
 };
