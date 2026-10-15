@@ -3,7 +3,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { expect, fireEvent } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { Test } from '../qti-choice-interaction.stories';
+import { optionsRender } from './qti-choice-interaction.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
@@ -42,7 +42,7 @@ const formTemplate = (storyArgs, context) => html`
       }
     }}
   >
-    ${Test.render(storyArgs, context)}
+    ${optionsRender(storyArgs, context)}
     <input type="submit" value="submit" />
     <input type="reset" value="reset" />
   </form>
@@ -336,6 +336,72 @@ export const ComprehensiveTest: Story = {
       await setChoiceValue(choiceA);
       await fireEvent.submit(form);
       expect(getFormDataValues(form, 'RESPONSE')).toEqual(['A']);
+    });
+  }
+};
+
+const overviewFormTemplate = (args, context) => html`
+  <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
+    ${optionsRender(args, context)}
+    <input type="submit" value="submit" />
+  </form>
+`;
+
+/** `max-choices="0"` makes checkboxes, and the form submits every checked value. */
+export const CheckboxSubmitsAllValues: Story = {
+  render: overviewFormTemplate,
+  args: {
+    name: 'RESPONSE',
+    'max-choices': 0
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    await step('event', async () => {
+      expect(choiceA.internals.role).toBe('checkbox');
+    });
+
+    await step('event', async () => {
+      await fireEvent.click(choiceA);
+      await fireEvent.click(choiceB);
+      await fireEvent.submit(form);
+      const formData = new FormData(form);
+
+      const submittedValuesArray: string[] = (formData.get('RESPONSE') as string).split(',');
+      const expectedValues = ['A', 'B'];
+
+      expect(submittedValuesArray).toEqual(expect.arrayContaining(expectedValues));
+    });
+  }
+};
+
+/** Radios submit only the last checked value. */
+export const RadioSubmitsOneValue: Story = {
+  render: overviewFormTemplate,
+  args: {
+    name: 'RESPONSE'
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
+    const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
+    const form = canvas.getByRole<HTMLFormElement>('form');
+
+    await step('event', async () => {
+      expect(choiceA.internals.role).toBe('radio');
+    });
+
+    await step('event', async () => {
+      await fireEvent.click(choiceA);
+      await fireEvent.click(choiceB);
+      await fireEvent.submit(form);
+      const formData = new FormData(form);
+      const submittedValues = formData.getAll('RESPONSE');
+      const expectedValues = ['B'];
+      expect(submittedValues).toEqual(expect.arrayContaining(expectedValues));
     });
   }
 };
