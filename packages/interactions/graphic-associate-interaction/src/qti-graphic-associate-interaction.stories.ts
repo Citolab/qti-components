@@ -19,7 +19,7 @@ type Story = StoryObj<QtiGraphicAssociateInteraction & typeof args>;
  */
 const meta: Meta<QtiGraphicAssociateInteraction> = {
   component: 'qti-graphic-associate-interaction',
-  title: 'Interactions/Graphic Associate',
+  title: 'Interactions/Graphic Associate/Overview',
   args,
   argTypes,
   parameters: {

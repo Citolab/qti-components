@@ -29,7 +29,7 @@ type Story = StoryObj<QtiGapMatchInteraction & typeof args>;
  */
 const meta: Meta<QtiGapMatchInteraction> = {
   component: 'qti-gap-match-interaction',
-  title: 'Interactions/Gap Match',
+  title: 'Interactions/Gap Match/Overview',
   args,
   argTypes,
   parameters: {

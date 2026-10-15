@@ -22,7 +22,7 @@ type Story = StoryObj<QtiExtendedTextInteraction & typeof args>;
  */
 const meta: Meta<QtiExtendedTextInteraction> = {
   component: 'qti-extended-text-interaction',
-  title: 'Interactions/Extended Text',
+  title: 'Interactions/Extended Text/Overview',
   // args,
   argTypes,
   parameters: {

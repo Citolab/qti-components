@@ -123,7 +123,7 @@ type Story = StoryObj<QtiOrderInteraction & typeof args>;
  */
 const meta: Meta<QtiOrderInteraction & { class: InputType }> = {
   component: 'qti-order-interaction',
-  title: 'Interactions/Order',
+  title: 'Interactions/Order/Overview',
   args,
   argTypes: {
     ...argTypes,

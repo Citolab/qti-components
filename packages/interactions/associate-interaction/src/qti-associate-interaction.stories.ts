@@ -22,7 +22,7 @@ type Story = StoryObj<QtiAssociateInteraction & typeof args>;
  */
 const meta: Meta<QtiAssociateInteraction> = {
   component: 'qti-associate-interaction',
-  title: 'Interactions/Associate',
+  title: 'Interactions/Associate/Overview',
   subcomponents: { QtiSimpleAssociableChoice: 'qti-simple-associable-choice' },
   args,
   argTypes,

@@ -11,7 +11,7 @@ type Story = StoryObj<QtiMatchInteraction>;
 
 const meta: Meta<QtiMatchInteraction> = {
   component: 'qti-match-interaction',
-  title: 'Testing/Interactions/Match/Config Context',
+  title: 'Interactions/Match/Config Context',
   tags: ['configuration', 'specific', 'iol']
 };
 export default meta;

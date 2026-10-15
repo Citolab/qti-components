@@ -47,11 +47,15 @@ Storybook has 143 story files under 10+ unrelated prefixes (`Docs`, `E2E`, `Base
 ```
 Rules behind it:
 - Sort by task, not by package. Package structure (`Base`, `QTI Processing`, `QTI Elements`) disappears from navigation.
-- Exactly one story per interaction is the "Overview"; scenario stories (a11y, api, forms, validation, behavior, config) leave the sidebar. Keep the file taxonomy from `AGENTS.md`, but they get `tags: ['!dev','!autodocs']`-style hiding or become `.spec.ts`.
+- Exactly one story per interaction is the "Overview"; the scenario stories (a11y, api, forms, validation, behavior, config) sit next to it in the same folder. Keep the file taxonomy from `AGENTS.md`.
 - Names are English, no numeric prefixes, no brand names outside Cookbook.
 
-## What becomes a spec instead of a story
-Candidates (no one needs to look at them): `qti-base/Context root`, `qti-outcome-condition`, `*.validation`, `*.forms`, `*.dom`, `*.api`, `*.a11y` scenario stories, `Stories/shuffle`, `Test title`/`Test title 2`, `qti-elements/*Feedback*` plumbing, `qti-assessment-item-ref`, `qti-assessment-stimulus-ref`, `qti-stylesheet`. Behaviour moves to `*.spec.ts` (plain `tests` project) or browser tests; anything with a11y/visual value stays in Testing.
+## Evidence stays visible (decision, replaces "move to spec")
+Scenario stories (accessibility, API, behavior, configuration, config context, DOM, forms, theming,
+validation, vocabulary) are evidence a human can read, so they stay stories, in the interaction's own
+folder: `Interactions/<Name>/Overview`, then the topics. Choice is the reference; the other
+interactions copy its topics. Only logic with nothing to look at is a spec (the `*.spec.ts` helpers).
+A generated evidence matrix (interaction x topic, story counts from `index.json`) shows the gaps.
 
 ## Docs build
 - Tag-driven: stories tagged `dev` or `test` are excluded from the published build via `tags.exclude` (`storybook build --test`-style or a `STORYBOOK_DOCS=1` env in `.storybook/main.ts`, same pattern as the existing `VRT=1` branch).

@@ -22,7 +22,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: 'Testing/Interactions/Choice/Validation',
+  title: 'Interactions/Choice/Validation',
   tags: ['validation', 'specific', 'iol']
 };
 export default meta;

@@ -19,7 +19,7 @@ type Story = StoryObj<QtiExtendedTextInteraction>;
  */
 const meta: Meta<QtiExtendedTextInteraction> = {
   component: 'qti-extended-text-interaction',
-  title: 'Testing/Interactions/Extended Text/API',
+  title: 'Interactions/Extended Text/API',
   tags: ['api', 'iol']
 };
 export default meta;

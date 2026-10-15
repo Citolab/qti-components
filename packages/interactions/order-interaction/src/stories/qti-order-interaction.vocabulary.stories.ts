@@ -12,7 +12,7 @@ type Story = StoryObj<QtiOrderInteraction>;
 
 const meta: Meta<QtiOrderInteraction> = {
   component: 'qti-order-interaction',
-  title: 'Testing/Interactions/Order/Vocabulary',
+  title: 'Interactions/Order/Vocabulary',
   tags: ['vocabulary', 'specific', 'iol']
 };
 export default meta;

@@ -18,7 +18,7 @@ type Story = StoryObj<QtiTextEntryInteraction>;
  */
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
-  title: 'Testing/Interactions/Text Entry/Accessibility',
+  title: 'Interactions/Text Entry/Accessibility',
   tags: ['a11y', 'iol']
 };
 export default meta;

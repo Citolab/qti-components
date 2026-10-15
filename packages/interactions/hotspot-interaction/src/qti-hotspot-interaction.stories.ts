@@ -18,7 +18,7 @@ type Story = StoryObj<QtiHotspotInteraction & typeof args>;
  */
 const meta: Meta<QtiHotspotInteraction> = {
   component: 'qti-hotspot-interaction',
-  title: 'Interactions/Hotspot',
+  title: 'Interactions/Hotspot/Overview',
   args,
   argTypes,
   parameters: {

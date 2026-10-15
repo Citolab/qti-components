@@ -18,7 +18,7 @@ type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
  */
 const meta: Meta<QtiEndAttemptInteraction> = {
   component: 'qti-end-attempt-interaction',
-  title: 'Interactions/End Attempt',
+  title: 'Interactions/End Attempt/Overview',
   args: { ...args, title: 'end attempt' },
   argTypes,
   parameters: {

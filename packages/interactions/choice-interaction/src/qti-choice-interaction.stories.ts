@@ -26,7 +26,7 @@ const meta: Meta<
   QtiChoiceInteraction & { classLabel: InputType; classLabelSuffix: InputType; classOrientation: InputType }
 > = {
   component: 'qti-choice-interaction',
-  title: 'Interactions/Choice',
+  title: 'Interactions/Choice/Overview',
   args,
   argTypes,
   parameters: {

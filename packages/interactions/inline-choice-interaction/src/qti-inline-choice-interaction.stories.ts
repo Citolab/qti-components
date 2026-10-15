@@ -85,7 +85,7 @@ if (!window.customElements.get('inline-choice-shadow-host')) {
  */
 const meta: Meta<QtiInlineChoiceInteraction> = {
   component: 'qti-inline-choice-interaction',
-  title: 'Interactions/Inline Choice',
+  title: 'Interactions/Inline Choice/Overview',
   args,
   argTypes,
   parameters: {

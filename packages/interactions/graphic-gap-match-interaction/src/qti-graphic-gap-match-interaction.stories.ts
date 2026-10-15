@@ -21,7 +21,7 @@ type Story = StoryObj<QtiGraphicGapMatchInteraction & typeof args>;
  */
 const meta: Meta<QtiGraphicGapMatchInteraction> = {
   component: 'qti-graphic-gap-match-interaction',
-  title: 'Interactions/Graphic Gap Match',
+  title: 'Interactions/Graphic Gap Match/Overview',
   args,
   argTypes,
   parameters: {

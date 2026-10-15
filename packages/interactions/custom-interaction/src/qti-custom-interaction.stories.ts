@@ -26,7 +26,7 @@ type Story = StoryObj<QtiCustomInteraction & typeof args>;
  *
  */
 const meta: Meta<QtiCustomInteraction> = {
-  title: 'Interactions/Custom',
+  title: 'Interactions/Custom/Overview',
   component: 'qti-custom-interaction',
   args,
   argTypes,
