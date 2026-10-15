@@ -1,0 +1,113 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/How it fits together" />
+
+# How it fits together
+
+Three ideas explain most of the library: an **item** and a **test** are different layers, data lives
+in **variables** that flow through **context**, and a host talks to a test with **properties in** and
+**events out**.
+
+## Item and test
+
+|              | Item                                                 | Test                                                           |
+| ------------ | ---------------------------------------------------- | -------------------------------------------------------------- |
+| **Element**  | `qti-assessment-item` (rendered by `qti-item`)       | `qti-test`                                                     |
+| **Is**       | One question with its interactions and processing    | A sequence of items with navigation and test-level outcomes    |
+| **Owns**     | Response, outcome and template variables of one item | Which item is shown, every item's variables, test outcomes     |
+| **Use when** | You render or score one item                         | You deliver an assessment: navigation, sections, state, review |
+
+A test does not replace the item; it contains one at a time. Everything you learn about an item
+(interactions, response processing, feedback) holds inside a test too.
+
+## The shape of a test
+
+```html
+<qti-test navigate="item">
+  <test-navigation>
+    <test-container test-url="assessment.xml"></test-container>
+    <test-prev>Previous</test-prev>
+    <test-next>Next</test-next>
+  </test-navigation>
+</qti-test>
+```
+
+- **`qti-test`** is the root. It owns the session state and provides the context the elements
+  inside read from.
+- **`test-navigation`** works out where the candidate is and publishes it.
+- **`test-container`** loads the test XML and renders the current item.
+- **Everything else** (`test-next`, a scoring panel, text to speech, a bookmark) is a **plugin**: an
+  element inside the test that reads context and sends requests. See _Extending QTI / Creating a plugin_.
+
+## Variables
+
+An item declares variables in its XML. They are the only thing that carries a candidate's work:
+
+| Kind         | Set by                                   | Example                           |
+| ------------ | ---------------------------------------- | --------------------------------- |
+| **response** | The candidate, through an interaction    | `RESPONSE` = `choice-A`           |
+| **outcome**  | Response processing, after an attempt    | `SCORE` = `1`                     |
+| **template** | Template processing, when the item loads | a randomised number in the prompt |
+| **context**  | The host, through `qtiContext`           | candidate and test identifiers    |
+
+The chain for one answer: the candidate acts, the **interaction** publishes its value
+(`saveResponse`), the item stores it in the response variable and fires
+`cito-item-response-changed`, and response processing may then set outcomes, which fires
+`cito-item-outcome-changed`. In a test, the test collects each item's variables so it can score
+across items, show progress and hand you a state to save.
+
+## Context flows down, events flow up
+
+Elements inside a test do not receive their data through attributes. They read **context**
+(`@lit/context`), which crosses shadow roots and updates when the value changes:
+
+| Context           | Holds                                                                        | Who sets it       |
+| ----------------- | ---------------------------------------------------------------------------- | ----------------- |
+| `configContext`   | Delivery options (what to show, when to validate)                            | The host          |
+| `qtiContext`      | Who takes which test, and the shuffle `seed`                                 | The host          |
+| `computedContext` | A read-only view of the test: parts, sections, items, scores, what is active | `test-navigation` |
+
+Communication the other way uses events, and the name tells you the direction:
+
+- **Requests are verbs** and go _to_ the test: `cito-test-navigate`, `cito-test-end-attempt`.
+- **Notifications are past tense** and come _from_ it: `cito-test-navigated`, `cito-test-state-changed`.
+
+Only events that start with `cito-` are public. Any other event is internal plumbing.
+
+## The host: properties in, events out
+
+```text
+            ┌───────────────────────────── host ─────────────────────────────┐
+  in  ───►  │ navigate, test-url · configContext · qtiContext (seed) · state │
+            └────────────────────────────────┬───────────────────────────────┘
+                                             ▼
+                                         <qti-test>
+                                             │
+            ┌────────────────────────────────▼───────────────────────────────┐
+  out ◄───  │ cito-test-state-changed · cito-test-navigated · cito-item-*    │
+            └────────────────────────────────────────────────────────────────┘
+```
+
+- **In:** the host sets the test's attributes and properties, supplies `configContext` and
+  `qtiContext`, and may assign a saved `state` to resume.
+- **Out:** the host listens for notifications, above all `cito-test-state-changed`, whose `detail` is
+  the state to store.
+
+### State is what the candidate produced
+
+`qtiTest.state` holds the candidate's values and where they are in the test, and nothing else. Store
+it anywhere (a database, `localStorage`) and assign it back to resume.
+
+It does **not** hold what the host decides or what the XML already says, so supply these again on
+every load:
+
+- `configContext` and `qtiContext`, including the shuffle `seed`. Without the same seed, a resumed
+  test shows items and choices in a different order.
+- the `view` (candidate, scorer, ...), which is a role the host picks.
+- declarations and the answer key, which come from the XML.
+
+## Where to go next
+
+- Embedding a test: the **Persist and restore** story under _QTI Test_, and the [Public API](?path=/docs/api-reference-public-api--docs).
+- One interaction at a time: _Interactions_.
+- Adding your own interaction or plugin: _Extending QTI_.
