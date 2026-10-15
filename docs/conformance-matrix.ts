@@ -96,6 +96,8 @@ const cellStyle = ({ asserted, total }: { asserted: number; total: number }): CS
 export const ConformanceMatrix = () => {
   const [entries, setEntries] = useState<Entry[] | null>(null);
   const [error, setError] = useState<string>();
+  /** The cell last clicked: its row, and which of the row's stories it counts (a capability, `all` or `todo`). */
+  const [picked, setPicked] = useState<{ group: string; filter: string } | null>(null);
 
   useEffect(() => {
     fetch('./index.json')
@@ -112,9 +114,39 @@ export const ConformanceMatrix = () => {
   const center: CSSProperties = { textAlign: 'center' };
   const text = (n: { asserted: number; total: number }) => (n.total ? `${n.asserted}/${n.total}` : '–');
 
+  const groupKey = (group: Group) => `${group.profile}/${group.folder}`;
+  const counts = (item: Item, filter: string) =>
+    filter === 'all' ? true : filter === 'todo' ? item.state === 'todo' : capabilityOf(item.criterion) === filter;
+
+  /** A number in the table opens its row's stories below and marks the ones it counts. Again to clear. */
+  const pick = (group: Group, filter: string) => {
+    const key = groupKey(group);
+    setPicked(picked?.group === key && picked.filter === filter ? null : { group: key, filter });
+    setTimeout(() => {
+      const details = document.getElementById(`conformance-${key}`) as HTMLDetailsElement | null;
+      if (!details) return;
+      details.open = true;
+      details.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 0);
+  };
+  const link = (group: Group, filter: string, label: ReactNode): ReactNode =>
+    h(
+      'a',
+      {
+        href: '#',
+        onClick: (event: { preventDefault: () => void }) => {
+          event.preventDefault();
+          pick(group, filter);
+        },
+        title: 'Show these stories',
+        style: { color: 'inherit', textDecoration: 'underline dotted', cursor: 'pointer' }
+      },
+      label
+    );
+
   const cell = (group: Group, key: string): ReactNode => {
     const n = count(group.items.filter(i => capabilityOf(i.criterion) === key));
-    return h('td', { key, style: cellStyle(n) }, text(n));
+    return h('td', { key, style: cellStyle(n) }, n.total ? link(group, key, text(n)) : text(n));
   };
 
   const table = h(
@@ -149,8 +181,10 @@ export const ConformanceMatrix = () => {
             h('td', null, group.profile),
             h('td', null, prettify(group.folder)),
             ...CAPABILITIES.map(c => cell(group, c.key)),
-            h('td', { style: cellStyle(total) }, text(total)),
-            ...(all.todo ? [h('td', { key: 'todo', style: center }, total.todo || '–')] : [])
+            h('td', { style: cellStyle(total) }, link(group, 'all', text(total))),
+            ...(all.todo
+              ? [h('td', { key: 'todo', style: center }, total.todo ? link(group, 'todo', total.todo) : '–')]
+              : [])
           );
         })
       ),
@@ -175,7 +209,7 @@ export const ConformanceMatrix = () => {
   const lists = groups.map(group =>
     h(
       'details',
-      { key: `${group.profile}/${group.folder}` },
+      { key: groupKey(group), id: `conformance-${groupKey(group)}` },
       h('summary', null, `${group.profile} · ${prettify(group.folder)} (${group.items.length})`),
       h(
         'p',
@@ -193,7 +227,11 @@ export const ConformanceMatrix = () => {
                 border: '1px solid currentColor',
                 borderRadius: '0.25rem',
                 fontSize: '0.8em',
-                opacity: item.state === 'asserted' ? 1 : 0.6
+                ...(picked?.group === groupKey(group)
+                  ? counts(item, picked.filter)
+                    ? { fontWeight: 700, outline: '2px solid currentColor' }
+                    : { opacity: 0.3 }
+                  : { opacity: item.state === 'asserted' ? 1 : 0.6 })
               }
             },
             `${MARK[item.state]} ${item.criterion}`
