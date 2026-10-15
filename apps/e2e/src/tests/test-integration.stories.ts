@@ -26,7 +26,7 @@ const meta: Meta = {
             </template>
           </template>
         </test-stamp>
-        <div class="flex space-between">
+        <div class="flex justify-between">
           <div class="qti-base-stimulus w-1/2" data-stimulus-idref="Stimulus1"></div>
 
           <test-container class="w-1/2" test-url="/assets/qti-test-package-stimulus/assessment.xml">

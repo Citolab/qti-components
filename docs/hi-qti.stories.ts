@@ -1,59 +1,74 @@
-import type { QtiTest } from '@qti-components/test';
+import '../.storybook/utilities.css';
+
+import type { QtiTest, QtiTestState } from '@qti-components/test';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
-type Story = StoryObj<QtiTest>;
-
-const html = String.raw;
-
-const meta: Meta<QtiTest> = {
-  title: 'Introduction/Demo'
-  // tags: ['!dev']
+/**
+ * The players on the landing page. They are attached to `hi-qti.mdx` and hidden from the sidebar
+ * (`!dev`): the page is the entry, these stories are only its demos.
+ */
+const meta: Meta = {
+  title: 'Introduction/Hi QTI',
+  tags: ['!dev']
 };
 export default meta;
 
-export const Default: Story = {
-  render: () => html`
-    <style>
-      test-container {
-        display: block;
-        aspect-ratio: 16 / 5;
-        max-width: 800px;
-      }
-    </style>
-    <qti-test navigate="item">
-      <test-navigation>
-        <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
-        <div>
-          <test-prev> previous </test-prev>
-          <test-next> next </test-next>
-        </div>
-      </test-navigation>
-    </qti-test>
-  `
+/** Both players open on a real question, not on the info screen the examples test starts with. */
+const startAt: QtiTestState = {
+  version: 1,
+  test: { items: [], outcomes: [] },
+  session: { navItemRefId: 'ITM-choice' }
 };
 
-// export const PkgPr: Story = {
-//   render: (_args, context) => {
-//     if (context.loaded?.pkgpr) {
-//       return html`<pre>${context.loaded.pkgpr.packages[0]?.url || 'No URL available'}</pre>`;
-//     } else if (context.error) {
-//       return html`<p>Error: ${context.error}</p>`;
-//     } else {
-//       return html`<p>No pkg pr URL available</p>`;
-//     }
-//   },
-//   loaders: [
-//     async () => {
-//       try {
-//         const response = await fetch('./pkg.pr.json');
-//         if (!response.ok) {
-//           throw new Error(`Failed to load: ${response.statusText}`);
-//         }
-//         const pkgpr = await response.json();
-//         return { pkgpr };
-//       } catch (error) {
-//         return { error: error.message || 'An error occurred while fetching the file.' };
-//       }
-//     }
-//   ]
-// };
+const mount = (markup: string) => {
+  const root = document.createElement('div');
+  root.innerHTML = markup;
+  // Assigned while the test is detached: safe before or after it loads.
+  root.querySelector<QtiTest>('qti-test')!.state = startAt;
+  return root;
+};
+
+/** The smallest player: the item, and previous and next. */
+export const Player: StoryObj = {
+  render: () =>
+    mount(`
+      <qti-test navigate="item">
+        <test-navigation>
+          <div class="flex flex-col gap-3">
+            <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
+            <nav class="flex items-center justify-between">
+              <test-prev>previous</test-prev>
+              <test-next>next</test-next>
+            </nav>
+          </div>
+        </test-navigation>
+      </qti-test>
+    `)
+};
+
+/** The same player with a numbered link per item, so you can jump between the interaction types. */
+export const WithPagination: StoryObj = {
+  render: () =>
+    mount(`
+      <qti-test navigate="item">
+        <test-navigation>
+          <div class="flex flex-col gap-3">
+            <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
+            <nav class="flex flex-wrap items-center gap-2">
+              <test-prev>previous</test-prev>
+              <test-stamp class="flex flex-wrap items-center justify-center gap-2 flex-1">
+                <template>
+                  <template type="repeat" repeat="{{ activeTestpart.items }}">
+                    <test-item-link item-id="{{ item.identifier }}" class="{{ item.active ? 'active' : '' }}"
+                      >{{ item.index }}</test-item-link
+                    >
+                  </template>
+                </template>
+              </test-stamp>
+              <test-next>next</test-next>
+            </nav>
+          </div>
+        </test-navigation>
+      </qti-test>
+    `)
+};
