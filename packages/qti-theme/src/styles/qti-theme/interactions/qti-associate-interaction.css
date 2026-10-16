@@ -65,39 +65,16 @@
     &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
       @mixin dropping;
     }
-    & qti-simple-associable-choice::part(drag),
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
-       `::part(qti-simple-associable-choice)`, a part named after the tag. */
-    &::part(drag) {
+       `::part(qti-simple-associable-choice)`, a part named after the tag. Its hover, press and ring
+       are in the states layer below. Deleted here: `&[dragging] { @mixin dragging }`. An attribute
+       selector after ::part() never matches. */
+    & qti-simple-associable-choice::part(drag) {
       @mixin drag;
-      &:hover {
-        @mixin drag-hover;
-      }
-      &:active:not(:state(placeholder), :state(dragging)) {
-        @mixin press drag;
-      }
-      &:focus-visible {
-        @mixin foc;
-      }
-      &[dragging] {
-        @mixin dragging;
-      }
     }
-    /* Editor fake-drag projected into the interaction's drop-target shadow.
-       Kept as a separate block (not merged into the comma list above)
-       because a CSS comment between commas in a nested selector list is
-       silently dropped by Chrome's nesting parser. */
+    /* Editor fake-drag projected into the interaction's drop-target shadow. */
     &::part(drag) {
       @mixin drag;
-      &:hover {
-        @mixin drag-hover;
-      }
-      &:active:not(:state(placeholder), :state(dragging)) {
-        @mixin press drag;
-      }
-      &:focus-visible {
-        @mixin foc;
-      }
     }
     /* `display: grid` lives in qti-associate-interaction.styles.ts, which already declares it on
        [part~='drop'] alongside the drop's min-height/min-width. */
@@ -140,6 +117,28 @@
   qti-simple-associable-choice::part(drag),
   qti-associate-interaction::part(drag) {
     @mixin drag;
+  }
+
+  /*
+   * A placed chip's hover, press and focus ring. Written flat: nested under `&::part(drag)` they
+   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
+   * `background-color` and must not out-rank the hover and press.
+   *
+   * The press is unguarded: `:not()` cannot follow `::part()`, and a placed chip needs no guard. It
+   * is never a placeholder or `dragging`; a drag out of a drop removes it from the drop instead.
+   */
+  qti-associate-interaction qti-simple-associable-choice::part(drag):hover,
+  qti-associate-interaction::part(drag):hover {
+    @mixin drag-hover;
+  }
+  qti-associate-interaction qti-simple-associable-choice::part(drag):active,
+  qti-associate-interaction::part(drag):active {
+    @mixin press drag;
+  }
+  qti-associate-interaction qti-simple-associable-choice::part(drag):focus-visible,
+  qti-associate-interaction::part(drag):focus-visible {
+    @mixin foc;
   }
 
   qti-associate-interaction::part(hover),

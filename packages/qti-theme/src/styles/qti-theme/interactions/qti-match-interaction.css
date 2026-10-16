@@ -33,15 +33,6 @@
      see when an answer is dropped onto a target at runtime. */
   qti-simple-associable-choice::part(drag) {
     @mixin drag;
-    &:hover {
-      @mixin drag-hover;
-    }
-    &:active:not(:state(placeholder), :state(dragging)) {
-      @mixin press drag;
-    }
-    &:focus-visible {
-      @mixin foc;
-    }
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
@@ -166,6 +157,25 @@
 }
 
 @layer qti-components.interactions.states {
+  /*
+   * A placed chip's hover, press and focus ring. Written flat: nested under `&::part(drag)` they
+   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
+   * `background-color` and must not out-rank the hover and press.
+   *
+   * The press is unguarded: `:not()` cannot follow `::part()`, and a placed chip needs no guard. It
+   * is never a placeholder or `dragging`; a drag out of a drop removes it from the drop instead.
+   */
+  qti-simple-associable-choice::part(drag):hover {
+    @mixin drag-hover;
+  }
+  qti-simple-associable-choice::part(drag):active {
+    @mixin press drag;
+  }
+  qti-simple-associable-choice::part(drag):focus-visible {
+    @mixin foc;
+  }
+
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
     qti-simple-associable-choice:state(dragging),

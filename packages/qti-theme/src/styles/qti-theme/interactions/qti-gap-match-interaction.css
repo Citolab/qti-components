@@ -47,15 +47,6 @@
        styling so the editor preview matches runtime when a gap is filled. */
     & qti-gap::part(drag) {
       @mixin drag;
-      &:hover {
-        @mixin drag-hover;
-      }
-      &:active:not(:state(placeholder), :state(dragging)) {
-        @mixin press drag;
-      }
-      &:focus-visible {
-        @mixin foc;
-      }
     }
     & qti-gap-text {
       @mixin drag;
@@ -154,6 +145,25 @@
   /* One chip vocabulary across the bank and placed drags for gap-match only. */
   qti-gap::part(drag) {
     @mixin drag;
+  }
+
+  /*
+   * A placed chip's hover, press and focus ring. Written flat: nested under `&::part(drag)` they
+   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
+   * `background-color` and must not out-rank the hover and press.
+   *
+   * The press is unguarded: `:not()` cannot follow `::part()`, and a placed chip needs no guard. It
+   * is never a placeholder or `dragging`; a drag out of a drop removes it from the drop instead.
+   */
+  qti-gap-match-interaction qti-gap::part(drag):hover {
+    @mixin drag-hover;
+  }
+  qti-gap-match-interaction qti-gap::part(drag):active {
+    @mixin press drag;
+  }
+  qti-gap-match-interaction qti-gap::part(drag):focus-visible {
+    @mixin foc;
   }
 
   qti-gap-match-interaction qti-gap-text:state(placeholder) {
