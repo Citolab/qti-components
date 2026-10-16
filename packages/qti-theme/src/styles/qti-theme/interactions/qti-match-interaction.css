@@ -65,10 +65,7 @@
         &:hover {
           @mixin drag-hover;
         }
-        &:active:not(:state(placeholder), :state(dragging)) {
-          @mixin press drag;
-        }
-        &:focus-visible {
+        &:focus:not(:state(placeholder)) {
           @mixin foc;
         }
       }
@@ -103,8 +100,8 @@
           gap: var(--qti-gap);
         }
         /* The ring goes on the target itself: it is what takes keyboard focus. Nothing in its shadow
-           is focusable, so the `::part(drop):focus-visible` this replaces never matched. */
-        &:focus-visible {
+           is focusable, so the `::part(drop):focus` this replaces never matched. */
+        &:focus:not(:state(placeholder)) {
           @mixin foc;
         }
         & > *:not(qti-simple-associable-choice) {
@@ -119,10 +116,7 @@
           &:hover {
             @mixin drag-hover;
           }
-          &:active:not(:state(placeholder), :state(dragging)) {
-            @mixin press drag;
-          }
-          &:focus-visible {
+          &:focus:not(:state(placeholder)) {
             @mixin foc;
           }
         }
@@ -160,21 +154,15 @@
 
 @layer qti-components.interactions.states {
   /*
-   * A placed chip's hover, press and focus ring. Written flat: nested under `&::part(drag)` they
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(drag)` they
    * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
    * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
-   * `background-color` and must not out-rank the hover and press.
-   *
-   * The press is unguarded: `:not()` cannot follow `::part()`, and a placed chip needs no guard. It
-   * is never a placeholder or `dragging`; a drag out of a drop removes it from the drop instead.
+   * `background-color` and must not out-rank the hover.
    */
   qti-simple-associable-choice::part(drag):hover {
     @mixin drag-hover;
   }
-  qti-simple-associable-choice::part(drag):active {
-    @mixin press drag;
-  }
-  qti-simple-associable-choice::part(drag):focus-visible {
+  qti-simple-associable-choice::part(drag):focus {
     @mixin foc;
   }
 

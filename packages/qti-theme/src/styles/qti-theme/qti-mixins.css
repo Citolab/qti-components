@@ -40,6 +40,7 @@
   --$(role)-color: $color;
   --$(role)-border-color: $color;
   --$(role)-box-shadow: none;
+  --qti-grip-color: $color;
 }
 
 @define-mixin answer {
@@ -117,6 +118,7 @@
      @scope, so it inherits no border-box from anywhere else and this sets it. */
   box-sizing: border-box;
   padding: var(--qti-drag-padding);
+  line-height: var(--qti-field-line-height);
   cursor: grab;
 
   /*
@@ -162,6 +164,9 @@
   /* The chip's own colours (--cito-color-chip), behind the same slots: the surface and the
      surrounding text by default, a filled chip when a brand sets the tier-1 chip colour. */
   background-color: var(--drag-background-color, var(--qti-drag-fill));
+  /* A brand can give a chip its own edge (--cito-color-chip-border), transparent for a borderless
+     card; the width stays, so a chip keeps its size whichever edge it shows. */
+  border-color: var(--drag-border-color, var(--cito-color-chip-border, var(--qti-component-border-color)));
   color: var(--drag-color, var(--cito-color-chip-content, inherit));
 }
 
@@ -177,10 +182,10 @@
  */
 @define-mixin drag-placeholder {
   /* The hole a spent/lifted chip leaves. Like the chip (see `drag`), it sets NO fill / border /
-     shadow of its own — those inherit from the resting chip (neutral by default, the brand's fill
-     when an overlay is on), so a brand can restyle the hole via a `:state(placeholder)` overlay
-     with no specificity contest. The one thing a placeholder always does, in every brand, is hide
-     its text; the default hole is then just the resting chip (white + border) with its text gone. */
+     shadow here, on the interaction's high-specificity selector: the hole's paint is the bare
+     `:state(placeholder)` rule in interactions/qti-placeholder.css (a primary tint, inset shadow),
+     which a brand can restyle with the same selector and no specificity contest. The one thing this
+     mixin does, in every brand, is hide the chip's text. */
   --drag-color: transparent;
   --drag-opacity: 1;
 }
@@ -204,7 +209,9 @@
   width: 0.75em;
   height: 1em;
   margin-right: var(--qti-glyph-gap);
-  background-color: currentColor;
+  /* A verdict (`@mixin candidate`) sets --qti-grip-color, so a corrected chip's handle takes the
+     verdict colour even when a brand colours its handles. */
+  background-color: var(--qti-grip-color, var(--cito-color-drag-icon, currentColor));
   mask: var(--qti-grip-mask) no-repeat center / contain;
   -webkit-mask: var(--qti-grip-mask) no-repeat center / contain;
 }
@@ -225,18 +232,26 @@
   color: var(--qti-fg);
   font-family: inherit;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: var(--qti-field-line-height);
 }
 
 /*
- * An element that sits in a line of text: a text entry, an inline choice, a gap. Space either side
- * and a block padding that keeps its line close to the height of the lines around it. The values are
- * named in qti-variables.css; the box is declared as --qti-padding-box, which the field's own parts
- * already read, so no component has to know about it.
+ * An element that sits in a line of text: a text entry, an inline choice, a gap, a hottext. They all
+ * get the same box, so a sentence holding several of them stays level: space either side, the field
+ * line height, and the inline-field padding (2px above and below, one spacing unit either side). Its
+ * line is then exactly --qti-line-height tall, like every other line of the item.
+ *
+ * The padding is declared as --qti-padding-box, which the parts of a text entry and an inline choice
+ * already read, so no component has to know about it. An element that pays its own padding (a
+ * hottext) reads --qti-inline-field-padding directly; a gap is sized by the chip in it, which
+ * gap-match gives the same padding through --qti-drag-padding.
  */
 @define-mixin inline {
   margin-inline: var(--qti-inline-gap);
+  line-height: var(--qti-field-line-height);
   --qti-padding-box: var(--qti-inline-field-padding);
+  /* The correction badge sits as far in from the end as the text does from the start. */
+  --qti-correction-inset: var(--qti-inline-padding-inline);
 }
 
 @define-mixin dropping {
@@ -337,9 +352,13 @@
  *
  * An outline, not a box-shadow: it costs no layout, and it joins none of the fights over box-shadow
  * (a chip's resting lift, its in-flight elevation, the placeholder's inset). A focused chip keeps
- * its lift and gets its ring. On `:focus-visible`, so a mouse click on a choice or a chip shows no
- * ring and a keyboard always does; a text field matches it on a click too, which is right for a
- * field you are about to type in.
+ * its lift and gets its ring.
+ *
+ * WHEN: on `:focus`, for everything a candidate can focus (choices, hottext, hotspots, an inline
+ * choice's trigger, a slider, a tabular match cell, chips and drops), so what you just picked with
+ * the mouse shows its ring as it does from the keyboard, and so does the drop a keyboard drag moves
+ * to. A lifted chip's placeholder does not ring (`:not(:state(placeholder))`): the chip is in your
+ * hand, not in the bank. A text field matches `:focus-visible` on a click anyway.
  *
  * `foc-inset` draws the same ring just inside the box, for a row in a list that clips (the inline
  * choice menu scrolls, so a ring outside a row would be cut off at the menu's edge).
@@ -360,12 +379,11 @@
  *
  * `readonly` and `dis` were a single `cursor` declaration each — `pointer` and `not-allowed`. A mixin
  * that expands to one property is a name you have to look up to read the rule, and thirteen call
- * sites had to. THE POLICY THEY CARRIED IS STILL THE POLICY, and is worth stating once here rather
- * than losing with them: **the theme's disabled and readonly treatments are cursor ONLY.** No dimming,
- * no desaturation, no border change. A disabled control keeps its box and its colour so the page does
- * not reflow or change meaning when an item locks; the pointer is the whole affordance. If that ever
- * stops being true it becomes a state that PAINTS, and it belongs in the contract below, not in a
- * one-line mixin.
+ * sites had to. The policy they carried has since split. **Readonly is cursor ONLY**: an answered item
+ * in review keeps its full look, so its answers stay readable. **Disabled paints**: one muted grey
+ * for text, edges, controls and the selected mark (interactions/qti-disabled.css, through
+ * --qti-color-disabled), so a candidate can see that nothing there will respond. Neither moves a
+ * box: only colours change, so the page does not reflow when an item locks.
  *
  * `act` set `border-color` + `background-color` directly, which is what the paint contract exists to
  * stop: a state repaints by SWITCHING a variable, never by re-declaring the property. Its three call
@@ -462,8 +480,11 @@
 }
 
 /*
- * A press: the fill takes a little more of the content colour while the pointer is down, so a
- * choice or a chip answers the moment it is touched. Paint only, so nothing moves, and not guarded
+ * A press: the fill takes a little more of the content colour while the pointer is down.
+ *
+ * Not used by choices or chips. A choice selects on press (ActiveElementMixin, `activateOn:
+ * 'press'`), so its selection is the feedback; a chip starts a drag, which lifts and tilts it. A
+ * grey wash on top of either only muddied the look. Kept for a control that acts on release. Paint only, so nothing moves, and not guarded
  * by a hover query: a press is real on touch too, and it ends when the finger lifts.
  *
  * $role is the element's paint role (`button`, `drag`); the fill it mixes from is that role's own,

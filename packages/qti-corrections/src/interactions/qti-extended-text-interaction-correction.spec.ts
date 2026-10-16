@@ -152,13 +152,15 @@ describe('extended-text, corrected from outside', () => {
     );
 
     const badge = badgeOf(el)!.getBoundingClientRect();
-    const field = (el.shadowRoot!.querySelector('[part~="textarea"]') as HTMLElement).getBoundingClientRect();
+    const textarea = el.shadowRoot!.querySelector('[part~="textarea"]') as HTMLElement;
+    const field = textarea.getBoundingClientRect();
+    const gutter = parseFloat(getComputedStyle(textarea).paddingRight);
 
     expect(field.height, 'sanity: the textarea has a box').toBeGreaterThan(0);
     expect(badge.top, 'badge starts below the top of the field').toBeGreaterThanOrEqual(Math.floor(field.top));
     expect(badge.bottom, 'and ends above its bottom').toBeLessThanOrEqual(Math.ceil(field.bottom));
-    expect(badge.left, 'sits inside the reserved left gutter').toBeGreaterThanOrEqual(Math.floor(field.left));
-    expect(badge.right, 'without reaching the text').toBeLessThanOrEqual(Math.ceil(field.left + 38.4)); // 2.4rem
+    expect(badge.right, 'sits inside the reserved end gutter').toBeLessThanOrEqual(Math.ceil(field.right));
+    expect(badge.left, 'without reaching the text').toBeGreaterThanOrEqual(Math.floor(field.right - gutter));
   });
 
   /**
@@ -171,13 +173,13 @@ describe('extended-text, corrected from outside', () => {
     const textarea = el.shadowRoot!.querySelector('[part~="textarea"]') as HTMLElement;
 
     const before = textarea.getBoundingClientRect();
-    const paddingBefore = getComputedStyle(textarea).paddingLeft;
+    const paddingBefore = getComputedStyle(textarea).paddingRight;
 
     el.candidateCorrection = 'incorrect';
     await settle();
 
     const after = textarea.getBoundingClientRect();
-    expect(getComputedStyle(textarea).paddingLeft, 'the gutter was already there').toBe(paddingBefore);
+    expect(getComputedStyle(textarea).paddingRight, 'the gutter was already there').toBe(paddingBefore);
     expect({ w: Math.round(after.width), h: Math.round(after.height) }).toEqual({
       w: Math.round(before.width),
       h: Math.round(before.height)

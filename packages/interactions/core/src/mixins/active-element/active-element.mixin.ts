@@ -41,7 +41,21 @@ export interface ActiveElementMixinInterface {
   internals: ElementInternals;
 }
 
-export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, type: string) {
+export interface ActiveElementOptions {
+  /*
+   * When a pointer activates the element: on `click` (release, the native default) or on `press`
+   * (pointer-down). Only for an element that is not also a drag source: there pointer-down has to
+   * start the drag, so an element carrying `qti-draggable` always waits for the click. Keyboard
+   * activation (keyup) and a programmatic `.click()` behave the same either way.
+   */
+  activateOn?: 'click' | 'press';
+}
+
+export function ActiveElementMixin<T extends Constructor<LitElement>>(
+  Base: T,
+  type: string,
+  { activateOn = 'click' }: ActiveElementOptions = {}
+) {
   abstract class QtiChoice extends Base {
     @property({ type: String })
     public identifier = '';
@@ -72,6 +86,10 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       converter: ariaBooleanConverter
     })
     public readonly = false;
+
+    /* Set when a press already activated, so the `click` that follows on release does not toggle it
+       back. Reset by every pointer-down, so a press that never ends in a click cannot leak. */
+    #pressActivated = false;
 
     public internals: ElementInternals;
 
@@ -165,6 +183,8 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
 
       this.addEventListener('keyup', this._onKeyUp);
       this.addEventListener('click', this._onClick);
+      this.addEventListener('pointerdown', this._onPointerDown);
+      this.addEventListener('mousedown', this._onMouseDown);
 
       this.dispatchEvent(
         new CustomEvent(`register-${type}`, {
@@ -178,6 +198,8 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       super.disconnectedCallback();
       this.removeEventListener('keyup', this._onKeyUp);
       this.removeEventListener('click', this._onClick);
+      this.removeEventListener('pointerdown', this._onPointerDown);
+      this.removeEventListener('mousedown', this._onMouseDown);
       this.dispatchEvent(
         new CustomEvent(`unregister-${type}`, {
           bubbles: true,
@@ -195,7 +217,27 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(Base: T, t
       }
     }
 
+    /* A disabled element takes no focus, like a disabled native control. tabindex -1 only keeps it
+       out of the Tab order; a mouse press would still focus it (and show the ring). Cancelling the
+       mousedown is what stops that focus. */
+    private _onMouseDown = (event: MouseEvent) => {
+      if (this.disabled) event.preventDefault();
+    };
+
+    private _onPointerDown = (event: PointerEvent) => {
+      this.#pressActivated = false;
+      if (activateOn !== 'press' || event.button !== 0 || !event.isPrimary) return;
+      if (this.hasAttribute('qti-draggable') || this.disabled || this.readonly) return;
+      this.#pressActivated = true;
+      this.focus();
+      this._activate();
+    };
+
     private _onClick() {
+      if (this.#pressActivated) {
+        this.#pressActivated = false;
+        return;
+      }
       if (this.disabled || this.readonly) return;
       this.focus();
       this._activate();

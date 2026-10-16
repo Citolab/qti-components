@@ -2,3 +2,13 @@ qti-slider-interaction {
   --qti-tick-color: var(--qti-color-base-300);
   --qti-tick-width: 1px;
 }
+
+/* The slider takes focus on its host (tabindex 0, role slider); the ring goes round the knob, the
+   part you move, on :focus like every control you set with the pointer. */
+qti-slider-interaction:focus {
+  outline: var(--qti-focus-border-width) solid transparent;
+}
+
+qti-slider-interaction:focus::part(knob) {
+  @mixin foc;
+}

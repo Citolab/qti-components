@@ -12,7 +12,7 @@
          in the repo sets it. */
       &[shape='circle'] {
         background-color: transparent;
-        &:focus-visible {
+        &:focus {
           @mixin foc;
         }
       }

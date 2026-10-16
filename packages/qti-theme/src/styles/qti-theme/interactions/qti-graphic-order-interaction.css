@@ -37,13 +37,13 @@
         box-shadow: none;
       }
 
-      &[shape='circle']:focus-visible,
-      &[shape='rect']:focus-visible,
-      &[shape='ellipse']:focus-visible {
+      &[shape='circle']:focus,
+      &[shape='rect']:focus,
+      &[shape='ellipse']:focus {
         @mixin foc;
       }
 
-      &[shape='poly']:focus-visible {
+      &[shape='poly']:focus {
         @mixin foc;
       }
 
@@ -54,7 +54,7 @@
       }
 
       &[aria-ordervalue]:hover,
-      &[aria-ordervalue]:focus-visible {
+      &[aria-ordervalue]:focus {
         border-color: transparent !important;
       }
       &[aria-ordercorrectvalue][aria-ordervalue]:not([shape='circle'])::after {

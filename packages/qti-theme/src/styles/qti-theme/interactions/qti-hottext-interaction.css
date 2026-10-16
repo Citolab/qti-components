@@ -1,6 +1,7 @@
 @layer qti-components.interactions.base {
   qti-hottext-interaction {
-    --qti-hottext-selected-padding: var(--qti-padding-inline);
+    /* A hottext is a word in a sentence: the inline-field box, as a text entry and a gap have. */
+    --qti-hottext-selected-padding: var(--qti-inline-field-padding);
 
     /* The native radio/checkbox control is never rendered for a hottext — every variant uses custom
        styling. That is unconditional, so it lives in qti-hottext.styles.ts, which hides [part='control']
@@ -18,8 +19,12 @@
      * target's active border: pay the space once, up front, so the state has only to repaint. Every
      * hottext is now the size a selected one used to be, which is also a larger target to click.
      */
+    /* A word you pick, like a choice: a pointer cursor, and the ring on :focus so a word picked
+       with the mouse shows it too. */
     qti-hottext {
+      @mixin inline;
       padding: var(--qti-hottext-selected-padding);
+      cursor: pointer;
     }
 
     &.qti-input-control-hidden {
@@ -29,7 +34,7 @@
 
         background: var(--qti-bg);
 
-        &:focus-visible {
+        &:focus {
           @mixin foc;
         }
       }
@@ -42,7 +47,7 @@
         background-color: transparent;
         cursor: pointer;
 
-        &:focus-visible {
+        &:focus {
           @mixin foc;
         }
       }
@@ -53,7 +58,7 @@
         border: var(--qti-border);
         border-radius: var(--qti-radius-selector);
 
-        &:focus-visible {
+        &:focus {
           @mixin foc;
         }
       }
@@ -81,7 +86,10 @@
 
     &.qti-unselected-hidden qti-hottext,
     &:not(.qti-input-control-hidden, .qti-unselected-hidden) qti-hottext {
+      /* The edge takes the selected colour with the fill, as a selected choice's does, so a picked
+         word is one solid shape rather than a filled box inside a grey frame. */
       &:state(checked) {
+        border-color: var(--qti-border-active);
         background-color: var(--qti-selected-bg);
         color: var(--qti-selected-color);
       }

@@ -712,7 +712,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // from the document — `::part()` is the only way in, and a bare `::part(drag)` matches in
         // any shadow root. Without this the chip renders unstyled, which the invariance spec
         // catches as "a chip is not the same size wherever it lives".
-        cleanClone.setAttribute('part', 'drag');
+        // A text chip also carries `drag-text`, so a theme can give a word a label box where it
+        // leaves an image tile plain (graphic-gap-match takes both).
+        cleanClone.setAttribute('part', cleanClone.localName === 'qti-gap-text' ? 'drag drag-text' : 'drag');
         // Parts do not chain: `::part(drag)::part(control)` is inert. The chip forwards its own
         // inner part up one level, renamed, so a theme can still reach the drag handle as
         // `::part(drag-control)`. Drawing the grip on the chip host instead would have worked too,

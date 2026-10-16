@@ -64,7 +64,7 @@
     --hs-ring: color-mix(in oklab, var(--qti-hotspot-ring-color, var(--qti-border-active)) 90%, transparent);
   }
 
-  qti-hotspot-interaction qti-hotspot-choice:focus-visible {
+  qti-hotspot-interaction qti-hotspot-choice:focus {
     @mixin foc;
   }
 }
@@ -107,13 +107,13 @@
    *
    * Blank the ring and its halo while a hotspot is neither selected nor keyboard-focused. Both
    * halves matter: the picture reads cleanly, and a *focused* hotspot returns, which is the only
-   * thing that keeps the interaction operable from a keyboard — drop `:not(:focus-visible)` and
+   * thing that keeps the interaction operable from a keyboard — drop `:not(:focus)` and
    * tabbing through an item shows nothing.
    *
    * In `states` so it outranks the base ring and the `:hover` strengthen: hover must NOT reveal, or
    * sweeping the pointer hands back the answer regions one at a time.
    */
-  qti-hotspot-interaction.qti-unselected-hidden qti-hotspot-choice:not(:state(checked)):not(:focus-visible) {
+  qti-hotspot-interaction.qti-unselected-hidden qti-hotspot-choice:not(:state(checked)):not(:focus) {
     --hs-ring: transparent;
     --hs-halo: transparent;
   }

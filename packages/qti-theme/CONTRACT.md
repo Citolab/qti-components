@@ -217,7 +217,10 @@ derived keeps it. Older tier-1 names (`--qti-spacing`, `--qti-motion`, `--qti-fi
 | Feel    | `--cito-depth`, `--qti-motion`                                                                             |
 
 Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows, and the
-optional `--cito-color-border` for a brand that wants every edge in its own colour (Kennisnet).
+optional ones: `--cito-color-border` for a brand that wants every edge in its own colour (Kennisnet),
+`--cito-color-chip-border` for a chip's edge, `--cito-icon-drag` and `--cito-color-drag-icon` for its
+handle, and `--cito-color-marker`, `--cito-icon-marker` and `--cito-marker-anchor` for the select-point
+marker.
 
 **The `cito-` names are inputs, never declared by the theme.** Each is read once, with its default as
 the fallback, into a `qti-` name that every rule reads:

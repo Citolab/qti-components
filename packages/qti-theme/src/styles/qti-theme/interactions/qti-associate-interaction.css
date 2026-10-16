@@ -26,7 +26,7 @@
 
   /* The bank chip's own ring. The rules below ring only the PLACED chip (::part(drag)), so a bank
      chip reached with Tab showed the browser's ring instead of the theme's. */
-  qti-associate-interaction :state(drag):focus-visible {
+  qti-associate-interaction :state(drag):focus:not(:state(placeholder)) {
     @mixin foc;
   }
 
@@ -66,7 +66,7 @@
       @mixin dropping;
     }
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
-       `::part(qti-simple-associable-choice)`, a part named after the tag. Its hover, press and ring
+       `::part(qti-simple-associable-choice)`, a part named after the tag. Its hover and ring
        are in the states layer below. Deleted here: `&[dragging] { @mixin dragging }`. An attribute
        selector after ::part() never matches. */
     & qti-simple-associable-choice::part(drag) {
@@ -88,7 +88,7 @@
     &::part(drop) {
       @mixin drop;
     }
-    &::part(drop):focus-visible {
+    &::part(drop):focus {
       @mixin foc;
     }
 
@@ -120,24 +120,17 @@
   }
 
   /*
-   * A placed chip's hover, press and focus ring. Written flat: nested under `&::part(drag)` they
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(drag)` they
    * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
    * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
-   * `background-color` and must not out-rank the hover and press.
-   *
-   * The press is unguarded: `:not()` cannot follow `::part()`, and a placed chip needs no guard. It
-   * is never a placeholder or `dragging`; a drag out of a drop removes it from the drop instead.
+   * `background-color` and must not out-rank the hover.
    */
   qti-associate-interaction qti-simple-associable-choice::part(drag):hover,
   qti-associate-interaction::part(drag):hover {
     @mixin drag-hover;
   }
-  qti-associate-interaction qti-simple-associable-choice::part(drag):active,
-  qti-associate-interaction::part(drag):active {
-    @mixin press drag;
-  }
-  qti-associate-interaction qti-simple-associable-choice::part(drag):focus-visible,
-  qti-associate-interaction::part(drag):focus-visible {
+  qti-associate-interaction qti-simple-associable-choice::part(drag):focus,
+  qti-associate-interaction::part(drag):focus {
     @mixin foc;
   }
 

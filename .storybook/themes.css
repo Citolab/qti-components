@@ -9,7 +9,9 @@
  *   light      color-scheme: light, and the page painted from the base tokens
  *   dark       color-scheme: dark, the same; every light-dark() token flips
  *   kennisnet  the Kennisnet brand, as tokens (its VRT suite still adopts kennisnet.css)
- *   cito       cito.nl: the logo's dark blue, pink and light blue, and cito.nl's own :root values
+ *   cito       cito.nl: the logo's dark blue and pink, white cards on the warm page colour, and
+ *              cito.nl's own :root values
+ *   playful    a theme for young children, like a friendly learning app
  *
  * Storybook only. The brand presets are not published with @qti-components/theme.
  */
@@ -40,6 +42,7 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   --cito-depth: 1;
 
   --cito-color-border: var(--cito-color-primary); /* every edge in the brand colour */
+  --cito-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='3' width='12' height='2' rx='1'/%3E%3Crect x='2' y='7' width='12' height='2' rx='1'/%3E%3Crect x='2' y='11' width='12' height='2' rx='1'/%3E%3C/svg%3E"); /* three bars */
 }
 
 [data-qti-theme='cito'] {
@@ -47,13 +50,22 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   --cito-color-base-100: oklch(100% 0 none);
   --cito-color-base-content: oklch(32.11% 0 none); /* #333, cito.nl's --c-title */
 
-  /* The three logo colours (logo_cito.svg), each where it stays legible. */
-  --cito-color-primary: oklch(53.46% 0.1196 238.57); /* dark blue #0075aa: white on it 5.1:1 */
+  /* The logo's pink (logo_cito.svg, #ff0078), as on cito.nl's buttons and arrows: selection,
+     active border, focus ring, the Next button. White on it is 3.8:1, enough for bold or large text
+     and for edges, not for small body text. The logo's dark blue stays the answer key. */
+  --cito-color-primary: oklch(64.31% 0.2584 4.97); /* pink #ff0078 */
   --cito-color-primary-content: oklch(100% 0 none);
   --cito-color-neutral: oklch(64.31% 0.2584 4.97); /* pink #ff0078: the Next button, as on cito.nl */
   --cito-color-neutral-content: oklch(100% 0 none); /* 3.8:1, bold labels only */
-  --cito-color-chip: oklch(69.45% 0.1303 223.85); /* light blue #00add8 */
-  --cito-color-chip-content: oklch(32.11% 0 none); /* #333 on it 4.8:1; white would be 2.6:1 */
+  /* Chips like cito.nl's cards: white, borderless, #333 text, on the warm page colour below, with
+     the handle in the logo's pink, like the arrows on those cards. */
+  --cito-color-chip: oklch(100% 0 none);
+  --cito-color-chip-content: oklch(32.11% 0 none);
+  --cito-color-chip-border: transparent;
+  --cito-color-drag-icon: oklch(64.31% 0.2584 4.97); /* pink #ff0078 */
+  --cito-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1l2.5 2.5H9v3.5h3.5V5.5L15 8l-2.5 2.5V9H9v3.5h1.5L8 15l-2.5-2.5H7V9H3.5v1.5L1 8l2.5-2.5V7H7V3.5H5.5z'/%3E%3C/svg%3E"); /* four-way arrow */
+  --cito-icon-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1a11 11 0 1 1 0 22 11 11 0 0 1 0-22zm0 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 3.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z'/%3E%3C/svg%3E"); /* a target ring, the select-point marker */
+  --cito-marker-anchor: -50%; /* centred on the point, not standing on it like a pin */
 
   /* Field and table edges. The theme's default mixes 45% of the text colour into the surface, which
      with Cito's lighter #333 lands at 2.7:1 on white, under the 3:1 a field's edge needs (WCAG
@@ -72,4 +84,51 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   --cito-radius-box: 15px;
   --cito-size-selector: 0.3125em;
   --cito-font-family: 'PT Sans', Arial, sans-serif;
+}
+
+/* cito.nl's page colour (--c-background), so white fields and chips stand on it as its cards do. */
+html[data-qti-theme][data-qti-theme='cito'] body {
+  background-color: oklch(97.09% 0.0045 78.3); /* #f7f5f2 */
+}
+
+/*
+ * Playful: for young children, in the style of a friendly learning app. White cards on a pale sky
+ * page, one clear blue for what is chosen, a green button to go on, white chips that stand off the
+ * page with a soft 3D lift, generous rounding and a friendly typeface. Calm enough to read, bright
+ * enough to feel like play.
+ */
+[data-qti-theme='playful'] {
+  color-scheme: light;
+  --cito-color-base-100: oklch(100% 0 none);
+  --cito-color-base-content: oklch(34% 0.04 255); /* slate blue text */
+  --cito-color-primary: oklch(57% 0.17 245); /* clear blue: selection, focus */
+  --cito-color-primary-content: oklch(100% 0 none);
+  --cito-color-neutral: oklch(62% 0.19 140); /* green: the Next button */
+  --cito-color-neutral-content: oklch(100% 0 none);
+  --cito-color-chip: oklch(100% 0 none);
+  --cito-color-chip-content: oklch(34% 0.04 255);
+  --cito-color-chip-border: oklch(88% 0.02 250);
+  --cito-color-drag-icon: oklch(57% 0.17 245);
+  --cito-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Ccircle cx='3' cy='3' r='1.8'/%3E%3Ccircle cx='8' cy='3' r='1.8'/%3E%3Ccircle cx='13' cy='3' r='1.8'/%3E%3Ccircle cx='3' cy='9' r='1.8'/%3E%3Ccircle cx='8' cy='9' r='1.8'/%3E%3Ccircle cx='13' cy='9' r='1.8'/%3E%3C/svg%3E"); /* six round dots, side by side */
+  --cito-icon-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l3.1 6.6 7.2.8-5.4 4.9 1.5 7.2L12 17.4 5.6 21l1.5-7.2L1.7 8.9l7.2-.8z'/%3E%3C/svg%3E"); /* a star marks the point you chose */
+  --cito-marker-anchor: -50%;
+  --cito-color-marker: oklch(68% 0.2 45); /* orange */
+  --cito-color-border: oklch(78% 0.03 250);
+  --cito-color-info: oklch(52% 0.16 265);
+  --cito-color-success: oklch(55% 0.16 145);
+  --cito-color-warning: oklch(62% 0.15 60);
+  --cito-color-error: oklch(56% 0.2 25);
+  --cito-radius-field: 0.75rem;
+  --cito-radius-selector: 0.75rem;
+  --cito-radius-box: 1.25rem;
+  --cito-border-width: 2px;
+  --cito-size-selector: 0.3em;
+  --cito-size-field: 0.25rem;
+  --cito-depth: 1;
+  --cito-font-family: 'Avenir Next', Nunito, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* The pale sky page the white cards and chips stand on. */
+html[data-qti-theme][data-qti-theme='playful'] body {
+  background-color: oklch(97.5% 0.015 235);
 }

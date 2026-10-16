@@ -58,5 +58,8 @@
   :scope {
     line-height: var(--qti-line-height);
     font-family: var(--cito-font-family, inherit); /* the page's font, unless a brand sets one */
+    /* The theme's text colour, so the words flip with the surfaces when the page is dark. Inheriting
+       the page's colour left dark text on the dark fields of a page that had not set its own. */
+    color: var(--qti-color-base-content);
   }
 }

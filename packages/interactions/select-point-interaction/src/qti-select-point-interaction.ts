@@ -294,6 +294,9 @@ export class QtiSelectPointInteraction extends Interaction {
 
     if (this.#imgElement) {
       this.#calculateScale();
+      // A response given in the markup was rendered before the image's size was read, so its points
+      // were placed against a width of 1 (thousands of percent off the image). Place them again.
+      this.requestUpdate();
       // Attach the click event listener to the image element
       this.#imgElement.addEventListener('click', this.#onImageClick);
     } else {

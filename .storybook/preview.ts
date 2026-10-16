@@ -104,7 +104,8 @@ const preview: Preview = {
         Light: 'light',
         Dark: 'dark',
         Kennisnet: 'kennisnet',
-        Cito: 'cito'
+        Cito: 'cito',
+        Playful: 'playful'
       },
       defaultTheme: 'Default',
       attributeName: 'data-qti-theme'

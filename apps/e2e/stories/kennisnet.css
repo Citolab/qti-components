@@ -35,14 +35,6 @@
   }
 }
 
-@layer qti-components.interactions.states {
-  :state(placeholder) {
-    --drag-background-color: var(--qti-placeholder-bg);
-    --drag-border-color: transparent;
-    --drag-box-shadow: inset var(--qti-placeholder-shadow);
-  }
-}
-
 /*
  * Regression story scaffolding.
  *

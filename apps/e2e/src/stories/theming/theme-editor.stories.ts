@@ -19,6 +19,8 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
  * change any input in the Controls panel. A control left empty keeps the preset's value. The block
  * at the top is the CSS for the inputs you changed, ready to paste into a host's stylesheet.
  *
+ * The chrome follows the page's color-scheme (light-dark()), so it stays readable under Dark.
+ *
  * The specimens render in a shadow root that adopts the theme, as an item does in a host. The
  * inputs are set on that root's host element and inherit into it; the theme re-derives every
  * `--qti-*` token there. The page chrome around them (cards, labels) is deliberately not themed, so
@@ -45,15 +47,16 @@ const registry = (() => {
 })();
 
 const chromeCss = `
-  .te { display: grid; gap: 1.5rem; padding: 1.5rem; font-family: system-ui, sans-serif; color: #0f172a; }
+  .te { display: grid; gap: 1.5rem; padding: 1.5rem; font-family: system-ui, sans-serif;
+    color: light-dark(#0f172a, #e2e8f0); }
   .te-css { margin: 0; padding: 0.75rem 1rem; border-radius: 6px; background: #0f172a; color: #e2e8f0;
     font: 0.75rem/1.5 ui-monospace, SFMono-Regular, monospace; white-space: pre-wrap; }
   .te-h { margin: 0 0 0.5rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.09em;
     text-transform: uppercase; color: #64748b; }
   .te-g { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem; align-items: start; }
-  .te-c { margin: 0; min-width: 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
-  .te-c > figcaption { padding: 0.375rem 0.75rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc;
-    font-size: 0.75rem; font-weight: 600; color: #334155; }
+  .te-c { margin: 0; min-width: 0; border: 1px solid light-dark(#e2e8f0, #334155); border-radius: 8px; overflow: hidden; }
+  .te-c > figcaption { padding: 0.375rem 0.75rem; border-bottom: 1px solid light-dark(#e2e8f0, #334155); background: light-dark(#f8fafc, #1e293b);
+    font-size: 0.75rem; font-weight: 600; color: light-dark(#334155, #cbd5e1); }
   .te-b { padding: 1rem; overflow-x: auto; }
   .te-c--wide { grid-column: span 2; }
   @media (max-width: 40rem) { .te-c--wide { grid-column: auto; } }
@@ -82,6 +85,9 @@ const INPUTS: Record<string, Input> = {
   neutralContent: { token: '--cito-color-neutral-content', control: 'color', group: 'Brand' },
   chip: { token: '--cito-color-chip', control: 'color', group: 'Brand' },
   chipContent: { token: '--cito-color-chip-content', control: 'color', group: 'Brand' },
+  chipBorder: { token: '--cito-color-chip-border', control: 'color', group: 'Brand' },
+  dragIcon: { token: '--cito-color-drag-icon', control: 'color', group: 'Brand' },
+  marker: { token: '--cito-color-marker', control: 'color', group: 'Brand' },
   border: { token: '--cito-color-border', control: 'color', group: 'Brand' },
   info: { token: '--cito-color-info', control: 'color', group: 'States' },
   success: { token: '--cito-color-success', control: 'color', group: 'States' },
@@ -269,11 +275,51 @@ const answered = [
       step="5"
       response="35"
     ></qti-slider-interaction>`
+  ),
+  card(
+    'Select point',
+    html`<qti-select-point-interaction response-identifier="P" max-choices="1" response="203 159">
+      <qti-prompt>Klik op Mars.</qti-prompt>
+      <img src="/assets/docs/theme-editor/planets.jpg" width="480" height="320" alt="De zon en de acht planeten" />
+    </qti-select-point-interaction>`,
+    true
+  ),
+  card(
+    'Graphic gap match, words on an image',
+    html`<qti-graphic-gap-match-interaction response-identifier="GG" max-associations="4">
+      <qti-prompt>Sleep elk woord naar het juiste deel van de plant.</qti-prompt>
+      <img src="/assets/docs/theme-editor/plant.jpg" width="320" height="480" alt="Een bloeiende plant" />
+      <qti-gap-text identifier="petal" match-max="1">petal</qti-gap-text>
+      <qti-gap-text identifier="leaf" match-max="1">leaf</qti-gap-text>
+      <qti-gap-text identifier="stem" match-max="1">stem</qti-gap-text>
+      <qti-gap-text identifier="roots" match-max="1">roots</qti-gap-text>
+      <qti-associable-hotspot identifier="A" match-max="1" shape="rect" coords="175,60,275,96"></qti-associable-hotspot>
+      <qti-associable-hotspot
+        identifier="B"
+        match-max="1"
+        shape="rect"
+        coords="40,190,140,226"
+      ></qti-associable-hotspot>
+      <qti-associable-hotspot
+        identifier="C"
+        match-max="1"
+        shape="rect"
+        coords="165,285,265,321"
+      ></qti-associable-hotspot>
+      <qti-associable-hotspot
+        identifier="D"
+        match-max="1"
+        shape="rect"
+        coords="110,405,210,441"
+      ></qti-associable-hotspot>
+    </qti-graphic-gap-match-interaction>`,
+    true
   )
 ];
 
 /* Corrections: the candidate's answer marked, and the answer key below it. Attributes are written as
-   a string because show-candidate-correction is read when the element connects. */
+   a string because show-candidate-correction is read when the element connects. Extended text has
+   no answer key: its verdict comes from a grader, through the candidate-correction attribute. */
 const corrected = [
   [
     'Choice',
@@ -282,6 +328,10 @@ const corrected = [
   [
     'Text entry',
     `<p>Het verschijnsel heet <qti-text-entry-interaction response-identifier="T" expected-length="12" response="reflectie" correct-response="refractie" ${correction}></qti-text-entry-interaction>.</p>`
+  ],
+  [
+    'Extended text, partially correct',
+    `<qti-extended-text-interaction response-identifier="E" response="Zon en wind vullen elkaar aan." candidate-correction="partially-correct"></qti-extended-text-interaction>`
   ],
   [
     'Gap match',

@@ -18,11 +18,14 @@
       color: inherit;
       cursor: pointer;
       font-size: inherit;
+      /* The same line as a text entry's input (@mixin field-typography), so the two fields sit in a
+         sentence at the same height. `normal` made the dropdown about 6px shorter. */
+      line-height: var(--qti-field-line-height);
     }
 
     /* The trigger fills the field inside its border, so its ring is pushed out past that border:
        it then sits where a text entry's does, which rings its host. */
-    &::part(trigger):focus-visible {
+    &::part(trigger):focus {
       @mixin foc;
       outline-offset: var(--qti-focus-offset-past-border);
     }

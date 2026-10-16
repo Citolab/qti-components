@@ -30,12 +30,15 @@
 
       & qti-simple-choice {
         @mixin button;
+        /* A box, so a compact one: the chip's padding and the field line height, instead of the
+           roomy --qti-padding-box a plain choice pays for its selected paint. */
+        padding: var(--qti-choice-box-padding);
+        line-height: var(--qti-field-line-height);
         --qti-control-display: none;
-        &:focus-visible {
+        /* On :focus, not :focus-visible: a choice is something you pick, so the ring shows which one
+           you just picked with the mouse too (see `@mixin foc`). */
+        &:focus {
           @mixin foc;
-        }
-        &:active {
-          @mixin press button;
         }
       }
     }
@@ -47,17 +50,13 @@
         /* With a radio or checkbox shown, the ring goes round the control, as on a native one; the
            choice itself is drawn as nothing at rest, so a ring round it would outline an invisible
            box. Choices drawn as boxes (.qti-input-control-hidden, above) ring the whole box. The host
-           holds focus, so it is the host's :focus-visible that picks the part. */
-        &:focus-visible {
+           holds focus, so it is the host's :focus that picks the part; on :focus, so a choice picked
+           with the mouse shows its ring too. */
+        &:focus {
           outline: var(--qti-focus-border-width) solid transparent;
         }
 
-        &:active {
-          @mixin press button;
-        }
-
-        &:focus-visible::part(control),
-        &::part(control):focus-visible {
+        &:focus::part(control) {
           @mixin foc;
         }
 

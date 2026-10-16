@@ -158,19 +158,29 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
       // grid-row/grid-column writes required. --qti-match-rows/-cols are set
       // inline on [part='grid'] from render() so the editor (which can't write
       // to host style under ProseMirror) shares the same mechanism.
+      // A header labels its row or column and does nothing when activated, so it leaves the tab
+      // order: Tab goes from one answer cell to the next, not through every label first.
       this.sourceChoices?.forEach(c => {
         stripSizing(c);
         c.setAttribute('role', 'rowheader');
+        c.tabIndex = -1;
       });
       this.targetChoices?.forEach(c => {
         stripSizing(c);
         c.setAttribute('role', 'columnheader');
+        c.tabIndex = -1;
       });
     } else {
       sourceSet?.removeAttribute('slot');
       targetSet?.removeAttribute('slot');
-      this.sourceChoices?.forEach(c => c.removeAttribute('role'));
-      this.targetChoices?.forEach(c => c.removeAttribute('role'));
+      this.sourceChoices?.forEach(c => {
+        c.removeAttribute('role');
+        c.tabIndex = c.disabled ? -1 : 0;
+      });
+      this.targetChoices?.forEach(c => {
+        c.removeAttribute('role');
+        c.tabIndex = c.disabled ? -1 : 0;
+      });
     }
   }
 
@@ -287,7 +297,6 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                           >
                             <input
                               type=${type}
-                              hidden
                               name=${rowId}
                               value=${value}
                               .checked=${checked}

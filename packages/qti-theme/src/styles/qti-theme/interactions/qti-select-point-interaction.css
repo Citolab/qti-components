@@ -12,12 +12,16 @@
      * corrections mixin writes to. Setting it here rather than `color` leaves the prompt inheriting
      * ordinary body text, and corrections still win: they set the same variable on the point element
      * itself (`[part~='correct']`), which is deeper than this host declaration.
+     *
+     * A theme sets it through the optional input --cito-color-marker (the primary by default), and
+     * the marker's shape through --cito-icon-marker. The halo round it follows the colour on its own
+     * (qti-select-point-interaction.styles.ts).
      */
-    --qti-select-point-marker-color: var(--qti-primary);
+    --qti-select-point-marker-color: var(--cito-color-marker, var(--qti-primary));
 
     /* One selector, not nested under `&::part(point)`: that compiled to `:is(…::part(point))`,
        which no browser accepts, so the ring never matched. */
-    &::part(point):focus-visible {
+    &::part(point):focus {
       @mixin foc;
     }
   }

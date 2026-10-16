@@ -41,15 +41,23 @@
       --qti-drag-justify-content: center;
       cursor: grab;
       /* The bank chip's own ring; the rule below rings only the placed one. */
-      &:focus-visible {
+      &:focus:not(:state(placeholder)) {
         @mixin foc;
       }
     }
     /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only.
        Written in one selector: nested under `&::part(drag)` it compiled to `:is(…::part(drag))`,
        and a pseudo-element cannot sit inside `:is()`, so the ring never matched. */
-    & qti-associable-hotspot::part(drag):focus-visible {
+    & qti-associable-hotspot::part(drag):focus {
       @mixin foc;
+    }
+    /*
+     * A WORD chip is a label, so it gets the chip box: the drag paint and the inline-field box, the
+     * same as a gap-match chip, in the bank and on the image. An IMAGE tile stays plain, as above.
+     */
+    --qti-drag-padding: var(--qti-inline-field-padding);
+    & qti-gap-text {
+      @mixin drag;
     }
     /*
      * The hotspot centres its chip in qti-associable-hotspot.styles.ts.
@@ -64,6 +72,13 @@
      * Adding a rule would be a redundant restatement of this line. Left as a note rather than code
      * because the absence is the kind of thing that reads as an oversight.
      */
+    /* Where a word or tile can go, shown at rest: a dashed edge on an empty hotspot, drawn as an
+       outline so the hotspot's box does not change. Not under qti-unselected-hidden, where the author
+       asks for the hotspots to stay hidden until used (QTI 3 Appendix B.1). */
+    &:not(.qti-unselected-hidden) qti-associable-hotspot:not(:state(filled)) {
+      outline: var(--qti-border-width) dashed var(--qti-border-color);
+      outline-offset: var(--qti-drop-outline-offset);
+    }
     & qti-associable-hotspot {
       border: 2px solid transparent;
       /* No .qti-selections-* branches in here. They used to sit inside both of these blocks as
@@ -138,6 +153,14 @@
       max-width: 100%;
       height: auto;
     }
+  }
+}
+
+/* The placed word, in the hotspot's shadow. Flat: a pseudo-element in a nested list compiles to a
+   dead `:is()`. */
+@layer qti-components.interactions.base {
+  qti-graphic-gap-match-interaction qti-associable-hotspot::part(drag-text) {
+    @mixin drag;
   }
 }
 

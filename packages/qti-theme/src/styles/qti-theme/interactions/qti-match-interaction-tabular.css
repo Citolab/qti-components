@@ -87,6 +87,12 @@
       background-color: var(--qti-bg);
     }
 
+    /* A cell's radio or checkbox is a real input, visually hidden: the cell rings while it has
+       focus, inside its own edge, because the grid clips. */
+    &::part(input-cell):focus-within {
+      @mixin foc-inset;
+    }
+
     &::part(control checked) {
       @mixin control-selected var(--qti-primary);
     }

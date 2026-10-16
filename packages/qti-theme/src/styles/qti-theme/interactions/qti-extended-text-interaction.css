@@ -16,7 +16,8 @@
     &::part(textarea) {
       @mixin field-typography;
       /*
-       * The left gutter is reserved ALWAYS, graded or not.
+       * The gutter at the END of the line is reserved ALWAYS, graded or not (it was on the left, which
+       * indented every answer by the badge's room).
        *
        * It holds the correction badge, and it is stated here rather than in the corrections layer
        * because padding is layout: switching it on `:state(candidate-*)` would re-wrap every line of
@@ -32,7 +33,8 @@
        * padding and the badge's own offsets cannot drift apart. It was a literal 2.4rem that had to
        * be kept in agreement by hand with numbers in a different package.
        */
-      padding: var(--qti-spacing) var(--qti-correction-inset) var(--qti-spacing) var(--qti-correction-gutter);
+      padding-block: var(--qti-spacing);
+      padding-inline: var(--qti-correction-inset) var(--qti-correction-gutter);
 
       @mixin text;
     }

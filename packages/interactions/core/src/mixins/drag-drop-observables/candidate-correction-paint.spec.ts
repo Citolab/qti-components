@@ -83,13 +83,14 @@ const CASES: Array<{ name: string; html: string; carrier: string; painted?: stri
       </qti-match-interaction>`
   },
   {
-    // The roleless one: no card, so its correction is written as direct properties rather than slots.
+    // The roleless one: an IMAGE tile takes no card, so its correction is written as direct properties
+    // rather than slots. (A word chip in this interaction is a label box, like gap-match's.)
     name: 'graphic-gap-match chip',
     card: false,
     carrier: '[identifier="G1"]',
     html: `<qti-graphic-gap-match-interaction response-identifier="R">
         <img slot="image" alt="" width="200" height="120" />
-        <qti-gap-text identifier="G1" match-max="1">winter</qti-gap-text>
+        <qti-gap-img identifier="G1" match-max="1"><img alt="winter" width="40" height="30" /></qti-gap-img>
         <qti-associable-hotspot coords="0,0,60,40" identifier="H1" match-max="1" shape="rect"></qti-associable-hotspot>
       </qti-graphic-gap-match-interaction>`
   },

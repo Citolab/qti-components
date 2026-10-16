@@ -38,8 +38,12 @@
      * the `color-scheme` of the page around the item. The theme sets no `color-scheme` itself: a
      * page that declares none stays light. The semantic colours are one value for both.
      *
-     * The colour literals reproduce the hex colours the theme shipped with (#0175aa, #2b830e,
-     * #ffa700, #df0000, #007ac3, white), so nothing moves. Today's names below are aliases of these.
+     * The default theme is black and white: the surface is white (light) or near-black (dark), and
+     * the primary, which marks what is selected, active or focused, is the text colour itself, so a
+     * selected choice is a black fill with white text, and white on black in dark mode. Only the
+     * four state colours carry hue, because they carry meaning: the answer key, correct, partially
+     * correct, incorrect. A brand sets its colour through --cito-color-primary. Today's names below
+     * are aliases of these.
      *
      * HOW THEY ARE READ. The theme never declares a `--cito-*` name. Each line below reads one, with
      * the default as its fallback, into the `--qti-` name every rule uses:
@@ -54,20 +58,17 @@
      * `@mixin drag`) and --cito-font-family (read in reset.css). The optional --cito-color-border is
      * read by --qti-border-color, below.
      */
-    --qti-color-base-100: var(
-      --cito-color-base-100,
-      light-dark(oklch(100% 0 none), oklch(25.33% 0.016 252.42))
-    ); /* t1 */
-    --qti-color-base-content: var(
-      --cito-color-base-content,
-      light-dark(oklch(21% 0 none), oklch(97.8% 0.029 256.85))
-    ); /* t1 */
+    --qti-color-base-100: var(--cito-color-base-100, light-dark(oklch(100% 0 none), oklch(20% 0 none))); /* t1 */
+    --qti-color-base-content: var(--cito-color-base-content, light-dark(oklch(21% 0 none), oklch(96% 0 none))); /* t1 */
 
     --qti-color-primary: var(
       --cito-color-primary,
-      oklch(53.47% 0.1195 238.63)
+      light-dark(oklch(21% 0 none), oklch(96% 0 none))
     ); /* t1 — selection, active border, focus ring */
-    --qti-color-primary-content: var(--cito-color-primary-content, oklch(100% 0 none)); /* t1 */
+    --qti-color-primary-content: var(
+      --cito-color-primary-content,
+      light-dark(oklch(100% 0 none), oklch(21% 0 none))
+    ); /* t1 */
 
     /* The colour of an unbranded control that still has to stand out: the test's Next button. */
     --qti-color-neutral: var(--cito-color-neutral, light-dark(oklch(17.76% 0 none), oklch(92% 0 none))); /* t1 */
@@ -122,6 +123,11 @@
      */
     --qti-color-base-200: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 2.5%);
     --qti-color-base-300: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 6%);
+
+    /* What a disabled interaction is drawn in: text, edges, controls and the selected mark, all one
+       muted grey (interactions/qti-disabled.css). 40% of the text colour into the surface; WCAG
+       exempts disabled controls from contrast, and this keeps them readable but plainly off. */
+    --qti-color-disabled: color-mix(in oklab, var(--qti-color-base-content) 40%, var(--qti-color-base-100));
 
     /* ── Today's names, as aliases of tier 1 ──
        Rules and components read these, so a brand that sets one still wins. */
@@ -189,7 +195,10 @@
      *                               collapses at a line break, where a margin would leave an indent
      *   --qti-inline-padding-block  the field's block padding: a quarter unit, so the line holding a
      *                               field stays near the height of the lines around it
-     *   --qti-inline-field-padding  the field's box, that block padding and the usual inline padding
+     *   --qti-inline-padding-inline the field's inline padding: one spacing unit, half the padding a
+     *                               block box gets (--qti-gap), so a field in a sentence stays compact
+     *                               without its text touching the side edges
+     *   --qti-inline-field-padding  the field's box, those two together
      *
      * --qti-line-height is derived from the same parts, so a line of text is exactly as tall as a
      * field set in it: a field line then sits level with the lines around it. It is a length, so it
@@ -197,7 +206,8 @@
      */
     --qti-inline-gap: calc(var(--qti-spacing) / 4);
     --qti-inline-padding-block: var(--qti-size-field);
-    --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-gap);
+    --qti-inline-padding-inline: var(--qti-spacing);
+    --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-inline-padding-inline);
     --qti-line-height: calc(
       var(--qti-field-line-height) * 1em + 2 * var(--qti-inline-padding-block) + 2 * var(--qti-component-border-width)
     );
@@ -335,7 +345,12 @@
        A SHAPE rather than a shade, deliberately — colour alone would leave partial credit
        indistinguishable from correct for a colour-blind candidate, or in greyscale print. */
     --qti-partial-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z'/%3E%3C/svg%3E");
-    --qti-grip-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M40 352l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zm192 0l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 320c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 192l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40zM40 160c-22.1 0-40-17.9-40-40L0 72C0 49.9 17.9 32 40 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0zM232 32l48 0c22.1 0 40 17.9 40 40l0 48c0 22.1-17.9 40-40 40l-48 0c-22.1 0-40-17.9-40-40l0-48c0-22.1 17.9-40 40-40z'/%3E%3C/svg%3E");
+    /* The drag handle (`@mixin grip`): six small round dots by default, a theme sets its own shape
+       with --cito-icon-drag (a mask) and its colour with --cito-color-drag-icon. */
+    --qti-grip-mask: var(
+      --cito-icon-drag,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Ccircle cx='3' cy='3' r='1.4'/%3E%3Ccircle cx='7' cy='3' r='1.4'/%3E%3Ccircle cx='3' cy='8' r='1.4'/%3E%3Ccircle cx='7' cy='8' r='1.4'/%3E%3Ccircle cx='3' cy='13' r='1.4'/%3E%3Ccircle cx='7' cy='13' r='1.4'/%3E%3C/svg%3E")
+    ); /* t1 input: --cito-icon-drag, optional */
     --qti-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E");
 
     /*
@@ -369,6 +384,9 @@
     --qti-focus-offset: var(--qti-focus-border-width);
     --qti-focus-offset-inset: calc(-1 * var(--qti-focus-border-width));
     --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--qti-border-width));
+
+    /* A drop edge drawn as an outline lies exactly where a border would (an inline gap). */
+    --qti-drop-outline-offset: calc(-1 * var(--qti-border-width));
   }
 
   /* Honour the OS "reduce motion" request through the same knob, so CSS transitions and the JS FLIP
@@ -441,7 +459,7 @@
     --qti-field-line-height: 1.5; /* t1 */
 
     /*
-     * The left gutter a multi-line field reserves for its correction badge.
+     * The gutter at the end of the line a multi-line field reserves for its correction badge.
      *
      * DERIVED, so it cannot drift from the thing it makes room for: the badge's own inset, plus the
      * badge, plus the gap that separates it from the first character. It used to be a literal
@@ -551,8 +569,15 @@
      * the old `chip` paid `0.8em`, and which one you got depended on the layer the call site
      * happened to sit in. That is the associate bug recorded in drag-drop.invariance.spec.ts — one
      * drag, two box models, depending on where it was standing.
+     *
+     * Compact: three quarters of a spacing unit above and below, one and a half either side (6px ×
+     * 12px at the default unit), with the field line height (`@mixin drag`), so a chip is a
+     * word-sized box rather than a button. It was a whole unit by 0.8em. A choice drawn as a box takes the same, so a list of
+     * buttons and a bank of chips read as the same kind of thing. Gap match goes tighter still: its
+     * chips sit in a sentence (--qti-inline-field-padding).
      */
-    --qti-drag-padding: var(--qti-spacing) 0.8em;
+    --qti-drag-padding: calc(var(--qti-spacing) * 0.75) calc(var(--qti-spacing) * 1.5);
+    --qti-choice-box-padding: var(--qti-drag-padding);
   }
 }
 
