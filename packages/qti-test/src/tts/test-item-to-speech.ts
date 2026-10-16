@@ -29,11 +29,11 @@ function getHighlightSheet(): CSSStyleSheet {
     highlightSheet = new CSSStyleSheet();
     highlightSheet.replaceSync(`
       ::highlight(${HIGHLIGHT_ELEMENT}) {
-        background-color: var(--test-tts-element-highlight, color-mix(in oklab, var(--qti-color-info, Highlight) 15%, transparent));
+        background-color: var(--test-tts-element-highlight, color-mix(in oklab, var(--cito-color-info, Highlight) 15%, transparent));
         color: inherit;
       }
       ::highlight(${HIGHLIGHT_WORD}) {
-        background-color: var(--test-tts-word-highlight, color-mix(in oklab, var(--qti-color-warning, Mark) 55%, transparent));
+        background-color: var(--test-tts-word-highlight, color-mix(in oklab, var(--cito-color-warning, Mark) 55%, transparent));
         color: inherit;
       }
     `);

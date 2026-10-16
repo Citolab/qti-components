@@ -10,7 +10,7 @@
   width: 100%;
   border: var(--qti-border-thickness) solid var(--qti-info);
   background-color: var(--qti-bg);
-  border-radius: var(--qti-radius-box);
+  border-radius: var(--cito-radius-box);
   padding: var(--qti-padding-box);
   margin-top: var(--qti-gap);
 }

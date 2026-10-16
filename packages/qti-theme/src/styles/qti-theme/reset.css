@@ -57,5 +57,6 @@
 @scope (qti-item-body) {
   :scope {
     line-height: var(--qti-line-height);
+    font-family: var(--cito-font-family); /* `inherit` unless a brand sets its typeface */
   }
 }

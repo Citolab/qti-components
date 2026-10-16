@@ -201,6 +201,23 @@ A theme is a small set of values. Everything else is worked out from them. In
 `qti-variables.css` a tier-1 token carries a trailing `/* t1 */`; every other token declared there is
 tier 2. Tier 3 is never declared there.
 
+The tier-1 tokens made for this set carry the public prefix `cito-`, like the public `cito-` events:
+the prefix says "this is what you style". `qti-` belongs to 1EdTech's vocabulary, and everything
+derived keeps it. Older tier-1 names (`--qti-spacing`, `--qti-motion`, `--qti-field-line-height`,
+`--qti-fg`) keep their names.
+
+| Group   | Tier-1 tokens                                                                                              |
+| ------- | ---------------------------------------------------------------------------------------------------------- |
+| Surface | `--cito-color-base-100`, `--cito-color-base-content`                                                       |
+| Brand   | `--cito-color-primary` / `-content`, `--cito-color-neutral` / `-content`, `--cito-color-chip` / `-content` |
+| States  | `--cito-color-info` (answer key), `-success` (correct), `-warning` (partial), `-error` (incorrect)         |
+| Shape   | `--cito-radius-field`, `--cito-radius-selector`, `--cito-radius-box`, `--cito-border-width`                |
+| Size    | `--qti-spacing`, `--cito-size-selector`, `--cito-size-field`                                               |
+| Type    | `--cito-font-family`                                                                                       |
+| Feel    | `--cito-depth`, `--qti-motion`                                                                             |
+
+Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows.
+
 | Tier | What it is                                                                                                                                                                                                           | Who sets it                                                                       | Where it is declared                                                                                                                  |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | 1    | **Brand knobs.** The values a theme is made of: surface and text colours, the semantic colours, radii, sizes, the border width, depth, the spacing unit.                                                             | A brand or a host. Setting only these gives a complete theme.                     | `qti-variables.css`, the only place in the theme that holds literals.                                                                 |
@@ -234,7 +251,7 @@ slots; they never re-value a tier-2 token to repaint one role.
   `data-qti-theme`: tier 2 is declared there again and follows it. Such an element starts from the
   theme's defaults, not from what its ancestors set, so it states every tier-1 value it changes.
 - **Old names are aliases.** A token that was public before the tier set existed stays, as a tier-2
-  alias of its tier-1 name (`--qti-primary: var(--qti-color-primary)`). Components and rules keep
+  alias of its tier-1 name (`--qti-primary: var(--cito-color-primary)`). Components and rules keep
   reading the old name, so a brand that sets the old name still wins. A new rule reads the tier-1
   name when it has no older one.
 - **Interaction rules read tier 2 and 3.** A rule that needs a value no token offers gets a named

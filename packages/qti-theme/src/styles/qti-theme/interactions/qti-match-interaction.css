@@ -143,8 +143,8 @@
        them: border-box is already the reset, and content-box is what dropRegion sets. */
     &::part(label) {
       border: var(--qti-border);
-      border-top-left-radius: var(--qti-radius-box);
-      border-top-right-radius: var(--qti-radius-box);
+      border-top-left-radius: var(--cito-radius-box);
+      border-top-right-radius: var(--cito-radius-box);
       padding: 0.5rem;
     }
 

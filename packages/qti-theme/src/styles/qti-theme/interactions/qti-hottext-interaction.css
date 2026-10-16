@@ -25,7 +25,7 @@
     &.qti-input-control-hidden {
       qti-hottext {
         border: var(--qti-border);
-        border-radius: var(--qti-radius-selector);
+        border-radius: var(--cito-radius-selector);
 
         background: var(--qti-bg);
 
@@ -38,7 +38,7 @@
     &.qti-unselected-hidden {
       qti-hottext {
         border: 0;
-        border-radius: var(--qti-radius-selector);
+        border-radius: var(--cito-radius-selector);
         background-color: transparent;
         cursor: pointer;
 
@@ -51,7 +51,7 @@
     &:not(.qti-input-control-hidden, .qti-unselected-hidden) {
       qti-hottext {
         border: var(--qti-border);
-        border-radius: var(--qti-radius-selector);
+        border-radius: var(--cito-radius-selector);
 
         &:focus-visible {
           @mixin foc;
