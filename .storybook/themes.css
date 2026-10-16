@@ -1,0 +1,70 @@
+/*
+ * Theme presets for Storybook's toolbar (addon-themes, `withThemeByDataAttribute` in preview.ts).
+ *
+ * Each preset is tier-1 inputs only (`--cito-*`, packages/qti-theme/CONTRACT.md §8) on
+ * <html data-qti-theme>. The theme never declares those names, so they inherit everywhere, into
+ * every shadow root too, and the theme re-derives from them on <html> and on every `:host`.
+ *
+ *   default    nothing at all: what a host gets with no configuration
+ *   light      color-scheme: light, and the page painted from the base tokens
+ *   dark       color-scheme: dark, the same; every light-dark() token flips
+ *   kennisnet  the Kennisnet brand, as tokens (its VRT suite still adopts kennisnet.css)
+ *   cito       cito.nl: the logo's dark blue, pink and light blue, and cito.nl's own :root values
+ *
+ * Storybook only. The brand presets are not published with @qti-components/theme.
+ */
+
+/* Every preset but `default` paints the page from the tokens, so a dark or tinted surface has text
+   that reads on it. `default` leaves the page alone, as a host's page would be. */
+html[data-qti-theme]:not([data-qti-theme='default']) body {
+  background-color: var(--qti-color-base-100);
+  color: var(--qti-color-base-content);
+}
+
+[data-qti-theme='light'] {
+  color-scheme: light;
+}
+
+[data-qti-theme='dark'] {
+  color-scheme: dark;
+}
+
+[data-qti-theme='kennisnet'] {
+  color-scheme: light;
+  --cito-color-base-content: oklch(28.82% 0.1066 315.18); /* #3e144e */
+  --cito-color-primary: oklch(36.34% 0.1411 314.28); /* #581d70 */
+  --cito-color-primary-content: oklch(100% 0 none);
+  --cito-color-chip: var(--cito-color-primary); /* filled chips */
+  --cito-color-chip-content: var(--cito-color-primary-content);
+  --cito-radius-field: 0.3rem;
+  --cito-depth: 1;
+
+  --cito-color-border: var(--cito-color-primary); /* every edge in the brand colour */
+}
+
+[data-qti-theme='cito'] {
+  color-scheme: light;
+  --cito-color-base-100: oklch(100% 0 none);
+  --cito-color-base-content: oklch(32.11% 0 none); /* #333, cito.nl's --c-title */
+
+  /* The three logo colours (logo_cito.svg), each where it stays legible. */
+  --cito-color-primary: oklch(53.46% 0.1196 238.57); /* dark blue #0075aa: white on it 5.1:1 */
+  --cito-color-primary-content: oklch(100% 0 none);
+  --cito-color-neutral: oklch(64.31% 0.2584 4.97); /* pink #ff0078: the Next button, as on cito.nl */
+  --cito-color-neutral-content: oklch(100% 0 none); /* 3.8:1, bold labels only */
+  --cito-color-chip: oklch(69.45% 0.1303 223.85); /* light blue #00add8 */
+  --cito-color-chip-content: oklch(32.11% 0 none); /* #333 on it 4.8:1; white would be 2.6:1 */
+
+  /* cito.nl's state colours (--c-info, --c-success, --c-warning, --c-error). */
+  --cito-color-info: oklch(53.46% 0.1196 238.57); /* #0075aa, the same dark blue */
+  --cito-color-success: oklch(63.6% 0.179 149.09); /* #00a748 */
+  --cito-color-warning: oklch(86.13% 0.176 89.44); /* #ffca00 */
+  --cito-color-error: oklch(65.28% 0.2332 26.62); /* #ff3838 */
+
+  /* cito.nl's --r-sm and --r-lg, and its 5 × --s checkboxes and radios. */
+  --cito-radius-field: 5px;
+  --cito-radius-selector: 5px;
+  --cito-radius-box: 15px;
+  --cito-size-selector: 0.3125em;
+  --cito-font-family: 'PT Sans', Arial, sans-serif;
+}

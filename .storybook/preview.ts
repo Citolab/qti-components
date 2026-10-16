@@ -3,7 +3,7 @@ import { setStorybookHelpersConfig, type StorybookHelpersOptions } from '@wc-too
 import prettier from 'prettier-v2'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import HTMLParser from 'prettier-v2/parser-html'; /* https://github.com/storybookjs/storybook/issues/8078#issuecomment-2325332120 */
 import { expect } from 'storybook/test';
-import { withThemeByClassName } from '@storybook/addon-themes';
+import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import { mswLoader } from 'msw-storybook-addon/csf3';
 
 /*
@@ -27,6 +27,7 @@ const mswSetup = async () => {
  */
 import 'modern-normalize/modern-normalize.css';
 import '../packages/qti-theme/src/item.css';
+import './themes.css';
 // The single QTI theme, inlined into the preview document so every story is themed. This replaces
 // the old multi-substrate switcher (one theme now — see the theme-architecture pivot); a story that
 // scopes its own brand adopts its stylesheets into its own shadow instead (see kennisnet.stories.ts).
@@ -92,17 +93,21 @@ setCustomElementsManifest(customElements);
 const preview: Preview = {
   decorators: [
     /*
-     * One class-based theme axis. `withThemeByClassName` applies the theme class to <html>. `light`
-     * is the neutral default (a chip is a bordered box); `dark` is its dark counterpart. The
-     * Kennisnet brand is NOT a global theme here — it is a brand overlay adopted straight into the
-     * item shadow by its own story (apps/e2e/src/stories/kennisnet/kennisnet.stories.ts).
+     * The theme presets in the toolbar. Each sets `data-qti-theme` on <html>; themes.css gives each
+     * value its tier-1 tokens, and the theme re-derives everything else there. `default` sets
+     * nothing, so every story and test renders as a host with no configuration would. The Kennisnet
+     * VRT suite does not depend on this: it adopts kennisnet.css into its own item shadows.
      */
-    withThemeByClassName({
+    withThemeByDataAttribute({
       themes: {
-        light: 'light-theme',
-        dark: 'dark-theme'
+        Default: 'default',
+        Light: 'light',
+        Dark: 'dark',
+        Kennisnet: 'kennisnet',
+        Cito: 'cito'
       },
-      defaultTheme: 'light'
+      defaultTheme: 'Default',
+      attributeName: 'data-qti-theme'
     }),
     baselineOverlayDecorator,
     webComponentInspectDecorator
