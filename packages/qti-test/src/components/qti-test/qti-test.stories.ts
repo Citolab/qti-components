@@ -32,7 +32,7 @@ export const Default: Story = {
   render: () => html`
     <qti-test navigate="item">
       <test-navigation class="flex flex-col gap-2">
-        <test-container class="block h-96 overflow-auto" test-url=${GETTING_STARTED_TEST}></test-container>
+        <test-container class="block h-100 overflow-auto" test-url=${GETTING_STARTED_TEST}></test-container>
         <nav class="flex justify-between">
           <test-prev>Previous</test-prev>
           <test-next>Next</test-next>
