@@ -464,6 +464,10 @@
  * $role is the element's paint role (`button`, `drag`); the fill it mixes from is that role's own,
  * so a selected choice or a branded chip darkens from its own colour. A direct `background-color`,
  * for the reason `drag-hover` below gives.
+ *
+ * On a chip, call it as `&:active:not(:state(placeholder), :state(dragging))`. `:active` holds for
+ * as long as the button is down, which is the whole drag, and a direct property outranks the slot
+ * the placeholder switches: unguarded, the hole a lifted chip leaves would stay darkened.
  */
 @define-mixin press $role {
   background-color: color-mix(

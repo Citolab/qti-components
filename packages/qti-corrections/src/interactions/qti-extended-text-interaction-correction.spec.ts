@@ -22,7 +22,16 @@ import { QtiExtendedTextInteractionCorrection } from './qti-extended-text-intera
 
 const settle = () => new Promise(r => setTimeout(r, 150));
 
-const AMBER = 'rgb(255, 167, 0)'; // --qti-warning, which --qti-partially-correct aliases
+// The partial verdict's colour, read from the theme's own token (--qti-partially-correct aliases
+// --qti-warning) so the test follows the theme instead of a literal.
+const tokenColor = (token: string) => {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${token})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+};
 
 type Corrected = HTMLElement & {
   internals: ElementInternals;
@@ -112,6 +121,7 @@ describe('extended-text, corrected from outside', () => {
       `<qti-extended-text-interaction response-identifier="R" candidate-correction="partially-correct"></qti-extended-text-interaction>`
     );
 
+    const AMBER = tokenColor('--qti-partially-correct');
     const badge = badgeOf(el)!;
     expect(badge.getAttribute('part')).toBe('correction correction-partially-correct');
 

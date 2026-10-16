@@ -47,7 +47,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:active {
+      &:active:not(:state(placeholder), :state(dragging)) {
         @mixin press drag;
       }
       &:focus-visible {
@@ -64,7 +64,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:active {
+      &:active:not(:state(placeholder), :state(dragging)) {
         @mixin press drag;
       }
       &:focus-visible {
