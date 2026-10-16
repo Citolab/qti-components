@@ -10,6 +10,8 @@ import type { TestProjectConfiguration } from 'vitest/config';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 
+import { legacyChromePath } from './tools/testing/legacy-chrome.mjs';
+
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // .storybook/preview.ts imports the generated (uncommitted) custom-elements.json.
@@ -210,6 +212,8 @@ export default defineConfig({
             // covered here too — see tools/postcss/custom-state-fallback.mjs.
             'tools/**/*.spec.ts'
           ],
+          // Assert old-browser behaviour, so they run only in the `legacy` project below.
+          exclude: ['**/node_modules/**', '**/*.legacy.spec.ts'],
           globals: true,
           typecheck: {
             tsconfig: './tsconfig.json'
@@ -224,7 +228,42 @@ export default defineConfig({
             instances: [{ browser: 'chromium', headless: true }]
           }
         }
-      }
+      },
+      /* Old-browser checks: `*.legacy.spec.ts` in a Chrome that predates `:state()`, so the
+         custom-state shim and the theme's `[data-state~=…]` fallback arms are what render. See
+         tools/testing/legacy-chrome.mjs. Only under `LEGACY=1` (`pnpm run test:legacy`), and only
+         once that Chrome is installed (`pnpm run test:legacy:install`). */
+      ...((process.env.LEGACY !== '1'
+        ? []
+        : [
+            {
+              plugins: [tsconfigPaths()],
+              test: {
+                name: 'legacy',
+                include: ['packages/**/*.legacy.spec.ts', 'tools/**/*.legacy.spec.ts'],
+                globals: true,
+                browser: {
+                  enabled: true,
+                  // LEGACY_BROWSER=bundled runs the same specs in Playwright's own Chromium, to compare.
+                  provider:
+                    process.env.LEGACY_BROWSER === 'bundled'
+                      ? playwright()
+                      : playwright({ launchOptions: { executablePath: requireLegacyChrome() } }),
+                  headless: true,
+                  // Tall enough for the whole contact sheet in one screenshot.
+                  viewport: { width: 800, height: 2000 },
+                  screenshotFailures: false,
+                  instances: [{ browser: 'chromium' }]
+                }
+              }
+            }
+          ]) as TestProjectConfiguration[])
     ]
   }
 });
+
+function requireLegacyChrome(): string {
+  const executable = legacyChromePath();
+  if (!executable) throw new Error('LEGACY=1 needs the legacy Chrome: run `pnpm run test:legacy:install` first.');
+  return executable;
+}
