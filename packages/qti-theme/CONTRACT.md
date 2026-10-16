@@ -11,13 +11,18 @@ Treat this as normative. If implementation and this document disagree, update on
 The theme must declare the layer stack in this exact order in
 packages/qti-theme/src/styles/qti-theme/index.css:
 
-1. qti-components.global
-2. qti-components.interactions.base
-3. qti-components.interactions.states
-4. qti-components.interactions.corrections
-5. qti-components.overrides
+1. qti-components.reset
+2. qti-components.global
+3. qti-components.interactions.base
+4. qti-components.interactions.brand
+5. qti-components.interactions.states
+6. qti-components.interactions.corrections
+7. qti-components.elements
+8. qti-components.overrides
 
-Precedence rule: later layer wins at equal specificity.
+Precedence rule: later layer wins at equal specificity. `interactions.brand` and `overrides` are
+empty in the theme on purpose: they are where a brand sheet and a host write, and they must stay
+declared so a brand's paint lands under states and corrections, not above them.
 
 ## 2. Ownership by layer
 
@@ -52,6 +57,21 @@ values, so any layer can read a token declared in any other.
 - Owns answer-blue treatment and answer check glyphs.
 - Can override base/states paint where answer-key semantics require it.
 - Tokens: correct / incorrect / partially-correct (plus -light variants), answer key.
+
+### qti-components.reset
+
+- The item's base rules inside `@scope (qti-item-body)`: box sizing, margins, the line height.
+- Declares no tokens.
+
+### qti-components.interactions.brand
+
+- A brand sheet's resting look (kennisnet.css). Above base, below states, so a state still wins.
+- Empty in the theme. Declares no tokens.
+
+### qti-components.elements
+
+- Non-interaction elements and prose (`prose.css`, rubric block, modal feedback).
+- Declares no tokens.
 
 ### qti-components.overrides
 
@@ -118,17 +138,17 @@ If this contract changes, update this file and the VRT guard in the same PR.
 The theme is **spacing, sizing and paint**. Where a box goes, and whether it is in flow at all,
 belongs to the `.styles.ts` beside the component that owns the box.
 
-| Class            | Properties                                                                                                                                                                                  | Theme |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| Paint            | `color`, `background*`, `box-shadow`, `outline*`, `opacity`, `mask*`, `cursor`, `transition`, `visibility`, `font-*`, `text-*`, `transform` / `rotate`                                          | yes   |
-| Border           | `border*`, `border-radius`                                                                                                                                                                    | yes   |
-| Spacing          | `margin*`, `padding*`, `gap`                                                                                                                                                                  | yes   |
-| Sizing           | `width`, `height`, `min-*`, `max-*`, `box-sizing`                                                                                                                                             | yes   |
-| Layout           | `display`, `position`, `inset` / `top` / `right` / `bottom` / `left`, `float`, `clear`, `flex*`, `grid*`, `justify-*`, `align-*`, `place-*`, `order`, `overflow*`, `vertical-align`, `z-index`, `white-space`, `columns`, `aspect-ratio` | no    |
+| Class   | Properties                                                                                                                                                                                                                               | Theme |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| Paint   | `color`, `background*`, `box-shadow`, `outline*`, `opacity`, `mask*`, `cursor`, `transition`, `visibility`, `font-*`, `text-*`, `transform` / `rotate`                                                                                   | yes   |
+| Border  | `border*`, `border-radius`                                                                                                                                                                                                               | yes   |
+| Spacing | `margin*`, `padding*`, `gap`                                                                                                                                                                                                             | yes   |
+| Sizing  | `width`, `height`, `min-*`, `max-*`, `box-sizing`                                                                                                                                                                                        | yes   |
+| Layout  | `display`, `position`, `inset` / `top` / `right` / `bottom` / `left`, `float`, `clear`, `flex*`, `grid*`, `justify-*`, `align-*`, `place-*`, `order`, `overflow*`, `vertical-align`, `z-index`, `white-space`, `columns`, `aspect-ratio` | no    |
 
 Enforced by `qti/no-layout-in-theme` (`tools/stylelint/no-layout-in-theme.mjs`), scoped to this
 directory. Note that it and `qti/no-layout-in-transient-state` disagree on purpose: inside a
-transient state `padding` and `width` *are* layout, because toggling them reflows the page, while in
+transient state `padding` and `width` _are_ layout, because toggling them reflows the page, while in
 the theme they are exactly what belongs.
 
 ### Two exceptions
@@ -172,12 +192,53 @@ The theme still decides; the box model stays with the component. The same patter
 
 - the answer key's chip bank, on `:host([answer-key])`. The attribute is set on the clone by
   `CorrectResponseMixin`; the theme cannot see it, because `.full-correct-response` is on the wrapper
-  *around* the interaction and only a document selector reaches that.
+  _around_ the interaction and only a document selector reaches that.
 - the native radio/checkbox under `.qti-input-control-hidden`, via `--qti-control-display`.
+
+## 8. Token tiers
+
+A theme is a small set of values. Everything else is worked out from them. In
+`qti-variables.css` a tier-1 token carries a trailing `/* t1 */`; every other token declared there is
+tier 2. Tier 3 is never declared there.
+
+| Tier | What it is                                                                                                                                                                                                           | Who sets it                                                                       | Where it is declared                                                                                                                  |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | **Brand knobs.** The values a theme is made of: surface and text colours, the semantic colours, radii, sizes, the border width, depth, the spacing unit.                                                             | A brand or a host. Setting only these gives a complete theme.                     | `qti-variables.css`, the only place in the theme that holds literals.                                                                 |
+| 2    | **Derived defaults.** Everything that follows from tier 1: tints, the border colour, the focus ring, selection, corrections, the paint contract's resting look (`--qti-component-*`), the rhythm composites.         | Nobody, normally. A host may re-value one when the derived value is wrong for it. | `qti-variables.css`, as `var()`, `calc()` or `color-mix(in oklch, …)` over tier 1.                                                    |
+| 3    | **Handover variables.** A decision the theme makes and a component spends (§7): `--qti-choice-gap`, `--qti-control-display`, `--qti-choice-label-display`, `--qti-choice-align-items`, `--qti-chip-justify-content`. | The theme, on the element that needs it.                                          | Nowhere at the root. The theme sets it on a selector; the component reads it with a fallback that keeps it working without the theme. |
+
+Not a tier: the paint contract's **role slots** (`--drag-*`, `--button-*`, `--text-*`, …). A slot is
+declared nowhere and read only with a tier-2 fallback (see `@mixin paint`). States and brands switch
+slots; they never re-value a tier-2 token to repaint one role.
+
+### Rules
+
+- **Literals live in tier 1 only.** A tier-2 value is a reference, a `calc()` or a
+  `color-mix(in oklch, …)` over tier 1. Exceptions, each a literal on purpose: hairlines in `px`
+  (focus width, ring widths), durations, z-indices, the icon masks, and the unitless ratios inside a
+  derivation (a mix percentage, `* 0.625`).
+- **Colours are `oklch()`.** A gray uses `none` as its hue, so mixing it with a colour does not pull
+  the result toward red.
+- **Light and dark are one set of tokens.** A tier-1 colour is `light-dark(<light>, <dark>)`. The
+  theme sets no `color-scheme`: the page decides. A host that declares `color-scheme: dark` (or
+  `light dark`) on the item's container gets the dark values; one that declares nothing stays light.
+  A dark theme is made by switching `color-scheme`, never by redefining the tokens.
+- **Re-value tier 1 where tier 2 is declared.** Every token block is declared on
+  `:root, :host, [data-qti-theme]`. A custom property's `var()` resolves on the element that
+  declares it, so a tier-2 token declared on `:root` keeps the `:root` value of the tier 1 it reads,
+  whatever a descendant sets. Theme a subtree by setting tier 1 on an element that carries
+  `data-qti-theme`: tier 2 is declared there again and follows it. Such an element starts from the
+  theme's defaults, not from what its ancestors set, so it states every tier-1 value it changes.
+- **Old names are aliases.** A token that was public before the tier set existed stays, as a tier-2
+  alias of its tier-1 name (`--qti-primary: var(--qti-color-primary)`). Components and rules keep
+  reading the old name, so a brand that sets the old name still wins. A new rule reads the tier-1
+  name when it has no older one.
+- **Interaction rules read tier 2 and 3.** A rule that needs a value no token offers gets a named
+  tier-2 token, not a `calc()` at the call site (see the rhythm contract in `qti-variables.css`).
 
 ---
 
-## 8. See also
+## 9. See also
 
 - **`DROP-SIZING.md`** — the drop/drag sizing vocabulary: which four tokens exist, why a drop is
   either a slot or a card, why the inset is additive, and why a chip never resizes when it lands.

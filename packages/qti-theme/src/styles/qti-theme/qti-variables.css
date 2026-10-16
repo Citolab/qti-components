@@ -8,6 +8,11 @@
  * token declared in `global` is readable from a rule in any layer, and `var()` substitution across
  * these blocks (--qti-correct reads --qti-success) is layer-independent. Nothing here renders
  * differently for being grouped this way.
+ *
+ * Tiers (CONTRACT.md §8): a token tagged `t1` is a brand knob and the only kind that holds a
+ * literal; every other token here is tier 2, derived from tier 1. Every block is declared on
+ * `:root, :host, [data-qti-theme]`, so a subtree themed with `data-qti-theme` re-derives tier 2 from
+ * its own tier 1.
  */
 
 /* ============================================================================
@@ -15,16 +20,17 @@
  * ========================================================================== */
 @layer qti-components.global {
   :root,
-  :host {
+  :host,
+  [data-qti-theme] {
     /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
-    --qti-primary: #0175aa; /* purple — chips, selection, active border */
-    --qti-success: #2b830e; /* green */
-    --qti-warning: #ffa700; /* amber */
-    --qti-error: #df0000; /* red */
-    --qti-info: #007ac3; /* blue — the answer key */
+    --qti-primary: #0175aa; /* t1 — purple — chips, selection, active border */
+    --qti-success: #2b830e; /* t1 — green */
+    --qti-warning: #ffa700; /* t1 — amber */
+    --qti-error: #df0000; /* t1 — red */
+    --qti-info: #007ac3; /* t1 — blue — the answer key */
 
     /* Foreground on a primary fill. */
-    --qti-primary-fg: #fff;
+    --qti-primary-fg: #fff; /* t1 */
 
     /* ── Rhythm ──
      *
@@ -65,7 +71,7 @@
      *
      * Widening boxes without touching the vertical rhythm means re-declaring --qti-padding-box,
      * which is deliberate: that is a different look, not a different unit. */
-    --qti-spacing: 0.5rem;
+    --qti-spacing: 0.5rem; /* t1 */
     --qti-padding-box: var(--qti-spacing) calc(var(--qti-spacing) * 2);
     --qti-padding-inline: calc(var(--qti-spacing) / 4) calc(var(--qti-spacing) / 2);
     --qti-gap: calc(var(--qti-spacing) * 2);
@@ -107,7 +113,7 @@
        motion. CSS transitions read it through the calc below; the drag-drop FLIP engine reads
        --qti-motion directly (see flip.utils.ts resolveMotionScale), so this one token silences both
        CSS motion and JS FLIP. A theme or PNP profile can set 0.5 to slow motion or 0 to stop it. */
-    --qti-motion: 1;
+    --qti-motion: 1; /* t1 */
     --qti-motion-duration-fast: calc(150ms * var(--qti-motion));
 
     /* ── The component surface ──
@@ -116,7 +122,7 @@
        slider track). Those two readerships are why this group and the --qti-component-* group below
        are not one group: this is "the theme's surface colour", that is "what a component paints when
        it says nothing", and only the second is the paint contract's business. */
-    --qti-bg: white;
+    --qti-bg: white; /* t1 */
 
     /*
      * THE body text colour — the foreground half of the --qti-bg / --qti-fg pair.
@@ -140,11 +146,11 @@
      * Every reader is a colour context, which is what makes the keyword safe: it reaches `color`
      * either directly or through a role slot (--field-color, --drag-color, @mixin candidate).
      */
-    --qti-fg: inherit;
-    --qti-border-thickness: 1px; /* some places need the width alone (invariance, calcs) */
-    --qti-border-style: solid;
+    --qti-fg: inherit; /* t1 */
+    --qti-border-thickness: 1px; /* t1 — some places need the width alone (invariance, calcs) */
+    --qti-border-style: solid; /* t1 */
     --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
-    --qti-border-radius: 0.2rem;
+    --qti-border-radius: 0.2rem; /* t1 */
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
     /* ── The paint contract's resting look ──
@@ -230,7 +236,8 @@
      with higher specificity. */
   @media (prefers-reduced-motion: reduce) {
     :root,
-    :host {
+    :host,
+    [data-qti-theme] {
       --qti-motion: 0;
     }
   }
@@ -241,7 +248,8 @@
  * ========================================================================== */
 @layer qti-components.interactions.base {
   :root,
-  :host {
+  :host,
+  [data-qti-theme] {
     /*
      * The radio/checkbox box. Named for what it is — every other name around it already says
      * "control": part="control", part="control-mark", the control-selected mixin. "form" was the odd
@@ -262,7 +270,7 @@
      * shrinks with it. Nothing in the theme sets a smaller size yet, so a floor would be a magic
      * number guarding a case that does not exist; add `max()` here if a real one turns up.
      */
-    --qti-control-size: 1em;
+    --qti-control-size: 1em; /* t1 */
 
     /* The correction badge's box. Named in two comments above and read by correction.styles.ts, but
        never actually declared until now — every badge has been running on that file's `1em`
@@ -290,7 +298,7 @@
     /* The line-height @mixin field-typography gives a field. A token because the correction badge
        has to be exactly one field-line tall to centre on the text, and `1lh` cannot be used for it:
        that unit resolves against the badge's own inherited line-height, not the field's. */
-    --qti-field-line-height: 1.5;
+    --qti-field-line-height: 1.5; /* t1 */
 
     /*
      * The left gutter a multi-line field reserves for its correction badge.
@@ -413,7 +421,8 @@
  * ========================================================================== */
 @layer qti-components.interactions.states {
   :root,
-  :host {
+  :host,
+  [data-qti-theme] {
     /* Selection is a semantic alias of the primary action colour. */
     --qti-selected-bg: var(--qti-primary);
     --qti-selected-color: var(--qti-primary-fg);
@@ -460,7 +469,8 @@
  * ========================================================================== */
 @layer qti-components.interactions.corrections {
   :root,
-  :host {
+  :host,
+  [data-qti-theme] {
     /* ── Correction — derived from the semantic colours, never set directly. ── */
     --qti-correct: var(--qti-success);
     --qti-incorrect: var(--qti-error);
