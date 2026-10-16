@@ -1,5 +1,11 @@
 # @citolab/qti-components
 
+## 10.0.0-next.9
+
+### Patch Changes
+
+- [#316](https://github.com/Citolab/qti-components/pull/316) [`b58d409`](https://github.com/Citolab/qti-components/commit/b58d4093456e38c992bf08cbbbc85ddf97abea40) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - The PCI iframe is now exactly as high as its content: it no longer adds 100px of empty space below it. The iframe keeps the width of its host instead of a fixed pixel width, so a PCI follows the item layout when it gets narrower, e.g. when QTI layout columns stack.
+
 ## 10.0.0-next.8
 
 ### Patch Changes
