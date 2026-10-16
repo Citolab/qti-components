@@ -30,6 +30,7 @@ const render = () => html`
       <test-container test-url=${TEST_URL}></test-container>
       <test-end-attempt>End Attempt</test-end-attempt>
       <test-next>Next</test-next>
+      <test-submit>Submit</test-submit>
     </test-navigation>
   </qti-test>
 `;
@@ -68,19 +69,18 @@ export const T1_L2_D1: Story = {
  * strictly equal to the amount of correctly responded AssessmentItems amongst the AssessmentTest.
  *
  * The candidate answers the first two items correctly, ending the attempt and moving on after each (the
- * test is linear with individual submission, so Next only unlocks once the attempt has ended). Nothing here
- * calls `outcomeProcessing()`: the test is expected to keep the outcome up to date itself.
+ * test is linear with individual submission, so Next only unlocks once the attempt has ended), then presses
+ * Submit, which scores the test. Each submit starts from the declared default, so the total is the count of
+ * correct items and does not accumulate over submits.
  */
 export const T9_L2_D1: Story = {
   name: 'T9-L2-D1',
-  // Known failing: the test does not run its outcome processing when an attempt ends, so SCORE_TOTAL stays 0
-  // until a host calls `outcomeProcessing()`. Excluded from the test runs (see `tags.exclude` in vitest.config.ts).
-  tags: ['xfail'],
   render,
   play: async ({ canvasElement, step }) => {
     const test = canvasElement.querySelector('qti-test') as TestElement;
     const next = within(canvasElement).getByText('Next');
     const endAttempt = within(canvasElement).getByText('End Attempt');
+    const submit = within(canvasElement).getByText('Submit');
     const scoreTotal = () => Number(test.getOutcome('SCORE_TOTAL')?.value);
 
     const answerCorrectlyAndMoveOn = async (n: number) => {
@@ -95,11 +95,13 @@ export const T9_L2_D1: Story = {
 
     await step('item 1 answered correctly: SCORE_TOTAL is 1', async () => {
       await answerCorrectlyAndMoveOn(1);
+      submit.click();
       await waitFor(() => expect(scoreTotal()).toBe(1), { timeout: 5000 });
     });
 
     await step('item 2 answered correctly: SCORE_TOTAL is 2', async () => {
       await answerCorrectlyAndMoveOn(2);
+      submit.click();
       await waitFor(() => expect(scoreTotal()).toBe(2), { timeout: 5000 });
     });
   }
