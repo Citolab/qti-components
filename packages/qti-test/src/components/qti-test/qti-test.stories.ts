@@ -6,9 +6,8 @@ import type { QtiTest } from './qti-test';
 type Story = StoryObj<QtiTest>;
 
 const meta: Meta<QtiTest> = {
-  title: 'QTI Test/Overview',
+  title: 'Getting started',
   component: 'qti-test',
-  subcomponents: { testContainer: 'test-container' },
   args: {},
   argTypes: {},
   parameters: {
@@ -17,7 +16,8 @@ const meta: Meta<QtiTest> = {
     },
     controls: { disable: true }
   },
-  tags: ['autodocs', 'no-tests']
+  // The demo behind the Getting started page: out of the sidebar (`!dev`) and out of the test runs (`no-tests`).
+  tags: ['!dev', 'no-tests']
 };
 export default meta;
 

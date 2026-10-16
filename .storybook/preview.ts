@@ -138,6 +138,7 @@ const preview: Preview = {
         // Sidebar order = reading order; 'Testing' is last.
         order: [
           'Introduction',
+          'Getting started',
           'Implementation',
           ['Theming', 'Cookbook'],
           'Concepts',
