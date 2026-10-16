@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'Testing/Conformance/advanced/Q10 - Order Interaction',
+  title: 'Testing/Conformance/advanced/Q15 - Order Interaction',
   beforeEach: async () => {}
 };
 export default meta;
@@ -34,16 +34,16 @@ const getResponse = (assessmentItem: QtiAssessmentItem) =>
   assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value;
 
 const loader = async () => ({
-  xml: await getItemByUri('/assets/qti-conformance/Advanced/Q10/order-interaction.xml')
+  xml: await getItemByUri('/assets/qti-conformance/Advanced/Q15/order-interaction.xml')
 });
 
 const settle = async () => {
   await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
 };
 
-// Q10-L1-D1: No choices ordered → RESPONSE is NULL
-export const Q10_L1_D1: Story = {
-  name: 'Q10-L1-D1',
+// Q15-L1-D1: No choices ordered → RESPONSE is NULL
+export const Q15_L1_D1: Story = {
+  name: 'Q15-L1-D1',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem } = getElements(canvasElement);
@@ -53,9 +53,9 @@ export const Q10_L1_D1: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D2: Order A, B, C → RESPONSE is ['A', 'B', 'C']
-export const Q10_L1_D2: Story = {
-  name: 'Q10-L1-D2',
+// Q15-L1-D2: Order A, B, C → RESPONSE is ['A', 'B', 'C']
+export const Q15_L1_D2: Story = {
+  name: 'Q15-L1-D2',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction, choiceA, choiceB, choiceC } = getElements(canvasElement);
@@ -72,9 +72,9 @@ export const Q10_L1_D2: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D3: Order C, B, A → RESPONSE is ['C', 'B', 'A']
-export const Q10_L1_D3: Story = {
-  name: 'Q10-L1-D3',
+// Q15-L1-D3: Order C, B, A → RESPONSE is ['C', 'B', 'A']
+export const Q15_L1_D3: Story = {
+  name: 'Q15-L1-D3',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction, choiceA, choiceB, choiceC } = getElements(canvasElement);
@@ -90,9 +90,9 @@ export const Q10_L1_D3: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D4: Order B, A, C → RESPONSE is ['B', 'A', 'C']
-export const Q10_L1_D4: Story = {
-  name: 'Q10-L1-D4',
+// Q15-L1-D4: Order B, A, C → RESPONSE is ['B', 'A', 'C']
+export const Q15_L1_D4: Story = {
+  name: 'Q15-L1-D4',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction, choiceA, choiceB, choiceC } = getElements(canvasElement);
@@ -108,9 +108,9 @@ export const Q10_L1_D4: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D5: Order A, C, B → RESPONSE is ['A', 'C', 'B']
-export const Q10_L1_D5: Story = {
-  name: 'Q10-L1-D5',
+// Q15-L1-D5: Order A, C, B → RESPONSE is ['A', 'C', 'B']
+export const Q15_L1_D5: Story = {
+  name: 'Q15-L1-D5',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction, choiceA, choiceB, choiceC } = getElements(canvasElement);
@@ -126,9 +126,9 @@ export const Q10_L1_D5: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D6: A -> slot0, then return to source, then A -> slot2 => ['', '', 'A']
-export const Q10_L1_D6: Story = {
-  name: 'Q10-L1-D6',
+// Q15-L1-D6: A -> slot0, then return to source, then A -> slot2 => ['', '', 'A']
+export const Q15_L1_D6: Story = {
+  name: 'Q15-L1-D6',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction, choiceA } = getElements(canvasElement);
@@ -150,9 +150,9 @@ export const Q10_L1_D6: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D7: A->0, B->1, C->2, then move A from 0 to 2 (occupied) => ['C','B','A'] via sortable swap
-export const Q10_L1_D7: Story = {
-  name: 'Q10-L1-D7',
+// Q15-L1-D7: A->0, B->1, C->2, then move A from 0 to 2 (occupied) => ['C','B','A'] via sortable swap
+export const Q15_L1_D7: Story = {
+  name: 'Q15-L1-D7',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction, choiceA, choiceB, choiceC } = getElements(canvasElement);
@@ -173,9 +173,9 @@ export const Q10_L1_D7: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D8: Default mode shows inline validation message on processResponse for invalid state
-export const Q10_L1_D8: Story = {
-  name: 'Q10-L1-D8',
+// Q15-L1-D8: Default mode shows inline validation message on processResponse for invalid state
+export const Q15_L1_D8: Story = {
+  name: 'Q15-L1-D8',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction } = getElements(canvasElement);
@@ -195,9 +195,9 @@ export const Q10_L1_D8: Story = {
   loaders: [loader]
 };
 
-// Q10-L1-D9: validationDisplayMode='none' suppresses inline message while keeping invalid state
-export const Q10_L1_D9: Story = {
-  name: 'Q10-L1-D9',
+// Q15-L1-D9: validationDisplayMode='none' suppresses inline message while keeping invalid state
+export const Q15_L1_D9: Story = {
+  name: 'Q15-L1-D9',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, orderInteraction } = getElements(canvasElement);

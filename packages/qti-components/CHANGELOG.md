@@ -1,5 +1,17 @@
 # @citolab/qti-components
 
+## 10.0.0-next.10
+
+### Minor Changes
+
+- [#318](https://github.com/Citolab/qti-components/pull/318) [`b410a9f`](https://github.com/Citolab/qti-components/commit/b410a9f628da90986044a664f5aa12e46ed3b0ea) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-submit>` scores the test: on click it asks the test to submit (`cito-test-submit`), which runs outcome processing and then dispatches `cito-test-submitted`. `qtiTest.submit()` does the same from code. `qtiTest.outcomeProcessing()` now starts every run from the test outcomes' declared defaults, as QTI does and as the documentation already said; before, a rule that adds to its own outcome, such as `SCORE_TOTAL = sum + SCORE_TOTAL`, grew on every run.
+
+## 10.0.0-next.9
+
+### Patch Changes
+
+- [#316](https://github.com/Citolab/qti-components/pull/316) [`b58d409`](https://github.com/Citolab/qti-components/commit/b58d4093456e38c992bf08cbbbc85ddf97abea40) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - The PCI iframe is now exactly as high as its content: it no longer adds 100px of empty space below it. The iframe keeps the width of its host instead of a fixed pixel width, so a PCI follows the item layout when it gets narrower, e.g. when QTI layout columns stack.
+
 ## 10.0.0-next.8
 
 ### Patch Changes

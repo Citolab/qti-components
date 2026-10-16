@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
     identifier="q3-match-interaction"
-    title="Q3 - Match Interaction"
+    title="Q13 - Match Interaction"
     adaptive="false" time-dependent="false">
     <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair"></qti-response-declaration>
     <qti-item-body>
