@@ -661,8 +661,9 @@ export class QtiPortableCustomInteraction extends Interaction {
 
       case 'resize':
         if (typeof data.height === 'number' && this.iframe) {
+          // Only the height follows the content. The width stays 100% of the host, so the PCI keeps
+          // following the item's layout when it gets narrower (a column that stacks, a resized window).
           this.iframe.style.height = `${data.height}px`;
-          this.iframe.style.width = `${data.width}px`;
         }
         break;
       case 'console':
@@ -985,6 +986,8 @@ export class QtiPortableCustomInteraction extends Interaction {
             }
             #pci-container {
               width: 100%;
+              /* Keeps the first and last child's margins inside, so scrollHeight is the full height. */
+              display: flow-root;
             }
             qti-interaction-markup {
               display: block;
@@ -1738,7 +1741,8 @@ export class QtiPortableCustomInteraction extends Interaction {
             let previousHeight = 0;
             const notifyResize = () => {
               const container = document.getElementById('pci-container');
-              const newHeight = container.scrollHeight + 100;
+              // The content's own height (subpixel, rounded up) or what overflows it, e.g. an open popup.
+              const newHeight = Math.max(Math.ceil(container.getBoundingClientRect().height), container.scrollHeight);
               if (newHeight !== previousHeight) {
                 previousHeight = newHeight;
                 clearTimeout(resizeTimeout);
