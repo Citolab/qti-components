@@ -135,7 +135,7 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        // Sidebar order = reading order; 'Testing' and 'Maintainers' are last. See plans/storybook-toc.md.
+        // Sidebar order = reading order; 'Testing' and 'Maintainers' are last.
         order: [
           'Introduction',
           'Concepts',

@@ -4,7 +4,7 @@ import type { CSSProperties } from 'react';
 
 /**
  * What each topic of an interaction proves. The topics are the folders under
- * `Interactions/<Name>/` (see `plans/storybook-toc.md`); Choice is the reference.
+ * `Interactions/<Name>/` (see #320); Choice is the reference.
  */
 const TOPICS = [
   { name: 'Overview', proves: 'Examples to try, with controls for the properties' },
