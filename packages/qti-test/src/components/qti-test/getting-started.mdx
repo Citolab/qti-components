@@ -23,19 +23,7 @@ bundle (`@citolab/qti-components/qti-test`, `/qti-interactions`, ...).
 
 ## 2. Put a test on the page
 
-<Canvas of={GettingStarted.Default} />
-
-```html
-<qti-test navigate="item">
-  <test-navigation class="flex flex-col gap-2">
-    <test-container class="block h-96 overflow-auto border rounded p-4" test-url="assessment.xml"></test-container>
-    <nav class="flex justify-between">
-      <test-prev>Previous</test-prev>
-      <test-next>Next</test-next>
-    </nav>
-  </test-navigation>
-</qti-test>
-```
+<Canvas of={GettingStarted.Default} sourceState="shown" />
 
 - `qti-test` is the root. It owns the session and provides what the elements inside read.
 - `test-container` loads the test from `test-url` and renders the current item.
