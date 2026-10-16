@@ -27,9 +27,9 @@ bundle (`@citolab/qti-components/qti-test`, `/qti-interactions`, ...).
 
 ```html
 <qti-test navigate="item">
-  <test-navigation>
-    <test-container test-url="/assets/assessment.xml"></test-container>
-    <nav>
+  <test-navigation class="flex flex-col gap-2">
+    <test-container class="block h-96 overflow-auto border rounded p-4" test-url="assessment.xml"></test-container>
+    <nav class="flex justify-between">
       <test-prev>Previous</test-prev>
       <test-next>Next</test-next>
     </nav>
@@ -39,7 +39,7 @@ bundle (`@citolab/qti-components/qti-test`, `/qti-interactions`, ...).
 
 - `qti-test` is the root. It owns the session and provides what the elements inside read.
 - `test-container` loads the test from `test-url` and renders the current item.
-- `test-prev` and `test-next` move through the test. Any element inside `test-navigation` can be a plugin; see
+- `test-prev` and `test-next` move through the test. The classes only give the demo a fixed height that scrolls. Any element inside `test-navigation` can be a plugin; see
   _Extending QTI / Creating a plugin_.
 
 `navigate` decides what one screen shows: `item` is a single item, `section` is every item of a section.
