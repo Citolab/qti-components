@@ -1,13 +1,18 @@
 import { html } from 'lit';
 
+import { KENNISNET_STORY_WIDTH } from './story-width';
 import { withCorrection } from './with-correction';
 
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { Decorator, Meta, StoryObj } from '@storybook/web-components-vite';
+
+/** Fixed width for overlay comparison — see story-width.ts. */
+const withFixedWidth: Decorator = story => html`<div style="width: ${KENNISNET_STORY_WIDTH}">${story()}</div>`;
 
 const meta: Meta = {
   title: 'Cookbook/Kennisnet/Suite',
   tags: ['autodocs', 'no-tests', 'vrt'],
-  decorators: [withCorrection],
+  // Later decorators wrap earlier ones: the fixed width sits outside the correction shadow host.
+  decorators: [withCorrection, withFixedWidth],
   parameters: {
     layout: 'fullscreen',
     viewport: {

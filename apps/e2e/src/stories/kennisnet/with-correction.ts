@@ -13,7 +13,15 @@ import kennisnetCss from './kennisnet.css?inline';
 
 import type { Decorator } from '@storybook/web-components-vite';
 
-const correctionRegistry = (() => {
+/*
+ * Built on first use, not at import: `new CustomElementRegistry()` throws in browsers without
+ * scoped registries (Chrome 120), and kennisnet.legacy.spec.ts imports these stories there
+ * without ever applying this decorator.
+ */
+let correctionRegistryInstance: CustomElementRegistry | undefined;
+const correctionRegistry = (): CustomElementRegistry => (correctionRegistryInstance ??= createCorrectionRegistry());
+
+const createCorrectionRegistry = () => {
   const registry = new CustomElementRegistry();
   const overrides = new Map<string, CustomElementConstructor>(
     qtiCorrectionElements.map(({ tag, ctor }) => [tag, ctor])
@@ -33,7 +41,7 @@ const correctionRegistry = (() => {
   }
 
   return registry;
-})();
+};
 
 const itemSheet = new CSSStyleSheet();
 itemSheet.replaceSync(itemCss);
@@ -58,7 +66,7 @@ const applyContainerRegistry = (root: ParentNode): void => {
   for (const container of root.querySelectorAll<HTMLElement & { customElementRegistry: CustomElementRegistry }>(
     'item-container, test-container'
   )) {
-    container.customElementRegistry = correctionRegistry;
+    container.customElementRegistry = correctionRegistry();
   }
 };
 
@@ -71,7 +79,7 @@ export const withCorrection: Decorator = story => {
 
   if (hasContainerStory) {
     const host = document.createElement('div');
-    const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry });
+    const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry() });
     shadow.adoptedStyleSheets = [itemSheet, kennisnetSheet];
 
     const wrapper = document.createElement('div');
@@ -89,7 +97,7 @@ export const withCorrection: Decorator = story => {
   render(nothing, scratch);
 
   const host = document.createElement('div');
-  const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry });
+  const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry() });
   shadow.adoptedStyleSheets = [itemSheet, kennisnetSheet];
 
   // Keep a wrapper so correction clones can be inserted via interaction.parentElement.

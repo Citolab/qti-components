@@ -240,20 +240,28 @@ export default defineConfig({
               plugins: [tsconfigPaths()],
               test: {
                 name: 'legacy',
-                include: ['packages/**/*.legacy.spec.ts', 'tools/**/*.legacy.spec.ts'],
+                include: ['packages/**/*.legacy.spec.ts', 'apps/**/*.legacy.spec.ts', 'tools/**/*.legacy.spec.ts'],
                 globals: true,
                 browser: {
                   enabled: true,
-                  // LEGACY_BROWSER=bundled runs the same specs in Playwright's own Chromium, to compare.
-                  provider:
-                    process.env.LEGACY_BROWSER === 'bundled'
-                      ? playwright()
-                      : playwright({ launchOptions: { executablePath: requireLegacyChrome() } }),
                   headless: true,
-                  // Tall enough for the whole contact sheet in one screenshot.
-                  viewport: { width: 800, height: 2000 },
+                  // Wide enough for the 960px Kennisnet stories, tall enough for the contact sheet.
+                  viewport: { width: 1280, height: 2000 },
                   screenshotFailures: false,
-                  instances: [{ browser: 'chromium' }]
+                  instances: [
+                    {
+                      browser: 'chromium',
+                      // LEGACY_BROWSER=bundled runs the same specs in Playwright's own Chromium.
+                      provider: playwright({
+                        // A window larger than the iframe viewport, so Vitest does not shrink the
+                        // iframe to fit and captures come out at full size; 2x for sharpness.
+                        contextOptions: { viewport: { width: 1600, height: 2400 }, deviceScaleFactor: 2 },
+                        ...(process.env.LEGACY_BROWSER === 'bundled'
+                          ? {}
+                          : { launchOptions: { executablePath: requireLegacyChrome() } })
+                      })
+                    }
+                  ]
                 }
               }
             }
