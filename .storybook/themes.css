@@ -55,6 +55,11 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   --cito-color-chip: oklch(69.45% 0.1303 223.85); /* light blue #00add8 */
   --cito-color-chip-content: oklch(32.11% 0 none); /* #333 on it 4.8:1; white would be 2.6:1 */
 
+  /* Field and table edges. The theme's default mixes 45% of the text colour into the surface, which
+     with Cito's lighter #333 lands at 2.7:1 on white, under the 3:1 a field's edge needs (WCAG
+     1.4.11). 55% of #333 gives about 3.5:1 and keeps the edge a neutral grey. */
+  --cito-color-border: color-mix(in oklab, var(--cito-color-base-content) 55%, var(--cito-color-base-100));
+
   /* cito.nl's state colours (--c-info, --c-success, --c-warning, --c-error). */
   --cito-color-info: oklch(53.46% 0.1196 238.57); /* #0075aa, the same dark blue */
   --cito-color-success: oklch(63.6% 0.179 149.09); /* #00a748 */
