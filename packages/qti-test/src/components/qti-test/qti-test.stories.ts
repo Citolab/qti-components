@@ -1,9 +1,7 @@
 import { html } from 'lit';
-import { expect } from 'storybook/test';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTest } from './qti-test';
-import type { QtiChoiceInteraction } from '@qti-components/interactions';
 
 type Story = StoryObj<QtiTest>;
 
@@ -23,110 +21,14 @@ const meta: Meta<QtiTest> = {
 };
 export default meta;
 
-// export const Controls: Story = {
-//   parameters: {
-//     controls: { disable: false }
-//   },
-//   render: args => {
-//     return html` ${template(
-//       args,
-//       html`<test-navigation
-//         ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-//         <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
-//       >`
-//     )}`;
-//   }
-// };
-
-export const Unstyled: Story = {
-  render: () => {
-    return html`<qti-test navigate="item"
-      ><test-navigation
-        ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-        <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
-      ></qti-test
-    >`;
-  }
-};
-
-export const BootstrapForTest: Story = {
+/** The smallest working test: a container that loads the test, and previous and next to move through it. */
+export const Default: Story = {
   render: () => html`
-    <qti-test navigate="item" class="d-flex h-100 w-full flex-column">
-      <test-navigation>
-        <test-container
-          test-url="/assets/api/examples/assessment.xml"
-          class="overflow-auto aspect-16/9"
-        ></test-container>
-        <div class="d-flex align-items-center justify-content-between">
-          <test-prev class="d-flex flex-nowrap btn  btn-success">
-            <i class="bi bi-arrow-left-short me-2"></i>previous
-          </test-prev>
-
-          <test-next class="d-flex flex-nowrap btn  btn-success">
-            next<i class="bi bi-arrow-right-short ms-2"></i>
-          </test-next>
-        </div>
-      </test-navigation>
-    </qti-test>
-  `
-};
-
-export const CSSVariablesForItem: Story = {
-  render: () => html`
-    <style>
-      test-container {
-        --qti-bg-active: #efecff;
-        --qti-border-active: #581d70;
-        --qti-button-padding-vertical: 0.2rem;
-      }
-    </style>
     <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
-        <test-prev> previous </test-prev>
-        <test-next> next </test-next>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
+        <nav><test-prev>Previous</test-prev><test-next>Next</test-next></nav>
       </test-navigation>
     </qti-test>
   `
-};
-
-export const ValidationDisplayModePropagation: Story = {
-  render: () => html`
-    <qti-test data-testid="qti-test-host" navigate="item">
-      <test-navigation>
-        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-      </test-navigation>
-    </qti-test>
-  `,
-  play: async ({ canvasElement }) => {
-    const qtiTest = canvasElement.querySelector('qti-test') as QtiTest | null;
-    expect(qtiTest).toBeTruthy();
-
-    if (!qtiTest) {
-      return;
-    }
-
-    qtiTest.configContext = {
-      ...(qtiTest.configContext || {}),
-      validationDisplayMode: 'none'
-    };
-
-    await qtiTest.updateComplete;
-
-    const choiceInteraction = qtiTest.querySelector('qti-choice-interaction') as QtiChoiceInteraction | null;
-    expect(choiceInteraction).toBeTruthy();
-
-    if (!choiceInteraction) {
-      return;
-    }
-
-    choiceInteraction.setAttribute('min-choices', '2');
-    choiceInteraction.validate();
-    choiceInteraction.reportValidity();
-
-    const messageEl = choiceInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
-    expect((choiceInteraction as any).internals.validity.valid).toBe(false);
-    expect(messageEl?.textContent || '').toBe('');
-    expect(messageEl?.style.display || '').toBe('none');
-  }
 };

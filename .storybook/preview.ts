@@ -135,7 +135,7 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        // Sidebar order = reading order; 'Testing' and 'Maintainers' are last.
+        // Sidebar order = reading order; 'Testing' is last.
         order: [
           'Introduction',
           'Concepts',
@@ -456,8 +456,7 @@ const preview: Preview = {
           'Theming',
           'API Reference',
           'Cookbook',
-          'Testing',
-          'Maintainers'
+          'Testing'
         ]
       }
     },
