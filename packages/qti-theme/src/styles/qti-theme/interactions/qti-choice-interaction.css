@@ -31,7 +31,7 @@
       & qti-simple-choice {
         @mixin button;
         --qti-control-display: none;
-        &:focus {
+        &:focus-visible {
           @mixin foc;
         }
       }
@@ -41,7 +41,16 @@
       & qti-simple-choice {
         @mixin check;
 
-        &:focus {
+        /* With a radio or checkbox shown, the ring goes round the control, as on a native one; the
+           choice itself is drawn as nothing at rest, so a ring round it would outline an invisible
+           box. Choices drawn as boxes (.qti-input-control-hidden, above) ring the whole box. The host
+           holds focus, so it is the host's :focus-visible that picks the part. */
+        &:focus-visible {
+          outline: var(--qti-focus-border-width) solid transparent;
+        }
+
+        &:focus-visible::part(control),
+        &::part(control):focus-visible {
           @mixin foc;
         }
 

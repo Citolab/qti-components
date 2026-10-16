@@ -299,7 +299,6 @@
   @mixin button;
   --button-border-color: transparent;
   gap: 0.5rem;
-  outline: none;
   cursor: pointer;
 }
 
@@ -324,8 +323,26 @@
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
 }
 
+/*
+ * THE focus ring: one outline, on `:focus-visible`, for everything a candidate can focus.
+ *
+ * An outline, not a box-shadow: it costs no layout, and it joins none of the fights over box-shadow
+ * (a chip's resting lift, its in-flight elevation, the placeholder's inset). A focused chip keeps
+ * its lift and gets its ring. On `:focus-visible`, so a mouse click on a choice or a chip shows no
+ * ring and a keyboard always does; a text field matches it on a click too, which is right for a
+ * field you are about to type in.
+ *
+ * `foc-inset` draws the same ring just inside the box, for a row in a list that clips (the inline
+ * choice menu scrolls, so a ring outside a row would be cut off at the menu's edge).
+ */
 @define-mixin foc {
-  box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
+  outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+  outline-offset: var(--qti-focus-offset);
+}
+
+@define-mixin foc-inset {
+  outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
+  outline-offset: var(--qti-focus-offset-inset);
 }
 
 /*
@@ -350,12 +367,9 @@
  * `act-bor` was deleted outright: zero call sites anywhere in the repo.
  */
 
-/* `foc` stays a mixin, deliberately, and is the one state still painting a property directly.
- * Twenty call sites read it, and it draws a `box-shadow` — the property the contract has NOT bound
- * (see `paint` above). Routing it through --<role>-box-shadow would not fix anything: focus would
- * then fight the resting lift and the in-flight elevation over one slot, last-declared winning,
- * which is the four-rule contention already documented in qti-variables.css. The intended fix
- * recorded there is a single `outline` on `:focus-visible`, and that is its own VRT-checked step. */
+/* `foc` stays a mixin, deliberately, and is the one state still painting a property directly: an
+ * `outline`, which the paint contract does not bind. Nothing else in the theme draws an outline on
+ * these elements, so there is nothing to switch and no slot is needed. */
 
 /* A choice — the clickable box a candidate picks. Nothing but the resting paint box; its padding is
    the interaction's (qti-choice-interaction.css), because a choice's box differs per interaction and

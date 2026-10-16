@@ -47,6 +47,11 @@
      * that makes the preserved indentation legible. Typography only — the box does not move, so
      * the layout-invariance contract holds.
      */
+    /* The textarea is the field's box itself, so the theme's ring replaces the browser's. */
+    &::part(textarea):focus-visible {
+      @mixin foc;
+    }
+
     &[format='preformatted']::part(textarea) {
       font-family: monospace;
       tab-size: 2;

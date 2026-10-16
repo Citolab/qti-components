@@ -169,11 +169,15 @@
     );
 
     /*
-     * How far a stacked choice is pulled out so its control sits on the same edge as the prose around
-     * it: the room it reserves for its selected paint, which is its inline padding (--qti-gap, the
-     * inline half of --qti-padding-box) and its border.
+     * How far a stacked choice is pulled out toward the edge of the prose around it: the room it
+     * reserves for its selected paint, which is its inline padding (--qti-gap, the inline half of
+     * --qti-padding-box) and its border, less the reach of the focus ring round its radio or
+     * checkbox. The control then sits just inside the prose edge, so its ring stays inside the
+     * column instead of being cut off by it.
      */
-    --qti-choice-outdent: calc(var(--qti-gap) + var(--qti-component-border-width));
+    --qti-choice-outdent: calc(
+      var(--qti-gap) + var(--qti-component-border-width) - var(--qti-focus-offset) - var(--qti-focus-border-width)
+    );
 
     --qti-popover-z-index: 1000;
     --qti-overlay-z-index: 1;
@@ -217,7 +221,15 @@
     --qti-fg: inherit; /* t1 */
     --qti-border-thickness: var(--qti-border-width); /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid; /* t1 */
-    --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
+    /*
+     * THE border colour, the border half of the --qti-bg / --qti-fg pair. A neutral, worked out from
+     * the base colours: base-content mixed into the surface, just far enough (about 3.3:1 on white) to
+     * meet the 3:1 WCAG asks of a field's edge. It was the primary colour, which drew every field,
+     * table and drop in the brand's blue at rest; the primary now marks only what is active or
+     * selected (--qti-border-active). A brand that wants its colour on every edge sets this token,
+     * as kennisnet.css does.
+     */
+    --qti-border-color: color-mix(in oklch, var(--qti-color-base-content) 45%, var(--qti-color-base-100));
     --qti-border-radius: var(--qti-radius-field);
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
@@ -297,23 +309,23 @@
     --qti-bg-active: color-mix(in oklch, var(--qti-primary) 8%, var(--qti-bg));
     --qti-border-active: var(--qti-primary);
 
-    /* ── Slated for removal — still referenced across mixins/interactions ──
+    /*
+     * The focus ring (`@mixin foc`): one outline on `:focus-visible`, for everything. The test
+     * controls read the same two tokens, so a page has one ring.
      *
-     *   focus → a single :focus-visible outline (no vars)
-     *     Two treatments already read these two tokens: `@mixin foc` draws a box-shadow, while
-     *     hotspot and graphic-order draw an outline. The box-shadow half is the problem — four
-     *     rules contest that one property on a drag (the resting lift, the in-flight elevation,
-     *     the placeholder's inset, the focus ring) and the last one declared wins, so focusing a
-     *     drag mid-interaction drops either its ring or its elevation. An outline joins no such
-     *     fight and costs no layout. The theme also still says `:focus` 24 times against
-     *     `:focus-visible` 10, so most rings show on mouse click too. Once it is an outline on
-     *     :focus-visible, a width and a colour are not worth tokenising.
+     * Primary, not the answer key's info blue: a ring is the brand's "you are here", and it must not
+     * be mistaken for the answer key. 2px, a hairline, so a length in px. It sits that far outside
+     * the box, or that far inside it for a row in a list that clips (`@mixin foc-inset`).
+     *
      * The four --qti-light-* and --qti-dark-* tokens that used to sit here are now
      * --qti-selections-*, in the interactions.states block below. They are not a page-level light
      * and dark theme, which is what the old names suggested and why they were mistaken for dead.
      */
     --qti-focus-border-width: 2px;
-    --qti-focus-color: var(--qti-info);
+    --qti-focus-color: var(--qti-primary);
+    --qti-focus-offset: var(--qti-focus-border-width);
+    --qti-focus-offset-inset: calc(-1 * var(--qti-focus-border-width));
+    --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--qti-border-width));
   }
 
   /* Honour the OS "reduce motion" request through the same knob, so CSS transitions and the JS FLIP

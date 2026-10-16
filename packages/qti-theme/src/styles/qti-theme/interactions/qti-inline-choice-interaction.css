@@ -20,9 +20,11 @@
       font-size: inherit;
     }
 
+    /* The trigger fills the field inside its border, so its ring is pushed out past that border:
+       it then sits where a text entry's does, which rings its host. */
     &::part(trigger):focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc;
+      outline-offset: var(--qti-focus-offset-past-border);
     }
 
     &:state(disabled)::part(trigger),
@@ -106,8 +108,7 @@
     }
 
     &::part(option):focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc-inset;
     }
 
     &::part(option-selected) {
@@ -134,8 +135,7 @@
     }
 
     & qti-inline-choice:focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc-inset;
     }
 
     & qti-inline-choice:state(checked) {

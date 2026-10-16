@@ -24,6 +24,12 @@
     @mixin drag;
   }
 
+  /* The bank chip's own ring. The rules below ring only the PLACED chip (::part(drag)), so a bank
+     chip reached with Tab showed the browser's ring instead of the theme's. */
+  qti-associate-interaction :state(drag):focus-visible {
+    @mixin foc;
+  }
+
   qti-associate-interaction :state(drag)::part(control)::before,
   qti-associate-interaction::part(drag-control)::before,
   qti-associate-interaction ::part(drag-control)::before,
@@ -67,7 +73,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
       &[dragging] {
@@ -83,7 +89,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }
@@ -99,7 +105,7 @@
     &::part(drop) {
       @mixin drop;
     }
-    &::part(drop):focus {
+    &::part(drop):focus-visible {
       @mixin foc;
     }
 

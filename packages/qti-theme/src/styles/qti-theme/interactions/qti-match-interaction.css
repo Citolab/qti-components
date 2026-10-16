@@ -36,7 +36,7 @@
     &:hover {
       @mixin drag-hover;
     }
-    &:focus {
+    &:focus-visible {
       @mixin foc;
     }
   }
@@ -71,7 +71,7 @@
         &:hover {
           @mixin drag-hover;
         }
-        &:focus {
+        &:focus-visible {
           @mixin foc;
         }
       }
@@ -102,7 +102,7 @@
              used to LEAK: `dragging` sets --component-box-shadow, one shared namespace, so it
              inherited onto every chip nested in the drop. That half is now structural — `dragging`
              sets --drag-box-shadow, which a drop does not read.) */
-          &:focus {
+          &:focus-visible {
             @mixin foc;
           }
           margin-top: var(--qti-gap);
@@ -120,7 +120,7 @@
           &:hover {
             @mixin drag-hover;
           }
-          &:focus {
+          &:focus-visible {
             @mixin foc;
           }
         }

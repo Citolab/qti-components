@@ -16,7 +16,7 @@
     --qti-select-point-marker-color: var(--qti-primary);
 
     &::part(point) {
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }

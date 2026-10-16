@@ -29,7 +29,7 @@
 
         background: var(--qti-bg);
 
-        &:focus {
+        &:focus-visible {
           @mixin foc;
         }
       }
@@ -40,10 +40,9 @@
         border: 0;
         border-radius: var(--qti-radius-selector);
         background-color: transparent;
-        outline: none;
         cursor: pointer;
 
-        &:focus {
+        &:focus-visible {
           @mixin foc;
         }
       }
@@ -54,7 +53,7 @@
         border: var(--qti-border);
         border-radius: var(--qti-radius-selector);
 
-        &:focus {
+        &:focus-visible {
           @mixin foc;
         }
       }

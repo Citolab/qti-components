@@ -30,6 +30,9 @@
     --qti-border-radius: 0.3rem;
 
     --qti-fg: #3e144e;
+
+    /* Every edge in the brand colour. The theme's default border is a neutral grey. */
+    --qti-border-color: var(--qti-primary);
   }
 }
 

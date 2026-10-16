@@ -65,8 +65,7 @@
   }
 
   qti-hotspot-interaction qti-hotspot-choice:focus-visible {
-    outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
-    outline-offset: 2px;
+    @mixin foc;
   }
 }
 

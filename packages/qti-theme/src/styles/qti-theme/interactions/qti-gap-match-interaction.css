@@ -50,7 +50,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }
@@ -62,7 +62,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }

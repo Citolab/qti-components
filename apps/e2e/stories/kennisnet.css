@@ -11,6 +11,7 @@
     --qti-border-thickness: 1px;
     --qti-border-radius: 0.3rem;
     --qti-fg: #3e144e;
+    --qti-border-color: var(--qti-primary); /* every edge in the brand colour */
   }
 }
 

@@ -47,7 +47,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }
@@ -61,7 +61,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }
@@ -111,7 +111,7 @@
       &[enabled] {
         @mixin dropping;
       }
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }

@@ -43,7 +43,7 @@
     }
     /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only. */
     & qti-associable-hotspot::part(drag) {
-      &:focus {
+      &:focus-visible {
         @mixin foc;
       }
     }
