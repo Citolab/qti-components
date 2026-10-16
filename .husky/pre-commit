@@ -21,8 +21,15 @@ fi
 # workflow files, markdown and MDX pages, docs fixtures): none of those can change a screenshot, and a
 # docs commit should not wait on a browser. Anything else, including an empty commit, runs it. CI
 # skips docs-only changes by a similar rule (see ci.yml `changes`).
+#
+# POSIX sh only: husky runs this file with `sh -e` whatever the shebang says, so no `<(…)` process
+# substitution (a syntax error under sh, which failed every commit). The patterns go through a temp
+# file instead.
 staged="$(git diff --cached --name-only)"
-code_staged="$(printf '%s\n' "$staged" | grep -vEf <(grep -vE '^(#|$)' tools/ci/no-visual-change.txt) || true)"
+no_visual_patterns="$(mktemp)"
+grep -vE '^(#|$)' tools/ci/no-visual-change.txt > "$no_visual_patterns"
+code_staged="$(printf '%s\n' "$staged" | grep -vEf "$no_visual_patterns" || true)"
+rm -f "$no_visual_patterns"
 if [ -n "$staged" ] && [ -z "$code_staged" ]; then
   echo "→ Skipping VRT: only docs, plans, changesets, markdown and docs fixtures are staged."
 else
