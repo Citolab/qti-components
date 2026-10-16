@@ -5,6 +5,7 @@ import { TestPrintVariables } from '../components/test-print-item-variables/test
 import { TestScoringButtons } from '../components/test-scoring-buttons/test-scoring-buttons';
 import { TestScoringFeedback } from '../components/test-scoring-feedback/test-scoring-feedback';
 import { TestStamp } from '../components/test-stamp/test-stamp';
+import { TestSubmit } from '../components/test-submit/test-submit';
 import { TestView } from '../components/test-view-toggle/test-view';
 import { TestViewToggle } from '../components/test-view-toggle/test-view-toggle';
 import { ttsElements } from '../tts/elements';
@@ -21,6 +22,7 @@ export {
   TestScoringButtons,
   TestScoringFeedback,
   TestStamp,
+  TestSubmit,
   TestView,
   TestViewToggle
 };
@@ -40,6 +42,7 @@ export const pluginElements = [
   { tag: 'test-scoring-buttons', ctor: TestScoringButtons },
   { tag: 'test-scoring-feedback', ctor: TestScoringFeedback },
   { tag: 'test-stamp', ctor: TestStamp },
+  { tag: 'test-submit', ctor: TestSubmit },
   { tag: 'test-view', ctor: TestView },
   { tag: 'test-view-toggle', ctor: TestViewToggle },
   ...ttsElements

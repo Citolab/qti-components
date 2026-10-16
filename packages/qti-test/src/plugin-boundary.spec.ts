@@ -74,6 +74,12 @@ const PLUGINS: Plugin[] = [
     allow: [PUBLIC_EVENTS_FROM_COMPONENTS]
   },
   {
+    name: 'submit',
+    folders: ['components/test-submit/'],
+    reference: /(?<![\w-])test-submit(?![\w-])|TestSubmit/,
+    allow: [PUBLIC_EVENTS_FROM_COMPONENTS, STYLES_FROM_COMPONENTS]
+  },
+  {
     name: 'view',
     folders: ['components/test-view-toggle/', 'components/test-view/', 'components/test-check-item/'],
     reference: /test-view-toggle|TestViewToggle|test-view['">\s]|TestView\b|test-check-item|TestCheckItem/,

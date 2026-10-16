@@ -5,7 +5,9 @@ description: Outcome processing and per-item state — qti-outcome-processing, q
 
 ## `<qti-outcome-processing>`
 
-Declared inside `<qti-assessment-test>` (per the QTI spec), this element is invisible (`display: none`) and does nothing until `outcomeProcessing()` is called on the enclosing `<qti-test>`. That method finds the `<qti-outcome-processing>` element and calls `process()` on it, which in turn runs `process()` on each of its child rule elements in document order — the same rule-execution model used by item-level response processing.
+Declared inside `<qti-assessment-test>` (per the QTI spec), this element is invisible (`display: none`) and does nothing until `outcomeProcessing()` is called on the enclosing `<qti-test>`. That method finds the `<qti-outcome-processing>` element and calls `process()` on it, which in turn runs `process()` on each of its child rule elements in document order — the same rule-execution model used by item-level response processing. Every run starts from the declared defaults of the test outcomes, so running it twice gives the same result.
+
+`<test-submit>` is a button for it: on click the test runs outcome processing and dispatches `cito-test-submitted`, after which the host reads `qtiTest.getOutcome(id)`. `qtiTest.submit()` does the same from code.
 
 ## `qti-test-variables`
 
