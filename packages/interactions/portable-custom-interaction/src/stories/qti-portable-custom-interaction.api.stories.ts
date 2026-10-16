@@ -33,6 +33,66 @@ const timeInWindow = (field: string) => html`
   </qti-lte>
 `;
 
+/** The record item, its PCI optionally `sandboxed`. */
+const recordItem = ({ sandboxed = false } = {}) =>
+  html`<qti-assessment-item
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+    identifier="pci-record-response"
+    title="PCI record response"
+    adaptive="false"
+    time-dependent="false"
+  >
+    <qti-response-declaration identifier="RESPONSE" cardinality="record">
+      <qti-correct-response>
+        <qti-value field-identifier="time" base-type="float">4.0</qti-value>
+        <qti-value field-identifier="point" base-type="point">460 245</qti-value>
+      </qti-correct-response>
+    </qti-response-declaration>
+    <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+      <qti-default-value><qti-value>0</qti-value></qti-default-value>
+    </qti-outcome-declaration>
+    <qti-item-body>
+      <qti-portable-custom-interaction-test
+        response-identifier="RESPONSE"
+        module="recordPci"
+        custom-interaction-type-identifier="urn:fdc:qti-components:test:recordPci"
+        data-time="4.12"
+        data-x="455"
+        data-y="250"
+        data-base-url="/assets/qti-portable-interaction/record-pci"
+        ?sandboxed=${sandboxed}
+      >
+        <qti-interaction-modules>
+          <qti-interaction-module id="recordPci" primary-path="record-pci.js"></qti-interaction-module>
+        </qti-interaction-modules>
+        <qti-interaction-markup></qti-interaction-markup>
+      </qti-portable-custom-interaction-test>
+    </qti-item-body>
+    <qti-response-processing>
+      <qti-response-condition>
+        <qti-response-if>
+          <qti-and>
+            ${timeInWindow('time')}
+            <qti-inside shape="circle" coords="460,245,60">
+              <qti-field-value field-identifier="point">
+                <qti-variable identifier="RESPONSE"></qti-variable>
+              </qti-field-value>
+            </qti-inside>
+          </qti-and>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">1</qti-base-value>
+          </qti-set-outcome-value>
+        </qti-response-if>
+        <qti-response-else-if>
+          <qti-and>${timeInWindow('time')}</qti-and>
+          <qti-set-outcome-value identifier="SCORE">
+            <qti-base-value base-type="float">0.5</qti-base-value>
+          </qti-set-outcome-value>
+        </qti-response-else-if>
+      </qti-response-condition>
+    </qti-response-processing>
+  </qti-assessment-item>`;
+
 /**
  * A PCI bound to a `record` response (the "stop the video and click the frame" case).
  *
@@ -42,63 +102,7 @@ const timeInWindow = (field: string) => html`
  * in `boundTo` typed by the declaration, and the record correct response once it shows a solution.
  */
 export const RecordResponse: Story = {
-  render: () =>
-    html`<qti-assessment-item
-      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
-      identifier="pci-record-response"
-      title="PCI record response"
-      adaptive="false"
-      time-dependent="false"
-    >
-      <qti-response-declaration identifier="RESPONSE" cardinality="record">
-        <qti-correct-response>
-          <qti-value field-identifier="time" base-type="float">4.0</qti-value>
-          <qti-value field-identifier="point" base-type="point">460 245</qti-value>
-        </qti-correct-response>
-      </qti-response-declaration>
-      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
-        <qti-default-value><qti-value>0</qti-value></qti-default-value>
-      </qti-outcome-declaration>
-      <qti-item-body>
-        <qti-portable-custom-interaction-test
-          response-identifier="RESPONSE"
-          module="recordPci"
-          custom-interaction-type-identifier="urn:fdc:qti-components:test:recordPci"
-          data-time="4.12"
-          data-x="455"
-          data-y="250"
-          data-base-url="/assets/qti-portable-interaction/record-pci"
-        >
-          <qti-interaction-modules>
-            <qti-interaction-module id="recordPci" primary-path="record-pci.js"></qti-interaction-module>
-          </qti-interaction-modules>
-          <qti-interaction-markup></qti-interaction-markup>
-        </qti-portable-custom-interaction-test>
-      </qti-item-body>
-      <qti-response-processing>
-        <qti-response-condition>
-          <qti-response-if>
-            <qti-and>
-              ${timeInWindow('time')}
-              <qti-inside shape="circle" coords="460,245,60">
-                <qti-field-value field-identifier="point">
-                  <qti-variable identifier="RESPONSE"></qti-variable>
-                </qti-field-value>
-              </qti-inside>
-            </qti-and>
-            <qti-set-outcome-value identifier="SCORE">
-              <qti-base-value base-type="float">1</qti-base-value>
-            </qti-set-outcome-value>
-          </qti-response-if>
-          <qti-response-else-if>
-            <qti-and>${timeInWindow('time')}</qti-and>
-            <qti-set-outcome-value identifier="SCORE">
-              <qti-base-value base-type="float">0.5</qti-base-value>
-            </qti-set-outcome-value>
-          </qti-response-else-if>
-        </qti-response-condition>
-      </qti-response-processing>
-    </qti-assessment-item>`,
+  render: () => recordItem(),
   play: async ({ canvasElement, step }) => {
     const item = canvasElement.querySelector('qti-assessment-item') as unknown as QtiAssessmentItem;
     const pci = canvasElement.querySelector(
@@ -151,6 +155,68 @@ export const RecordResponse: Story = {
             cardinality: 'record',
             correctResponse: { value: { time: '4.0', point: '460 245' } }
           }),
+        { timeout: 10000, interval: 250 }
+      );
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
+/**
+ * The record round trip with the PCI in a sandboxed iframe (`sandboxed`: `sandbox="allow-scripts"`,
+ * an opaque origin). The host cannot read the frame, so what the PCI was constructed with is read
+ * from what it renders, through the postMessage bridge.
+ */
+export const RecordResponseSandboxed: Story = {
+  render: () => recordItem({ sandboxed: true }),
+  play: async ({ canvasElement, step }) => {
+    const item = canvasElement.querySelector('qti-assessment-item') as unknown as QtiAssessmentItem;
+    const pci = canvasElement.querySelector(
+      'qti-portable-custom-interaction-test'
+    ) as unknown as QtiPortableCustomInteractionTest;
+    const responseValue = () => item.itemContext.variables.find(v => v.identifier === 'RESPONSE')?.value;
+    const iframe = () => pci.querySelector('iframe') as HTMLIFrameElement;
+
+    await pci.waitForReady(10000);
+
+    await step('the iframe is sandboxed and out of reach of the host', async () => {
+      expect(iframe().getAttribute('sandbox')).toBe('allow-scripts');
+      expect(iframe().contentDocument).toBeNull();
+      expect(() => iframe().contentWindow?.document).toThrow();
+      await waitFor(() => expect(parseFloat(iframe().style.height)).toBeGreaterThan(0));
+    });
+
+    await step('the PCI reports a record, the item stores its field map', async () => {
+      await waitFor(
+        async () => {
+          await pci.iFrameClickOnElementByText('Answer');
+          expect(responseValue()).toEqual({ time: '4.12', point: '455 250' });
+        },
+        { timeout: 5000 }
+      );
+      expect(pci.validate()).toBe(true);
+    });
+
+    await step('response processing reads the fields and scores 1', async () => {
+      item.processResponse();
+      expect(+item.getOutcome('SCORE').value).toBe(1);
+    });
+
+    await step('a new construction gets the record back in boundTo', async () => {
+      await pci.recreateIframe();
+      expect(iframe().getAttribute('sandbox')).toBe('allow-scripts');
+      await waitFor(
+        async () =>
+          expect(await pci.getIFrameContent()).toContain(
+            JSON.stringify({
+              record: [
+                { name: 'time', base: { float: 4.12 } },
+                { name: 'point', base: { point: [455, 250] } }
+              ]
+            })
+          ),
         { timeout: 10000, interval: 250 }
       );
     });

@@ -21,11 +21,43 @@ No live example on this page yet. Real PCI packages *do* exist in this repo (e.g
 | `data-components-cdn-url` | A qti-components bundle (ES module) to import inside the iframe, e.g. your own copy of `@citolab/qti-components/cdn/index.js`. Not loaded when absent. |
 | `data-components-css-url` | A stylesheet to link inside the iframe, e.g. your own copy of `@citolab/qti-components/item.css`. Not loaded when absent. |
 | `data-base-url` | Base URL prefix used to resolve module paths and assets. |
+| `sandboxed` | Boolean, off by default. Runs the PCI in a sandboxed iframe (`sandbox="allow-scripts"`, no `allow-same-origin`), so its code cannot reach the host page. See [Sandboxing](#sandboxing). |
 | any other `data-*` | Forwarded (hyphenated key, normalized) into the PCI's `properties` object. |
 
 The PCI runs in a `srcdoc` iframe that loads nothing from a public CDN: RequireJS and the QTI 3 shared vocabulary
 stylesheet (`qti-layout-row`, `qti-well`, `qti-padding-*`, …) are inlined from this version of qti-components. The item's
 `qti-stylesheet`s are added to the iframe as well. The only other request is the PCI module itself, from the item.
+
+## Sandboxing
+
+By default the iframe is a plain `srcdoc` frame. It shares the page's origin, so the PCI's code can read the host's
+DOM, `localStorage`, cookies and anything else on that origin. That is fine for PCIs you trust, and it keeps the frame
+under the page's Service Worker (a player that serves package files from one, such as the playground, needs that).
+
+A host that runs PCIs it does not trust, for example ones uploaded by users, sets `sandboxed`:
+
+```html
+<qti-portable-custom-interaction sandboxed response-identifier="RESPONSE" module="..." ...>
+```
+
+In item XML, write it as `sandboxed=""`. As a property: `pci.sandboxed = true`. It is reflected, so the
+correct-response viewer (a clone) is sandboxed too, and changing it on a connected interaction rebuilds the iframe.
+
+The iframe then gets `sandbox="allow-scripts"` and nothing else: an opaque origin, no popups, no modal dialogs
+(`alert`, `confirm`), no forms, no downloads, no top-level navigation. Everything between the host and the PCI already
+travels by `postMessage` (initialisation, markup, stylesheets, responses, state, `setResponse`/`boundTo`, the solution
+status, resizing, console forwarding), so all of that works unchanged.
+
+What changes for the PCI is what it can load. The frame keeps its `<base href>` (from `data-base-url`), but every URL
+is now cross-origin to it:
+
+| Works as before | Needs CORS or breaks |
+|---|---|
+| The PCI module and its dependencies (RequireJS loads them with `<script>`) | `fetch`/XHR of the PCI's own files, including RequireJS `text!`/`json!` plugins: the server must answer `Origin: null` with `Access-Control-Allow-Origin` |
+| `<img>`, `<video>`, `<audio>`, `<link rel="stylesheet">` | Web fonts (`@font-face`) and ES modules (`data-components-cdn-url`) from another origin: CORS |
+| Inlined RequireJS and shared vocabulary CSS | Reading pixels of images or video on a canvas or in WebGL: tainted without CORS |
+| | `localStorage`, `sessionStorage`, IndexedDB, cookies: throw |
+| | The page's Service Worker does not control the frame |
 
 ## Child elements
 
