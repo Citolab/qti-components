@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q3 - Match Interaction',
+  title: 'qti-conformance/advanced/Q13 - Match Interaction',
   beforeEach: async () => {}
 };
 export default meta;
@@ -41,12 +41,12 @@ const getResponse = (assessmentItem: QtiAssessmentItem) =>
   assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value;
 
 const loader = async () => ({
-  xml: await getItemByUri('/assets/qti-conformance/Advanced/Q3/match-interaction.xml')
+  xml: await getItemByUri('/assets/qti-conformance/Advanced/Q13/match-interaction.xml')
 });
 
-// Q3-L1-D1: No associations made → RESPONSE is NULL
-export const Q3_L1_D1: Story = {
-  name: 'Q3-L1-D1',
+// Q13-L1-D1: No associations made → RESPONSE is NULL
+export const Q13_L1_D1: Story = {
+  name: 'Q13-L1-D1',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem } = getElements(canvasElement);
@@ -56,9 +56,9 @@ export const Q3_L1_D1: Story = {
   loaders: [loader]
 };
 
-// Q3-L1-D2: Drag A → T → RESPONSE is a Multiple Container with the directedPair ['A T']
-export const Q3_L1_D2: Story = {
-  name: 'Q3-L1-D2',
+// Q13-L1-D2: Drag A → T → RESPONSE is a Multiple Container with the directedPair ['A T']
+export const Q13_L1_D2: Story = {
+  name: 'Q13-L1-D2',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, matchInteraction, sourceA, targetT } = getElements(canvasElement);
@@ -73,9 +73,9 @@ export const Q3_L1_D2: Story = {
   loaders: [loader]
 };
 
-// Q3-L1-D3: Drag B → T → RESPONSE contains ['B T']
-export const Q3_L1_D3: Story = {
-  name: 'Q3-L1-D3',
+// Q13-L1-D3: Drag B → T → RESPONSE contains ['B T']
+export const Q13_L1_D3: Story = {
+  name: 'Q13-L1-D3',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, matchInteraction, sourceB, targetT } = getElements(canvasElement);
@@ -89,9 +89,9 @@ export const Q3_L1_D3: Story = {
   loaders: [loader]
 };
 
-// Q3-L1-D4: Drag C → U → RESPONSE contains ['C U']
-export const Q3_L1_D4: Story = {
-  name: 'Q3-L1-D4',
+// Q13-L1-D4: Drag C → U → RESPONSE contains ['C U']
+export const Q13_L1_D4: Story = {
+  name: 'Q13-L1-D4',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, matchInteraction, sourceC, targetU } = getElements(canvasElement);
@@ -105,9 +105,9 @@ export const Q3_L1_D4: Story = {
   loaders: [loader]
 };
 
-// Q3-L1-D5: Drag A → T, B → U → RESPONSE contains ['A T', 'B U']
-export const Q3_L1_D5: Story = {
-  name: 'Q3-L1-D5',
+// Q13-L1-D5: Drag A → T, B → U → RESPONSE contains ['A T', 'B U']
+export const Q13_L1_D5: Story = {
+  name: 'Q13-L1-D5',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, matchInteraction, sourceA, sourceB, targetT, targetU } = getElements(canvasElement);
@@ -122,9 +122,9 @@ export const Q3_L1_D5: Story = {
   loaders: [loader]
 };
 
-// Q3-L1-D6: Drag A → T, B → T → RESPONSE contains ['A T', 'B T'] (two sources to same target)
-export const Q3_L1_D6: Story = {
-  name: 'Q3-L1-D6',
+// Q13-L1-D6: Drag A → T, B → T → RESPONSE contains ['A T', 'B T'] (two sources to same target)
+export const Q13_L1_D6: Story = {
+  name: 'Q13-L1-D6',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, matchInteraction, sourceA, sourceB, targetT } = getElements(canvasElement);
@@ -139,9 +139,9 @@ export const Q3_L1_D6: Story = {
   loaders: [loader]
 };
 
-// Q3-L1-D7: Drag A → T, B → T, C → U → RESPONSE contains ['A T', 'B T', 'C U']
-export const Q3_L1_D7: Story = {
-  name: 'Q3-L1-D7',
+// Q13-L1-D7: Drag A → T, B → T, C → U → RESPONSE contains ['A T', 'B T', 'C U']
+export const Q13_L1_D7: Story = {
+  name: 'Q13-L1-D7',
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem, matchInteraction, sourceA, sourceB, sourceC, targetT, targetU } =

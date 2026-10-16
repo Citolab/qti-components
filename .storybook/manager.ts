@@ -26,6 +26,25 @@ addons.setConfig({
         mdx: true
       }
     },
+    // Conformance stories: a placeholder nothing tests yet, and a test that is written but known to fail.
+    {
+      tags: 'todo',
+      badge: {
+        text: 'To do',
+        style: { backgroundColor: '#fff8c5', color: '#7d4e00' },
+        tooltip: 'A placeholder: nothing tests this criterion yet'
+      },
+      display: { sidebar: [{ type: 'story' }], toolbar: false, mdx: true }
+    },
+    {
+      tags: 'xfail',
+      badge: {
+        text: 'Failing',
+        style: { backgroundColor: '#ffebe9', color: '#a40e26' },
+        tooltip: 'Written, and known to fail: not run in CI'
+      },
+      display: { sidebar: [{ type: 'story' }], toolbar: false, mdx: true }
+    },
     // Place the default config after your custom matchers.
     ...defaultConfig
   ] satisfies TagBadgeParameters
