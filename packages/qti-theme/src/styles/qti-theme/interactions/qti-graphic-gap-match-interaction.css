@@ -104,7 +104,7 @@
          chip `flex: 0 0 auto`, which is the invariance rule this was quietly fighting. */
       &:not(:empty) > * {
         transform: rotate(0);
-        box-shadow: 0 0 0 1px #e5e7eb;
+        box-shadow: 0 0 0 var(--qti-border-width) var(--qti-color-base-300);
       }
     }
     /* `:not(:empty)` tested light-DOM children. The hotspot renders its chips into its own shadow
@@ -149,7 +149,7 @@
     @mixin drag-placeholder;
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklch, var(--qti-drop-highlight-border-color) 55%, transparent);
     pointer-events: none;
   }
 
@@ -157,7 +157,7 @@
   qti-graphic-gap-match-interaction qti-gap-text:state(return-anchor) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklch, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 
   qti-graphic-gap-match-interaction qti-gap-img:state(placeholder) > *,

@@ -78,13 +78,13 @@
       gap: 1px;
       background-color: var(--qti-border-color);
       border: var(--qti-border-thickness) solid var(--qti-border-color);
-      border-radius: var(--qti-border-radius);
+      border-radius: var(--qti-radius-box);
     }
 
     &::part(corner),
     &::part(input-cell) {
       border: none;
-      background-color: white;
+      background-color: var(--qti-bg);
     }
 
     &::part(control checked) {
@@ -92,19 +92,19 @@
     }
 
     &::part(control-mark radio checked) {
-      background-color: white;
+      background-color: var(--qti-bg);
       width: calc(var(--qti-control-size) * 0.5);
       height: calc(var(--qti-control-size) * 0.5);
     }
 
     &::part(control-mark checkbox checked) {
-      background-color: white;
+      background-color: var(--qti-bg);
     }
   }
 
   qti-match-interaction.qti-match-tabular qti-simple-match-set qti-simple-associable-choice {
     border: none;
-    background-color: white;
+    background-color: var(--qti-bg);
   }
 }
 

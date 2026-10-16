@@ -32,8 +32,7 @@
        * padding and the badge's own offsets cannot drift apart. It was a literal 2.4rem that had to
        * be kept in agreement by hand with numbers in a different package.
        */
-      padding: var(--qti-spacing) var(--qti-correction-inset) var(--qti-spacing)
-        var(--qti-correction-gutter);
+      padding: var(--qti-spacing) var(--qti-correction-inset) var(--qti-spacing) var(--qti-correction-gutter);
 
       @mixin text;
     }

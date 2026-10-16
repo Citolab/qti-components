@@ -9,6 +9,18 @@ Build and test check of 2026-10-09 (typecheck of the QTI layer, nothing run in a
 
 ## Unreleased after 9.3.0
 
+### Tier-1 theme tokens (feat/theme-tokens)
+
+Status: recommended; nothing breaks on upgrade
+Members: `--qti-primary`, `--qti-fg`, `--qti-border-radius`, `--qti-border-thickness` and the other
+tokens the brand sheet sets
+Do: nothing is required, the old names are aliases and still win. To move, set the tier-1 names
+instead (`--qti-color-primary`, `--qti-color-success`, …, `--qti-radius-field`,
+`--qti-border-width`); see `packages/qti-theme/CONTRACT.md` §8. A part of a page can carry its own
+theme on an element with `data-qti-theme`.
+Evidence: from our model brand sheet `apps/e2e/src/stories/kennisnet/kennisnet.css`; the host's own
+CSS not surveyed
+
 ### `state` replaces the `testContext` round trip (PR #225)
 
 Status: recommended; nothing breaks on upgrade

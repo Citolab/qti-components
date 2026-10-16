@@ -215,8 +215,10 @@ slots; they never re-value a tier-2 token to repaint one role.
 
 - **Literals live in tier 1 only.** A tier-2 value is a reference, a `calc()` or a
   `color-mix(in oklch, …)` over tier 1. Exceptions, each a literal on purpose: hairlines in `px`
-  (focus width, ring widths), durations, z-indices, the icon masks, and the unitless ratios inside a
-  derivation (a mix percentage, `* 0.625`).
+  (focus width, ring widths), durations, z-indices, the icon masks, the unitless ratios inside a
+  derivation (a mix percentage, `* 0.625`), and the few colours that must NOT follow the theme
+  because they are drawn over an author's image: the selections pair (`--qti-selections-*`) and the
+  hotspot halo.
 - **Colours are `oklch()`.** A gray uses `none` as its hue, so mixing it with a colour does not pull
   the result toward red.
 - **Light and dark are one set of tokens.** A tier-1 colour is `light-dark(<light>, <dark>)`. The

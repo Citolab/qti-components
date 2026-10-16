@@ -1,4 +1,4 @@
 qti-slider-interaction {
-  --qti-tick-color: rgb(229 231 235 / 100%);
+  --qti-tick-color: var(--qti-color-base-300);
   --qti-tick-width: 1px;
 }

@@ -148,7 +148,7 @@
     &::part(message) {
       @mixin message;
       --message-color: var(--qti-fg);
-      --message-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      --message-background-color: color-mix(in oklch, var(--qti-warning) 5%, var(--qti-bg));
       --message-border-color: var(--qti-warning);
       padding: var(--qti-padding-box);
     }

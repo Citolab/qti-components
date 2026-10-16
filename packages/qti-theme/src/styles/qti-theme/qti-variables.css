@@ -22,15 +22,83 @@
   :root,
   :host,
   [data-qti-theme] {
-    /* ── Base palette — six concrete brand colours. A theme replaces just these. ── */
-    --qti-primary: #0175aa; /* t1 — purple — chips, selection, active border */
-    --qti-success: #2b830e; /* t1 — green */
-    --qti-warning: #ffa700; /* t1 — amber */
-    --qti-error: #df0000; /* t1 — red */
-    --qti-info: #007ac3; /* t1 — blue — the answer key */
+    /*
+     * ── Tier 1: the theme ──────────────────────────────────────────────────────────────────────
+     *
+     * Modelled on a daisyUI theme block. Setting these, and nothing else, makes a complete theme;
+     * every other token in this file is derived from them (CONTRACT.md §8).
+     *
+     * Colours are oklch. Each `-content` colour is the one that reads ON its partner: text on a
+     * primary fill, a label on a neutral button. The three base colours are surfaces, from the
+     * page's own (100) to a step darker (200, 300); base-content is what is drawn against them.
+     *
+     * Light and dark are one set. The base and neutral colours are `light-dark()`, so they follow
+     * the `color-scheme` of the page around the item. The theme sets no `color-scheme` itself: a
+     * page that declares none stays light. The semantic colours are one value for both.
+     *
+     * These literals reproduce the hex colours the theme shipped with (#0175aa, #2b830e, #ffa700,
+     * #df0000, #007ac3, white), so nothing moves. Today's names below are aliases of these.
+     */
+    --qti-color-base-100: light-dark(oklch(100% 0 none), oklch(25.33% 0.016 252.42)); /* t1 */
+    --qti-color-base-200: light-dark(oklch(98% 0 none), oklch(23.26% 0.014 253.1)); /* t1 */
+    --qti-color-base-300: light-dark(oklch(95% 0 none), oklch(21.15% 0.012 254.09)); /* t1 */
+    --qti-color-base-content: light-dark(oklch(21% 0 none), oklch(97.8% 0.029 256.85)); /* t1 */
+
+    --qti-color-primary: oklch(53.47% 0.1195 238.63); /* t1 — chips, selection, active border */
+    --qti-color-primary-content: oklch(100% 0 none); /* t1 */
+
+    /* The colour of an unbranded control that still has to stand out: the test's Next button. */
+    --qti-color-neutral: light-dark(oklch(17.76% 0 none), oklch(92% 0 none)); /* t1 */
+    --qti-color-neutral-content: light-dark(oklch(100% 0 none), oklch(17.76% 0 none)); /* t1 */
+
+    --qti-color-info: oklch(56.14% 0.1437 245.8); /* t1 — the answer key */
+    --qti-color-info-content: oklch(100% 0 none); /* t1 */
+    --qti-color-success: oklch(53.64% 0.166 139.96); /* t1 — correct */
+    --qti-color-success-content: oklch(100% 0 none); /* t1 */
+    --qti-color-warning: oklch(79.62% 0.1708 71.71); /* t1 — partially correct, validation */
+    --qti-color-warning-content: oklch(21% 0 none); /* t1 */
+    --qti-color-error: oklch(56.75% 0.2329 29.23); /* t1 — incorrect */
+    --qti-color-error-content: oklch(100% 0 none); /* t1 */
+
+    /*
+     * Radii, by what a box is: a selector is a small thing you pick (checkbox, chip), a field is a
+     * thing you type or choose in (text entry, choice, dropdown), a box holds content (menu, modal,
+     * rubric, validation message).
+     *
+     * Selector and box default to the field radius, read through its old name, so a brand that sets
+     * --qti-border-radius still rounds all three.
+     */
+    --qti-radius-field: 0.2rem; /* t1 */
+    --qti-radius-selector: var(--qti-border-radius); /* t1 */
+    --qti-radius-box: var(--qti-border-radius); /* t1 */
+
+    /*
+     * Sizes. The selector unit is a quarter of a radio or checkbox (`em`, so a control follows the
+     * text it labels; see --qti-control-size). The field unit is an inline field's block padding:
+     * the room above and below the text in a text entry, an inline choice or a gap.
+     */
+    --qti-size-selector: 0.25em; /* t1 */
+    --qti-size-field: 0.125rem; /* t1 */
+
+    /* The width of every border. A hairline, so a length in px. */
+    --qti-border-width: 1px; /* t1 */
+
+    /*
+     * Depth: 0 or 1. At 1 a chip stands off the page with a small lift under it; at 0 (the default)
+     * it is flat. A multiplier, like --qti-motion, so it can also be set in between.
+     */
+    --qti-depth: 0; /* t1 */
+
+    /* ── Today's names, as aliases of tier 1 ──
+       Rules and components read these, so a brand that sets one still wins. */
+    --qti-primary: var(--qti-color-primary);
+    --qti-success: var(--qti-color-success);
+    --qti-warning: var(--qti-color-warning);
+    --qti-error: var(--qti-color-error);
+    --qti-info: var(--qti-color-info);
 
     /* Foreground on a primary fill. */
-    --qti-primary-fg: #fff; /* t1 */
+    --qti-primary-fg: var(--qti-color-primary-content);
 
     /* ── Rhythm ──
      *
@@ -94,7 +162,7 @@
      * is the same in every element of the item, whatever its font size.
      */
     --qti-inline-gap: calc(var(--qti-spacing) / 4);
-    --qti-inline-padding-block: calc(var(--qti-spacing) / 4);
+    --qti-inline-padding-block: var(--qti-size-field);
     --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-gap);
     --qti-line-height: calc(
       var(--qti-field-line-height) * 1em + 2 * var(--qti-inline-padding-block) + 2 * var(--qti-component-border-width)
@@ -122,7 +190,7 @@
        slider track). Those two readerships are why this group and the --qti-component-* group below
        are not one group: this is "the theme's surface colour", that is "what a component paints when
        it says nothing", and only the second is the paint contract's business. */
-    --qti-bg: white; /* t1 */
+    --qti-bg: var(--qti-color-base-100);
 
     /*
      * THE body text colour — the foreground half of the --qti-bg / --qti-fg pair.
@@ -147,10 +215,10 @@
      * either directly or through a role slot (--field-color, --drag-color, @mixin candidate).
      */
     --qti-fg: inherit; /* t1 */
-    --qti-border-thickness: 1px; /* t1 — some places need the width alone (invariance, calcs) */
+    --qti-border-thickness: var(--qti-border-width); /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid; /* t1 */
     --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
-    --qti-border-radius: 0.2rem; /* t1 */
+    --qti-border-radius: var(--qti-radius-field);
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
     /* ── The paint contract's resting look ──
@@ -186,6 +254,23 @@
     --qti-component-opacity: 1;
     --qti-component-filter: none;
 
+    /*
+     * Depth, worked out from --qti-depth (tier 1).
+     *
+     *   --qti-drag-lift       a chip at rest: a hard shadow under it, as tall as two borders. At
+     *                         depth 0 its colour mixes to nothing, so the chip is flat.
+     *   --qti-drag-elevation  a chip in flight, at any depth: picked up is always off the page.
+     *   --qti-hover-mix       how much base-content a hover or a press mixes into a fill.
+     */
+    --qti-drag-lift: 0 calc(2 * var(--qti-border-width)) 0
+      color-mix(in oklch, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent);
+    --qti-drag-elevation:
+      0 var(--qti-spacing) calc(var(--qti-spacing) * 1.5)
+        color-mix(in oklch, var(--qti-color-base-content) 20%, transparent),
+      0 calc(var(--qti-spacing) / 2) var(--qti-spacing)
+        color-mix(in oklch, var(--qti-color-base-content) 10%, transparent);
+    --qti-hover-mix: 8%;
+
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
        dependency. One vocabulary, kept together even though --qti-times-mask is read only from
        the corrections layer. */
@@ -209,7 +294,7 @@
      * Deliberately in `global`: they are read from both interactions.base and interactions.states,
      * so no single interaction layer could own them.
      */
-    --qti-bg-active: color-mix(in srgb, var(--qti-primary) 8%, var(--qti-bg));
+    --qti-bg-active: color-mix(in oklch, var(--qti-primary) 8%, var(--qti-bg));
     --qti-border-active: var(--qti-primary);
 
     /* ── Slated for removal — still referenced across mixins/interactions ──
@@ -270,7 +355,7 @@
      * shrinks with it. Nothing in the theme sets a smaller size yet, so a floor would be a magic
      * number guarding a case that does not exist; add `max()` here if a real one turns up.
      */
-    --qti-control-size: 1em; /* t1 */
+    --qti-control-size: calc(var(--qti-size-selector) * 4);
 
     /* The correction badge's box. Named in two comments above and read by correction.styles.ts, but
        never actually declared until now — every badge has been running on that file's `1em`
@@ -398,7 +483,7 @@
        --qti-hotspot-ring-color is intentionally NOT defined here: it is neutral by default and set
        contextually by the qti-selections-* classes and the correction states. */
     --qti-hotspot-ring-width: 2px;
-    --qti-hotspot-halo: rgb(255 255 255 / 85%);
+    --qti-hotspot-halo: oklch(100% 0 none / 85%);
 
     /*
      * A drag's own padding, deliberately not --qti-padding-box.
@@ -428,8 +513,8 @@
     --qti-selected-color: var(--qti-primary-fg);
 
     /* The hole a lifted / placed chip leaves — derived from primary. */
-    --qti-placeholder-bg: color-mix(in srgb, var(--qti-primary) 20%, white);
-    --qti-placeholder-shadow: 0 4px color-mix(in srgb, var(--qti-primary) 30%, white);
+    --qti-placeholder-bg: color-mix(in oklch, var(--qti-primary) 20%, var(--qti-bg));
+    --qti-placeholder-shadow: 0 4px color-mix(in oklch, var(--qti-primary) 30%, var(--qti-bg));
 
     /*
      * Selections theming, for the two interactions Appendix B.1 of the QTI 3 implementation guide
@@ -445,10 +530,10 @@
      * feature, and `global` claimed an ownership they never had — nothing outside these two
      * interactions' state rules reads them.
      */
-    --qti-selections-light-bg: #f0f0f0;
-    --qti-selections-light-border: #d0d0d0;
-    --qti-selections-dark-bg: #1f2937;
-    --qti-selections-dark-border: #64748b;
+    --qti-selections-light-bg: oklch(95.51% 0 none);
+    --qti-selections-light-border: oklch(85.76% 0 none);
+    --qti-selections-dark-bg: oklch(27.81% 0.0296 256.85);
+    --qti-selections-dark-border: oklch(55.44% 0.0407 257.42);
 
     /* A drop-zone highlight is a background FILL only — no border, no ring — which keeps it
        layout-invariant for free (a fill never reflows; the old inset ring existed only to avoid the
@@ -458,7 +543,7 @@
        --qti-drop-highlight-border-color / -border-width stay ONLY for the chip-in-flight outline
        (the dragging / return-anchor states), which marks the dragged element, not the zone. */
     --qti-drop-highlight-bg: var(--qti-bg-active);
-    --qti-drop-highlight-enabled-bg: color-mix(in srgb, var(--qti-drop-highlight-bg) 50%, transparent);
+    --qti-drop-highlight-enabled-bg: color-mix(in oklch, var(--qti-drop-highlight-bg) 50%, transparent);
     --qti-drop-highlight-border-color: var(--qti-border-active);
     --qti-drop-highlight-border-width: 2px;
   }
@@ -475,13 +560,13 @@
     --qti-correct: var(--qti-success);
     --qti-incorrect: var(--qti-error);
     --qti-partially-correct: var(--qti-warning);
-    --qti-correct-light: color-mix(in srgb, var(--qti-correct) 5%, white);
-    --qti-incorrect-light: color-mix(in srgb, var(--qti-incorrect) 5%, white);
-    --qti-partially-correct-light: color-mix(in srgb, var(--qti-partially-correct) 5%, white);
+    --qti-correct-light: color-mix(in oklch, var(--qti-correct) 5%, var(--qti-bg));
+    --qti-incorrect-light: color-mix(in oklch, var(--qti-incorrect) 5%, var(--qti-bg));
+    --qti-partially-correct-light: color-mix(in oklch, var(--qti-partially-correct) 5%, var(--qti-bg));
 
     /* The answer key — the info blue, deliberately NOT the correct green. */
     --qti-answer-fg: var(--qti-info);
-    --qti-answer-bg: color-mix(in srgb, var(--qti-info) 5%, white);
+    --qti-answer-bg: color-mix(in oklch, var(--qti-info) 5%, var(--qti-bg));
     --qti-answer-border: var(--qti-info);
   }
 }

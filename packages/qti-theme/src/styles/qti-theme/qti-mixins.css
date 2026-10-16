@@ -152,6 +152,12 @@
      `qti-gap::part(drag)`, so the brand could never win. With nothing set here, the overlay's
      --drag-* is the only declaration and wins with no specificity/layer contest. */
   @mixin paint drag;
+
+  /* A chip is a selector, so it takes the selector radius, and its lift follows --qti-depth. Both
+     re-declared with the slot in FRONT, the drop's dashed-edge pattern: the default changes, the
+     slot still wins, and nothing is set on --drag-* (see above). */
+  border-radius: var(--drag-border-radius, var(--qti-radius-selector));
+  box-shadow: var(--drag-box-shadow, var(--qti-drag-lift));
 }
 
 /*
@@ -263,6 +269,7 @@
 
 @define-mixin checkbox {
   @mixin paint checkbox;
+  border-radius: var(--checkbox-border-radius, var(--qti-radius-selector));
   width: var(--qti-control-size);
   height: var(--qti-control-size);
 }
@@ -302,18 +309,18 @@
  * A glyph, not a box — the same kind of thing as `grip` and `answer-check`, so it gets a colour slot
  * rather than a whole paint role. It is drawn ON the checked control's accent fill (see
  * `control-selected`), so the two belong together: override --checkbox-background-color and you will
- * usually want --checkbox-mark-color with it. `white` is the resting value, not a fixed one.
+ * usually want --checkbox-mark-color with it. --qti-primary-fg is the resting value, not a fixed one.
  */
 @define-mixin radio-checked {
   /* 0.5 reproduces today's 8px at the default 1rem — see mark-size for why this is a fraction. */
   width: calc(var(--qti-control-size) * 0.5);
   height: calc(var(--qti-control-size) * 0.5);
-  background-color: var(--radio-mark-color, white);
+  background-color: var(--radio-mark-color, var(--qti-primary-fg));
   border-radius: 100%;
 }
 
 @define-mixin checkbox-checked {
-  background-color: var(--checkbox-mark-color, white);
+  background-color: var(--checkbox-mark-color, var(--qti-primary-fg));
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' width='100%' height='100%' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
 }
 
@@ -387,10 +394,10 @@
    What is left here is paint. */
 @define-mixin validation-message {
   color: var(--qti-fg);
-  background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+  background-color: color-mix(in oklch, var(--qti-warning) 5%, var(--qti-bg));
   padding: var(--qti-padding-box);
   border: var(--qti-border-thickness) solid var(--qti-warning);
-  border-radius: var(--qti-border-radius);
+  border-radius: var(--qti-radius-box);
   margin-top: var(--qti-gap);
 }
 
@@ -408,12 +415,15 @@
   @mixin paint field;
 }
 
+/* The menu and the message hold content, so they take the box radius. */
 @define-mixin menu {
   @mixin paint menu;
+  border-radius: var(--menu-border-radius, var(--qti-radius-box));
 }
 
 @define-mixin message {
   @mixin paint message;
+  border-radius: var(--message-border-radius, var(--qti-radius-box));
 }
 
 /*
@@ -425,7 +435,7 @@
 @define-mixin dragging {
   pointer-events: none;
   rotate: -2deg;
-  --drag-box-shadow: 0 8px 12px rgb(0 0 0 / 20%), 0 4px 8px rgb(0 0 0 / 10%);
+  --drag-box-shadow: var(--qti-drag-elevation);
 }
 
 /*
@@ -451,9 +461,9 @@
 @define-mixin drag-hover {
   @media (hover: hover) {
     background-color: color-mix(
-      in srgb,
-      var(--drag-background-color, var(--qti-component-background-color)) 92%,
-      black
+      in oklch,
+      var(--drag-background-color, var(--qti-component-background-color)),
+      var(--qti-color-base-content) var(--qti-hover-mix)
     );
   }
 }
