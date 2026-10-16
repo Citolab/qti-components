@@ -204,7 +204,7 @@ tier 2. Tier 3 is never declared there.
 | Tier | What it is                                                                                                                                                                                                           | Who sets it                                                                       | Where it is declared                                                                                                                  |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | 1    | **Brand knobs.** The values a theme is made of: surface and text colours, the semantic colours, radii, sizes, the border width, depth, the spacing unit.                                                             | A brand or a host. Setting only these gives a complete theme.                     | `qti-variables.css`, the only place in the theme that holds literals.                                                                 |
-| 2    | **Derived defaults.** Everything that follows from tier 1: tints, the border colour, the focus ring, selection, corrections, the paint contract's resting look (`--qti-component-*`), the rhythm composites.         | Nobody, normally. A host may re-value one when the derived value is wrong for it. | `qti-variables.css`, as `var()`, `calc()` or `color-mix(in oklch, …)` over tier 1.                                                    |
+| 2    | **Derived defaults.** Everything that follows from tier 1: tints, the border colour, the focus ring, selection, corrections, the paint contract's resting look (`--qti-component-*`), the rhythm composites.         | Nobody, normally. A host may re-value one when the derived value is wrong for it. | `qti-variables.css`, as `var()`, `calc()` or `color-mix(in oklab, …)` over tier 1.                                                    |
 | 3    | **Handover variables.** A decision the theme makes and a component spends (§7): `--qti-choice-gap`, `--qti-control-display`, `--qti-choice-label-display`, `--qti-choice-align-items`, `--qti-chip-justify-content`. | The theme, on the element that needs it.                                          | Nowhere at the root. The theme sets it on a selector; the component reads it with a fallback that keeps it working without the theme. |
 
 Not a tier: the paint contract's **role slots** (`--drag-*`, `--button-*`, `--text-*`, …). A slot is
@@ -214,13 +214,15 @@ slots; they never re-value a tier-2 token to repaint one role.
 ### Rules
 
 - **Literals live in tier 1 only.** A tier-2 value is a reference, a `calc()` or a
-  `color-mix(in oklch, …)` over tier 1. Exceptions, each a literal on purpose: hairlines in `px`
+  `color-mix(in oklab, …)` over tier 1. Exceptions, each a literal on purpose: hairlines in `px`
   (focus width, ring widths), durations, z-indices, the icon masks, the unitless ratios inside a
   derivation (a mix percentage, `* 0.625`), and the few colours that must NOT follow the theme
   because they are drawn over an author's image: the selections pair (`--qti-selections-*`) and the
   hotspot halo.
-- **Colours are `oklch()`.** A gray uses `none` as its hue, so mixing it with a colour does not pull
-  the result toward red.
+- **Colours are written in `oklch()` and mixed in `oklab`.** A gray uses `none` as its hue. A mix
+  goes through `oklab` because mixing in `oklch` interpolates the hue: a warm base (hue 90) and a
+  cool content colour (hue 260) came out as a GREEN border (hue 166). `oklab` mixes straight across,
+  so a tint of two colours stays between them.
 - **Light and dark are one set of tokens.** A tier-1 colour is `light-dark(<light>, <dark>)`. The
   theme sets no `color-scheme`: the page decides. A host that declares `color-scheme: dark` (or
   `light dark`) on the item's container gets the dark values; one that declares nothing stays light.

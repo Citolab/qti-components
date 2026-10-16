@@ -51,7 +51,7 @@ export const btn = css`
   background-color: var(--test-button-background-color, ${surface});
   color: var(--test-button-color, inherit);
   border: var(--qti-border-width, 1px) solid
-    var(--test-button-border-color, var(--qti-border-color, color-mix(in oklch, ${content} 45%, ${surface})));
+    var(--test-button-border-color, var(--qti-border-color, color-mix(in oklab, ${content} 45%, ${surface})));
 `;
 
 /** The filled look: the neutral colour, its content colour on top. Same box as `btn`, so the two sit level. */
@@ -65,14 +65,14 @@ export const btnPrimary = css`
 export const btnInteractive = css`
   background-color: var(
     --test-button-hover-background-color,
-    color-mix(in oklch, ${surface}, ${content} var(--qti-hover-mix, 8%))
+    color-mix(in oklab, ${surface}, ${content} var(--qti-hover-mix, 8%))
   );
 `;
 
 export const btnPrimaryInteractive = css`
   background-color: var(
     --test-button-primary-hover-background-color,
-    color-mix(in oklch, ${neutral}, ${neutralContent} var(--qti-hover-mix, 8%))
+    color-mix(in oklab, ${neutral}, ${neutralContent} var(--qti-hover-mix, 8%))
   );
 `;
 
@@ -80,14 +80,14 @@ export const btnPrimaryInteractive = css`
 export const btnActive = css`
   background-color: var(
     --test-button-active-background-color,
-    color-mix(in oklch, ${surface}, ${content} var(--qti-active-mix, 16%))
+    color-mix(in oklab, ${surface}, ${content} var(--qti-active-mix, 16%))
   );
 `;
 
 export const btnPrimaryActive = css`
   background-color: var(
     --test-button-primary-active-background-color,
-    color-mix(in oklch, ${neutral}, ${neutralContent} var(--qti-active-mix, 16%))
+    color-mix(in oklab, ${neutral}, ${neutralContent} var(--qti-active-mix, 16%))
   );
 `;
 

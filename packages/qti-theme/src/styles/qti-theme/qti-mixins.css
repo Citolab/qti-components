@@ -412,7 +412,7 @@
    What is left here is paint. */
 @define-mixin validation-message {
   color: var(--qti-fg);
-  background-color: color-mix(in oklch, var(--qti-warning) 5%, var(--qti-bg));
+  background-color: color-mix(in oklab, var(--qti-warning) 5%, var(--qti-bg));
   padding: var(--qti-padding-box);
   border: var(--qti-border-thickness) solid var(--qti-warning);
   border-radius: var(--qti-radius-box);
@@ -471,7 +471,7 @@
  */
 @define-mixin press $role {
   background-color: color-mix(
-    in oklch,
+    in oklab,
     var(--$(role)-background-color, var(--qti-component-background-color)),
     var(--qti-color-base-content) var(--qti-active-mix)
   );
@@ -500,7 +500,7 @@
 @define-mixin drag-hover {
   @media (hover: hover) {
     background-color: color-mix(
-      in oklch,
+      in oklab,
       var(--drag-background-color, var(--qti-component-background-color)),
       var(--qti-color-base-content) var(--qti-hover-mix)
     );

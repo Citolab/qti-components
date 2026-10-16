@@ -229,7 +229,7 @@
      * selected (--qti-border-active). A brand that wants its colour on every edge sets this token,
      * as kennisnet.css does.
      */
-    --qti-border-color: color-mix(in oklch, var(--qti-color-base-content) 45%, var(--qti-color-base-100));
+    --qti-border-color: color-mix(in oklab, var(--qti-color-base-content) 45%, var(--qti-color-base-100));
     --qti-border-radius: var(--qti-radius-field);
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
@@ -276,12 +276,12 @@
      *   --qti-active-mix      how much a press mixes in: twice the hover, so a press reads as one.
      */
     --qti-drag-lift: 0 calc(2 * var(--qti-border-width)) 0
-      color-mix(in oklch, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent);
+      color-mix(in oklab, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent);
     --qti-drag-elevation:
       0 var(--qti-spacing) calc(var(--qti-spacing) * 1.5)
-        color-mix(in oklch, var(--qti-color-base-content) 20%, transparent),
+        color-mix(in oklab, var(--qti-color-base-content) 20%, transparent),
       0 calc(var(--qti-spacing) / 2) var(--qti-spacing)
-        color-mix(in oklch, var(--qti-color-base-content) 10%, transparent);
+        color-mix(in oklab, var(--qti-color-base-content) 10%, transparent);
     --qti-hover-mix: 8%;
     --qti-active-mix: 16%; /* a press: the same mix, twice as far */
 
@@ -308,7 +308,7 @@
      * Deliberately in `global`: they are read from both interactions.base and interactions.states,
      * so no single interaction layer could own them.
      */
-    --qti-bg-active: color-mix(in oklch, var(--qti-primary) 8%, var(--qti-bg));
+    --qti-bg-active: color-mix(in oklab, var(--qti-primary) 8%, var(--qti-bg));
     --qti-border-active: var(--qti-primary);
 
     /*
@@ -527,8 +527,8 @@
     --qti-selected-color: var(--qti-primary-fg);
 
     /* The hole a lifted / placed chip leaves — derived from primary. */
-    --qti-placeholder-bg: color-mix(in oklch, var(--qti-primary) 20%, var(--qti-bg));
-    --qti-placeholder-shadow: 0 4px color-mix(in oklch, var(--qti-primary) 30%, var(--qti-bg));
+    --qti-placeholder-bg: color-mix(in oklab, var(--qti-primary) 20%, var(--qti-bg));
+    --qti-placeholder-shadow: 0 4px color-mix(in oklab, var(--qti-primary) 30%, var(--qti-bg));
 
     /*
      * Selections theming, for the two interactions Appendix B.1 of the QTI 3 implementation guide
@@ -557,7 +557,7 @@
        --qti-drop-highlight-border-color / -border-width stay ONLY for the chip-in-flight outline
        (the dragging / return-anchor states), which marks the dragged element, not the zone. */
     --qti-drop-highlight-bg: var(--qti-bg-active);
-    --qti-drop-highlight-enabled-bg: color-mix(in oklch, var(--qti-drop-highlight-bg) 50%, transparent);
+    --qti-drop-highlight-enabled-bg: color-mix(in oklab, var(--qti-drop-highlight-bg) 50%, transparent);
     --qti-drop-highlight-border-color: var(--qti-border-active);
     --qti-drop-highlight-border-width: 2px;
   }
@@ -574,13 +574,13 @@
     --qti-correct: var(--qti-success);
     --qti-incorrect: var(--qti-error);
     --qti-partially-correct: var(--qti-warning);
-    --qti-correct-light: color-mix(in oklch, var(--qti-correct) 5%, var(--qti-bg));
-    --qti-incorrect-light: color-mix(in oklch, var(--qti-incorrect) 5%, var(--qti-bg));
-    --qti-partially-correct-light: color-mix(in oklch, var(--qti-partially-correct) 5%, var(--qti-bg));
+    --qti-correct-light: color-mix(in oklab, var(--qti-correct) 5%, var(--qti-bg));
+    --qti-incorrect-light: color-mix(in oklab, var(--qti-incorrect) 5%, var(--qti-bg));
+    --qti-partially-correct-light: color-mix(in oklab, var(--qti-partially-correct) 5%, var(--qti-bg));
 
     /* The answer key — the info blue, deliberately NOT the correct green. */
     --qti-answer-fg: var(--qti-info);
-    --qti-answer-bg: color-mix(in oklch, var(--qti-info) 5%, var(--qti-bg));
+    --qti-answer-bg: color-mix(in oklab, var(--qti-info) 5%, var(--qti-bg));
     --qti-answer-border: var(--qti-info);
   }
 }

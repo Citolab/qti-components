@@ -9,7 +9,7 @@
     & qti-hotspot-choice {
       width: 100%;
       height: 100%;
-      background-color: color-mix(in oklch, var(--qti-border-color) 18%, transparent);
+      background-color: color-mix(in oklab, var(--qti-border-color) 18%, transparent);
       padding: 0;
       cursor: pointer;
       transition:
@@ -22,18 +22,18 @@
       }
 
       &[shape='poly'] {
-        background-color: color-mix(in oklch, var(--qti-border-color) 18%, transparent);
+        background-color: color-mix(in oklab, var(--qti-border-color) 18%, transparent);
         box-shadow: none;
       }
 
       &[shape='circle']:hover,
       &[shape='rect']:hover,
       &[shape='ellipse']:hover {
-        background-color: color-mix(in oklch, var(--qti-border-active) 12%, transparent);
+        background-color: color-mix(in oklab, var(--qti-border-active) 12%, transparent);
       }
 
       &[shape='poly']:hover {
-        background-color: color-mix(in oklch, var(--qti-border-active) 20%, transparent);
+        background-color: color-mix(in oklab, var(--qti-border-active) 20%, transparent);
         box-shadow: none;
       }
 
@@ -50,7 +50,7 @@
       &[aria-ordervalue] {
         border: 0 !important;
         box-shadow: none;
-        background-color: color-mix(in oklch, var(--qti-selected-bg) 35%, transparent);
+        background-color: color-mix(in oklab, var(--qti-selected-bg) 35%, transparent);
       }
 
       &[aria-ordervalue]:hover,
@@ -105,11 +105,11 @@
       &[shape='circle']:state(checked),
       &[shape='rect']:state(checked),
       &[shape='ellipse']:state(checked) {
-        background-color: color-mix(in oklch, var(--qti-selected-bg) 35%, transparent);
+        background-color: color-mix(in oklab, var(--qti-selected-bg) 35%, transparent);
       }
 
       &[shape='poly']:state(checked) {
-        background-color: color-mix(in oklch, var(--qti-selected-bg) 40%, transparent);
+        background-color: color-mix(in oklab, var(--qti-selected-bg) 40%, transparent);
         box-shadow: none;
       }
 
@@ -143,33 +143,33 @@
       &[shape='circle']:state(correct-response),
       &[shape='rect']:state(correct-response),
       &[shape='ellipse']:state(correct-response) {
-        background-color: color-mix(in oklch, var(--qti-answer-bg) 75%, transparent);
+        background-color: color-mix(in oklab, var(--qti-answer-bg) 75%, transparent);
       }
 
       &[shape='poly']:state(correct-response) {
-        background-color: color-mix(in oklch, var(--qti-answer-bg) 80%, transparent);
+        background-color: color-mix(in oklab, var(--qti-answer-bg) 80%, transparent);
         box-shadow: none;
       }
 
       &[shape='circle']:state(candidate-correct),
       &[shape='rect']:state(candidate-correct),
       &[shape='ellipse']:state(candidate-correct) {
-        background-color: color-mix(in oklch, var(--qti-correct) 35%, transparent);
+        background-color: color-mix(in oklab, var(--qti-correct) 35%, transparent);
       }
 
       &[shape='poly']:state(candidate-correct) {
-        background-color: color-mix(in oklch, var(--qti-correct) 40%, transparent);
+        background-color: color-mix(in oklab, var(--qti-correct) 40%, transparent);
         box-shadow: none;
       }
 
       &[shape='circle']:state(candidate-incorrect),
       &[shape='rect']:state(candidate-incorrect),
       &[shape='ellipse']:state(candidate-incorrect) {
-        background-color: color-mix(in oklch, var(--qti-incorrect) 35%, transparent);
+        background-color: color-mix(in oklab, var(--qti-incorrect) 35%, transparent);
       }
 
       &[shape='poly']:state(candidate-incorrect) {
-        background-color: color-mix(in oklch, var(--qti-incorrect) 40%, transparent);
+        background-color: color-mix(in oklab, var(--qti-incorrect) 40%, transparent);
         box-shadow: none;
       }
 

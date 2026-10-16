@@ -1,7 +1,7 @@
 /* `display: block` is declared by the element itself, in qti-rubric-block.ts. */
 qti-rubric-block {
   border: var(--qti-border-thickness) solid var(--qti-info);
-  background-color: color-mix(in oklch, var(--qti-info) 5%, var(--qti-bg));
+  background-color: color-mix(in oklab, var(--qti-info) 5%, var(--qti-bg));
   border-radius: var(--qti-radius-box);
   padding: var(--qti-padding-box);
   margin-top: var(--qti-gap);

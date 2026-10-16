@@ -228,7 +228,7 @@
     qti-simple-associable-choice:state(dragging) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in oklch, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 
   qti-match-interaction:not(.qti-match-tabular)
@@ -236,7 +236,7 @@
     qti-simple-associable-choice:state(return-anchor) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in oklch, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 }
 
