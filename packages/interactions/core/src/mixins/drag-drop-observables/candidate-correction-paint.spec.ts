@@ -24,8 +24,16 @@ import itemCss from '@qti-components/theme/item-css';
 
 const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
-const CORRECT = 'rgb(43, 131, 14)';
-const INCORRECT = 'rgb(223, 0, 0)';
+// The verdict colours, read from the theme's own tokens rather than written here, so the test follows
+// the theme. Read off a probe in the same document, after applyTheme.
+const tokenColor = (token: string) => {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${token})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+};
 const TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
 const applyTheme = () => {
@@ -135,6 +143,9 @@ describe('candidate correction paint', () => {
   beforeEach(() => applyTheme());
 
   test.each(CASES.map(c => [c.name, c] as const))('%s repaints for both verdicts', async (_n, spec) => {
+    const CORRECT = tokenColor('--qti-correct');
+    const INCORRECT = tokenColor('--qti-incorrect');
+    expect(CORRECT, 'the two verdicts must be told apart').not.toBe(INCORRECT);
     for (const [state, expected] of [
       ['candidate-correct', CORRECT],
       ['candidate-incorrect', INCORRECT]
@@ -203,7 +214,7 @@ describe('candidate correction paint', () => {
     await settle();
 
     const cs = getComputedStyle(chip);
-    expect(cs.color, 'it is still corrected').toBe(CORRECT);
+    expect(cs.color, 'it is still corrected').toBe(tokenColor('--qti-correct'));
     expect(parseFloat(cs.borderTopWidth), 'but draws no border over the image').toBe(0);
     expect(parseFloat(cs.paddingLeft), 'and takes no padding').toBe(0);
   });
