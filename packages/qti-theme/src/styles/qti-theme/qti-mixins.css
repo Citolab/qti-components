@@ -156,13 +156,13 @@
   /* A chip is a selector, so it takes the selector radius, and its lift follows --cito-depth. Both
      re-declared with the slot in FRONT, the drop's dashed-edge pattern: the default changes, the
      slot still wins, and nothing is set on --drag-* (see above). */
-  border-radius: var(--drag-border-radius, var(--cito-radius-selector));
+  border-radius: var(--drag-border-radius, var(--qti-radius-selector));
   box-shadow: var(--drag-box-shadow, var(--qti-drag-lift));
 
   /* The chip's own colours (--cito-color-chip), behind the same slots: the surface and the
      surrounding text by default, a filled chip when a brand sets the tier-1 chip colour. */
   background-color: var(--drag-background-color, var(--qti-drag-fill));
-  color: var(--drag-color, var(--qti-drag-text));
+  color: var(--drag-color, var(--cito-color-chip-content, inherit));
 }
 
 /*
@@ -274,7 +274,7 @@
 
 @define-mixin checkbox {
   @mixin paint checkbox;
-  border-radius: var(--checkbox-border-radius, var(--cito-radius-selector));
+  border-radius: var(--checkbox-border-radius, var(--qti-radius-selector));
   width: var(--qti-control-size);
   height: var(--qti-control-size);
 }
@@ -420,7 +420,7 @@
   background-color: color-mix(in oklab, var(--qti-warning) 5%, var(--qti-bg));
   padding: var(--qti-padding-box);
   border: var(--qti-border-thickness) solid var(--qti-warning);
-  border-radius: var(--cito-radius-box);
+  border-radius: var(--qti-radius-box);
   margin-top: var(--qti-gap);
 }
 
@@ -441,12 +441,12 @@
 /* The menu and the message hold content, so they take the box radius. */
 @define-mixin menu {
   @mixin paint menu;
-  border-radius: var(--menu-border-radius, var(--cito-radius-box));
+  border-radius: var(--menu-border-radius, var(--qti-radius-box));
 }
 
 @define-mixin message {
   @mixin paint message;
-  border-radius: var(--message-border-radius, var(--cito-radius-box));
+  border-radius: var(--message-border-radius, var(--qti-radius-box));
 }
 
 /*
@@ -478,7 +478,7 @@
   background-color: color-mix(
     in oklab,
     var(--$(role)-background-color, var(--qti-$(role)-fill, var(--qti-component-background-color))),
-    var(--cito-color-base-content) var(--qti-active-mix)
+    var(--qti-color-base-content) var(--qti-active-mix)
   );
 }
 
@@ -507,7 +507,7 @@
     background-color: color-mix(
       in oklab,
       var(--drag-background-color, var(--qti-drag-fill)),
-      var(--cito-color-base-content) var(--qti-hover-mix)
+      var(--qti-color-base-content) var(--qti-hover-mix)
     );
   }
 }

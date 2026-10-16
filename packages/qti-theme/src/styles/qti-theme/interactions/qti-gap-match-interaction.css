@@ -129,7 +129,7 @@
         transform: rotate(0);
         /* Through the drag slot so a correction (which sets --drag-box-shadow) composes over it
            instead of this leaking onto a corrected chip. */
-        --drag-box-shadow: 0 0 0 var(--cito-border-width) var(--qti-color-base-300);
+        --drag-box-shadow: 0 0 0 var(--qti-border-width) var(--qti-color-base-300);
       }
     }
   }

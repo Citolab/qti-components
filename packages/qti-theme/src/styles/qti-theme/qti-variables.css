@@ -40,28 +40,52 @@
      *
      * The colour literals reproduce the hex colours the theme shipped with (#0175aa, #2b830e,
      * #ffa700, #df0000, #007ac3, white), so nothing moves. Today's names below are aliases of these.
+     *
+     * HOW THEY ARE READ. The theme never declares a `--cito-*` name. Each line below reads one, with
+     * the default as its fallback, into the `--qti-` name every rule uses:
+     *
+     *     --qti-color-primary: var(--cito-color-primary, oklch(…));
+     *
+     * An undeclared custom property inherits through every shadow boundary, so a `--cito-*` value a
+     * host sets anywhere above an item reaches it, also inside a shadow root that adopts this sheet
+     * (test-container, an item's own root). Declaring the `--cito-*` names here, on `:host`, would
+     * reset them to the defaults in every such root. Two inputs have no `--qti-` line because their
+     * default is `inherit`, which a custom property cannot hold: --cito-color-chip-content (read in
+     * `@mixin drag`) and --cito-font-family (read in reset.css). The optional --cito-color-border is
+     * read by --qti-border-color, below.
      */
-    --cito-color-base-100: light-dark(oklch(100% 0 none), oklch(25.33% 0.016 252.42)); /* t1 */
-    --cito-color-base-content: light-dark(oklch(21% 0 none), oklch(97.8% 0.029 256.85)); /* t1 */
+    --qti-color-base-100: var(
+      --cito-color-base-100,
+      light-dark(oklch(100% 0 none), oklch(25.33% 0.016 252.42))
+    ); /* t1 */
+    --qti-color-base-content: var(
+      --cito-color-base-content,
+      light-dark(oklch(21% 0 none), oklch(97.8% 0.029 256.85))
+    ); /* t1 */
 
-    --cito-color-primary: oklch(53.47% 0.1195 238.63); /* t1 — selection, active border, focus ring */
-    --cito-color-primary-content: oklch(100% 0 none); /* t1 */
+    --qti-color-primary: var(
+      --cito-color-primary,
+      oklch(53.47% 0.1195 238.63)
+    ); /* t1 — selection, active border, focus ring */
+    --qti-color-primary-content: var(--cito-color-primary-content, oklch(100% 0 none)); /* t1 */
 
     /* The colour of an unbranded control that still has to stand out: the test's Next button. */
-    --cito-color-neutral: light-dark(oklch(17.76% 0 none), oklch(92% 0 none)); /* t1 */
-    --cito-color-neutral-content: light-dark(oklch(100% 0 none), oklch(17.76% 0 none)); /* t1 */
+    --qti-color-neutral: var(--cito-color-neutral, light-dark(oklch(17.76% 0 none), oklch(92% 0 none))); /* t1 */
+    --qti-color-neutral-content: var(
+      --cito-color-neutral-content,
+      light-dark(oklch(100% 0 none), oklch(17.76% 0 none))
+    ); /* t1 */
 
     /*
      * A drag chip: the surface by default, so a chip is an outlined box; a brand that wants filled
      * chips sets its own colour here. Its text is the surrounding text unless a brand says otherwise.
      */
-    --cito-color-chip: var(--cito-color-base-100); /* t1 */
-    --cito-color-chip-content: inherit; /* t1 */
+    --qti-color-chip: var(--cito-color-chip, var(--qti-color-base-100)); /* t1 */
 
-    --cito-color-info: oklch(56.14% 0.1437 245.8); /* t1 — the answer key */
-    --cito-color-success: oklch(53.64% 0.166 139.96); /* t1 — correct */
-    --cito-color-warning: oklch(79.62% 0.1708 71.71); /* t1 — partially correct, validation */
-    --cito-color-error: oklch(56.75% 0.2329 29.23); /* t1 — incorrect */
+    --qti-color-info: var(--cito-color-info, oklch(56.14% 0.1437 245.8)); /* t1 — the answer key */
+    --qti-color-success: var(--cito-color-success, oklch(53.64% 0.166 139.96)); /* t1 — correct */
+    --qti-color-warning: var(--cito-color-warning, oklch(79.62% 0.1708 71.71)); /* t1 — partially correct, validation */
+    --qti-color-error: var(--cito-color-error, oklch(56.75% 0.2329 29.23)); /* t1 — incorrect */
 
     /*
      * Radii, by what a box is: a selector is a small thing you pick (checkbox, chip), a field is a
@@ -71,47 +95,44 @@
      * Selector and box default to the field radius, read through its old name, so a brand that sets
      * --qti-border-radius still rounds all three.
      */
-    --cito-radius-field: 0.2rem; /* t1 */
-    --cito-radius-selector: var(--qti-border-radius); /* t1 */
-    --cito-radius-box: var(--qti-border-radius); /* t1 */
+    --qti-radius-field: var(--cito-radius-field, 0.2rem); /* t1 */
+    --qti-radius-selector: var(--cito-radius-selector, var(--qti-border-radius)); /* t1 */
+    --qti-radius-box: var(--cito-radius-box, var(--qti-border-radius)); /* t1 */
 
     /*
      * Sizes. The selector unit is a quarter of a radio or checkbox (`em`, so a control follows the
      * text it labels; see --qti-control-size). The field unit is an inline field's block padding:
      * the room above and below the text in a text entry, an inline choice or a gap.
      */
-    --cito-size-selector: 0.25em; /* t1 */
-    --cito-size-field: 0.125rem; /* t1 */
+    --qti-size-selector: var(--cito-size-selector, 0.25em); /* t1 */
+    --qti-size-field: var(--cito-size-field, 0.125rem); /* t1 */
 
     /* The width of every border. A hairline, so a length in px. */
-    --cito-border-width: 1px; /* t1 */
-
-    /* The item's typeface. `inherit` by default: an item is set in the page's font. */
-    --cito-font-family: inherit; /* t1 */
+    --qti-border-width: var(--cito-border-width, 1px); /* t1 */
 
     /*
      * Depth: 0 or 1. At 1 a chip stands off the page with a small lift under it; at 0 (the default)
      * it is flat. A multiplier, like --qti-motion, so it can also be set in between.
      */
-    --cito-depth: 0; /* t1 */
+    --qti-depth: var(--cito-depth, 0); /* t1 */
 
     /*
      * Two surfaces a step darker than base-100, derived so the three cannot drift apart: a little
      * base-content mixed in (2.5% and 6% reproduce the 98% and 95% greys of the light default).
      */
-    --qti-color-base-200: color-mix(in oklab, var(--cito-color-base-100), var(--cito-color-base-content) 2.5%);
-    --qti-color-base-300: color-mix(in oklab, var(--cito-color-base-100), var(--cito-color-base-content) 6%);
+    --qti-color-base-200: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 2.5%);
+    --qti-color-base-300: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 6%);
 
     /* ── Today's names, as aliases of tier 1 ──
        Rules and components read these, so a brand that sets one still wins. */
-    --qti-primary: var(--cito-color-primary);
-    --qti-success: var(--cito-color-success);
-    --qti-warning: var(--cito-color-warning);
-    --qti-error: var(--cito-color-error);
-    --qti-info: var(--cito-color-info);
+    --qti-primary: var(--qti-color-primary);
+    --qti-success: var(--qti-color-success);
+    --qti-warning: var(--qti-color-warning);
+    --qti-error: var(--qti-color-error);
+    --qti-info: var(--qti-color-info);
 
     /* Foreground on a primary fill. */
-    --qti-primary-fg: var(--cito-color-primary-content);
+    --qti-primary-fg: var(--qti-color-primary-content);
 
     /* ── Rhythm ──
      *
@@ -175,7 +196,7 @@
      * is the same in every element of the item, whatever its font size.
      */
     --qti-inline-gap: calc(var(--qti-spacing) / 4);
-    --qti-inline-padding-block: var(--cito-size-field);
+    --qti-inline-padding-block: var(--qti-size-field);
     --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-gap);
     --qti-line-height: calc(
       var(--qti-field-line-height) * 1em + 2 * var(--qti-inline-padding-block) + 2 * var(--qti-component-border-width)
@@ -207,7 +228,7 @@
        slider track). Those two readerships are why this group and the --qti-component-* group below
        are not one group: this is "the theme's surface colour", that is "what a component paints when
        it says nothing", and only the second is the paint contract's business. */
-    --qti-bg: var(--cito-color-base-100);
+    --qti-bg: var(--qti-color-base-100);
 
     /*
      * THE body text colour — the foreground half of the --qti-bg / --qti-fg pair.
@@ -232,7 +253,7 @@
      * either directly or through a role slot (--field-color, --drag-color, @mixin candidate).
      */
     --qti-fg: inherit; /* t1 */
-    --qti-border-thickness: var(--cito-border-width); /* some places need the width alone (invariance, calcs) */
+    --qti-border-thickness: var(--qti-border-width); /* some places need the width alone (invariance, calcs) */
     --qti-border-style: solid; /* t1 */
     /*
      * THE border colour, the border half of the --qti-bg / --qti-fg pair. A neutral, worked out from
@@ -242,8 +263,11 @@
      * selected (--qti-border-active). A brand that wants its colour on every edge sets this token,
      * as kennisnet.css does.
      */
-    --qti-border-color: color-mix(in oklab, var(--cito-color-base-content) 45%, var(--cito-color-base-100));
-    --qti-border-radius: var(--cito-radius-field);
+    --qti-border-color: var(
+      --cito-color-border,
+      color-mix(in oklab, var(--qti-color-base-content) 45%, var(--qti-color-base-100))
+    ); /* t1 input: --cito-color-border, optional */
+    --qti-border-radius: var(--qti-radius-field);
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
     /* ── The paint contract's resting look ──
@@ -288,19 +312,18 @@
      *   --qti-hover-mix       how much base-content a hover mixes into a fill.
      *   --qti-active-mix      how much a press mixes in: twice the hover, so a press reads as one.
      */
-    --qti-drag-lift: 0 calc(2 * var(--cito-border-width)) 0
-      color-mix(in oklab, var(--cito-color-base-content) calc(var(--cito-depth) * 20%), transparent);
+    --qti-drag-lift: 0 calc(2 * var(--qti-border-width)) 0
+      color-mix(in oklab, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent);
     --qti-drag-elevation:
       0 var(--qti-spacing) calc(var(--qti-spacing) * 1.5)
-        color-mix(in oklab, var(--cito-color-base-content) 20%, transparent),
+        color-mix(in oklab, var(--qti-color-base-content) 20%, transparent),
       0 calc(var(--qti-spacing) / 2) var(--qti-spacing)
-        color-mix(in oklab, var(--cito-color-base-content) 10%, transparent);
+        color-mix(in oklab, var(--qti-color-base-content) 10%, transparent);
     --qti-hover-mix: 8%;
 
-    /* A chip's resting fill and text: the tier-1 chip colours. `press` reads --qti-<role>-fill, so a
-       pressed chip darkens from the chip colour; other roles fall back to the component surface. */
-    --qti-drag-fill: var(--cito-color-chip);
-    --qti-drag-text: var(--cito-color-chip-content);
+    /* A chip's resting fill: the tier-1 chip colour. `press` reads --qti-<role>-fill, so a pressed
+       chip darkens from the chip colour; other roles fall back to the component surface. */
+    --qti-drag-fill: var(--qti-color-chip);
     --qti-active-mix: 16%; /* a press: the same mix, twice as far */
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
@@ -345,7 +368,7 @@
     --qti-focus-color: var(--qti-primary);
     --qti-focus-offset: var(--qti-focus-border-width);
     --qti-focus-offset-inset: calc(-1 * var(--qti-focus-border-width));
-    --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--cito-border-width));
+    --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--qti-border-width));
   }
 
   /* Honour the OS "reduce motion" request through the same knob, so CSS transitions and the JS FLIP
@@ -387,7 +410,7 @@
      * shrinks with it. Nothing in the theme sets a smaller size yet, so a floor would be a magic
      * number guarding a case that does not exist; add `max()` here if a real one turns up.
      */
-    --qti-control-size: calc(var(--cito-size-selector) * 4);
+    --qti-control-size: calc(var(--qti-size-selector) * 4);
 
     /* The correction badge's box. Named in two comments above and read by correction.styles.ts, but
        never actually declared until now — every badge has been running on that file's `1em`

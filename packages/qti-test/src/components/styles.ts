@@ -26,10 +26,10 @@ import { css } from 'lit';
  *                                                  the filled look only
  */
 
-const surface = css`var(--cito-color-base-100, Canvas)`;
-const content = css`var(--cito-color-base-content, CanvasText)`;
-const neutral = css`var(--cito-color-neutral, CanvasText)`;
-const neutralContent = css`var(--cito-color-neutral-content, Canvas)`;
+const surface = css`var(--qti-color-base-100, var(--cito-color-base-100, Canvas))`;
+const content = css`var(--qti-color-base-content, var(--cito-color-base-content, CanvasText))`;
+const neutral = css`var(--qti-color-neutral, var(--cito-color-neutral, CanvasText))`;
+const neutralContent = css`var(--qti-color-neutral-content, var(--cito-color-neutral-content, Canvas))`;
 
 export const form = css`
   display: inline-flex;
@@ -43,14 +43,14 @@ export const form = css`
   line-height: 1.25;
   cursor: pointer;
   user-select: none;
-  border-radius: var(--test-button-border-radius, var(--cito-radius-field, 0.2rem));
+  border-radius: var(--test-button-border-radius, var(--qti-radius-field, var(--cito-radius-field, 0.2rem)));
 `;
 
 export const btn = css`
   ${form};
   background-color: var(--test-button-background-color, ${surface});
   color: var(--test-button-color, inherit);
-  border: var(--cito-border-width, 1px) solid
+  border: var(--qti-border-width, var(--cito-border-width, 1px)) solid
     var(--test-button-border-color, var(--qti-border-color, color-mix(in oklab, ${content} 45%, ${surface})));
 `;
 
@@ -104,5 +104,5 @@ export const dis = css`
 
 export const ind = css`
   ${form};
-  border: var(--cito-border-width, 1px) solid var(--qti-border-color, GrayText);
+  border: var(--qti-border-width, var(--cito-border-width, 1px)) solid var(--qti-border-color, GrayText);
 `;

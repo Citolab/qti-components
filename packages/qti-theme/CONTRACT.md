@@ -198,8 +198,8 @@ The theme still decides; the box model stays with the component. The same patter
 ## 8. Token tiers
 
 A theme is a small set of values. Everything else is worked out from them. In
-`qti-variables.css` a tier-1 token carries a trailing `/* t1 */`; every other token declared there is
-tier 2. Tier 3 is never declared there.
+`qti-variables.css` a line tagged `/* t1 */` reads a tier-1 input; every other token declared there
+is tier 2. Tier 3 is never declared there.
 
 The tier-1 tokens made for this set carry the public prefix `cito-`, like the public `cito-` events:
 the prefix says "this is what you style". `qti-` belongs to 1EdTech's vocabulary, and everything
@@ -216,7 +216,19 @@ derived keeps it. Older tier-1 names (`--qti-spacing`, `--qti-motion`, `--qti-fi
 | Type    | `--cito-font-family`                                                                                       |
 | Feel    | `--cito-depth`, `--qti-motion`                                                                             |
 
-Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows.
+Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows, and the
+optional `--cito-color-border` for a brand that wants every edge in its own colour (Kennisnet).
+
+**The `cito-` names are inputs, never declared by the theme.** Each is read once, with its default as
+the fallback, into a `qti-` name that every rule reads:
+
+```css
+--qti-color-primary: var(--cito-color-primary, oklch(53.47% 0.1195 238.63));
+```
+
+That is what lets a value set on a page reach every item: an undeclared custom property inherits
+through every shadow boundary, while one the theme declared on `:host` would be reset to its default
+in every shadow root that adopts the theme (an item's own root, `test-container`).
 
 | Tier | What it is                                                                                                                                                                                                           | Who sets it                                                                       | Where it is declared                                                                                                                  |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -244,14 +256,14 @@ slots; they never re-value a tier-2 token to repaint one role.
   theme sets no `color-scheme`: the page decides. A host that declares `color-scheme: dark` (or
   `light dark`) on the item's container gets the dark values; one that declares nothing stays light.
   A dark theme is made by switching `color-scheme`, never by redefining the tokens.
-- **Re-value tier 1 where tier 2 is declared.** Every token block is declared on
+- **Set tier 1 anywhere; tier 2 follows where it is declared.** Every token block is declared on
   `:root, :host, [data-qti-theme]`. A custom property's `var()` resolves on the element that
-  declares it, so a tier-2 token declared on `:root` keeps the `:root` value of the tier 1 it reads,
-  whatever a descendant sets. Theme a subtree by setting tier 1 on an element that carries
-  `data-qti-theme`: tier 2 is declared there again and follows it. Such an element starts from the
-  theme's defaults, not from what its ancestors set, so it states every tier-1 value it changes.
+  declares it, so tier 2 follows a `--cito-*` value on `:root`, on any shadow host (every item root
+  re-derives), and on an element that carries `data-qti-theme`. Setting `--cito-*` on a plain light-DOM
+  wrapper changes nothing below it until that wrapper also carries `data-qti-theme`. Because the
+  inputs inherit, such a subtree keeps what its ancestors set and changes only what it states.
 - **Old names are aliases.** A token that was public before the tier set existed stays, as a tier-2
-  alias of its tier-1 name (`--qti-primary: var(--cito-color-primary)`). Components and rules keep
+  alias of its tier-1 name (`--qti-primary: var(--qti-color-primary)`). Components and rules keep
   reading the old name, so a brand that sets the old name still wins. A new rule reads the tier-1
   name when it has no older one.
 - **Interaction rules read tier 2 and 3.** A rule that needs a value no token offers gets a named
