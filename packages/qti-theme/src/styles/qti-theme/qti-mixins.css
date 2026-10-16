@@ -298,6 +298,10 @@
 @define-mixin check {
   @mixin button;
   --button-border-color: transparent;
+  /* No fill either: at rest such a choice is a line of text with a control before it, so it shows
+     the page behind it, not the theme's surface. A state or a correction still fills it through the
+     same slot. */
+  --button-background-color: transparent;
   gap: 0.5rem;
   cursor: pointer;
 }
@@ -450,6 +454,23 @@
   pointer-events: none;
   rotate: -2deg;
   --drag-box-shadow: var(--qti-drag-elevation);
+}
+
+/*
+ * A press: the fill takes a little more of the content colour while the pointer is down, so a
+ * choice or a chip answers the moment it is touched. Paint only, so nothing moves, and not guarded
+ * by a hover query: a press is real on touch too, and it ends when the finger lifts.
+ *
+ * $role is the element's paint role (`button`, `drag`); the fill it mixes from is that role's own,
+ * so a selected choice or a branded chip darkens from its own colour. A direct `background-color`,
+ * for the reason `drag-hover` below gives.
+ */
+@define-mixin press $role {
+  background-color: color-mix(
+    in oklch,
+    var(--$(role)-background-color, var(--qti-component-background-color)),
+    var(--qti-color-base-content) var(--qti-active-mix)
+  );
 }
 
 /*

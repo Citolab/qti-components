@@ -36,6 +36,9 @@
     &:hover {
       @mixin drag-hover;
     }
+    &:active {
+      @mixin press drag;
+    }
     &:focus-visible {
       @mixin foc;
     }
@@ -70,6 +73,9 @@
         }
         &:hover {
           @mixin drag-hover;
+        }
+        &:active {
+          @mixin press drag;
         }
         &:focus-visible {
           @mixin foc;
@@ -119,6 +125,9 @@
           @mixin drag;
           &:hover {
             @mixin drag-hover;
+          }
+          &:active {
+            @mixin press drag;
           }
           &:focus-visible {
             @mixin foc;

@@ -44,8 +44,13 @@ export class TestNext extends LitElement {
       ${styles.btn};
       ${styles.btnPrimary};
     }
-    :host(:hover:not([disabled])) {
-      ${styles.btnPrimaryInteractive};
+    @media (hover: hover) and (pointer: fine) {
+      :host(:hover:not([disabled])) {
+        ${styles.btnPrimaryInteractive};
+      }
+    }
+    :host(:active:not([disabled])) {
+      ${styles.btnPrimaryActive};
     }
     :host(:focus-visible) {
       ${styles.focusRing};

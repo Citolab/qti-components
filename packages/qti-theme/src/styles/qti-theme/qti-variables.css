@@ -272,7 +272,8 @@
      *   --qti-drag-lift       a chip at rest: a hard shadow under it, as tall as two borders. At
      *                         depth 0 its colour mixes to nothing, so the chip is flat.
      *   --qti-drag-elevation  a chip in flight, at any depth: picked up is always off the page.
-     *   --qti-hover-mix       how much base-content a hover or a press mixes into a fill.
+     *   --qti-hover-mix       how much base-content a hover mixes into a fill.
+     *   --qti-active-mix      how much a press mixes in: twice the hover, so a press reads as one.
      */
     --qti-drag-lift: 0 calc(2 * var(--qti-border-width)) 0
       color-mix(in oklch, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent);
@@ -282,6 +283,7 @@
       0 calc(var(--qti-spacing) / 2) var(--qti-spacing)
         color-mix(in oklch, var(--qti-color-base-content) 10%, transparent);
     --qti-hover-mix: 8%;
+    --qti-active-mix: 16%; /* a press: the same mix, twice as far */
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
        dependency. One vocabulary, kept together even though --qti-times-mask is read only from

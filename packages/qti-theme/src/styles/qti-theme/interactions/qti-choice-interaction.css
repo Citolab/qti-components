@@ -34,6 +34,9 @@
         &:focus-visible {
           @mixin foc;
         }
+        &:active {
+          @mixin press button;
+        }
       }
     }
 
@@ -47,6 +50,10 @@
            holds focus, so it is the host's :focus-visible that picks the part. */
         &:focus-visible {
           outline: var(--qti-focus-border-width) solid transparent;
+        }
+
+        &:active {
+          @mixin press button;
         }
 
         &:focus-visible::part(control),
