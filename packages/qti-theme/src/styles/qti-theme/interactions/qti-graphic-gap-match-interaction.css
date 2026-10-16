@@ -40,12 +40,16 @@
     & qti-gap-text {
       --qti-drag-justify-content: center;
       cursor: grab;
-    }
-    /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only. */
-    & qti-associable-hotspot::part(drag) {
+      /* The bank chip's own ring; the rule below rings only the placed one. */
       &:focus-visible {
         @mixin foc;
       }
+    }
+    /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only.
+       Written in one selector: nested under `&::part(drag)` it compiled to `:is(…::part(drag))`,
+       and a pseudo-element cannot sit inside `:is()`, so the ring never matched. */
+    & qti-associable-hotspot::part(drag):focus-visible {
+      @mixin foc;
     }
     /*
      * The hotspot centres its chip in qti-associable-hotspot.styles.ts.

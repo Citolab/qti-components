@@ -15,10 +15,10 @@
      */
     --qti-select-point-marker-color: var(--qti-primary);
 
-    &::part(point) {
-      &:focus-visible {
-        @mixin foc;
-      }
+    /* One selector, not nested under `&::part(point)`: that compiled to `:is(…::part(point))`,
+       which no browser accepts, so the ring never matched. */
+    &::part(point):focus-visible {
+      @mixin foc;
     }
   }
 }

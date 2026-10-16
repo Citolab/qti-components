@@ -99,11 +99,13 @@
              used to LEAK: `dragging` sets --component-box-shadow, one shared namespace, so it
              inherited onto every chip nested in the drop. That half is now structural — `dragging`
              sets --drag-box-shadow, which a drop does not read.) */
-          &:focus-visible {
-            @mixin foc;
-          }
           margin-top: var(--qti-gap);
           gap: var(--qti-gap);
+        }
+        /* The ring goes on the target itself: it is what takes keyboard focus. Nothing in its shadow
+           is focusable, so the `::part(drop):focus-visible` this replaces never matched. */
+        &:focus-visible {
+          @mixin foc;
         }
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;
