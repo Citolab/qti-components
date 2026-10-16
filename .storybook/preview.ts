@@ -138,6 +138,8 @@ const preview: Preview = {
         // Sidebar order = reading order; 'Testing' is last.
         order: [
           'Introduction',
+          'Implementation',
+          ['Theming', 'Cookbook'],
           'Concepts',
           'QTI Test',
           [
@@ -451,11 +453,11 @@ const preview: Preview = {
               'Vocabulary'
             ]
           ],
+          'Corrections',
+          ['Kennisnet'],
           'Extending QTI',
           ['Creating an extended interaction', 'Creating a plugin', 'Public API'],
-          'Theming',
           'API Reference',
-          'Cookbook',
           'Testing'
         ]
       }

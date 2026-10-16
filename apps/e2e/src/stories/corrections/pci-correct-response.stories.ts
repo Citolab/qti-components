@@ -84,7 +84,7 @@ const deepIframeHtml = (iframe: HTMLIFrameElement | null): string => {
 };
 
 const meta: Meta = {
-  title: 'Cookbook/Corrections/portable custom interaction',
+  title: 'Corrections/Portable custom interaction',
   decorators: [withCorrection],
   parameters: {
     chromatic: { disableSnapshot: true }

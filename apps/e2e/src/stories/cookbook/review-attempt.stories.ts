@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '@qti-components/elements';
 
 const meta: Meta = {
-  title: 'Cookbook/CitoTestUit/Review a finished attempt',
+  title: 'Implementation/Cookbook/CitoTestUit/Review a finished attempt',
   tags: ['autodocs'],
   parameters: {
     controls: { disable: true },
