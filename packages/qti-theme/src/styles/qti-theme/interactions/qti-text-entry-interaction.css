@@ -2,6 +2,8 @@
   qti-text-entry-interaction {
     @mixin text;
 
+    @mixin inline;
+
     &::part(input) {
       @mixin field-typography;
       appearance: none;

@@ -45,3 +45,17 @@
     margin: 0;
   }
 }
+
+/*
+ * Reading rhythm for rendered items.
+ *
+ * Browsers and normalize sheets leave the line height at about 1.15, which squashes every sentence
+ * of an item against the next. Items set their own, from one token a host can re-value. The token is
+ * derived from the height of an inline field, so a line holding one is no taller than the rest.
+ * Rendered items only: an editor document keeps the line height its editor gives it.
+ */
+@scope (qti-item-body) {
+  :scope {
+    line-height: var(--qti-line-height);
+  }
+}

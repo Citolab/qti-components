@@ -39,6 +39,10 @@
     &:state(dragzone-enabled)::part(drags) {
       @mixin dropping;
     }
+    & qti-gap {
+      @mixin inline;
+    }
+
     /* Editor fake-drag projected into a filled <qti-gap>'s shadow. Same `drag`
        styling so the editor preview matches runtime when a gap is filled. */
     & qti-gap::part(drag) {

@@ -70,6 +70,37 @@
     --qti-padding-inline: calc(var(--qti-spacing) / 4) calc(var(--qti-spacing) / 2);
     --qti-gap: calc(var(--qti-spacing) * 2);
 
+    /*
+     * Inline fields: a text entry, an inline choice, a gap, anything that sits in a line of text.
+     *
+     * Named, not computed at the call site (the contract above): they are the quarter-unit values
+     * the three composites do not offer, and each is read whole.
+     *
+     *   --qti-inline-gap            space either side of the field, so it never touches the words
+     *                               around it; the sentence's own space supplies the rest and
+     *                               collapses at a line break, where a margin would leave an indent
+     *   --qti-inline-padding-block  the field's block padding: a quarter unit, so the line holding a
+     *                               field stays near the height of the lines around it
+     *   --qti-inline-field-padding  the field's box, that block padding and the usual inline padding
+     *
+     * --qti-line-height is derived from the same parts, so a line of text is exactly as tall as a
+     * field set in it: a field line then sits level with the lines around it. It is a length, so it
+     * is the same in every element of the item, whatever its font size.
+     */
+    --qti-inline-gap: calc(var(--qti-spacing) / 4);
+    --qti-inline-padding-block: calc(var(--qti-spacing) / 4);
+    --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-gap);
+    --qti-line-height: calc(
+      var(--qti-field-line-height) * 1em + 2 * var(--qti-inline-padding-block) + 2 * var(--qti-component-border-width)
+    );
+
+    /*
+     * How far a stacked choice is pulled out so its control sits on the same edge as the prose around
+     * it: the room it reserves for its selected paint, which is its inline padding (--qti-gap, the
+     * inline half of --qti-padding-box) and its border.
+     */
+    --qti-choice-outdent: calc(var(--qti-gap) + var(--qti-component-border-width));
+
     --qti-popover-z-index: 1000;
     --qti-overlay-z-index: 1;
     /* Motion master switch — a unitless multiplier every animation scales by. 1 = normal, 0 = no

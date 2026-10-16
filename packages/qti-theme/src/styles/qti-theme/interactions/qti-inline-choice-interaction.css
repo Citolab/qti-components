@@ -6,6 +6,7 @@
        being the field's own slot, it no longer inherits into the menu and message below. Those two
        still land on the same colour: they inherit the field's computed `color`. */
     @mixin field;
+    @mixin inline;
     --field-color: var(--qti-fg);
 
     /* ── Trigger: transparent inside the field border ───────────────────────── */

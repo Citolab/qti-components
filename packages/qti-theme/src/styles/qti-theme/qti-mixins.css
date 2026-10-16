@@ -217,6 +217,17 @@
   line-height: 1.5;
 }
 
+/*
+ * An element that sits in a line of text: a text entry, an inline choice, a gap. Space either side
+ * and a block padding that keeps its line close to the height of the lines around it. The values are
+ * named in qti-variables.css; the box is declared as --qti-padding-box, which the field's own parts
+ * already read, so no component has to know about it.
+ */
+@define-mixin inline {
+  margin-inline: var(--qti-inline-gap);
+  --qti-padding-box: var(--qti-inline-field-padding);
+}
+
 @define-mixin dropping {
   background-color: var(--qti-bg-active);
 }

@@ -10,9 +10,11 @@ export default [
       display: block;
     }
 
+    /* No gap of its own: a choice carries its own padding, which already spaces a list. A theme sets
+       --qti-choice-gap where the choices are drawn as separate boxes and need air between them. */
     [part='slot'] {
       display: grid;
-      gap: 10px;
+      gap: var(--qti-choice-gap, 0);
     }
 
     /* Define the number of columns dynamically */
