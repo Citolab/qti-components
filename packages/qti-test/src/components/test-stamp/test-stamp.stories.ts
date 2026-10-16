@@ -11,7 +11,19 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-stamp');
 
 type Story = StoryObj<TestStamp & typeof args>;
 
+/**
+ * The **stamp** plugin renders a template from the state of the test, so a page can show where the
+ * candidate is without writing a component.
+ *
+ * `<test-stamp>` renders its `<template>` with the active item (`activeItem`), section
+ * (`activeSection`), test part (`activeTestpart`) and the test (`test`, with `test.plugins`). Inside
+ * it, `<template type="repeat" repeat="{{ activeTestpart.items }}">` makes one entry per item, and
+ * `repeat="{{ activeTestpart.sections }}"` one per section, for example a `<test-item-link>` or a
+ * `<test-section-link>`.
+ */
 const meta: Meta<TestStamp> = {
+  tags: ['autodocs'],
+  title: 'QTI Test/Plugins/Stamp/test-stamp',
   component: 'test-stamp',
   args,
   argTypes,

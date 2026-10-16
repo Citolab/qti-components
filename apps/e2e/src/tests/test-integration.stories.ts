@@ -8,6 +8,7 @@ import '../../../../.storybook/utilities.css';
 type Story = StoryObj;
 
 const meta: Meta = {
+  title: 'Testing/E2E/test-integration',
   component: 'test-integration',
   tags: ['skip-test'],
   render: () => {
@@ -18,12 +19,14 @@ const meta: Meta = {
         }
       </style>
       <test-navigation>
-        <test-section-buttons-stamp>
+        <test-stamp>
           <template>
-            <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            <template type="repeat" repeat="{{ activeTestpart.sections }}">
+              <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
+            </template>
           </template>
-        </test-section-buttons-stamp>
-        <div class="flex space-between">
+        </test-stamp>
+        <div class="flex justify-between">
           <div class="qti-base-stimulus w-1/2" data-stimulus-idref="Stimulus1"></div>
 
           <test-container class="w-1/2" test-url="/assets/qti-test-package-stimulus/assessment.xml">

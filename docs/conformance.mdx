@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { ConformanceMatrix } from './conformance-matrix';
+
+<Meta title="Testing/Conformance/Overview" />
+
+# QTI 3 conformance
+
+How the stories we run against the [1EdTech QTI 3 conformance suite](https://github.com/1EdTech/qti-conformance)
+fare. The suite is a set of items, tests and packages with acceptance criteria per feature. Each criterion
+has an ID: `Q2-L1-D51` is feature Q2 (choice interaction), level 1, delivery, number 51.
+
+Every conformance story is one criterion, named by its ID. This page reads Storybook's own story index, so
+there is nothing to run or generate: add a story and it appears here.
+
+<ConformanceMatrix />
+
+## How to read it
+
+- A row is a feature (a conformance story folder). A cell is **stories that assert, over all stories** for
+  that capability. Green means all of them assert, amber means some are placeholders or only shown.
+- **Delivery** stories check what a candidate sees and what the response variable holds after the attempt
+  ends. **Import** stories check that the item was read and stored correctly. **Other** are stories whose
+  name is not a criterion ID. Export and authoring are not tested: this is a rendering library, not an
+  authoring tool.
+- **To do** (shown once a placeholder exists) counts placeholder stories: criteria of the suite that nothing tests
+  yet. Each is an empty story tagged `todo`, with the criterion's text in its docs. **Failing** counts stories that
+  are written and known to fail, tagged `xfail`: they are in Storybook but not run in CI, and they do not count as
+  asserting. Both show a badge in the sidebar.
+- A story's criteria are the IDs in its name (a name may list several, `T4-L1-D1, T7-L1-D2`), else the ID in its
+  export name, else the one in its title. A story that lists several IDs counts once and covers each.
+- Click a number in the table to open its row's stories below, with the ones that number counts marked and
+  the rest dimmed. Click it again to clear. Click a story to open it.
+
+## What it is and is not
+
+- A story with an assertion is run in CI, so on `main` it passes. The page shows that a story asserts, not
+  the result of the latest run.
+- Placeholders exist only for the features that have been scaffolded. A feature with no placeholders can be
+  all green while the suite asks for more. The suite's own list is in the
+  [`qti3.0` folder](https://github.com/1EdTech/qti-conformance/tree/master/qti3.0), one README per sample.
+- It is not certification. 1EdTech certifies against its own checklists, with a human review.
+
+## Testing a placeholder
+
+A placeholder is an empty story named by its criterion ID, in a `*.todo.stories.ts` file. To test one, give
+it a `play` that asserts what the criterion says and remove the `todo` tag. If the test fails because the library
+does not do it yet, tag it `xfail` until it does. From then on it counts as
+asserted.

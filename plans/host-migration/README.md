@@ -7,6 +7,7 @@ say which host uses what.
 - [kennisnet.md](kennisnet.md): Angular, `@kennisnet/qti-components` 7.28.1
 - [citotestuit.md](citotestuit.md): React, `@citolab/qti-components` 9.3.0
 - [peilinglezen.md](peilinglezen.md): pinned 7.14, surveyed by imports only
+- [examenkompas.md](examenkompas.md): React, `@citolab/qti-components` 7.27.4
 
 ## Rule
 

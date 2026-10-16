@@ -1,6 +1,6 @@
 # @qti-components/elements
 
-## 1.10.1
+## 1.10.0-next.3
 
 ### Patch Changes
 
@@ -11,9 +11,23 @@
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
 - Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/base@2.5.0
+  - @qti-components/base@2.5.0-next.2
 
-## 1.10.0
+## 1.10.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+
+## 1.10.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+
+## 1.10.0-next.0
 
 ### Minor Changes
 
@@ -23,11 +37,6 @@
   - `qti-assessment-item-connected` stays: it is internal plumbing for the test and item container. Hosts use `cito-item-rendered`.
 
   Host entries: `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md`.
-
-### Patch Changes
-
-- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
-  - @qti-components/base@2.4.1
 
 ## 1.9.0
 

@@ -12,7 +12,21 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-scoring-b
 
 type Story = StoryObj<TestScoringButtons & typeof args>;
 
+/**
+ * The **scoring** plugin is for a scorer who marks an item by hand.
+ *
+ * - `<test-scoring-buttons>` stamps its `<template>` with `scores` (0 up to the item's `MAXSCORE`), the
+ *   current `score` and `disabled` (the buttons only work for items scored by a human). Clicking an
+ *   `<input>` writes that value to the item's `SCORE` through `cito-test-update-outcome`.
+ * - `<test-scoring-feedback>` shows a line for the active item: no response, correct or incorrect from
+ *   its `SCORE`, or an informational text. The texts come from `data-text-*` attributes.
+ *
+ * Both read `computedContext` and use only the public requests, so they sit anywhere inside
+ * `<test-navigation>`.
+ */
 const meta: Meta<TestScoringButtons> = {
+  tags: ['autodocs'],
+  title: 'QTI Test/Plugins/Scoring/test-scoring-buttons',
   component: 'test-scoring-buttons',
   args,
   argTypes,

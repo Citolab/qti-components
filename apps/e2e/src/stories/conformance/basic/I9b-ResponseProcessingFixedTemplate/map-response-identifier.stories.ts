@@ -11,7 +11,7 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/I9b Response Processing Fixed Template/map-response-identifier',
+  title: 'Testing/Conformance/basic/I9b Response Processing Fixed Template/map-response-identifier',
   beforeEach: async () => {}
 };
 export default meta;

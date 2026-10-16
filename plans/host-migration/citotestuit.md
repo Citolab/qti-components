@@ -121,6 +121,17 @@ unchanged. Listening for both names runs your handler twice; pick one.
 - `qti-interaction-changed`: `AssessmentPlayerView.tsx:966` (interaction replay log).
   Evidence: read, not run
 
+### Bookmarks: `<test-bookmark>` replaces `marked` (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-bookmark>`, `bookmarkedItems`, `state.session.plugins.bookmarks`
+Do: put `<test-bookmark>Bookmark</test-bookmark>` in the toolbar next to the navigation instead of the
+`onMarkCurrentItem` handler (`ToolBar.tsx`), read the marks with `bookmarkedItems(computedContext)` where the
+navigation shows marked items, and drop `marked` on the context items (`assessmentStore.ts`). Persist nothing
+extra: the marks are part of `state`, which you already store. Replaces the workaround of keeping `marked`
+next to the state.
+Evidence: read, not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.

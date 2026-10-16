@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import '../../../../.storybook/utilities.css';
 
 const meta: Meta = {
-  title: 'Qti Test',
+  title: 'QTI Test/Examples',
   argTypes: {
     packages: {
       options: packages.packages,
@@ -86,16 +86,18 @@ export const QtiTest: Story = {
             updateArgs({ itemIdentifier: detail.id });
           }}
         >
-          <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
+          <test-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
             <template>
-              <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
-                {{ item.index }} {{ item.title }} {{ item.difficulty }}
-                <template type="if" if="{{ item.type === 'info' }}">
-                  <i class="bi bi-info-circle"></i>
-                </template>
-              </test-item-link>
+              <template type="repeat" repeat="{{ activeTestpart.items }}">
+                <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
+                  {{ item.index }} {{ item.title }} {{ item.difficulty }}
+                  <template type="if" if="{{ item.type === 'info' }}">
+                    <i class="bi bi-info-circle"></i>
+                  </template>
+                </test-item-link>
+              </template>
             </template>
-          </test-paging-buttons-stamp>
+          </test-stamp>
 
           <div class="flex flex-col flex-1">
             <div class="flex items-center gap-2 p-2">

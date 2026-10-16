@@ -72,9 +72,10 @@ export class TestStamp extends LitElement {
     const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
     const activeSection = activeTestPart?.sections.find(section => section.active);
     const activeItem = activeSection?.items.find(item => item.active);
+    // In `navigate="section"` the test shows a section, not one item, so there may be no active item.
     const { variables, ...augmentedItem } = activeItem || {};
 
-    if (!activeTestPart || !activeSection || !activeItem) {
+    if (!activeTestPart) {
       return;
     }
 
@@ -87,7 +88,10 @@ export class TestStamp extends LitElement {
       }))
     };
 
-    const augmentedSection = { ...activeSection, items: activeSection.items.map(({ variables, ...rest }) => rest) };
+    const augmentedSection = {
+      ...activeSection,
+      items: (activeSection?.items ?? []).map(({ variables, ...rest }) => rest)
+    };
     const { testParts, ...activeTest } = this.computedContext;
 
     this.stampContext = {

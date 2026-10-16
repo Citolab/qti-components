@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
-<Meta title="CSS contract" />
+<Meta title="Theming/CSS contract" />
 
 # CSS contract
 
@@ -40,61 +40,61 @@ so authoring there wins over all of it without specificity games:
 `qti-components` is ordered internally as `reset, global, interactions.base, interactions.brand,
 interactions.states, interactions.corrections, elements, overrides`. Two of those are empty in the
 shipped theme and exist for you: **`qti-components.interactions.brand`** for brand paint that should
-still sit *under* state and correction paint, and **`qti-components.overrides`** for rules that
+still sit _under_ state and correction paint, and **`qti-components.overrides`** for rules that
 should beat the theme but still lose to `qti-extended`. Write into them by name — they are already
-declared, and a layer you create yourself with an undeclared name is appended *after* every declared
+declared, and a layer you create yourself with an undeclared name is appended _after_ every declared
 layer, which would put your brand colours above the state colours rather than below them.
 
 ## Parts
 
 Generated from the custom-elements manifest. Only elements that expose parts are listed.
 
-| Element | Parts |
-| --- | --- |
-| `qti-associable-hotspot` | `drop` |
-| `qti-associate-interaction` | `drags` `drop` `drop-row` `drops` `message` |
-| `qti-choice-interaction` | `message` `prompt` `slot` |
-| `qti-end-attempt-interaction` | `button` |
-| `qti-extended-text-interaction` | `textarea` |
-| `qti-gap` | `drop` |
-| `qti-gap-match-interaction` | `drags` `drops` `message` |
-| `qti-graphic-associate-interaction` | `correct-line` `line` `message` `point` |
-| `qti-graphic-gap-match-interaction` | `drags` `image` `message` |
-| `qti-graphic-order-interaction` | `message` |
-| `qti-hottext-interaction` | `message` |
-| `qti-inline-choice-interaction` | `dropdown-icon` `menu` `option` `option-content` `trigger` `value` |
-| `qti-item-body` | `qti-rubric-block` |
-| `qti-match-interaction` | `c-header` `checkbox-grid` `cols-wrap` `control` `control-mark` `corner` `grid` `input-cell` `message` `r-header` `rows-wrap` |
-| `qti-order-interaction` | `container` `drag` `drags` `drop` `drops` |
-| `qti-select-point-interaction` | `point` |
-| `qti-simple-choice` | `control` `control-mark` `label` `marker` |
-| `qti-slider-interaction` | `bounds` `knob` `knob-correct` `rail` `slider` `ticks` `value` |
-| `qti-text-entry-interaction` | `answer` `input` `message` |
+| Element                             | Parts                                                                                                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `qti-associable-hotspot`            | `drop`                                                                                                                        |
+| `qti-associate-interaction`         | `drags` `drop` `drop-row` `drops` `message`                                                                                   |
+| `qti-choice-interaction`            | `message` `prompt` `slot`                                                                                                     |
+| `qti-end-attempt-interaction`       | `button`                                                                                                                      |
+| `qti-extended-text-interaction`     | `textarea`                                                                                                                    |
+| `qti-gap`                           | `drop`                                                                                                                        |
+| `qti-gap-match-interaction`         | `drags` `drops` `message`                                                                                                     |
+| `qti-graphic-associate-interaction` | `correct-line` `line` `message` `point`                                                                                       |
+| `qti-graphic-gap-match-interaction` | `drags` `image` `message`                                                                                                     |
+| `qti-graphic-order-interaction`     | `message`                                                                                                                     |
+| `qti-hottext-interaction`           | `message`                                                                                                                     |
+| `qti-inline-choice-interaction`     | `dropdown-icon` `menu` `option` `option-content` `trigger` `value`                                                            |
+| `qti-item-body`                     | `qti-rubric-block`                                                                                                            |
+| `qti-match-interaction`             | `c-header` `checkbox-grid` `cols-wrap` `control` `control-mark` `corner` `grid` `input-cell` `message` `r-header` `rows-wrap` |
+| `qti-order-interaction`             | `container` `drag` `drags` `drop` `drops`                                                                                     |
+| `qti-select-point-interaction`      | `point`                                                                                                                       |
+| `qti-simple-choice`                 | `control` `control-mark` `label` `marker`                                                                                     |
+| `qti-slider-interaction`            | `bounds` `knob` `knob-correct` `rail` `slider` `ticks` `value`                                                                |
+| `qti-text-entry-interaction`        | `answer` `input` `message`                                                                                                    |
 
 Two names carry most of the weight. **`control`** is the box whose role is carried by state, not by
 its name — a radio, a checkbox or a drag grip depending on `:state(radio)` / `:state(checkbox)` /
 `:state(drag)`. **`drag`** is on the chip clone inside a drop target, so a bare `::part(drag)`
-reaches a dropped chip in *any* target's shadow root.
+reaches a dropped chip in _any_ target's shadow root.
 
 ## States
 
-| State | Meaning | Set by |
-| --- | --- | --- |
-| `radio` / `checkbox` | the role this choice is playing | the interaction, via `interactionContext` |
-| `checked` | selected | choices mixin, inline-choice |
-| `disabled` / `readonly` | non-interactive | interaction base |
-| `drag` | this element is a draggable chip | drag-drop core |
-| `dragging` | a drag is in progress on this chip | drag-drop core |
-| `placeholder` | the gap left behind in the bank while its chip is placed | drag-drop core |
-| `return-anchor` | where this chip returns to if the drag is abandoned | drag-drop core |
-| `dragzone-enabled` / `dragzone-active` | the interaction has droppable zones / a drag is live | drag-drop mixins |
-| `droppable` | this element accepts chips | drag-drop core |
-| `filled` | this drop target holds at least one chip | `setDropFlag` |
-| `active` / `enabled` | a drag is live and this target could receive it | `setDropFlag` |
-| `hover` | the chip is currently over this target | `setDropFlag` |
-| `candidate-correct` / `candidate-incorrect` / `candidate-partially-correct` | how the candidate's answer scored | corrections package |
-| `correct-response` / `show-correct-response` | the correct answer is being displayed | corrections package |
-| `open` | the inline-choice dropdown is open | inline-choice |
+| State                                                                       | Meaning                                                  | Set by                                    |
+| --------------------------------------------------------------------------- | -------------------------------------------------------- | ----------------------------------------- |
+| `radio` / `checkbox`                                                        | the role this choice is playing                          | the interaction, via `interactionContext` |
+| `checked`                                                                   | selected                                                 | choices mixin, inline-choice              |
+| `disabled` / `readonly`                                                     | non-interactive                                          | interaction base                          |
+| `drag`                                                                      | this element is a draggable chip                         | drag-drop core                            |
+| `dragging`                                                                  | a drag is in progress on this chip                       | drag-drop core                            |
+| `placeholder`                                                               | the gap left behind in the bank while its chip is placed | drag-drop core                            |
+| `return-anchor`                                                             | where this chip returns to if the drag is abandoned      | drag-drop core                            |
+| `dragzone-enabled` / `dragzone-active`                                      | the interaction has droppable zones / a drag is live     | drag-drop mixins                          |
+| `droppable`                                                                 | this element accepts chips                               | drag-drop core                            |
+| `filled`                                                                    | this drop target holds at least one chip                 | `setDropFlag`                             |
+| `active` / `enabled`                                                        | a drag is live and this target could receive it          | `setDropFlag`                             |
+| `hover`                                                                     | the chip is currently over this target                   | `setDropFlag`                             |
+| `candidate-correct` / `candidate-incorrect` / `candidate-partially-correct` | how the candidate's answer scored                        | corrections package                       |
+| `correct-response` / `show-correct-response`                                | the correct answer is being displayed                    | corrections package                       |
+| `open`                                                                      | the inline-choice dropdown is open                       | inline-choice                             |
 
 Correction states only exist when the `@qti-components/qti-corrections` elements are registered.
 
@@ -112,7 +112,7 @@ These are verified in Chromium and they shape how the theme is written. They wil
 Consequences worth knowing:
 
 - **A plain `<div>` cannot carry a custom state** — `attachInternals()` throws on it. So order's and
-  associate's `<div part="drop">` take an extra part *token* instead, and a theme reaches them as
+  associate's `<div part="drop">` take an extra part _token_ instead, and a theme reaches them as
   `::part(active)` where a custom-element target would take `:state(active)`.
 - **Parts do not chain.** `::part(a)::part(b)` never matches; the contract stays one level deep.
 - **Keep `:state()` in the same selector as `::part()`.** Native nesting after a pseudo-element

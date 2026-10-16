@@ -1,15 +1,30 @@
 # @qti-components/graphic-gap-match-interaction
 
-## 1.1.7
+## 1.1.6-next.3
 
 ### Patch Changes
 
 - [#305](https://github.com/Citolab/qti-components/pull/305) [`f700c5d`](https://github.com/Citolab/qti-components/commit/f700c5d4d0acd4219797211b1078c539fa43c62c) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - Graphic gap match: when the graphic is drawn narrower than its declared width, the drop areas and the gap images now scale with it. The measured chip size no longer acts as each hotspot's minimum size (a hotspot's box is its `coords`), gap images scale by the graphic's factor (`--qti-graphic-scale`) in the bank and in the hotspot, and the drag clone accounts for that zoom so a drop lands where it is aimed.
-- Updated dependencies [[`f700c5d`](https://github.com/Citolab/qti-components/commit/f700c5d4d0acd4219797211b1078c539fa43c62c), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/interactions-core@2.1.4
-  - @qti-components/base@2.5.0
+- Updated dependencies [[`f700c5d`](https://github.com/Citolab/qti-components/commit/f700c5d4d0acd4219797211b1078c539fa43c62c)]:
+  - @qti-components/interactions-core@2.1.4-next.2
 
-## 1.1.6
+## 1.1.6-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+  - @qti-components/interactions-core@2.1.4-next.1
+
+## 1.1.6-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+  - @qti-components/interactions-core@2.1.4-next.0
+
+## 1.1.6-next.0
 
 ### Patch Changes
 
@@ -24,6 +39,3 @@
   With `qti-choices-left` / `qti-choices-right` the image slot is now capped at 75% instead of forced to it, so it stays the graphic's box.
 
   Not covered: a drop area still grows to fit the largest draggable (`--qti-dropzone-min-*`), so on a heavily scaled graphic a small drop area can be larger than its authored shape. `qti-hotspot-interaction` has the same `reset.css` override issue and is left for a separate change.
-
-- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
-  - @qti-components/base@2.4.1

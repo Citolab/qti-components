@@ -12,7 +12,7 @@ import type { QtiAssessmentItem, QtiGraphicGapMatchInteraction } from '@citolab/
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-8 Graphic Gap Match Interaction'
 };
 export default meta;
 

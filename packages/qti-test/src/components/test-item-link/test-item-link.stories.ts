@@ -9,6 +9,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-item-link
 type Story = StoryObj<TestItemLink & typeof args>;
 
 const meta: Meta<TestItemLink> = {
+  title: 'QTI Test/Building blocks/test-item-link',
   component: 'test-item-link',
   args: { ...args }, // itemId: 'ITM-32cjnu' - private property, set via attribute
   argTypes,

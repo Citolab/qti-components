@@ -20,7 +20,7 @@ type Story = StoryObj<QtiTextEntryInteraction & typeof args>;
  */
 const meta: Meta<QtiTextEntryInteraction> = {
   component: 'qti-text-entry-interaction',
-  title: '03 Text Entry Interaction',
+  title: 'Interactions/Text Entry/Overview',
 
   args,
   argTypes,

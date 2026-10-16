@@ -44,7 +44,7 @@ function rgbStringToRgb(rgbString) {
 const wait = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-8 Graphic Gap Match Interaction'
 };
 export default meta;
 

@@ -11,7 +11,19 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-view-togg
 
 type Story = StoryObj<TestViewToggle & typeof args>;
 
+/**
+ * The **view** plugin switches who is looking. QTI content can be meant for one audience
+ * (`view="candidate"`, `view="scorer"`, …), and `[view]` content shows or hides to match.
+ *
+ * - `<test-view>` is a dropdown of views; `view-options` sets which.
+ * - `<test-view-toggle>` switches to the view named by its `view` attribute.
+ * - `<test-check-item>` ends the attempt on the current item and switches to a view (default
+ *   `scorer`), for example to reveal a rubric after the candidate has answered.
+ *
+ * All three send `cito-test-switch-view`; `computedContext.view` follows.
+ */
 const meta: Meta<TestViewToggle> = {
+  title: 'QTI Test/Plugins/View/test-view-toggle',
   component: 'test-view-toggle',
   args,
   argTypes,
@@ -20,7 +32,7 @@ const meta: Meta<TestViewToggle> = {
       handles: events
     }
   },
-  tags: ['no-tests']
+  tags: ['autodocs', 'no-tests']
 };
 export default meta;
 

@@ -18,7 +18,7 @@ type Story = StoryObj<QtiGraphicOrderInteraction & typeof args>;
  */
 const meta: Meta<QtiGraphicOrderInteraction> = {
   component: 'qti-graphic-order-interaction',
-  title: '11 Graphic Order',
+  title: 'Interactions/Graphic Order/Overview',
   args,
   argTypes,
   parameters: {

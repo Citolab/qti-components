@@ -10,7 +10,16 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-print-con
 
 type Story = StoryObj<TestPrintContext & typeof args>;
 
+/**
+ * The **print** plugin is two debug helpers that show what the test knows, for building a page or a
+ * plugin.
+ *
+ * - `<test-print-context>` prints the whole `computedContext` as JSON.
+ * - `<test-print-item-variables>` prints the variables of the active item as a table.
+ */
 const meta: Meta<TestPrintContext> = {
+  tags: ['autodocs'],
+  title: 'QTI Test/Plugins/Print/test-print-context',
   component: 'test-print-context',
   args,
   argTypes,

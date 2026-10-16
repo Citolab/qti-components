@@ -37,17 +37,16 @@ These are decided but not deprecated in code yet, so nothing warns about them.
 
 ## Deprecated, no removal date
 
-| Deprecated                                                                           | Use instead                                                    | Console warning |
-| ------------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------------- |
-| Assigning or reading `qtiTest.testContext` to persist a session                      | `qtiTest.state`. `testContext` is still the internal provider  | no              |
-| `item.responses`                                                                     | `item.variables`                                               | no              |
-| `ConfigContext.disableAfterIfMaxChoicesReached`                                      | `disableAfterMaxReached`                                       | yes             |
-| `qti-choice-interaction` `orientation`                                               | the `qti-orientation-horizontal` / `-vertical` classes         | no              |
-| `IInteraction`                                                                       | `RegisteredInteraction`                                        | no              |
-| `DragDropInteractionMixin`, `TouchDragAndDrop` and the other legacy drag-drop mixins | `DragDropSlottedMixin` (and `DragDropSlottedSortableMixin`)    | no              |
-| `test-paging-buttons-stamp`, `test-section-buttons-stamp`                            | the `<template>`-driven pattern used by `test-scoring-buttons` | no              |
-| `test-show-correct-response`                                                         | the `<template>`-driven pattern used by `test-view-toggle`     | no              |
-| `filterArgsForSpread`                                                                | the `spreadArgs` directive                                     | no              |
+| Deprecated                                                                           | Use instead                                                   | Console warning |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------- | --------------- |
+| Assigning or reading `qtiTest.testContext` to persist a session                      | `qtiTest.state`. `testContext` is still the internal provider | no              |
+| `item.responses`                                                                     | `item.variables`                                              | no              |
+| `ConfigContext.disableAfterIfMaxChoicesReached`                                      | `disableAfterMaxReached`                                      | yes             |
+| `qti-choice-interaction` `orientation`                                               | the `qti-orientation-horizontal` / `-vertical` classes        | no              |
+| `IInteraction`                                                                       | `RegisteredInteraction`                                       | no              |
+| `DragDropInteractionMixin`, `TouchDragAndDrop` and the other legacy drag-drop mixins | `DragDropSlottedMixin` (and `DragDropSlottedSortableMixin`)   | no              |
+| `test-show-correct-response`                                                         | the `<template>`-driven pattern used by `test-view-toggle`    | no              |
+| `filterArgsForSpread`                                                                | the `spreadArgs` directive                                    | no              |
 
 "No removal date" means it is marked deprecated and will be removed in a later major release, not
 the next one. It moves to the first table when a date is set.
