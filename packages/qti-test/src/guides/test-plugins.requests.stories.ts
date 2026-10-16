@@ -22,7 +22,7 @@ import type { QtiTestState } from '../types/qti-test-state';
  * `test-bookmark`.
  */
 const meta: Meta = {
-  title: 'Test plugins/Requests',
+  title: 'Extending QTI/Creating a plugin/Requests',
   parameters: { layout: 'padded', testTimeout: 60000 }
 };
 export default meta;

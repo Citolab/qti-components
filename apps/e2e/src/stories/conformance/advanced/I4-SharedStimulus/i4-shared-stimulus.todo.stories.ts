@@ -11,7 +11,7 @@ type Story = StoryObj;
  * it as tested from then on.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/I4 Shared Stimulus',
+  title: 'Testing/Conformance/advanced/I4 Shared Stimulus',
   tags: ['todo'],
   parameters: { controls: { disable: true }, a11y: { test: 'off' } }
 };

@@ -15,7 +15,7 @@ import type { QtiTestState } from '../../../types/qti-test-state';
  * `qti-state-changed` to save, assign `state` to resume. See the Persist & restore docs page.
  */
 const meta: Meta = {
-  title: 'qti-test/Persist and restore',
+  title: 'QTI Test/Persist and restore',
   component: 'qti-test'
 };
 export default meta;

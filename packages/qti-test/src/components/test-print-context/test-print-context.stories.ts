@@ -19,7 +19,7 @@ type Story = StoryObj<TestPrintContext & typeof args>;
  */
 const meta: Meta<TestPrintContext> = {
   tags: ['autodocs'],
-  title: 'Plugins/Print/test-print-context',
+  title: 'QTI Test/Plugins/Print/test-print-context',
   component: 'test-print-context',
   args,
   argTypes,

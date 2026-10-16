@@ -15,7 +15,7 @@ type Story = StoryObj;
  * Tests for min/max selection validation messages.
  */
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-6 Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-6 Gap Match Interaction'
 };
 export default meta;
 

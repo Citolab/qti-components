@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import './kennisnet.css';
 
 const meta: Meta = {
-  title: 'QTI Kennisnet/Regression',
+  title: 'Testing/Regression',
   tags: ['no-tests'],
   decorators: [regressionLayout]
 };

@@ -9,6 +9,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-section-l
 type Story = StoryObj<TestSectionLink & typeof args>;
 
 const meta: Meta<TestSectionLink & { 'section-id' }> = {
+  title: 'QTI Test/Building blocks/test-section-link',
   component: 'test-section-link',
   args: { ...args, 'section-id': 'advanced' },
   argTypes,

@@ -23,7 +23,7 @@ type Story = StoryObj<TestStamp & typeof args>;
  */
 const meta: Meta<TestStamp> = {
   tags: ['autodocs'],
-  title: 'Plugins/Stamp/test-stamp',
+  title: 'QTI Test/Plugins/Stamp/test-stamp',
   component: 'test-stamp',
   args,
   argTypes,

@@ -26,7 +26,7 @@ type Story = StoryObj<TestScoringButtons & typeof args>;
  */
 const meta: Meta<TestScoringButtons> = {
   tags: ['autodocs'],
-  title: 'Plugins/Scoring/test-scoring-buttons',
+  title: 'QTI Test/Plugins/Scoring/test-scoring-buttons',
   component: 'test-scoring-buttons',
   args,
   argTypes,

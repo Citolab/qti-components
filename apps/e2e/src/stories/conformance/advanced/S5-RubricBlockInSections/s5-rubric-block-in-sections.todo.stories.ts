@@ -11,7 +11,7 @@ type Story = StoryObj;
  * it as tested from then on.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/S5 - Rubric Block in Sections',
+  title: 'Testing/Conformance/advanced/S5 - Rubric Block in Sections',
   tags: ['todo'],
   parameters: { controls: { disable: true }, a11y: { test: 'off' } }
 };

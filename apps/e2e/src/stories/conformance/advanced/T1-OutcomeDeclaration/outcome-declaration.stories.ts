@@ -13,7 +13,7 @@ type Story = StoryObj;
  * processing that sums the items' `SCORE`. Both stories are written from the criterion text alone.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/T1 - Outcome Declaration and T9 - Outcome Processing',
+  title: 'Testing/Conformance/advanced/T1 - Outcome Declaration and T9 - Outcome Processing',
   parameters: { controls: { disable: true }, testTimeout: 60000 }
 };
 export default meta;

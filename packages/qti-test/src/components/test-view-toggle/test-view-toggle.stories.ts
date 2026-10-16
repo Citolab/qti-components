@@ -23,7 +23,7 @@ type Story = StoryObj<TestViewToggle & typeof args>;
  * All three send `cito-test-switch-view`; `computedContext.view` follows.
  */
 const meta: Meta<TestViewToggle> = {
-  title: 'Plugins/View/test-view-toggle',
+  title: 'QTI Test/Plugins/View/test-view-toggle',
   component: 'test-view-toggle',
   args,
   argTypes,

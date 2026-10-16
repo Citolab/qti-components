@@ -31,7 +31,7 @@ type Story = StoryObj<TestBookmark & typeof args>;
  */
 const meta: Meta<TestBookmark> = {
   tags: ['autodocs'],
-  title: 'Plugins/Bookmark',
+  title: 'QTI Test/Plugins/Bookmark',
   component: 'test-bookmark',
   args,
   argTypes,
@@ -74,7 +74,7 @@ export const HorizontalPlayer: Story = {
   render: () => html`
     <qti-test navigate="item">
       <test-navigation>
-        <div class="card p-0 flex flex-col h-dvh-padded overflow-hidden">
+        <div class="border rounded-lg bg-white p-0 flex flex-col h-[calc(100dvh-2rem)] overflow-hidden">
           <header class="flex items-center justify-between gap-3 px-3 py-2 border-b">
             <strong>Mini player</strong>
             <test-bookmark aria-label="Bookmark this item"></test-bookmark>
@@ -152,7 +152,7 @@ export const VerticalPlayer: Story = {
         {{ xmlDoc }}
       </template>
       <test-navigation>
-        <div class="card p-0 flex flex-col h-dvh-padded overflow-hidden">
+        <div class="border rounded-lg bg-white p-0 flex flex-col h-[calc(100dvh-2rem)] overflow-hidden">
           <header class="flex items-center justify-between gap-3 px-3 py-2 border-b">
             <test-stamp class="count">
               <template>
@@ -165,7 +165,7 @@ export const VerticalPlayer: Story = {
               </template>
             </test-stamp>
             <test-stamp>
-              <template><span class="text-sm muted">{{ activeSection.title }}</span></template>
+              <template><span class="text-sm opacity-70">{{ activeSection.title }}</span></template>
             </test-stamp>
           </header>
           <div class="flex-1 min-h-0 overflow-auto p-4">

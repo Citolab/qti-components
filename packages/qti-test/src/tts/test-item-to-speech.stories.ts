@@ -18,7 +18,7 @@ const { events, args, argTypes } = getStorybookHelpers('test-item-to-speech');
 type Story = StoryObj<TestItemToSpeech & typeof args>;
 
 const meta: Meta<TestItemToSpeech> = {
-  title: 'Plugins/Text to speech/test-item-to-speech',
+  title: 'QTI Test/Plugins/Text to speech',
   component: 'test-item-to-speech',
   args: { ...args, language: 'fr-FR' },
   argTypes,
@@ -100,16 +100,16 @@ const EXAMPLES = [
 export const LanguageResolution: Story = {
   render: args => html`
     <qti-test navigate="item">
-      <test-navigation class="stack">
-        <div class="card stack text-sm">
+      <test-navigation class="flex flex-col gap-3">
+        <div class="border rounded-lg p-3 bg-white flex flex-col gap-3 text-sm">
           ${EXAMPLES.map(
             e =>
-              html`<div class="row">
-                <test-item-link item-id=${e.id}>${e.label}</test-item-link><span class="muted">${e.explains}</span>
+              html`<div class="flex flex-wrap items-center gap-2">
+                <test-item-link item-id=${e.id}>${e.label}</test-item-link><span class="opacity-70">${e.explains}</span>
               </div>`
           )}
         </div>
-        <div class="row">
+        <div class="flex flex-wrap items-center gap-2">
           <test-item-to-speech language=${args.language}>
             <test-tts-prev></test-tts-prev>
             <test-tts-play></test-tts-play>
@@ -119,7 +119,7 @@ export const LanguageResolution: Story = {
           </test-item-to-speech>
           <button
             type="button"
-            class="story-button"
+            class="border rounded px-3 py-2"
             @click=${(e: Event) => {
               const root = document.documentElement;
               if (root.getAttribute('lang')) root.removeAttribute('lang');
@@ -129,7 +129,7 @@ export const LanguageResolution: Story = {
           >
             Document lang: ${document.documentElement.getAttribute('lang') || 'none'}
           </button>
-          <span class="text-sm muted">Player fallback language: <code>${args.language}</code></span>
+          <span class="text-sm opacity-70">Player fallback language: <code>${args.language}</code></span>
         </div>
         <test-container test-url=${TEST_URL}></test-container>
       </test-navigation>
@@ -240,8 +240,8 @@ export const OnEveryItem: Story = {
         </div>
         {{ xmlDoc }}
       </template>
-      <test-navigation class="stack">
-        <test-stamp class="row">
+      <test-navigation class="flex flex-col gap-3">
+        <test-stamp class="flex flex-wrap items-center gap-2">
           <template>
             <template type="repeat" repeat="{{ activeTestpart.sections }}">
               <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
@@ -332,15 +332,15 @@ export const SharedStimulus: Story = {
         </div>
         {{ xmlDoc }}
       </template>
-      <test-navigation class="stack">
-        <test-stamp class="row">
+      <test-navigation class="flex flex-col gap-3">
+        <test-stamp class="flex flex-wrap items-center gap-2">
           <template>
             <template type="repeat" repeat="{{ activeTestpart.sections }}">
               <test-section-link section-id="{{ item.identifier }}"> {{ item.identifier }} </test-section-link>
             </template>
           </template>
         </test-stamp>
-        <div class="row" style="align-items: flex-start">
+        <div class="flex flex-wrap items-center gap-2" style="align-items: flex-start">
           <aside data-stimulus-panel style="flex: 1; min-width: 0">
             <test-item-to-speech>
               <test-tts-play></test-tts-play>
@@ -418,7 +418,7 @@ export const SharedStimulus: Story = {
  */
 export const HtmlContent: Story = {
   render: () =>
-    html` <div class="stack" style="max-width: 40rem">
+    html` <div class="flex flex-col gap-3" style="max-width: 40rem">
       <test-item-to-speech>
         <test-tts-play></test-tts-play>
         <test-tts-pick></test-tts-pick>
@@ -530,8 +530,8 @@ const skipsHiddenContentRender = () => html`
       </test-item-to-speech>
       {{ xmlDoc }}
     </template>
-    <test-navigation class="stack">
-      <div class="row">
+    <test-navigation class="flex flex-col gap-3">
+      <div class="flex flex-wrap items-center gap-2">
         <test-item-link item-id="ITM-tts-hidden-content">Hidden content example</test-item-link>
         <test-view-toggle role="switch">
           <template> {{ view === 'scorer' ? 'Scorer view' : 'Candidate view' }} </template>
@@ -676,7 +676,7 @@ export const WithOwnIcons: Story = {
         </test-item-to-speech>
         {{ xmlDoc }}
       </template>
-      <test-navigation class="stack">
+      <test-navigation class="flex flex-col gap-3">
         <test-container test-url=${TEST_URL}></test-container>
       </test-navigation>
     </qti-test>

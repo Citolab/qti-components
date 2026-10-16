@@ -14,6 +14,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('item-container
 type Story = StoryObj<ItemContainer & typeof args>;
 
 const meta: Meta<typeof ItemContainer & { 'item-url': string }> = {
+  title: 'QTI Item/item-container',
   component: 'item-container',
   args: { ...args, 'item-url': 'assets/qti-item/example-choice-item.xml' },
   argTypes,

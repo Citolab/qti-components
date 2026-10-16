@@ -11,7 +11,7 @@ type Story = StoryObj;
  * it as tested from then on.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/I17 - Composite Item',
+  title: 'Testing/Conformance/advanced/I17 - Composite Item',
   tags: ['todo'],
   parameters: { controls: { disable: true }, a11y: { test: 'off' } }
 };

@@ -7,7 +7,7 @@ import packages from '../assets/packages.json';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Qti-Item',
+  title: 'QTI Item/Examples',
   argTypes: {
     qtipkg: {
       options: packages.packages,

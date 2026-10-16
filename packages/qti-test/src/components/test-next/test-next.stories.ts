@@ -14,6 +14,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-next');
 type Story = StoryObj<TestNext & typeof args>;
 
 const meta: Meta<TestNext> = {
+  title: 'QTI Test/Building blocks/test-next',
   component: 'test-next',
   args,
   argTypes,

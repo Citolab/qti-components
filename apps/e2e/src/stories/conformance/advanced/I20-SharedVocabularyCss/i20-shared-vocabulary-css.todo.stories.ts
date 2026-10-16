@@ -11,7 +11,7 @@ type Story = StoryObj;
  * it as tested from then on.
  */
 const meta: Meta = {
-  title: 'qti-conformance/advanced/I20 Shared Vocabulary CSS',
+  title: 'Testing/Conformance/advanced/I20 Shared Vocabulary CSS',
   tags: ['todo'],
   parameters: { controls: { disable: true }, a11y: { test: 'off' } }
 };

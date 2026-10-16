@@ -13,7 +13,7 @@ type Story = StoryObj;
  * Tests for gap container width behavior at different zoom levels.
  */
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-6 Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-6 Gap Match Interaction'
 };
 export default meta;
 

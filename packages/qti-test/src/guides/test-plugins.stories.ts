@@ -9,7 +9,7 @@ import type { ComputedContext } from '@qti-components/base';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 /**
- * The example plugin from the "Test plugins" guide, defined here so the guide's code is tested
+ * The example plugin from the "Creating a plugin" guide, defined here so the guide's code is tested
  * rather than just shown. It imports nothing but `lit`, `@lit/context` and `computedContext` from
  * `@qti-components/base` — if that public API changes, this story fails.
  *
@@ -38,7 +38,7 @@ export class ExampleReadingTime extends LitElement {
 if (!customElements.get('example-reading-time')) customElements.define('example-reading-time', ExampleReadingTime);
 
 const meta: Meta = {
-  title: 'Test plugins',
+  title: 'Extending QTI/Creating a plugin/Guide',
   parameters: { layout: 'padded' }
 };
 export default meta;

@@ -20,7 +20,7 @@ import './kennisnet.css';
 // rename it when the alignment playbook is next revisited.
 
 const meta: Meta = {
-  title: 'QTI Kennisnet/Regression',
+  title: 'Testing/Regression',
   tags: ['no-tests'],
   decorators: [regressionLayout]
 };

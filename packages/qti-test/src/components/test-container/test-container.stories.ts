@@ -14,6 +14,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-container
 type Story = StoryObj<TestContainer & typeof args>;
 
 const meta: Meta<TestContainer & { 'test-url': string }> = {
+  title: 'QTI Test/Building blocks/test-container',
   component: 'test-container',
   args: { ...args, 'test-url': '/assets/qti-conformance/Basic/T4-T7/assessment.xml' },
   argTypes,
