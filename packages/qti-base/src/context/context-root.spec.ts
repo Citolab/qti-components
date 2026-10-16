@@ -1,30 +1,25 @@
 import { ContextConsumer, ContextProvider } from '@lit/context';
 import { LitElement } from 'lit';
-import { expect, waitFor } from 'storybook/test';
 
-import { qtiContext } from '../qti.context';
+import { installContextRoot } from './context-root';
+import { qtiContext } from './qti.context';
 
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import type { QtiContext } from '../qti.context';
+import type { QtiContext } from './qti.context';
 
 /**
  * A component that asks for a context before anything provides it still gets the value once a
  * provider appears. The library attaches a `ContextRoot` to the page for that: it holds the
  * requests nobody answered and asks again when a provider connects.
  *
- * The elements here are defined in the story, in the order that matters: the consumer first, the
+ * The elements here are defined in the test, in the order that matters: the consumer first, the
  * provider after it has already been placed around the consumer in the page. The tags are unique
  * per run because a custom element can only be defined once.
  */
-const meta: Meta = {
-  title: 'Testing/Base/Context root',
-  parameters: { testTimeout: 15000 }
-};
-export default meta;
-
 const VALUE: QtiContext = {
   QTI_CONTEXT: { testIdentifier: 'late', candidateIdentifier: 'c', environmentIdentifier: 'default' }
 };
+
+type Received = HTMLElement & { received?: QtiContext };
 
 let run = 0;
 
@@ -56,12 +51,21 @@ const lateElements = () => {
   return { consumerTag, providerTag, defineProvider: () => customElements.define(providerTag, Provider) };
 };
 
-export const ProviderDefinedAfterTheConsumer: StoryObj = {
-  render: () => document.createElement('div'),
-  play: async ({ canvasElement }) => {
+describe('context root', () => {
+  let host: HTMLElement;
+
+  beforeEach(() => {
+    installContextRoot();
+    host = document.createElement('div');
+    document.body.append(host);
+  });
+
+  afterEach(() => host.remove());
+
+  it('delivers the context to a consumer whose provider is defined after it', async () => {
     const { consumerTag, providerTag, defineProvider } = lateElements();
-    canvasElement.innerHTML = `<${providerTag}><${consumerTag}></${consumerTag}></${providerTag}>`;
-    const consumer = canvasElement.querySelector<HTMLElement & { received?: QtiContext }>(consumerTag);
+    host.innerHTML = `<${providerTag}><${consumerTag}></${consumerTag}></${providerTag}>`;
+    const consumer = host.querySelector<Received>(consumerTag);
 
     // The consumer is connected and has asked; the provider is still a plain unknown element.
     await Promise.resolve();
@@ -69,25 +73,21 @@ export const ProviderDefinedAfterTheConsumer: StoryObj = {
 
     defineProvider();
 
-    await waitFor(() => expect(consumer.received).toEqual(VALUE));
-  }
-};
+    await vi.waitFor(() => expect(consumer.received).toEqual(VALUE));
+  });
 
-/** The same, with the consumer inside a shadow root, which the request has to cross as well. */
-export const ProviderDefinedAfterTheConsumerInAShadowRoot: StoryObj = {
-  render: () => document.createElement('div'),
-  play: async ({ canvasElement }) => {
+  it('does the same when the consumer sits inside a shadow root, which the request has to cross as well', async () => {
     const { consumerTag, providerTag, defineProvider } = lateElements();
-    canvasElement.innerHTML = `<${providerTag}><div id="wrapper"></div></${providerTag}>`;
-    const wrapper = canvasElement.querySelector('#wrapper');
+    host.innerHTML = `<${providerTag}><div id="wrapper"></div></${providerTag}>`;
+    const wrapper = host.querySelector('#wrapper');
     wrapper.attachShadow({ mode: 'open' }).innerHTML = `<${consumerTag}></${consumerTag}>`;
-    const consumer = wrapper.shadowRoot.querySelector<HTMLElement & { received?: QtiContext }>(consumerTag);
+    const consumer = wrapper.shadowRoot.querySelector<Received>(consumerTag);
 
     await Promise.resolve();
     expect(consumer.received).toBeUndefined();
 
     defineProvider();
 
-    await waitFor(() => expect(consumer.received).toEqual(VALUE));
-  }
-};
+    await vi.waitFor(() => expect(consumer.received).toEqual(VALUE));
+  });
+});

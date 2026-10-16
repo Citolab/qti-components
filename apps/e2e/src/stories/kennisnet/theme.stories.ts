@@ -159,7 +159,7 @@ const withThemeBench: Decorator = story => {
 };
 
 const meta: Meta = {
-  title: 'Theming/Kennisnet theme',
+  title: 'Implementation/Theming/Kennisnet theme',
   tags: ['autodocs', 'no-tests'],
   decorators: [withThemeBench],
   parameters: {

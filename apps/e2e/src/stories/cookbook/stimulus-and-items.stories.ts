@@ -4,7 +4,7 @@ import { expect, waitFor, within } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Cookbook/PeilingLezen/A text beside its questions',
+  title: 'Implementation/Cookbook/PeilingLezen/A text beside its questions',
   tags: ['autodocs'],
   parameters: {
     controls: { disable: true },

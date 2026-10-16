@@ -135,9 +135,12 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        // Sidebar order = reading order; 'Testing' and 'Maintainers' are last. See plans/storybook-toc.md.
+        // Sidebar order = reading order; 'Testing' is last.
         order: [
           'Introduction',
+          'Getting started',
+          'Implementation',
+          ['Theming', 'Cookbook'],
           'Concepts',
           'QTI Test',
           [
@@ -451,13 +454,12 @@ const preview: Preview = {
               'Vocabulary'
             ]
           ],
+          'Corrections',
+          ['Kennisnet'],
           'Extending QTI',
           ['Creating an extended interaction', 'Creating a plugin', 'Public API'],
-          'Theming',
           'API Reference',
-          'Cookbook',
-          'Testing',
-          'Maintainers'
+          'Testing'
         ]
       }
     },

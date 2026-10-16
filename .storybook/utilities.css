@@ -76,6 +76,9 @@ body.sb-main-fullscreen #storybook-root #root-inner {
 .h-\[calc\(100dvh-2rem\)\] {
   height: calc(100dvh - 2rem); /* the viewport inside a story's default padding */
 }
+.h-96 {
+  height: 24rem;
+}
 .min-h-0 {
   min-height: 0;
 }

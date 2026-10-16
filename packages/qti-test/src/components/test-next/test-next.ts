@@ -42,9 +42,10 @@ export class TestNext extends LitElement {
   static override styles = css`
     :host {
       ${styles.btn};
+      ${styles.btnPrimary};
     }
     :host(:hover:not([disabled])) {
-      ${styles.btnInteractive};
+      ${styles.btnPrimaryInteractive};
     }
     :host(:focus-visible) {
       ${styles.focusRing};
