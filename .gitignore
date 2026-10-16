@@ -39,6 +39,8 @@ public/assets/api/test
 # live at stories/kennisnet/__screenshots__/, one level deeper than the old un-nested path. A literal
 # `!apps/e2e/src/stories/__screenshots__/` silently stopped matching them and nothing was tracked.
 !apps/e2e/src/stories/**/__screenshots__/
+# …except the legacy Chrome 120 captures, which `pnpm run test:legacy` regenerates on every run.
+apps/e2e/src/stories/**/__screenshots__/**/*-legacy-*.png
 # Vitest writes actual/diff images here on failure; never commit these.
 .vitest-attachments/
 .eslintcache
