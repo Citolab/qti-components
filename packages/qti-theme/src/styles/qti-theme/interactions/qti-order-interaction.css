@@ -43,7 +43,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus:not(:state(placeholder)) {
+      &:focus:not(:state(placeholder), :active) {
         @mixin foc;
       }
     }
@@ -180,7 +180,7 @@
   qti-order-interaction::part(drag):hover {
     @mixin drag-hover;
   }
-  qti-order-interaction::part(drag):focus {
+  qti-order-interaction::part(drag):focus:not(:active) {
     @mixin foc;
   }
 
@@ -203,13 +203,14 @@
       color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 
-  qti-order-interaction::part(hover),
-  qti-order-interaction::part(active) {
-    background-color: var(--qti-drop-highlight-bg);
-  }
-
+  qti-order-interaction::part(active),
   qti-order-interaction::part(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  /* After `enabled`, which every target carries during a drag: the one under the chip. */
+  qti-order-interaction::part(hover) {
+    @mixin drop-over;
   }
 }
 

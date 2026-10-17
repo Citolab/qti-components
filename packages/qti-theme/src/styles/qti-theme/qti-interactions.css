@@ -17,5 +17,6 @@
 @import url('./interactions/qti-position-object-interaction.css') layer(qti-components.interactions.base);
 @import url('./interactions/qti-prompt.css') layer(qti-components.interactions.base);
 @import url('./interactions/qti-placeholder.css') layer(qti-components.interactions.states);
+@import url('./interactions/qti-drag-clone.css') layer(qti-components.interactions.states);
 @import url('./interactions/qti-disabled.css') layer(qti-components.interactions.states);
 @import url('./interactions/qti-corrections.css') layer(qti-components.interactions.corrections);

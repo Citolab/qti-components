@@ -6,7 +6,7 @@
  * A bare `:state(placeholder)` on purpose, imported into `interactions.states`. The layer puts it
  * above a brand's resting chip (`interactions.brand`), so a filled chip still leaves a tinted hole;
  * the low specificity lets a brand sheet restyle the hole with the same selector, no contest. Each
- * interaction's own placeholder rule (`@mixin drag-placeholder`) only hides the text, so it does not
+ * interaction's own placeholder rule (`@mixin drag-placeholder`) only hides the text and the handle, so it does not
  * fight this one. Graphic gap match reads no --drag-* slot, so its tiles keep their own placeholder.
  * Corrections, a layer higher, still win.
  */

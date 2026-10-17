@@ -62,7 +62,7 @@
       &:hover {
         @mixin drag-hover;
       }
-      &:focus:not(:state(placeholder)) {
+      &:focus:not(:state(placeholder), :active) {
         @mixin foc;
       }
     }
@@ -177,7 +177,7 @@
   qti-gap-match-interaction qti-gap::part(drag):hover {
     @mixin drag-hover;
   }
-  qti-gap-match-interaction qti-gap::part(drag):focus {
+  qti-gap-match-interaction qti-gap::part(drag):focus:not(:active) {
     @mixin foc;
   }
 
@@ -200,13 +200,14 @@
       color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 
-  qti-gap-match-interaction qti-gap:state(hover),
-  qti-gap-match-interaction qti-gap:state(active) {
-    background-color: var(--qti-drop-highlight-bg);
-  }
-
+  qti-gap-match-interaction qti-gap:state(active),
   qti-gap-match-interaction qti-gap:state(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  /* After `enabled`, which every target carries during a drag: the one under the chip. */
+  qti-gap-match-interaction qti-gap:state(hover) {
+    @mixin drop-over;
   }
 }
 

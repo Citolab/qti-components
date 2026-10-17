@@ -757,16 +757,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           // Only animate if there's actual movement
           if (deltaX !== 0 || deltaY !== 0) {
             cleanClone.animate(
-              [
-                {
-                  transform: `translate(${deltaX}px, ${deltaY}px)`,
-                  opacity: 0.8
-                },
-                {
-                  transform: 'translate(0, 0)',
-                  opacity: 1
-                }
-              ],
+              [{ transform: `translate(${deltaX}px, ${deltaY}px)` }, { transform: 'translate(0, 0)' }],
               {
                 duration: this.flipAnimationConfig.duration || 200,
                 easing: this.flipAnimationConfig.easing || 'ease',

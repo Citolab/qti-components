@@ -136,7 +136,8 @@ const INPUTS: Record<string, Input> = {
     group: 'Size'
   },
   fontFamily: { token: '--cito-font-family', control: 'text', group: 'Type' },
-  depth: { token: '--cito-depth', control: { type: 'range', min: 0, max: 1, step: 0.25 }, group: 'Feel' }
+  depth: { token: '--cito-depth', control: { type: 'range', min: 0, max: 1, step: 0.25 }, group: 'Feel' },
+  dragShadow: { token: '--cito-shadow-drag', control: 'text', group: 'Feel' }
 };
 
 type Args = Partial<Record<keyof typeof INPUTS, string | number>>;

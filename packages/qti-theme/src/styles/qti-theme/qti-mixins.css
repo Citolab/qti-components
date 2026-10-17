@@ -185,8 +185,10 @@
      shadow here, on the interaction's high-specificity selector: the hole's paint is the bare
      `:state(placeholder)` rule in interactions/qti-placeholder.css (a primary tint, inset shadow),
      which a brand can restyle with the same selector and no specificity contest. The one thing this
-     mixin does, in every brand, is hide the chip's text. */
+     mixin does, in every brand, is hide what the chip shows: its text, and its handle, which a theme
+     that colours its handles (--cito-color-drag-icon) would otherwise leave standing in the hole. */
   --drag-color: transparent;
+  --qti-grip-color: transparent;
   --drag-opacity: 1;
 }
 
@@ -256,6 +258,21 @@
 
 @define-mixin dropping {
   background-color: var(--qti-bg-active);
+}
+
+/*
+ * The drop the chip is over, during a drag: the target it lands on when you let go. Every target
+ * that can take a chip already shows the faint `enabled` wash; this one adds the highlight fill and
+ * a ring in the active border colour, OUTSIDE its edge: the chip in flight is the size of the slot
+ * and covers it, so a ring inside would be hidden under the very chip it is for. An outline, so it
+ * costs no layout, and it replaces the dashed outline of a gap or a hotspot while it shows. The drag
+ * code sets the `hover` flag on the one target under the pointer (drag-drop-core.mixin.ts,
+ * handleDragMove).
+ */
+@define-mixin drop-over {
+  background-color: var(--qti-drop-highlight-bg);
+  outline: var(--qti-drop-highlight-border-width) solid var(--qti-drop-highlight-border-color);
+  outline-offset: var(--qti-focus-offset);
 }
 
 /*
@@ -358,7 +375,9 @@
  * choice's trigger, a slider, a tabular match cell, chips and drops), so what you just picked with
  * the mouse shows its ring as it does from the keyboard, and so does the drop a keyboard drag moves
  * to. A lifted chip's placeholder does not ring (`:not(:state(placeholder))`): the chip is in your
- * hand, not in the bank. A text field matches `:focus-visible` on a click anyway.
+ * hand, not in the bank. Nor does a chip while the button is down (`:not(:active)`): a press may
+ * be the start of a drag, so the ring waits for the release. A text field matches `:focus-visible`
+ * on a click anyway.
  *
  * `foc-inset` draws the same ring just inside the box, for a row in a list that clips (the inline
  * choice menu scrolls, so a ring outside a row would be cut off at the menu's edge).
@@ -504,31 +523,27 @@
 }
 
 /*
- * A drag darkens a little under the pointer. The one hover affordance in the theme.
+ * A drag's edge takes the primary colour under the pointer. The one hover affordance in the theme.
  *
- * Guarded by `@media (hover: hover)` because touch does not lack hover — it emulates it, and the
- * emulated state sticks after a tap. Without the guard a tapped drag stays darkened until the
- * candidate taps somewhere else, which is worse than no hover at all.
+ * Guarded by `@media (hover: hover) and (pointer: fine)` because touch does not lack hover — it
+ * emulates it, and the emulated state sticks after a tap. Without the guard a tapped drag stays
+ * highlighted until the candidate taps somewhere else, which is worse than no hover at all.
  *
- * So this may only ever decorate. Everything it says is also said by `:focus-visible` for a keyboard
+ * So this may only ever decorate. Everything it says is also said by the focus ring for a keyboard
  * and by the resting state for a finger; nothing is communicated by hover alone.
  *
- * A background darken, not a lift: it costs no layout (paint only, never reflows the bank), and it
- * reads the chip's own `--drag-background-color`, so it tracks whatever the brand painted the
- * chip — primary under Kennisnet, white otherwise. `background-color` is a DIRECT property (not
- * `--drag-background-color`): it overrides the `@mixin paint drag` binding on `:hover`, does not
- * self-reference the var it reads, and — being a real property — never inherits into children.
+ * The edge, not the fill: a fill darkened by the text colour turned every white chip grey. The
+ * border is reserved at rest, so this is paint only and never reflows the bank. It switches the
+ * `--drag-border-color` slot rather than setting `border-color`, so the layers above still win: a
+ * placeholder (states) keeps no edge, and a verdict (corrections) keeps its colour. A brand whose
+ * chip edge already is the primary (Kennisnet's filled chips) sees no change on hover.
  *
  * It replaces `hov`, an empty mixin invoked 21 times, applied to drags, drop targets, textareas,
  * hotspots and choices alike where no single rule suited all of them. This one is called from drags
  * only.
  */
 @define-mixin drag-hover {
-  @media (hover: hover) {
-    background-color: color-mix(
-      in oklab,
-      var(--drag-background-color, var(--qti-drag-fill)),
-      var(--qti-color-base-content) var(--qti-hover-mix)
-    );
+  @media (hover: hover) and (pointer: fine) {
+    --drag-border-color: var(--qti-border-active);
   }
 }

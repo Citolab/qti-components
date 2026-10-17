@@ -219,7 +219,7 @@ derived keeps it. Older tier-1 names (`--qti-spacing`, `--qti-motion`, `--qti-fi
 Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows, and the
 optional ones: `--cito-color-border` for a brand that wants every edge in its own colour (Kennisnet),
 `--cito-color-chip-border` for a chip's edge, `--cito-icon-drag` and `--cito-color-drag-icon` for its
-handle, and `--cito-color-marker`, `--cito-icon-marker` and `--cito-marker-anchor` for the select-point
+handle, `--cito-shadow-drag` for a chip in flight, and `--cito-color-marker`, `--cito-icon-marker` and `--cito-marker-anchor` for the select-point
 marker.
 
 **The `cito-` names are inputs, never declared by the theme.** Each is read once, with its default as

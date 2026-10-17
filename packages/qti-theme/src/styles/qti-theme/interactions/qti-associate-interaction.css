@@ -26,7 +26,7 @@
 
   /* The bank chip's own ring. The rules below ring only the PLACED chip (::part(drag)), so a bank
      chip reached with Tab showed the browser's ring instead of the theme's. */
-  qti-associate-interaction :state(drag):focus:not(:state(placeholder)) {
+  qti-associate-interaction :state(drag):focus:not(:state(placeholder), :active) {
     @mixin foc;
   }
 
@@ -129,18 +129,19 @@
   qti-associate-interaction::part(drag):hover {
     @mixin drag-hover;
   }
-  qti-associate-interaction qti-simple-associable-choice::part(drag):focus,
-  qti-associate-interaction::part(drag):focus {
+  qti-associate-interaction qti-simple-associable-choice::part(drag):focus:not(:active),
+  qti-associate-interaction::part(drag):focus:not(:active) {
     @mixin foc;
   }
 
-  qti-associate-interaction::part(hover),
-  qti-associate-interaction::part(active) {
-    background-color: var(--qti-drop-highlight-bg);
-  }
-
+  qti-associate-interaction::part(active),
   qti-associate-interaction::part(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  /* After `enabled`, which every target carries during a drag: the one under the chip. */
+  qti-associate-interaction::part(hover) {
+    @mixin drop-over;
   }
 
   qti-associate-interaction qti-simple-associable-choice:state(placeholder) {

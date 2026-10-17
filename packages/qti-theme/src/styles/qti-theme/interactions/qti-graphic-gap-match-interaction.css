@@ -41,14 +41,14 @@
       --qti-drag-justify-content: center;
       cursor: grab;
       /* The bank chip's own ring; the rule below rings only the placed one. */
-      &:focus:not(:state(placeholder)) {
+      &:focus:not(:state(placeholder), :active) {
         @mixin foc;
       }
     }
     /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only.
        Written in one selector: nested under `&::part(drag)` it compiled to `:is(…::part(drag))`,
        and a pseudo-element cannot sit inside `:is()`, so the ring never matched. */
-    & qti-associable-hotspot::part(drag):focus {
+    & qti-associable-hotspot::part(drag):focus:not(:active) {
       @mixin foc;
     }
     /*
@@ -194,13 +194,14 @@
     visibility: hidden;
   }
 
-  qti-graphic-gap-match-interaction qti-associable-hotspot:state(hover),
-  qti-graphic-gap-match-interaction qti-associable-hotspot:state(active) {
-    background-color: var(--qti-drop-highlight-bg);
-  }
-
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(active),
   qti-graphic-gap-match-interaction qti-associable-hotspot:state(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  /* After `enabled`, which every target carries during a drag: the one under the chip. */
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(hover) {
+    @mixin drop-over;
   }
 }
 
