@@ -547,3 +547,38 @@
     --drag-border-color: var(--qti-border-active);
   }
 }
+
+/*
+ * The test controls' look (next, previous, the item links: packages/qti-test/src/components/
+ * styles.ts), for the two interactions that are a button: end attempt, and the upload's file
+ * button. The same `--test-button-*` slots with the same defaults, so a host that repaints its test
+ * buttons repaints these too, and the page shows one kind of button. The neutral look; the filled
+ * one is for Next alone.
+ */
+@define-mixin test-button {
+  min-block-size: var(--test-button-size, 2.25rem);
+  padding: 0 0.875rem;
+  font: inherit;
+  line-height: 1.25;
+  cursor: pointer;
+  border-radius: var(--test-button-border-radius, var(--qti-radius-field));
+  background-color: var(--test-button-background-color, var(--qti-color-base-100));
+  color: var(--test-button-color, var(--qti-color-base-content));
+  border: var(--qti-border-width) solid var(--test-button-border-color, var(--qti-border-color));
+}
+
+@define-mixin test-button-hover {
+  @media (hover: hover) and (pointer: fine) {
+    background-color: var(
+      --test-button-hover-background-color,
+      color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) var(--qti-hover-mix))
+    );
+  }
+}
+
+@define-mixin test-button-active {
+  background-color: var(
+    --test-button-active-background-color,
+    color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) var(--qti-active-mix))
+  );
+}

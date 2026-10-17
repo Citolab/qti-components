@@ -51,7 +51,13 @@ export class QtiUploadInteraction extends Interaction {
     return html`
       <div>
         <slot name="prompt"></slot>
-        <input type="file" @change="${this.#onFileChange}" ?disabled="${this.disabled}" ?readonly="${this.readonly}" />
+        <input
+          type="file"
+          part="input"
+          @change="${this.#onFileChange}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+        />
       </div>
     `;
   }

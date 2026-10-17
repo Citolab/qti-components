@@ -146,7 +146,7 @@ const preview: Preview = {
           'Introduction',
           'Getting started',
           'Implementation',
-          ['Theming', 'Cookbook'],
+          ['Theme editor', 'Cookbook'],
           'Concepts',
           'QTI Test',
           [

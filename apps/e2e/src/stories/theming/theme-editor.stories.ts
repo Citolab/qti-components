@@ -315,6 +315,63 @@ const answered = [
       ></qti-associable-hotspot>
     </qti-graphic-gap-match-interaction>`,
     true
+  ),
+  card(
+    'Associate',
+    html`<qti-associate-interaction response-identifier="A" max-associations="2">
+      <qti-prompt>Koppel elk land aan zijn hoofdstad.</qti-prompt>
+      <qti-simple-associable-choice identifier="fr" match-max="1">Frankrijk</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="parijs" match-max="1">Parijs</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="es" match-max="1">Spanje</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="madrid" match-max="1">Madrid</qti-simple-associable-choice>
+    </qti-associate-interaction>`
+  ),
+  card(
+    'Hotspot',
+    html`<qti-hotspot-interaction response-identifier="HS" max-choices="1" response="C">
+      <qti-prompt>Klik op de meest zuidelijke luchthaven.</qti-prompt>
+      <img src="/assets/qti-hotspot-interaction/uk.png" width="206" height="280" alt="Kaart van het VK" />
+      <qti-hotspot-choice identifier="A" shape="circle" coords="77,115,10"></qti-hotspot-choice>
+      <qti-hotspot-choice identifier="B" shape="circle" coords="118,184,10"></qti-hotspot-choice>
+      <qti-hotspot-choice identifier="C" shape="circle" coords="150,235,10"></qti-hotspot-choice>
+    </qti-hotspot-interaction>`
+  ),
+  card(
+    'Graphic order',
+    html`<qti-graphic-order-interaction response-identifier="GO">
+      <qti-prompt>Zet de luchthavens op volgorde van noord naar zuid.</qti-prompt>
+      <img src="/assets/qti-graphic-order-interaction/uk.png" width="206" height="280" alt="Kaart van het VK" />
+      <qti-hotspot-choice identifier="A" shape="circle" coords="78,102,8"></qti-hotspot-choice>
+      <qti-hotspot-choice identifier="B" shape="circle" coords="117,171,8"></qti-hotspot-choice>
+      <qti-hotspot-choice identifier="C" shape="circle" coords="166,227,8"></qti-hotspot-choice>
+    </qti-graphic-order-interaction>`
+  ),
+  card(
+    'Graphic associate',
+    html`<qti-graphic-associate-interaction response-identifier="GA" max-associations="2">
+      <qti-prompt>Teken de nieuwe routes.</qti-prompt>
+      <img src="/assets/qti-graphic-associate-interaction/uk.png" width="206" height="280" alt="Luchthavens" />
+      <qti-associable-hotspot identifier="A" match-max="2" shape="circle" coords="78,102,8"></qti-associable-hotspot>
+      <qti-associable-hotspot identifier="B" match-max="2" shape="circle" coords="117,171,8"></qti-associable-hotspot>
+      <qti-associable-hotspot identifier="C" match-max="2" shape="circle" coords="166,227,8"></qti-associable-hotspot>
+    </qti-graphic-associate-interaction>`
+  ),
+  card(
+    'Media',
+    html`<qti-media-interaction response-identifier="MD">
+      <qti-prompt>Bekijk het fragment.</qti-prompt>
+      <video src="/assets/qti-media-interaction/earth.mp4" controls style="inline-size: 100%"></video>
+    </qti-media-interaction>`
+  ),
+  card(
+    'Upload',
+    html`<qti-upload-interaction response-identifier="U">
+      <qti-prompt>Upload je uitwerking als PDF.</qti-prompt>
+    </qti-upload-interaction>`
+  ),
+  card(
+    'End attempt',
+    html`<qti-end-attempt-interaction response-identifier="EA" title="Nakijken"></qti-end-attempt-interaction>`
   )
 ];
 
@@ -390,7 +447,7 @@ ${css.length
 };
 
 const meta: Meta<Args> = {
-  title: 'Implementation/Theming/Theme editor',
+  title: 'Implementation/Theme editor',
   parameters: { layout: 'fullscreen' },
   argTypes: Object.fromEntries(
     Object.entries(INPUTS).map(([key, { token, control, unit, group }]) => [
@@ -406,7 +463,8 @@ const meta: Meta<Args> = {
 };
 export default meta;
 
-export const Editor: Story = {
+export const ThemeEditor: Story = {
+  name: 'Theme editor',
   render: args => page(args)
 };
 
