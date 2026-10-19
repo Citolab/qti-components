@@ -12,6 +12,7 @@
  *   cito       cito.nl: the logo's dark blue and pink, white cards on the warm page colour, and
  *              cito.nl's own :root values
  *   playful    a theme for young children, like a friendly learning app
+ *   soft       playful without borders, on a beige page: the fill marks fields, choices and chips
  *
  * Storybook only. The brand presets are not published with @qti-components/theme.
  */
@@ -97,7 +98,8 @@ html[data-qti-theme][data-qti-theme='cito'] body {
  * page with a soft 3D lift, generous rounding and a friendly typeface. Calm enough to read, bright
  * enough to feel like play.
  */
-[data-qti-theme='playful'] {
+[data-qti-theme='playful'],
+[data-qti-theme='soft'] {
   color-scheme: light;
   --cito-color-base-100: oklch(100% 0 none);
   --cito-color-base-content: oklch(34% 0.04 255); /* slate blue text */
@@ -129,6 +131,36 @@ html[data-qti-theme][data-qti-theme='cito'] body {
 }
 
 /* The pale sky page the white cards and chips stand on. */
-html[data-qti-theme][data-qti-theme='playful'] body {
+html[data-qti-theme]:is([data-qti-theme='playful'], [data-qti-theme='soft']) body {
   background-color: oklch(97.5% 0.015 235);
+}
+
+/*
+ * Soft: Playful without lines, on a warm beige page. On a page with a background every edge competes
+ * with it, so the fill does the work: fields, choices, hottext, the table and the chips are white and
+ * draw no border, and a radio or checkbox is a beige dot. The border width stays, transparent, so
+ * no box changes size.
+ *
+ * One edge stays: the dashed edge of an empty drop, which is otherwise an invisible hole (`--drop-*`,
+ * set here on the page so it inherits; a filled drop still hides it). A checked control still fills
+ * with the primary.
+ *
+ * No edge means no 3:1 field boundary (WCAG 1.4.11): the white fill on the beige page marks the
+ * field. A host that needs the contrast keeps Playful.
+ */
+[data-qti-theme='soft'] {
+  --cito-color-border: transparent;
+  --cito-color-chip-border: transparent;
+  --radio-border-color: transparent;
+  --checkbox-border-color: transparent;
+  /* Without a ring a white control vanishes on a white surface (a table cell), so an unchecked one
+     is filled a step darker than the page: it shows on the page and on white alike. */
+  --radio-background-color: oklch(86% 0.03 78);
+  --checkbox-background-color: oklch(86% 0.03 78);
+  --drop-border-color: oklch(78% 0.03 75);
+}
+
+/* The beige page the white fields and chips stand on. */
+html[data-qti-theme][data-qti-theme='soft'] body {
+  background-color: oklch(93% 0.025 80);
 }

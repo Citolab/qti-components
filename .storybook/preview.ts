@@ -105,7 +105,8 @@ const preview: Preview = {
         Dark: 'dark',
         Kennisnet: 'kennisnet',
         Cito: 'cito',
-        Playful: 'playful'
+        Playful: 'playful',
+        Soft: 'soft'
       },
       defaultTheme: 'Default',
       attributeName: 'data-qti-theme'
@@ -146,8 +147,7 @@ const preview: Preview = {
           'Introduction',
           'Getting started',
           'Implementation',
-          ['Theme editor', 'Cookbook'],
-          'Concepts',
+          ['Build a player', 'Theming', 'Cookbook'],
           'QTI Test',
           [
             'Overview',

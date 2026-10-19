@@ -280,6 +280,18 @@
     --qti-border-radius: var(--qti-radius-field);
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
 
+    /* The QTI 3 shared CSS (qti-native/qti3p0.css, vocabulary §2.12) leaves the colours of
+       .qti-bordered, .qti-underline and .qti-well to these hooks and defines none of them, so
+       without the theme a well got its padding and nothing else. Filled from the theme's own
+       tokens: a brand that restyles its borders restyles the well and the bordered box with them.
+       A well is a tinted surface inside the theme's border (§1.1.6.2: border plus background, the
+       background chosen by the platform); base-200 is the theme's tint for that. */
+    --table-border-color: var(--qti-border-color);
+    --foreground: var(--qti-color-base-content);
+    --well-bg: var(--qti-color-base-200);
+    --well-border: var(--qti-border);
+    --well-box-shadow: none;
+
     /* ── The paint contract's resting look ──
      *
      * One token per PAINT property, and the whole of what a role paints when it sets nothing. These
@@ -431,7 +443,11 @@
      * shrinks with it. Nothing in the theme sets a smaller size yet, so a floor would be a magic
      * number guarding a case that does not exist; add `max()` here if a real one turns up.
      */
-    --qti-control-size: calc(var(--qti-size-selector) * 4);
+    /* Snapped to an even number of pixels, as are the marks drawn inside it (`mark-size`,
+       `radio-checked`): with a fractional control (19.2px at Playful's 0.3em) the gap round the dot
+       is fractional too, and the ring and the dot antialias differently, so the dot looks off
+       centre although it is not. Even sizes keep every gap a whole pixel. 16px is unchanged. */
+    --qti-control-size: round(calc(var(--qti-size-selector) * 4), 2px);
 
     /* The correction badge's box. Named in two comments above and read by correction.styles.ts, but
        never actually declared until now — every badge has been running on that file's `1em`

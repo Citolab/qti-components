@@ -324,8 +324,8 @@
  * keeps the mark proportional to the control's outer size, which is the size anyone reasons about.
  */
 @define-mixin mark-size {
-  width: calc(var(--qti-control-size) * 0.625);
-  height: calc(var(--qti-control-size) * 0.625);
+  width: round(calc(var(--qti-control-size) * 0.625), 2px);
+  height: round(calc(var(--qti-control-size) * 0.625), 2px);
 }
 
 /* A choice with its native control shown (radio/checkbox visible) is the button component with its
@@ -353,8 +353,8 @@
  */
 @define-mixin radio-checked {
   /* 0.5 reproduces today's 8px at the default 1rem — see mark-size for why this is a fraction. */
-  width: calc(var(--qti-control-size) * 0.5);
-  height: calc(var(--qti-control-size) * 0.5);
+  width: round(calc(var(--qti-control-size) * 0.5), 2px);
+  height: round(calc(var(--qti-control-size) * 0.5), 2px);
   background-color: var(--radio-mark-color, var(--qti-primary-fg));
   border-radius: 100%;
 }

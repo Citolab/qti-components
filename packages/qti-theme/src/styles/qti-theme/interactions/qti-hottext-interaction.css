@@ -57,6 +57,9 @@
       qti-hottext {
         border: var(--qti-border);
         border-radius: var(--qti-radius-selector);
+        /* The field surface, as a text entry has: on a tinted page, or in a theme without borders,
+           the fill is what shows a word can be picked. White on white changes nothing. */
+        background-color: var(--qti-bg);
 
         &:focus {
           @mixin foc;

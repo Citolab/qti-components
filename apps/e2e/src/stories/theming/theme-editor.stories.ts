@@ -54,10 +54,10 @@ const chromeCss = `
   .te-h { margin: 0 0 0.5rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.09em;
     text-transform: uppercase; color: #64748b; }
   .te-g { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem; align-items: start; }
-  .te-c { margin: 0; min-width: 0; border: 1px solid light-dark(#e2e8f0, #334155); border-radius: 8px; overflow: hidden; }
-  .te-c > figcaption { padding: 0.375rem 0.75rem; border-bottom: 1px solid light-dark(#e2e8f0, #334155); background: light-dark(#f8fafc, #1e293b);
-    font-size: 0.75rem; font-weight: 600; color: light-dark(#334155, #cbd5e1); }
-  .te-b { padding: 1rem; overflow-x: auto; }
+  /* Each card is a QTI well (.qti-well, vocabulary §1.1.6.2), drawn by the theme: its tint, border
+     and radius follow the preset. Only the grid placement is the editor's. */
+  .te-c { margin: 0; min-width: 0; overflow-x: auto; }
+  .te-c > figcaption { margin: 0 0 0.75rem; font-size: 0.75rem; font-weight: 600; opacity: 0.75; }
   .te-c--wide { grid-column: span 2; }
   @media (max-width: 40rem) { .te-c--wide { grid-column: auto; } }
 `;
@@ -152,9 +152,9 @@ const declarations = (args: Args) =>
 /* ── The specimens ────────────────────────────────────────────────────────────────────────────── */
 
 const card = (label: string, body: unknown, wide = false) =>
-  html`<figure class="te-c ${wide ? 'te-c--wide' : ''}">
+  html`<figure class="qti-well te-c ${wide ? 'te-c--wide' : ''}">
     <figcaption>${label}</figcaption>
-    <div class="te-b"><qti-item-body>${body}</qti-item-body></div>
+    <qti-item-body>${body}</qti-item-body>
   </figure>`;
 
 const choices = html`
@@ -447,7 +447,7 @@ ${css.length
 };
 
 const meta: Meta<Args> = {
-  title: 'Implementation/Theme editor',
+  title: 'Implementation/Theming',
   parameters: { layout: 'fullscreen' },
   argTypes: Object.fromEntries(
     Object.entries(INPUTS).map(([key, { token, control, unit, group }]) => [
@@ -463,8 +463,7 @@ const meta: Meta<Args> = {
 };
 export default meta;
 
-export const ThemeEditor: Story = {
-  name: 'Theme editor',
+export const Theming: Story = {
   render: args => page(args)
 };
 
