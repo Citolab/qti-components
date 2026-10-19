@@ -8,6 +8,7 @@ import {
 import { stateHost } from './state-host';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { QtiTestState } from '@qti-components/test';
 
 const meta: Meta = {
   title: 'Implementation/Cookbook/CitoTestUit/Bookmarks that survive a reload',
@@ -61,7 +62,8 @@ export const BookmarksInState: StoryObj = {
       await waitFor(() => expect(bookmark()).not.toHaveAttribute('disabled'));
       bookmark().click();
       await waitFor(() => expect(bookmark()).toHaveAttribute('aria-pressed', 'true'));
-      await waitFor(() => expect(canvas.getByTestId('saved-state').textContent).toContain('bookmarks'));
+      const test = canvasElement.querySelector<HTMLElement & { state: QtiTestState }>('qti-test')!;
+      await waitFor(() => expect(JSON.stringify(test.state)).toContain('bookmarks'));
 
       canvas.getByText('Next').click();
       await waitFor(() => expect(bookmark()).toHaveAttribute('aria-pressed', 'false'));

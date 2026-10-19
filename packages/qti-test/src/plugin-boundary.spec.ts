@@ -63,9 +63,18 @@ const PLUGINS: Plugin[] = [
   },
   {
     name: 'print',
-    folders: ['components/test-print-context/', 'components/test-print-item-variables/'],
-    reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables/,
-    allow: [PUBLIC_EVENTS_FROM_COMPONENTS]
+    folders: [
+      'components/test-print-context/',
+      'components/test-print-item-variables/',
+      'components/test-print-state/'
+    ],
+    reference:
+      /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables|test-print-state|TestPrintState/,
+    allow: [
+      PUBLIC_EVENTS_FROM_COMPONENTS,
+      /^\.\.\/\.\.\/types\/qti-test-state$/, // the public state type
+      /^\.\.\/qti-test\/getting-started\.fixtures$/ // a story runs the docs demo test (CLAUDE.md, Docs demos)
+    ]
   },
   {
     name: 'scoring',

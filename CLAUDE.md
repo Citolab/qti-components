@@ -73,6 +73,15 @@ publish` rewrite `catalog:` correctly; `npm pack` does not, so packing must go t
 - Semantic/visual theming lives in `qti-theme` (`packages/qti-theme/src/styles/...`), not in
   component packages — interaction components must remain functional without that CSS loaded.
 
+## Docs demos
+
+- A story that only shows an example demo (a docs page, the Implementation section) uses the Getting started
+  demo: the test `GETTING_STARTED_TEST` (`packages/qti-test/src/components/qti-test/getting-started.fixtures.ts`,
+  two-column items) in the same markup as the `Getting started` story — `test-navigation` with a fixed-height
+  `test-container` and a Previous/Next `nav`. Add only what the page is about around it.
+- A docs page is a single sidebar entry: an `.mdx` in `docs/` with `<Meta of={…}>`, and its stories file
+  under the same title tagged `!dev` (see `build-a-player`, `state`). No separate story in the sidebar.
+
 ## Story architecture (interaction packages)
 
 Applies to `packages/interactions/**` (see its local `AGENTS.md` for the full policy):

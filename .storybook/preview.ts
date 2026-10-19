@@ -147,7 +147,7 @@ const preview: Preview = {
           'Introduction',
           'Getting started',
           'Implementation',
-          ['Build a player', 'Theming', 'Cookbook'],
+          ['Build a player', 'Theming', 'State', 'Cookbook'],
           'QTI Test',
           [
             'Overview',

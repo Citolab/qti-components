@@ -1,0 +1,67 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as State from './state.stories';
+
+<Meta of={State} />
+
+# State
+
+How a test starts, how it hands you its state, and how you give that state back to resume. Every host does
+this; Kennisnet, CitoTestUit and PeilingLezen each do it differently (`plans/host-migration/`).
+
+> **This will change.** Starting a test is order-dependent today, as described below. Issue
+> [#328](https://github.com/Citolab/qti-components/issues/328) proposes an explicit start-up for the next major:
+> `state` may be a promise, the seed moves into the state, a `start-at` for deep links, and `navigate`
+> defaults to `item`. Until then, follow the order on this page.
+
+## Try it
+
+Answer the first item, press **Next**, then **Restart from saved state**: a fresh test opens where you left
+off, and the answer is still there. To the right, a `<test-print-state>` dropped into the test shows its state as a tree: fold a branch open or shut, and watch it change as you answer.
+
+<Canvas of={State.SaveAndResume} />
+
+## The inputs
+
+| Input                         | Set on             | What it does                                                                                                                                                   |
+| ----------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `test-url`                    | `<test-container>` | Loads the assessment test. When it has loaded, the test fires `cito-test-loaded`.                                                                              |
+| `qtiContext.QTI_CONTEXT.seed` | `<qti-test>`       | Seeds the shuffling of items and choices. Read when `test-url` loads. A resumed test needs the same seed, or items and choices come back in a different order. |
+| `state`                       | `<qti-test>`       | A `QtiTestState`: the answers, the outcomes and the position (`session.navItemRefId`).                                                                         |
+| `navigate`                    | `<qti-test>`       | `item` shows one item at a time, `section` all items of a section. **Unset (the default), the test loads but opens nothing**: you call `navigateTo` yourself.  |
+
+And one output: `cito-test-state-changed` fires on every change, and its `detail` is the state. Store it
+wherever you like.
+
+## Start or resume, in this order
+
+Set the seed and the saved state **before** `test-url`. On `cito-test-loaded` the test applies the state, then
+`navigate` opens the saved item, or the first item when there is no state.
+
+```html
+<qti-test navigate="item">
+  <test-container></test-container>
+</qti-test>
+```
+
+```js
+const test = document.querySelector('qti-test');
+test.addEventListener('cito-test-state-changed', e => save(candidateId, e.detail));
+
+test.qtiContext = { QTI_CONTEXT: { testIdentifier, candidateIdentifier, environmentIdentifier: 'default', seed } };
+const saved = await load(candidateId); // the seed is not in the state: store it next to it
+if (saved) test.state = saved;
+
+document.querySelector('test-container').testURL = '/path/to/assessment.xml';
+```
+
+## What goes wrong today
+
+- **A state assigned after the test has loaded navigates again.** The candidate sees the first item, then
+  jumps to the saved one. So you cannot fetch the state in parallel with the test and assign it when it
+  arrives: wait for it before setting `test-url`, or leave `navigate` unset and call `navigateTo` once
+  yourself after both are in.
+- **`navigate` means two things:** the unit (`item` or `section`), and, unset, "do not start".
+- **The seed lives outside the state.** Resuming needs both the state and the same `qtiContext` seed.
+- **A deep link is a `navigateTo` on `cito-test-loaded`,** which runs after the test already opened its start
+  item.
