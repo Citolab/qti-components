@@ -11,6 +11,7 @@
     --qti-border-thickness: 1px;
     --qti-border-radius: 0.3rem;
     --qti-fg: #3e144e;
+    --qti-border-color: var(--qti-primary); /* every edge in the brand colour */
   }
 }
 
@@ -31,14 +32,6 @@
     --drag-color: var(--qti-fg);
     --drag-border-color: var(--qti-border-color);
     --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
-  }
-}
-
-@layer qti-components.interactions.states {
-  :state(placeholder) {
-    --drag-background-color: var(--qti-placeholder-bg);
-    --drag-border-color: transparent;
-    --drag-box-shadow: inset var(--qti-placeholder-shadow);
   }
 }
 

@@ -1,16 +1,16 @@
 import { html } from 'lit';
-import { expect } from 'storybook/test';
+
+import '../../../../../.storybook/utilities.css';
+import { GETTING_STARTED_TEST } from './getting-started.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTest } from './qti-test';
-import type { QtiChoiceInteraction } from '@qti-components/interactions';
 
 type Story = StoryObj<QtiTest>;
 
 const meta: Meta<QtiTest> = {
-  title: 'QTI Test/Overview',
+  title: 'Getting started',
   component: 'qti-test',
-  subcomponents: { testContainer: 'test-container' },
   args: {},
   argTypes: {},
   parameters: {
@@ -19,114 +19,25 @@ const meta: Meta<QtiTest> = {
     },
     controls: { disable: true }
   },
-  tags: ['autodocs', 'no-tests']
+  // The demo behind the Getting started page: out of the sidebar (`!dev`) and out of the test runs (`no-tests`).
+  tags: ['!dev', 'no-tests']
 };
 export default meta;
 
-// export const Controls: Story = {
-//   parameters: {
-//     controls: { disable: false }
-//   },
-//   render: args => {
-//     return html` ${template(
-//       args,
-//       html`<test-navigation
-//         ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-//         <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
-//       >`
-//     )}`;
-//   }
-// };
-
-export const Unstyled: Story = {
-  render: () => {
-    return html`<qti-test navigate="item"
-      ><test-navigation
-        ><test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-        <nav><test-prev>Vorige</test-prev><test-next>Volgende</test-next></nav></test-navigation
-      ></qti-test
-    >`;
-  }
-};
-
-export const BootstrapForTest: Story = {
+/**
+ * The smallest working test, as a mini player: the item sits in a box of fixed height that scrolls when
+ * the content is taller, so moving between items does not make the page jump.
+ */
+export const Default: Story = {
   render: () => html`
-    <qti-test navigate="item" class="d-flex h-100 w-full flex-column">
-      <test-navigation>
-        <test-container
-          test-url="/assets/api/examples/assessment.xml"
-          class="overflow-auto aspect-16/9"
-        ></test-container>
-        <div class="d-flex align-items-center justify-content-between">
-          <test-prev class="d-flex flex-nowrap btn  btn-success">
-            <i class="bi bi-arrow-left-short me-2"></i>previous
-          </test-prev>
-
-          <test-next class="d-flex flex-nowrap btn  btn-success">
-            next<i class="bi bi-arrow-right-short ms-2"></i>
-          </test-next>
-        </div>
-      </test-navigation>
-    </qti-test>
-  `
-};
-
-export const CSSVariablesForItem: Story = {
-  render: () => html`
-    <style>
-      test-container {
-        --qti-bg-active: #efecff;
-        --qti-border-active: #581d70;
-        --qti-button-padding-vertical: 0.2rem;
-      }
-    </style>
     <qti-test navigate="item">
-      <test-navigation>
-        <test-container test-url="/assets/api/examples/assessment.xml"></test-container>
-        <test-prev> previous </test-prev>
-        <test-next> next </test-next>
+      <test-navigation class="flex flex-col gap-2">
+        <test-container class="block h-100 overflow-auto" test-url=${GETTING_STARTED_TEST}></test-container>
+        <nav class="flex justify-between">
+          <test-prev>Previous</test-prev>
+          <test-next>Next</test-next>
+        </nav>
       </test-navigation>
     </qti-test>
   `
-};
-
-export const ValidationDisplayModePropagation: Story = {
-  render: () => html`
-    <qti-test data-testid="qti-test-host" navigate="item">
-      <test-navigation>
-        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"></test-container>
-      </test-navigation>
-    </qti-test>
-  `,
-  play: async ({ canvasElement }) => {
-    const qtiTest = canvasElement.querySelector('qti-test') as QtiTest | null;
-    expect(qtiTest).toBeTruthy();
-
-    if (!qtiTest) {
-      return;
-    }
-
-    qtiTest.configContext = {
-      ...(qtiTest.configContext || {}),
-      validationDisplayMode: 'none'
-    };
-
-    await qtiTest.updateComplete;
-
-    const choiceInteraction = qtiTest.querySelector('qti-choice-interaction') as QtiChoiceInteraction | null;
-    expect(choiceInteraction).toBeTruthy();
-
-    if (!choiceInteraction) {
-      return;
-    }
-
-    choiceInteraction.setAttribute('min-choices', '2');
-    choiceInteraction.validate();
-    choiceInteraction.reportValidity();
-
-    const messageEl = choiceInteraction.shadowRoot?.querySelector('#validation-message') as HTMLElement | null;
-    expect((choiceInteraction as any).internals.validity.valid).toBe(false);
-    expect(messageEl?.textContent || '').toBe('');
-    expect(messageEl?.style.display || '').toBe('none');
-  }
 };

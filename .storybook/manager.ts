@@ -2,7 +2,12 @@
 import { addons } from 'storybook/manager-api';
 import { defaultConfig, type TagBadgeParameters } from 'storybook-addon-tag-badges/manager-helpers';
 
+import { renderFolderLabel } from './extensions/folder-tags';
+
 addons.setConfig({
+  sidebar: {
+    renderLabel: renderFolderLabel
+  },
   tagBadges: [
     // Add an entry that matches 'frog' and displays a cool badge in the sidebar only
     {
@@ -44,6 +49,16 @@ addons.setConfig({
         tooltip: 'Written, and known to fail: not run in CI'
       },
       display: { sidebar: [{ type: 'story' }], toolbar: false, mdx: true }
+    },
+    // Interaction maturity: computed by extensions/folder-tags.ts from the conformance stories.
+    {
+      tags: 'stable',
+      badge: {
+        text: 'Stable',
+        style: { backgroundColor: '#dafbe1', color: '#116329' },
+        tooltip: 'Stable: part of the public API, covered by evidence stories'
+      },
+      display: { sidebar: [{ type: 'group', skipInherited: false }], toolbar: false, mdx: false }
     },
     // Place the default config after your custom matchers.
     ...defaultConfig

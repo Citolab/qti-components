@@ -11,7 +11,7 @@ const ITEM_1 = 'T1 - Test Entry - Item 1';
 const ITEM_2 = 'T1 - Choice Interaction - Multiple Cardinality';
 
 const meta: Meta = {
-  title: 'Cookbook/All hosts/Save and resume a test',
+  title: 'Implementation/Cookbook/All hosts/Save and resume a test',
   tags: ['autodocs'],
   parameters: {
     controls: { disable: true },

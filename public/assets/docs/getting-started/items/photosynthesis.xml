@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="GS-photosynthesis" title="Photosynthesis" adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response><qti-value>light</qti-value></qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="GAS" cardinality="single" base-type="string">
+    <qti-correct-response><qti-value>oxygen</qti-value></qti-correct-response>
+    <qti-mapping default-value="0">
+      <qti-map-entry map-key="oxygen" mapped-value="1" case-sensitive="false" />
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+  <qti-item-body>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col6">
+        <h2>Photosynthesis</h2>
+        <p>
+          Plants make their own food. Using <strong>light</strong>, a plant turns <em>carbon dioxide</em> and
+          <em>water</em> into <strong>glucose</strong> and releases a gas.
+        </p>
+        <p>
+          In symbols:
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <mrow>
+              <mrow>
+                <mn>6</mn>
+                <mo>&#x2062;</mo>
+                <msub><mi mathvariant="normal">CO</mi><mn>2</mn></msub>
+              </mrow>
+              <mo>+</mo>
+              <mrow>
+                <mn>6</mn>
+                <mo>&#x2062;</mo>
+                <mrow><msub><mi mathvariant="normal">H</mi><mn>2</mn></msub><mi mathvariant="normal">O</mi></mrow>
+              </mrow>
+              <mo>&#x2192;</mo>
+              <mrow>
+                <msub><mi mathvariant="normal">C</mi><mn>6</mn></msub>
+                <msub><mi mathvariant="normal">H</mi><mn>12</mn></msub>
+                <msub><mi mathvariant="normal">O</mi><mn>6</mn></msub>
+              </mrow>
+              <mo>+</mo>
+              <mrow>
+                <mn>6</mn>
+                <mo>&#x2062;</mo>
+                <msub><mi mathvariant="normal">O</mi><mn>2</mn></msub>
+              </mrow>
+            </mrow>
+          </math>
+        </p>
+      </div>
+      <div class="qti-layout-col6">
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+          <qti-prompt>Which energy source does photosynthesis use?</qti-prompt>
+          <qti-simple-choice identifier="light">Light</qti-simple-choice>
+          <qti-simple-choice identifier="heat">Heat</qti-simple-choice>
+          <qti-simple-choice identifier="sound">Sound</qti-simple-choice>
+        </qti-choice-interaction>
+        <p>
+          Plants take in carbon dioxide through tiny openings in their leaves. During the day they use the energy
+          of sunlight to turn it, together with water, into sugar. While this happens a gas is released that most
+          animals need to breathe: the gas that is released is
+          <qti-text-entry-interaction response-identifier="GAS" expected-length="8" />, and it leaves the leaf through
+          the same tiny openings and drifts away into the air around the plant.
+        </p>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml" />
+</qti-assessment-item>

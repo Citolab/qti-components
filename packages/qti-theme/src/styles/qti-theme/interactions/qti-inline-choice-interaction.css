@@ -6,6 +6,7 @@
        being the field's own slot, it no longer inherits into the menu and message below. Those two
        still land on the same colour: they inherit the field's computed `color`. */
     @mixin field;
+    @mixin inline;
     --field-color: var(--qti-fg);
 
     /* ── Trigger: transparent inside the field border ───────────────────────── */
@@ -17,11 +18,16 @@
       color: inherit;
       cursor: pointer;
       font-size: inherit;
+      /* The same line as a text entry's input (@mixin field-typography), so the two fields sit in a
+         sentence at the same height. `normal` made the dropdown about 6px shorter. */
+      line-height: var(--qti-field-line-height);
     }
 
-    &::part(trigger):focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+    /* The trigger fills the field inside its border, so its ring is pushed out past that border:
+       it then sits where a text entry's does, which rings its host. */
+    &::part(trigger):focus {
+      @mixin foc;
+      outline-offset: var(--qti-focus-offset-past-border);
     }
 
     &:state(disabled)::part(trigger),
@@ -105,8 +111,7 @@
     }
 
     &::part(option):focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc-inset;
     }
 
     &::part(option-selected) {
@@ -133,8 +138,7 @@
     }
 
     & qti-inline-choice:focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc-inset;
     }
 
     & qti-inline-choice:state(checked) {
@@ -147,7 +151,7 @@
     &::part(message) {
       @mixin message;
       --message-color: var(--qti-fg);
-      --message-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      --message-background-color: color-mix(in oklab, var(--qti-warning) 5%, var(--qti-bg));
       --message-border-color: var(--qti-warning);
       padding: var(--qti-padding-box);
     }

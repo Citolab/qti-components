@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="GS-leaf" title="Inside a leaf" adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="directedPair">
+    <qti-correct-response>
+      <qti-value>chlorophyll G1</qti-value>
+      <qti-value>stomata G2</qti-value>
+    </qti-correct-response>
+    <qti-mapping default-value="0">
+      <qti-map-entry map-key="chlorophyll G1" mapped-value="1" />
+      <qti-map-entry map-key="stomata G2" mapped-value="1" />
+    </qti-mapping>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" />
+  <qti-item-body>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col6">
+        <h2>Inside a leaf</h2>
+        <p>
+          A leaf is a small factory. The green pigment that catches the light is called <strong>chlorophyll</strong>.
+          Tiny openings on the underside, the <em>stomata</em>, let gases in and out.
+        </p>
+      </div>
+      <div class="qti-layout-col6">
+        <qti-gap-match-interaction response-identifier="RESPONSE" shuffle="false">
+          <qti-prompt>Drag the words to the gaps.</qti-prompt>
+          <qti-gap-text identifier="chlorophyll" match-max="1">chlorophyll</qti-gap-text>
+          <qti-gap-text identifier="stomata" match-max="1">stomata</qti-gap-text>
+          <qti-gap-text identifier="roots" match-max="1">roots</qti-gap-text>
+          <p>
+            Light is caught by <qti-gap identifier="G1" />, and gases pass through the <qti-gap identifier="G2" />.
+          </p>
+        </qti-gap-match-interaction>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/map_response.xml" />
+</qti-assessment-item>

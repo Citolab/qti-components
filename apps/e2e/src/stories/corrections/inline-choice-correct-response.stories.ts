@@ -22,7 +22,7 @@ type Story = StoryObj;
  * says who was right.
  */
 const meta: Meta = {
-  title: 'Cookbook/Corrections/inline choice',
+  title: 'Corrections/Inline choice',
   decorators: [withCorrection],
   parameters: {
     layout: 'padded',

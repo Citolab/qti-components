@@ -29,6 +29,11 @@
 
 @layer qti-components.interactions.base {
   qti-gap-match-interaction {
+    /* Its chips go into gaps in a sentence, so they are inline fields too: the inline-field padding
+       instead of a chip's roomier one, and the field line height. A gap is sized by the chip it
+       takes, so it follows. Bank chips get the same box, so a chip does not change size when it
+       lands (drag-drop.invariance.spec.ts). */
+    --qti-drag-padding: var(--qti-inline-field-padding);
     /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
        that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
        item in this repo ever set it on a gap-match interaction. What was here overrode the neutral
@@ -39,31 +44,48 @@
     &:state(dragzone-enabled)::part(drags) {
       @mixin dropping;
     }
+    & qti-gap {
+      @mixin inline;
+    }
+
     /* Editor fake-drag projected into a filled <qti-gap>'s shadow. Same `drag`
        styling so the editor preview matches runtime when a gap is filled. */
     & qti-gap::part(drag) {
       @mixin drag;
-      &:hover {
-        @mixin drag-hover;
-      }
-      &:focus {
-        @mixin foc;
-      }
     }
     & qti-gap-text {
       @mixin drag;
+      line-height: var(--qti-field-line-height);
       &[dragging] {
         @mixin dragging;
       }
       &:hover {
         @mixin drag-hover;
       }
-      &:focus {
+      &:focus:not(:state(placeholder), :active) {
         @mixin foc;
       }
     }
     & qti-gap {
       @mixin drop;
+
+      /*
+       * The dashed edge as an inset OUTLINE, not a border, so the gap is exactly as tall as the chip
+       * it takes and as every other field in the sentence. A border would add its width to the chip's
+       * height (the gap reserves the chip's border-box inside its own border). The outline reads the
+       * same --drop-* slots as the border did, so the states and corrections that switch them still
+       * repaint it; focus draws its own ring over it.
+       */
+      --drop-border-width: 0;
+      outline: var(--qti-border-width) var(--drop-border-style, dashed)
+        var(--drop-border-color, var(--qti-component-border-color));
+      outline-offset: var(--qti-drop-outline-offset);
+
+      /* Focused (Tab, or the keyboard drag moving to it), the solid ring replaces the dashed edge:
+         both are the outline, so without this the focus could not be seen. */
+      &:focus {
+        @mixin foc;
+      }
 
       /*
        * A filled gap hides its dashed edge, exactly as a filled order slot does
@@ -128,7 +150,7 @@
         transform: rotate(0);
         /* Through the drag slot so a correction (which sets --drag-box-shadow) composes over it
            instead of this leaking onto a corrected chip. */
-        --drag-box-shadow: 0 0 0 1px #e5e7eb;
+        --drag-box-shadow: 0 0 0 var(--qti-border-width) var(--qti-color-base-300);
       }
     }
   }
@@ -146,6 +168,19 @@
     @mixin drag;
   }
 
+  /*
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(drag)` they
+   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
+   * `background-color` and must not out-rank the hover.
+   */
+  qti-gap-match-interaction qti-gap::part(drag):hover {
+    @mixin drag-hover;
+  }
+  qti-gap-match-interaction qti-gap::part(drag):focus:not(:active) {
+    @mixin foc;
+  }
+
   qti-gap-match-interaction qti-gap-text:state(placeholder) {
     @mixin drag-placeholder;
     pointer-events: none;
@@ -155,23 +190,24 @@
     @mixin drag-placeholder;
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
     pointer-events: none;
   }
 
   qti-gap-match-interaction qti-gap-text:state(return-anchor) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 
-  qti-gap-match-interaction qti-gap:state(hover),
-  qti-gap-match-interaction qti-gap:state(active) {
-    background-color: var(--qti-drop-highlight-bg);
-  }
-
+  qti-gap-match-interaction qti-gap:state(active),
   qti-gap-match-interaction qti-gap:state(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  /* After `enabled`, which every target carries during a drag: the one under the chip. */
+  qti-gap-match-interaction qti-gap:state(hover) {
+    @mixin drop-over;
   }
 }
 

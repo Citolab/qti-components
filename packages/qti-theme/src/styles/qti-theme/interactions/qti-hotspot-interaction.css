@@ -26,9 +26,9 @@
 @layer qti-components.interactions.base {
   qti-hotspot-interaction qti-hotspot-choice {
     /* Resting: a faint neutral ring, so the regions are discoverable before any interaction. */
-    --hs-ring: color-mix(in srgb, var(--qti-hotspot-ring-color, var(--qti-border-color)) 60%, transparent);
+    --hs-ring: color-mix(in oklab, var(--qti-hotspot-ring-color, var(--qti-border-color)) 60%, transparent);
     --hs-width: var(--qti-hotspot-ring-width, 2px);
-    --hs-halo: var(--qti-hotspot-halo, rgb(255 255 255 / 85%));
+    --hs-halo: var(--qti-hotspot-halo);
 
     background-color: transparent;
     cursor: pointer;
@@ -61,12 +61,11 @@
 
   /* Hover strengthens the resting ring rather than filling the shape. */
   qti-hotspot-interaction qti-hotspot-choice:hover {
-    --hs-ring: color-mix(in srgb, var(--qti-hotspot-ring-color, var(--qti-border-active)) 90%, transparent);
+    --hs-ring: color-mix(in oklab, var(--qti-hotspot-ring-color, var(--qti-border-active)) 90%, transparent);
   }
 
-  qti-hotspot-interaction qti-hotspot-choice:focus-visible {
-    outline: var(--qti-focus-border-width) solid var(--qti-focus-color);
-    outline-offset: 2px;
+  qti-hotspot-interaction qti-hotspot-choice:focus {
+    @mixin foc;
   }
 }
 
@@ -108,13 +107,13 @@
    *
    * Blank the ring and its halo while a hotspot is neither selected nor keyboard-focused. Both
    * halves matter: the picture reads cleanly, and a *focused* hotspot returns, which is the only
-   * thing that keeps the interaction operable from a keyboard — drop `:not(:focus-visible)` and
+   * thing that keeps the interaction operable from a keyboard — drop `:not(:focus)` and
    * tabbing through an item shows nothing.
    *
    * In `states` so it outranks the base ring and the `:hover` strengthen: hover must NOT reveal, or
    * sweeping the pointer hands back the answer regions one at a time.
    */
-  qti-hotspot-interaction.qti-unselected-hidden qti-hotspot-choice:not(:state(checked)):not(:focus-visible) {
+  qti-hotspot-interaction.qti-unselected-hidden qti-hotspot-choice:not(:state(checked)):not(:focus) {
     --hs-ring: transparent;
     --hs-halo: transparent;
   }

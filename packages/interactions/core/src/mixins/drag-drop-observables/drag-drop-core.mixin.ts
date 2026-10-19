@@ -989,6 +989,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         const property = computedStyles[i];
         clone.style.setProperty(property, computedStyles.getPropertyValue(property));
       }
+      // The chip's resting shadow would be copied inline with the rest and outrank the theme, which
+      // gives a chip in flight its own elevation (`[data-drag-clone]`, --qti-drag-elevation).
+      clone.style.removeProperty('box-shadow');
 
       // Where the clone can live: the interaction's root while the browser paints it, the
       // fullscreen element when it does not. See utils/drag-clone-host.ts for why each is needed —
@@ -1011,7 +1014,6 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       clone.style.pointerEvents = 'none'; // Critical: never capture events
       clone.style.touchAction = 'none'; // Prevent touch interactions
       clone.style.userSelect = 'none'; // Prevent selection
-      clone.style.opacity = '0.8';
 
       clone.removeAttribute('qti-draggable');
       clone.removeAttribute('tabindex');

@@ -7,9 +7,10 @@
  * repaint that role alone, so none of this reaches the drop targets the chips land in.
  *
  * A RESTING-look override sits in `brand` (above base, below states, so functional states still win).
- * A STATE override (the placeholder) sits in `states`; the base placeholder sets no fill / border /
- * shadow of its own (see `@mixin drag-placeholder`), so this restyles the hole with no specificity
- * contest. border-COLOR goes transparent, never the width, so switching brands can't move a chip or
+ * The placeholder (the hole a lifted chip leaves) is the theme's own: a tint of the primary with an
+ * inset shadow (interactions/qti-placeholder.css), so this sheet no longer restyles it. A brand that
+ * wants another hole writes a bare `:state(placeholder)` in `states`, no specificity contest. A
+ * border-COLOR goes transparent, never the width, so switching brands can't move a chip or
  * reflow a bank (layout-invariance). The `@layer` order is declared by item.css, adopted alongside
  * this sheet in the same shadow.
  */
@@ -30,6 +31,9 @@
     --qti-border-radius: 0.3rem;
 
     --qti-fg: #3e144e;
+
+    /* Every edge in the brand colour. The theme's default border is a neutral grey. */
+    --qti-border-color: var(--qti-primary);
   }
 }
 
@@ -62,12 +66,5 @@
   }
 }
 
-@layer qti-components.interactions.states {
-  /* The placeholder: a tint fill + inset shadow, no border (the base default is a plain bordered
-     white box). Corrections, a layer higher, keep winning. */
-  :state(placeholder) {
-    --drag-background-color: var(--qti-placeholder-bg);
-    --drag-border-color: transparent;
-    --drag-box-shadow: inset var(--qti-placeholder-shadow);
-  }
-}
+/* No placeholder rule: the theme's own (interactions/qti-placeholder.css) is the tint and inset
+   shadow this sheet used to add, derived from the brand's primary. */

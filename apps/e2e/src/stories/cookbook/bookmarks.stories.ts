@@ -10,7 +10,7 @@ import { stateHost } from './state-host';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Cookbook/CitoTestUit/Bookmarks that survive a reload',
+  title: 'Implementation/Cookbook/CitoTestUit/Bookmarks that survive a reload',
   tags: ['autodocs'],
   parameters: {
     controls: { disable: true },

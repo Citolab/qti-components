@@ -28,13 +28,10 @@ import type { CSSResultGroup } from 'lit';
  * @csspart label - The default slot holding the choice content.
  * @csspart marker - The order-number badge, when `marker` is set.
  */
-export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice') {
+/* A choice selects the moment it is pressed, not on release. Not while it is a drag chip (order
+   interaction): ActiveElementMixin checks `qti-draggable` and then waits for the click. */
+export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice', { activateOn: 'press' }) {
   static override styles: CSSResultGroup = styles;
-
-  static override shadowRootOptions: ShadowRootInit = {
-    ...LitElement.shadowRootOptions,
-    delegatesFocus: true
-  };
 
   @property({ type: String, attribute: 'template-identifier' })
   public templateIdentifier: string | null = null;
@@ -60,7 +57,10 @@ export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-
   }
 
   override render() {
-    return html`<div part="control" tabindex="0"><div part="control-mark"></div></div>
+    // The host takes focus (it carries the tabindex, see ActiveElementMixin), not the control: a
+    // focusable control inside a delegating shadow root made the host miss `:focus-visible`, so the
+    // theme's ring could not be drawn on the choice, and the browser drew its own on the radio.
+    return html`<div part="control"><div part="control-mark"></div></div>
       ${this.marker ? html`<div id="label" part="marker">${this.marker}</div>` : nothing}
       <slot part="label"></slot>`;
   }

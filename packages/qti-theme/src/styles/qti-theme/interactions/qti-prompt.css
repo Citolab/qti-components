@@ -1,1 +1,9 @@
 /* `display: block` lives in qti-prompt.styles.ts, which already declares it on :host. */
+
+/* A prompt opens the interaction it belongs to, so it carries no space above itself. Otherwise the
+   interaction starts lower than whatever sits beside it, and columns do not line up at the top. */
+@layer qti-components.interactions.base {
+  qti-prompt {
+    margin-block-start: 0;
+  }
+}

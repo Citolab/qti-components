@@ -17,15 +17,25 @@ import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref
 const HIGHLIGHT_ELEMENT = 'tts-element'; // navigation cursor — whole element
 const HIGHLIGHT_WORD = 'tts-word'; // word boundary during speech
 
-// Shared across all instances — added to whichever shadow root needs it
+// Shared across all instances — added to whichever shadow root needs it. The two highlights are
+// tints of the theme's info (the element being read) and warning (the word being spoken) colours,
+// see-through so the text and its own background stay visible. Without the theme they fall back to
+// the system Highlight and Mark colours. A host repaints them with --test-tts-element-highlight and
+// --test-tts-word-highlight.
 let highlightSheet: CSSStyleSheet | null = null;
 
 function getHighlightSheet(): CSSStyleSheet {
   if (!highlightSheet) {
     highlightSheet = new CSSStyleSheet();
     highlightSheet.replaceSync(`
-      ::highlight(${HIGHLIGHT_ELEMENT}) { background-color: #dbeafe; color: inherit; }
-      ::highlight(${HIGHLIGHT_WORD})    { background-color: #ffe066; color: inherit; }
+      ::highlight(${HIGHLIGHT_ELEMENT}) {
+        background-color: var(--test-tts-element-highlight, color-mix(in oklab, var(--qti-color-info, var(--cito-color-info, Highlight)) 15%, transparent));
+        color: inherit;
+      }
+      ::highlight(${HIGHLIGHT_WORD}) {
+        background-color: var(--test-tts-word-highlight, color-mix(in oklab, var(--qti-color-warning, var(--cito-color-warning, Mark)) 55%, transparent));
+        color: inherit;
+      }
     `);
   }
   return highlightSheet;
@@ -99,8 +109,13 @@ abstract class TtsButtonBase extends LitElement {
          page as tall as the scrolled content. */
       position: relative;
     }
-    button:hover:not(:disabled) {
-      ${styles.btnInteractive};
+    @media (hover: hover) and (pointer: fine) {
+      button:hover:not(:disabled) {
+        ${styles.btnInteractive};
+      }
+    }
+    button:active:not(:disabled) {
+      ${styles.btnActive};
     }
     button:focus-visible {
       ${styles.focusRing};
@@ -110,8 +125,8 @@ abstract class TtsButtonBase extends LitElement {
     }
     button[aria-pressed='true'],
     button[aria-pressed='true']:hover {
-      background-color: var(--test-button-selected-background-color, var(--qti-selected-bg, #0175aa));
-      color: var(--test-button-selected-color, var(--qti-selected-color, #fff));
+      background-color: var(--test-button-selected-background-color, var(--qti-selected-bg, Highlight));
+      color: var(--test-button-selected-color, var(--qti-selected-color, HighlightText));
     }
     svg,
     ::slotted(svg) {

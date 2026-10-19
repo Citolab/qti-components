@@ -9,7 +9,7 @@ import type { Decorator, Meta, StoryObj } from '@storybook/web-components-vite';
 const withFixedWidth: Decorator = story => html`<div style="width: ${KENNISNET_STORY_WIDTH}">${story()}</div>`;
 
 const meta: Meta = {
-  title: 'Cookbook/Kennisnet/Suite',
+  title: 'Corrections/Kennisnet/Suite',
   tags: ['autodocs', 'no-tests', 'vrt'],
   // Later decorators wrap earlier ones: the fixed width sits outside the correction shadow host.
   decorators: [withCorrection, withFixedWidth],

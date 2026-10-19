@@ -9,6 +9,10 @@
   box-sizing: border-box;
 }
 
+.qti-layout-row > [class*='qti-layout-col'] > :first-child {
+  margin-block-start: 0; /* a heading or paragraph that opens a column starts at the column's top edge */
+}
+
 .qti-layout-row [class*='qti-layout-col']:empty {
   width: 0;
   overflow: hidden; /* to fully collapse if there’s padding or borders */

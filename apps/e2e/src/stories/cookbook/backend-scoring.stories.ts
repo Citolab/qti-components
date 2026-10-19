@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTest, QtiTestState } from '@qti-components/test';
 
 const meta: Meta = {
-  title: 'Cookbook/Kennisnet/Scoring on a backend',
+  title: 'Implementation/Cookbook/Kennisnet/Scoring on a backend',
   tags: ['autodocs'],
   parameters: {
     controls: { disable: true },

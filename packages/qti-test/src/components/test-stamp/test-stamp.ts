@@ -11,8 +11,9 @@ import type { ComputedContext } from '@qti-components/base';
 import type { TemplateFunction } from '@heximal/templates';
 
 /**
- * A custom web component that renders a test stamp using the Lit framework.
- * This component is deprecated and will be removed in the future.
+ * The stamp plugin: renders its `<template>` child with the state of the test (`test`,
+ * `activeTestpart`, `activeSection`, `activeItem`, `view`), again on every change, so a player
+ * can show progress or numbered navigation without writing a component.
  * @customElement
  * @extends {LitElement}
  */

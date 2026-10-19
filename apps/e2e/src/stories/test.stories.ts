@@ -34,6 +34,7 @@ export const QtiTest: Story = {
     const [args, updateArgs] = useArgs();
     return html`
       <qti-test
+        navigate="item"
         class="h-full"
         @qti-test-connected=${(e: CustomEvent) => {
           console.log('qti-test-connected', e);
