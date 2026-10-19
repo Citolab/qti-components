@@ -1,5 +1,164 @@
 # @citolab/qti-components
 
+## 10.0.0-next.11
+
+### Minor Changes
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The default theme is black and white, and dark mode works.
+
+  - **Black and white.** The default `--cito-color-primary` is the text colour itself: near-black on a light page, near-white on a dark one, with `--cito-color-primary-content` the opposite. A selected choice is a black fill with white text; the focus ring, the active border, the drop highlight and the placeholder tint follow. Only the four state colours keep their hue, because they carry meaning (answer key, correct, partially correct, incorrect). A brand sets its colour with `--cito-color-primary`; a brand that sets `--qti-primary` still wins, as before.
+  - **Dark mode.** `qti-item-body` now takes its text colour from `--cito-color-base-content`, a `light-dark()` pair, so the words flip together with the surfaces when the page's `color-scheme` is dark. Before, an item inherited the page's text colour, which left dark text on dark fields on a page that had not set its own. The dark surfaces are neutral greys now (`oklch(20% 0 none)` and `oklch(96% 0 none)`) instead of a blue-tinted slate.
+
+  **Hosts:** item text is the theme's colour now, not the page's. A host that wants its own body text colour in items sets `--cito-color-base-content`.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - Chips answer the pointer more clearly, and the drop a chip will land in shows.
+
+  - **Hover:** a chip's edge takes the active border colour under the pointer (`--qti-border-active`); its fill stays. Before, 8% of the text colour was mixed into the fill, which turned every white chip grey. Only on a fine pointer that can hover.
+  - **Focus ring on release:** a chip shows its focus ring once the button is released, not while it is pressed (`:focus:not(:active)`), because a press may be the start of a drag.
+  - **Placeholder:** the hole a lifted or placed chip leaves hides the chip's handle too, not only its text. A theme that colours its handles (`--cito-color-drag-icon`) left the handle standing in the hole.
+  - **Drop target under the chip:** while you drag, the drop the chip is over gets the highlight fill and a ring in the active border colour just outside its edge (new `@mixin drop-over`), in order, associate, match, gap match and graphic gap match. The drag code already flagged that target (`:state(hover)`, or `::part(hover)` on order and associate slots), but the faint wash every droppable target gets (`enabled`) came later in each stylesheet and painted over it.
+  - **No hover on other chips during a drag:** the chips a dragged chip passes over keep their resting edge while the interaction is in `:state(dragzone-active)`.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - A choice selects the moment it is pressed.
+
+  - **`qti-simple-choice` activates on `pointerdown`** (primary button), not on release: holding a choice down already shows it selected. The `click` that follows is swallowed, so a checkbox does not toggle back. Keyboard (Space, Enter) and a programmatic `.click()` work as before. A choice used as a drag chip (order interaction, `qti-draggable`) still waits for the click, because there a press starts the drag. `ActiveElementMixin` takes this as an option, `ActiveElementMixin(Base, type, { activateOn: 'press' })`; the default stays `'click'`.
+  - **No grey press tint on choices and chips.** The selection is a choice's press feedback now, and a chip's is its drag; the `:active` wash on top of either is gone. The test controls keep theirs, because they act on release.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - Compact chips and boxed choices, and the extended-text badge on the end side.
+
+  - **Chips** (order, match, associate) and **choices drawn as boxes** (`qti-input-control-hidden`) have a compact box: `--qti-drag-padding` is ¾ by 1½ spacing units (6px × 12px, was 8px × 0.8em), with the field line height, so they are 38px tall instead of 48px. A boxed choice reads it through the new `--qti-choice-box-padding`. Drops follow the chip they are sized from. Gap-match chips keep their inline-field box; choices with a radio or checkbox are unchanged.
+  - **Extended text** reserves the correction gutter at the end of the line instead of the start, and the badge sits there, top end corner. An ungraded answer no longer starts indented by the badge's room.
+
+  Six Kennisnet VRT baselines are regenerated: the four match items and the two order items, whose chips and drops get smaller. The open question is unchanged: that suite does not grade it.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - A disabled interaction looks disabled.
+
+  - **Disabled paints in one muted grey**, `--qti-color-disabled` (40% of the text colour into the surface): its text, edges, controls, chips and handles, and the mark of what is selected, which stays visibly selected. Not opacity, which faded the selected answer with the rest and let the background through. It applies to every interaction with the `disabled` attribute and to a single choice with `:state(disabled)`, by re-valuing the paint tokens on that element (`interactions/qti-disabled.css`). Before, only the cursor changed. Corrections still show their verdict colours.
+  - **Readonly is unchanged**: full look, only the cursor, so an answered test in review stays readable.
+  - **A disabled choice takes no focus** from a mouse press (`ActiveElementMixin`), as a disabled native control does; before, a click on it showed the focus ring.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - A theme sets a chip's handle and edge.
+
+  - **Drag handle:** six small round dots by default (was six square blocks). Set the shape with the new optional input `--cito-icon-drag` (a mask `url()`) and its colour with `--cito-color-drag-icon` (the chip's text colour by default). A correction still recolours the handle along with the chip.
+  - **Chip edge:** `--cito-color-chip-border` (new, optional) is a drag chip's border colour; `transparent` gives borderless cards. It defaults to the component border, as before.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - One focus ring, on everything you can pick, and a tabular match you can answer from the keyboard.
+
+  - **The ring shows when you pick with the mouse too.** Choices (on the radio or checkbox, or round the box for `qti-input-control-hidden`), hottext, hotspots, graphic order and associate hotspots, select-point points, an inline choice's trigger, the slider and a tabular match cell ring on `:focus`, not only `:focus-visible`. Chips and drops too, except a lifted chip's placeholder. A gap in gap match swaps its dashed edge for the solid ring while it has focus; before, a gap reached with Tab, or by a keyboard drag, showed no focus at all.
+  - **Slider:** the ring goes round the knob.
+  - **Hottext** has a pointer cursor in every variant.
+  - **Tabular match** (`qti-match-tabular`): each cell's radio or checkbox is a real input, visually hidden over the cell, instead of `hidden`. It takes Tab focus; the arrow keys move within a row and Space toggles a checkbox, natively. Before, the grid could not be answered from a keyboard at all. The cell rings inside its edge. The row and column header cells leave the tab order (`tabindex="-1"`).
+  - **Corrections:** `qti-simple-choice` registered by the corrections package had a focusable inner control (`tabindex="0"`), so every choice took two Tab presses. One now.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - Words on an image, and points in the right place.
+
+  - **Select point:** a response given in the markup (`response="203 159"`) now shows its marker where it belongs. It was rendered before the image's size was read and placed against a width of 1, thousands of percent off the image.
+  - **Graphic gap match with words:** a `qti-gap-text` chip is a label box, the inline-field box that gap-match chips have, in the bank and once placed on the image; an image tile (`qti-gap-img`) stays plain. A placed word carries the part `drag drag-text` (new) next to `drag`, so a theme can tell a word from a tile. A placed chip no longer shrinks in a hotspot narrower than it (`qti-associable-hotspot`). An empty hotspot shows a dashed edge at rest, unless the interaction has `qti-unselected-hidden`.
+  - **Select point marker on any picture:** the marker gets a halo that follows its colour, white round a dark marker and black round a light one (lightness below or above 0.7, derived with relative colour syntax), so it stays visible on a dark or busy image. Set the colour with the new optional input `--cito-color-marker` (the primary by default) and the shape with `--cito-icon-marker` (a mask; the pin by default), with `--cito-marker-anchor` saying where that shape points: `-100%` stands it on the point by its bottom, like the pin, `-50%` centres it, for a ring or a star. `--qti-select-point-halo` overrides the derived halo. The marker's shape is now drawn by its `::before`, so the halo can follow it.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - Everything that sits in a sentence has one box. A text entry, an inline choice, a hottext, a gap-match chip and the gap it goes into are all the same height as a line of text (`--qti-line-height`, 30px at 16px), with the same padding: `--qti-inline-padding-block` above and below (`--cito-size-field`, 2px) and the new `--qti-inline-padding-inline` either side (one `--qti-spacing`, 8px). They share the field line height (`--qti-field-line-height`) too.
+
+  - **Inline choice** was about 6px shorter than a text entry: its trigger had `line-height: normal`.
+  - **Text entry and inline choice** have 8px either side instead of 16px; their correction badge sits 8px from the end, the same distance.
+  - **Hottext** takes the inline-field padding (was 2px 4px) and margins, so a word to select is the size of a field.
+  - **Gap match** chips take the inline-field padding instead of a chip's 8px × 0.8em, in the bank and in a gap, so a sentence with gaps is no taller than one without. A gap draws its dashed edge as an inset outline, not a border, so it is exactly the chip's size.
+
+  Six Kennisnet VRT baselines are regenerated: the two text entry items, the dropdown, the two hottext items and the gap-match item. Those with gaps or hottext get shorter (the gap-match item from 608px to 462px).
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls (`test-prev`, `test-next`, item and section links, end attempt, ...) look neutral by default, and `test-next` is the primary action.
+
+  They used to be white with a blue border and black text, painted from the shared `--qti-component-*` tokens. Now the neutral look is a white button with a thin gray border and the surrounding text colour, with a faint gray hover, and `test-next` is solid dark with white text. There are no shadows, glows or transitions. The focus ring and the disabled look are unchanged.
+
+  The controls no longer read `--qti-component-border-color`, `--qti-component-background-color` or `--qti-component-color`, so changing those tokens repaints interactions and no longer the test controls. To repaint the controls, set the `--test-button-*` slots on the test:
+
+  - `--test-button-background-color`, `--test-button-color`, `--test-button-border-color`, `--test-button-hover-background-color` for the neutral look.
+  - New: `--test-button-primary-background-color`, `--test-button-primary-color`, `--test-button-primary-hover-background-color` for `test-next`. Setting the neutral slots no longer repaints `test-next`.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - One focus ring, and a neutral border by default.
+
+  - **Neutral border.** `--qti-border-color` is a grey derived from the base colours (`color-mix(in oklab, var(--cito-color-base-content) 45%, var(--cito-color-base-100))`, about 3.3:1 on white) instead of the primary colour, so fields, choices, tables and drops are no longer drawn in the brand blue at rest. The primary still marks what is active or selected. A brand that wants its colour on every edge sets `--qti-border-color: var(--qti-primary)`, as the Kennisnet sheet now does.
+  - **One focus ring.** `@mixin foc` is an `outline` (`--qti-focus-border-width` in `--qti-focus-color`, now the primary colour, `--qti-focus-offset` outside the box) on `:focus-visible`, not a `box-shadow` on `:focus`. A mouse click on a choice or a chip no longer shows a ring, and a focused chip keeps its lift. The theme no longer writes `outline: none` anywhere.
+    - A text entry is ringed on its host (`:focus-within`), around the border you see; the input inside draws no ring of its own (Chrome drew an orange one). An extended text is ringed on its textarea, an inline choice on its trigger, pushed out past the field's border (`--qti-focus-offset-past-border`) so it sits where a text entry's does. Rows in the inline choice menu are ringed inside (`--qti-focus-offset-inset`), because the menu clips.
+    - A choice with a radio or checkbox shown rings the control, as a native one does. A choice drawn as a box (`qti-input-control-hidden`) rings the whole box.
+    - A stacked choice is pulled out by the ring's reach less (`--qti-choice-outdent`), so the ring round its radio stays inside the column.
+    - Associate's bank chip gets the theme's ring; before, only a placed chip did.
+  - **`qti-simple-choice` takes focus on its host.** It no longer delegates focus into its shadow root, and its `part="control"` no longer has a `tabindex`. The host already carried `tabindex="0"` and handled the keys. Delegating meant the host never matched `:focus-visible`, so a theme could not ring it, and a choice whose control is hidden (`qti-input-control-hidden`) had nothing to delegate to and could not be reached with Tab at all. `document.activeElement` is the choice, as before.
+
+  The two Kennisnet multiple-choice VRT baselines are regenerated: their radios and checkboxes sit 4px further right, inside the prose edge, so a focus ring round them stays inside the column. Nothing else in the suite moved.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The chip you drag is opaque and raised.
+
+  - **No more half-transparent clone.** The drag code no longer writes `opacity: 0.8` on the clone, and a dropped chip no longer fades in from 0.8. It also no longer copies the chip's resting `box-shadow` onto the clone inline, where it outranked the theme.
+  - **The theme raises it.** A chip in flight (`[data-drag-clone]`) takes `--qti-drag-elevation`, a soft shadow from the text colour. Set your own with the new optional input `--cito-shadow-drag` (any `box-shadow`, `none` for flat). A graphic-gap-match image tile stays as it is.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The hole a lifted or spent chip leaves is a tint of the primary colour with an inset shadow and no border, in every theme (`--qti-placeholder-bg`, `--qti-placeholder-shadow`). Before, the theme left the resting chip there without its label: a bordered white box by default, and a solid block for a brand with filled chips. The rule is a bare `:state(placeholder)` in the `interactions.states` layer, so a brand restyles the hole with the same selector and no specificity contest. Graphic gap match keeps its own placeholder.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-well` and `qti-bordered` are drawn by the theme.
+
+  The QTI 3 shared CSS the theme ships (vocabulary §2.12) leaves their colours to hooks it never defines, so a `.qti-bordered` box drew no border at all (its `border` declaration pointed at an undefined `--table-border-color` and was dropped), and a `.qti-well` got its padding and nothing else. The theme now fills those hooks from its own tokens: `--table-border-color` is `--qti-border-color`, `--foreground` the text colour, and a well is `--qti-color-base-200` inside `--qti-border` with no inset shadow (`--well-bg`, `--well-border`, `--well-box-shadow`). Its corner follows `--qti-radius-box` instead of a fixed 4px. A brand that restyles its borders restyles both with them.
+
+  One Kennisnet VRT baseline is regenerated: _Woorden selecteren (niet herkenbaar)_ wraps its sentences in `qti-bordered`, which now shows its border (4px taller).
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - Items read more comfortably by default: a taller line height, columns that start level, choices aligned with the prose, and air around inline fields.
+
+  - **Line height.** `qti-item-body` sets `line-height: var(--qti-line-height)`. Browsers and normalize sheets leave it at about 1.15, which put every sentence against the next. The token is derived from the height of an inline field (a field line, plus its block padding and border, about 30px for 16px text), so a line holding a text entry is no taller than the lines around it. Rendered items only: an editor document keeps its own. Re-value `--qti-line-height` to change it, or set it to `normal` to get the old look back. **Items get taller**, from 2% for a short item to about 30% for a matrix or a hottext, so a host that fixes the height of an item box may need more room.
+  - **Aligned tops.** A `qti-prompt` no longer carries space above itself, and the first child of a `qti-layout-col*` starts at the column's top edge. Side-by-side columns line up whatever opens them: a heading, a paragraph or an interaction.
+  - **Inline elements.** `qti-text-entry-interaction`, `qti-inline-choice-interaction` and `qti-gap` get `var(--qti-inline-gap)` of margin on both sides (a quarter of the spacing unit), so they no longer touch the words around them. Text entry and inline choice also take a block padding of `var(--qti-inline-padding-block)` (a quarter of the spacing unit, not a whole one), so the line holding a field stays close to the height of the lines around it. Both tokens are re-valued on the host or any ancestor.
+  - **Choices line up with the text.** A choice with a visible control is pulled out by the room it reserves for its selected paint (`--qti-choice-outdent`, its padding plus its border), so the radio or checkbox sits on the same edge as the paragraphs around it and the selected paint reaches into the gutter. Set `--qti-choice-outdent: 0` for the old indent, or inside a box that clips its content.
+  - **Choice spacing.** `qti-choice-interaction` no longer puts a fixed `10px` between its choices: its gap is `--qti-choice-gap`, `0` by default, because each choice's own padding already spaces a list. The theme sets it to the spacing unit for choices drawn as boxes (`qti-input-control-hidden`), where the visible borders need air between them.
+
+  The Kennisnet VRT baselines are regenerated: every item is 8px to 310px taller, and stacked choices sit one padding further left, level with the prompt.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls take their colours from the theme, and everything a candidate presses answers the press.
+
+  - **Test controls** (`test-next`, `test-prev`, item and section links, submit, check, end attempt, bookmark, the text-to-speech buttons) read the theme's tier-1 tokens instead of literal colours. The neutral button is the page's surface (`--cito-color-base-100`) with the theme's border; `test-next` is filled with `--cito-color-neutral` and labelled in `--cito-color-neutral-content`. Hover and press mix the content colour into the fill (`--qti-hover-mix`, `--qti-active-mix`). Without the theme they fall back to the system colours `Canvas`, `CanvasText` and `Highlight`, so they follow the page's `color-scheme`. Every `--test-button-*` slot still works; new are `--test-button-active-background-color` and `--test-button-primary-active-background-color`. Hover now applies only on a device with a fine pointer, so it no longer sticks after a tap.
+  - **A press is visible.** Test controls, choices and chips (gap-match, match, associate, order) darken a little while pressed (`@mixin press`), paint only.
+  - **Text to speech.** The highlights are see-through tints of `--cito-color-info` (the element being read) and `--cito-color-warning` (the word being spoken), re-valued with `--test-tts-element-highlight` and `--test-tts-word-highlight`. A pressed TTS button falls back to `Highlight` without the theme.
+  - **A choice with a radio or checkbox shown has no fill**: it shows the page behind it, not the theme's white surface. Its selection and its correction are painted on the radio or checkbox, as before. A choice drawn as a box (`qti-input-control-hidden`) keeps its fill. While pressed, a chip that has been lifted (its placeholder) does not darken.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - A small set of tier-1 tokens, modelled on a daisyUI theme block, is now enough to give QTI its own look. They are the public styling API, so they carry the public prefix `cito-`, like the `cito-` events; everything derived from them keeps `qti-`. Everything else is derived from them with `color-mix(in oklab, …)`. See `packages/qti-theme/CONTRACT.md` §8 and [the host notes](../plans/host-migration/README.md).
+
+  - **Colours**, in oklch: `--cito-color-base-100` and `--cito-color-base-content` (the surface and what is drawn on it); `--cito-color-primary`, `--cito-color-neutral` and `--cito-color-chip`, each with a `-content` colour that reads on it; and `--cito-color-info`, `--cito-color-success`, `--cito-color-warning`, `--cito-color-error`. The base and neutral colours are `light-dark()` pairs, so an item follows the `color-scheme` of the page it sits in. The theme sets no `color-scheme` itself, so a page that declares none stays light. Two darker surfaces, `--qti-color-base-200` and `-300`, are derived from these.
+  - **Chips**: `--cito-color-chip` and `--cito-color-chip-content` are a drag chip's fill and text. They default to the surface and the surrounding text (an outlined chip); a brand sets them for filled chips.
+  - **Radii**: `--cito-radius-field` (text entry, choice, dropdown), `--cito-radius-selector` (checkbox, chip, hottext), `--cito-radius-box` (menu, validation message, modal feedback, rubric block, match table and cards). Selector and box default to the field radius.
+  - **Sizes**: `--cito-size-selector` (a quarter of a radio or checkbox) and `--cito-size-field` (an inline field's block padding).
+  - **`--cito-border-width`**, the width of every border. `--qti-border` stays the border shorthand.
+  - **`--cito-font-family`**, the item's typeface, set on `qti-item-body`. `inherit` by default, so an item keeps the page's font.
+  - **`--cito-depth`**, 0 (default) or 1: at 1 a chip at rest gets a small lift under it.
+
+  Today's names still work. `--qti-primary`, `--qti-primary-fg`, `--qti-success`, `--qti-warning`, `--qti-error`, `--qti-info`, `--qti-bg`, `--qti-border-thickness`, `--qti-border-radius` and `--qti-control-size` are now aliases of the tier-1 tokens, and the rules keep reading them, so a brand that sets them looks as before.
+
+  Tints that mixed in sRGB and with `white` (the active surface, the placeholder, the correction and answer-key washes, the validation message, the rubric block) now mix in oklab with the theme's surface, so they follow a dark or tinted base. The difference on a light page is at most 3 of 255 in a channel; the Kennisnet VRT baselines pass unchanged. The literal greys left in the theme (the slider tick, a placed chip's ring in gap-match and graphic-gap-match, the match table's cells, the graphic-order pin) now read the base colours.
+
+  `--qti-inline-padding-block` now reads `--cito-size-field` instead of a quarter of `--qti-spacing`. It is the same 0.125rem; a host that changes `--qti-spacing` no longer changes an inline field's block padding with it.
+
+  The `--cito-*` tokens are inputs: the theme never declares them, it reads each one (with its default as the fallback) into a `--qti-` name. So a value set on the page reaches every item, including items inside a shadow root that adopts the theme, such as `test-container`. `--cito-color-border` is an optional extra input for a brand that wants every edge in its own colour.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The theme's tokens are sorted into tiers, written down in `packages/qti-theme/CONTRACT.md` §8: tier 1 are the brand knobs (the only tokens with literal values), tier 2 is derived from them, tier 3 are the variables the theme hands to a component. In `qti-variables.css` a tier-1 token is tagged `/* t1 */`.
+
+  Every token block is now also declared on `[data-qti-theme]`. Set tier-1 tokens on an element with that attribute and the derived tokens inside it follow, so a part of a page can carry its own theme. Before, a derived token such as `--qti-bg-active` kept the value worked out at `:root`, whatever an ancestor of the item set.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - End attempt and upload look like the test controls.
+
+  - **End attempt:** its button (`::part(button)`) is drawn like Previous and the item links: the theme's surface, border and radius, with the same hover, press and focus ring, and muted when disabled. It was the browser's default button.
+  - **Upload:** the file input carries a new part, `input`, and its button (`::part(input)::file-selector-button`) is drawn the same way; the file name beside it takes the item's type and colour.
+  - Both read the `--test-button-*` slots with the test controls' defaults, through the new `@mixin test-button`, so a host that repaints its test buttons repaints these too.
+
+### Patch Changes
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - Radio and checkbox marks sit dead centre at any size, and a plain hottext has the field surface.
+
+  - **Marks:** `--qti-control-size` and the marks drawn inside a control (the radio's dot, the checkbox's tick box) are rounded to an even number of pixels. At a fractional size (19.2px with `--cito-size-selector: 0.3em`) the gap round the dot was fractional, the ring and the dot antialiased differently, and the dot looked off centre. At the default 16px nothing changes.
+  - **Hottext:** a hottext without `qti-input-control-hidden` or `qti-unselected-hidden` fills with the field surface (`--qti-bg`), as a text entry does, so on a tinted page or in a theme without borders a word still shows it can be picked. On a white page nothing changes.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - A chip placed in a drop now gets the theme's hover, press and focus ring (gap-match, match, associate, order). These rules were nested under `::part(drag)` and compiled to `:is(…::part(drag)):hover`, a selector the browser drops because a pseudo-element cannot sit inside `:is()`. They are written flat now and sit in the `interactions.states` layer, after the chip's own paint, so the hover and press tint win over it. A placed chip reached with Tab shows one solid `--qti-focus-color` outline. The order interaction's drop shows the theme ring on `:focus-visible` too. Two nested attribute rules after `::part()` (`[dragging]` on a placed chip, `[enabled]` on an order drop) are removed; they could never match.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The theme's keyboard focus ring now shows on the placed chip in graphic-gap-match and on the point in select-point. Those rules were nested under `::part()` and compiled to `:is(…::part(…)):focus-visible`, which matches nothing in any browser; they are written as one selector now. Graphic-gap-match bank chips and match targets get the theme ring too, where they showed the browser's default ring: they had no focus rule, and match's ring sat on the drop part, which never takes focus.
+
+  The build no longer wraps a `:state()` that follows `::part()` in its `[data-state]` fallback (`::part(drag):is(:state(x), [data-state~='x'])`). That form worked only because browsers parse `:is()` forgivingly; it is now emitted as plain `::part(drag):state(x)`, in a rule of its own when it shared a selector list with other selectors. No visible change.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-stamp` is no longer described as deprecated. Its JSDoc (and so the custom-elements manifest and the Storybook docs) said it would be removed, but it is the kept `stamp` plugin; the description now says what it renders.
+
 ## 10.0.0-next.10
 
 ### Minor Changes
