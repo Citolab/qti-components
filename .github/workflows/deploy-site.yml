@@ -22,7 +22,7 @@ permissions:
 jobs:
   check-release-type:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_run'
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
     outputs:
       is-dry-run: ${{ steps.check.outputs.is-dry-run }}
     steps:
