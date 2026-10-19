@@ -272,9 +272,66 @@ slots; they never re-value a tier-2 token to repaint one role.
 - **Interaction rules read tier 2 and 3.** A rule that needs a value no token offers gets a named
   tier-2 token, not a `calc()` at the call site (see the rhythm contract in `qti-variables.css`).
 
+## 9. Decisions behind the token set
+
+§8 says what the rules are. This records why, and what was tried and rejected, so the same ground is
+not walked twice.
+
+- **Shaped like a daisyUI theme.** A surface, its text colour, a few brand colours with their
+  `-content` partners, the four verdict colours, three radii, two sizes, a border width and a depth.
+  Everything else is derived, so a brand is a handful of values.
+- **The default is black and white.** Only the four verdict colours keep a hue; a brand adds its own.
+  Dark mode comes from `light-dark()` and the item's own text colour, not from a second token set.
+- **Interaction feel, as chosen for the default theme:**
+  - The focus ring shows on `:focus`, so also after a mouse pick, except on a chip, where it waits
+    for the release because a press may be the start of a drag. A text field rings on its host.
+  - A choice selects on pointer press.
+  - No grey hover or press washes.
+  - Borders distract on a tinted page, which is what the Soft preset shows.
+- **Rejected, and why:**
+  - _Declaring the `cito-` inputs on `:root, :host`._ The presets then never reached an item: every
+    shadow root that adopts the theme reset them to the default. Hence "inputs are never declared".
+  - _Mixing in `oklch`._ Two tinted colours drifted to a third hue (§8).
+  - _A theming story per interaction._ One editor page that shows every interaction under the
+    tier-1 controls replaced them.
+  - _`delegatesFocus`._ The host holds focus; the corrections' inner `tabindex` then made Tab stop
+    twice.
+  - _Opacity for disabled._ It faded the answer the candidate chose. A derived disabled colour is
+    used instead.
+
+## 10. Silent failures
+
+Each of these fails with no error and no effect, and most pass lint and tests. Check them in a
+browser.
+
+- **No pseudo-class or `:state()` after `::part()` inside a nested selector.** postcss-nesting turns
+  `&::part(drag) { &:hover {…} }` into `:is(…::part(drag)):hover`; a pseudo-element cannot sit inside
+  `:is()`, so the rule never matches. It left hover, focus and press dead on every placed chip. Write
+  the selector flat: `qti-gap-match-interaction qti-gap::part(drag):focus`.
+- **`::part(x):state(y)` gets no `[data-state]` fallback.** It only works where `:state()` works, and
+  a browser without `:state()` (Chrome 120) drops the whole selector list, so the build splits a mixed
+  list into two rules. See the header of `tools/postcss/custom-state-fallback.mjs`;
+  `tools/testing/legacy` covers old browsers.
+- **The QTI 3 shared CSS reads hooks it does not define** (`--well-bg`, `--well-border`,
+  `--well-box-shadow`, `--table-border-color`, `--foreground`). A `border` that names an undefined
+  variable is dropped whole, so `.qti-bordered` drew nothing until the theme filled them. Before
+  trusting a vocabulary class, check that its hooks have values.
+- **Fractional control sizes look off-centre.** A 19.2px radio put its dot at a fractional offset:
+  centred when measured, lopsided when antialiased. Control sizes round to 2px.
+- **Layout properties are rejected in the theme** (§7), including ones that look harmless, such as
+  `flex-shrink`. They go into the component's `*.styles.ts`.
+
 ---
 
-## 9. See also
+## 11. See also
+
+- **The theme editor** — Storybook `Implementation › Theming`
+  (`apps/e2e/src/stories/theming/theme-editor.stories.ts`). The tier-1 inputs are its controls, and
+  every interaction is on the page.
+- **The presets** — `.storybook/themes.css` (Default, Light, Dark, Kennisnet, Cito, Playful, Soft),
+  switched with `data-qti-theme` in `.storybook/preview.ts`. Each is a worked example of a brand made
+  of tier-1 values only.
+- **Host notes** — `plans/host-migration/README.md`, row "Tier-1 theme tokens".
 
 - **`DROP-SIZING.md`** — the drop/drag sizing vocabulary: which four tokens exist, why a drop is
   either a slot or a card, why the inset is additive, and why a chip never resizes when it lands.
