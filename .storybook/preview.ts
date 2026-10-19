@@ -95,8 +95,8 @@ const preview: Preview = {
     /*
      * The theme presets in the toolbar. Each sets `data-qti-theme` on <html>; themes.css gives each
      * value its tier-1 tokens, and the theme re-derives everything else there. `default` sets
-     * nothing, so every story and test renders as a host with no configuration would. The Kennisnet
-     * VRT suite does not depend on this: it adopts kennisnet.css into its own item shadows.
+     * nothing, so every story and test renders as a host with no configuration would. The Corrections
+     * visual regression suite pins `kennisnet` with its `globals`, so it always renders that preset.
      */
     withThemeByDataAttribute({
       themes: {
@@ -153,7 +153,6 @@ const preview: Preview = {
             'Overview',
             'Navigation',
             'Examples',
-            'Persist and restore',
             'Plugins',
             ['Text to speech', 'Bookmark', 'Print', 'Scoring', 'Stamp', 'View'],
             'Building blocks'
@@ -461,7 +460,7 @@ const preview: Preview = {
             ]
           ],
           'Corrections',
-          ['Kennisnet'],
+          ['Overview', 'Formative test'],
           'Extending QTI',
           ['Creating an extended interaction', 'Creating a plugin', 'Public API'],
           'API Reference',

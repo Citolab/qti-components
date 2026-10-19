@@ -20,7 +20,8 @@ import type { QtiTestState } from '../../../types/qti-test-state';
  * calls and listens to, exercised through nothing else. A host that depends on one of these
  * members should break a story here, not in production.
  *
- * Persistence (`state`, `qti-state-changed`) has its own story: Persist and restore.
+ * Persistence (`state`, `cito-test-state-changed`) is exercised by the Implementation / State story
+ * (docs/state.stories.ts) and, in detail, by test-state.spec.ts.
  */
 const meta: Meta = {
   title: 'API Reference/Test host API',

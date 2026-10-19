@@ -244,8 +244,8 @@
      * THE body text colour — the foreground half of the --qti-bg / --qti-fg pair.
      *
      * `inherit`, deliberately: the base theme does not impose a text colour. What a candidate reads
-     * is the host page's, and a brand that wants its own sets this token (kennisnet.css declares
-     * #3e144e). A base theme that cannot pick the colour also cannot pick a failing one.
+     * is the host page's, and a brand that wants its own sets this token, or paints the page in its
+     * base-content colour as the Storybook presets do (Kennisnet's #3e144e reaches the text that way). A base theme that cannot pick the colour also cannot pick a failing one.
      *
      * This is a FIX that changes nothing, which is the point. It read `var(#aaaaaa)` — a value
      * wrapped in var() by mistake in 925bdf14. var() takes a custom-property name, so `#aaaaaa` made
@@ -271,7 +271,7 @@
      * meet the 3:1 WCAG asks of a field's edge. It was the primary colour, which drew every field,
      * table and drop in the brand's blue at rest; the primary now marks only what is active or
      * selected (--qti-border-active). A brand that wants its colour on every edge sets this token,
-     * as kennisnet.css does.
+     * as the Kennisnet preset does.
      */
     --qti-border-color: var(
       --cito-color-border,
@@ -285,10 +285,11 @@
        without the theme a well got its padding and nothing else. Filled from the theme's own
        tokens: a brand that restyles its borders restyles the well and the bordered box with them.
        A well is a tinted surface inside the theme's border (§1.1.6.2: border plus background, the
-       background chosen by the platform); base-200 is the theme's tint for that. */
+       background chosen by the platform); base-200 is the theme's tint for that, and a brand that
+       puts its items on a coloured page sets --cito-color-well (Kennisnet: white, like its cards). */
     --table-border-color: var(--qti-border-color);
     --foreground: var(--qti-color-base-content);
-    --well-bg: var(--qti-color-base-200);
+    --well-bg: var(--cito-color-well, var(--qti-color-base-200)); /* t1 input: --cito-color-well, optional */
     --well-border: var(--qti-border);
     --well-box-shadow: none;
 
@@ -329,14 +330,19 @@
      * Depth, worked out from --cito-depth (tier 1).
      *
      *   --qti-drag-lift       a chip at rest: a hard shadow under it, as tall as two borders. At
-     *                         depth 0 its colour mixes to nothing, so the chip is flat.
+     *                         depth 0 its colour mixes to nothing, so the chip is flat. A theme sets
+     *                         its own with --cito-shadow-chip (Kennisnet: a taller lift in its brand
+     *                         colour).
      *   --qti-drag-elevation  a chip in flight, at any depth: picked up is always off the page. A
      *                         theme sets its own with --cito-shadow-drag (`none` for flat).
      *   --qti-hover-mix       how much base-content a hover mixes into a fill.
      *   --qti-active-mix      how much a press mixes in: twice the hover, so a press reads as one.
      */
-    --qti-drag-lift: 0 calc(2 * var(--qti-border-width)) 0
-      color-mix(in oklab, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent);
+    --qti-drag-lift: var(
+      --cito-shadow-chip,
+      0 calc(2 * var(--qti-border-width)) 0
+        color-mix(in oklab, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent)
+    ); /* t1 input: --cito-shadow-chip, optional */
     --qti-drag-elevation: var(
       --cito-shadow-drag,
       0 var(--qti-spacing) calc(var(--qti-spacing) * 1.5)
@@ -349,6 +355,14 @@
     /* A chip's resting fill: the tier-1 chip colour. `press` reads --qti-<role>-fill, so a pressed
        chip darkens from the chip colour; other roles fall back to the component surface. */
     --qti-drag-fill: var(--qti-color-chip);
+    /* An order interaction's PLACED chip, when a brand gives it a look of its own: Kennisnet inverts
+       it (a white chip with dark text and a border on its filled bank) so a dropped answer reads as
+       settled. Optional and unset by default — then a placed order chip is the same chip as in the
+       bank. Unset, these compute to the guaranteed-invalid value, and the role slots they feed fall
+       back to the chip's own look. */
+    --qti-order-placed-fill: var(--cito-color-order-placed); /* t1 input, optional */
+    --qti-order-placed-color: var(--cito-color-order-placed-content); /* t1 input, optional */
+    --qti-order-placed-border-color: var(--cito-color-order-placed-border); /* t1 input, optional */
     --qti-active-mix: 16%; /* a press: the same mix, twice as far */
 
     /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime

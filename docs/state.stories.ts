@@ -3,7 +3,10 @@ import { expect, waitFor, within } from 'storybook/test';
 import '../.storybook/utilities.css';
 import { stateHost } from '../apps/e2e/src/stories/cookbook/state-host';
 import { GETTING_STARTED_TEST } from '../packages/qti-test/src/components/qti-test/getting-started.fixtures';
-import { getAssessmentItemFromTestContainerByDataTitle } from '../tools/testing/test-utils';
+import {
+  getAssessmentItemFromTestContainerByDataTitle,
+  getAssessmentItemsFromTestContainer
+} from '../tools/testing/test-utils';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiTestState } from '@qti-components/test';
@@ -61,6 +64,9 @@ export const SaveAndResume: StoryObj = {
     await step('A fresh test resumes from the saved state', async () => {
       canvas.getByText('Restart from saved state').click();
       await loadedItem(canvasElement, ITEM_2);
+      // It opens where the candidate left off, with only that item on screen.
+      const titles = (await getAssessmentItemsFromTestContainer(canvasElement))!.map(item => item.dataset.title);
+      expect(titles).toEqual([ITEM_2]);
 
       canvas.getByText('Previous').click();
       const item = await loadedItem(canvasElement, ITEM_1);

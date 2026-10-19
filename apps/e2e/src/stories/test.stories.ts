@@ -113,7 +113,6 @@ export const QtiTest: Story = {
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
             <nav class="flex justify-between p-2">
               <test-end-attempt>End attempt</test-end-attempt>
-              <test-show-correct-response>Show Correct</test-show-correct-response>
               <test-prev>Vorige</test-prev>
               <test-next>Volgende</test-next>
             </nav>

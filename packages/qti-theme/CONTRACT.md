@@ -65,7 +65,7 @@ values, so any layer can read a token declared in any other.
 
 ### qti-components.interactions.brand
 
-- A brand sheet's resting look (kennisnet.css). Above base, below states, so a state still wins.
+- A brand sheet's resting look (a host's own brand CSS). Above base, below states, so a state still wins.
 - Empty in the theme. Declares no tokens.
 
 ### qti-components.elements
@@ -219,8 +219,11 @@ derived keeps it. Older tier-1 names (`--qti-spacing`, `--qti-motion`, `--qti-fi
 Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows, and the
 optional ones: `--cito-color-border` for a brand that wants every edge in its own colour (Kennisnet),
 `--cito-color-chip-border` for a chip's edge, `--cito-icon-drag` and `--cito-color-drag-icon` for its
-handle, `--cito-shadow-drag` for a chip in flight, and `--cito-color-marker`, `--cito-icon-marker` and `--cito-marker-anchor` for the select-point
-marker.
+handle, `--cito-shadow-chip` for a chip at rest and `--cito-shadow-drag` for one in flight,
+`--cito-color-order-placed` / `-content` / `-border` for an order interaction's placed chip when a brand
+gives it its own look (Kennisnet inverts it), `--cito-color-well` for the fill of a `.qti-well` (a
+brand on a coloured page makes it white), and `--cito-color-marker`, `--cito-icon-marker` and
+`--cito-marker-anchor` for the select-point marker.
 
 **The `cito-` names are inputs, never declared by the theme.** Each is read once, with its default as
 the fallback, into a `qti-` name that every rule reads:
