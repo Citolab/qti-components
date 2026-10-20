@@ -158,6 +158,8 @@ const preview: Preview = {
             'Building blocks'
           ],
           'QTI Item',
+          // The native QTI elements that are not interactions, one entry each.
+          'Elements',
           'Interactions',
           // Each interaction is a folder: its Overview first, then the evidence topics (Choice is the
           // reference). Written out because Storybook reads storySort statically. A new interaction sorts

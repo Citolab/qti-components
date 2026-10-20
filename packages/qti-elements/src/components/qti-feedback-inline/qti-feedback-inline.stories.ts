@@ -15,7 +15,7 @@ type Story = StoryObj<QtiFeedbackInline & typeof args>;
  * # qti-feedback-inline
  */
 const meta: Meta<QtiFeedbackInline> = {
-  title: 'QTI Item/Elements/qti-feedback-inline',
+  title: 'Elements/qti-feedback-inline',
   component: 'qti-feedback-inline',
   args,
   argTypes,
@@ -29,6 +29,8 @@ const meta: Meta<QtiFeedbackInline> = {
 export default meta;
 
 export const FeedbackInline: Story = {
+  // Shown on the Docs page; out of the sidebar so the element is one entry there.
+  tags: ['!dev'],
   render: _args =>
     html` <qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

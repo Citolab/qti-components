@@ -9,6 +9,16 @@ Build and test check of 2026-10-09 (typecheck of the QTI layer, nothing run in a
 
 ## Unreleased after 9.3.0
 
+### Inline choices are as wide as their widest option (inline-choice autosize)
+
+Status: behaviour change
+Members: `configContext` (`inlineChoiceAutosize`)
+Do: nothing to keep working. An inline choice now measures its options and is as wide as the
+widest from the start, so choosing no longer widens the field and reflows the sentence. Items with
+a `qti-input-width-*` class are unchanged. To keep the old look (the field sized to the option shown),
+set `inlineChoiceAutosize: false` in `configContext`. The host does not set this option today.
+Evidence: read, not run
+
 ### Tier-1 theme tokens (feat/theme-tokens)
 
 Status: recommended; nothing breaks on upgrade

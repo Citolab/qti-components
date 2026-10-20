@@ -28,7 +28,8 @@ const meta: Meta = {
       expanded: false
     }
   },
-  tags: ['no-tests']
+  // Hidden from the sidebar for now: it needs a local scoring backend on port 3000 to show anything.
+  tags: ['no-tests', '!dev']
 };
 
 /*

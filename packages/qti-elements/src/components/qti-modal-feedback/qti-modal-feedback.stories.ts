@@ -16,7 +16,7 @@ type Story = StoryObj<QtiModalFeedback & typeof args>;
  * # qti-modal-feedback
  */
 const meta: Meta<QtiModalFeedback> = {
-  title: 'QTI Item/Elements/qti-modal-feedback',
+  title: 'Elements/qti-modal-feedback',
   component: 'qti-modal-feedback',
   args,
   argTypes,
@@ -30,6 +30,8 @@ const meta: Meta<QtiModalFeedback> = {
 export default meta;
 
 export const ModalFeedback: Story = {
+  // Shown on the Docs page; out of the sidebar so the element is one entry there.
+  tags: ['!dev'],
   render: _args =>
     html` <qti-assessment-item
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
