@@ -393,15 +393,16 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     ): Promise<void> {
       const sectionEl = this._findSection(sectionId);
       const navPartId = sectionEl?.closest('qti-test-part')?.identifier;
+      const itemIds = this._getSectionItemIds(sectionId);
 
       this.sessionContext = {
         ...this.sessionContext,
         navPartId,
         navSectionId: sectionId,
-        navItemRefId: null
+        // with navigate="item", the section's first item is the current position, so test-next/test-prev
+        // and item highlights have an item to work from
+        navItemRefId: this.navigate === 'item' ? (itemIds[0] ?? null) : null
       };
-
-      const itemIds = this._getSectionItemIds(sectionId);
 
       this._resetLoadingState();
       this._loadingState.expectedItems = itemIds.length;
