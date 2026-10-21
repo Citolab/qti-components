@@ -19,6 +19,20 @@
      */
     --qti-select-point-marker-color: var(--cito-color-marker, var(--qti-primary));
 
+    /*
+     * The picture narrows with its column and never grows past its own size; its height follows
+     * the aspect ratio. The component already sizes it so (::slotted(img) in
+     * qti-select-point-interaction.styles.ts), but reset.css gives every picture inside an
+     * interaction `max-width: none`, a light-DOM rule that outranks ::slotted(), so a 1024px
+     * picture overflowed a narrower column. Restated here for the picture alone (a direct child).
+     * A click is stored in the picture's own pixels and a marker is placed in percentages, so the
+     * answer is the same at any displayed size.
+     */
+    & > img {
+      max-width: 100%;
+      height: auto;
+    }
+
     /* One selector, not nested under `&::part(point)`: that compiled to `:is(…::part(point))`,
        which no browser accepts, so the ring never matched. */
     &::part(point):focus {
