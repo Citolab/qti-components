@@ -3,7 +3,7 @@ import { useArgs } from 'storybook/preview-api';
 
 import { getManifestInfo } from '@qti-components/loader';
 
-import packages from '../assets/packages.json';
+import { PACKAGE_NAMES, PACKAGES, type PackageName } from './packages.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -13,14 +13,13 @@ const meta: Meta = {
   title: 'QTI Test/Examples',
   argTypes: {
     packages: {
-      options: packages.packages,
+      options: PACKAGE_NAMES,
       control: { type: 'radio' }
     }
   },
   args: {
-    serverLocation: '/assets/api',
     itemIdentifier: undefined,
-    packages: 'examples'
+    packages: 'showcase'
   },
   parameters: {
     layout: 'fullscreen'
@@ -127,7 +126,7 @@ export const QtiTest: Story = {
   },
   loaders: [
     async ({ args }) => {
-      const { testURL } = await getManifestInfo(`${args.serverLocation}/${args.packages}/imsmanifest.xml`);
+      const { testURL } = await getManifestInfo(PACKAGES[args.packages as PackageName]);
       return { testURL };
     }
   ]

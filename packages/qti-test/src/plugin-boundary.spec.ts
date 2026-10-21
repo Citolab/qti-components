@@ -25,6 +25,8 @@ interface Plugin {
 }
 
 const PUBLIC_EVENTS_FROM_COMPONENTS = /^\.\.\/\.\.\/public-events$/; // the public event names and helpers
+/** A story runs a shared demo test: Getting started or the showcase (CLAUDE.md, Docs demos). */
+const DEMO_TEST_FROM_COMPONENTS = /^\.\.\/qti-test\/(?:getting-started|showcase)\.fixtures$/;
 const STYLES_FROM_COMPONENTS = /^\.\.\/styles$/; // the shared look of the test controls
 
 const PLUGINS: Plugin[] = [
@@ -38,7 +40,8 @@ const PLUGINS: Plugin[] = [
       /^\.\.\/\.\.\/plugin-state$/, // the typed read of a plugin's entry
       /^\.\.\/\.\.\/types\/qti-test-state$/, // the public state type
       /^\.\.\/qti-test\/qti-test$/, // the spec drives a test through its public element
-      /^@citolab\/qti-components$/ // the spec registers everything the way a host does
+      /^@citolab\/qti-components$/, // the spec registers everything the way a host does
+      DEMO_TEST_FROM_COMPONENTS
     ]
   },
   {
@@ -57,6 +60,7 @@ const PLUGINS: Plugin[] = [
     folders: ['components/test-stamp/'],
     reference: /test-stamp|TestStamp|stampContext/,
     allow: [
+      DEMO_TEST_FROM_COMPONENTS,
       PUBLIC_EVENTS_FROM_COMPONENTS,
       /^\.\.\/test-print-context\/test-print-context$/ // a story shows it next to the stamp
     ]
@@ -73,7 +77,7 @@ const PLUGINS: Plugin[] = [
     allow: [
       PUBLIC_EVENTS_FROM_COMPONENTS,
       /^\.\.\/\.\.\/types\/qti-test-state$/, // the public state type
-      /^\.\.\/qti-test\/getting-started\.fixtures$/ // a story runs the docs demo test (CLAUDE.md, Docs demos)
+      DEMO_TEST_FROM_COMPONENTS
     ]
   },
   {

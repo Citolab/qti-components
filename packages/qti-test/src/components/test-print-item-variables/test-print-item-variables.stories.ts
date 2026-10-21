@@ -1,5 +1,8 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
+import { expect, waitFor } from 'storybook/test';
+
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestPrintVariables } from './test-print-item-variables';
@@ -27,9 +30,14 @@ export const Default: Story = {
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
         ${template(args)}
-        <test-next>Volgende</test-next>
+        <test-next>Next</test-next>
       </test-navigation>
-    </qti-test>`
+    </qti-test>`,
+  play: async ({ canvasElement }) => {
+    const table = canvasElement.querySelector('test-print-item-variables')!;
+    // The first item's response variable is listed.
+    await waitFor(() => expect(table.shadowRoot?.textContent).toContain('RESPONSE'), { timeout: 15000 });
+  }
 };

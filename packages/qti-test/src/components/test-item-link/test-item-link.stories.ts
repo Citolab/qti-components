@@ -1,6 +1,8 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
 
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
+
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestItemLink } from './test-item-link';
 
@@ -25,7 +27,7 @@ export const Default: Story = {
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/api/biologie/assessment.xml"></test-container>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
         ${template(args, html`Link to item`)}
       </test-navigation>
     </qti-test>`
