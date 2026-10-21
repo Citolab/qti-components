@@ -1,5 +1,13 @@
 # @qti-components/theme
 
+## 2.3.0-next.3
+
+### Minor Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-layout-col*` columns now stack when their `qti-layout-row` is 767px wide or less, instead of when the viewport is. An item in a narrow pane or beside other content on a wide screen now collapses to one column too. The row is a size container (`container-type: inline-size`), so it must not be placed in a shrink-to-fit parent.
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - Four optional tier-1 inputs, so a brand can be made of tokens alone: `--cito-shadow-chip` sets a chip's resting lift (the shadow `--cito-depth` works out otherwise), and `--cito-color-order-placed`, `--cito-color-order-placed-content` and `--cito-color-order-placed-border` give an order interaction's placed chip a look of its own, and `--cito-color-well` fills a `.qti-well` (the base-200 tint otherwise). Unset, nothing changes.
+
 ## 2.3.0-next.2
 
 ### Minor Changes

@@ -28,7 +28,10 @@ export default meta;
 
 export const Default: Story = {
   render: args => {
-    return html`${template(args, html`<item-container item-url="/qti-item/example-choice-item.xml"></item-container>`)}`;
+    return html`${template(
+      args,
+      html`<item-container item-url="/assets/qti-item/example-choice-item.xml"></item-container>`
+    )}`;
   }
 };
 

@@ -103,8 +103,8 @@ export const WithConfigContextEmpty: Story = {
 };
 
 /**
- * Autosizing is opt-in through `configContext.inlineChoiceAutosize`. With it off (the default) the
- * trigger keeps the theme's base width and a long option is clipped to it; with it on the component
+ * Autosizing is on by default; a host turns it off with `configContext.inlineChoiceAutosize: false`.
+ * Turned off, the trigger keeps the theme's base width and a long option is clipped to it; on, the component
  * measures the widest option and writes the result to `--qti-inline-choice-width` as an inline style
  * ON THE TRIGGER, inside the shadow root, so the closed trigger is already wide enough for whatever
  * the candidate picks. The property is written there rather than on the host so the same mixin works
@@ -117,19 +117,19 @@ export const WithConfigContextEmpty: Story = {
  * is committed on the detached template clone, before the fragment is inserted, so it lands first.
  */
 export const AutosizeViaConfigContext: Story = {
-  name: 'Config Wrapper: inlineChoiceAutosize = true',
+  name: 'Config Wrapper: inlineChoiceAutosize on (default) and false',
   render: () => html`
     <p>
-      Default (no autosize):
-      <qti-inline-choice-interaction data-testid="plain">
+      Autosize off:
+      <qti-inline-choice-interaction data-testid="plain" .configContext=${{ inlineChoiceAutosize: false }}>
         <qti-inline-choice identifier="S">Ely</qti-inline-choice>
         <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
       </qti-inline-choice-interaction>
     </p>
 
     <p>
-      Autosized:
-      <qti-inline-choice-interaction data-testid="autosized" .configContext=${{ inlineChoiceAutosize: true }}>
+      Default (autosized):
+      <qti-inline-choice-interaction data-testid="autosized">
         <qti-inline-choice identifier="S">Ely</qti-inline-choice>
         <qti-inline-choice identifier="L">Kingston upon Kingston-upon-Hull</qti-inline-choice>
       </qti-inline-choice-interaction>
@@ -163,7 +163,7 @@ export const AutosizeViaConfigContext: Story = {
       });
     });
 
-    await step('Interaction without the config keeps the width unset', async () => {
+    await step('Interaction with autosize off keeps the width unset', async () => {
       expect(triggerOf(plain)?.style.getPropertyValue('--qti-inline-choice-width') ?? '').toBe('');
       // and nothing is written to the host either, by anyone
       expect(plain.style.getPropertyValue('--qti-inline-choice-width')).toBe('');

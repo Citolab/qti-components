@@ -56,7 +56,7 @@ addons.setConfig({
       badge: {
         text: 'Stable',
         style: { backgroundColor: '#dafbe1', color: '#116329' },
-        tooltip: 'Stable: part of the public API, covered by evidence stories'
+        tooltip: 'Stable: part of the public API, covered by evidence stories, no known failures'
       },
       display: { sidebar: [{ type: 'group', skipInherited: false }], toolbar: false, mdx: false }
     },

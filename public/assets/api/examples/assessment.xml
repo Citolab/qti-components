@@ -16,9 +16,6 @@
       title="examples-a1"
       visible="true"
     >
-      <qti-assessment-item-ref identifier="ITM-info_start" href="items/info_start.xml"
-        category="dep-informational" />
-
 
       <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml" />
       <qti-assessment-item-ref identifier="ITM-choice_multiple" href="items/choice_multiple.xml" />
@@ -42,9 +39,6 @@
       <qti-assessment-item-ref identifier="ITM-position_object" href="items/position_object.xml" />
       <qti-assessment-item-ref identifier="ITM-select_point" href="items/select_point.xml" />
       <qti-assessment-item-ref identifier="ITM-slider" href="items/slider.xml" />
-
-      <qti-assessment-item-ref identifier="ITM-info_end" href="items/info_end.xml"
-        category="dep-informational" />
 
     </qti-assessment-section>
   </qti-test-part>

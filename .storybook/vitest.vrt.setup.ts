@@ -163,8 +163,8 @@ const vrtAnnotations = {
       ((root as HTMLElement).matches?.(CAPTURE_TARGET)
         ? (root as HTMLElement)
         : (root.querySelector(CAPTURE_TARGET) as HTMLElement)) ?? (root as HTMLElement);
-    // The Kennisnet brand is applied entirely by the story's own decorator, which adopts kennisnet.css
-    // into each item's shadow root (the overlay carries no scoping class — adoption is the scoping).
+    // The Kennisnet brand is the theme preset the suite's `globals` select: `data-qti-theme` on <html>,
+    // set by the theme decorator, and its tier-1 tokens inherit into each item's shadow root.
     // Nothing to toggle on the document here.
     stabilizeStyles(target.ownerDocument);
     await waitForRenderStable(root);

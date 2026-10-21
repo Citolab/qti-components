@@ -1,8 +1,14 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
-import type { StoryObj, Meta } from '@storybook/web-components-vite';
+import vh5bg1eV2Png from './fixtures/VH5BG1e_v2.png';
+import hotspotPng from './fixtures/hotspot.png';
+import mapCapeCodSvg from './fixtures/map_cape_cod.svg';
+import ukPng from './fixtures/uk.png';
+import ukairPng from './fixtures/ukair.png';
+
 import type { QtiHotspotInteraction } from './qti-hotspot-interaction';
+import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
 const { events, args, argTypes, template } = getStorybookHelpers('qti-hotspot-interaction', {
   excludeCategories: ['methods', 'events', 'properties']
@@ -34,7 +40,7 @@ export const Circle: Story = {
     template(
       args,
       html`
-        <img src="assets/qti-hotspot-interaction/uk.png" height="280" width="206" />
+        <img src=${ukPng} height="280" width="206" />
         <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -51,7 +57,7 @@ export const CircleSelectionsLight: Story = {
         class: 'qti-selections-light'
       },
       html`
-        <img src="assets/qti-hotspot-interaction/uk.png" height="280" width="206" />
+        <img src=${ukPng} height="280" width="206" />
         <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -68,7 +74,7 @@ export const CircleSelectionsDark: Story = {
         class: 'qti-selections-dark'
       },
       html`
-        <img src="assets/qti-hotspot-interaction/uk.png" height="280" width="206" />
+        <img src=${ukPng} height="280" width="206" />
         <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -85,7 +91,7 @@ export const CircleUnselectedHidden: Story = {
         class: 'qti-unselected-hidden'
       },
       html`
-        <img src="assets/qti-hotspot-interaction/uk.png" height="280" width="206" />
+        <img src=${ukPng} height="280" width="206" />
         <qti-hotspot-choice coords="77,115,10" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="118,184,10" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="150,235,10" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -100,7 +106,7 @@ export const Circle2: Story = {
       args,
       html`
         <img
-          src="assets/qti-hotspot-interaction/map_cape_cod.svg"
+          src=${mapCapeCodSvg}
           width="700"
           height="550"
           alt="a map of Cape Cod Massachusetts with 4 lighthouse icons distributed on the outer Cape"
@@ -119,7 +125,7 @@ export const Circle3: Story = {
       args,
       html`
         <qti-prompt>Which one is Glasgow?</qti-prompt>
-        <img type="image/png" width="206" height="280" src="assets/qti-hotspot-interaction/ukair.png" />
+        <img type="image/png" width="206" height="280" src=${ukairPng} />
         <qti-hotspot-choice shape="circle" coords="77,115,8" identifier="A"></qti-hotspot-choice>
         <qti-hotspot-choice shape="circle" coords="118,184,8" identifier="B"></qti-hotspot-choice>
         <qti-hotspot-choice shape="circle" coords="150,235,8" identifier="C"></qti-hotspot-choice>
@@ -136,7 +142,7 @@ export const Rect = {
         <qti-prompt>
           <strong>Cliquer sur le nom des organes où passent les aliments.</strong>
         </qti-prompt>
-        <img src="assets/qti-hotspot-interaction/hotspot.PNG" width="688" height="558" />
+        <img src=${hotspotPng} width="688" height="558" />
         <qti-hotspot-choice identifier="hotspot_1" shape="rect" coords="484,68,655,112"></qti-hotspot-choice>
         <qti-hotspot-choice identifier="hotspot_2" shape="rect" coords="18,67,190,112"></qti-hotspot-choice>
         <qti-hotspot-choice identifier="hotspot_3" shape="rect" coords="19,178,191,221"></qti-hotspot-choice>
@@ -236,7 +242,7 @@ const polyChoices = html`
 export const Poly: Story = {
   render: () => html`
     <qti-hotspot-interaction max-choices="0">
-      <img src="assets//qti-hotspot-interaction/VH5BG1e_v2.png" width="602" height="452" />
+      <img src=${vh5bg1eV2Png} width="602" height="452" />
       ${polyChoices}
     </qti-hotspot-interaction>
   `
@@ -245,7 +251,7 @@ export const Poly: Story = {
 export const PolyResponsive: Story = {
   render: () => html`
     <qti-hotspot-interaction max-choices="0">
-      <img src="assets//qti-hotspot-interaction/VH5BG1e_v2.png" />
+      <img src=${vh5bg1eV2Png} />
       ${polyChoices}
     </qti-hotspot-interaction>
   `

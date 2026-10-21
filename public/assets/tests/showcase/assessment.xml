@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="showcase"
+                     title="Showcase">
+    <qti-test-part identifier="PART001" navigation-mode="nonlinear" submission-mode="individual">
+        <qti-assessment-section identifier="choosing" title="Choosing" visible="true">
+            <qti-assessment-item-ref identifier="ITEM001" href="ITEM001.xml"/>
+            <qti-assessment-item-ref identifier="ITEM002" href="ITEM002.xml"/>
+            <qti-assessment-item-ref identifier="ITEM028" href="ITEM028.xml"/>
+            <qti-assessment-item-ref identifier="ITEM006" href="ITEM006.xml"/>
+            <qti-assessment-item-ref identifier="ITEM010" href="ITEM010.xml"/>
+            <qti-assessment-item-ref identifier="ITEM011" href="ITEM011.xml"/>
+            <qti-assessment-item-ref identifier="ITEM012" href="ITEM012.xml"/>
+        </qti-assessment-section>
+        <qti-assessment-section identifier="writing" title="Writing" visible="true">
+            <qti-assessment-item-ref identifier="ITEM003" href="ITEM003.xml"/>
+            <qti-assessment-item-ref identifier="ITEM004" href="ITEM004.xml"/>
+            <qti-assessment-item-ref identifier="ITEM005" href="ITEM005.xml"/>
+        </qti-assessment-section>
+        <qti-assessment-section identifier="dragging-and-ordering" title="Dragging and ordering" visible="true">
+            <qti-assessment-item-ref identifier="ITEM007" href="ITEM007.xml"/>
+            <qti-assessment-item-ref identifier="ITEM008" href="ITEM008.xml"/>
+            <qti-assessment-item-ref identifier="ITEM009" href="ITEM009.xml"/>
+            <qti-assessment-item-ref identifier="ITEM017" href="ITEM017.xml"/>
+            <qti-assessment-item-ref identifier="ITEM022" href="ITEM022.xml"/>
+            <qti-assessment-item-ref identifier="ITEM015" href="ITEM015.xml"/>
+            <qti-assessment-item-ref identifier="ITEM013" href="ITEM013.xml"/>
+            <qti-assessment-item-ref identifier="ITEM014" href="ITEM014.xml"/>
+        </qti-assessment-section>
+        <qti-assessment-section identifier="pointing-at-images" title="Pointing at images" visible="true">
+            <qti-assessment-item-ref identifier="ITEM018" href="ITEM018.xml"/>
+            <qti-assessment-item-ref identifier="ITEM016" href="ITEM016.xml"/>
+            <qti-assessment-item-ref identifier="ITEM020" href="ITEM020.xml"/>
+            <qti-assessment-item-ref identifier="ITEM021" href="ITEM021.xml"/>
+            <qti-assessment-item-ref identifier="ITEM019" href="ITEM019.xml"/>
+            <qti-assessment-item-ref identifier="ITEM025" href="ITEM025.xml"/>
+        </qti-assessment-section>
+        <qti-assessment-section identifier="other" title="Other" visible="true">
+            <qti-assessment-item-ref identifier="ITEM023" href="ITEM023.xml"/>
+            <qti-assessment-item-ref identifier="ITEM024" href="ITEM024.xml"/>
+            <qti-assessment-item-ref identifier="ITEM026" href="ITEM026.xml"/>
+            <qti-assessment-item-ref identifier="ITEM027" href="ITEM027.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

@@ -4,6 +4,7 @@ import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import '../../../../../.storybook/utilities.css';
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../../tools/testing/test-utils';
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { TestBookmark } from './test-bookmark';
 import type { QtiTest } from '../qti-test/qti-test';
@@ -48,13 +49,13 @@ export const Default: Story = {
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
         ${template(args)}
       </test-navigation>
     </qti-test>`
 };
 
-const TEST_URL = '/assets/qti-test-package/assessment.xml';
+const TEST_URL = SHOWCASE_TEST;
 
 /** The text of an element with its whitespace collapsed. */
 const textOf = (element: Element | null | undefined) => element?.textContent?.replace(/\s+/g, ' ').trim();
@@ -107,8 +108,8 @@ export const HorizontalPlayer: Story = {
     const links = () => [...canvasElement.querySelectorAll('footer test-item-link')];
     const starred = () => links().filter(link => textOf(link)?.includes('★'));
 
-    // 1 Wait for the first item ("Info Start"); nothing is marked yet
-    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
+    // 1 Wait for the first item; nothing is marked yet
+    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Multiple choice, one answer');
     await waitFor(() => expect(bookmark).not.toHaveAttribute('disabled'));
     expect(bookmark).toHaveAttribute('aria-pressed', 'false');
     expect(qtiTest.state.session.plugins).toBeUndefined();
@@ -191,7 +192,7 @@ export const VerticalPlayer: Story = {
     const total = () => textOf(canvasElement.querySelector('test-stamp.count'));
     const buttons = () => deepAll<TestBookmark>(canvasElement, 'qti-assessment-item-ref test-bookmark');
 
-    // 1 The first section holds one item; nothing is marked
+    // 1 The first section's items each have a button; nothing is marked
     await waitFor(() => expect(buttons().length).toBeGreaterThan(0));
     await waitFor(() => expect(total()).toBe('0 bookmarked'));
 

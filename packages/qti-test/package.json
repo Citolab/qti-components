@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/test",
   "description": "QTI test utilities",
-  "version": "2.0.0-next.9",
+  "version": "2.0.0-next.11",
   "author": "",
   "dependencies": {
     "@heximal/templates": "catalog:",

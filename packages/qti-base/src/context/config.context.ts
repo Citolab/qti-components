@@ -87,8 +87,9 @@ export interface ConfigContext {
   inlineChoicePrompt?: string;
 
   /**
-   * If true, the inline choice interaction automatically measures the widest option and sizes the
-   * trigger button to match. Defaults to false.
+   * The inline choice interaction measures the widest option and sizes the trigger to match, so
+   * choosing an option never changes the field's width. Defaults to true; set false to size the
+   * field to the option shown.
    * When a `qti-input-width-*` class is present on the interaction, that class width always takes
    * precedence and autosizing is skipped regardless of this setting.
    */

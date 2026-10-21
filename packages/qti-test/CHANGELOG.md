@@ -1,5 +1,26 @@
 # @qti-components/test
 
+## 2.0.0-next.11
+
+### Minor Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - New `<test-print-state>`: drop it anywhere inside `<qti-test>` to see the test's state (`qtiTest.state`) as a tree you can fold open and shut. It follows every `cito-test-state-changed`. A debug helper, next to `<test-print-context>` and `<test-print-item-variables>`.
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/theme@2.3.0-next.3
+  - @qti-components/interactions@1.10.5-next.5
+  - @qti-components/elements@1.10.0-next.4
+  - @qti-components/processing@1.6.1-next.3
+
+## 2.0.0-next.10
+
+### Patch Changes
+
+- [#335](https://github.com/Citolab/qti-components/pull/335) [`e0aed5d`](https://github.com/Citolab/qti-components/commit/e0aed5d24309fef6dbe350b503d86e0e2bc6064f) Thanks [@herrKlein](https://github.com/herrKlein)! - With `navigate="item"`, a `test-section-link` (a `cito-test-navigate` request of type `section`) now makes the section's first item the active one. Before, no item was active, so `test-next` and `test-prev` stayed disabled and item links highlighted nothing. The whole section still loads, and `navigate="section"` is unchanged. Since that first item is now the active item, `test-check-item`, `test-end-attempt` and the scoring buttons act on it. Hosts: see "Section link in item mode" in `plans/host-migration/kennisnet.md` and `plans/host-migration/citotestuit.md` ([#332](https://github.com/Citolab/qti-components/issues/332)).
+
 ## 2.0.0-next.9
 
 ### Minor Changes

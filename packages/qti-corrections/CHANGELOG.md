@@ -1,5 +1,38 @@
 # @qti-components/corrections
 
+## 0.5.0-next.6
+
+### Minor Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-show-correct-response>` is supported again (no longer deprecated) and is now a real button: it has the `button` role, takes focus, and toggles on a click anywhere on it and on Enter or Space. Before, only a click on its inner text worked.
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/inline-choice-interaction@3.0.0-next.3
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/test@2.0.0-next.11
+  - @qti-components/interactions@1.10.5-next.5
+  - @qti-components/associate-interaction@1.1.7-next.3
+  - @qti-components/choice-interaction@1.2.0-next.3
+  - @qti-components/interactions-core@2.2.0-next.4
+  - @qti-components/extended-text-interaction@2.0.0-next.4
+  - @qti-components/gap-match-interaction@1.2.1-next.3
+  - @qti-components/graphic-associate-interaction@1.1.6-next.3
+  - @qti-components/graphic-gap-match-interaction@1.1.6-next.5
+  - @qti-components/graphic-order-interaction@1.2.2-next.3
+  - @qti-components/hotspot-interaction@1.1.6-next.3
+  - @qti-components/hottext-interaction@1.2.1-next.3
+  - @qti-components/match-interaction@2.1.0-next.3
+  - @qti-components/order-interaction@2.0.1-next.3
+  - @qti-components/portable-custom-interaction@1.3.0-next.5
+  - @qti-components/select-point-interaction@1.1.6-next.3
+  - @qti-components/slider-interaction@1.1.6-next.4
+  - @qti-components/text-entry-interaction@1.1.7-next.3
+  - @qti-components/elements@1.10.0-next.4
+  - @qti-components/item@1.5.1-next.4
+  - @qti-components/processing@1.6.1-next.3
+
 ## 0.5.0-next.5
 
 ### Minor Changes

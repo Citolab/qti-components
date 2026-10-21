@@ -6,6 +6,16 @@ run.
 
 ## Unreleased after 9.3.0
 
+### Inline choices are as wide as their widest option (inline-choice autosize)
+
+Status: behaviour change
+Members: `configContext` (`inlineChoiceAutosize`)
+Do: nothing to keep working. An inline choice now measures its options and is as wide as the
+widest from the start, so choosing no longer widens the field and reflows the sentence. Items with
+a `qti-input-width-*` class are unchanged. To keep the old look (the field sized to the option shown),
+set `inlineChoiceAutosize: false` in `configContext`. The host does not set this option today.
+Evidence: read, not run
+
 ### `state` replaces the `testContext` round trip (PR #225)
 
 Status: recommended; nothing breaks on upgrade
@@ -130,6 +140,15 @@ Do: put `<test-bookmark>Bookmark</test-bookmark>` in the toolbar next to the nav
 navigation shows marked items, and drop `marked` on the context items (`assessmentStore.ts`). Persist nothing
 extra: the marks are part of `state`, which you already store. Replaces the workaround of keeping `marked`
 next to the state.
+
+### Section link in item mode has an active item (#332)
+
+Status: behaviour change (fix); nothing to do
+Members: `navigate="item"`, `navigateTo`
+Do: nothing, unless the host sends a `section` request (`navigateTo('section', id)` or a
+`test-section-link`) while `navigate="item"`. Then the section's first item is now the current
+item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-attempt` and the
+scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
 
 ## Not in the library, still in the host

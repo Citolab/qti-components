@@ -1,5 +1,17 @@
 # @citolab/qti-components
 
+## 10.0.0-next.13
+
+### Major Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - `inlineChoiceAutosize` is on by default. An inline choice is as wide as its widest option from the start, so choosing an option no longer widens the field and reflows the sentence around it. A `qti-input-width-*` class still wins; set `configContext.inlineChoiceAutosize: false` for the old behaviour, where the field sizes to the option shown. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`.
+
+## 10.0.0-next.12
+
+### Patch Changes
+
+- [#335](https://github.com/Citolab/qti-components/pull/335) [`e0aed5d`](https://github.com/Citolab/qti-components/commit/e0aed5d24309fef6dbe350b503d86e0e2bc6064f) Thanks [@herrKlein](https://github.com/herrKlein)! - With `navigate="item"`, a `test-section-link` (a `cito-test-navigate` request of type `section`) now makes the section's first item the active one. Before, no item was active, so `test-next` and `test-prev` stayed disabled and item links highlighted nothing. The whole section still loads, and `navigate="section"` is unchanged. Since that first item is now the active item, `test-check-item`, `test-end-attempt` and the scoring buttons act on it. Hosts: see "Section link in item mode" in `plans/host-migration/kennisnet.md` and `plans/host-migration/citotestuit.md` ([#332](https://github.com/Citolab/qti-components/issues/332)).
+
 ## 10.0.0-next.11
 
 ### Minor Changes

@@ -1,0 +1,68 @@
+import { Canvas, Meta, Source } from '@storybook/addon-docs/blocks';
+
+import * as Formative from './formative-test.stories';
+import hostSource from './formative-host.js?raw';
+
+<Meta of={Formative} />
+
+# Formative test
+
+A practice test: the candidate checks each answer, sees whether it is right, may change it and check again,
+and moves on once the question is checked. This is how Kennisnet's player runs its practice tests.
+
+The test package does not change for this. It is the same plain package you would use for a test, with no
+`qti-item-session-control`. The player adds the practice behaviour in code: about a hundred lines of host
+script on top of the public API and the [corrections package](?path=/docs/corrections-overview--docs).
+
+## Try it
+
+Answer a question, press **Check**, change your answer, check again, and go on. Reload the page: the test
+resumes where you were. **Start again** clears the saved session.
+
+<Canvas of={Formative.FormativeTest} />
+
+## The rules
+
+| When                                | What the candidate gets                                                         |
+| ----------------------------------- | ------------------------------------------------------------------------------- |
+| The question is not checked yet     | **Next** is disabled.                                                           |
+| They press **Check**                | Their answer is marked right, partly right or wrong, with a message.            |
+| The answer is wrong or partly right | **Check** stays, so they can change the answer and check again.                 |
+| They change a checked answer        | The marks and the message go, and **Next** is disabled until they check again.  |
+| The answer is right                 | **Check** disappears.                                                           |
+| They finish the last question       | The total score shows; every question shows its correct response and is locked. |
+
+Checks are unlimited, as in Kennisnet's player. To show the correct response after a number of checks
+instead, and let the candidate go on, pass `checksBeforeSolution`:
+
+```js
+startFormativeTest(document, { checksBeforeSolution: 2 });
+```
+
+Answer wrong twice here: the correct response shows, the question locks and **Next** opens.
+
+<Canvas of={Formative.SolutionAfterTwoChecks} />
+
+## How it works
+
+- **The corrections build** gives `<qti-assessment-item>` its `showCandidateCorrection(show)` and
+  `showCorrectResponse(show)`. The script gets the item on screen from `qti-assessment-item-connected`.
+- **Check** ends the attempt with `cito-test-end-attempt`, dispatched on `<test-navigation>`. The test scores
+  the item and adds one to its `numAttempts`; it does not stop at one attempt, because there is no session
+  control to say so.
+- **Everything else comes from the state.** On every `cito-test-state-changed` the script reads the item's
+  `numAttempts`, `SCORE` and `MAXSCORE` from `detail.test.items` and the position from
+  `detail.session.navItemRefId`, decides what the candidate may do, and saves the state.
+- **Resuming** is the [State](?path=/docs/implementation-state--docs) page: the saved state is assigned before
+  the test loads. The script saves two things of its own next to it: whether the test is finished, and
+  which questions were changed after their last check.
+- **A changed answer** arrives as `qti-interaction-changed`; the script clears the marks.
+
+`<test-end-attempt>` is not used for **Check**: without session control it applies QTI's default of one attempt
+and disables itself after the first check.
+
+## The script
+
+The Code tab of the story holds the whole page. This is the script on its own:
+
+<Source code={hostSource} language="js" />

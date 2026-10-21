@@ -48,9 +48,13 @@
       }
     }
     /* A placed chip, and the editor's fake-drag projected into the drop-target shadow. Its hover,
-       and ring are in the states layer below. */
+       and ring are in the states layer below. The three --drag-* slots take a brand's placed-chip
+       look (--cito-color-order-placed*); unset, they are invalid and the chip keeps its own. */
     &::part(drag) {
       @mixin drag;
+      --drag-background-color: var(--qti-order-placed-fill);
+      --drag-color: var(--qti-order-placed-color);
+      --drag-border-color: var(--qti-order-placed-border-color);
     }
     /* The drag's box — flex, centred, clipped — is in qti-order-interaction.styles.ts. */
     &::part(drag) {
@@ -135,11 +139,10 @@
 
     /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
        chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
-    /* The placed order chip's INVERTED look (white fill, dark text, neutral border) is
-       Kennisnet-specific — a light chip against the primary bank — so it lives in the Kennisnet brand
-       overlay (apps/e2e/src/stories/kennisnet/kennisnet.css), not here. In the base theme a placed
-       chip is just the neutral chip (@mixin drag), and its corrections route through --drag-*
-       like every other chip. */
+    /* The placed order chip's INVERTED look (white fill, dark text, a border) is a brand choice —
+       Kennisnet's — made through the --cito-color-order-placed* inputs on ::part(drag) above. In the
+       base theme a placed chip is just the neutral chip (@mixin drag), and its corrections route
+       through --drag-* like every other chip. */
     & qti-simple-choice {
       @mixin drag;
     }

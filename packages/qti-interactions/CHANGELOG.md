@@ -1,5 +1,34 @@
 # @qti-components/interactions
 
+## 1.10.5-next.5
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/inline-choice-interaction@3.0.0-next.3
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/associate-interaction@1.1.7-next.3
+  - @qti-components/choice-interaction@1.2.0-next.3
+  - @qti-components/interactions-core@2.2.0-next.4
+  - @qti-components/custom-interaction@1.2.1-next.3
+  - @qti-components/end-attempt-interaction@1.1.6-next.3
+  - @qti-components/extended-text-interaction@2.0.0-next.4
+  - @qti-components/gap-match-interaction@1.2.1-next.3
+  - @qti-components/graphic-associate-interaction@1.1.6-next.3
+  - @qti-components/graphic-gap-match-interaction@1.1.6-next.5
+  - @qti-components/graphic-order-interaction@1.2.2-next.3
+  - @qti-components/hotspot-interaction@1.1.6-next.3
+  - @qti-components/hottext-interaction@1.2.1-next.3
+  - @qti-components/match-interaction@2.1.0-next.3
+  - @qti-components/media-interaction@1.2.1-next.3
+  - @qti-components/order-interaction@2.0.1-next.3
+  - @qti-components/portable-custom-interaction@1.3.0-next.5
+  - @qti-components/position-object-interaction@1.1.6-next.3
+  - @qti-components/select-point-interaction@1.1.6-next.3
+  - @qti-components/slider-interaction@1.1.6-next.4
+  - @qti-components/text-entry-interaction@1.1.7-next.3
+  - @qti-components/upload-interaction@1.2.0-next.3
+
 ## 1.10.5-next.4
 
 ### Patch Changes

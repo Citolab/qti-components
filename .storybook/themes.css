@@ -8,7 +8,7 @@
  *   default    nothing at all: what a host gets with no configuration
  *   light      color-scheme: light, and the page painted from the base tokens
  *   dark       color-scheme: dark, the same; every light-dark() token flips
- *   kennisnet  the Kennisnet brand, as tokens (its VRT suite still adopts kennisnet.css)
+ *   kennisnet  the Kennisnet brand, as tokens; the Corrections visual regression suite runs on it
  *   cito       cito.nl: the logo's dark blue and pink, white cards on the warm page colour, and
  *              cito.nl's own :root values
  *   playful    a theme for young children, like a friendly learning app
@@ -43,7 +43,23 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   --cito-depth: 1;
 
   --cito-color-border: var(--cito-color-primary); /* every edge in the brand colour */
-  --cito-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='2' y='3' width='12' height='2' rx='1'/%3E%3Crect x='2' y='7' width='12' height='2' rx='1'/%3E%3Crect x='2' y='11' width='12' height='2' rx='1'/%3E%3C/svg%3E"); /* three bars */
+  /* The chip: primary fill, white text, no edge, and a 3px lift in the brand colour. The handle is
+     the theme's own six dots, which is Kennisnet's (Font Awesome's grip-vertical). */
+  --cito-color-chip-border: transparent;
+  --cito-shadow-chip: 0 3px color-mix(in oklab, var(--cito-color-primary) 50%, transparent);
+  /* Order's placed chip is inverted — white, dark text, the brand edge — so a dropped answer reads
+     as settled against the filled bank. */
+  --cito-color-order-placed: oklch(100% 0 none);
+  --cito-color-order-placed-content: var(--cito-color-base-content);
+  --cito-color-order-placed-border: var(--cito-color-border);
+  /* Wells are white, like the cards of Kennisnet's player on its lavender page (below). */
+  --cito-color-well: oklch(100% 0 none);
+}
+
+/* The page colour of Kennisnet's player (toetsen.wikiwijs.nl, #edecf6), so white wells, fields and
+   chips stand on it as its cards do. */
+html[data-qti-theme][data-qti-theme='kennisnet'] body {
+  background-color: oklch(94.67% 0.0134 290.75); /* #edecf6 */
 }
 
 [data-qti-theme='cito'] {

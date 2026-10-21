@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiStylesheet } from './qti-stylesheet';
 
 const meta = {
-  title: 'QTI Item/Elements/qti-stylesheet',
+  title: 'Elements/qti-stylesheet',
   component: 'qti-stylesheet'
 } satisfies Meta<QtiStylesheet>;
 

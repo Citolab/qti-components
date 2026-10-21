@@ -8,7 +8,7 @@
  * not worth the file count.
  *
  * `interactions.brand` and `overrides` hold nothing here ON PURPOSE — they are the extension points
- * a brand sheet writes into (apps/e2e/src/stories/kennisnet/kennisnet.css uses `interactions.brand`).
+ * a brand sheet writes into (a host's own brand CSS; the Storybook presets need none, being tokens).
  * They must stay DECLARED even while empty: a layer first created by a consumer's own `@layer`
  * block is appended after every declared layer, which would put brand paint above the state and
  * correction paint it is meant to sit under. Deleting the two names moved 7 of the 17 VRT baselines.
