@@ -130,6 +130,15 @@ Do: put `<test-bookmark>Bookmark</test-bookmark>` in the toolbar next to the nav
 navigation shows marked items, and drop `marked` on the context items (`assessmentStore.ts`). Persist nothing
 extra: the marks are part of `state`, which you already store. Replaces the workaround of keeping `marked`
 next to the state.
+
+### Section link in item mode has an active item (#332)
+
+Status: behaviour change (fix); nothing to do
+Members: `navigate="item"`, `navigateTo`
+Do: nothing, unless the host sends a `section` request (`navigateTo('section', id)` or a
+`test-section-link`) while `navigate="item"`. Then the section's first item is now the current
+item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-attempt` and the
+scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
 
 ## Not in the library, still in the host
