@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 140" width="600" height="140" role="img" aria-labelledby="title">
+  <title id="title">A number line from 0 to 1, divided into eighths, with only 0 and 1 labelled</title>
+  <rect width="600" height="140" fill="#ffffff"/>
+  <path d="M50 90 H550" stroke="#1d3b53" stroke-width="4"/>
+  <g stroke="#1d3b53" stroke-width="3">
+    <path d="M50 76 V104"/><path d="M550 76 V104"/>
+  </g>
+  <g stroke="#1d3b53" stroke-width="2">
+    <path d="M112.5 82 V98"/><path d="M175 82 V98"/><path d="M237.5 82 V98"/><path d="M300 82 V98"/>
+    <path d="M362.5 82 V98"/><path d="M425 82 V98"/><path d="M487.5 82 V98"/>
+  </g>
+  <g fill="#1d3b53" font-family="Arial, Helvetica, sans-serif" font-size="20" text-anchor="middle">
+    <text x="50" y="128">0</text>
+    <text x="550" y="128">1</text>
+  </g>
+</svg>
