@@ -1,5 +1,8 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
+import { expect, waitFor } from 'storybook/test';
+
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestStamp } from './test-stamp';
@@ -92,8 +95,20 @@ export const Default: Story = {
         )}
         ${template(args, html`<template>{{ item.identifier }}</template>`)}
 
-        <test-container test-url="/assets/api/kennisnet/AssessmentTest.xml"></test-container>
-        <test-next>Volgende</test-next>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
+        <test-next>Next</test-next>
       </test-navigation>
-    </qti-test>`
+    </qti-test>`,
+  play: async ({ canvasElement }) => {
+    // The stamp fills its template from the test: the test's title and identifier.
+    const stamps = [...canvasElement.querySelectorAll('test-stamp')];
+    await waitFor(
+      () => {
+        const text = stamps.map(stamp => stamp.shadowRoot?.textContent || stamp.textContent).join(' ');
+        expect(text).toContain('Showcase');
+        expect(text).toContain('showcase');
+      },
+      { timeout: 15000 }
+    );
+  }
 };

@@ -10,8 +10,8 @@ The rule: **what is on this page is public. Everything else may change in a mino
 depend on something that isn't here, tell us, so it can be added or replaced.
 
 Every member below has a contract story in Storybook that uses only the public API, so a breaking
-change shows up as a failing story: **qti-test / Host API**, **qti-test / Persist and restore** and
-**qti-assessment-item / Host API**.
+change shows up as a failing story: **qti-test / Host API**, **Implementation / State** (saving and
+resuming) and **qti-assessment-item / Host API**.
 
 | Status         | Meaning                                                                                         |
 | -------------- | ----------------------------------------------------------------------------------------------- |
@@ -63,7 +63,8 @@ Everything you call on, listen to or configure around a `<qti-test>`.
 The name tells you an event is public: every one starts with `cito-`. Any other event is internal
 plumbing and may change in any release. All of them bubble and are composed, so one listener on
 `qti-test` hears them. **Requests** are verbs: you dispatch them at the test. **Notifications** are
-past tense: the test dispatches them.
+past tense: the test dispatches them. `cito-test-end-attempt` is the exception: `<test-navigation>`
+handles it, so dispatch it on that element or from inside it.
 
 | Event                          | Kind         | `detail`                                             | Replaces (deprecated)               |
 | ------------------------------ | ------------ | ---------------------------------------------------- | ----------------------------------- |
@@ -112,7 +113,9 @@ Members of `<qti-assessment-item>`, for hosts that score outside the browser or 
 | `item.assessmentItemRefId`             | **Supported**  | The item-ref's identifier, which differs from the item's own.                                 |
 
 `qti-assessment-item-correction` (package `@qti-components/corrections`) adds
-`showCorrectResponse(show)` and `showCandidateCorrection(show)`.
+`showCorrectResponse(show)` and `showCandidateCorrection(show)`, and the same package's
+`<test-show-correct-response>` is a **Supported** button for them inside `test-navigation`. See
+[Corrections](?path=/docs/corrections-overview--docs).
 
 ## Extending
 

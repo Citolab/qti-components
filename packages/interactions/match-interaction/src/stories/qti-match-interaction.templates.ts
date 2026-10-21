@@ -1,5 +1,9 @@
 import { html } from 'lit';
 
+import choiceB3Image from '../fixtures/72c4b1f4ea9f7ba5548683c37806580e.png';
+import choiceB2Image from '../fixtures/80378beafd6b12ab7b97899ce39a2b78.jpg';
+import choiceB1Image from '../fixtures/8c571f983f691e42e7b3a0dc2664e51d.png';
+
 /** Fixtures shared by the overview demos and the behavior stories. */
 export const testTemplate = html`<qti-prompt
     >Match the following characters to the Shakespeare play they appeared in:</qti-prompt
@@ -176,13 +180,13 @@ export const withImagesTemplate = html`
     </qti-simple-match-set>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="B1" match-max="1">
-        <img src="assets/qti-match-interaction/8c571f983f691e42e7b3a0dc2664e51d.png" alt="afbeelding" />
+        <img src=${choiceB1Image} alt="afbeelding" />
       </qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="B2" match-max="1">
-        <img src="assets/qti-match-interaction/80378beafd6b12ab7b97899ce39a2b78.jpg" alt="afbeelding" />
+        <img src=${choiceB2Image} alt="afbeelding" />
       </qti-simple-associable-choice>
       <qti-simple-associable-choice identifier="B3" match-max="1">
-        <img src="assets/qti-match-interaction/72c4b1f4ea9f7ba5548683c37806580e.png" alt="afbeelding" />
+        <img src=${choiceB3Image} alt="afbeelding" />
       </qti-simple-associable-choice>
     </qti-simple-match-set>
   </qti-match-interaction>

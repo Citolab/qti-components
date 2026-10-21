@@ -10,7 +10,8 @@ import { renderLabel } from 'storybook-addon-tag-badges/manager-helpers';
  *
  * `stable`: an `Interactions/<Name>` folder is stable when its QTI 3 conformance folder
  * (`Testing/Conformance/<profile>/Q.. <Name> Interaction`) has stories and every one of them asserts: no
- * `todo` placeholder, no `xfail`, no story that only shows something. Nothing is tagged by hand.
+ * `todo` placeholder, no `xfail`, no story that only shows something. A known failure (`xfail`) in the
+ * interaction's own `Interactions/<Name>` stories also withholds it. Nothing is tagged by hand.
  *
  * Manager code is not hot-reloaded: restart Storybook after changing this file.
  */
@@ -41,7 +42,15 @@ const isStable = (name: string, entries: IndexEntry[]) => {
       entry.title.startsWith('Testing/Conformance/') &&
       conformanceName(entry.title.split('/')[3] ?? '') === squash(name)
   );
+  const knownFailures = entries.some(
+    ({ title, type, tags = [] }) =>
+      type === 'story' &&
+      title.split('/')[0] === 'Interactions' &&
+      title.split('/')[1] === name &&
+      tags.includes('xfail')
+  );
   return (
+    !knownFailures &&
     stories.length > 0 &&
     stories.every(({ tags = [] }) => tags.includes('play-fn') && !tags.includes('todo') && !tags.includes('xfail'))
   );

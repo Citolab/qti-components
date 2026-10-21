@@ -25,6 +25,8 @@ interface Plugin {
 }
 
 const PUBLIC_EVENTS_FROM_COMPONENTS = /^\.\.\/\.\.\/public-events$/; // the public event names and helpers
+/** A story runs a shared demo test: Getting started or the showcase (CLAUDE.md, Docs demos). */
+const DEMO_TEST_FROM_COMPONENTS = /^\.\.\/qti-test\/(?:getting-started|showcase)\.fixtures$/;
 const STYLES_FROM_COMPONENTS = /^\.\.\/styles$/; // the shared look of the test controls
 
 const PLUGINS: Plugin[] = [
@@ -38,7 +40,8 @@ const PLUGINS: Plugin[] = [
       /^\.\.\/\.\.\/plugin-state$/, // the typed read of a plugin's entry
       /^\.\.\/\.\.\/types\/qti-test-state$/, // the public state type
       /^\.\.\/qti-test\/qti-test$/, // the spec drives a test through its public element
-      /^@citolab\/qti-components$/ // the spec registers everything the way a host does
+      /^@citolab\/qti-components$/, // the spec registers everything the way a host does
+      DEMO_TEST_FROM_COMPONENTS
     ]
   },
   {
@@ -57,15 +60,25 @@ const PLUGINS: Plugin[] = [
     folders: ['components/test-stamp/'],
     reference: /test-stamp|TestStamp|stampContext/,
     allow: [
+      DEMO_TEST_FROM_COMPONENTS,
       PUBLIC_EVENTS_FROM_COMPONENTS,
       /^\.\.\/test-print-context\/test-print-context$/ // a story shows it next to the stamp
     ]
   },
   {
     name: 'print',
-    folders: ['components/test-print-context/', 'components/test-print-item-variables/'],
-    reference: /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables/,
-    allow: [PUBLIC_EVENTS_FROM_COMPONENTS]
+    folders: [
+      'components/test-print-context/',
+      'components/test-print-item-variables/',
+      'components/test-print-state/'
+    ],
+    reference:
+      /test-print-context|TestPrintContext|test-print-item-variables|TestPrintVariables|test-print-state|TestPrintState/,
+    allow: [
+      PUBLIC_EVENTS_FROM_COMPONENTS,
+      /^\.\.\/\.\.\/types\/qti-test-state$/, // the public state type
+      DEMO_TEST_FROM_COMPONENTS
+    ]
   },
   {
     name: 'scoring',

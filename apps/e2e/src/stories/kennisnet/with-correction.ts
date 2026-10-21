@@ -9,8 +9,6 @@ import { qtiCorrectionElements } from '@qti-components/corrections/elements';
 import { qtiTestElements } from '@qti-components/test/elements';
 import itemCss from '@qti-components/theme/item-css';
 
-import kennisnetCss from './kennisnet.css?inline';
-
 import type { Decorator } from '@storybook/web-components-vite';
 
 /*
@@ -19,7 +17,8 @@ import type { Decorator } from '@storybook/web-components-vite';
  * without ever applying this decorator.
  */
 let correctionRegistryInstance: CustomElementRegistry | undefined;
-const correctionRegistry = (): CustomElementRegistry => (correctionRegistryInstance ??= createCorrectionRegistry());
+export const correctionRegistry = (): CustomElementRegistry =>
+  (correctionRegistryInstance ??= createCorrectionRegistry());
 
 const createCorrectionRegistry = () => {
   const registry = new CustomElementRegistry();
@@ -45,9 +44,6 @@ const createCorrectionRegistry = () => {
 
 const itemSheet = new CSSStyleSheet();
 itemSheet.replaceSync(itemCss);
-
-const kennisnetSheet = new CSSStyleSheet();
-kennisnetSheet.replaceSync(kennisnetCss);
 
 type BoundContainerState = {
   itemXML?: string;
@@ -80,7 +76,7 @@ export const withCorrection: Decorator = story => {
   if (hasContainerStory) {
     const host = document.createElement('div');
     const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry() });
-    shadow.adoptedStyleSheets = [itemSheet, kennisnetSheet];
+    shadow.adoptedStyleSheets = [itemSheet];
 
     const wrapper = document.createElement('div');
     while (scratch.firstChild) {
@@ -98,7 +94,7 @@ export const withCorrection: Decorator = story => {
 
   const host = document.createElement('div');
   const shadow = host.attachShadow({ mode: 'open', customElementRegistry: correctionRegistry() });
-  shadow.adoptedStyleSheets = [itemSheet, kennisnetSheet];
+  shadow.adoptedStyleSheets = [itemSheet];
 
   // Keep a wrapper so correction clones can be inserted via interaction.parentElement.
   shadow.innerHTML = `<div>${markup}</div>`;

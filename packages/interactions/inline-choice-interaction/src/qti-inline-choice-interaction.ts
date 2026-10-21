@@ -277,15 +277,17 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   }
 
   /**
-   * Autosizing is opt-in through `configContext.inlineChoiceAutosize`, and an explicit
-   * `qti-input-width-*` class always wins.
+   * Autosizing is on unless a host turns it off (`configContext.inlineChoiceAutosize: false`), and an
+   * explicit `qti-input-width-*` class always wins. On by default because without it the field sizes
+   * to the option shown, so choosing a longer one widened the field and reflowed the sentence around
+   * it: a state that changed layout.
    *
    * That second check has to live here rather than in CSS: the measurement is written as an inline
    * style on the trigger, and the width classes set the same property on `:host`, so the cascade
    * would hand it to the measurement every time. Not writing at all is what makes the class win.
    */
   public override shouldAutoSizeMenu(): boolean {
-    if (!this.configContext?.inlineChoiceAutosize) return false;
+    if (this.configContext?.inlineChoiceAutosize === false) return false;
     return !Array.from(this.classList).some(c => c.startsWith('qti-input-width-'));
   }
 

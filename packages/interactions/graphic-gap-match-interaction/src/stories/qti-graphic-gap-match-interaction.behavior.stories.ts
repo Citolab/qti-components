@@ -2,9 +2,14 @@ import { html } from 'lit';
 import { expect, fn } from 'storybook/test';
 
 import drag from '../../../../../tools/testing/drag';
+import aCwPng from '../fixtures/a-cw.png';
+import bWw2Png from '../fixtures/b-ww2.png';
+import cVietnamPng from '../fixtures/c-vietnam.png';
+import dBayPng from '../fixtures/d-bay.png';
+import timeline558Png from '../fixtures/timeline-558.png';
 
-import type { QtiGraphicGapMatchInteraction } from '../qti-graphic-gap-match-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
+import type { QtiGraphicGapMatchInteraction } from '../qti-graphic-gap-match-interaction';
 
 type Story = StoryObj<QtiGraphicGapMatchInteraction>;
 
@@ -66,43 +71,18 @@ export const SortableSwapFilledHotspots: Story = {
       response-identifier="RESPONSE"
       max-associations="4"
     >
-      <img
-        alt="timeline from 1939 to 1991"
-        src="assets/qti-graphic-gap-match-interaction/timeline-558.png"
-        height="326"
-        width="558"
-      />
+      <img alt="timeline from 1939 to 1991" src=${timeline558Png} height="326" width="558" />
       <qti-gap-img identifier="DraggerA" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/a-cw.png"
-          alt="Choice A, The Cold War Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${aCwPng} alt="Choice A, The Cold War Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerB" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/b-ww2.png"
-          alt="Choice B, World War 2 Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${bWw2Png} alt="Choice B, World War 2 Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerC" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/c-vietnam.png"
-          alt="Choice C, Vietnam Conflict Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${cVietnamPng} alt="Choice C, Vietnam Conflict Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerD" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/d-bay.png"
-          alt="Choice D, Bay of Pigs"
-          height="63"
-          width="78"
-        />
+        <img src=${dBayPng} alt="Choice D, Bay of Pigs" height="63" width="78" />
       </qti-gap-img>
       <qti-associable-hotspot
         coords="55,256,133,319"
@@ -206,43 +186,18 @@ export const SortableSwapPartialHotspots: Story = {
       response-identifier="RESPONSE"
       max-associations="4"
     >
-      <img
-        alt="timeline from 1939 to 1991"
-        src="assets/qti-graphic-gap-match-interaction/timeline-558.png"
-        height="326"
-        width="558"
-      />
+      <img alt="timeline from 1939 to 1991" src=${timeline558Png} height="326" width="558" />
       <qti-gap-img identifier="DraggerA" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/a-cw.png"
-          alt="Choice A, The Cold War Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${aCwPng} alt="Choice A, The Cold War Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerB" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/b-ww2.png"
-          alt="Choice B, World War 2 Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${bWw2Png} alt="Choice B, World War 2 Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerC" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/c-vietnam.png"
-          alt="Choice C, Vietnam Conflict Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${cVietnamPng} alt="Choice C, Vietnam Conflict Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerD" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/d-bay.png"
-          alt="Choice D, Bay of Pigs"
-          height="63"
-          width="78"
-        />
+        <img src=${dBayPng} alt="Choice D, Bay of Pigs" height="63" width="78" />
       </qti-gap-img>
       <qti-associable-hotspot
         coords="55,256,133,319"
@@ -334,43 +289,18 @@ export const BasicPlacementAndResponse: Story = {
       max-associations="4"
     >
       <qti-prompt>Place each event tile on one hotspot.</qti-prompt>
-      <img
-        alt="timeline from 1939 to 1991"
-        src="assets/qti-graphic-gap-match-interaction/timeline-558.png"
-        height="326"
-        width="558"
-      />
+      <img alt="timeline from 1939 to 1991" src=${timeline558Png} height="326" width="558" />
       <qti-gap-img identifier="DraggerA" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/a-cw.png"
-          alt="Choice A, The Cold War Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${aCwPng} alt="Choice A, The Cold War Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerB" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/b-ww2.png"
-          alt="Choice B, World War 2 Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${bWw2Png} alt="Choice B, World War 2 Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerC" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/c-vietnam.png"
-          alt="Choice C, Vietnam Conflict Ends"
-          height="63"
-          width="78"
-        />
+        <img src=${cVietnamPng} alt="Choice C, Vietnam Conflict Ends" height="63" width="78" />
       </qti-gap-img>
       <qti-gap-img identifier="DraggerD" match-max="1">
-        <img
-          src="assets/qti-graphic-gap-match-interaction/d-bay.png"
-          alt="Choice D, Bay of Pigs"
-          height="63"
-          width="78"
-        />
+        <img src=${dBayPng} alt="Choice D, Bay of Pigs" height="63" width="78" />
       </qti-gap-img>
       <qti-associable-hotspot
         coords="55,256,133,319"

@@ -1,4 +1,7 @@
 .qti-layout-row {
+  /* The columns stack when the row is narrow, not the viewport: an item in a side-by-side player or a
+   * narrow pane collapses too. The row is the container, so it is never shrink-to-fit (width: 100%). */
+  container-type: inline-size;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -110,7 +113,7 @@
   margin-left: 93.6170212766%;
 }
 
-@media (width <= 767px) {
+@container (width <= 767px) {
   [class*='qti-layout-col'] {
     width: 100%;
   }

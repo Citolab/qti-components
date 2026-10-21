@@ -67,3 +67,6 @@ packages/qti-components/tsup.config.bundled_z3j43jv4ey.mjs
 # Personal VS Code workspace file. Was tracked; untracked deliberately, since it holds one
 # developer's folder layout and settings rather than anything the project needs.
 QTI-Components.code-workspace
+
+# Local dev-server config for the Claude desktop preview pane
+.claude/launch.json

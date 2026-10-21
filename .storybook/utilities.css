@@ -30,6 +30,12 @@ body.sb-main-fullscreen #storybook-root #root-inner {
 .relative {
   position: relative;
 }
+.absolute {
+  position: absolute;
+}
+.inset-0 {
+  inset: 0;
+}
 
 /* flex */
 .flex-col {
@@ -79,6 +85,9 @@ body.sb-main-fullscreen #storybook-root #root-inner {
 .h-100 {
   height: 25rem;
 }
+.w-80 {
+  width: 20rem;
+}
 .min-h-0 {
   min-height: 0;
 }
@@ -90,6 +99,9 @@ body.sb-main-fullscreen #storybook-root #root-inner {
 }
 
 /* spacing */
+.m-0 {
+  margin: 0;
+}
 .p-0 {
   padding: 0;
 }
@@ -139,8 +151,18 @@ body.sb-main-fullscreen #storybook-root #root-inner {
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
 .font-bold {
   font-weight: 700;
+}
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+.text-gray-500 {
+  color: #6b7280; /* demo chrome only, never a component's colour */
 }
 .opacity-70 {
   opacity: 0.7;

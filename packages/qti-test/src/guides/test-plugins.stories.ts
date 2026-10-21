@@ -5,6 +5,8 @@ import { expect, waitFor, within } from 'storybook/test';
 
 import { computedContext } from '@qti-components/base';
 
+import { SHOWCASE_TEST } from '../components/qti-test/showcase.fixtures';
+
 import type { ComputedContext } from '@qti-components/base';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -58,7 +60,7 @@ export const ReadingTime: Story = {
           <test-next>Next</test-next>
           <example-reading-time></example-reading-time>
         </div>
-        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
       </test-navigation>
     </qti-test>
   `,
@@ -68,12 +70,12 @@ export const ReadingTime: Story = {
     const words = () => Number.parseInt(output()?.textContent ?? '', 10);
 
     // The first item is counted once the test has rendered it.
-    await waitFor(() => expect(output()?.dataset.item).toBe('ITM-info_start'), { timeout: 15000 });
+    await waitFor(() => expect(output()?.dataset.item).toBe('ITEM001'), { timeout: 15000 });
     await waitFor(() => expect(words()).toBeGreaterThan(0));
 
     // Navigating counts the next item.
     (await canvas.findByText('Next')).click();
-    await waitFor(() => expect(output()?.dataset.item).toBe('ITM-text_entry'), { timeout: 5000 });
+    await waitFor(() => expect(output()?.dataset.item).toBe('ITEM002'), { timeout: 5000 });
     await waitFor(() => expect(words()).toBeGreaterThan(0));
   }
 };

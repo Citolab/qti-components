@@ -10,7 +10,7 @@ import '../../../../../packages/qti-components/src/corrections';
 
 import itemCss from '@qti-components/theme/item-css';
 
-import kennisnetCss from './kennisnet.css?inline';
+import themesCss from '../../../../../.storybook/themes.css?inline';
 import meta, * as stories from './kennisnet.stories';
 import { KENNISNET_STORY_WIDTH } from './story-width';
 
@@ -23,8 +23,9 @@ import { KENNISNET_STORY_WIDTH } from './story-width';
  * "Baseline source → Legacy Chrome 120" toolbar item lays it over the live story.
  *
  * Not a regression gate: every run overwrites the captures. It renders each story the way its
- * `withCorrection` decorator does — inside a shadow root carrying the item and Kennisnet sheets —
- * minus the scoped registry that decorator needs, which is why the decorator is not applied.
+ * `withCorrection` decorator does — inside a shadow root carrying the item sheet, under the Kennisnet
+ * theme preset the story's `globals` select — minus the scoped registry that decorator needs, which
+ * is why the decorator is not applied.
  */
 
 const SCREENSHOT_DIR = 'apps/e2e/src/stories/kennisnet/__screenshots__/kennisnet.stories.ts';
@@ -35,9 +36,11 @@ const sheet = (css: string) => {
   s.replaceSync(css);
   return s;
 };
-const sheets = [sheet(itemCss), sheet(kennisnetCss)];
-// The document styles .storybook/preview.ts imports, so text and spacing match the baselines.
-document.adoptedStyleSheets = [sheet(normalizeCss), sheet(itemCss)];
+const sheets = [sheet(itemCss)];
+// The document styles .storybook/preview.ts imports, so text and spacing match the baselines, and the
+// Kennisnet preset on <html>, as the theme toolbar sets it: its tier-1 tokens inherit into the shadow.
+document.adoptedStyleSheets = [sheet(normalizeCss), sheet(itemCss), sheet(themesCss)];
+document.documentElement.dataset.qtiTheme = 'kennisnet';
 
 /** Every <img> under `node`, through shadow roots. */
 const images = (node: ParentNode): HTMLImageElement[] => [
@@ -74,6 +77,7 @@ test.each(entries.map(([key, story]) => [key, story] as const))('%s', async (key
   document.body.innerHTML = '';
   const host = document.createElement('div');
   host.style.width = KENNISNET_STORY_WIDTH;
+  host.style.backgroundColor = 'white'; // as the story's withFixedWidth: white, not the preset's page
   document.body.appendChild(host);
   const shadow = host.attachShadow({ mode: 'open' });
   shadow.adoptedStyleSheets = sheets;
@@ -85,7 +89,7 @@ test.each(entries.map(([key, story]) => [key, story] as const))('%s', async (key
   const target = shadow.querySelector('qti-item-body') as HTMLElement;
   expect(target, `${key} renders a qti-item-body`).toBeTruthy();
 
-  const id = sanitizeStoryId(toId(meta.title!, storyNameFromExport(key)));
+  const id = sanitizeStoryId(toId(meta.id ?? meta.title!, storyNameFromExport(key)));
   // Captured the way .storybook/vitest.vrt.setup.ts captures the baselines.
   const shot = await page.elementLocator(target).screenshot({ base64: true, save: false });
   const base64 = typeof shot === 'string' ? shot : shot.base64;

@@ -1,4 +1,9 @@
 import { html, render } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+
+// The layout classes below; Storybook chrome, not a package this app depends on.
+// eslint-disable-next-line import/no-relative-packages
+import '../../../../../.storybook/utilities.css';
 
 import type { TemplateResult } from 'lit';
 import type { QtiTestState } from '@qti-components/test';
@@ -9,19 +14,19 @@ export const SEED = 'session-1';
 /**
  * The chrome a host puts around a `<qti-test>` to save and resume it, for the cookbook stories.
  *
- * - Saves from `cito-test-state-changed`, whose `detail` is the state, and shows it as JSON.
- * - "Restart from saved state" builds a fresh test and assigns the saved `state` and the same seed
+ * - Keeps the state from `cito-test-state-changed`, whose `detail` is the state. A
+ *   `<test-print-state>` dropped into the test shows it, to the right of the player.
+ * - "Restart from saved state" builds a fresh test and assigns the kept `state` and the same seed
  *   before the test is attached, which is what a host does after a page reload.
  *
- * Built with plain DOM so it works on the docs page too, where `play` does not run.
+ * Built with plain DOM so it works on the docs page too, where `play` does not run. `markup` may be a
+ * string: the docs stories have no `lit` of their own.
  */
-export const stateHost = (inner: TemplateResult): HTMLElement => {
+export const stateHost = (markup: TemplateResult | string): HTMLElement => {
+  const inner = typeof markup === 'string' ? unsafeHTML(markup) : markup;
   const root = document.createElement('div');
+  root.className = 'flex flex-col gap-2';
   const stage = document.createElement('div');
-  const output = document.createElement('pre');
-  output.dataset.testid = 'saved-state';
-  output.textContent = 'Nothing saved yet.';
-  output.style.cssText = 'max-height: 12rem; overflow: auto; font-size: 0.75rem;';
 
   const restart = document.createElement('button');
   restart.type = 'button';
@@ -38,25 +43,35 @@ export const stateHost = (inner: TemplateResult): HTMLElement => {
     }
   };
 
+  // The state's column stretches to the player's height and the tree fills it, so a long state
+  // scrolls instead of making the row taller.
+  const content = html`
+    <div class="flex gap-3">
+      <div class="flex-1 min-w-0">${inner}</div>
+      <div class="relative w-80">
+        <test-print-state class="absolute inset-0 overflow-auto font-mono text-xs text-gray-500"></test-print-state>
+      </div>
+    </div>
+  `;
+
   const mount = (state?: QtiTestState) => {
     const container = document.createElement('div');
     // `.state` is assigned while the test is detached: safe before or after it loads.
     render(
       state
-        ? html`<qti-test navigate="item" .qtiContext=${qtiContext} .state=${state}>${inner}</qti-test>`
-        : html`<qti-test navigate="item" .qtiContext=${qtiContext}>${inner}</qti-test>`,
+        ? html`<qti-test navigate="item" .qtiContext=${qtiContext} .state=${state}>${content}</qti-test>`
+        : html`<qti-test navigate="item" .qtiContext=${qtiContext}>${content}</qti-test>`,
       container
     );
     container.querySelector('qti-test')!.addEventListener('cito-test-state-changed', event => {
       saved = event.detail;
-      output.textContent = JSON.stringify(saved, null, 2);
       restart.disabled = false;
     });
     stage.replaceChildren(container);
   };
 
   restart.addEventListener('click', () => mount(saved));
-  root.append(restart, stage, output);
+  root.append(restart, stage);
   mount();
   return root;
 };

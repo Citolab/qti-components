@@ -1,4 +1,4 @@
-import { expect, fireEvent } from 'storybook/test';
+import { expect, fireEvent, spyOn, waitFor } from 'storybook/test';
 
 import { getItemByUri } from '@qti-components/loader';
 
@@ -61,6 +61,18 @@ const loaderMathml = async () => ({
 const loaderInvalid = async () => ({
   xml: await getItemByUri('/assets/qti-conformance/Advanced/Q12-inline-choice/inline-choice-invalid.xml')
 });
+
+/** Errors logged that name cardinality: how an invalid binding would be reported. */
+const cardinalityErrors = () =>
+  (console.error as unknown as { mock: { calls: unknown[][] } }).mock.calls.filter(args =>
+    args.some(arg => /cardinality/i.test(String(arg instanceof Error ? arg.message : arg)))
+  );
+
+/** Spies on console.error for the length of one story. */
+const spyOnConsoleError = () => {
+  const consoleError = spyOn(console, 'error');
+  return () => consoleError.mockRestore();
+};
 
 // ─── IMPORT ──────────────────────────────────────────────────────────────────
 
@@ -140,17 +152,22 @@ export const Q12_L2_I3: Story = {
  * **Invalid Example** for inline-choice-invalid.xml the system MUST display an XML validation
  * exception.
  *
- * Note: the `cardinality="multiple"` on the response declaration is what makes this item invalid —
- * inline choice interactions require single cardinality. This story verifies the invalid attribute
- * is present in the loaded item.
+ * The `cardinality="multiple"` on the response declaration is what makes this item invalid: an inline
+ * choice interaction requires single cardinality. Known to fail: nothing validates the item on load, so
+ * no exception is reported.
  */
 export const Q12_L2_I21: Story = {
   name: 'Q12-L2-I21',
+  tags: ['xfail'],
+  beforeEach: spyOnConsoleError,
   render: (_, { loaded: { xml } }) => xml,
   play: async ({ canvasElement }) => {
     const { assessmentItem } = getElements(canvasElement);
     const responseDecl = assessmentItem.querySelector('qti-response-declaration[identifier="RESPONSE"]');
     expect(responseDecl?.getAttribute('cardinality')).toBe('multiple');
+
+    // The validation exception: an error naming the cardinality problem.
+    await waitFor(() => expect(cardinalityErrors()).not.toHaveLength(0));
   },
   loaders: [loaderInvalid]
 };
@@ -477,4 +494,29 @@ export const Q12_L2_D103: Story = {
     expect(validationMessage).toBeVisible();
   },
   loaders: [loaderSv3]
+};
+
+/**
+ * **Invalid Example** (inline-choice-invalid.xml): this should display a QTI validation exception,
+ * because multiple cardinality is not permitted for an inline choice interaction.
+ *
+ * Known to fail: the interaction accepts the multiple-cardinality binding without reporting it, either
+ * in the item or on the console.
+ */
+export const Q12_L2_D21: Story = {
+  name: 'Q12-L2-D21',
+  tags: ['xfail'],
+  beforeEach: spyOnConsoleError,
+  render: (_, { loaded: { xml } }) => xml,
+  play: async ({ canvasElement }) => {
+    const { assessmentItem } = getElements(canvasElement);
+    const interaction = getInteraction(assessmentItem);
+    await interaction.updateComplete;
+
+    await waitFor(() => expect(cardinalityErrors()).not.toHaveLength(0));
+    const alert = interaction.shadowRoot?.querySelector('[role="alert"]') as HTMLElement;
+    expect(alert).toHaveTextContent(/cardinality/i);
+    expect(alert).toBeVisible();
+  },
+  loaders: [loaderInvalid]
 };
