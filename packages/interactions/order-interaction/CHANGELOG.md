@@ -1,5 +1,13 @@
 # @qti-components/order-interaction
 
+## 2.0.1-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/interactions-core@2.2.0-next.4
+
 ## 2.0.1-next.2
 
 ### Patch Changes

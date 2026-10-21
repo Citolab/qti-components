@@ -1,5 +1,20 @@
 # @qti-components/test
 
+## 2.0.0-next.11
+
+### Minor Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - New `<test-print-state>`: drop it anywhere inside `<qti-test>` to see the test's state (`qtiTest.state`) as a tree you can fold open and shut. It follows every `cito-test-state-changed`. A debug helper, next to `<test-print-context>` and `<test-print-item-variables>`.
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/theme@2.3.0-next.3
+  - @qti-components/interactions@1.10.5-next.5
+  - @qti-components/elements@1.10.0-next.4
+  - @qti-components/processing@1.6.1-next.3
+
 ## 2.0.0-next.10
 
 ### Patch Changes
