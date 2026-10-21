@@ -330,7 +330,12 @@ const answered = [
     'Hotspot',
     html`<qti-hotspot-interaction response-identifier="HS" max-choices="1" response="C">
       <qti-prompt>Klik op de meest zuidelijke luchthaven.</qti-prompt>
-      <img src="/assets/qti-hotspot-interaction/uk.png" width="206" height="280" alt="Kaart van het VK" />
+      <img
+        src="/fixtures/packages/interactions/hotspot-interaction/src/fixtures/uk.png"
+        width="206"
+        height="280"
+        alt="Kaart van het VK"
+      />
       <qti-hotspot-choice identifier="A" shape="circle" coords="77,115,10"></qti-hotspot-choice>
       <qti-hotspot-choice identifier="B" shape="circle" coords="118,184,10"></qti-hotspot-choice>
       <qti-hotspot-choice identifier="C" shape="circle" coords="150,235,10"></qti-hotspot-choice>
@@ -340,7 +345,12 @@ const answered = [
     'Graphic order',
     html`<qti-graphic-order-interaction response-identifier="GO">
       <qti-prompt>Zet de luchthavens op volgorde van noord naar zuid.</qti-prompt>
-      <img src="/assets/qti-graphic-order-interaction/uk.png" width="206" height="280" alt="Kaart van het VK" />
+      <img
+        src="/fixtures/packages/interactions/graphic-order-interaction/src/fixtures/uk.png"
+        width="206"
+        height="280"
+        alt="Kaart van het VK"
+      />
       <qti-hotspot-choice identifier="A" shape="circle" coords="78,102,8"></qti-hotspot-choice>
       <qti-hotspot-choice identifier="B" shape="circle" coords="117,171,8"></qti-hotspot-choice>
       <qti-hotspot-choice identifier="C" shape="circle" coords="166,227,8"></qti-hotspot-choice>
@@ -350,7 +360,12 @@ const answered = [
     'Graphic associate',
     html`<qti-graphic-associate-interaction response-identifier="GA" max-associations="2">
       <qti-prompt>Teken de nieuwe routes.</qti-prompt>
-      <img src="/assets/qti-graphic-associate-interaction/uk.png" width="206" height="280" alt="Luchthavens" />
+      <img
+        src="/fixtures/packages/interactions/graphic-associate-interaction/src/fixtures/uk.png"
+        width="206"
+        height="280"
+        alt="Luchthavens"
+      />
       <qti-associable-hotspot identifier="A" match-max="2" shape="circle" coords="78,102,8"></qti-associable-hotspot>
       <qti-associable-hotspot identifier="B" match-max="2" shape="circle" coords="117,171,8"></qti-associable-hotspot>
       <qti-associable-hotspot identifier="C" match-max="2" shape="circle" coords="166,227,8"></qti-associable-hotspot>
@@ -360,7 +375,11 @@ const answered = [
     'Media',
     html`<qti-media-interaction response-identifier="MD">
       <qti-prompt>Bekijk het fragment.</qti-prompt>
-      <video src="/assets/qti-media-interaction/earth.mp4" controls style="inline-size: 100%"></video>
+      <video
+        src="/fixtures/packages/interactions/media-interaction/src/fixtures/earth.mp4"
+        controls
+        style="inline-size: 100%"
+      ></video>
     </qti-media-interaction>`
   ),
   card(

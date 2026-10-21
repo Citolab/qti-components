@@ -1,7 +1,29 @@
+import { globSync } from 'fs';
+import { resolve } from 'path';
+
 import remarkGfm from 'remark-gfm';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import type { StorybookConfig } from '@storybook/web-components-vite';
+
+/**
+ * Fixtures next to their story. Every `fixtures/` folder under a package's `src/` is served at its
+ * repo path under `/fixtures/`, keeping its shape, so links inside it (an item's images, a custom
+ * interaction's scripts) resolve as they do in a real package:
+ *
+ *   packages/interactions/custom-interaction/src/fixtures/  ->  /fixtures/packages/interactions/custom-interaction/src/fixtures/
+ *
+ * The prefix is load-bearing: Vite serves source files at their bare repo path, and a story that imports
+ * an image from the same folder (`import uk from './fixtures/uk.png'`) asks for that path with `?import`.
+ * Served there too, the static copy would answer instead of Vite's module, and the story fails to load.
+ *
+ * A story reaches its folder through a `*.fixtures.ts` constant. Packages publish only `dist`, so
+ * these files never reach npm. Read once at start-up: a new folder needs a Storybook restart.
+ */
+const root = resolve(import.meta.dirname, '..');
+const colocatedFixtures = globSync('packages/**/src/**/fixtures', { cwd: root })
+  .filter(dir => !dir.includes('node_modules'))
+  .map(dir => ({ from: `../${dir}`, to: `/fixtures/${dir}` }));
 
 const config: StorybookConfig = {
   // stories: [
@@ -110,7 +132,8 @@ const config: StorybookConfig = {
     '../public',
     // Serve committed VRT baseline screenshots so the in-canvas overlay decorator
     // (see preview.ts) can lay them over the live story for onion-skin review.
-    { from: '../apps/e2e/src/stories/kennisnet/__screenshots__', to: '/baselines' }
+    { from: '../apps/e2e/src/stories/kennisnet/__screenshots__', to: '/baselines' },
+    ...colocatedFixtures
   ],
   async viteFinal(config: any) {
     return {

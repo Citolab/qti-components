@@ -1,6 +1,8 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
+import earthMp4 from './fixtures/earth.mp4';
+
 import type { QtiMediaInteraction } from './qti-media-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
@@ -36,7 +38,7 @@ export const Default: Story = {
       html`
         <qti-prompt>Play this video.</qti-prompt>
         <video width="320" height="240" controls>
-          <source src="qti-media-interaction/earth.mp4" type="video/mp4" />
+          <source src=${earthMp4} type="video/mp4" />
           Your browser does not support the video tag
         </video>
       `

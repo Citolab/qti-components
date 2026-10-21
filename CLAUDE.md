@@ -82,6 +82,25 @@ publish` rewrite `catalog:` correctly; `npm pack` does not, so packing must go t
 - A docs page is a single sidebar entry: an `.mdx` in `docs/` with `<Meta of={…}>`, and its stories file
   under the same title tagged `!dev` (see `build-a-player`, `state`). No separate story in the sidebar.
 
+## Fixtures
+
+Files a story or spec loads live with their single user when there is one, and centrally only when
+several places share them.
+
+- **Images and other single files**: import them in the story (`import sign from './fixtures/sign.png'`).
+  Vite handles them in dev and build; nothing to configure.
+- **Files that link to each other** (an item and its images, a test and its items, a custom or
+  portable interaction's scripts): a `fixtures/` folder next to the story, under the package's `src/`.
+  Storybook serves every such folder at its repo path under `/fixtures/` (`colocatedFixtures` in
+  `.storybook/main.ts`), so `packages/x/src/fixtures/` is `/fixtures/packages/x/src/fixtures/`. A new
+  folder needs a Storybook restart.
+- **Shared fixtures** (a demo test, the 1EdTech conformance suite, packages several stories or the
+  docs site use) stay in `public/assets/`.
+- Code reaches a fixtures folder or shared test through a constant in a `*.fixtures.ts` next to its user
+  (see `getting-started.fixtures.ts`, `qti-custom-interaction.fixtures.ts`), never a typed path.
+  `tools/testing/fixture-references.spec.ts` checks that every constant and every `.xml` reference
+  points at a real file. Packages publish only `dist`, so fixtures never reach npm.
+
 ## Story architecture (interaction packages)
 
 Applies to `packages/interactions/**` (see its local `AGENTS.md` for the full policy):
