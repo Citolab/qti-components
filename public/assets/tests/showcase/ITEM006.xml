@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM006"
+                     title="Drop-down question"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>choice_hoger</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="choice_hoger" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE2" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>choice2_lager</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="choice2_lager" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="2">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>2</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col4">
+                <img src="resources/doppler.png" alt="Sound waves from a passing car reaching a person at the roadside" width="250" />
+            </div>
+            <div class="qti-layout-col8">
+                <p>The Doppler effect happens when a source of sound and a listener move towards or away from each other.</p>
+                The sound you hear is
+                <qti-inline-choice-interaction response-identifier="RESPONSE" shuffle="false" data-prompt="choose the right answer…">
+                    <qti-inline-choice identifier="choice_lager">lower</qti-inline-choice>
+                    <qti-inline-choice identifier="choice_hoger">higher</qti-inline-choice>
+                    <qti-inline-choice identifier="choice_onveranderd">unchanged</qti-inline-choice>
+                </qti-inline-choice-interaction>
+                when the source comes closer, and
+                <qti-inline-choice-interaction response-identifier="RESPONSE2" shuffle="false" data-prompt="choose the right answer…">
+                    <qti-inline-choice identifier="choice2_lager">lower</qti-inline-choice>
+                    <qti-inline-choice identifier="choice2_hoger">higher</qti-inline-choice>
+                    <qti-inline-choice identifier="choice2_onveranderd">unchanged</qti-inline-choice>
+                </qti-inline-choice-interaction>
+                when the source moves away.
+            </div>
+        </div>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-sum>
+                <qti-map-response identifier="RESPONSE"/>
+                <qti-map-response identifier="RESPONSE2"/>
+            </qti-sum>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>
