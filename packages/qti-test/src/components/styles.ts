@@ -1,5 +1,5 @@
 // /* eslint-disable lit-plugin(no-invalid-css) */
-import { css } from 'lit';
+import { css, html } from 'lit';
 
 /*
  * The resting look of the test controls (next, prev, item/section links, TTS buttons).
@@ -31,8 +31,27 @@ const content = css`var(--qti-color-base-content, var(--cito-color-base-content,
 const neutral = css`var(--qti-color-neutral, var(--cito-color-neutral, CanvasText))`;
 const neutralContent = css`var(--qti-color-neutral-content, var(--cito-color-neutral-content, Canvas))`;
 
-export const form = css`
+/*
+ * A test control is drawn on an inner element (`.control`, part "button"), never on its host.
+ *
+ * A page's reset, Tailwind's preflight for one (`*, ::before, ::after { margin: 0; padding: 0; border: 0 solid }`),
+ * is a rule of the page, and a page rule beats the `:host` rules of a shadow root whatever its layer or its
+ * specificity. A control that paints its padding and border on the host loses them to such a reset. The
+ * inner element lives in the shadow tree, where the page's `*` does not reach, so the control looks the same with
+ * or without a reset. The host keeps only what a reset leaves alone: its display, the radius its focus ring
+ * follows, and the cursor.
+ */
+export const hostBox = css`
   display: inline-flex;
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--test-button-border-radius, var(--qti-radius-field, var(--cito-radius-field, 0.2rem)));
+`;
+
+/** The box of the control itself: the inner element. */
+export const form = css`
+  display: flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
   gap: 0.375em;
@@ -105,4 +124,49 @@ export const dis = css`
 export const ind = css`
   ${form};
   border: var(--qti-border-width, var(--cito-border-width, 1px)) solid var(--qti-border-color, GrayText);
+`;
+
+/** What a test control renders: the inner element that carries the look (see `hostBox`). */
+export const control = html`<span class="control" part="button"><slot></slot></span>`;
+
+/**
+ * The stylesheet of a neutral test control: the host box, the look on `.control`, and its hover, press,
+ * focus and disabled states. A control with its own content (a bookmark's icon) adds to it.
+ */
+export const button = css`
+  :host {
+    ${hostBox};
+  }
+  .control {
+    ${btn};
+  }
+  @media (hover: hover) and (pointer: fine) {
+    :host(:hover:not([disabled])) .control {
+      ${btnInteractive};
+    }
+  }
+  :host(:active:not([disabled])) .control {
+    ${btnActive};
+  }
+  :host(:focus-visible) {
+    ${focusRing};
+  }
+  :host([disabled]) {
+    ${dis};
+  }
+`;
+
+/** The filled look of `test-next`: add after `button`, so its rules win at equal specificity. */
+export const buttonPrimary = css`
+  .control {
+    ${btnPrimary};
+  }
+  @media (hover: hover) and (pointer: fine) {
+    :host(:hover:not([disabled])) .control {
+      ${btnPrimaryInteractive};
+    }
+  }
+  :host(:active:not([disabled])) .control {
+    ${btnPrimaryActive};
+  }
 `;

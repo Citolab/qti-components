@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -39,26 +39,7 @@ export class TestNext extends LitElement {
     }
   }
 
-  static override styles = css`
-    :host {
-      ${styles.btn};
-      ${styles.btnPrimary};
-    }
-    @media (hover: hover) and (pointer: fine) {
-      :host(:hover:not([disabled])) {
-        ${styles.btnPrimaryInteractive};
-      }
-    }
-    :host(:active:not([disabled])) {
-      ${styles.btnPrimaryActive};
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+  static override styles = [styles.button, styles.buttonPrimary];
   #internals: ElementInternals;
 
   constructor() {
@@ -115,7 +96,7 @@ export class TestNext extends LitElement {
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return styles.control;
   }
 }
 

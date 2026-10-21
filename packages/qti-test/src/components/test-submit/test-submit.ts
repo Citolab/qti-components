@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 
 import * as styles from '../styles';
 import { dispatchPublic } from '../../public-events';
@@ -9,25 +9,7 @@ import { dispatchPublic } from '../../public-events';
  * The host decides where it sits, for example on the last item or in a review view.
  */
 export class TestSubmit extends LitElement {
-  static override styles = css`
-    :host {
-      ${styles.btn};
-    }
-    @media (hover: hover) and (pointer: fine) {
-      :host(:hover:not([disabled])) {
-        ${styles.btnInteractive};
-      }
-    }
-    :host(:active:not([disabled])) {
-      ${styles.btnActive};
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+  static override styles = styles.button;
 
   constructor() {
     super();
@@ -35,7 +17,7 @@ export class TestSubmit extends LitElement {
   }
 
   override render() {
-    return html` <slot></slot> `;
+    return styles.control;
   }
 }
 

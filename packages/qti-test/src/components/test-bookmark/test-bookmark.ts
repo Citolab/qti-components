@@ -60,45 +60,26 @@ export class TestBookmark extends LitElement {
 
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  static override styles = css`
-    :host {
-      ${styles.btn};
-    }
-    @media (hover: hover) and (pointer: fine) {
-      :host(:hover:not([disabled])) {
-        ${styles.btnInteractive};
+  static override styles = [
+    styles.button,
+    css`
+      svg {
+        width: 1.1em;
+        height: 1.1em;
+        flex: none;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linejoin: round;
       }
-    }
-    :host(:active:not([disabled])) {
-      ${styles.btnActive};
-    }
-    :host {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4em;
-    }
-    svg {
-      width: 1.1em;
-      height: 1.1em;
-      flex: none;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linejoin: round;
-    }
-    :host([bookmarked]) {
-      color: var(--qti-bookmark-color, #b45309);
-    }
-    :host([bookmarked]) svg {
-      fill: currentColor;
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+      :host([bookmarked]) {
+        color: var(--qti-bookmark-color, #b45309);
+      }
+      :host([bookmarked]) svg {
+        fill: currentColor;
+      }
+    `
+  ];
 
   constructor() {
     super();
@@ -151,7 +132,9 @@ export class TestBookmark extends LitElement {
   }
 
   override render() {
-    return html`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg><slot></slot>`;
+    return html`<span class="control" part="button"
+      ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21z" /></svg><slot></slot
+    ></span>`;
   }
 }
 
