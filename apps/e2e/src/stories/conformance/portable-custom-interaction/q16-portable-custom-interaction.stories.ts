@@ -21,6 +21,8 @@ type PciStoryOptions = {
     expectedValid: boolean;
     message?: string;
   };
+  /** Run the PCIs with the `sandboxed` attribute: an opaque-origin iframe, `sandbox="allow-scripts"`. */
+  sandboxed?: boolean;
 };
 
 type PlotSpec = {
@@ -42,6 +44,7 @@ type RestoreStoryOptions = {
   plotSpecs: PlotSpec[];
   navigateAway?: 'next' | 'prev';
   startItemIndex?: number; // 0-based index of the item to start on (default: 0)
+  sandboxed?: boolean;
 };
 
 const meta: Meta = {
@@ -150,7 +153,7 @@ const getModuleResolutionConfig = async (baseUrl: string, name: string) => {
   return JSON.parse(fileContent) as ModuleResolutionConfig;
 };
 
-const createPostLoadTransformCallback = () => {
+const createPostLoadTransformCallback = ({ sandboxed = false }: { sandboxed?: boolean } = {}) => {
   return async (transformer: transformItemApi, itemRef: { href: string }) => {
     const itemUrl = new URL(itemRef.href, window.location.origin);
     const baseUrl = itemUrl.pathname.substring(0, itemUrl.pathname.lastIndexOf('/'));
@@ -160,6 +163,7 @@ const createPostLoadTransformCallback = () => {
     transformer = transformer.fn((xmlDoc: XMLDocument) => {
       xmlDoc.querySelectorAll('qti-portable-custom-interaction-test').forEach(el => {
         el.setAttribute('data-forward-console', 'true');
+        if (sandboxed) el.setAttribute('sandboxed', '');
       });
       xmlDoc.querySelectorAll('qti-stylesheet[href]').forEach(el => {
         const href = el.getAttribute('href');
@@ -179,13 +183,20 @@ const createPostLoadTransformCallback = () => {
   };
 };
 
-const loadPciItem = async (canvasElement: HTMLElement, itemName: string) => {
+const loadPciItem = async (
+  canvasElement: HTMLElement,
+  itemName: string,
+  { sandboxed = false }: { sandboxed?: boolean } = {}
+) => {
   const baseUrl = `${pciRoot}/${itemName}`;
   const assetBaseUrl = removeDoubleSlashes(`${window.location.origin}${baseUrl}`);
   const response = await fetch(`${baseUrl}/qti.xml`);
   const xmlText = await response.text();
   const qti = xmlText
-    .replaceAll('<qti-portable-custom-interaction', '<qti-portable-custom-interaction-test data-forward-console="true"')
+    .replaceAll(
+      '<qti-portable-custom-interaction',
+      `<qti-portable-custom-interaction-test data-forward-console="true"${sandboxed ? ' sandboxed=""' : ''}`
+    )
     .replaceAll('</qti-portable-custom-interaction>', '</qti-portable-custom-interaction-test>')
     .replaceAll('href="css/', `href="${assetBaseUrl}/css/`)
     .replaceAll("href='css/", `href='${assetBaseUrl}/css/`);
@@ -351,6 +362,21 @@ const assertPciLoaded = async (
   return { assessmentItem, pciElements };
 };
 
+/**
+ * A `sandboxed` PCI runs in an opaque-origin iframe: the host cannot reach into its document, and
+ * everything - the handshake, resizing, console, responses, state - has to travel by postMessage.
+ */
+const assertSandboxedFrames = async (pciElements: Iterable<Element>) => {
+  for (const el of pciElements) {
+    const iframe = el.querySelector(':scope > iframe') as HTMLIFrameElement | null;
+    expect(iframe?.getAttribute('sandbox')).toBe('allow-scripts');
+    expect(iframe?.contentDocument).toBeNull();
+    expect(() => iframe?.contentWindow?.document).toThrow();
+    // The frame sized itself: its resize message came through.
+    await waitFor(() => expect(parseFloat(iframe?.style.height ?? '')).toBeGreaterThan(0));
+  }
+};
+
 const createConsoleCapture = (pciElements: NodeListOf<Element>) => {
   const messages: string[] = [];
   const handler = (event: Event) => {
@@ -410,18 +436,22 @@ const createPciStory = ({
   expectedPciCount = 1,
   plotSpecs,
   consoleExpectations,
-  endAttemptCheck
+  endAttemptCheck,
+  sandboxed = false
 }: PciStoryOptions): Story => ({
   render: () =>
     endAttemptCheck ? renderPciItemWithEndAttempt(endAttemptCheck.message || 'Invalid response.') : renderPciItem(),
   play: async ({ canvasElement }) => {
-    await loadPciItem(canvasElement, itemName);
+    await loadPciItem(canvasElement, itemName, { sandboxed });
     let consoleCapture: ReturnType<typeof createConsoleCapture> | null = null;
-    const { assessmentItem } = await assertPciLoaded(canvasElement, expectedPciCount, pciElements => {
+    const { assessmentItem, pciElements } = await assertPciLoaded(canvasElement, expectedPciCount, pciElements => {
       if (consoleExpectations && consoleExpectations.length > 0) {
         consoleCapture = createConsoleCapture(pciElements);
       }
     });
+    if (sandboxed) {
+      await assertSandboxedFrames(pciElements);
+    }
 
     if (consoleCapture && consoleExpectations) {
       await assertConsoleMessages(consoleCapture.messages, consoleExpectations);
@@ -481,14 +511,15 @@ const createRestoreStory = ({
   nextItemIdentifier,
   plotSpecs,
   navigateAway = 'next',
-  startItemIndex = 0
+  startItemIndex = 0,
+  sandboxed = false
 }: RestoreStoryOptions): Story => ({
   name,
   render: (_args, { loaded: { manifestInfo } }) => html`
     <qti-test
       navigate="item"
       class="flex h-full w-full flex-col"
-      .postLoadTransformCallback=${createPostLoadTransformCallback()}
+      .postLoadTransformCallback=${createPostLoadTransformCallback({ sandboxed })}
     >
       <test-navigation>
         <div class="relative flex-1 overflow-auto">
@@ -569,6 +600,9 @@ const createRestoreStory = ({
     const restoredItem = await waitForAssessmentItemInTest(testContainer, startItemRefId);
     await waitForPcisInItem(restoredItem);
     await assertResponses(restoredItem, plotSpecs);
+    if (sandboxed) {
+      await assertSandboxedFrames(restoredItem.querySelectorAll('qti-portable-custom-interaction-test'));
+    }
   },
   loaders: [
     async () => ({
@@ -1146,3 +1180,67 @@ export const Q16_PCI_D65: Story = createRestoreStory({
     }
   ]
 });
+
+/*
+ * The same conformance checks with the PCIs in a sandboxed iframe (the `sandboxed` attribute:
+ * `sandbox="allow-scripts"`, an opaque origin). Each also checks that the host cannot reach into
+ * the frame and that the frame still sized itself.
+ */
+const onePoint: PlotSpec[] = [
+  { responseIdentifier: 'RESPONSE', graphSelector: '#graph svg', points: [{ x: 1, y: -3 }], expected: ['1,-3'] }
+];
+const twoGraphs: PlotSpec[] = [
+  {
+    responseIdentifier: 'RESPONSE',
+    graphSelector: '#graph-1 svg',
+    points: [
+      { x: -3, y: 0 },
+      { x: 0, y: -2 }
+    ],
+    expected: ['-3,0', '0,-2']
+  },
+  {
+    responseIdentifier: 'RESPONSE1',
+    graphSelector: '#graph-2 svg',
+    points: [
+      { x: -3, y: 0 },
+      { x: 0, y: -2 }
+    ],
+    expected: ['-3,0', '0,-2']
+  }
+];
+
+/** Configuration consistent and console forwarded, from an opaque-origin frame. */
+export const Q16_PCI_D12_Sandboxed: Story = {
+  name: 'Q16-PCI-D12 (sandboxed)',
+  ...createPciStory({ itemName: 'item-1', consoleExpectations: consoleSingle, sandboxed: true })
+};
+/** A response reported by the PCI reaches the item. */
+export const Q16_PCI_D14_Sandboxed: Story = {
+  name: 'Q16-PCI-D14 (sandboxed)',
+  ...createPciStory({ itemName: 'item-1', plotSpecs: onePoint, sandboxed: true })
+};
+/** Response and state survive navigating away and back: the PCI is rebuilt from the stored state. */
+export const Q16_PCI_D16_Sandboxed: Story = createRestoreStory({
+  name: 'Q16-PCI-D16 (sandboxed)',
+  itemIdentifier: 'pci-graphing-interaction-1',
+  nextItemIdentifier: 'pci-graphing-interaction-2',
+  plotSpecs: onePoint,
+  sandboxed: true
+});
+/** Two sandboxed PCIs on one item each talk to their own interaction. */
+export const Q16_PCI_D32_Sandboxed: Story = {
+  name: 'Q16-PCI-D32 (sandboxed)',
+  ...createPciStory({ itemName: 'item-3', expectedPciCount: 2, consoleExpectations: consoleDouble, sandboxed: true })
+};
+/** Two sandboxed PCIs: responses and the PCI's own validity. */
+export const Q16_PCI_D35_Sandboxed: Story = {
+  name: 'Q16-PCI-D35 (sandboxed)',
+  ...createPciStory({
+    itemName: 'item-3',
+    expectedPciCount: 2,
+    plotSpecs: twoGraphs,
+    endAttemptCheck: { expectedValid: true, message: 'Invalid response: Please mark at least one point on the graph.' },
+    sandboxed: true
+  })
+};
