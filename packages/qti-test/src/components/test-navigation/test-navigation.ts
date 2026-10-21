@@ -202,13 +202,12 @@ export class TestNavigation extends LitElement {
   }
 
   /**
-   * Handles the 'test-end-attempt' event.
-   * @private
-   * @listens TestNavigation#test-end-attempt
-   * @param {CustomEvent} event - The custom event object.
+   * Ends an attempt: the item named by `detail.itemId` (a `test-end-attempt` stamped into an item, or
+   * given an `item`), or else the item on screen.
    */
-  #handleTestEndAttempt(_event: CustomEvent) {
-    const qtiAssessmentItemEl = this.activeAssessmentItem;
+  #handleTestEndAttempt(event: CustomEvent<{ itemId?: string } | undefined>) {
+    const itemId = event.detail?.itemId;
+    const qtiAssessmentItemEl = itemId ? this.#assessmentItemFor(itemId) : this.activeAssessmentItem;
     if (!qtiAssessmentItemEl) return;
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
@@ -499,7 +498,8 @@ export class TestNavigation extends LitElement {
                 // Published by the item. One that is not on screen has nothing to be invalid.
                 const valid = itemContext?.valid ?? true;
 
-                const responseVars = itemContext?.variables?.filter(v => v.type === 'response') || [];
+                const responseVars =
+                  itemContext?.variables?.filter(v => v.type === 'response' && v.identifier !== 'numAttempts') || [];
 
                 const isDefaultResponse = responseVars.every(v => {
                   if (v.value === undefined || v.value === null) {

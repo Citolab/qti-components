@@ -154,6 +154,9 @@ export const button = css`
   :host([disabled]) {
     ${dis};
   }
+  :host([disabled]) .control {
+    cursor: not-allowed;
+  }
 `;
 
 /** The filled look of `test-next`: add after `button`, so its rules win at equal specificity. */

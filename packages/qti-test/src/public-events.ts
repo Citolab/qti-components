@@ -28,7 +28,11 @@ export interface NavigationFailure {
 
 export interface PublicEventMap {
   'cito-test-navigate': CustomEvent<NavigationTarget>;
-  'cito-test-end-attempt': CustomEvent<unknown>;
+  /**
+   * Ends an attempt: processes the response of the item-ref `itemId`, or, without it, of the item on
+   * screen. `test-end-attempt` sends the `itemId` of the item it is stamped into or names.
+   */
+  'cito-test-end-attempt': CustomEvent<{ itemId?: string }>;
   /** Scores the test: resets its outcomes to their defaults, runs outcome processing, then `cito-test-submitted`. */
   'cito-test-submit': CustomEvent<Record<string, never>>;
   'cito-test-update-outcome': CustomEvent<{
