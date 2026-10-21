@@ -121,6 +121,16 @@ unchanged. Listening for both names runs your handler twice; pick one.
 - `qti-interaction-changed`: `AssessmentPlayerView.tsx:966` (interaction replay log).
   Evidence: read, not run
 
+### Section link in item mode has an active item (#332)
+
+Status: behaviour change (fix); nothing to do
+Members: `navigate="item"`, `navigateTo`
+Do: nothing, unless the host sends a `section` request (`navigateTo('section', id)` or a
+`test-section-link`) while `navigate="item"`. Then the section's first item is now the current
+item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-attempt` and the
+scoring buttons act on it. The whole section still renders.
+Evidence: read, not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.
