@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM023"
+                     title="Slider"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="integer" cardinality="single">
+        <qti-correct-response>
+            <qti-value>71</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col7">
+                <qti-slider-interaction response-identifier="RESPONSE" lower-bound="0" upper-bound="100" step="1" step-label="false">
+                    <qti-prompt>
+                        <p>About what percentage of the Earth's surface is covered by water? Set the slider.</p>
+                    </qti-prompt>
+                </qti-slider-interaction>
+            </div>
+            <div class="qti-layout-col5">
+                <img src="resources/world-map.jpg" alt="Map of the world"/>
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct: 71%. Any answer from 68 to 74 scores the point.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-and>
+                    <qti-gte>
+                        <qti-variable identifier="RESPONSE"/>
+                        <qti-base-value base-type="integer">68</qti-base-value>
+                    </qti-gte>
+                    <qti-lte>
+                        <qti-variable identifier="RESPONSE"/>
+                        <qti-base-value base-type="integer">74</qti-base-value>
+                    </qti-lte>
+                </qti-and>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value base-type="float">1</qti-base-value>
+                </qti-set-outcome-value>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                    <qti-base-value base-type="identifier">correct</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value base-type="float">0</qti-base-value>
+                </qti-set-outcome-value>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                    <qti-base-value base-type="identifier">incorrect</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-else>
+        </qti-response-condition>
+    </qti-response-processing>
+
+    <qti-modal-feedback outcome-identifier="FEEDBACK" identifier="correct" show-hide="show" title="Well done">
+        <qti-content-body>
+            <p>Yes: about 71% of the Earth's surface is water, almost all of it in the oceans.</p>
+        </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback outcome-identifier="FEEDBACK" identifier="incorrect" show-hide="show" title="Not quite">
+        <qti-content-body>
+            <p>About 71% of the Earth's surface is covered by water, almost all of it in the oceans.</p>
+        </qti-content-body>
+    </qti-modal-feedback>
+</qti-assessment-item>

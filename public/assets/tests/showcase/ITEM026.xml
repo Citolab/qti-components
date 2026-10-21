@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM026"
+                     title="Asking for a hint"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="string" cardinality="single">
+        <qti-correct-response>
+            <qti-value>Au</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="HINTREQUEST" base-type="boolean" cardinality="single"/>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="HINTUSED" base-type="boolean" cardinality="single">
+        <qti-default-value>
+            <qti-value>false</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col8">
+                <p>What is the chemical symbol for gold?</p>
+                <p><qti-text-entry-interaction response-identifier="RESPONSE" expected-length="3"/></p>
+                <qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show a hint"/>
+                <qti-feedback-block outcome-identifier="FEEDBACK" identifier="HINT" show-hide="show">
+                    <qti-content-body>
+                        <p class="qti-well">Hint: the symbol comes from <em>aurum</em>, the Latin word for gold. Using the hint halves your score.</p>
+                    </qti-content-body>
+                </qti-feedback-block>
+            </div>
+            <div class="qti-layout-col4">
+                <img src="resources/chemistry.png" alt="A conical flask and a test tube with liquid" width="250" />
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct: Au (capital A, small u). One point without the hint, half a point with it.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-variable identifier="HINTREQUEST"/>
+                <qti-set-outcome-value identifier="HINTUSED">
+                    <qti-base-value base-type="boolean">true</qti-base-value>
+                </qti-set-outcome-value>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                    <qti-base-value base-type="identifier">HINT</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-if>
+        </qti-response-condition>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-match>
+                    <qti-variable identifier="RESPONSE"/>
+                    <qti-correct identifier="RESPONSE"/>
+                </qti-match>
+                <qti-response-condition>
+                    <qti-response-if>
+                        <qti-variable identifier="HINTUSED"/>
+                        <qti-set-outcome-value identifier="SCORE">
+                            <qti-base-value base-type="float">0.5</qti-base-value>
+                        </qti-set-outcome-value>
+                    </qti-response-if>
+                    <qti-response-else>
+                        <qti-set-outcome-value identifier="SCORE">
+                            <qti-base-value base-type="float">1</qti-base-value>
+                        </qti-set-outcome-value>
+                    </qti-response-else>
+                </qti-response-condition>
+            </qti-response-if>
+            <qti-response-else>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value base-type="float">0</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-else>
+        </qti-response-condition>
+    </qti-response-processing>
+</qti-assessment-item>

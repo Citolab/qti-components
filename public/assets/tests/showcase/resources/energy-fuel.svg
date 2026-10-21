@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 90" width="70" height="90">
+  <!-- Fuel drop -->
+  <path d="M35,6 C35,6 10,42 10,58 A25,25 0 0,0 60,58 C60,42 35,6 35,6 Z"
+        fill="#E67E22" stroke="#CA6F1E" stroke-width="2"/>
+  <!-- Highlight sheen -->
+  <path d="M24,44 Q19,54 23,62" fill="none" stroke="rgba(255,255,255,0.45)"
+        stroke-width="4" stroke-linecap="round"/>
+  <!-- Fuel can nozzle -->
+  <rect x="26" y="76" width="18" height="8" rx="2" fill="#7D6608"/>
+  <line x1="35" y1="83" x2="35" y2="88" stroke="#7D6608" stroke-width="3"/>
+</svg>

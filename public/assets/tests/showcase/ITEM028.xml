@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM028"
+                     title="Multiple choice with pictures"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>bike</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0" upper-bound="1">
+            <qti-map-entry map-key="bike" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="true" max-choices="1" class="qti-orientation-horizontal">
+            <qti-prompt>
+                <p>Which of these vehicles needs neither fuel nor electricity?</p>
+            </qti-prompt>
+            <qti-simple-choice identifier="car">
+                <img src="resources/vehicle-car.svg" alt="Car" width="150" height="98"/>
+            </qti-simple-choice>
+            <qti-simple-choice identifier="train">
+                <img src="resources/vehicle-train.svg" alt="Train" width="165" height="98"/>
+            </qti-simple-choice>
+            <qti-simple-choice identifier="bike">
+                <img src="resources/vehicle-bike.svg" alt="Bicycle" width="150" height="112"/>
+            </qti-simple-choice>
+        </qti-choice-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct: the bicycle. A car runs on fuel and a train on electricity; a bicycle runs on muscle power.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>
