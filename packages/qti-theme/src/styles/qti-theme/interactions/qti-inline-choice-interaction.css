@@ -63,9 +63,20 @@
      * above it. Two spacing tokens for one box is the whole bug — the vocabulary says pick one and
      * spend it whole (see the CONTRACT note on --qti-padding-box / -inline / --qti-gap).
      */
+    /*
+     * The seam is ONE border. The menu anchors to the field's outer bottom edge, so its top border
+     * used to stack under the field's bottom border: two borders read as one thick band. Pulled up by
+     * the field's border width, the menu's top border lies on the field's bottom border instead.
+     *
+     * A negative margin rather than dropping the menu's top border: `position-try-fallbacks:
+     * flip-block` flips margins with the menu, so a menu flipped above the field overlaps the
+     * field's top border the same way and still has a border on its free edge. Not in a :state —
+     * the menu is only painted while open anyway, so this never toggles.
+     */
     &::part(menu) {
       @mixin menu;
       padding: 0;
+      margin-block-start: calc(-1 * var(--field-border-width, var(--qti-component-border-width)));
     }
 
     /*
@@ -93,18 +104,18 @@
       border-end-end-radius: 0;
     }
 
+    /* All four corners square: the top because it joins the field, the bottom by design — the open
+       list is a straight-edged sheet under the field. */
     &::part(menu):popover-open {
-      border-start-start-radius: 0;
-      border-start-end-radius: 0;
+      border-radius: 0;
     }
 
     /* ── Option rows ─────────────────────────────────────────────────────────── */
     &::part(option) {
       padding: var(--qti-padding-box);
       border: 0;
-      /* Square, because a row now spans the full width of the menu. The menu's own radius still
-         rounds the first and last row, since it clips them (overflow: auto). A radius here would
-         only show as a notch inside a straight edge. */
+      /* Square, because a row spans the full width of the menu, and the open menu is square too.
+         A radius here would only show as a notch inside a straight edge. */
       border-radius: 0;
       background: transparent;
       cursor: pointer;
