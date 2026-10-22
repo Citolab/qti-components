@@ -54,6 +54,7 @@ const item = ({ adaptive = 'false', processing = matchCorrect, endAttempt }: Opt
         <qti-correct-response><qti-value>A</qti-value></qti-correct-response>
       </qti-response-declaration>
       <qti-response-declaration identifier="END" cardinality="single" base-type="boolean"></qti-response-declaration>
+      <qti-response-declaration identifier="HINT" cardinality="single" base-type="boolean"></qti-response-declaration>
       <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
         <qti-default-value><qti-value>0</qti-value></qti-default-value>
       </qti-outcome-declaration>
@@ -222,8 +223,9 @@ export const AdaptiveSetsItsOwnCompletion: StoryObj = {
 };
 
 /**
- * `qti-end-attempt-interaction` ends the attempt; it counts one only with `count-attempt="true"`.
- * Without the attribute it does not count (QTI's default for `count-attempt` is true).
+ * `qti-end-attempt-interaction` ends the attempt; it counts one only with `count-attempt="true"` (QTI 3
+ * gives the attribute no default). The response of the one used is `true`, that of every other
+ * end-attempt interaction `false` (QTI info model §2.4.5).
  */
 export const EndAttemptInteraction: StoryObj = {
   render: () =>
@@ -231,21 +233,26 @@ export const EndAttemptInteraction: StoryObj = {
       endAttempt: html`
         <qti-end-attempt-interaction data-testid="counts" response-identifier="END" count-attempt="true" title="Done">
         </qti-end-attempt-interaction>
-        <qti-end-attempt-interaction data-testid="hint" response-identifier="END" title="Hint">
+        <qti-end-attempt-interaction data-testid="hint" response-identifier="HINT" title="Hint">
         </qti-end-attempt-interaction>
       `
     }),
   play: async ({ canvasElement }) => {
     const { host, item, now, choose } = await ready(canvasElement);
     type EndAttempt = HTMLElement & { endAttempt(e: Event): void };
+    const response = (id: string) => item.itemContext.variables.find(v => v.identifier === id)?.value;
     await choose('A');
 
     within(host).getByTestId<EndAttempt>('hint').endAttempt(new Event('click'));
     expect(now()).toEqual({ numAttempts: '0', completionStatus: 'completed', SCORE: '1' });
-    expect(item.itemContext.variables.find(v => v.identifier === 'END')?.value).toBe('true');
+    expect([response('HINT'), response('END')]).toEqual(['true', 'false']);
 
     within(host).getByTestId<EndAttempt>('counts').endAttempt(new Event('click'));
     expect(now()).toEqual({ numAttempts: '1', completionStatus: 'completed', SCORE: '1' });
+    expect([response('HINT'), response('END')]).toEqual(['false', 'true']);
+
+    item.processResponse();
+    expect([response('HINT'), response('END')]).toEqual(['false', 'false']);
   }
 };
 
