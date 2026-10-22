@@ -90,18 +90,6 @@ export class QtiCustomOperator extends LitElement implements Calculate {
             }
           })
         );
-      },
-      updateResponseVariable: (responseIdentifier: string, response: string | string[]) => {
-        this.dispatchEvent(
-          new CustomEvent<{ responseIdentifier: string; response: string | string[] }>('qti-interaction-response', {
-            bubbles: true,
-            composed: true,
-            detail: {
-              responseIdentifier,
-              response
-            }
-          })
-        );
       }
     };
 

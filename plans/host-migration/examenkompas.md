@@ -88,3 +88,16 @@ Status: none
 Members: `test-print-context`, `test-print-item-variables`, `test-scoring-buttons`, `test-scoring-feedback`
 Do: nothing. They are plugins in the source, but `@qti-components/test` still registers them; no extra import.
 Evidence: read, not run
+
+## Next major
+
+### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+
+Status: breaking
+Members: `qti-outcome-changed`
+Do: listen for `cito-item-outcomes-changed` instead (`assessment.tsx:200`, `:208`, and the
+`qtioutcomechanged` mapping in `assessment-test-container.tsx:29`). `detail` is
+`{ item, outcomes: [{ identifier, value }] }`, one event per update, sent after the item context is
+published. The handler (`outcomeChanged`, passed as `itemChanged` in `digitaal.tsx:588`) bumps a
+tick in `assessment.tsx:184-187`; check whether `itemChanged` reads `detail`.
+Evidence: read, not run

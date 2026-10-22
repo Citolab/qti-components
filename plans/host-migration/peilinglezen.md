@@ -85,6 +85,23 @@ pick one.
   `qti-outcome-changed` handler.
   Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
 
+## Next major
+
+### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+
+Status: breaking
+Members: `qti-outcome-changed`
+Do: listen for `cito-item-outcomes-changed` instead. `detail` is `{ item, outcomes: [{ identifier, value }] }`:
+one event per update with every outcome that changed, sent after the item context is published.
+
+- `apps/leesvaardigheid/src/app/components/assessment-test.component.tsx:148` listens for
+  `qti-outcome-changed` and logs an `outcome-changed` action (`:101`) per outcome; log one per entry
+  in `outcomes`.
+- `player/src/main.ts:233` has an empty `qti-outcome-changed` handler; drop it.
+- `player/src/components/qti-assessment-item-ref.ts:39-42` reads `detail.outcomeIdentifier` (outcomes
+  named `RESPONSE-…` in the `opzoeken` items); loop over `detail.outcomes` and read `identifier`.
+  Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

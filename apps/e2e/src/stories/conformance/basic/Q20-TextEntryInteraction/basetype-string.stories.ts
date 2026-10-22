@@ -22,7 +22,7 @@ export const Q20_L1_D1: Story = {
   render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onOutcomeChangedAction = action('cito-item-outcomes-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -32,7 +32,7 @@ export const Q20_L1_D1: Story = {
       <div
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @cito-item-outcomes-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
         ${xml}
@@ -67,7 +67,7 @@ export const Q20_L1_D2: Story = {
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onOutcomeChangedAction = action('cito-item-outcomes-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -77,7 +77,7 @@ export const Q20_L1_D2: Story = {
       <div
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @cito-item-outcomes-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
         ${xml}

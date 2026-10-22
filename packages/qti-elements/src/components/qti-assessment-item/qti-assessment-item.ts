@@ -8,12 +8,11 @@ import { dispatchPublic } from '../../public-events';
 
 import type { PropertyValues } from 'lit';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
-import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
+import type { InteractionChangedDetails, OutcomeEntry, SetOutcomesDetails } from '../../internal/event-types.ts';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { RegisteredInteraction } from '@qti-components/base';
 import type { VariableDeclaration, VariableValue } from '@qti-components/base';
 import type { OutcomeVariable, ResponseVariable, TemplateVariable } from '@qti-components/base';
-import type { QtiResponseProcessing } from '../qti-response-processing/qti-response-processing.ts';
 import type QtiRegisterVariable from '../../internal/events/qti-register-variable.ts';
 import type { ItemContext } from '@qti-components/base';
 
@@ -27,6 +26,14 @@ import type { ItemContext } from '@qti-components/base';
  * @event qti-item-context-updated - Emitted when through a user action the itemContext is updated,
  * typically on interaction with the interactions, or calling response processing.
  */
+
+/**
+ * What the item needs of its response processing: start a run for an attempt. The result comes
+ * back as an event.
+ */
+interface ResponseProcessor {
+  processResponse(options: { numAttempts: number }): void;
+}
 
 export class QtiAssessmentItem extends LitElement {
   #itemTitle: string | undefined;
@@ -239,7 +246,7 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-register-variable', this.#handleRegisterVariable);
     this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.addEventListener('end-attempt', this.#handleEndAttempt);
-    this.addEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.addEventListener('cito-item-set-outcomes', this.#handleSetOutcomes);
     this.addEventListener('qti-set-template-value', this.#handleSetTemplateValue);
     this.addEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.addEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
@@ -249,7 +256,7 @@ export class QtiAssessmentItem extends LitElement {
     this.removeEventListener('qti-register-variable', this.#handleRegisterVariable);
     this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.removeEventListener('end-attempt', this.#handleEndAttempt);
-    this.removeEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.removeEventListener('cito-item-set-outcomes', this.#handleSetOutcomes);
     this.removeEventListener('qti-set-template-value', this.#handleSetTemplateValue);
     this.removeEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.removeEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
@@ -278,11 +285,33 @@ export class QtiAssessmentItem extends LitElement {
     this.processResponse(countAttempt);
   };
 
-  #handleSetOutcomeValue = (e: CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>) => {
+  /**
+   * Applies the outcomes of a processing run, ours or a backend's, in one update. After an attempt
+   * (`responseProcessed`) a non-adaptive item sets completionStatus from the interactions' validity;
+   * an adaptive item's processing sets it itself.
+   */
+  #handleSetOutcomes = (e: CustomEvent<SetOutcomesDetails>) => {
     e.stopImmediatePropagation();
-    const { outcomeIdentifier, value } = e.detail;
-    this.updateOutcomeVariable(outcomeIdentifier, value);
-    e.stopPropagation();
+    const { outcomes = [], responseProcessed = false } = e.detail ?? {};
+    const valid = this.#checkValidity(false);
+    const completion: OutcomeEntry[] =
+      responseProcessed && this.adaptive === 'false'
+        ? [{ identifier: 'completionStatus', value: this.#completionStatusOf(valid) }]
+        : [];
+    this.#applyOutcomes([...outcomes, ...completion], valid);
+
+    if (responseProcessed) {
+      // `responseProcessed` marks this as the end of an attempt (vs. a plain
+      // selection, which fires the same event without the flag). Lets listeners
+      // react only when an attempt actually ends.
+      this.dispatchEvent(
+        new CustomEvent<{ itemContext: ItemContext; responseProcessed: boolean }>('qti-item-context-updated', {
+          bubbles: true,
+          composed: true,
+          detail: { itemContext: this._context, responseProcessed: true }
+        })
+      );
+    }
   };
 
   #handleSetTemplateValue = (e: CustomEvent<{ templateIdentifier: string; value: string | string[] | null }>) => {
@@ -347,42 +376,37 @@ export class QtiAssessmentItem extends LitElement {
     this.#initialContext = { ...this._context, variables: this._context.variables };
   }
 
+  /**
+   * Scores the attempt. The item does not score itself: its response processing does, like a
+   * backend, and sends the outcomes back in `cito-item-set-outcomes`, which the item applies in one
+   * update. The item keeps the attempt count (QTI info model §2.2.2: the delivery engine maintains
+   * numAttempts) and hands the new count to the run, whose rules may read it. Without response
+   * processing the item only counts the attempt. A run that throws still counts the attempt and applies
+   * no outcomes.
+   *
+   * @returns whether the item has response processing.
+   */
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
-    this.validate(reportValidityAfterScoring);
+    this.#checkValidity(reportValidityAfterScoring);
 
-    if (countNumAttempts) {
-      this.updateOutcomeVariable(
-        'numAttempts',
-        (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
-      );
+    const numAttempts = +this.getVariable('numAttempts')?.value + (countNumAttempts ? 1 : 0);
+    const processor = this.querySelector<HTMLElement & Partial<ResponseProcessor>>('qti-response-processing');
+    if (typeof processor?.processResponse === 'function') {
+      try {
+        processor.processResponse({ numAttempts });
+      } catch (error) {
+        // The attempt started, so it counts (QTI info model §2.2.2), as in TAO and Amp-up; the
+        // outcomes of a run that failed are not applied.
+        this.#applyOutcomes([{ identifier: 'numAttempts', value: String(numAttempts) }]);
+        throw error;
+      }
+      return true;
     }
-
-    if (this.adaptive === 'false') {
-      this.#resetOutcomeVariablesBeforeResponseProcessing();
-    }
-
-    const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
-    const canProcess = !!(responseProcessor && typeof responseProcessor.process === 'function');
-    if (canProcess) {
-      responseProcessor.process();
-    }
-    if (this.adaptive === 'false') {
-      // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
-    }
-
-    // `responseProcessed` marks this as the end of an attempt (vs. a plain
-    // selection, which fires the same event without the flag). Lets listeners
-    // react only when an attempt actually ends.
-    this.dispatchEvent(
-      new CustomEvent<{ itemContext: ItemContext; responseProcessed: boolean }>('qti-item-context-updated', {
-        bubbles: true,
-        composed: true,
-        detail: { itemContext: this._context, responseProcessed: true }
-      })
-    );
-
-    return canProcess;
+    dispatchPublic(this, 'cito-item-set-outcomes', {
+      outcomes: [{ identifier: 'numAttempts', value: String(numAttempts) }],
+      responseProcessed: true
+    });
+    return false;
   }
 
   public resetResponses() {
@@ -433,7 +457,7 @@ export class QtiAssessmentItem extends LitElement {
 
     if (this.adaptive === 'false') {
       // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
+      this.updateOutcomeVariable('completionStatus', this.#completionStatusOf(this.validate(false)));
     }
   }
 
@@ -548,41 +572,54 @@ export class QtiAssessmentItem extends LitElement {
    * @param value - The new value for the response variable.
    */
   public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
-    const outcomeVariable = this.getOutcome(identifier);
+    this.#applyOutcomes([{ identifier, value }]);
+  }
 
-    if (!outcomeVariable) {
-      console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
-      return;
+  /**
+   * Publishes the outcomes (and the validity) in one update, then one `cito-item-outcomes-changed`.
+   * An identifier the item does not declare is skipped with a warning; a later entry for the same
+   * identifier wins.
+   */
+  #applyOutcomes(outcomes: readonly OutcomeEntry[], valid?: boolean) {
+    const values = new Map<string, OutcomeEntry['value']>();
+    for (const { identifier, value } of outcomes) {
+      const variable = this.getVariable(identifier);
+      if (!variable) {
+        console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
+        continue;
+      }
+      values.set(identifier, variable.cardinality === 'single' ? value : Array.isArray(value) ? value : [value]);
     }
+    const validChanged = valid !== undefined && valid !== this._context.valid;
+    if (values.size === 0 && !validChanged) return;
 
     this._context = {
       ...this._context,
-      variables: this._context.variables.map(v => {
-        if (v.identifier !== identifier) {
-          return v;
-        }
-        return {
-          ...v,
-          value: outcomeVariable.cardinality === 'single' ? value : Array.isArray(value) ? value : [value]
-        };
-      })
+      ...(validChanged ? { valid } : {}),
+      variables: this._context.variables.map(v =>
+        values.has(v.identifier) ? { ...v, value: values.get(v.identifier) as string | string[] | null } : v
+      )
     };
 
-    dispatchPublic(this, 'cito-item-outcome-changed', {
-      item: this.identifier,
-      outcomeIdentifier: identifier,
-      value: this._context.variables.find(v => v.identifier === identifier)?.value
-    });
+    if (values.size > 0) {
+      dispatchPublic(this, 'cito-item-outcomes-changed', {
+        item: this.identifier,
+        outcomes: [...values].map(([identifier, value]) => ({ identifier, value }))
+      });
+    }
   }
 
   public validate(reportValidity = true): boolean {
-    const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
+    const isValid = this.#checkValidity(reportValidity);
     this.#publishValidity(isValid);
+    return isValid;
+  }
 
+  #checkValidity(reportValidity: boolean): boolean {
+    const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
     if (reportValidity) {
       this.reportValidity();
     }
-
     return isValid;
   }
 
@@ -611,44 +648,14 @@ export class QtiAssessmentItem extends LitElement {
     }
   }
 
+  #completionStatusOf(valid: boolean): 'completed' | 'incomplete' {
+    return valid ? 'completed' : 'incomplete';
+  }
+
   public reportValidity() {
     for (const interactionElement of this.interactionElements) {
       interactionElement.reportValidity();
     }
-  }
-
-  #getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
-    const valid = this.validate(false);
-    if (valid === true) return 'completed';
-    if (valid === false) return 'incomplete';
-    return 'not_attempted';
-  }
-
-  #resetOutcomeVariablesBeforeResponseProcessing(): void {
-    this._context = {
-      ...this._context,
-      variables: this._context.variables.map(variable => {
-        if (variable.type !== 'outcome') {
-          return variable;
-        }
-
-        const hasDefaultValue = 'defaultValue' in variable;
-        const declaredDefault = hasDefaultValue ? variable.defaultValue : null;
-
-        let value = declaredDefault ?? null;
-        if (
-          (value === null || value === undefined) &&
-          (variable.baseType === 'integer' || variable.baseType === 'float')
-        ) {
-          value = '0';
-        }
-
-        return {
-          ...variable,
-          value
-        };
-      })
-    };
   }
 }
 
