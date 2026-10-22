@@ -101,3 +101,19 @@ Do: listen for `cito-item-outcomes-changed` instead (`assessment.tsx:200`, `:208
 published. The handler (`outcomeChanged`, passed as `itemChanged` in `digitaal.tsx:588`) bumps a
 tick in `assessment.tsx:184-187`; check whether `itemChanged` reads `detail`.
 Evidence: read, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `apps/examenkompas/src/lib/ui/components/examen/assessment.tsx:258-264, 365-392, 407-418`: the
+  view switch, enabling scoring and AI review read `completed`.
+- `item-navigation.tsx:26`, `item-thumbs.tsx:45`, `item-list.tsx:41`: nav and thumbnail status.
+- `apps/functions/src/app-specific/examenkompas.ts:339-341`: the report's `completed` feeds
+  `toetsVolledigBeantwoord`.
+  Evidence: read, not run

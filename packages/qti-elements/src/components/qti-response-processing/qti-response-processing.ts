@@ -86,7 +86,10 @@ export class QtiResponseProcessing extends LitElement {
     const reset = this.closest('qti-assessment-item')?.getAttribute('adaptive') !== 'true';
     for (const variable of copy.variables) {
       if (variable.identifier === 'numAttempts') variable.value = String(numAttempts);
-      if (variable.type === 'outcome' && reset) variable.value = defaultValueOf(variable as OutcomeVariable);
+      // completionStatus is built in: it has no default to reset to, and keeps its value (as in TAO).
+      if (variable.type === 'outcome' && reset && variable.identifier !== 'completionStatus') {
+        variable.value = defaultValueOf(variable as OutcomeVariable);
+      }
     }
 
     this.#runRules();
