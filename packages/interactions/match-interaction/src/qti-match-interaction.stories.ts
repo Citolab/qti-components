@@ -158,7 +158,7 @@ export const TabularAardrijkskunde = {
                 testRef?.value?.processResponse();
                 action(JSON.stringify(e.detail))();
               }}"
-      @qti-outcome-changed="${(e: { detail: any }) => {
+      @cito-item-outcomes-changed="${(e: { detail: any }) => {
         action(JSON.stringify(e.detail))();
       }}"
         xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"

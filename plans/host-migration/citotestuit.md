@@ -151,6 +151,16 @@ item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-att
 scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
 
+## Next major
+
+### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+
+Status: none
+Members: `qti-outcome-changed`
+Do: nothing; CitoTestUit does not listen for it. The item context is now published once at the end of
+an attempt instead of at every step, which the host only notices as fewer updates.
+Evidence: grep of the PrototypesQTI checkout for `outcome-changed`, not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.

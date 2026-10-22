@@ -75,7 +75,7 @@ export const SetOutcomeVariable: StoryObj = {
   play: async ({ canvasElement }) => {
     const { item } = await readyItem(canvasElement);
     const changed = fn();
-    item.addEventListener('qti-outcome-changed', changed);
+    item.addEventListener('cito-item-outcomes-changed', changed);
     const feedback = (id: string) =>
       item.querySelector<HTMLElement & { showStatus: string }>(`qti-modal-feedback[identifier="${id}"]`);
 
@@ -86,7 +86,10 @@ export const SetOutcomeVariable: StoryObj = {
     expect(feedback('incorrect').showStatus).toBe('off');
 
     const [event] = changed.mock.calls.at(-1) as [CustomEvent];
-    expect(event.detail).toMatchObject({ item: 'item-under-test', outcomeIdentifier: 'FEEDBACK', value: 'correct' });
+    expect(event.detail).toMatchObject({
+      item: 'item-under-test',
+      outcomes: [expect.objectContaining({ identifier: 'FEEDBACK', value: 'correct' })]
+    });
     expect(item.variables).toContainEqual(expect.objectContaining({ identifier: 'FEEDBACK', value: 'correct' }));
   }
 };

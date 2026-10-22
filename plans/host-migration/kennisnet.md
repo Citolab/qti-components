@@ -143,6 +143,31 @@ item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-att
 scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
 
+## Next major
+
+### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+
+Status: breaking
+Members: `qti-outcome-changed`, `cito-item-outcome-changed`
+Do: listen for `cito-item-outcomes-changed` instead. `detail` is `{ item, outcomes: [{ identifier, value }] }`:
+one event per update with every outcome that changed, sent after the item context is published, with
+the final values. An end of attempt no longer passes through a score of 0 or empty feedback first.
+
+- `projects/shared/src/lib/qti/events.ts:10`, `:21` and `:43` declare and list `qti-outcome-changed`
+  with the old `detail`; change the name and the type, then loop over `outcomes` in the handlers.
+  Evidence: read from `projects/shared/src/lib/qti/events.ts`, not run
+
+### `cito-item-set-outcomes` applies a backend's outcomes at once (feat/processing-as-backend)
+
+Status: recommended
+Members: `updateItemVariables`, `setOutcomeVariable`
+Do: when outcomes come from a backend, send them on the item in one event,
+`item.dispatchEvent(new CustomEvent('cito-item-set-outcomes', { detail: { outcomes: [{ identifier, value }, …], responseProcessed: true } }))`,
+instead of one `setOutcomeVariable` per outcome: the item publishes once and feedback is not shown and
+hidden again in between. Leave `responseProcessed` out when replaying stored outcomes that end no attempt.
+The item has applied everything when `dispatchEvent` returns.
+Evidence: read, not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

@@ -282,9 +282,8 @@ class ThrowingRule extends HTMLElement {
 if (!customElements.get('attempts-throwing-rule')) customElements.define('attempts-throwing-rule', ThrowingRule);
 
 /**
- * A rule that throws ends `processResponse` with the error. What was written before the throw
- * stays: the attempt is counted, SCORE keeps the earlier rule's value, and completionStatus is left
- * at the reset value (null: the built-in declares no default), because it is set after processing.
+ * A rule that throws ends `processResponse` with the error. The attempt counts (it started); the
+ * outcomes keep the values from before it.
  */
 export const ProcessingThrows: StoryObj = {
   render: () => item({ processing: html`${matchCorrect}<attempts-throwing-rule></attempts-throwing-rule>` }),
@@ -293,14 +292,13 @@ export const ProcessingThrows: StoryObj = {
     await choose('A');
 
     expect(() => item.processResponse()).toThrow('rule failed');
-    expect(now()).toEqual({ numAttempts: '1', completionStatus: null, SCORE: '1' });
+    expect(now()).toEqual({ numAttempts: '1', completionStatus: 'completed', SCORE: '0' });
   }
 };
 
 /**
- * Every state the item publishes during one `processResponse`, in order: the attempt count, the
- * reset of the outcomes to their defaults (completionStatus to null, SCORE to 0), each rule's
- * write, then completionStatus. A consumer sees each of these.
+ * `processResponse` publishes once, with the final values: no consumer sees the reset to the
+ * defaults or a rule's intermediate write.
  */
 export const PublishedDuringProcessResponse: StoryObj = {
   render: () => item(),
@@ -309,16 +307,10 @@ export const PublishedDuringProcessResponse: StoryObj = {
     await choose('A');
 
     expect(during(() => item.processResponse())).toEqual([
-      { numAttempts: '1', completionStatus: 'completed', SCORE: '0' },
-      { numAttempts: '1', completionStatus: null, SCORE: '0' },
-      { numAttempts: '1', completionStatus: null, SCORE: '1' },
       { numAttempts: '1', completionStatus: 'completed', SCORE: '1' }
     ]);
-    // A repeat with the same answer passes through SCORE 0 before it is 1 again.
+    // A repeat with the same answer never passes through SCORE 0.
     expect(during(() => item.processResponse())).toEqual([
-      { numAttempts: '2', completionStatus: 'completed', SCORE: '1' },
-      { numAttempts: '2', completionStatus: null, SCORE: '0' },
-      { numAttempts: '2', completionStatus: null, SCORE: '1' },
       { numAttempts: '2', completionStatus: 'completed', SCORE: '1' }
     ]);
   }
