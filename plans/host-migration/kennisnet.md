@@ -168,6 +168,22 @@ hidden again in between. Leave `responseProcessed` out when replaying stored out
 The item has applied everything when `dispatchEvent` returns.
 Evidence: read, not run
 
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `projects/shared/src/lib/player/store/items.ts:74`: the Nakijken button is enabled on `completed`;
+  use `valid && !isDefaultResponse`, else it stays disabled until after checking.
+- `selectors.ts:177-200` (`answeredItemIds`) and `items.ts:58,65`: unlocking the next question and the
+  nav markers read `completed`; same replacement.
+- The host's own writes of `completed` after backend scoring (`check-item.ts:59`, `submit.ts:49`) keep working.
+  Evidence: read from `projects/shared/src/lib/player/store/`, not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

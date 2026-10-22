@@ -8,8 +8,11 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '../qti-assessment-item';
 
 /**
- * The two built-in variables every item carries: `numAttempts` (counts the attempts) and
- * `completionStatus` (whether the candidate is done). Each story walks one path that sets them and
+ * The two built-in variables every item carries (QTI info model §2.2.2): `numAttempts`, which the
+ * item counts, and `completionStatus`, which is `not_attempted` until the item is presented,
+ * `unknown` from then on, and what response processing sets; a non-adaptive item becomes
+ * `completed` once an attempt ends (as in TAO and the 1EdTech reference results). Whether the
+ * answers are valid is the item context's `valid`, not completionStatus. Each story walks one path that sets them and
  * checks the values a host reads afterwards, and where it matters the states the item published on
  * the way, which every consumer of the item context (feedback, test navigation) sees.
  */
@@ -117,7 +120,7 @@ const ready = async (canvasElement: HTMLElement) => {
   return { host, item: el, now, during, choose };
 };
 
-/** A fresh item has not been attempted; its completion is unknown. */
+/** A presented item has started its first attempt: completionStatus is `unknown`, no longer `not_attempted`. */
 export const Initial: StoryObj = {
   render: () => item(),
   play: async ({ canvasElement }) => {
@@ -145,30 +148,44 @@ export const ProcessResponseCounts: StoryObj = {
 };
 
 /**
- * A non-adaptive item sets completionStatus from the interactions' validity: on every answer, and
- * again at the end of each attempt. `min-choices="1"`: nothing chosen is incomplete.
+ * The item does not derive completionStatus from the answers: `valid` in the item context says
+ * whether the interactions are valid (`min-choices="1"`: nothing chosen is invalid). completionStatus
+ * stays `unknown` until an attempt ends.
  */
-export const CompletionFollowsValidity: StoryObj = {
+export const ValidityIsNotCompletion: StoryObj = {
   render: () => item(),
   play: async ({ canvasElement }) => {
     const { item, now, choose } = await ready(canvasElement);
-
-    item.processResponse();
-    expect(now()).toEqual({ numAttempts: '1', completionStatus: 'incomplete', SCORE: '0' });
+    expect(item.itemContext.valid).toBe(false);
 
     await choose('A');
-    expect(now().completionStatus).toBe('completed');
+    expect(item.itemContext.valid).toBe(true);
+    expect(now().completionStatus).toBe('unknown');
 
-    await choose('A'); // deselect: nothing chosen again
-    expect(now().completionStatus).toBe('incomplete');
-
-    await choose('B');
     item.processResponse();
-    expect(now()).toEqual({ numAttempts: '2', completionStatus: 'completed', SCORE: '0' });
+    expect(now()).toEqual({ numAttempts: '1', completionStatus: 'completed', SCORE: '1' });
   }
 };
 
-/** An item without `qti-response-processing` still counts the attempt and sets completionStatus. */
+/** A non-adaptive item's response processing may set completionStatus itself; the item keeps that value. */
+export const NonAdaptiveProcessingSetsCompletion: StoryObj = {
+  render: () =>
+    item({
+      processing: html`${matchCorrect}
+        <qti-set-outcome-value identifier="completionStatus">
+          <qti-base-value base-type="identifier">incomplete</qti-base-value>
+        </qti-set-outcome-value>`
+    }),
+  play: async ({ canvasElement }) => {
+    const { item, now, choose } = await ready(canvasElement);
+    await choose('B');
+
+    item.processResponse();
+    expect(now()).toEqual({ numAttempts: '1', completionStatus: 'incomplete', SCORE: '0' });
+  }
+};
+
+/** An item without `qti-response-processing` still counts the attempt, and the ended attempt completes it. */
 export const WithoutResponseProcessing: StoryObj = {
   render: () => item({ processing: false }),
   play: async ({ canvasElement }) => {
@@ -289,8 +306,8 @@ class ThrowingRule extends HTMLElement {
 if (!customElements.get('attempts-throwing-rule')) customElements.define('attempts-throwing-rule', ThrowingRule);
 
 /**
- * A rule that throws ends `processResponse` with the error. The attempt counts (it started); the
- * outcomes keep the values from before it.
+ * A rule that throws ends `processResponse` with the error. The attempt counts (it started), and
+ * the outcomes keep the values from before it.
  */
 export const ProcessingThrows: StoryObj = {
   render: () => item({ processing: html`${matchCorrect}<attempts-throwing-rule></attempts-throwing-rule>` }),
@@ -299,7 +316,7 @@ export const ProcessingThrows: StoryObj = {
     await choose('A');
 
     expect(() => item.processResponse()).toThrow('rule failed');
-    expect(now()).toEqual({ numAttempts: '1', completionStatus: 'completed', SCORE: '0' });
+    expect(now()).toEqual({ numAttempts: '1', completionStatus: 'unknown', SCORE: '0' });
   }
 };
 

@@ -662,9 +662,8 @@ export const Q16_PCI_D13: Story = {
       validationMessage.style.display = 'block';
     }
 
-    // Verify completionStatus is NOT 'completed' (no points marked = invalid response)
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).not.toBe('completed');
+    // The item publishes the verdict (no points marked = invalid response)
+    expect(assessmentItem.itemContext.valid).toBe(false);
 
     // Verify the response is invalid
     expect(isValid).toBe(false);
@@ -739,9 +738,8 @@ export const Q16_PCI_D15: Story = {
     // Verify the response is valid
     expect(isValid).toBe(true);
 
-    // Verify completionStatus IS 'completed'
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).toBe('completed');
+    // The item publishes the verdict
+    expect(assessmentItem.itemContext.valid).toBe(true);
 
     // Verify NO validation message is shown
     expect(validationMessage.style.display).toBe('none');
@@ -888,9 +886,8 @@ export const Q16_PCI_D25: Story = {
     // Verify the response is valid
     expect(isValid).toBe(true);
 
-    // Verify completionStatus IS 'completed'
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).toBe('completed');
+    // The item publishes the verdict
+    expect(assessmentItem.itemContext.valid).toBe(true);
 
     // Verify NO validation message is shown
     expect(validationMessage.style.display).toBe('none');

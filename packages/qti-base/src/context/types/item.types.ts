@@ -26,7 +26,8 @@ export const itemContextVariables = [
     identifier: 'completionStatus',
     cardinality: 'single',
     baseType: 'string',
-    value: 'unknown',
+    // QTI info model §2.2.2; the item makes it `unknown` once it is presented.
+    value: 'not_attempted',
     type: 'outcome'
   },
   {

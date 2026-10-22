@@ -249,7 +249,7 @@ describe('qti-assessment-item response processing scope', () => {
     expect(attemptsEnded).toEqual([]);
   });
 
-  it('with responseProcessed, a host ends the attempt: completionStatus is set and the test is told', async () => {
+  it('with responseProcessed, a host ends the attempt: the test is told, completionStatus is what it sent', async () => {
     const { item, published } = await setup(itemWith('false'));
     const attemptsEnded: unknown[] = [];
     item.addEventListener('qti-item-context-updated', (e: Event) =>
@@ -261,7 +261,8 @@ describe('qti-assessment-item response processing scope', () => {
         detail: {
           outcomes: [
             { identifier: 'SCORE', value: '1' },
-            { identifier: 'numAttempts', value: '1' }
+            { identifier: 'numAttempts', value: '1' },
+            { identifier: 'completionStatus', value: 'completed' }
           ],
           responseProcessed: true
         }

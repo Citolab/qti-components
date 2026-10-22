@@ -102,6 +102,19 @@ one event per update with every outcome that changed, sent after the item contex
   named `RESPONSE-…` in the `opzoeken` items); loop over `detail.outcomes` and read `identifier`.
   Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
 
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `player/src/components/qti-navigation-bar.ts:103-107`: the "open" count (finishing allowed at 0)
+  reads `completed`; count items that are not `valid && !isDefaultResponse` instead.
+  Evidence: read from `player/src`, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

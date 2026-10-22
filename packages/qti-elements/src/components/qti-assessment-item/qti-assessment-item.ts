@@ -171,6 +171,7 @@ export class QtiAssessmentItem extends LitElement {
     // The interactions take the answers over from the context, some of them a moment from now, and
     // a different answer can mean a different verdict. Look once they have.
     void this.updateComplete.then(() => this.#revalidate());
+    if (this.isConnected) this.#beginFirstAttempt();
   }
 
   public get state(): ItemContext['state'] {
@@ -224,6 +225,7 @@ export class QtiAssessmentItem extends LitElement {
     this.updateComplete.then(() => {
       // The verdict goes in first, so whoever hears the item connect reads it with the rest.
       this.validate(false);
+      this.#beginFirstAttempt();
       dispatchPublic(this, 'cito-item-rendered', this);
       // Internal plumbing: the test and the item container listen for this name.
       this.dispatchEvent(
@@ -286,19 +288,25 @@ export class QtiAssessmentItem extends LitElement {
   };
 
   /**
-   * Applies the outcomes of a processing run, ours or a backend's, in one update. After an attempt
-   * (`responseProcessed`) a non-adaptive item sets completionStatus from the interactions' validity;
-   * an adaptive item's processing sets it itself.
+   * Applies the outcomes of a processing run, ours or a backend's, in one update, with the
+   * interactions' validity.
+   *
+   * completionStatus is response processing's to set (QTI info model §2.2.2). When an attempt of a
+   * non-adaptive item ends and processing left it `unknown`, the item marks it `completed`: the
+   * attempt is done. TAO does the same, and the 1EdTech results-reporting reference results expect
+   * it. An adaptive item is completed only by its own processing.
    */
   #handleSetOutcomes = (e: CustomEvent<SetOutcomesDetails>) => {
     e.stopImmediatePropagation();
     const { outcomes = [], responseProcessed = false } = e.detail ?? {};
-    const valid = this.#checkValidity(false);
-    const completion: OutcomeEntry[] =
-      responseProcessed && this.adaptive === 'false'
-        ? [{ identifier: 'completionStatus', value: this.#completionStatusOf(valid) }]
-        : [];
-    this.#applyOutcomes([...outcomes, ...completion], valid);
+    const completion: OutcomeEntry[] = [];
+    if (responseProcessed && this.adaptive === 'false') {
+      const sent = outcomes.find(o => o.identifier === 'completionStatus')?.value;
+      if ((sent ?? this.getVariable('completionStatus')?.value) === 'unknown') {
+        completion.push({ identifier: 'completionStatus', value: 'completed' });
+      }
+    }
+    this.#applyOutcomes([...outcomes, ...completion], this.#checkValidity(false));
 
     if (responseProcessed) {
       // `responseProcessed` marks this as the end of an attempt (vs. a plain
@@ -431,6 +439,22 @@ export class QtiAssessmentItem extends LitElement {
 
   public resetResponses() {
     this._context = this.#initialContext;
+    if (this.isConnected) this.#beginFirstAttempt();
+  }
+
+  /**
+   * QTI info model §2.2.2: completionStatus is `not_attempted` until the first attempt starts, then
+   * `unknown`. The attempt starts when the candidate gets the item, so an item on screen is never
+   * `not_attempted` — also not after a reset or a restore that says so.
+   */
+  #beginFirstAttempt(): void {
+    if (this.getVariable('completionStatus')?.value !== 'not_attempted') return;
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v =>
+        v.identifier === 'completionStatus' ? { ...v, value: 'unknown' } : v
+      )
+    };
   }
 
   protected getResponse(identifier: string): Readonly<ResponseVariable> {
@@ -475,10 +499,8 @@ export class QtiAssessmentItem extends LitElement {
       response: Array.isArray(value) ? [...value] : value
     });
 
-    if (this.adaptive === 'false') {
-      // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this.#completionStatusOf(this.validate(false)));
-    }
+    // A different answer can mean a different verdict.
+    this.validate(false);
   }
 
   /**
@@ -666,10 +688,6 @@ export class QtiAssessmentItem extends LitElement {
         })
       );
     }
-  }
-
-  #completionStatusOf(valid: boolean): 'completed' | 'incomplete' {
-    return valid ? 'completed' : 'incomplete';
   }
 
   public reportValidity() {

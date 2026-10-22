@@ -24,14 +24,14 @@ export class TestScoringFeedback extends LitElement {
 
     if ((activeItem as any)['category'] === 'dep-informational') return html`<div>${this.dataset.informational}</div>`;
 
-    const completionStatus = activeItem?.variables.find(v => v.identifier === 'completionStatus')?.value;
     const scoreOutcome = activeItem?.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
 
     const score = parseFloat(scoreOutcome?.value as string);
     const externalScored = (activeItem as any)['externalScored'];
 
     const feedbackText = () => {
-      if (completionStatus !== 'completed') {
+      // No (valid) answer: completionStatus is QTI's, set by response processing, not "answered".
+      if (activeItem.valid === false || activeItem.isDefaultResponse) {
         return this.dataset.textNoResponse;
       }
 
