@@ -282,7 +282,7 @@ export class QtiAssessmentItem extends LitElement {
     const { responseIdentifier, countAttempt } = e.detail;
     this.validate();
     this.updateResponseVariable(responseIdentifier, 'true');
-    this.processResponse(countAttempt);
+    this.#processResponse(countAttempt, true, responseIdentifier);
   };
 
   /**
@@ -387,7 +387,12 @@ export class QtiAssessmentItem extends LitElement {
    * @returns whether the item has response processing.
    */
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
-    this.#checkValidity(reportValidityAfterScoring);
+    return this.#processResponse(countNumAttempts, reportValidityAfterScoring);
+  }
+
+  #processResponse(countNumAttempts: boolean, reportValidity: boolean, endedBy?: string): boolean {
+    this.#checkValidity(reportValidity);
+    this.#resetOtherEndAttempts(endedBy);
 
     const numAttempts = +this.getVariable('numAttempts')?.value + (countNumAttempts ? 1 : 0);
     const processor = this.querySelector<HTMLElement & Partial<ResponseProcessor>>('qti-response-processing');
@@ -407,6 +412,21 @@ export class QtiAssessmentItem extends LitElement {
       responseProcessed: true
     });
     return false;
+  }
+
+  /**
+   * QTI info model §2.4.5: when an attempt ends any other way than through an end-attempt
+   * interaction, that interaction's response is `false`.
+   */
+  #resetOtherEndAttempts(endedBy: string | undefined): void {
+    const others = Array.from(this.querySelectorAll('qti-end-attempt-interaction'), el =>
+      el.getAttribute('response-identifier')
+    ).filter(id => id && id !== endedBy);
+    if (others.length === 0) return;
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v => (others.includes(v.identifier) ? { ...v, value: 'false' } : v))
+    };
   }
 
   public resetResponses() {
