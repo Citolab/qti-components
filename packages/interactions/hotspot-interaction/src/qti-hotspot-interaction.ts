@@ -45,7 +45,9 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
   }
 
   async #positionHotspot(hotspot: QtiHotspotChoice): Promise<void> {
-    const img = this.querySelector('img') as HTMLImageElement;
+    const img = this.querySelector('img') as HTMLImageElement | null;
+    // Positioning needs an <img>; an image given as <object> (QTI allows it) leaves the hotspots unplaced.
+    if (!img) return;
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));
