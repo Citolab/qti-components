@@ -54,7 +54,7 @@ amp-up `qti3-item-player` `QtiAssessmentItem.vue`, QTI.JS `session.js`/`processi
   suite's Results Reporting reference results expect the same.
 - `count-attempt` on the end-attempt interaction: TAO ignores it, amp-up and QTI.JS always count. QTI
   2.x defined it with default `true`; QTI 3 gives no default. Our "absent = not counted" is the odd
-  one out. **Decided 2026-10-23: absent counts**, as in 2.x, amp-up and QTI.JS. Library change pending;
+  one out. **Decided 2026-10-23: absent counts**, as in 2.x, amp-up and QTI.JS. Implemented on this branch (#341);
   story 4b asserts it.
 - `numAttempts` on open: §2.2.2.2 says it "increases by 1 at the start of each attempt", so a
   presented item would be at 1. All three engines, and we, count when the attempt ends. **Decided
@@ -184,7 +184,7 @@ run untagged and fails for the reason its docstring gives.
 | 2 | I answer and press Check | Choose Amsterdam. Press Check. | Only the correct feedback shows; `numAttempts` 1; `completed`; `SCORE` 1. | §2.2.1, §2.5 | same | pass |
 | 3 | I try again with the same answer | Choose, Check, Check. | `numAttempts` 2; `SCORE` 1 (the rule is SCORE + 1, so 1 proves the reset). | §2.2.2.3, §2.5 | same | pass |
 | 4 | I ask for a hint, then answer | Choose. Hint (`count-attempt="false"`). Check. | After Hint: hint shows, HINT `true`, CHECK `false`, `numAttempts` 0. After Check: answer feedback replaces hint, HINT `false`, CHECK `true`, `numAttempts` 1. | §2.4.5 | same plus Hint and a HINT feedback block | pass (since #340's fix, `c6092203`) |
-| 4b | A Check button that does not say whether it counts, counts | Check without `count-attempt`. | `numAttempts` 1. | §5.45, decision above | same, attribute left out | **xfail**: we count only `count-attempt="true"` |
+| 4b | A Check button that does not say whether it counts, counts | Check without `count-attempt`. | `numAttempts` 1. | §5.45, decision above | same, attribute left out | pass (#341) |
 | 5 | I give up and look at the solution | Press Show Solution. | Solution and "since you viewed the solution" text show; the button is hidden; "Correct" not shown; `completed`; `SCORE` 0; SOLREQUEST `true`. | impl. §3.7.2, §2.5 | `fixtures/example03-feedback-block-solution.xml`, the spec item verbatim plus a provenance comment, imported `?raw` (a single file, CLAUDE.md Fixtures) and loaded through `qtiTransformItem()` | pass. The "then answer" half is dropped: the item is completed, so its session is closed (§2.5), and there is no candidate submit at item level |
 | 6 | The item builds on my last try | Rotterdam, Check; Amsterdam, Check. | Try 1: "try again" shows, `incomplete`, `SCORE` 0. Try 2: correct feedback replaces it, `completed`, `SCORE` 1 (2 − one retained wrong try). | §2.5, §2.2.2.3 | capital item, `adaptive="true"`, hint-counter processing | pass |
 | 6b | I cannot try again once the item is done | Amsterdam, Check. | `completed`; Check is disabled. | §2.5 | same | **xfail**: an item on its own keeps its end-attempt buttons enabled |
@@ -214,7 +214,7 @@ API`), because its helpers are its own. `CompletionFollowsValidity` was already 
   returns the expression's raw value, and a boolean variable's value is the string `'true'`/`'false'`,
   so `<qti-response-if><qti-variable identifier="X"/>` always runs once X has a value. The spec's
   §3.7.2 examples use exactly this (`SOLREQUEST`, `seenSolution`). Fixes story 4.
-- #341 (Next major) End-attempt `count-attempt` absent → counts (decided above). Fixes story 4b. A breaking change for
+- #341 (done on this branch) End-attempt `count-attempt` absent → counts (decided above). Fixes story 4b. A breaking change for
   items that relied on "absent = not counted": `next`, changeset `major`, host-migration entries.
 - #342 (Next major, provisional) An adaptive item that sets `completed` closes its session (§2.5): disable its end-attempt
   interactions. Fixes story 6b.

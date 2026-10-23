@@ -35,7 +35,7 @@
             <div class="qti-layout-col8">
                 <p>What is the chemical symbol for gold?</p>
                 <p><qti-text-entry-interaction response-identifier="RESPONSE" expected-length="3"/></p>
-                <qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show a hint"/>
+                <qti-end-attempt-interaction response-identifier="HINTREQUEST" title="Show a hint" count-attempt="false"/>
                 <qti-feedback-block outcome-identifier="FEEDBACK" identifier="HINT" show-hide="show">
                     <qti-content-body>
                         <p class="qti-well">Hint: the symbol comes from <em>aurum</em>, the Latin word for gold. Using the hint halves your score.</p>

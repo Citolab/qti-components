@@ -16,7 +16,13 @@ export class QtiEndAttemptInteraction extends LitElement {
 
   @property({ reflect: true, type: Boolean }) disabled = false;
 
-  /** Defines the number of attempts that a user can make using the 'endAttemptInteraction' mechanism (this can be used to limit the number of hints, etc.). [More information](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#DataCharacteristic_EndAttemptInteraction.Attr_count-attempt) */
+  /**
+   * Whether ending the attempt with this button counts as an attempt (`numAttempts` goes up), so it
+   * uses up one of the item's `max-attempts`. Only `"false"` does not count: a hint button that
+   * should not use up an attempt says so. QTI 3 gives the attribute no default; an absent value counts,
+   * as QTI 2.x's default `true` did and as amp-up and QTI.JS do.
+   * [More information](https://www.imsglobal.org/spec/qti/v3p0/info#Data_EndAttemptInteraction)
+   */
   @property({ type: String, attribute: 'count-attempt' })
   public countAttempt: 'true' | 'false' | null = null;
 
@@ -31,7 +37,7 @@ export class QtiEndAttemptInteraction extends LitElement {
       new CustomEvent('end-attempt', {
         bubbles: true,
         composed: true,
-        detail: { responseIdentifier: this.responseIdentifier, countAttempt: this.countAttempt === 'true' }
+        detail: { responseIdentifier: this.responseIdentifier, countAttempt: this.countAttempt !== 'false' }
       })
     );
   }

@@ -339,13 +339,10 @@ export const IAskForAHintThenAnswer: StoryObj = {
 /**
  * `count-attempt` on an end-attempt interaction: QTI 2.x gave it the default `true`; QTI 3 gives no
  * default (info model §5.45). We follow 2.x, amp-up and QTI.JS: a button that does not say counts
- * the attempt.
- *
- * Fails: the library counts only `count-attempt="true"`.
+ * the attempt. Only `count-attempt="false"` does not count.
  */
 export const AButtonWithoutCountAttemptCounts: StoryObj = {
   name: 'A Check button that does not say whether it counts, counts',
-  tags: ['xfail'],
   render: () => capitalItem({ checkCounts: null }),
   play: async ({ canvasElement, step }) => {
     const { choose, press, variable } = await candidate(canvasElement);
