@@ -431,16 +431,12 @@ export const TheItemBuildsOnMyLastTry: StoryObj = {
 };
 
 /**
- * QTI info model §2.5: when an adaptive item sets completionStatus to `completed`, the item session
- * closes and no further attempt can start. The candidate sees that as a Check button that no longer
- * works.
- *
- * Fails: on its own the item keeps its end-attempt buttons enabled (in a test, `test-end-attempt`
- * locks the test's own button).
+ * QTI info model §2.2.2: "If an Adaptive Item sets completionStatus to completed then the session
+ * must be placed into the closed state", and in that state no further attempt can start (§2.2.1).
+ * The candidate sees that as a Check button that no longer works.
  */
 export const ICannotTryAgainOnceTheItemIsDone: StoryObj = {
   name: 'I cannot try again once the item is done',
-  tags: ['xfail'],
   render: () => capitalItem({ adaptive: true, processing: buildOnTheLastTry }),
   play: async ({ canvasElement, step }) => {
     const { choose, press, button, variable } = await candidate(canvasElement);

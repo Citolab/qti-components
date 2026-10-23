@@ -187,7 +187,7 @@ run untagged and fails for the reason its docstring gives.
 | 4b | A Check button that does not say whether it counts, counts | Check without `count-attempt`. | `numAttempts` 1. | §5.45, decision above | same, attribute left out | pass (#341) |
 | 5 | I give up and look at the solution | Press Show Solution. | Solution and "since you viewed the solution" text show; the button is hidden; "Correct" not shown; `completed`; `SCORE` 0; SOLREQUEST `true`. | impl. §3.7.2, §2.5 | `fixtures/example03-feedback-block-solution.xml`, the spec item verbatim plus a provenance comment, imported `?raw` (a single file, CLAUDE.md Fixtures) and loaded through `qtiTransformItem()` | pass. The "then answer" half is dropped: the item is completed, so its session is closed (§2.5), and there is no candidate submit at item level |
 | 6 | The item builds on my last try | Rotterdam, Check; Amsterdam, Check. | Try 1: "try again" shows, `incomplete`, `SCORE` 0. Try 2: correct feedback replaces it, `completed`, `SCORE` 1 (2 − one retained wrong try). | §2.5, §2.2.2.3 | capital item, `adaptive="true"`, hint-counter processing | pass |
-| 6b | I cannot try again once the item is done | Amsterdam, Check. | `completed`; Check is disabled. | §2.5 | same | **xfail**: an item on its own keeps its end-attempt buttons enabled |
+| 6b | I cannot try again once the item is done | Amsterdam, Check. | `completed`; Check is disabled. | §2.5 | same | pass (#342) |
 
 Moved out: the old file (title `API Reference/Attempts and completion`, every story drives
 `processResponse`) is now `qti-assessment-item.attempts.api.stories.ts`, tag `cito-api`, title
@@ -216,7 +216,7 @@ API`), because its helpers are its own. `CompletionFollowsValidity` was already 
   §3.7.2 examples use exactly this (`SOLREQUEST`, `seenSolution`). Fixes story 4.
 - #341 (done on this branch) End-attempt `count-attempt` absent → counts (decided above). Fixes story 4b. A breaking change for
   items that relied on "absent = not counted": `next`, changeset `major`, host-migration entries.
-- #342 (Next major, provisional) An adaptive item that sets `completed` closes its session (§2.5): disable its end-attempt
+- #342 (done on this branch) An adaptive item that sets `completed` closes its session (§2.5): disable its end-attempt
   interactions. Fixes story 6b.
 
 - `auto-score-items` must call `processResponse(false, …)`: scoring a change is not an attempt (§2.5).

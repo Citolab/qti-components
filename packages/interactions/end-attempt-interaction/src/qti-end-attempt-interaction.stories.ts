@@ -145,3 +145,40 @@ export const CountAttemptFalse: Story = {
     });
   }
 };
+
+/**
+ * QTI info model §2.2.2: "If an Adaptive Item sets completionStatus to completed then the session
+ * must be placed into the closed state", so no further attempt can start (§2.2.1). The button follows
+ * its item and is greyed out from then on.
+ */
+export const ClosedOnceAnAdaptiveItemIsDone: Story = {
+  name: 'Closed once an adaptive item is done',
+  render: args => html`
+    <qti-assessment-item adaptive="true">
+      <qti-item-body>
+        <qti-end-attempt-interaction response-identifier="END" title=${args.title ?? 'end attempt'}>
+        </qti-end-attempt-interaction>
+      </qti-item-body>
+      <qti-response-processing>
+        <qti-set-outcome-value identifier="completionStatus">
+          <qti-base-value base-type="identifier">completed</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-processing>
+    </qti-assessment-item>
+  `,
+  play: async ({ canvasElement, step }) => {
+    const button = await within(canvasElement).findByShadowRole('button', { name: 'end attempt' });
+
+    await step('The button can be pressed', () => {
+      expect(button).toBeEnabled();
+    });
+
+    await step('Press it: the item sets completionStatus to completed', async () => {
+      await userEvent.click(button);
+    });
+
+    await step('The item is done: the button is greyed out', async () => {
+      await waitFor(() => expect(button).toBeDisabled());
+    });
+  }
+};

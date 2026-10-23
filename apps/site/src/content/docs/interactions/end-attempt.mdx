@@ -25,6 +25,7 @@ Clicking it dispatches an `end-attempt` event (bubbles/composed) with `detail: {
 - **Pressing it ends the attempt.** Response processing runs at once. The button's response is `true`, every other end-attempt interaction's `false`; an attempt ended any other way sets them all to `false` ([QTI info model §2.4.5](https://www.imsglobal.org/spec/qti/v3p0/info#Data_EndAttemptInteraction)).
 - **It counts as an attempt unless it says `count-attempt="false"`.** QTI 3 gives `count-attempt` no default. We count when it is absent, as QTI 2.x's default `true` did and as amp-up and QTI.JS do.
 - **A counted attempt uses up `max-attempts`.** In a test the default is one attempt, and the item is locked once it is used. Give a hint or "show solution" button `count-attempt="false"` when it must not cost the candidate an attempt.
+- **It follows its item.** It cannot be pressed while the item is `disabled` or `readonly`, or once an adaptive item has set `completionStatus` to `completed`: that closes the item session, so no further attempt can start ([QTI info model §2.2.2](https://www.imsglobal.org/spec/qti/v3p0/info#Variables)).
 
 ## `qti-end-attempt-interaction`
 

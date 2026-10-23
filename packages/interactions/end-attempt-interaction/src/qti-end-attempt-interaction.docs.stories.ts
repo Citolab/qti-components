@@ -27,6 +27,9 @@ type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
  * - **A counted attempt uses up `max-attempts`.** In a test the default is one attempt, and the item is locked once
  *   it is used. A hint or "show solution" button that must not cost the candidate an attempt needs
  *   `count-attempt="false"`.
+ * - **It follows its item.** It cannot be pressed while the item is `disabled` or `readonly`, or once an adaptive item
+ *   has set `completionStatus` to `completed`: that closes the item session, so no further attempt can start
+ *   ([info model §2.2.2](https://www.imsglobal.org/spec/qti/v3p0/info#Variables)).
  */
 const meta: Meta<QtiEndAttemptInteraction> = {
   component: 'qti-end-attempt-interaction',
