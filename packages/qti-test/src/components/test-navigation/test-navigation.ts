@@ -471,7 +471,7 @@ export class TestNavigation extends LitElement {
                 item =>
                   this._testContext.items
                     .find(i => i.identifier === item.identifier)
-                    ?.variables.find(v => v.identifier === 'completionStatus').value === 'completed'
+                    ?.variables.find(v => v.identifier === 'completionStatus')?.value === 'completed'
               ),
 
               items: section.items.map(item => {
