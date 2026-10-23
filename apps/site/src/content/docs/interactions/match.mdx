@@ -11,7 +11,7 @@ Also see the attributes shared by every interaction on the [overview page](/inte
 ## Example
 
 <InteractionDemo>
-  <qti-match-interaction response-identifier="RESPONSE">
+  <qti-match-interaction response-identifier="RESPONSE" max-associations="4">
     <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
     <qti-simple-match-set>
       <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
@@ -28,7 +28,7 @@ Also see the attributes shared by every interaction on the [overview page](/inte
 </InteractionDemo>
 
 ```html
-<qti-match-interaction response-identifier="RESPONSE">
+<qti-match-interaction response-identifier="RESPONSE" max-associations="4">
   <qti-prompt>Match the following characters to the Shakespeare play they appeared in:</qti-prompt>
   <qti-simple-match-set>
     <qti-simple-associable-choice identifier="C" match-max="1">Capulet</qti-simple-associable-choice>
@@ -49,6 +49,8 @@ Also see the attributes shared by every interaction on the [overview page](/inte
 | Attribute | Notes |
 |---|---|
 | `class` | `qti-choices-top` / `-bottom` / `-left` / `-right`, or `qti-match-tabular` to switch to a table-based rendering instead of the drag/drop list layout. |
+| `max-associations` | Default `1`, as in QTI; `0` is unlimited. |
+| `min-associations` | Default `0`, as in QTI. |
 
 Note: `<qti-simple-match-set>` is a plain grouping tag, not a registered custom element — it's only used for CSS `:first-of-type`/`:last-of-type` selection and `shuffle` targeting, so it never "upgrades" to anything with its own behavior.
 

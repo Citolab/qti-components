@@ -63,7 +63,8 @@ export interface ConfigContext {
 
   /**
    * If true, disables further user actions when an interaction reaches its configured maximum.
-   * Applies to both choice-based and drag/drop interactions.
+   * Applies to both choice-based and drag/drop interactions. Defaults to false: QTI lets the candidate
+   * go over the maximum and reports it with the max-selections message.
    */
   disableAfterMaxReached?: boolean;
 

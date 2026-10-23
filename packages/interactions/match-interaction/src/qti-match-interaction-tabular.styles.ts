@@ -71,6 +71,20 @@ export default [
     }
 
     /*
+     * qti-header-hidden (vocabulary §1.2.8.2): "Do not display the top row of the table where the
+     * column headers are displayed." The whole row goes, the top-left cell with it.
+     */
+    :host(.qti-match-tabular.qti-header-hidden) [part='grid'] {
+      grid-template-rows: repeat(var(--qti-match-rows, 1), auto);
+    }
+    :host(.qti-match-tabular.qti-header-hidden) :is([part='corner'], [part='cols-wrap']) {
+      display: none;
+    }
+    :host(.qti-match-tabular.qti-header-hidden) :is([part='rows-wrap'], [part='checkbox-grid']) {
+      grid-row: 1 / -1;
+    }
+
+    /*
      * The radio/checkbox box centres its own mark. qti-simple-choice.styles.ts does the same for
      * the non-tabular control; here the cells are plain spans in this shadow root, so the rule
      * belongs to this file.

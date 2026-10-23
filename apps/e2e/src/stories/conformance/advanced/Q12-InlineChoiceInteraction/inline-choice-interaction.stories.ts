@@ -1,6 +1,8 @@
-import { expect, fireEvent, spyOn, waitFor } from 'storybook/test';
+import { html } from 'lit';
+import { expect, fireEvent, within } from 'storybook/test';
 
 import { getItemByUri } from '@qti-components/loader';
+import { qtiTransformItem } from '@qti-components/transformers';
 
 import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { QtiInlineChoiceInteraction } from '@qti-components/interactions';
@@ -58,20 +60,52 @@ const loaderMathml = async () => ({
   xml: await getItemByUri('/assets/qti-conformance/Advanced/Q12-inline-choice/inline-choice-mathml.xml')
 });
 
-const loaderInvalid = async () => ({
-  xml: await getItemByUri('/assets/qti-conformance/Advanced/Q12-inline-choice/inline-choice-invalid.xml')
-});
+const invalidItemUri = '/assets/qti-conformance/Advanced/Q12-inline-choice/inline-choice-invalid.xml';
 
-/** Errors logged that name cardinality: how an invalid binding would be reported. */
-const cardinalityErrors = () =>
-  (console.error as unknown as { mock: { calls: unknown[][] } }).mock.calls.filter(args =>
-    args.some(arg => /cardinality/i.test(String(arg instanceof Error ? arg.message : arg)))
-  );
+/**
+ * The invalid item's source, and what a host that validates bindings gets: the item, or the error that
+ * rejected it.
+ */
+const loaderInvalid = async () => {
+  const source = await (await fetch(invalidItemUri)).text();
+  try {
+    const api = await qtiTransformItem().load(invalidItemUri);
+    return { source, xml: api.validateBindings().htmlDoc().firstElementChild, error: null };
+  } catch (error) {
+    return { source, xml: null, error: error as Error };
+  }
+};
 
-/** Spies on console.error for the length of one story. */
-const spyOnConsoleError = () => {
-  const consoleError = spyOn(console, 'error');
-  return () => consoleError.mockRestore();
+/** What a host does with it: shows the item, or the exception that rejected it. */
+const renderInvalid: Story['render'] = (_, { loaded: { xml, error } }) =>
+  error ? html`<p role="alert">${error.message}</p>` : xml;
+
+/**
+ * The invalid example is a negative test: it passes when the system rejects the item. The transform's
+ * `validateBindings()` rejects it before anything renders; showing the exception is the host's part,
+ * which `renderInvalid` plays.
+ */
+const playInvalidExample: Story['play'] = async ({ canvasElement, loaded: { source, error }, step }) => {
+  await step('The item binds the inline choice interaction to a multiple-cardinality response', async () => {
+    const item = new DOMParser().parseFromString(source, 'text/xml');
+    const interaction = item.querySelector('qti-inline-choice-interaction');
+    const declaration = item.querySelector(
+      `qti-response-declaration[identifier="${interaction?.getAttribute('response-identifier')}"]`
+    );
+    expect(declaration?.getAttribute('cardinality')).toBe('multiple');
+  });
+
+  await step("Validating the item's bindings rejects it with a QTI validation error", async () => {
+    expect(error).toBeInstanceOf(Error);
+    expect(error.message).toMatch(
+      /^QTI validation error: qti-inline-choice-interaction .*multiple cardinality is not permitted/
+    );
+  });
+
+  await step('The candidate is shown the exception instead of the item', async () => {
+    expect(within(canvasElement).getByRole('alert')).toHaveTextContent(/multiple cardinality is not permitted/);
+    expect(canvasElement.querySelector('qti-assessment-item')).toBeNull();
+  });
 };
 
 // ─── IMPORT ──────────────────────────────────────────────────────────────────
@@ -149,26 +183,20 @@ export const Q12_L2_I3: Story = {
 };
 
 /**
- * **Invalid Example** for inline-choice-invalid.xml the system MUST display an XML validation
- * exception.
+ * > Q12-L2-I21: **Invalid Example** for inline-choice-invalid.xml the system MUST display an XML
+ * > validation exception.
  *
- * The `cardinality="multiple"` on the response declaration is what makes this item invalid: an inline
- * choice interaction requires single cardinality. Known to fail: nothing validates the item on load, so
- * no exception is reported.
+ * The README names the error: "The cardinality of the responseDeclaration variable for the
+ * inlineChoiceInteraction must be single cardinality. Multiple cardinality should throw an exception."
+ * (information model §5.74: "bound to a response variable with a base-type of identifier and single
+ * cardinality only"). The file is well-formed, and no XSD can tie a declaration to the interaction that
+ * uses it, so this is a QTI rule, not a parse error; the transform's `validateBindings()` checks it. A negative test: it
+ * passes when the item is rejected.
  */
 export const Q12_L2_I21: Story = {
   name: 'Q12-L2-I21',
-  tags: ['xfail'],
-  beforeEach: spyOnConsoleError,
-  render: (_, { loaded: { xml } }) => xml,
-  play: async ({ canvasElement }) => {
-    const { assessmentItem } = getElements(canvasElement);
-    const responseDecl = assessmentItem.querySelector('qti-response-declaration[identifier="RESPONSE"]');
-    expect(responseDecl?.getAttribute('cardinality')).toBe('multiple');
-
-    // The validation exception: an error naming the cardinality problem.
-    await waitFor(() => expect(cardinalityErrors()).not.toHaveLength(0));
-  },
+  render: renderInvalid,
+  play: playInvalidExample,
   loaders: [loaderInvalid]
 };
 
@@ -497,26 +525,15 @@ export const Q12_L2_D103: Story = {
 };
 
 /**
- * **Invalid Example** (inline-choice-invalid.xml): this should display a QTI validation exception,
- * because multiple cardinality is not permitted for an inline choice interaction.
+ * > Q12-L2-D21: **Invalid Example** This should display a QTI validation exception: multiple
+ * > cardinality not permitted.
  *
- * Known to fail: the interaction accepts the multiple-cardinality binding without reporting it, either
- * in the item or on the console.
+ * The transform's `validateBindings()` rejects the item; the host displays the exception. A negative test:
+ * it passes when the item is rejected.
  */
 export const Q12_L2_D21: Story = {
   name: 'Q12-L2-D21',
-  tags: ['xfail'],
-  beforeEach: spyOnConsoleError,
-  render: (_, { loaded: { xml } }) => xml,
-  play: async ({ canvasElement }) => {
-    const { assessmentItem } = getElements(canvasElement);
-    const interaction = getInteraction(assessmentItem);
-    await interaction.updateComplete;
-
-    await waitFor(() => expect(cardinalityErrors()).not.toHaveLength(0));
-    const alert = interaction.shadowRoot?.querySelector('[role="alert"]') as HTMLElement;
-    expect(alert).toHaveTextContent(/cardinality/i);
-    expect(alert).toBeVisible();
-  },
+  render: renderInvalid,
+  play: playInvalidExample,
   loaders: [loaderInvalid]
 };

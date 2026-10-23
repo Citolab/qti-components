@@ -104,30 +104,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      */
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
 
-    private _maxAssociations = 0;
-    private _maxAssociationsDefaultApplied = false;
-
-    @property({ type: Number, reflect: true, attribute: 'max-associations' })
-    get maxAssociations(): number {
-      // QTI compatibility: gap-match interactions default max-associations to 1
-      // when the attribute is omitted.
-      if (!this._maxAssociationsDefaultApplied) {
-        this._maxAssociationsDefaultApplied = true;
-        const tagName = this.tagName?.toLowerCase() || '';
-        const isGapMatchInteraction =
-          tagName === 'qti-graphic-gap-match-interaction' || tagName === 'qti-gap-match-interaction';
-        if (isGapMatchInteraction && !this.hasAttribute('max-associations') && this._maxAssociations === 0) {
-          this._maxAssociations = 1;
-        }
-      }
-      return this._maxAssociations;
-    }
-
-    set maxAssociations(value: number) {
-      const oldValue = this._maxAssociations;
-      this._maxAssociations = value;
-      this.requestUpdate('maxAssociations', oldValue);
-    }
+    @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 0;
 
     protected _response: string[] = [];
 
@@ -856,7 +833,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     private checkAllMaxAssociations(): void {
       const totalAssociations = this.totalAssociationsFromState();
-      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: true });
+      // Off unless the host asks: QTI renders a message "upon violation of the max-associations
+      // constraint" (vocabulary §1.2.8.3), so the candidate must be able to go over it.
+      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: false });
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 

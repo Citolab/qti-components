@@ -640,10 +640,11 @@ export const ReadonlyBlocksDrag: Story = {
 };
 
 /**
- * With max-associations=1, only one total placement is allowed.
+ * With max-associations=1, a second placement is accepted and reported with the max-selections message;
+ * placements are only refused when the host sets `disableAfterMaxReached`.
  */
-export const MaxAssociationsEnforced: Story = {
-  name: 'Validation: max-associations caps total placements',
+export const MaxAssociationsReported: Story = {
+  name: 'Validation: going over max-associations is reported',
   render: () => html`
     <qti-order-interaction
       data-testid="order-interaction"
@@ -671,16 +672,17 @@ export const MaxAssociationsEnforced: Story = {
       expect((await within(drops[0]).findAllByShadowText('Choice A')).length).toBeGreaterThan(0);
     });
 
-    await step('Second placement is blocked by max-associations', async () => {
-      await drag(choiceB, { to: drops[1], duration: 300 });
-      expect(within(drops[1]).queryAllByShadowText('Choice B')).toHaveLength(0);
-      expect(interaction.response).toEqual('A,,');
-    });
-
-    await step('validate() remains true when associations equal max-associations', async () => {
+    await step('validate() is true when associations equal max-associations', async () => {
       expect(interaction.validate()).toBe(true);
       expect(interaction.internals.validationMessage).toBe('');
-      expect(interaction.reportValidity()).toBe(true);
+    });
+
+    await step('A second placement is accepted and reported as over max-associations', async () => {
+      await drag(choiceB, { to: drops[1], duration: 300 });
+      expect((await within(drops[1]).findAllByShadowText('Choice B')).length).toBeGreaterThan(0);
+      expect(interaction.response).toEqual('A,B,');
+      expect(interaction.validate()).toBe(false);
+      expect(interaction.internals.validationMessage).toBe('Max 1 placement allowed');
     });
   }
 };

@@ -33,6 +33,9 @@ const SlottedBase = DragDropSlottedMixin(
 export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
 
+  /** QTI's default (information model §5.60). */
+  public override maxAssociations = 1;
+
   /**
    * A hotspot's box is its authored `coords`, always (CONFIGURABILITY.md §4). The measured
    * `--qti-dropzone-min-*` reservation is a floor on the hotspot's `min-width`/`min-height`, and it

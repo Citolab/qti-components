@@ -1,4 +1,4 @@
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { getItemByUri } from '@qti-components/loader';
 
@@ -91,23 +91,33 @@ export const Q13_L2_D1: Story = {
 };
 
 /**
- * Match example 2 (match-example-2.xml) limits the interaction to 3 associations
- * (max-associations="3"): a fourth association is not added.
+ * > Q13-L2-D2: For delivery, Match example 2 (match-example-2.xml) should limit the number of choices to
+ * > 3 associations (uses the max-associations attribute).
+ *
+ * The limit is enforced as QTI describes it: a max-selections message is rendered "upon violation of the
+ * max-associations constraint" (vocabulary §1.2.8.3), so the candidate can go over it and is told so.
  */
 export const Q13_L2_D2: Story = {
   name: 'Q13-L2-D2',
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement);
     await ctx.interaction.updateComplete;
     expect(ctx.interaction.maxAssociations).toBe(3);
 
-    // Each target takes one, so no target's match-max="2" gets in the way.
-    await associate(ctx, ['r1 h1', 'r2 h2', 'r3 h3']);
-    expect(ctx.response()).toHaveLength(3);
+    await step('The candidate makes 3 associations: within the limit', async () => {
+      // Each target takes one, so no target's match-max="2" gets in the way.
+      await associate(ctx, ['r1 h1', 'r2 h2', 'r3 h3']);
+      expect(ctx.response()).toHaveLength(3);
+      expect(ctx.message()).not.toBeVisible();
+    });
 
-    await associate(ctx, ['r4 h1']);
-    expect(ctx.response()).toEqual(['r1 h1', 'r2 h2', 'r3 h3']);
+    await step('A fourth association goes over the limit and is reported', async () => {
+      await associate(ctx, ['r4 h1']);
+      expect(ctx.response()).toHaveLength(4);
+      expect(ctx.interaction.validate()).toBe(false);
+      await waitFor(() => expect(ctx.message()).toBeVisible());
+    });
   },
   loaders: [loadItem('match-example-2.xml')]
 };
@@ -255,52 +265,95 @@ export const Q13_L2_D105: Story = {
 };
 
 /**
- * RESPONSE2, qti-match-tabular + qti-header-hidden: the column headers are not shown visually, but
- * stay identifiable to screen readers (the choices carry aria-label).
+ * > match-example-sv-2.xml , **RESPONSE2** : demonstrates **qti-match-tabular** combined with
+ * > **qti-header-hidden** shared vocabulary classes. The presentation/delivery system MUST render a visual
+ * > table (role="presentation") with the choices of the first Simple Match Set as the table row headers,
+ * > and the choices of the second Simple Match Set as the columns, but the simple-associable-choice values
+ * > MUST NOT be presented visually in the column headers (though they MUST be identifiable by
+ * > screen-readers -- this example uses aria-label) in the top row.
  *
- * Known to fail: qti-header-hidden is not implemented, so the column headers stay visible.
+ * Vocabulary §1.2.8.2: "Do not display the top row of the table where the column headers are
+ * displayed." Its Figure 67 shows a table "4 columns wide and 4 rows high", so the whole top row goes,
+ * the top-left cell with it. The table is an ARIA grid rather than `role="presentation"`: see D105.
+ *
+ * Known to fail: qti-header-hidden leaves the top row out with `display: none`, which also takes the
+ * column headers out of the accessibility tree, so screen readers cannot identify the columns. Kept
+ * that way by decision (2026-10-23).
  */
 export const Q13_L2_D106: Story = {
   name: 'Q13-L2-D106',
   tags: ['xfail'],
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE2');
     await ctx.interaction.updateComplete;
     expect(ctx.interaction).toHaveClass('qti-header-hidden');
+    const { grid, cells } = tabular(ctx.interaction);
 
-    for (const id of ['M', 'R', 'T']) {
-      const header = ctx.target(id);
-      expect(header).toHaveAttribute('role', 'columnheader');
-      expect(header).toHaveAccessibleName(header.getAttribute('aria-label')!);
-      // Visually hidden: in the accessibility tree, but with no visible box.
-      const { width, height } = header.getBoundingClientRect();
-      expect(width <= 1 || height <= 1 || !header.checkVisibility({ opacityProperty: true })).toBe(true);
-    }
-    // The row headers stay visible.
-    expect(ctx.source('C')).toBeVisible();
+    await step('The candidate sees the characters as row headers', async () => {
+      for (const id of ['C', 'D', 'L', 'P']) expect(ctx.source(id)).toBeVisible();
+    });
+
+    await step('The candidate sees no column-header row: the answer cells start at the top of the table', async () => {
+      expect(cells).toHaveLength(4 * 3);
+      expect(cells[0].getBoundingClientRect().top - grid.getBoundingClientRect().top).toBeLessThanOrEqual(1);
+      for (const id of ['M', 'R', 'T']) {
+        const header = ctx.target(id);
+        header.scrollIntoView({ block: 'center' });
+        const { left, top, width, height } = header.getBoundingClientRect();
+        // Nothing of the header is painted where it lies: that point hits something else.
+        expect(document.elementsFromPoint(left + width / 2, top + height / 2)).not.toContain(header);
+      }
+    });
+
+    await step('A screen reader still identifies each column by its aria-label', async () => {
+      for (const id of ['M', 'R', 'T']) {
+        const label = ctx.target(id).getAttribute('aria-label')!;
+        expect(within(ctx.interaction).getByRole('columnheader', { name: label })).toBe(ctx.target(id));
+        // getByRole walks light-DOM parents only; a display:none or visibility:hidden ancestor in the
+        // shadow root also takes the header out of the accessibility tree, and checkVisibility sees it.
+        expect(ctx.target(id).checkVisibility({ visibilityProperty: true })).toBe(true);
+      }
+    });
   },
   loaders: [loadItem('match-example-sv-2.xml')]
 };
 
 /**
- * RESPONSE3, qti-match-tabular + data-first-column-header="Characters": the top-left cell shows that
- * text.
+ * > match-example-sv-2.xml , **RESPONSE3** demonstrates **data-qti-first-column-header** shared vocabulary
+ * > attribute in combination with the **qti-match-tabular** class. The presentation/delivery system MUST
+ * > render a visual table (role="presentation") with the choices of the first Simple Match Set as the
+ * > table row headers, and the choices of the second Simple Match Set as the table column headers.
+ * > Additionally, the first row, first column value MUST be the text string provided in the
+ * > data-qti-first-column-header attribute.
  *
- * Known to fail: data-first-column-header is not implemented, so the top-left cell is empty.
+ * The suite's own item, the information model (§5.89) and the vocabulary (§1.2.8.2) all name the
+ * attribute `data-first-column-header`; `data-qti-first-column-header` occurs only in this README line.
+ * The vocabulary adds: "Custom text to be rendered in the top-left header cell of the table (headings
+ * must be visible)." The table is an ARIA grid rather than `role="presentation"`: see D105.
  */
 export const Q13_L2_D107: Story = {
   name: 'Q13-L2-D107',
-  tags: ['xfail'],
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE3');
     await ctx.interaction.updateComplete;
     expect(ctx.interaction).toHaveAttribute('data-first-column-header', 'Characters');
-
     const { corner } = tabular(ctx.interaction);
-    expect(corner).toHaveTextContent('Characters');
-    expect(corner).toBeVisible();
+
+    await step('The candidate sees "Characters" in the first row, first column of the table', async () => {
+      expect(corner).toHaveTextContent('Characters');
+      expect(corner).toBeVisible();
+      const cornerBox = corner.getBoundingClientRect();
+      // Above the row headers, left of the column headers.
+      expect(cornerBox.bottom).toBeLessThanOrEqual(ctx.source('C').getBoundingClientRect().top);
+      expect(cornerBox.right).toBeLessThanOrEqual(ctx.target('M').getBoundingClientRect().left);
+    });
+
+    await step('The candidate still sees the characters as row headers and the plays as column headers', async () => {
+      for (const id of ['C', 'D', 'L', 'P']) expect(ctx.source(id)).toBeVisible();
+      for (const id of ['M', 'R', 'T']) expect(ctx.target(id)).toBeVisible();
+    });
   },
   loaders: [loadItem('match-example-sv-2.xml')]
 };
@@ -308,24 +361,39 @@ export const Q13_L2_D107: Story = {
 // ─── DELIVER: shared vocabulary, match-example-sv-3 (messages) ───────────────
 
 /**
- * RESPONSE1, max-associations="4" + data-max-selections-message: trying a fifth association shows the
- * custom max message.
+ * > **match-example-sv-3.xml , RESPONSE1** demonstrates **data-qti-max-selections-message** shared
+ * > vocabulary attribute. The presentation/delivery interface MUST display the text string found in the
+ * > shared vocabulary attribute within the interaction element when the item is submitted with values
+ * > outside the stated **max-associations** value. The message MUST be acknowledged by the candidate by
+ * > either changing the number of selections or acknowledging the message by closing the message window
+ * > or by other means of deliberate acknowledgement.
+ *
+ * The item's attribute is `data-max-selections-message` (as in the vocabulary, §1.2.8.3).
  */
 export const Q13_L2_D108: Story = {
   name: 'Q13-L2-D108',
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE1');
     await ctx.interaction.updateComplete;
 
-    await associate(ctx, ['C M', 'D M', 'L M', 'P M']);
-    expect(ctx.response()).toHaveLength(4);
-    await associate(ctx, ['C R']);
-    expect(ctx.response()).toHaveLength(4);
+    await step('The candidate makes 5 associations, one over max-associations="4"', async () => {
+      await associate(ctx, ['C M', 'D M', 'L M', 'P M', 'C R']);
+      expect(ctx.response()).toHaveLength(5);
+    });
 
-    ctx.assessmentItem.processResponse();
-    await waitFor(() => expect(ctx.message()).toHaveTextContent('You cannot make more than 4 matches!'));
-    expect(ctx.message()).toBeVisible();
+    await step("Submitting shows the item's message within the interaction", async () => {
+      ctx.assessmentItem.processResponse();
+      await waitFor(() => expect(ctx.message()).toHaveTextContent('You cannot make more than 4 matches!'));
+      expect(ctx.message()).toBeVisible();
+    });
+
+    await step('Changing the number of associations acknowledges the message', async () => {
+      const placed = ctx.interaction.chipsIn(ctx.target('R'))[0];
+      await drag(placed, { to: ctx.sourceSet, duration: 100 });
+      expect(ctx.response()).toHaveLength(4);
+      await waitFor(() => expect(ctx.message()).not.toBeVisible());
+    });
   },
   loaders: [loadItem('match-example-sv-3.xml')]
 };
@@ -353,27 +421,44 @@ export const Q13_L2_D109: Story = {
 };
 
 /**
- * RESPONSE3 has no max-associations (the spec default is 1) and no data-max-selections-message: trying
- * a second association shows the platform's default max message.
+ * > **match-example-sv-3.xml , RESPONSE3** the interaction with response-identifier RESPONSE3 has no
+ * > **max-associations** attribute and no **data-max-selections-message** attribute. If a candidate
+ * > attempts to make more than one association the candidate should be presented with the delivery
+ * > platform's default max-selections-message content which MUST be acknowledged by the candidate by
+ * > either changing the number of selections or acknowledging the message by closing the message window
+ * > or by other means of deliberate acknowledgement.
  *
- * Known to fail: the match interaction does not apply the default max-associations of 1 (only gap match
- * does), so a second association is accepted and no message is shown.
+ * The item says so itself: "The max-associations attribute is optional and defaults to a value of 1 when
+ * unspecified." (information model §5.89: default 1). The message text is the platform's own, so the
+ * story asserts that one is shown, not its wording.
  */
 export const Q13_L2_D110: Story = {
   name: 'Q13-L2-D110',
-  tags: ['xfail'],
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE3');
     await ctx.interaction.updateComplete;
-    expect(ctx.interaction.hasAttribute('data-max-selections-message')).toBe(false);
+    expect(ctx.interaction).not.toHaveAttribute('data-max-selections-message');
 
-    await associate(ctx, ['C R', 'D M']);
-    expect(ctx.response()).toEqual(['C R']);
+    await step('The candidate makes one association', async () => {
+      await associate(ctx, ['C R']);
+      expect(ctx.response()).toEqual(['C R']);
+      expect(ctx.message()).not.toBeVisible();
+    });
 
-    ctx.assessmentItem.processResponse();
-    await waitFor(() => expect(ctx.message()).toHaveTextContent(/too many/i));
-    expect(ctx.message()).toBeVisible();
+    await step('Making a second association presents the default max-selections message', async () => {
+      await associate(ctx, ['D M']);
+      expect(ctx.response()).toEqual(['C R', 'D M']);
+      await waitFor(() => expect(ctx.message()).toBeVisible());
+      expect(ctx.message().textContent!.trim()).not.toBe('');
+    });
+
+    await step('Changing the number of associations acknowledges the message', async () => {
+      const placed = ctx.interaction.chipsIn(ctx.target('M'))[0];
+      await drag(placed, { to: ctx.sourceSet, duration: 100 });
+      expect(ctx.response()).toEqual(['C R']);
+      await waitFor(() => expect(ctx.message()).not.toBeVisible());
+    });
   },
   loaders: [loadItem('match-example-sv-3.xml')]
 };
