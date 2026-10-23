@@ -98,19 +98,27 @@ export const InlineJavaScript: StoryObj = {
       ${scoreButton()}
     </div>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const host = within(canvasElement);
     const { value } = await readyItem(canvasElement);
-    host.getByText('4').click();
-    host.getByText('Lyon').click();
-    host.getByText('Score').click();
-    await waitFor(() => expect(value('FEEDBACK')).toBe('1 of 2 correct'));
-    expect(value('SCORE')).toBe('1');
 
-    host.getByText('Paris').click();
-    host.getByText('Score').click();
-    await waitFor(() => expect(value('FEEDBACK')).toBe('2 of 2 correct'));
-    expect(value('SCORE')).toBe('2');
+    await step('Answer 4 (right) and Lyon (wrong)', () => {
+      host.getByText('4').click();
+      host.getByText('Lyon').click();
+    });
+
+    await step('Press Score: the script sets SCORE 1 and returns "1 of 2 correct" as FEEDBACK', async () => {
+      host.getByText('Score').click();
+      await waitFor(() => expect(value('FEEDBACK')).toBe('1 of 2 correct'));
+      expect(value('SCORE')).toBe('1');
+    });
+
+    await step('Change Lyon to Paris and press Score: SCORE 2, "2 of 2 correct"', async () => {
+      host.getByText('Paris').click();
+      host.getByText('Score').click();
+      await waitFor(() => expect(value('FEEDBACK')).toBe('2 of 2 correct'));
+      expect(value('SCORE')).toBe('2');
+    });
   }
 };
 
@@ -159,12 +167,17 @@ export const Definition: StoryObj = {
       ${scoreButton()}
     </div>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const host = within(canvasElement);
     const { item, value } = await readyItem(canvasElement);
 
-    item.updateResponseVariable('RESPONSE', '  Paris ');
-    host.getByText('Score').click();
-    await waitFor(() => expect(value('SCORE')).toBe('1'));
+    await step('The answer is " Paris " with spaces around it', () => {
+      item.updateResponseVariable('RESPONSE', '  Paris ');
+    });
+
+    await step('Press Score: depcp:Trim removes the spaces, so it matches Paris: SCORE 1', async () => {
+      host.getByText('Score').click();
+      await waitFor(() => expect(value('SCORE')).toBe('1'));
+    });
   }
 };
