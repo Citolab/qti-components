@@ -188,6 +188,24 @@ computed context (or `itemContext.valid` on the item).
 - The host's own writes of `completed` after backend scoring (`check-item.ts:59`, `submit.ts:49`) keep working.
   Evidence: read from `projects/shared/src/lib/player/store/`, not run
 
+### An item is locked once its attempts are used (test-navigation attempts lock)
+
+Status: breaking for practice tests
+Members: `test-navigation`, `qti-item-session-control` `max-attempts`
+Do: give a practice test unlimited attempts in its package: `<qti-item-session-control max-attempts="0" />`
+on the test part (or section, or item-ref). `test-navigation` now disables an item once a non-adaptive item
+has used its `max-attempts`, and QTI's default is 1, also for a package without `qti-item-session-control`.
+A plain practice package therefore locks each question after its first Nakijken, and the candidate can no
+longer change the answer and check again. TAO and QTI.JS read the default the same way. Tests that should
+allow one attempt need nothing.
+
+- The Formative test docs page (which follows Kennisnet's practice player) needed exactly this change in
+  its package (`public/assets/docs/getting-started/assessment.xml`).
+- Check whether Nakijken counts an attempt in Kennisnet's player (`cito-test-end-attempt` or
+  `processResponse()` do; a backend's `cito-item-set-outcomes` does not count by itself). If it does not, the
+  lock never fires there.
+  Evidence: from the Formative test docs page, not from Kennisnet's source; not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

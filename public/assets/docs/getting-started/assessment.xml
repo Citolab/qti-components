@@ -7,6 +7,9 @@
   title="Getting started"
 >
   <qti-test-part identifier="part-1" navigation-mode="nonlinear" submission-mode="individual">
+    <!-- Unlimited attempts: the formative demo lets the candidate check an answer as often as they like.
+         Without it each item gets one attempt (max-attempts defaults to 1) and is locked after it. -->
+    <qti-item-session-control max-attempts="0" />
     <qti-assessment-section identifier="section-1" title="Photosynthesis" visible="true">
       <qti-assessment-item-ref identifier="GS-photosynthesis" href="items/photosynthesis.xml" />
       <qti-assessment-item-ref identifier="GS-leaf" href="items/leaf.xml" />
