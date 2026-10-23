@@ -86,26 +86,34 @@ with `max-attempts="0"`).
 
 ## Where our code stands (2026-10-23)
 
-- Stories 1–6 are written on `test/qti-behaviour-stories` (worktree
-  `.claude/worktrees/test-qti-behaviour-stories`, branched from `test/conformance-results-reporting`
-  at `72864f94`, so it has `66e61155`, `0e06ff3e` and `b12c1feb`). Uncommitted, no PR yet. The
-  results-reporting stories staged in the `test/conformance-results-reporting` worktree are not on it.
-- `next` is at `226065eb`. None of the commits below are on `next` yet; they sit on local branches
-  only, stacked: `66e61155` → `0e06ff3e` → `b12c1feb`.
-- `66e61155` (processing runs like a backend, item publishes once) is the first commit on the
-  three local branches; `feat/processing-as-backend` holds the same change uncommitted, byte for byte.
-- `0e06ff3e` (other end-attempt responses → `false`, §2.4.5) is committed on
-  `feat/completion-status-qti` and `test/conformance-results-reporting`, and sits uncommitted a third
-  time in `feat/end-attempt-false`.
-- `b12c1feb` (`completionStatus` follows QTI 3: `not_attempted` → `unknown` → `completed`, no
-  longer derived from validity) is committed on `test/conformance-results-reporting` and staged,
-  uncommitted, on `feat/completion-status-qti`.
-- `fix/test-navigation-completion-guard`: a one-line `?.` guard.
-- `feat/processing-as-backend`: stale uncommitted copy of `66e61155`.
-- Found while reading: `auto-score-items` calls `processResponse(true, …)` on every interaction
-  change (`test-navigation.ts`), so every keystroke counts an attempt — against §2.5. The
-  `CompletionFollowsValidity` story contradicts `b12c1feb`. `test-end-attempt` and `test-next`
-  already implement `max-attempts`, the adaptive exception and `allow-skipping` correctly.
+Everything is in one local branch, `feat/qti-attempts-completion` (worktree
+`.claude/worktrees/feat-qti-attempts-completion`), off `next`, not pushed. One commit per problem:
+
+| Commit | What |
+|---|---|
+| `66e61155` | feat(item)!: response processing runs like a backend, the item publishes once |
+| `0e06ff3e` | feat(item): the other end-attempt responses become `false` when an attempt ends (§2.4.5) |
+| `b12c1feb` | feat(item)!: completionStatus follows QTI 3 |
+| `13b43d91` | changeset text for `cito-item-set-outcomes` follows `b12c1feb` |
+| `5b638274` | fix(test-navigation): no throw when an item has no completionStatus |
+| `8f88c642` | test(item): the QTI behaviour stories below, API stories split off |
+| `c6092203` | fix(processing): a boolean condition applies only when it is `true` (#340) |
+| `a2e0ff36` | fix(hotspot-interaction): no throw when the image is an `<object>` (needed by the next one) |
+| `d63c62a3` | test(conformance): Results Reporting test case 2 stories |
+
+Set aside, not in the branch (still uncommitted in the root checkout on `next`, and saved as patches):
+
+- **Attempts lock**: `test-navigation` disables an item once its attempts are used. It breaks
+  `docs/formative-test.stories.ts`: that demo keeps the package plain (default `max-attempts` 1) and
+  lets the candidate check again, as Kennisnet does. Open decision.
+- **Feedback events** (`cito-feedback-show` / `cito-feedback-hide`): written against the old
+  processing, where a repeat attempt reset the outcome first. Since `66e61155` the item publishes
+  once, so the spec "asks again on a repeat attempt … turns off and on" fails and the changeset
+  text is wrong. Needs rework on top of this branch.
+
+Full suite on the committed branch: all pass except 4 `test-end-attempt.stories.ts` stories, which
+fail the same way on `next` itself (`226065eb`). Still found while reading: `auto-score-items` calls
+`processResponse(true, …)` on every change (#299).
 
 ## Conventions
 
@@ -175,7 +183,7 @@ run untagged and fails for the reason its docstring gives.
 | 1 | I open an item | Item appears. | Question and Check visible, no feedback; `numAttempts` 0 (see decision above); `completionStatus` `unknown`; `SCORE` 0. | §2.2.2.2–3 | "capital" choice item built from components, end-attempt Check (`count-attempt="true"`) | pass |
 | 2 | I answer and press Check | Choose Amsterdam. Press Check. | Only the correct feedback shows; `numAttempts` 1; `completed`; `SCORE` 1. | §2.2.1, §2.5 | same | pass |
 | 3 | I try again with the same answer | Choose, Check, Check. | `numAttempts` 2; `SCORE` 1 (the rule is SCORE + 1, so 1 proves the reset). | §2.2.2.3, §2.5 | same | pass |
-| 4 | I ask for a hint, then answer | Choose. Hint (`count-attempt="false"`). Check. | After Hint: hint shows, HINT `true`, CHECK `false`, `numAttempts` 0. After Check: answer feedback replaces hint, HINT `false`, CHECK `true`, `numAttempts` 1. | §2.4.5 | same plus Hint and a HINT feedback block | **xfail**: a bare boolean `qti-variable` as a condition is the string `'false'`, truthy, so the hint shows again |
+| 4 | I ask for a hint, then answer | Choose. Hint (`count-attempt="false"`). Check. | After Hint: hint shows, HINT `true`, CHECK `false`, `numAttempts` 0. After Check: answer feedback replaces hint, HINT `false`, CHECK `true`, `numAttempts` 1. | §2.4.5 | same plus Hint and a HINT feedback block | pass (since #340's fix, `c6092203`) |
 | 4b | A Check button that does not say whether it counts, counts | Check without `count-attempt`. | `numAttempts` 1. | §5.45, decision above | same, attribute left out | **xfail**: we count only `count-attempt="true"` |
 | 5 | I give up and look at the solution | Press Show Solution. | Solution and "since you viewed the solution" text show; the button is hidden; "Correct" not shown; `completed`; `SCORE` 0; SOLREQUEST `true`. | impl. §3.7.2, §2.5 | `fixtures/example03-feedback-block-solution.xml`, the spec item verbatim plus a provenance comment, imported `?raw` (a single file, CLAUDE.md Fixtures) and loaded through `qtiTransformItem()` | pass. The "then answer" half is dropped: the item is completed, so its session is closed (§2.5), and there is no candidate submit at item level |
 | 6 | The item builds on my last try | Rotterdam, Check; Amsterdam, Check. | Try 1: "try again" shows, `incomplete`, `SCORE` 0. Try 2: correct feedback replaces it, `completed`, `SCORE` 1 (2 − one retained wrong try). | §2.5, §2.2.2.3 | capital item, `adaptive="true"`, hint-counter processing | pass |
@@ -202,7 +210,7 @@ API`), because its helpers are its own. `CompletionFollowsValidity` was already 
 
 ### Fixes that fall out (separate issues, not stories)
 
-- #340 (9.x) Boolean conditions: `QtiConditionIfBase.shouldProcess` (`qti-processing/src/components/qti-condition/qti-condition-base.ts`)
+- #340 (done in `c6092203`) Boolean conditions: `QtiConditionIfBase.shouldProcess` (`qti-processing/src/components/qti-condition/qti-condition-base.ts`)
   returns the expression's raw value, and a boolean variable's value is the string `'true'`/`'false'`,
   so `<qti-response-if><qti-variable identifier="X"/>` always runs once X has a value. The spec's
   §3.7.2 examples use exactly this (`SOLREQUEST`, `seenSolution`). Fixes story 4.
