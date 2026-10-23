@@ -320,23 +320,40 @@ export const Q13_L2_D106: Story = {
 };
 
 /**
- * RESPONSE3, qti-match-tabular + data-first-column-header="Characters": the top-left cell shows that
- * text.
+ * > match-example-sv-2.xml , **RESPONSE3** demonstrates **data-qti-first-column-header** shared vocabulary
+ * > attribute in combination with the **qti-match-tabular** class. The presentation/delivery system MUST
+ * > render a visual table (role="presentation") with the choices of the first Simple Match Set as the
+ * > table row headers, and the choices of the second Simple Match Set as the table column headers.
+ * > Additionally, the first row, first column value MUST be the text string provided in the
+ * > data-qti-first-column-header attribute.
  *
- * Known to fail: data-first-column-header is not implemented, so the top-left cell is empty.
+ * The suite's own item, the information model (§5.89) and the vocabulary (§1.2.8.2) all name the
+ * attribute `data-first-column-header`; `data-qti-first-column-header` occurs only in this README line.
+ * The vocabulary adds: "Custom text to be rendered in the top-left header cell of the table (headings
+ * must be visible)." The table is an ARIA grid rather than `role="presentation"`: see D105.
  */
 export const Q13_L2_D107: Story = {
   name: 'Q13-L2-D107',
-  tags: ['xfail'],
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE3');
     await ctx.interaction.updateComplete;
     expect(ctx.interaction).toHaveAttribute('data-first-column-header', 'Characters');
-
     const { corner } = tabular(ctx.interaction);
-    expect(corner).toHaveTextContent('Characters');
-    expect(corner).toBeVisible();
+
+    await step('The candidate sees "Characters" in the first row, first column of the table', async () => {
+      expect(corner).toHaveTextContent('Characters');
+      expect(corner).toBeVisible();
+      const cornerBox = corner.getBoundingClientRect();
+      // Above the row headers, left of the column headers.
+      expect(cornerBox.bottom).toBeLessThanOrEqual(ctx.source('C').getBoundingClientRect().top);
+      expect(cornerBox.right).toBeLessThanOrEqual(ctx.target('M').getBoundingClientRect().left);
+    });
+
+    await step('The candidate still sees the characters as row headers and the plays as column headers', async () => {
+      for (const id of ['C', 'D', 'L', 'P']) expect(ctx.source(id)).toBeVisible();
+      for (const id of ['M', 'R', 'T']) expect(ctx.target(id)).toBeVisible();
+    });
   },
   loaders: [loadItem('match-example-sv-2.xml')]
 };

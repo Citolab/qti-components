@@ -24,6 +24,8 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @attr {number} [max-associations=1] - Maximum pairings across the whole interaction; `0`
  *   means unlimited. Without the attribute it is QTI's default of 1 (information model §5.89).
  * @attr {number} [min-associations=0] - Minimum pairings for a valid response (QTI's default).
+ * @attr {string} data-first-column-header - QTI shared vocabulary, with `qti-match-tabular`: the
+ *   text of the table's top-left cell.
  * @attr {boolean} [shuffle=false] - Requests shuffling of both match sets. Applied by the
  *   transform pipeline (`qti-transformers`), not by this element.
  * @attr {'qti-match-tabular'|'qti-header-hidden'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
@@ -43,7 +45,7 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @slot - Default slot for the two match sets (drag-and-drop mode).
  *
  * @csspart grid - The tabular grid container.
- * @csspart corner - The top-left corner cell of the grid.
+ * @csspart corner - The top-left corner cell of the grid; shows `data-first-column-header`.
  * @csspart cols-wrap - Wrapper row for the column headers.
  * @csspart c-header - The column header slot wrapper.
  * @csspart rows-wrap - Wrapper column for the row headers.
@@ -91,6 +93,8 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
   protected lastCheckedRadio: HTMLInputElement | null = null;
 
   @property({ type: String }) class: string = '';
+
+  @property({ type: String, attribute: 'data-first-column-header' }) dataFirstColumnHeader: string;
 
   @state() protected _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
@@ -259,7 +263,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
               role="grid"
               style="--qti-match-rows: ${this.sourceChoices.length}; --qti-match-cols: ${this.targetChoices.length};"
             >
-              <div part="corner"></div>
+              <div part="corner">${this.dataFirstColumnHeader ?? nothing}</div>
               <div part="cols-wrap" role="row"><slot name="match-cols" part="c-header"></slot></div>
               <div part="rows-wrap"><slot name="match-rows" part="r-header"></slot></div>
               <div part="checkbox-grid">
