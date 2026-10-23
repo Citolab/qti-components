@@ -145,6 +145,16 @@ Evidence: read, not run
 
 ## Next major
 
+### Drag-and-drop interactions don't disable their targets at `max-associations` by default
+
+Status: behaviour change; none for this host
+Members: `configContext` (`disableAfterMaxReached`, `disableAfterIfMaxChoicesReached`)
+Do: nothing. Without the option, match, gap match, associate and order now let the candidate go over
+`max-associations` and show the max-selections message, as choice interactions already did. This host
+sets `disableAfterIfMaxChoicesReached: true` (`projects/shared/src/lib/qti/qti-test.ts:74`), which keeps targets disabled at the maximum.
+Drop the option to get QTI's behaviour (go over, see the message).
+Evidence: read from `projects/shared/src/lib/qti/qti-test.ts:74`, not run
+
 ### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
 
 Status: behaviour change; no API removed

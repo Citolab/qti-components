@@ -856,7 +856,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
     private checkAllMaxAssociations(): void {
       const totalAssociations = this.totalAssociationsFromState();
-      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: true });
+      // Off unless the host asks: QTI renders a message "upon violation of the max-associations
+      // constraint" (vocabulary §1.2.8.3), so the candidate must be able to go over it.
+      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: false });
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 

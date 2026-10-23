@@ -91,23 +91,33 @@ export const Q13_L2_D1: Story = {
 };
 
 /**
- * Match example 2 (match-example-2.xml) limits the interaction to 3 associations
- * (max-associations="3"): a fourth association is not added.
+ * > Q13-L2-D2: For delivery, Match example 2 (match-example-2.xml) should limit the number of choices to
+ * > 3 associations (uses the max-associations attribute).
+ *
+ * The limit is enforced as QTI describes it: a max-selections message is rendered "upon violation of the
+ * max-associations constraint" (vocabulary §1.2.8.3), so the candidate can go over it and is told so.
  */
 export const Q13_L2_D2: Story = {
   name: 'Q13-L2-D2',
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement);
     await ctx.interaction.updateComplete;
     expect(ctx.interaction.maxAssociations).toBe(3);
 
-    // Each target takes one, so no target's match-max="2" gets in the way.
-    await associate(ctx, ['r1 h1', 'r2 h2', 'r3 h3']);
-    expect(ctx.response()).toHaveLength(3);
+    await step('The candidate makes 3 associations: within the limit', async () => {
+      // Each target takes one, so no target's match-max="2" gets in the way.
+      await associate(ctx, ['r1 h1', 'r2 h2', 'r3 h3']);
+      expect(ctx.response()).toHaveLength(3);
+      expect(ctx.message()).not.toBeVisible();
+    });
 
-    await associate(ctx, ['r4 h1']);
-    expect(ctx.response()).toEqual(['r1 h1', 'r2 h2', 'r3 h3']);
+    await step('A fourth association goes over the limit and is reported', async () => {
+      await associate(ctx, ['r4 h1']);
+      expect(ctx.response()).toHaveLength(4);
+      expect(ctx.interaction.validate()).toBe(false);
+      await waitFor(() => expect(ctx.message()).toBeVisible());
+    });
   },
   loaders: [loadItem('match-example-2.xml')]
 };
@@ -308,24 +318,39 @@ export const Q13_L2_D107: Story = {
 // ─── DELIVER: shared vocabulary, match-example-sv-3 (messages) ───────────────
 
 /**
- * RESPONSE1, max-associations="4" + data-max-selections-message: trying a fifth association shows the
- * custom max message.
+ * > **match-example-sv-3.xml , RESPONSE1** demonstrates **data-qti-max-selections-message** shared
+ * > vocabulary attribute. The presentation/delivery interface MUST display the text string found in the
+ * > shared vocabulary attribute within the interaction element when the item is submitted with values
+ * > outside the stated **max-associations** value. The message MUST be acknowledged by the candidate by
+ * > either changing the number of selections or acknowledging the message by closing the message window
+ * > or by other means of deliberate acknowledgement.
+ *
+ * The item's attribute is `data-max-selections-message` (as in the vocabulary, §1.2.8.3).
  */
 export const Q13_L2_D108: Story = {
   name: 'Q13-L2-D108',
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE1');
     await ctx.interaction.updateComplete;
 
-    await associate(ctx, ['C M', 'D M', 'L M', 'P M']);
-    expect(ctx.response()).toHaveLength(4);
-    await associate(ctx, ['C R']);
-    expect(ctx.response()).toHaveLength(4);
+    await step('The candidate makes 5 associations, one over max-associations="4"', async () => {
+      await associate(ctx, ['C M', 'D M', 'L M', 'P M', 'C R']);
+      expect(ctx.response()).toHaveLength(5);
+    });
 
-    ctx.assessmentItem.processResponse();
-    await waitFor(() => expect(ctx.message()).toHaveTextContent('You cannot make more than 4 matches!'));
-    expect(ctx.message()).toBeVisible();
+    await step("Submitting shows the item's message within the interaction", async () => {
+      ctx.assessmentItem.processResponse();
+      await waitFor(() => expect(ctx.message()).toHaveTextContent('You cannot make more than 4 matches!'));
+      expect(ctx.message()).toBeVisible();
+    });
+
+    await step('Changing the number of associations acknowledges the message', async () => {
+      const placed = ctx.interaction.chipsIn(ctx.target('R'))[0];
+      await drag(placed, { to: ctx.sourceSet, duration: 100 });
+      expect(ctx.response()).toHaveLength(4);
+      await waitFor(() => expect(ctx.message()).not.toBeVisible());
+    });
   },
   loaders: [loadItem('match-example-sv-3.xml')]
 };
