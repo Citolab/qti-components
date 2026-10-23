@@ -151,6 +151,36 @@ item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-att
 scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
 
+## Next major
+
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
+
+Status: none
+Members: `qti-outcome-changed`
+Do: nothing; CitoTestUit does not listen for it. The item context is now published once at the end of
+an attempt instead of at every step, which the host only notices as fewer updates.
+Evidence: grep of the PrototypesQTI checkout for `outcome-changed`, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `frontend/packages/ui/src/assessment-player/nav-list.tsx:150-157`, `questionHeader.ts:31`,
+  `hasRecordedWork.ts:18-19`: nav pill, badge and recorded work read `completed`.
+- `frontend/apps/student/.../stores/assessmentStore.helpers.ts:92` (`answered`) and the scorer-view
+  templates `paging-template-{list,nav,thumbs}.html`: same.
+- `frontend/apps/admin/.../review/utils/responseUtils.ts:136-138, 319`: review counts.
+- Backend `AssessmentResultXmlBuilder.cs:81-83, 297-308` skips `not_attempted` items: still correct, a
+  presented item is never `not_attempted`.
+- `AssessmentPlayerView.tsx:2197` and `StudentAssessmentReviewDialog.tsx:99` use `'not-attempted'` with a
+  hyphen, which is no QTI value: use `'not_attempted'`.
+  Evidence: read from `frontend/` and `QtiBackend.Core/`, not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.

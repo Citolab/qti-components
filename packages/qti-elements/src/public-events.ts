@@ -1,4 +1,9 @@
-import type { InteractionChangedDetails, OutcomeChangedDetails } from './internal/event-types';
+import type {
+  InteractionChangedDetails,
+  OutcomeChangedDetails,
+  OutcomesChangedDetails,
+  SetOutcomesDetails
+} from './internal/event-types';
 
 /**
  * The public events of the item. The name tells you it is public: everything declared here starts
@@ -25,7 +30,15 @@ export interface PublicItemEventMap {
   // `cito-item-rendered` (detail: the `QtiAssessmentItem`) is added by qti-assessment-item.ts, so this
   // module imports no element: that import would be a cycle.
   'cito-item-response-changed': CustomEvent<InteractionChangedDetails>;
+  /**
+   * Request: the item applies these outcomes in one update. Response processing sends it; a host
+   * that scores on a backend sends it on the item with the outcomes the backend returned.
+   */
+  'cito-item-set-outcomes': CustomEvent<SetOutcomesDetails>;
+  /** One per outcome an update applied, with its final value, after the item context is published. */
   'cito-item-outcome-changed': CustomEvent<OutcomeChangedDetails>;
+  /** All the outcomes one update applied, after the item context is published. */
+  'cito-item-outcomes-changed': CustomEvent<OutcomesChangedDetails>;
   /** Cancelable: `preventDefault()` keeps the rubric block where it is. */
   'cito-item-rubric-placement': CustomEvent<RubricPlacement>;
 }
@@ -36,7 +49,9 @@ export const PUBLIC_ITEM_EVENTS: Record<PublicItemEventName, PublicEventDeclarat
   // The old name `qti-assessment-item-connected` stays as internal plumbing: it is sent separately.
   'cito-item-rendered': { kind: 'notification', scope: 'item' },
   'cito-item-response-changed': { kind: 'notification', scope: 'item', deprecated: 'qti-interaction-changed' },
+  'cito-item-set-outcomes': { kind: 'request', scope: 'item' },
   'cito-item-outcome-changed': { kind: 'notification', scope: 'item', deprecated: 'qti-outcome-changed' },
+  'cito-item-outcomes-changed': { kind: 'notification', scope: 'item' },
   'cito-item-rubric-placement': {
     kind: 'notification',
     scope: 'item',

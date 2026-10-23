@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  adaptive="false" identifier="rr-order-1" time-dependent="false" title="RR - Order interaction 1" 
+  xsi:schemaLocation=" http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd">
+  
+<qti-response-declaration base-type="identifier" cardinality="ordered" identifier="RESPONSE">
+  <qti-correct-response>
+    <qti-value>D</qti-value>
+    <qti-value>C</qti-value>
+    <qti-value>A</qti-value>
+    <qti-value>B</qti-value>
+  </qti-correct-response>
+</qti-response-declaration>
+
+<qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE"/>
+
+<qti-item-body>
+  <div class="qti-layout-row">
+    <div class="qti-layout-col8">
+    
+      <p>Arrange the words of the sentence into the correct order.</p>
+
+      <div class="qti-well">
+      
+        <qti-order-interaction orientation="horizontal" response-identifier="RESPONSE">
+          <qti-simple-choice identifier="A">as</qti-simple-choice>
+          <qti-simple-choice identifier="B">1-2-3</qti-simple-choice>
+          <qti-simple-choice identifier="C">easy</qti-simple-choice>
+          <qti-simple-choice identifier="D">A-B-C</qti-simple-choice>
+        </qti-order-interaction>
+      
+      </div>
+      
+    </div>
+  </div>
+</qti-item-body>
+<qti-response-processing template="http://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml"/>
+</qti-assessment-item>

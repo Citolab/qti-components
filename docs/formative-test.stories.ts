@@ -16,7 +16,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
  * `formative-host.js`, with the corrections elements.
  */
 const meta: Meta = {
-  title: 'Corrections/Formative test',
+  title: 'QTI behaviour/Formative test',
   tags: ['!dev'],
   parameters: { controls: { disable: true } }
 };

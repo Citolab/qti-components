@@ -45,7 +45,7 @@ type RestoreStoryOptions = {
 };
 
 const meta: Meta = {
-  title: 'Testing/Conformance/portable-custom-interaction'
+  title: 'QTI behaviour/Conformance/portable-custom-interaction'
 };
 export default meta;
 
@@ -628,6 +628,7 @@ export const Q16_PCI_D12: Story = {
   name: 'Q16-PCI-D12',
   ...createPciStory({ itemName: 'item-1', consoleExpectations: consoleSingle })
 };
+/** Q16-PCI-D13: ending an attempt with nothing marked on the graph is an invalid response; the delivery system can tell from the item's `valid`. */
 export const Q16_PCI_D13: Story = {
   name: 'Q16-PCI-D13',
   render: () => html`
@@ -646,31 +647,24 @@ export const Q16_PCI_D13: Story = {
       </div>
     </qti-item>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     await loadPciItem(canvasElement, 'item-1');
     const { assessmentItem } = await assertPciLoaded(canvasElement, 1);
-
     const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
+    let isValid = true;
 
-    clickEndAttempt(canvasElement);
+    await step('Press End Attempt without marking a point on the graph', () => {
+      clickEndAttempt(canvasElement);
+      isValid = assessmentItem.validate(true);
+      // The delivery system shows its message when the item says the response is invalid.
+      if (!isValid) validationMessage.style.display = 'block';
+    });
 
-    // Validate without marking any points - should be invalid
-    const isValid = assessmentItem.validate(true);
-
-    // Show validation message if invalid (simulating delivery system behavior)
-    if (!isValid) {
-      validationMessage.style.display = 'block';
-    }
-
-    // Verify completionStatus is NOT 'completed' (no points marked = invalid response)
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).not.toBe('completed');
-
-    // Verify the response is invalid
-    expect(isValid).toBe(false);
-
-    // Verify validation message is shown
-    expect(validationMessage.style.display).toBe('block');
+    await step('The item says the response is invalid, and the message shows', () => {
+      expect(isValid).toBe(false);
+      expect(assessmentItem.itemContext.valid).toBe(false);
+      expect(validationMessage.style.display).toBe('block');
+    });
   },
   parameters: {
     chromatic: { disableSnapshot: true }
@@ -691,6 +685,7 @@ export const Q16_PCI_D14: Story = {
     ]
   })
 };
+/** Q16-PCI-D15: one marked point is a valid response for item 1; `valid` says so and no message shows. */
 export const Q16_PCI_D15: Story = {
   name: 'Q16-PCI-D15',
   render: () => html`
@@ -709,42 +704,32 @@ export const Q16_PCI_D15: Story = {
       </div>
     </qti-item>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     await loadPciItem(canvasElement, 'item-1');
     const { assessmentItem, pciElements } = await assertPciLoaded(canvasElement, 1);
-
     const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
     const pciElement = pciElements[0] as any;
+    let isValid = false;
 
-    // Mark a point on the graph to make the response valid
-    await clickGraphPoint(pciElement, '#graph svg', { x: 1, y: -3 });
-
-    // Wait for the response to be registered
-    await waitFor(() => {
-      const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
-      expect(response?.value).toEqual(['1,-3']);
-      return true;
+    await step('Mark the point (1, -3) on the graph', async () => {
+      await clickGraphPoint(pciElement, '#graph svg', { x: 1, y: -3 });
+      await waitFor(() => {
+        expect(assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value).toEqual(['1,-3']);
+        return true;
+      });
     });
 
-    clickEndAttempt(canvasElement);
+    await step('Press End Attempt', () => {
+      clickEndAttempt(canvasElement);
+      isValid = assessmentItem.validate(true);
+      if (!isValid) validationMessage.style.display = 'block';
+    });
 
-    // Validate with a valid response - should pass
-    const isValid = assessmentItem.validate(true);
-
-    // Only show validation message if invalid (should NOT show)
-    if (!isValid) {
-      validationMessage.style.display = 'block';
-    }
-
-    // Verify the response is valid
-    expect(isValid).toBe(true);
-
-    // Verify completionStatus IS 'completed'
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).toBe('completed');
-
-    // Verify NO validation message is shown
-    expect(validationMessage.style.display).toBe('none');
+    await step('The item says the response is valid, and no message shows', () => {
+      expect(isValid).toBe(true);
+      expect(assessmentItem.itemContext.valid).toBe(true);
+      expect(validationMessage.style.display).toBe('none');
+    });
   },
   parameters: {
     chromatic: { disableSnapshot: true }
@@ -840,6 +825,7 @@ export const Q16_PCI_D24: Story = {
     ]
   })
 };
+/** Q16-PCI-D25: item 2 needs two marked points; with both, `valid` says the response is valid. */
 export const Q16_PCI_D25: Story = {
   name: 'Q16-PCI-D25',
   render: () => html`
@@ -856,44 +842,36 @@ export const Q16_PCI_D25: Story = {
       </div>
     </qti-item>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     await loadPciItem(canvasElement, 'item-2');
     const { assessmentItem, pciElements } = await assertPciLoaded(canvasElement, 1);
-
     const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
     const pciElement = pciElements[0] as any;
+    let isValid = false;
 
-    // Mark TWO points - Item 2 requires two points for valid response
-    await clickGraphPoint(pciElement, '#graph svg', { x: -3, y: 0 });
-    await clickGraphPoint(pciElement, '#graph svg', { x: 0, y: -2 });
-
-    // Wait for the response to be registered
-    await waitFor(() => {
-      const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
-      expect(response?.value).toEqual(['-3,0', '0,-2']);
-      return true;
+    await step('Mark the two points this item needs: (-3, 0) and (0, -2)', async () => {
+      await clickGraphPoint(pciElement, '#graph svg', { x: -3, y: 0 });
+      await clickGraphPoint(pciElement, '#graph svg', { x: 0, y: -2 });
+      await waitFor(() => {
+        expect(assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value).toEqual(['-3,0', '0,-2']);
+        return true;
+      });
     });
 
-    clickEndAttempt(canvasElement);
+    await step('Press End Attempt', () => {
+      clickEndAttempt(canvasElement);
+      isValid = assessmentItem.validate(true);
+      if (!isValid) {
+        validationMessage.textContent = 'You must plot two points to answer this question.';
+        validationMessage.style.display = 'block';
+      }
+    });
 
-    // Validate with 2 points - should be valid
-    const isValid = assessmentItem.validate(true);
-
-    // Only show validation message if invalid (should NOT show)
-    if (!isValid) {
-      validationMessage.textContent = 'You must plot two points to answer this question.';
-      validationMessage.style.display = 'block';
-    }
-
-    // Verify the response is valid
-    expect(isValid).toBe(true);
-
-    // Verify completionStatus IS 'completed'
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).toBe('completed');
-
-    // Verify NO validation message is shown
-    expect(validationMessage.style.display).toBe('none');
+    await step('The item says the response is valid, and no message shows', () => {
+      expect(isValid).toBe(true);
+      expect(assessmentItem.itemContext.valid).toBe(true);
+      expect(validationMessage.style.display).toBe('none');
+    });
   },
   parameters: {
     chromatic: { disableSnapshot: true }

@@ -603,6 +603,63 @@ export class TestNavigation extends LitElement {
     );
   }
 
+  protected override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    this.#lockUsedItems();
+  }
+
+  /** The items this navigation disabled because their attempts are used, so it releases only those. */
+  #lockedItems = new WeakSet<QtiAssessmentItem>();
+
+  /**
+   * Disables every rendered item whose attempts are used, from the computed context, so the
+   * candidate cannot change the answer once the last attempt is ended. Runs after every update:
+   * an item rendered later (another item, a section on screen, a restored state) is locked as it
+   * arrives, and one whose attempts are back to zero (a new state) is released.
+   *
+   * Only `disabled = true` is ever set here, and only on an item that was not disabled already; a
+   * host or view that disables or makes an item read-only itself keeps it so.
+   */
+  #lockUsedItems(): void {
+    if (!this.#testElement || !this.computedContext) return;
+    // In a simultaneous part every item has one attempt, processed when the part ends (QTI info model
+    // §2.8.2), so the candidate may change the answer until then: TAO keeps such an item open too.
+    const items = new Map(
+      this.computedContext.testParts.flatMap(part =>
+        part.sections.flatMap(section =>
+          (section.submissionMode || part.submissionMode) === 'simultaneous'
+            ? []
+            : section.items.map(item => [item.identifier, item] as const)
+        )
+      )
+    );
+    for (const itemRef of this.#testElement.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref')) {
+      const element = itemRef.assessmentItem;
+      if (!element) continue;
+      const used = this.#attemptsUsed(items.get(itemRef.identifier), element);
+      if (used && !element.disabled) {
+        element.disabled = true;
+        this.#lockedItems.add(element);
+      } else if (!used && this.#lockedItems.has(element)) {
+        this.#lockedItems.delete(element);
+        element.disabled = false;
+      }
+    }
+  }
+
+  /**
+   * The same rule as `test-end-attempt`'s max-attempts guard: a non-adaptive item with a
+   * `max-attempts` above 0 whose attempts reached it. Adaptive items end themselves, and 0 is
+   * unlimited. With `auto-score-items` every change is scored as an attempt, so the count is not
+   * the candidate's and locks nothing.
+   */
+  #attemptsUsed(item: ComputedItem | undefined, element: QtiAssessmentItem): boolean {
+    if (!item || this.autoScoreItems) return false;
+    if (item.adaptive || element.adaptive === 'true') return false;
+    const maxAttempts = item.maxAttempts ?? 1;
+    return maxAttempts > 0 && (item.numAttempts ?? 0) >= maxAttempts;
+  }
+
   /**
    * Decide whether an item should be treated as "the candidate is done with it"
    * for the purpose of gating forward navigation and further attempts.

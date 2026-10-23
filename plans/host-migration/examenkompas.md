@@ -88,3 +88,37 @@ Status: none
 Members: `test-print-context`, `test-print-item-variables`, `test-scoring-buttons`, `test-scoring-feedback`
 Do: nothing. They are plugins in the source, but `@qti-components/test` still registers them; no extra import.
 Evidence: read, not run
+
+## Next major
+
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
+
+Status: behaviour change; no API removed
+Members: `qti-outcome-changed`
+Do: nothing required. `qti-outcome-changed` and `cito-item-outcome-changed` stay, with the same `detail`
+(`{ item, outcomeIdentifier, value }`). What changes is when they come: once per outcome after each
+update, with the final value, after the item context is published. An end of attempt no longer sends
+the reset to the defaults (SCORE 0, empty FEEDBACK) or a rule's in-between value first, so a handler
+sees fewer events. `cito-item-outcomes-changed` is new: the same outcomes in one event
+(`{ item, outcomes: [{ identifier, value }] }`).
+
+The handler (`outcomeChanged`, passed as `itemChanged` in `digitaal.tsx:588`, via `assessment.tsx:200`,
+`:208` and the `qtioutcomechanged` mapping in `assessment-test-container.tsx:29`) bumps a tick in
+`assessment.tsx:184-187`; it now ticks once per outcome per update instead of at every step.
+Evidence: read, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `apps/examenkompas/src/lib/ui/components/examen/assessment.tsx:258-264, 365-392, 407-418`: the
+  view switch, enabling scoring and AI review read `completed`.
+- `item-navigation.tsx:26`, `item-thumbs.tsx:45`, `item-list.tsx:41`: nav and thumbnail status.
+- `apps/functions/src/app-specific/examenkompas.ts:339-341`: the report's `completed` feeds
+  `toetsVolledigBeantwoord`.
+  Evidence: read, not run

@@ -143,6 +143,69 @@ item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-att
 scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
 
+## Next major
+
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
+
+Status: behaviour change; no API removed
+Members: `qti-outcome-changed`, `cito-item-outcome-changed`
+Do: nothing required. `qti-outcome-changed` and `cito-item-outcome-changed` stay, with the same `detail`
+(`{ item, outcomeIdentifier, value }`). What changes is when they come: once per outcome after each
+update, with the final value, after the item context is published. An end of attempt no longer sends
+the reset to the defaults (SCORE 0, empty FEEDBACK) or a rule's in-between value first, so a handler
+sees fewer events. `cito-item-outcomes-changed` is new: the same outcomes in one event
+(`{ item, outcomes: [{ identifier, value }] }`).
+
+- `projects/shared/src/lib/qti/events.ts:10`, `:21` and `:43` declare and list `qti-outcome-changed`
+  with this `detail`; they keep working. Optionally move to `cito-item-outcomes-changed` (recommended)
+  to handle an update at once.
+  Evidence: read from `projects/shared/src/lib/qti/events.ts`, not run
+
+### `cito-item-set-outcomes` applies a backend's outcomes at once (feat/processing-as-backend)
+
+Status: recommended
+Members: `updateItemVariables`, `setOutcomeVariable`
+Do: when outcomes come from a backend, send them on the item in one event,
+`item.dispatchEvent(new CustomEvent('cito-item-set-outcomes', { detail: { outcomes: [{ identifier, value }, …], responseProcessed: true } }))`,
+instead of one `setOutcomeVariable` per outcome: the item publishes once and feedback is not shown and
+hidden again in between. Leave `responseProcessed` out when replaying stored outcomes that end no attempt.
+The item has applied everything when `dispatchEvent` returns.
+Evidence: read, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `projects/shared/src/lib/player/store/items.ts:74`: the Nakijken button is enabled on `completed`;
+  use `valid && !isDefaultResponse`, else it stays disabled until after checking.
+- `selectors.ts:177-200` (`answeredItemIds`) and `items.ts:58,65`: unlocking the next question and the
+  nav markers read `completed`; same replacement.
+- The host's own writes of `completed` after backend scoring (`check-item.ts:59`, `submit.ts:49`) keep working.
+  Evidence: read from `projects/shared/src/lib/player/store/`, not run
+
+### An item is locked once its attempts are used (test-navigation attempts lock)
+
+Status: breaking for practice tests
+Members: `test-navigation`, `qti-item-session-control` `max-attempts`
+Do: give a practice test unlimited attempts in its package: `<qti-item-session-control max-attempts="0" />`
+on the test part (or section, or item-ref). `test-navigation` now disables an item once a non-adaptive item
+has used its `max-attempts`, and QTI's default is 1, also for a package without `qti-item-session-control`.
+A plain practice package therefore locks each question after its first Nakijken, and the candidate can no
+longer change the answer and check again. TAO and QTI.JS read the default the same way. Tests that should
+allow one attempt need nothing.
+
+- The Formative test docs page (which follows Kennisnet's practice player) needed exactly this change in
+  its package (`public/assets/docs/getting-started/assessment.xml`).
+- Check whether Nakijken counts an attempt in Kennisnet's player (`cito-test-end-attempt` or
+  `processResponse()` do; a backend's `cito-item-set-outcomes` does not count by itself). If it does not, the
+  lock never fires there.
+  Evidence: from the Formative test docs page, not from Kennisnet's source; not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

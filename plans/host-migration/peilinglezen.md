@@ -85,6 +85,39 @@ pick one.
   `qti-outcome-changed` handler.
   Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
 
+## Next major
+
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
+
+Status: behaviour change; no API removed
+Members: `qti-outcome-changed`
+Do: nothing required. `qti-outcome-changed` and `cito-item-outcome-changed` stay, with the same `detail`
+(`{ item, outcomeIdentifier, value }`). What changes is when they come: once per outcome after each
+update, with the final value, after the item context is published. An end of attempt no longer sends
+the reset to the defaults (SCORE 0, empty FEEDBACK) or a rule's in-between value first, so a handler
+sees fewer events. `cito-item-outcomes-changed` is new: the same outcomes in one event
+(`{ item, outcomes: [{ identifier, value }] }`).
+
+- `apps/leesvaardigheid/src/app/components/assessment-test.component.tsx:148` listens for
+  `qti-outcome-changed` and logs an `outcome-changed` action (`:101`) per outcome: the log gets one
+  entry per outcome per attempt, without the reset entries it had before.
+- `player/src/main.ts:233` has an empty `qti-outcome-changed` handler; it can go.
+- `player/src/components/qti-assessment-item-ref.ts:39-42` reads `detail.outcomeIdentifier`; unchanged.
+  Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `player/src/components/qti-navigation-bar.ts:103-107`: the "open" count (finishing allowed at 0)
+  reads `completed`; count items that are not `valid && !isDefaultResponse` instead.
+  Evidence: read from `player/src`, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the
