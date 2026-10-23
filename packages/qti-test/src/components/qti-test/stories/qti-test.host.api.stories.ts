@@ -11,6 +11,7 @@ import {
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ComputedContext, QtiContext } from '@qti-components/base';
+import type { QtiChoiceInteraction } from '@qti-components/interactions';
 import type { QtiTest } from '../qti-test';
 import type { QtiTestState } from '../../../types/qti-test-state';
 
@@ -19,10 +20,11 @@ import type { QtiTestState } from '../../../types/qti-test-state';
  * calls and listens to, exercised through nothing else. A host that depends on one of these
  * members should break a story here, not in production.
  *
- * Persistence (`state`, `qti-state-changed`) has its own story: Persist and restore.
+ * Persistence (`state`, `cito-test-state-changed`) is exercised by the Implementation / State story
+ * (docs/state.stories.ts) and, in detail, by test-state.spec.ts.
  */
 const meta: Meta = {
-  title: 'qti-test/Host API',
+  title: 'API Reference/Test host API',
   component: 'qti-test'
 };
 export default meta;
@@ -271,6 +273,34 @@ export const ConfigContext: StoryObj = {
 
     const item = await loadedItem(canvasElement, 'Richard III (Take 2)');
     await waitFor(() => expect(inlineChoicePrompt(item)).toBe('Pick a house'));
+  }
+};
+
+/**
+ * `validationDisplayMode` set on `qti-test.configContext` reaches every interaction in the loaded items.
+ * With `'none'` an interaction still goes invalid (`min-choices` here) but shows no message, inline or native.
+ */
+export const ValidationDisplayModePropagation: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    const test = await mountStimulusTest(canvasElement, ({ test }) => {
+      test.configContext = { validationDisplayMode: 'none' };
+    });
+    test.navigateTo('item', 'ITM-choice_multiple');
+
+    const item = await loadedItem(canvasElement, 'Composition of Water');
+    const choice = item.querySelector('qti-choice-interaction') as QtiChoiceInteraction;
+    expect(choice, 'the item has a choice interaction').toBeTruthy();
+
+    choice.setAttribute('min-choices', '2');
+    choice.validate();
+    choice.reportValidity();
+
+    const message = choice.shadowRoot.querySelector<HTMLElement>('#validation-message');
+    expect((choice as any).internals.validity.valid).toBe(false);
+    expect(message?.textContent ?? '').toBe('');
+    expect(message?.style.display ?? '').toBe('none');
   }
 };
 

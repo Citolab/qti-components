@@ -3,24 +3,23 @@ import { useArgs } from 'storybook/preview-api';
 
 import { getManifestInfo } from '@qti-components/loader';
 
-import packages from '../assets/packages.json';
+import { PACKAGE_NAMES, PACKAGES, type PackageName } from './packages.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 import '../../../../.storybook/utilities.css';
 
 const meta: Meta = {
-  title: 'Qti Test',
+  title: 'QTI Test/Examples',
   argTypes: {
     packages: {
-      options: packages.packages,
+      options: PACKAGE_NAMES,
       control: { type: 'radio' }
     }
   },
   args: {
-    serverLocation: '/assets/api',
     itemIdentifier: undefined,
-    packages: 'examples'
+    packages: 'showcase'
   },
   parameters: {
     layout: 'fullscreen'
@@ -34,6 +33,7 @@ export const QtiTest: Story = {
     const [args, updateArgs] = useArgs();
     return html`
       <qti-test
+        navigate="item"
         class="h-full"
         @qti-test-connected=${(e: CustomEvent) => {
           console.log('qti-test-connected', e);
@@ -86,16 +86,18 @@ export const QtiTest: Story = {
             updateArgs({ itemIdentifier: detail.id });
           }}
         >
-          <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
+          <test-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
             <template>
-              <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
-                {{ item.index }} {{ item.title }} {{ item.difficulty }}
-                <template type="if" if="{{ item.type === 'info' }}">
-                  <i class="bi bi-info-circle"></i>
-                </template>
-              </test-item-link>
+              <template type="repeat" repeat="{{ activeTestpart.items }}">
+                <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
+                  {{ item.index }} {{ item.title }} {{ item.difficulty }}
+                  <template type="if" if="{{ item.type === 'info' }}">
+                    <i class="bi bi-info-circle"></i>
+                  </template>
+                </test-item-link>
+              </template>
             </template>
-          </test-paging-buttons-stamp>
+          </test-stamp>
 
           <div class="flex flex-col flex-1">
             <div class="flex items-center gap-2 p-2">
@@ -110,7 +112,6 @@ export const QtiTest: Story = {
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
             <nav class="flex justify-between p-2">
               <test-end-attempt>End attempt</test-end-attempt>
-              <test-show-correct-response>Show Correct</test-show-correct-response>
               <test-prev>Vorige</test-prev>
               <test-next>Volgende</test-next>
             </nav>
@@ -125,7 +126,7 @@ export const QtiTest: Story = {
   },
   loaders: [
     async ({ args }) => {
-      const { testURL } = await getManifestInfo(`${args.serverLocation}/${args.packages}/imsmanifest.xml`);
+      const { testURL } = await getManifestInfo(PACKAGES[args.packages as PackageName]);
       return { testURL };
     }
   ]

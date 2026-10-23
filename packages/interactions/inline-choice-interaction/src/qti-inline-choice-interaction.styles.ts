@@ -101,12 +101,30 @@ const own = css`
     vertical-align: baseline;
   }
 
+  /*
+   * min-height: 1lh — one line of the trigger's own line-height. An empty value (data-prompt="")
+   * is an empty span, which has no line box and collapsed the field to the chevron's height
+   * (measured: 20px empty vs 28px with text). Now the field is a line tall either way.
+   */
   [part='value'] {
+    min-height: 1lh;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
+  }
+
+  /*
+   * A zero-width space before the value and the option text, so an empty one (data-prompt="") still
+   * has a line box and therefore a text baseline. Without it the inline-grid trigger has no baseline
+   * and the browser sits its bottom edge on the sentence's baseline: the empty field rode high and
+   * made the line taller (measured: paragraph 39px empty vs 32.5px answered). No width, not
+   * selectable, and the empty alt text keeps it out of the accessible name.
+   */
+  [part='value']::before,
+  [part='option-content']::before {
+    content: '\\200B' / '';
   }
 
   /* ── Chevron icon ─────────────────────────────────────────────────────────────
@@ -159,7 +177,26 @@ const own = css`
     text-overflow: ellipsis;
   }
 
+  /* The empty prompt row while nothing is chosen (see renderMenu). The rule above sets display, which
+     beats the UA's [hidden] rule, so hidden has to be restated here. */
+  button[part~='option'][hidden] {
+    display: none;
+  }
+
+  /* The clear row's x glyph: a mask like the chevron, so the theme colours it with color:. */
+  [part='clear-icon'] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    background-color: currentColor;
+    mask: var(--qti-times-mask) no-repeat center / contain;
+    -webkit-mask: var(--qti-times-mask) no-repeat center / contain;
+  }
+
+  /* min-height: 1lh, so an empty prompt row is as tall as the other rows — see [part='value']. */
   [part='option-content'] {
+    min-height: 1lh;
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;

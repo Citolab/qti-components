@@ -1,5 +1,8 @@
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { html } from 'lit';
+import { expect, waitFor } from 'storybook/test';
+
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestStamp } from './test-stamp';
@@ -11,7 +14,19 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-stamp');
 
 type Story = StoryObj<TestStamp & typeof args>;
 
+/**
+ * The **stamp** plugin renders a template from the state of the test, so a page can show where the
+ * candidate is without writing a component.
+ *
+ * `<test-stamp>` renders its `<template>` with the active item (`activeItem`), section
+ * (`activeSection`), test part (`activeTestpart`) and the test (`test`, with `test.plugins`). Inside
+ * it, `<template type="repeat" repeat="{{ activeTestpart.items }}">` makes one entry per item, and
+ * `repeat="{{ activeTestpart.sections }}"` one per section, for example a `<test-item-link>` or a
+ * `<test-section-link>`.
+ */
 const meta: Meta<TestStamp> = {
+  tags: ['autodocs'],
+  title: 'QTI Test/Plugins/Stamp/test-stamp',
   component: 'test-stamp',
   args,
   argTypes,
@@ -80,8 +95,20 @@ export const Default: Story = {
         )}
         ${template(args, html`<template>{{ item.identifier }}</template>`)}
 
-        <test-container test-url="/assets/api/kennisnet/AssessmentTest.xml"></test-container>
-        <test-next>Volgende</test-next>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
+        <test-next>Next</test-next>
       </test-navigation>
-    </qti-test>`
+    </qti-test>`,
+  play: async ({ canvasElement }) => {
+    // The stamp fills its template from the test: the test's title and identifier.
+    const stamps = [...canvasElement.querySelectorAll('test-stamp')];
+    await waitFor(
+      () => {
+        const text = stamps.map(stamp => stamp.shadowRoot?.textContent || stamp.textContent).join(' ');
+        expect(text).toContain('Showcase');
+        expect(text).toContain('showcase');
+      },
+      { timeout: 15000 }
+    );
+  }
 };

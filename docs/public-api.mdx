@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
-<Meta title="Public API" />
+<Meta title="API Reference/Public API" />
 
 # Public API
 
@@ -10,8 +10,8 @@ The rule: **what is on this page is public. Everything else may change in a mino
 depend on something that isn't here, tell us, so it can be added or replaced.
 
 Every member below has a contract story in Storybook that uses only the public API, so a breaking
-change shows up as a failing story: **qti-test / Host API**, **qti-test / Persist and restore** and
-**qti-assessment-item / Host API**.
+change shows up as a failing story: **qti-test / Host API**, **Implementation / State** (saving and
+resuming) and **qti-assessment-item / Host API**.
 
 | Status         | Meaning                                                                                         |
 | -------------- | ----------------------------------------------------------------------------------------------- |
@@ -63,14 +63,17 @@ Everything you call on, listen to or configure around a `<qti-test>`.
 The name tells you an event is public: every one starts with `cito-`. Any other event is internal
 plumbing and may change in any release. All of them bubble and are composed, so one listener on
 `qti-test` hears them. **Requests** are verbs: you dispatch them at the test. **Notifications** are
-past tense: the test dispatches them.
+past tense: the test dispatches them. `cito-test-end-attempt` is the exception: `<test-navigation>`
+handles it, so dispatch it on that element or from inside it.
 
 | Event                          | Kind         | `detail`                                             | Replaces (deprecated)               |
 | ------------------------------ | ------------ | ---------------------------------------------------- | ----------------------------------- |
 | `cito-test-navigate`           | Request      | `{ type: 'item' \| 'section', id }`                  | `qti-request-navigation`            |
 | `cito-test-end-attempt`        | Request      | none                                                 | `test-end-attempt`                  |
+| `cito-test-submit`             | Request      | none                                                 | new                                 |
 | `cito-test-update-outcome`     | Request      | `{ assessmentItemRefId, outcomeVariableId, value }`  | `test-update-outcome-variable`      |
 | `cito-test-switch-view`        | Request      | the view                                             | `on-test-switch-view`               |
+| `cito-test-submitted`          | Notification | none                                                 | new                                 |
 | `cito-test-navigated`          | Notification | `{ type, id }`                                       | new                                 |
 | `cito-test-navigation-started` | Notification | `{ type, id }`                                       | `qti-navigation-loading-started`    |
 | `cito-test-navigation-failed`  | Notification | `{ message, details?, itemId?, sectionId? }`         | `qti-navigation-error`              |
@@ -90,39 +93,44 @@ request sent under an old name logs a one-time `console.warn` naming the new one
 
 These two do not have a `cito-` name yet. Both bubble and are composed.
 
-| Event                           | Status        | Notes                                                                       |
-| ------------------------------- | ------------- | --------------------------------------------------------------------------- |
-| `qti-assessment-item-connected` | **Supported** | `detail` is the item element.                                               |
-| `qti-interaction-changed`       | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`. |
-| `qti-outcome-changed`           | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`.                             |
+| Event                           | Status        | Notes                                                                                     |
+| ------------------------------- | ------------- | ----------------------------------------------------------------------------------------- |
+| `qti-assessment-item-connected` | **Supported** | `detail` is the item element.                                                             |
+| `qti-interaction-changed`       | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`.               |
+| `qti-outcome-changed`           | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`, once per outcome per update, final value. |
+| `cito-item-outcomes-changed`    | **Supported** | `detail`: `{ item, outcomes: [{ identifier, value }] }`, once per update.                 |
 
 ## Scoring and reviewing a single item
 
 Members of `<qti-assessment-item>`, for hosts that score outside the browser or show answers back.
 
-| Member                                 | Status         | Notes                                                                                         |
-| -------------------------------------- | -------------- | --------------------------------------------------------------------------------------------- |
-| `item.setOutcomeVariable(id, value)`   | **Supported**  | Replays a stored outcome. Feedback that depends on it is shown by the time the call returns.  |
-| `item.processResponse(countAttempts?)` | **Supported**  | Scores the candidate's answer.                                                                |
-| `item.variables`                       | **Supported**  | Read and assign. Assigning shows the values in the interactions, possibly on the next update. |
-| `item.responses`                       | **Deprecated** | Use `variables`.                                                                              |
-| `item.disabled`                        | **Supported**  | Locks a submitted item.                                                                       |
-| `item.assessmentItemRefId`             | **Supported**  | The item-ref's identifier, which differs from the item's own.                                 |
+| Member                                      | Status         | Notes                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `item.setOutcomeVariable(id, value)`        | **Supported**  | Replays a stored outcome. Feedback that depends on it is shown by the time the call returns.                                                                                                                                                                                                  |
+| `cito-item-set-outcomes` (send on the item) | **Supported**  | `detail`: `{ outcomes: [{ identifier, value }], responseProcessed? }`. Applies the outcomes a backend returned in one update, then one `cito-item-outcomes-changed`. `responseProcessed: true` ends the attempt: a non-adaptive item left `unknown` becomes `completed` and the test is told. |
+| `item.processResponse(countAttempts?)`      | **Supported**  | Scores the candidate's answer. The rules run on a copy of the context and send every outcome in one `cito-item-set-outcomes`; the item publishes once.                                                                                                                                        |
+| `item.variables`                            | **Supported**  | Read and assign. Assigning shows the values in the interactions, possibly on the next update.                                                                                                                                                                                                 |
+| `item.responses`                            | **Deprecated** | Use `variables`.                                                                                                                                                                                                                                                                              |
+| `item.disabled`                             | **Supported**  | Locks a submitted item.                                                                                                                                                                                                                                                                       |
+| `item.assessmentItemRefId`                  | **Supported**  | The item-ref's identifier, which differs from the item's own.                                                                                                                                                                                                                                 |
 
 `qti-assessment-item-correction` (package `@qti-components/corrections`) adds
-`showCorrectResponse(show)` and `showCandidateCorrection(show)`.
+`showCorrectResponse(show)` and `showCandidateCorrection(show)`, and the same package's
+`<test-show-correct-response>` is a **Supported** button for them inside `test-navigation`. See
+[Corrections](?path=/docs/corrections-overview--docs).
 
 ## Extending
 
-| Member                                       | Status        | Notes                                                                    |
-| -------------------------------------------- | ------------- | ------------------------------------------------------------------------ |
-| `postLoadTransformCallback`                  | **Supported** | Change an item's DOM after it is transformed.                            |
-| `postLoadTestTransformCallback`              | **Supported** | The same for a test document.                                            |
-| `transformer.extendElementName(tag, suffix)` | **Supported** | Register your own subclass under a suffixed tag name.                    |
-| `<template item-ref>` on `qti-test`          | **Supported** | Wrap each item in your own markup.                                       |
-| Subclassing `Interaction`                    | **Supported** | Write your own interaction. See Extending interactions on the docs site. |
-| Subclassing `QtiFeedback`                    | **Supported** | A base class.                                                            |
-| Subclassing `Qti*InteractionCorrection`      | **Supported** | A base class.                                                            |
+| Member                                       | Status        | Notes                                                                                                                                                                                   |
+| -------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `postLoadTransformCallback`                  | **Supported** | Change an item's DOM after it is transformed.                                                                                                                                           |
+| `postLoadTestTransformCallback`              | **Supported** | The same for a test document.                                                                                                                                                           |
+| `transformer.extendElementName(tag, suffix)` | **Supported** | Register your own subclass under a suffixed tag name.                                                                                                                                   |
+| `<template item-ref>` on `qti-test`          | **Supported** | Wrap each item in your own markup.                                                                                                                                                      |
+| Subclassing `Interaction`                    | **Supported** | Write your own interaction. See [Creating an extended interaction](?path=/docs/extending-qti-creating-an-extended-interaction--docs).                                                   |
+| Subclassing `QtiFeedback`                    | **Supported** | A base class.                                                                                                                                                                           |
+| Subclassing `Qti*InteractionCorrection`      | **Supported** | A base class.                                                                                                                                                                           |
+| Test plugins reading `computedContext`       | **Supported** | Elements inside `test-navigation`; `computedContext.itemElement(identifier)` gives the rendered item. See [Creating a plugin](?path=/docs/extending-qti-creating-a-plugin-guide--docs). |
 
 The base classes (`Interaction`, `QtiFeedback`) and the contexts (`testContext`, `computedContext`,
 `configContext`) are exported from `@citolab/qti-components/qti-base`. The old deep `/exports/*`

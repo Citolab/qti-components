@@ -1,6 +1,51 @@
 # @qti-components/elements
 
-## 1.10.1
+## 2.0.0-next.5
+
+### Major Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `completionStatus` follows QTI 3 (info model §2.2.2, §2.5) and the 1EdTech conformance suite's Results Reporting reference results.
+
+  - **completionStatus is no longer derived from validity.** Before, a non-adaptive item set `completed` or `incomplete` on every answer, from whether its interactions were valid. Now it is `not_attempted` until the item is presented, `unknown` from then on, and `completed` once an attempt of a non-adaptive item ends (after `processResponse()`), unless response processing set a value itself. An adaptive item is completed only by its response processing, as before. Whether the answers are valid is `valid` in the item context and in the computed context; to know whether an item is answered, read `valid && !isDefaultResponse` per item instead of `completionStatus === 'completed'`.
+  - An item that is presented is never `not_attempted`: after a reset or a restore that says so, it is `unknown`. The test context still holds `not_attempted` for items that were never presented.
+  - Response processing no longer resets `completionStatus` before a run of a non-adaptive item: it is built in and has no default.
+  - `test-scoring-feedback` shows its "no response" text from the item's validity and default response, not from completionStatus.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major).
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - Response processing runs the way it would on a backend: once, after which the item applies the final outcome values in one update.
+
+  Before, `processResponse` published the item context at every step: the attempt count, the reset of a non-adaptive item's outcomes to their defaults, every `qti-set-outcome-value`, the completion status. Every consumer (feedback, `test-navigation`, `test-end-attempt`, a modal) saw the in-between states, such as a score of 0 or an empty FEEDBACK. Now `qti-response-processing` runs its rules on a copy of the item context (outcomes reset for a non-adaptive item, `numAttempts` already counted), so a rule still sees what an earlier rule wrote (`SCORE = SCORE + 1` twice gives +2). When the rules are done it sends every outcome in one `cito-item-set-outcomes`; the item applies them with the completion status and the validity in one publish, then sends one `cito-item-outcomes-changed`.
+
+  What a host notices:
+
+  - **Changed:** `cito-item-outcome-changed` and its legacy name `qti-outcome-changed` keep their name and `detail` (`{ item, outcomeIdentifier, value }`), but are sent once per outcome after each update, with the final value, after the context is published. A handler no longer sees the reset to the defaults or a rule's in-between value.
+  - **New:** `cito-item-outcomes-changed`, the same outcomes in one event: `detail` is `{ item, outcomes: [{ identifier, value }] }`, sent once per update. After `processResponse` it lists every outcome of the item.
+  - **New:** `cito-item-set-outcomes`, a request a host sends on the item with the outcomes a backend returned: `detail` is `{ outcomes: [{ identifier, value }], responseProcessed? }`. The item applies them in one update, synchronously. With `responseProcessed: true` it also ends the attempt the way `processResponse` does: a non-adaptive item whose processing left completionStatus `unknown` becomes `completed` (see the completionStatus changeset) and `qti-item-context-updated` goes out with `responseProcessed`.
+  - A run that throws counts the attempt and applies no outcomes. Before, it also left the outcomes the rules had set before the error, and completionStatus at `null`.
+  - `qti-set-outcome-value` no longer reaches the item: `qti-response-processing` takes it and writes to its own copy of the item context, which only a run sends to the item.
+  - `qti-response-processing`'s `process()` is now `processResponse({ numAttempts })`, with the attempt count the item keeps, and sends its result instead of applying it; call `item.processResponse()` to score. The item no longer knows the element's class, only that it has `processResponse`.
+  - **Removed:** `item.updateResponseVariable` from the helper a `qti-custom-operator` script gets: response processing reads responses, it does not change them. `item.getVariable` and `item.updateOutcomeVariable` stay.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major) (nothing to do).
+
+### Minor Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - When an attempt ends, the response of every `qti-end-attempt-interaction` other than the one used is `false` (QTI info model §2.4.5): a hint requested in an earlier attempt no longer stays `true` when the candidate ends the next attempt another way.
+
+### Patch Changes
+
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320)]:
+  - @qti-components/base@3.0.0-next.4
+
+## 1.10.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+
+## 1.10.0-next.3
 
 ### Patch Changes
 
@@ -11,9 +56,23 @@
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
 - Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/base@2.5.0
+  - @qti-components/base@2.5.0-next.2
 
-## 1.10.0
+## 1.10.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+
+## 1.10.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+
+## 1.10.0-next.0
 
 ### Minor Changes
 
@@ -23,11 +82,6 @@
   - `qti-assessment-item-connected` stays: it is internal plumbing for the test and item container. Hosts use `cito-item-rendered`.
 
   Host entries: `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md`.
-
-### Patch Changes
-
-- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
-  - @qti-components/base@2.4.1
 
 ## 1.9.0
 

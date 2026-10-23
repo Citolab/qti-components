@@ -28,13 +28,23 @@ export interface NavigationFailure {
 
 export interface PublicEventMap {
   'cito-test-navigate': CustomEvent<NavigationTarget>;
-  'cito-test-end-attempt': CustomEvent<unknown>;
+  /**
+   * Ends an attempt: processes the response of the item-ref `itemId`, or, without it, of the item on
+   * screen. `test-end-attempt` sends the `itemId` of the item it is stamped into or names.
+   */
+  'cito-test-end-attempt': CustomEvent<{ itemId?: string }>;
+  /** Scores the test: resets its outcomes to their defaults, runs outcome processing, then `cito-test-submitted`. */
+  'cito-test-submit': CustomEvent<Record<string, never>>;
   'cito-test-update-outcome': CustomEvent<{
     assessmentItemRefId: string;
     outcomeVariableId: string;
     value: number | string;
   }>;
   'cito-test-switch-view': CustomEvent<View>;
+  /** `value` is JSON; `null` or `undefined` removes the plugin's entry. */
+  'cito-test-update-plugin-state': CustomEvent<{ plugin: string; value: unknown }>;
+  /** Outcome processing ran after a submit: read the test outcomes now. */
+  'cito-test-submitted': CustomEvent<Record<string, never>>;
   'cito-test-navigated': CustomEvent<NavigationTarget>;
   'cito-test-navigation-started': CustomEvent<NavigationTarget>;
   'cito-test-navigation-failed': CustomEvent<NavigationFailure>;
@@ -52,8 +62,11 @@ export type PublicEventName = keyof PublicEventMap;
 export const PUBLIC_EVENTS: Record<PublicEventName, PublicEventDeclaration> = {
   'cito-test-navigate': { kind: 'request', scope: 'test', deprecated: 'qti-request-navigation' },
   'cito-test-end-attempt': { kind: 'request', scope: 'test', deprecated: 'test-end-attempt' },
+  'cito-test-submit': { kind: 'request', scope: 'test' },
   'cito-test-update-outcome': { kind: 'request', scope: 'test', deprecated: 'test-update-outcome-variable' },
+  'cito-test-update-plugin-state': { kind: 'request', scope: 'test' },
   'cito-test-switch-view': { kind: 'request', scope: 'test', deprecated: 'on-test-switch-view' },
+  'cito-test-submitted': { kind: 'notification', scope: 'test' },
   'cito-test-navigated': { kind: 'notification', scope: 'test' },
   'cito-test-navigation-started': {
     kind: 'notification',

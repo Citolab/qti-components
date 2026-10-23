@@ -1,0 +1,66 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as Corrections from './corrections.stories';
+
+<Meta of={Corrections} />
+
+# Corrections
+
+The corrections package shows a candidate how they did: a mark on their own answer, and the correct response
+on the interaction. It is for practice tests and for reviewing a finished attempt.
+
+It is an **extension on QTI**, not part of it. QTI 3 describes how an item is scored and which feedback the
+author wrote; it says nothing about painting right and wrong on an interaction. So this lives in its own
+package, `@qti-components/corrections`, and the standard elements know nothing about it.
+
+## Import it
+
+Import the corrections build **instead of** the package root, not next to it:
+
+```js
+import '@citolab/qti-components/corrections'; // instead of '@citolab/qti-components'
+```
+
+It registers the same elements as the root, with a correction version for every tag it covers
+(`qti-choice-interaction`, `qti-assessment-item`, `test-navigation`, …) and its own controls on top. A tag has
+one constructor per registry, so the two builds cannot be mixed on one page: import one of them.
+
+To keep the standard elements on the page and use corrections in one part of it, give that part a scoped
+registry built from `qtiCorrectionElements` (`@qti-components/corrections/elements`), as the stories here do.
+Storybook registers the standard elements first, so these demos need it; a page of your own does not.
+
+## Show the correct response in a test
+
+Put `<test-show-correct-response>` inside `<test-navigation>`. It shows and hides the correct response of the
+item on screen, and it is disabled when that item declares no correct response or mapping. Answer the first
+question, then press it.
+
+<Canvas of={Corrections.ShowCorrectResponse} sourceState="shown" />
+
+## From your own code
+
+The corrections build adds two methods to `<qti-assessment-item>`. Get the item from
+`qti-assessment-item-connected` (its `detail` is the item):
+
+| Member                               | What it does                                                          |
+| ------------------------------------ | --------------------------------------------------------------------- |
+| `item.showCorrectResponse(show)`     | Marks the correct response on the item's interactions.                |
+| `item.showCandidateCorrection(show)` | Marks the candidate's own answer as correct, partly correct or wrong. |
+
+In the scorer view (`cito-test-switch-view` with `'scorer'`), the corrections `<qti-test>` shows the correct
+response of every item by itself.
+
+On an inline interaction (inline choice, text entry) the correct response is not painted into the field:
+it appears as a read-only copy of the interaction beside it, holding the correct answer. It shows whether or
+not the candidate was right; the mark on their own answer says who was.
+
+## Controls for a single item
+
+For a `<qti-item>` outside a test there are three buttons: `<item-show-correct-response>`,
+`<item-show-candidate-correction>` and `<item-correct-response-mode>`, which switches between marking the
+correct response on the interaction and showing a full, read-only copy of it.
+
+## Where next
+
+- [Formative test](?path=/docs/qti-behaviour-formative-test--docs): a practice test in which the candidate
+  checks each answer, built on a plain test package.

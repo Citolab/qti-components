@@ -24,6 +24,12 @@
     @mixin drag;
   }
 
+  /* The bank chip's own ring. The rules below ring only the PLACED chip (::part(drag)), so a bank
+     chip reached with Tab showed the browser's ring instead of the theme's. */
+  qti-associate-interaction :state(drag):focus:not(:state(placeholder), :active) {
+    @mixin foc;
+  }
+
   qti-associate-interaction :state(drag)::part(control)::before,
   qti-associate-interaction::part(drag-control)::before,
   qti-associate-interaction ::part(drag-control)::before,
@@ -59,33 +65,16 @@
     &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
       @mixin dropping;
     }
-    & qti-simple-associable-choice::part(drag),
     /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
-       `::part(qti-simple-associable-choice)`, a part named after the tag. */
-    &::part(drag) {
+       `::part(qti-simple-associable-choice)`, a part named after the tag. Its hover and ring
+       are in the states layer below. Deleted here: `&[dragging] { @mixin dragging }`. An attribute
+       selector after ::part() never matches. */
+    & qti-simple-associable-choice::part(drag) {
       @mixin drag;
-      &:hover {
-        @mixin drag-hover;
-      }
-      &:focus {
-        @mixin foc;
-      }
-      &[dragging] {
-        @mixin dragging;
-      }
     }
-    /* Editor fake-drag projected into the interaction's drop-target shadow.
-       Kept as a separate block (not merged into the comma list above)
-       because a CSS comment between commas in a nested selector list is
-       silently dropped by Chrome's nesting parser. */
+    /* Editor fake-drag projected into the interaction's drop-target shadow. */
     &::part(drag) {
       @mixin drag;
-      &:hover {
-        @mixin drag-hover;
-      }
-      &:focus {
-        @mixin foc;
-      }
     }
     /* `display: grid` lives in qti-associate-interaction.styles.ts, which already declares it on
        [part~='drop'] alongside the drop's min-height/min-width. */
@@ -130,13 +119,29 @@
     @mixin drag;
   }
 
-  qti-associate-interaction::part(hover),
-  qti-associate-interaction::part(active) {
-    background-color: var(--qti-drop-highlight-bg);
+  /*
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(drag)` they
+   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
+   * `background-color` and must not out-rank the hover.
+   */
+  qti-associate-interaction qti-simple-associable-choice::part(drag):hover,
+  qti-associate-interaction::part(drag):hover {
+    @mixin drag-hover;
+  }
+  qti-associate-interaction qti-simple-associable-choice::part(drag):focus:not(:active),
+  qti-associate-interaction::part(drag):focus:not(:active) {
+    @mixin foc;
   }
 
+  qti-associate-interaction::part(active),
   qti-associate-interaction::part(enabled) {
     background-color: var(--qti-drop-highlight-enabled-bg);
+  }
+
+  /* After `enabled`, which every target carries during a drag: the one under the chip. */
+  qti-associate-interaction::part(hover) {
+    @mixin drop-over;
   }
 
   qti-associate-interaction qti-simple-associable-choice:state(placeholder) {
@@ -149,7 +154,7 @@
     @mixin drag-placeholder;
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
     pointer-events: none;
   }
 
@@ -166,7 +171,7 @@
   qti-associate-interaction qti-simple-associable-choice:state(return-anchor) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 }
 

@@ -12,6 +12,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('qti-item');
 type Story = StoryObj<QtiItem & typeof args>;
 
 const meta: Meta<QtiItem> = {
+  title: 'QTI Item/qti-item',
   component: 'qti-item',
   subcomponents: { ItemContainer: 'item-container' },
   args,
@@ -27,7 +28,10 @@ export default meta;
 
 export const Default: Story = {
   render: args => {
-    return html`${template(args, html`<item-container item-url="/qti-item/example-choice-item.xml"></item-container>`)}`;
+    return html`${template(
+      args,
+      html`<item-container item-url="/assets/qti-item/example-choice-item.xml"></item-container>`
+    )}`;
   }
 };
 

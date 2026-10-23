@@ -17,10 +17,23 @@ type Story = StoryObj<QtiEndAttemptInteraction & typeof args>;
  * ### [3.2.21 End Attempt Interaction](https://www.imsglobal.org/spec/qti/v3p0/impl#h.b3g8rgbtuwqp)
  * is a special interaction which immediately ends the current attempt on an assessment item.  It may be used, for example, to allow the candidate to request a hint or model solution, or in an adaptive item to let the candidate display feedback or to move to the next in a series of interactions in the item.
  *
+ * #### Behaviour
+ *
+ * - **Pressing it ends the attempt.** Response processing runs at once; the button's response is `true`, and that of
+ *   every other end-attempt interaction in the item `false`. An attempt ended any other way sets them all to
+ *   `false` ([info model §2.4.5](https://www.imsglobal.org/spec/qti/v3p0/info#Data_EndAttemptInteraction)).
+ * - **It counts as an attempt unless it says `count-attempt="false"`.** QTI 3 gives `count-attempt` no default. We
+ *   count when it is absent, as QTI 2.x's default `true` did and as amp-up and QTI.JS do.
+ * - **A counted attempt uses up `max-attempts`.** In a test the default is one attempt, and the item is locked once
+ *   it is used. A hint or "show solution" button that must not cost the candidate an attempt needs
+ *   `count-attempt="false"`.
+ * - **It follows its item.** It cannot be pressed while the item is `disabled` or `readonly`, or once an adaptive item
+ *   has set `completionStatus` to `completed`: that closes the item session, so no further attempt can start
+ *   ([info model §2.2.2](https://www.imsglobal.org/spec/qti/v3p0/info#Variables)).
  */
 const meta: Meta<QtiEndAttemptInteraction> = {
   component: 'qti-end-attempt-interaction',
-  title: '21 End Attempt',
+  title: 'QTI behaviour/End Attempt interaction',
   args,
   argTypes,
   parameters: {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd" 
+  adaptive="false" identifier="match-example-2" time-dependent="false" title="Match Example 2">
+<qti-response-declaration base-type="directedPair" cardinality="multiple" identifier="RESPONSE">
+  <qti-correct-response>
+    <qti-value>r2 h1</qti-value>
+    <qti-value>r2 h3</qti-value>
+    <qti-value>r4 h3</qti-value>
+  </qti-correct-response>
+</qti-response-declaration>
+<qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE">
+  <qti-default-value>
+    <qti-value>0</qti-value>
+  </qti-default-value>
+</qti-outcome-declaration>
+<qti-item-body>
+  <div>
+    <p>Which properties do the following animal classes have?</p>
+
+    <qti-match-interaction max-associations="3" response-identifier="RESPONSE">
+      <qti-simple-match-set>
+        <qti-simple-associable-choice identifier="r1" match-max="0">
+          <p>Asexual</p>
+        </qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="r2" match-max="0">
+          <p>Endothermic</p>
+        </qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="r3" match-max="0">
+          <p>Possess Gills</p>
+        </qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="r4" match-max="0">
+          <p>Bear Live Young</p>
+        </qti-simple-associable-choice>
+      </qti-simple-match-set>
+      <qti-simple-match-set>
+        <qti-simple-associable-choice identifier="h1" match-max="2">Birds</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="h2" match-max="2">Reptiles</qti-simple-associable-choice>
+        <qti-simple-associable-choice identifier="h3" match-max="2">Mammals</qti-simple-associable-choice>
+      </qti-simple-match-set>
+    </qti-match-interaction>
+  </div>
+  <p class="ets-direction_paragraph">Select all choices that apply.</p>
+</qti-item-body>
+<qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml"/>
+</qti-assessment-item>

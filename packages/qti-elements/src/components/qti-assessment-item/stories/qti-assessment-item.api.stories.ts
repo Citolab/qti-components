@@ -14,7 +14,7 @@ import type { QtiAssessmentItem } from '../qti-assessment-item';
  * timing and a host written against today's timing must not notice.
  */
 const meta: Meta = {
-  title: 'qti-elements/qti-assessment-item/Host API',
+  title: 'QTI behaviour/API Reference/Host API',
   component: 'qti-assessment-item'
 };
 export default meta;

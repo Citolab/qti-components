@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="rr-choice-single-1" title="RR - Choice Single 1"
+  adaptive="false" time-dependent="false">
+  
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>ChoiceA</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  
+  <qti-item-body>
+       
+    <p>
+      <img src="assets/sign.png" alt="NEVER LEAVE LUGGAGE UNATTENDED"/>
+    </p>
+
+    <qti-choice-interaction max-choices="1" response-identifier="RESPONSE">
+      <qti-prompt><p>What does the sign say?</p></qti-prompt>
+      <qti-simple-choice identifier="ChoiceA">You must stay with your luggage at all times.</qti-simple-choice>
+      <qti-simple-choice identifier="ChoiceB">Do not let someone else look after your luggage.</qti-simple-choice>
+      <qti-simple-choice identifier="ChoiceC">Remember your luggage when you leave.</qti-simple-choice>
+    </qti-choice-interaction>
+        
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE"/>
+          <qti-correct identifier="RESPONSE"/>
+        </qti-match>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">1</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

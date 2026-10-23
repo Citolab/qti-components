@@ -6,6 +6,16 @@ run.
 
 ## Unreleased after 9.3.0
 
+### Inline choices are as wide as their widest option (inline-choice autosize)
+
+Status: behaviour change
+Members: `configContext` (`inlineChoiceAutosize`)
+Do: nothing to keep working. An inline choice now measures its options and is as wide as the
+widest from the start, so choosing no longer widens the field and reflows the sentence. Items with
+a `qti-input-width-*` class are unchanged. To keep the old look (the field sized to the option shown),
+set `inlineChoiceAutosize: false` in `configContext`. The host does not set this option today.
+Evidence: read, not run
+
 ### `state` replaces the `testContext` round trip (PR #225)
 
 Status: recommended; nothing breaks on upgrade
@@ -121,6 +131,16 @@ unchanged. Listening for both names runs your handler twice; pick one.
 - `qti-interaction-changed`: `AssessmentPlayerView.tsx:966` (interaction replay log).
   Evidence: read, not run
 
+### Bookmarks: `<test-bookmark>` replaces `marked` (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-bookmark>`, `bookmarkedItems`, `state.session.plugins.bookmarks`
+Do: put `<test-bookmark>Bookmark</test-bookmark>` in the toolbar next to the navigation instead of the
+`onMarkCurrentItem` handler (`ToolBar.tsx`), read the marks with `bookmarkedItems(computedContext)` where the
+navigation shows marked items, and drop `marked` on the context items (`assessmentStore.ts`). Persist nothing
+extra: the marks are part of `state`, which you already store. Replaces the workaround of keeping `marked`
+next to the state.
+
 ### Section link in item mode has an active item (#332)
 
 Status: behaviour change (fix); nothing to do
@@ -130,6 +150,56 @@ Do: nothing, unless the host sends a `section` request (`navigateTo('section', i
 item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-attempt` and the
 scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
+
+## Next major
+
+### Drag-and-drop interactions don't disable their targets at `max-associations` by default
+
+Status: behaviour change; none for this host
+Members: `configContext` (`disableAfterMaxReached`, `disableAfterIfMaxChoicesReached`)
+Do: nothing. Without the option, match, gap match, associate and order now let the candidate go over
+`max-associations` and show the max-selections message, as choice interactions already did. This host
+sets `disableAfterIfMaxChoicesReached: true` (`frontend/packages/ui/src/assessment-player/AssessmentPlayerView.tsx:99`), which keeps targets disabled at the maximum.
+Drop the option to get QTI's behaviour (go over, see the message).
+Evidence: read from `frontend/packages/ui/src/assessment-player/AssessmentPlayerView.tsx:99`, not run
+
+### A match interaction without `max-associations` allows one association (Q13-L2-D110)
+
+Status: breaking
+Members: `qti-match-interaction` `max-associations` / `min-associations`
+Do: items that leave `max-associations` out now take QTI's default of 1, so the candidate can make
+one pair without a message; a second is reported with the max-selections message. If your items rely on the old
+unlimited default, add `max-associations="0"` (unlimited) or the real limit to them. `min-associations` now defaults to 0, so an untouched match is no longer reported as
+"Please select at least 1 association."
+Evidence: not surveyed; whether CitoTestUit's items set `max-associations` is unknown
+
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
+
+Status: none
+Members: `qti-outcome-changed`
+Do: nothing; CitoTestUit does not listen for it. The item context is now published once at the end of
+an attempt instead of at every step, which the host only notices as fewer updates.
+Evidence: grep of the PrototypesQTI checkout for `outcome-changed`, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `frontend/packages/ui/src/assessment-player/nav-list.tsx:150-157`, `questionHeader.ts:31`,
+  `hasRecordedWork.ts:18-19`: nav pill, badge and recorded work read `completed`.
+- `frontend/apps/student/.../stores/assessmentStore.helpers.ts:92` (`answered`) and the scorer-view
+  templates `paging-template-{list,nav,thumbs}.html`: same.
+- `frontend/apps/admin/.../review/utils/responseUtils.ts:136-138, 319`: review counts.
+- Backend `AssessmentResultXmlBuilder.cs:81-83, 297-308` skips `not_attempted` items: still correct, a
+  presented item is never `not_attempted`.
+- `AssessmentPlayerView.tsx:2197` and `StudentAssessmentReviewDialog.tsx:99` use `'not-attempted'` with a
+  hyphen, which is no QTI value: use `'not_attempted'`.
+  Evidence: read from `frontend/` and `QtiBackend.Core/`, not run
 
 ## Not in the library, still in the host
 

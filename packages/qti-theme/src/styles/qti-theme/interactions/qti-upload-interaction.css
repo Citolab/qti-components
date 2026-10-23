@@ -1,0 +1,30 @@
+/* The file input: its button drawn as a test control (`@mixin test-button`), the file name beside it
+   in the item's own type. Flat: a pseudo-element after ::part() in a nested list compiles to a dead
+   `:is()`. */
+qti-upload-interaction::part(input) {
+  font: inherit;
+  color: var(--qti-color-base-content);
+}
+
+qti-upload-interaction::part(input)::file-selector-button {
+  @mixin test-button;
+  margin-inline-end: var(--qti-spacing);
+}
+
+qti-upload-interaction::part(input):hover::file-selector-button {
+  @mixin test-button-hover;
+}
+
+qti-upload-interaction::part(input):active::file-selector-button {
+  @mixin test-button-active;
+}
+
+qti-upload-interaction::part(input):focus-visible {
+  @mixin foc;
+}
+
+qti-upload-interaction::part(input):disabled::file-selector-button {
+  cursor: not-allowed;
+  color: var(--qti-color-disabled);
+  border-color: var(--qti-color-disabled);
+}

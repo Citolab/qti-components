@@ -1,12 +1,29 @@
 # @qti-components/portable-custom-interaction
 
-## 1.3.1
+## 1.3.0-next.5
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/theme@2.3.0-next.3
+  - @qti-components/interactions-core@2.2.0-next.4
+
+## 1.3.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd)]:
+  - @qti-components/theme@2.3.0-next.2
+  - @qti-components/interactions-core@2.2.0-next.3
+
+## 1.3.0-next.3
 
 ### Patch Changes
 
 - [#316](https://github.com/Citolab/qti-components/pull/316) [`b58d409`](https://github.com/Citolab/qti-components/commit/b58d4093456e38c992bf08cbbbc85ddf97abea40) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - The PCI iframe is now exactly as high as its content: it no longer adds 100px of empty space below it. The iframe keeps the width of its host instead of a fixed pixel width, so a PCI follows the item layout when it gets narrower, e.g. when QTI layout columns stack.
 
-## 1.3.0
+## 1.3.0-next.2
 
 ### Minor Changes
 
@@ -20,7 +37,22 @@
 
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
-- Updated dependencies [[`f700c5d`](https://github.com/Citolab/qti-components/commit/f700c5d4d0acd4219797211b1078c539fa43c62c), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/interactions-core@2.1.4
-  - @qti-components/theme@2.3.0
-  - @qti-components/base@2.5.0
+- Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
+  - @qti-components/theme@2.3.0-next.1
+  - @qti-components/base@2.5.0-next.2
+
+## 1.2.1-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+  - @qti-components/interactions-core@2.1.4-next.1
+
+## 1.2.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+  - @qti-components/interactions-core@2.1.4-next.0

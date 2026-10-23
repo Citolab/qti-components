@@ -11,8 +11,9 @@ import type { ComputedContext } from '@qti-components/base';
 import type { TemplateFunction } from '@heximal/templates';
 
 /**
- * A custom web component that renders a test stamp using the Lit framework.
- * This component is deprecated and will be removed in the future.
+ * The stamp plugin: renders its `<template>` child with the state of the test (`test`,
+ * `activeTestpart`, `activeSection`, `activeItem`, `view`), again on every change, so a player
+ * can show progress or numbered navigation without writing a component.
  * @customElement
  * @extends {LitElement}
  */
@@ -72,9 +73,10 @@ export class TestStamp extends LitElement {
     const activeTestPart = this.computedContext.testParts.find(testPart => testPart.active);
     const activeSection = activeTestPart?.sections.find(section => section.active);
     const activeItem = activeSection?.items.find(item => item.active);
+    // In `navigate="section"` the test shows a section, not one item, so there may be no active item.
     const { variables, ...augmentedItem } = activeItem || {};
 
-    if (!activeTestPart || !activeSection || !activeItem) {
+    if (!activeTestPart) {
       return;
     }
 
@@ -87,7 +89,10 @@ export class TestStamp extends LitElement {
       }))
     };
 
-    const augmentedSection = { ...activeSection, items: activeSection.items.map(({ variables, ...rest }) => rest) };
+    const augmentedSection = {
+      ...activeSection,
+      items: (activeSection?.items ?? []).map(({ variables, ...rest }) => rest)
+    };
     const { testParts, ...activeTest } = this.computedContext;
 
     this.stampContext = {

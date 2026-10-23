@@ -22,8 +22,6 @@
 
 @layer qti-components.interactions.states {
   qti-graphic-associate-interaction {
-
-
     /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
        that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
        item in this repo ever set it on a graphic-associate interaction. What was here overrode the neutral

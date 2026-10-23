@@ -1,24 +1,11 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 
 import * as styles from '../styles';
 import { dispatchPublic } from '../../public-events';
 
 export class TestSectionLink extends LitElement {
-  static override styles = css`
-    :host {
-      ${styles.btn};
-    }
-    :host(:hover:not([disabled])) {
-      ${styles.btnInteractive};
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+  static override styles = styles.button;
 
   @property({ type: String, attribute: 'section-id' })
   private sectionId: string = null;
@@ -33,7 +20,7 @@ export class TestSectionLink extends LitElement {
   }
 
   override render() {
-    return html` <slot></slot> `;
+    return styles.control;
   }
 }
 

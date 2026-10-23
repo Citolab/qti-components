@@ -3,6 +3,7 @@
 This document describes the drag-drop mixin system used across QTI interactions.
 
 > **See also**
+>
 > - [CONFIGURABILITY.md](./CONFIGURABILITY.md) — how per-interaction variation is expressed today
 >   (nine mechanisms), where QTI leaks into the generic machinery, and what a configurable,
 >   QTI-agnostic shape would look like. A design note; nothing in it is implemented.

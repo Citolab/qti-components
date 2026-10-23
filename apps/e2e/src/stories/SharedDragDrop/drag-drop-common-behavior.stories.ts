@@ -9,7 +9,7 @@ import type { QtiAssessmentItem } from '@citolab/qti-components';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Shared Drag Drop Behavior'
+  title: 'Testing/Conformance/advanced/Shared Drag Drop Behavior'
 };
 export default meta;
 
@@ -84,5 +84,5 @@ export const PressReleaseKeepsOrderPlacement: Story = {
       expect(getResponse(assessmentItem)).toEqual(['A', '', '']);
     });
   },
-  loaders: [async () => ({ xml: await getItemByUri('/assets/qti-conformance/Advanced/Q10/order-interaction.xml') })]
+  loaders: [async () => ({ xml: await getItemByUri('/assets/qti-conformance/Advanced/Q15/order-interaction.xml') })]
 };

@@ -4,6 +4,7 @@ import { expect, fireEvent, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { getAssessmentItemsFromTestContainer } from '../../../../../tools/testing/test-utils';
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { TestSectionLink } from './test-section-link';
@@ -13,6 +14,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-section-l
 type Story = StoryObj<TestSectionLink & typeof args>;
 
 const meta: Meta<TestSectionLink & { 'section-id' }> = {
+  title: 'QTI Test/Building blocks/test-section-link',
   component: 'test-section-link',
   args: { ...args, 'section-id': 'advanced' },
   argTypes,
@@ -28,7 +30,7 @@ export const Default: Story = {
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
         ${template(args, html`Link to section`)}
       </test-navigation>
     </qti-test>`
@@ -39,15 +41,15 @@ export const ItemModeActivatesFirstItem: Story = {
   render: () =>
     html` <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/qti-test-package/assessment.xml"></test-container>
-        <test-section-link section-id="advanced">Advanced</test-section-link>
+        <test-container test-url=${SHOWCASE_TEST}></test-container>
+        <test-section-link section-id="dragging-and-ordering">Dragging</test-section-link>
         <test-prev>previous</test-prev>
         <test-next>next</test-next>
       </test-navigation>
     </qti-test>`,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const sectionLink = canvas.getByShadowText('Advanced');
+    const sectionLink = canvas.getByShadowText('Dragging');
     const prevButton = canvas.getByShadowText('previous');
     const nextButton = canvas.getByShadowText('next');
 
@@ -58,7 +60,7 @@ export const ItemModeActivatesFirstItem: Story = {
     await waitFor(
       async () => {
         const items = await getAssessmentItemsFromTestContainer(canvasElement);
-        expect(items.map(item => item.getAttribute('data-title'))).toContain('Richard III (Take 1)');
+        expect(items.map(item => item.getAttribute('data-title'))).toContain('Matching, options above');
       },
       { timeout: 15000 }
     );
@@ -70,7 +72,7 @@ export const ItemModeActivatesFirstItem: Story = {
     await waitFor(
       async () => {
         const items = await getAssessmentItemsFromTestContainer(canvasElement);
-        expect(items.map(item => item.getAttribute('data-title'))).toEqual(['Low-cost Flying']);
+        expect(items.map(item => item.getAttribute('data-title'))).toEqual(['Matching, options on the right']);
       },
       { timeout: 15000 }
     );

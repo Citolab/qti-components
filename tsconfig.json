@@ -2,6 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
+    "jsx": "react-jsx",
     "paths": {
       "@citolab/qti-components": ["./packages/qti-components/src/index.ts"],
       "@qti-components/base": ["./packages/qti-base/src/index.ts"],
