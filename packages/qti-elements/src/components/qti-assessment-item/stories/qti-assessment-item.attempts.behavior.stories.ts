@@ -299,15 +299,11 @@ export const ITryAgainWithTheSameAnswer: StoryObj = {
 /**
  * QTI info model §2.4.5: the end-attempt interaction the candidate used gets the response `true`,
  * every other one `false`. A Hint button marked `count-attempt="false"` shows its hint without
- * using up an attempt.
- *
- * Fails: the item sets HINT to `false` before the Check run, but a bare boolean `qti-variable` as a
- * condition is read as the string `'false'`, which is truthy, so the hint shows again instead of the
- * answer feedback. The spec's own examples test booleans this way (§3.7.2).
+ * using up an attempt. The item's processing tests HINT as a bare boolean condition, as the spec's own
+ * examples do (§3.7.2).
  */
 export const IAskForAHintThenAnswer: StoryObj = {
   name: 'I ask for a hint, then answer',
-  tags: ['xfail'],
   render: () => capitalItem({ hint: true }),
   play: async ({ canvasElement, step }) => {
     const { choose, press, sees, variable } = await candidate(canvasElement);
