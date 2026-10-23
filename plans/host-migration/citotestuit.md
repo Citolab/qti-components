@@ -153,7 +153,7 @@ Evidence: read, not run
 
 ## Next major
 
-### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
 
 Status: none
 Members: `qti-outcome-changed`

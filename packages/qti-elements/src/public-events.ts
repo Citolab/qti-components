@@ -1,4 +1,9 @@
-import type { InteractionChangedDetails, OutcomesChangedDetails, SetOutcomesDetails } from './internal/event-types';
+import type {
+  InteractionChangedDetails,
+  OutcomeChangedDetails,
+  OutcomesChangedDetails,
+  SetOutcomesDetails
+} from './internal/event-types';
 
 /**
  * The public events of the item. The name tells you it is public: everything declared here starts
@@ -30,6 +35,8 @@ export interface PublicItemEventMap {
    * that scores on a backend sends it on the item with the outcomes the backend returned.
    */
   'cito-item-set-outcomes': CustomEvent<SetOutcomesDetails>;
+  /** One per outcome an update applied, with its final value, after the item context is published. */
+  'cito-item-outcome-changed': CustomEvent<OutcomeChangedDetails>;
   /** All the outcomes one update applied, after the item context is published. */
   'cito-item-outcomes-changed': CustomEvent<OutcomesChangedDetails>;
   /** Cancelable: `preventDefault()` keeps the rubric block where it is. */
@@ -43,6 +50,7 @@ export const PUBLIC_ITEM_EVENTS: Record<PublicItemEventName, PublicEventDeclarat
   'cito-item-rendered': { kind: 'notification', scope: 'item' },
   'cito-item-response-changed': { kind: 'notification', scope: 'item', deprecated: 'qti-interaction-changed' },
   'cito-item-set-outcomes': { kind: 'request', scope: 'item' },
+  'cito-item-outcome-changed': { kind: 'notification', scope: 'item', deprecated: 'qti-outcome-changed' },
   'cito-item-outcomes-changed': { kind: 'notification', scope: 'item' },
   'cito-item-rubric-placement': {
     kind: 'notification',

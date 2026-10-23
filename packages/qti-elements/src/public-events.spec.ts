@@ -28,16 +28,16 @@ describe('dispatchPublic / listenPublic (item)', () => {
   it('sends both names; a listener runs once; the old name alone is handled too', () => {
     const el = document.createElement('div');
     const names: string[] = [];
-    el.addEventListener('qti-interaction-changed', e => names.push(e.type));
-    el.addEventListener('cito-item-response-changed', e => names.push(e.type));
+    el.addEventListener('qti-outcome-changed', e => names.push(e.type));
+    el.addEventListener('cito-item-outcome-changed', e => names.push(e.type));
     let handled = 0;
-    listenPublic(el, 'cito-item-response-changed', () => handled++);
+    listenPublic(el, 'cito-item-outcome-changed', () => handled++);
 
-    dispatchPublic(el, 'cito-item-response-changed', { item: 'i1', responseIdentifier: 'R', response: 'a' } as never);
-    expect(names).toEqual(['cito-item-response-changed', 'qti-interaction-changed']);
+    dispatchPublic(el, 'cito-item-outcome-changed', { item: 'i1', outcomeIdentifier: 'SCORE', value: '1' });
+    expect(names).toEqual(['cito-item-outcome-changed', 'qti-outcome-changed']);
     expect(handled).toBe(1);
 
-    el.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: { item: 'i1' } }));
+    el.dispatchEvent(new CustomEvent('qti-outcome-changed', { detail: { item: 'i1' } }));
     expect(handled).toBe(2);
   });
 
@@ -55,20 +55,16 @@ describe('dispatchPublic / listenPublic (item)', () => {
   it('warns once when a host sends the old name alone, and never for our own dual dispatch', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const el = document.createElement('div');
-    listenPublic(el, 'cito-item-rubric-placement', () => {});
+    listenPublic(el, 'cito-item-response-changed', () => {});
 
-    dispatchPublic(el, 'cito-item-rubric-placement', { className: 'x', element: el });
+    dispatchPublic(el, 'cito-item-response-changed', { item: 'i1', responseIdentifier: 'R', response: 'a' } as never);
     expect(warn).not.toHaveBeenCalled();
 
-    el.dispatchEvent(
-      new CustomEvent('qti-rubric:discretionary-placement', { detail: { className: 'x', element: el } })
-    );
-    el.dispatchEvent(
-      new CustomEvent('qti-rubric:discretionary-placement', { detail: { className: 'y', element: el } })
-    );
+    el.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: { item: 'i1' } }));
+    el.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: { item: 'i2' } }));
     expect(warn).toHaveBeenCalledTimes(1);
-    expect(String(warn.mock.calls[0][0])).toContain('qti-rubric:discretionary-placement');
-    expect(String(warn.mock.calls[0][0])).toContain('cito-item-rubric-placement');
+    expect(String(warn.mock.calls[0][0])).toContain('qti-interaction-changed');
+    expect(String(warn.mock.calls[0][0])).toContain('cito-item-response-changed');
     warn.mockRestore();
   });
 });

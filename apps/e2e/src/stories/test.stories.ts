@@ -63,8 +63,8 @@ export const QtiTest: Story = {
         @qti-assessment-test-connected=${(e: CustomEvent) => {
           console.log('qti-assessment-test-connected', e);
         }}
-        @cito-item-outcomes-changed=${(e: CustomEvent) => {
-          console.log('cito-item-outcomes-changed', e);
+        @qti-outcome-changed=${(e: CustomEvent) => {
+          console.log('qti-outcome-changed', e);
         }}
         @qti-interaction-changed=${(e: CustomEvent) => {
           console.log('qti-interaction-changed', e);

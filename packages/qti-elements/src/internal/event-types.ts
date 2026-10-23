@@ -5,6 +5,13 @@ export interface OutcomeEntry {
   value: Readonly<string | string[] | null | undefined>;
 }
 
+/** One outcome an update applied, with its final value. */
+export interface OutcomeChangedDetails {
+  item: string;
+  outcomeIdentifier: string;
+  value: Readonly<string | string[]>;
+}
+
 /** The outcomes one update applied, sent after the item context is published. */
 export interface OutcomesChangedDetails {
   item: string;

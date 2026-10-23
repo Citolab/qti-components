@@ -618,7 +618,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   /**
-   * Publishes the outcomes (and the validity) in one update, then one `cito-item-outcomes-changed`.
+   * Publishes the outcomes (and the validity) in one update, then a `cito-item-outcome-changed` per
+   * outcome with its final value and one `cito-item-outcomes-changed` with all of them.
    * An identifier the item does not declare is skipped with a warning; a later entry for the same
    * identifier wins.
    */
@@ -644,6 +645,13 @@ export class QtiAssessmentItem extends LitElement {
     };
 
     if (values.size > 0) {
+      for (const [outcomeIdentifier, value] of values) {
+        dispatchPublic(this, 'cito-item-outcome-changed', {
+          item: this.identifier,
+          outcomeIdentifier,
+          value: value as string | string[]
+        });
+      }
       dispatchPublic(this, 'cito-item-outcomes-changed', {
         item: this.identifier,
         outcomes: [...values].map(([identifier, value]) => ({ identifier, value }))

@@ -145,16 +145,20 @@ Evidence: read, not run
 
 ## Next major
 
-### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
 
-Status: breaking
+Status: behaviour change; no API removed
 Members: `qti-outcome-changed`, `cito-item-outcome-changed`
-Do: listen for `cito-item-outcomes-changed` instead. `detail` is `{ item, outcomes: [{ identifier, value }] }`:
-one event per update with every outcome that changed, sent after the item context is published, with
-the final values. An end of attempt no longer passes through a score of 0 or empty feedback first.
+Do: nothing required. `qti-outcome-changed` and `cito-item-outcome-changed` stay, with the same `detail`
+(`{ item, outcomeIdentifier, value }`). What changes is when they come: once per outcome after each
+update, with the final value, after the item context is published. An end of attempt no longer sends
+the reset to the defaults (SCORE 0, empty FEEDBACK) or a rule's in-between value first, so a handler
+sees fewer events. `cito-item-outcomes-changed` is new: the same outcomes in one event
+(`{ item, outcomes: [{ identifier, value }] }`).
 
 - `projects/shared/src/lib/qti/events.ts:10`, `:21` and `:43` declare and list `qti-outcome-changed`
-  with the old `detail`; change the name and the type, then loop over `outcomes` in the handlers.
+  with this `detail`; they keep working. Optionally move to `cito-item-outcomes-changed` (recommended)
+  to handle an update at once.
   Evidence: read from `projects/shared/src/lib/qti/events.ts`, not run
 
 ### `cito-item-set-outcomes` applies a backend's outcomes at once (feat/processing-as-backend)

@@ -93,11 +93,12 @@ request sent under an old name logs a one-time `console.warn` naming the new one
 
 These two do not have a `cito-` name yet. Both bubble and are composed.
 
-| Event                           | Status        | Notes                                                                       |
-| ------------------------------- | ------------- | --------------------------------------------------------------------------- |
-| `qti-assessment-item-connected` | **Supported** | `detail` is the item element.                                               |
-| `qti-interaction-changed`       | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`. |
-| `cito-item-outcomes-changed`    | **Supported** | `detail`: `{ item, outcomes: [{ identifier, value }] }`, once per update.   |
+| Event                           | Status        | Notes                                                                                     |
+| ------------------------------- | ------------- | ----------------------------------------------------------------------------------------- |
+| `qti-assessment-item-connected` | **Supported** | `detail` is the item element.                                                             |
+| `qti-interaction-changed`       | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`.               |
+| `qti-outcome-changed`           | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`, once per outcome per update, final value. |
+| `cito-item-outcomes-changed`    | **Supported** | `detail`: `{ item, outcomes: [{ identifier, value }] }`, once per update.                 |
 
 ## Scoring and reviewing a single item
 

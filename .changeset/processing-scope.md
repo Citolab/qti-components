@@ -9,7 +9,8 @@ Before, `processResponse` published the item context at every step: the attempt 
 
 What a host notices:
 
-- **Removed:** `cito-item-outcome-changed` and its legacy name `qti-outcome-changed`. Listen to `cito-item-outcomes-changed` instead: `detail` is `{ item, outcomes: [{ identifier, value }] }`, sent once per update, after the context is published, with the final values. After `processResponse` it lists every outcome of the item.
+- **Changed:** `cito-item-outcome-changed` and its legacy name `qti-outcome-changed` keep their name and `detail` (`{ item, outcomeIdentifier, value }`), but are sent once per outcome after each update, with the final value, after the context is published. A handler no longer sees the reset to the defaults or a rule's in-between value.
+- **New:** `cito-item-outcomes-changed`, the same outcomes in one event: `detail` is `{ item, outcomes: [{ identifier, value }] }`, sent once per update. After `processResponse` it lists every outcome of the item.
 - **New:** `cito-item-set-outcomes`, a request a host sends on the item with the outcomes a backend returned: `detail` is `{ outcomes: [{ identifier, value }], responseProcessed? }`. The item applies them in one update, synchronously. With `responseProcessed: true` it also ends the attempt the way `processResponse` does: a non-adaptive item whose processing left completionStatus `unknown` becomes `completed` (see the completionStatus changeset) and `qti-item-context-updated` goes out with `responseProcessed`.
 - A run that throws counts the attempt and applies no outcomes. Before, it also left the outcomes the rules had set before the error, and completionStatus at `null`.
 - `qti-set-outcome-value` no longer reaches the item: `qti-response-processing` takes it and writes to its own copy of the item context, which only a run sends to the item.

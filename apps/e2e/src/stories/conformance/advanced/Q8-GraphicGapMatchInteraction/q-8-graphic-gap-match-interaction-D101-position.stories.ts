@@ -27,7 +27,7 @@ export const Q8_L2_D101: Story = {
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('cito-item-outcomes-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -37,7 +37,7 @@ export const Q8_L2_D101: Story = {
       <div
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
-        @cito-item-outcomes-changed=${onOutcomeChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -110,7 +110,7 @@ export const Q8_L2_D102: Story = {
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('cito-item-outcomes-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -120,7 +120,7 @@ export const Q8_L2_D102: Story = {
       <div
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
-        @cito-item-outcomes-changed=${onOutcomeChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -193,7 +193,7 @@ export const Q8_L2_D103: Story = {
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('cito-item-outcomes-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -203,7 +203,7 @@ export const Q8_L2_D103: Story = {
       <div
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
-        @cito-item-outcomes-changed=${onOutcomeChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -276,7 +276,7 @@ export const Q8_L2_D104: Story = {
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
     const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('cito-item-outcomes-changed');
+    const onOutcomeChangedAction = action('qti-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -286,7 +286,7 @@ export const Q8_L2_D104: Story = {
       <div
         class="item"
         @qti-interaction-changed=${onInteractionChangedAction}
-        @cito-item-outcomes-changed=${onOutcomeChangedAction}
+        @qti-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}

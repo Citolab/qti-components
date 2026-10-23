@@ -87,19 +87,22 @@ pick one.
 
 ## Next major
 
-### Response processing publishes once; `cito-item-outcomes-changed` replaces the per-outcome event (feat/processing-as-backend)
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
 
-Status: breaking
+Status: behaviour change; no API removed
 Members: `qti-outcome-changed`
-Do: listen for `cito-item-outcomes-changed` instead. `detail` is `{ item, outcomes: [{ identifier, value }] }`:
-one event per update with every outcome that changed, sent after the item context is published.
+Do: nothing required. `qti-outcome-changed` and `cito-item-outcome-changed` stay, with the same `detail`
+(`{ item, outcomeIdentifier, value }`). What changes is when they come: once per outcome after each
+update, with the final value, after the item context is published. An end of attempt no longer sends
+the reset to the defaults (SCORE 0, empty FEEDBACK) or a rule's in-between value first, so a handler
+sees fewer events. `cito-item-outcomes-changed` is new: the same outcomes in one event
+(`{ item, outcomes: [{ identifier, value }] }`).
 
 - `apps/leesvaardigheid/src/app/components/assessment-test.component.tsx:148` listens for
-  `qti-outcome-changed` and logs an `outcome-changed` action (`:101`) per outcome; log one per entry
-  in `outcomes`.
-- `player/src/main.ts:233` has an empty `qti-outcome-changed` handler; drop it.
-- `player/src/components/qti-assessment-item-ref.ts:39-42` reads `detail.outcomeIdentifier` (outcomes
-  named `RESPONSE-…` in the `opzoeken` items); loop over `detail.outcomes` and read `identifier`.
+  `qti-outcome-changed` and logs an `outcome-changed` action (`:101`) per outcome: the log gets one
+  entry per outcome per attempt, without the reset entries it had before.
+- `player/src/main.ts:233` has an empty `qti-outcome-changed` handler; it can go.
+- `player/src/components/qti-assessment-item-ref.ts:39-42` reads `detail.outcomeIdentifier`; unchanged.
   Evidence: read from `apps/leesvaardigheid/src` and `player/src`, not run
 
 ### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)

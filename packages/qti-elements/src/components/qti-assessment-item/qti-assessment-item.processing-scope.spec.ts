@@ -190,6 +190,34 @@ describe('qti-assessment-item response processing scope', () => {
     for (const e of outcomes) expect(e.value).toEqual(e.published);
   });
 
+  it('sends cito-item-outcome-changed and qti-outcome-changed once per outcome, after the publish, with the final values', async () => {
+    const { item, process } = await setup(itemWith('false'));
+    const seen: Record<string, { outcome: string; value: unknown; published: unknown }[]> = {
+      'cito-item-outcome-changed': [],
+      'qti-outcome-changed': []
+    };
+    for (const name of Object.keys(seen)) {
+      item.addEventListener(name, (e: Event) => {
+        const { outcomeIdentifier, value } = (e as CustomEvent).detail;
+        seen[name].push({ outcome: outcomeIdentifier, value, published: valueOf(item.itemContext, outcomeIdentifier) });
+      });
+    }
+
+    process();
+    for (const list of Object.values(seen)) list.length = 0;
+    process(); // a repeat attempt: no SCORE 0 or empty FEEDBACK from the reset in between
+
+    expect(seen['qti-outcome-changed']).toEqual(seen['cito-item-outcome-changed']);
+    const events = seen['cito-item-outcome-changed'];
+    const identifiers = events.map(e => e.outcome);
+    expect(new Set(identifiers).size).toBe(identifiers.length);
+    expect(events.filter(e => e.outcome === 'SCORE')).toEqual([{ outcome: 'SCORE', value: '2', published: '2' }]);
+    expect(events.filter(e => e.outcome === 'FEEDBACK')).toEqual([
+      { outcome: 'FEEDBACK', value: 'two', published: 'two' }
+    ]);
+    for (const e of events) expect(e.value).toEqual(e.published);
+  });
+
   it('a run that throws publishes nothing; the next run starts from the item context', async () => {
     const { item, process } = await setup(itemWith('false'));
     process();
