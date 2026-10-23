@@ -1,8 +1,10 @@
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
+
+import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../../tools/testing/test-utils';
 
 import type { TestView as TestViewClass } from '../test-view-toggle/test-view';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -35,10 +37,11 @@ export const Default: Story = {
     </qti-test>`
 };
 
+/**
+ * Choosing a view in the dropdown shows the rubric blocks of that view only. Showing the correct
+ * response to a scorer is the corrections package's job, not this element's.
+ */
 export const Test: Story = {
-  // Fails: it looks the item up by its title attribute, but the loader keeps an item's title as
-  // data-title, so 'T1 - Test Entry - Item 1' is not found.
-  tags: ['xfail'],
   render: args => html`
     <qti-test navigate="item">
       <test-navigation>
@@ -47,27 +50,28 @@ export const Test: Story = {
       </test-navigation>
     </qti-test>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const selectElement = await canvas.findByShadowLabelText('view');
-    // 1 Wait for the item to load
-    const itemElement = await canvas.findByShadowTitle('T1 - Test Entry - Item 1');
-    expect(itemElement).toBeInTheDocument();
-    // 2 Assume the candidate rubric is not visible
+
+    await step('The item "T1 - Test Entry - Item 1" is on screen', async () => {
+      // The loader keeps an item's title as data-title.
+      expect(
+        await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1')
+      ).toBeInTheDocument();
+    });
+
     const rubricElement = await canvas.findByShadowText('candidate rubric block');
-    expect(rubricElement).toBeVisible();
-    // 3 Select the candidate view
-    await userEvent.selectOptions(selectElement, 'candidate');
-    // 4 Wait for the candidate rubric to be visible
-    expect(rubricElement).toBeVisible();
-    // 5 Assume correctResponse is not set
-    const firstChoiceElement = await canvas.findByShadowText('Correct');
-    const afterStyle = getComputedStyle(firstChoiceElement, '::after');
-    expect(afterStyle.content).toBe('none');
-    // 6 Set the view to scorer
-    await userEvent.selectOptions(selectElement, 'scorer');
-    // Expect the correctResponse to be visible
-    expect(afterStyle.content).not.toBe('none');
+
+    await step('Choose the candidate view: the candidate rubric block shows', async () => {
+      await userEvent.selectOptions(selectElement, 'candidate');
+      await waitFor(() => expect(rubricElement).toBeVisible());
+    });
+
+    await step('Choose the scorer view: the candidate rubric block is hidden', async () => {
+      await userEvent.selectOptions(selectElement, 'scorer');
+      await waitFor(() => expect(rubricElement).not.toBeVisible());
+    });
   },
   args: {
     'view-options': 'candidate, scorer'

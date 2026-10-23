@@ -16,6 +16,14 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-end-attem
 
 type Story = StoryObj<TestEndAttempt & typeof args>;
 
+/**
+ * The args as attributes for `spread`, without the ones that are off. A boolean attribute is on as
+ * soon as it is there, so spreading every arg would set `require-answer=""` and make the button wait
+ * for an answer.
+ */
+const attributes = (storyArgs: Record<string, unknown>) =>
+  Object.fromEntries(Object.entries(storyArgs).filter(([, value]) => value !== false && value !== '' && value != null));
+
 const meta: Meta<TestEndAttempt> = {
   title: 'QTI behaviour/test-end-attempt',
   component: 'test-end-attempt',
@@ -41,52 +49,46 @@ export const Default: Story = {
     </qti-test>`
 };
 
+/** End Attempt scores the item on screen: a wrong answer shows Incorrect, a right one Correct. */
 export const Test: Story = {
-  // Fails since the button requires a valid response (fbfc4785): the story expects End Attempt to be
-  // enabled, or presses it, before an answer is chosen.
-  tags: ['xfail'],
   render: args => html`
     <qti-test navigate="item">
       <test-navigation>
         <!-- <test-print-item-variables>  </test-print-item-variables> -->
         <test-container test-url="/assets/qti-test-package/assessment.xml"> </test-container>
-        <test-end-attempt ${spread(args)}>End Attempt</test-end-attempt>
+        <test-end-attempt ${spread(attributes(args))}>End Attempt</test-end-attempt>
         <test-next>Volgende</test-next>
         <test-item-link item-id="ITM-text_entry">link</test-item-link>
       </test-navigation>
     </qti-test>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    const link = await canvas.findByShadowText('link');
-
-    const info = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
-    await fireEvent.click(link);
-
-    const nextButton = await canvas.findByShadowText('Volgende');
-    await waitFor(() => expect(nextButton).toBeEnabled());
-    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Richard III (Take 3)');
-    expect(firstItem).toBeInTheDocument();
-    // click end attempt
     const endAttemptButton = await findByShadowText(canvasElement, 'End Attempt');
-    endAttemptButton.click();
-    await new Promise(resolve => setTimeout(resolve, 0)); /* why is this necessary */
 
-    // check if incorrect feedback block is visible
-    const incorrect = await canvas.findByShadowText('Incorrect');
-    expect(incorrect.assignedSlot).toBeVisible();
+    await step('Go to the text entry item "Richard III (Take 3)"', async () => {
+      await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Info Start');
+      await fireEvent.click(await canvas.findByShadowText('link'));
+      await waitFor(() => expect(canvas.getByShadowText('Volgende')).toBeEnabled());
+      expect(
+        await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Richard III (Take 3)')
+      ).toBeInTheDocument();
+    });
 
-    // type York in the text field
-    const textEntryInteraction = await canvas.findByShadowRole<HTMLInputElement>('textbox');
-    await userEvent.type(textEntryInteraction, 'York');
+    await step('Press End Attempt with nothing typed: "Incorrect" shows', async () => {
+      endAttemptButton.click();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      const incorrect = await canvas.findByShadowText('Incorrect');
+      expect(incorrect.assignedSlot).toBeVisible();
+    });
 
-    endAttemptButton.click();
-    await new Promise(resolve => setTimeout(resolve, 0)); /* why is this necessary */
-
-    // check if correct feedback block is visible
-    const correct = await canvas.findByShadowText('Correct');
-    expect(correct.assignedSlot).toBeVisible();
+    await step('Type York and press End Attempt again: "Correct" shows', async () => {
+      await userEvent.type(await canvas.findByShadowRole<HTMLInputElement>('textbox'), 'York');
+      endAttemptButton.click();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      const correct = await canvas.findByShadowText('Correct');
+      expect(correct.assignedSlot).toBeVisible();
+    });
   }
 };
 
@@ -94,7 +96,7 @@ const itemSessionControlTemplate = (args: any) => html`
   <qti-test navigate="item">
     <test-navigation>
       <test-container test-url="/assets/qti-test-package/assessment-item-session-control.xml"> </test-container>
-      <test-end-attempt ${spread(args)}>End Attempt</test-end-attempt>
+      <test-end-attempt ${spread(attributes(args))}>End Attempt</test-end-attempt>
       <test-next>Volgende</test-next>
       <test-item-link item-id="ITM-choice-default">Default</test-item-link>
       <test-item-link item-id="ITM-choice-max2">Max2</test-item-link>
@@ -104,154 +106,120 @@ const itemSessionControlTemplate = (args: any) => html`
   </qti-test>
 `;
 
+/** Without `qti-item-session-control` an item gets one attempt (QTI default): after it, End Attempt is greyed out. */
 export const MaxAttemptsDefault: Story = {
-  // Fails since the button requires a valid response (fbfc4785): the story expects End Attempt to be
-  // enabled, or presses it, before an answer is chosen.
-  tags: ['xfail'],
   render: args => itemSessionControlTemplate(args),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    // wait for items to load
     await getAssessmentItemsFromTestContainer(canvasElement);
-
     const endAttemptButton = await canvas.findByShadowText('End Attempt');
 
-    // Navigate to the default max-attempts item
-    const defaultLink = await canvas.findByShadowText('Default');
-    defaultLink.click();
+    await step('Go to the item without item session control: End Attempt is enabled', async () => {
+      (await canvas.findByShadowText('Default')).click();
+      await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    });
 
-    // End attempt should be enabled before any attempt
-    await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    await step('Choose an answer and press End Attempt', async () => {
+      const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
+      item.querySelector<HTMLElement>('qti-simple-choice')!.click();
+      endAttemptButton.click();
+    });
 
-    // Select a choice
-    const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
-    const choice = item.querySelector('qti-simple-choice');
-    choice.click();
-
-    // Submit the attempt
-    endAttemptButton.click();
-
-    // After 1 attempt with default max-attempts, end attempt should be disabled
-    await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    await step('The one attempt is used: End Attempt is greyed out', async () => {
+      await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    });
   }
 };
 
+/** `max-attempts="2"`: after a wrong first attempt End Attempt stays enabled; after the second it is greyed out. */
 export const MaxAttemptsAt2: Story = {
-  // Fails since the button requires a valid response (fbfc4785): the story expects End Attempt to be
-  // enabled, or presses it, before an answer is chosen.
-  tags: ['xfail'],
   render: args => itemSessionControlTemplate(args),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    // wait for items to load
     await getAssessmentItemsFromTestContainer(canvasElement);
-
-    // Navigate to the max-attempts=2 item
-    const max2Link = await canvas.findByShadowText('Max2');
-    max2Link.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
     const endAttemptButton = await canvas.findByShadowText('End Attempt');
 
-    // End attempt should be enabled before any attempt
-    await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    await step('Go to the item with max-attempts 2: End Attempt is enabled', async () => {
+      (await canvas.findByShadowText('Max2')).click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    });
 
-    // Select a *wrong* choice (suboptimal) and submit first attempt — a better
-    // attempt is still possible, so attempts-remaining keeps the button enabled.
-    const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
-    const wrongChoice = item.querySelector('qti-simple-choice[identifier="ChoiceC"]') as HTMLElement;
-    wrongChoice.click();
+    await step('Choose a wrong answer and press End Attempt: still enabled, one attempt left', async () => {
+      const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
+      item.querySelector<HTMLElement>('qti-simple-choice[identifier="ChoiceC"]')!.click();
+      endAttemptButton.click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    });
 
-    endAttemptButton.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // After 1 suboptimal attempt with max-attempts=2, end attempt should still be enabled
-    await waitFor(() => expect(endAttemptButton).toBeEnabled());
-
-    // Submit second attempt
-    endAttemptButton.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // After 2 attempts with max-attempts=2, end attempt should be disabled
-    await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    await step('Press End Attempt again: both attempts used, greyed out', async () => {
+      endAttemptButton.click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    });
   }
 };
 
+/**
+ * Our own rule, not QTI's: once an attempt is optimal (SCORE reached MAXSCORE) there is nothing to
+ * improve, so End Attempt is greyed out even with attempts left.
+ */
 export const OptimalDisablesWithAttemptsLeft: Story = {
-  // Fails since the button requires a valid response (fbfc4785): the story expects End Attempt to be
-  // enabled, or presses it, before an answer is chosen.
-  tags: ['xfail'],
   render: args => itemSessionControlTemplate(args),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    // wait for items to load
     await getAssessmentItemsFromTestContainer(canvasElement);
-
-    // Navigate to the max-attempts=2 item
-    const max2Link = await canvas.findByShadowText('Max2');
-    max2Link.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
     const endAttemptButton = await canvas.findByShadowText('End Attempt');
 
-    // End attempt should be enabled before any attempt
-    await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    await step('Go to the item with max-attempts 2: End Attempt is enabled', async () => {
+      (await canvas.findByShadowText('Max2')).click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    });
 
-    // Select the *correct* choice (ChoiceA → SCORE reaches MAXSCORE = optimal)
-    const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
-    const correctChoice = item.querySelector('qti-simple-choice[identifier="ChoiceA"]') as HTMLElement;
-    correctChoice.click();
+    await step('Choose the right answer and press End Attempt', async () => {
+      const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
+      item.querySelector<HTMLElement>('qti-simple-choice[identifier="ChoiceA"]')!.click();
+      endAttemptButton.click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+    });
 
-    endAttemptButton.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Last submission was optimal — disabled even though 1 of 2 attempts remain
-    await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    await step('The attempt was optimal: greyed out, although one attempt is left', async () => {
+      await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    });
   }
 };
 
+/** `allow-skipping="false"`: End Attempt waits until the item has an answer, per item. */
 export const NonSkippingItems: Story = {
   render: args => itemSessionControlTemplate(args),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-
-    // wait for items to load
     await getAssessmentItemsFromTestContainer(canvasElement);
-
-    // Navigate to the no-skipping choice item
-    const noSkipLink = await canvas.findByShadowText('NoSkip');
-    noSkipLink.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
     const endAttemptButton = await canvas.findByShadowText('End Attempt');
-    const noSkipTextLink = await canvas.findByShadowText('NoSkipText');
 
-    // Button should be disabled initially (choice not selected, allow-skipping=false)
-    await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    await step('Go to the choice item that may not be skipped: End Attempt is greyed out', async () => {
+      (await canvas.findByShadowText('NoSkip')).click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    });
 
-    // Select a choice in the first item
-    const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
-    const choice = item.querySelector('qti-simple-choice');
-    choice.click();
+    await step('Choose an answer: End Attempt is enabled', async () => {
+      const item = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Unattended Luggage');
+      item.querySelector<HTMLElement>('qti-simple-choice')!.click();
+      await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    });
 
-    // Now it should be enabled for individual submission
-    await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    await step('Go to the text entry item that may not be skipped: greyed out again', async () => {
+      (await canvas.findByShadowText('NoSkipText')).click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await waitFor(() => expect(endAttemptButton).toBeDisabled());
+    });
 
-    // Navigate to the no-skipping text entry item
-    noSkipTextLink.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Initially second item is empty, so end attempt should be disabled again
-    await waitFor(() => expect(endAttemptButton).toBeDisabled());
-
-    // type in the text field
-    const textEntryInteraction = (await canvas.findByShadowRole('textbox')) as HTMLInputElement;
-    await userEvent.type(textEntryInteraction, 'anything');
-
-    // Now it should be enabled
-    await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    await step('Type an answer: End Attempt is enabled', async () => {
+      await userEvent.type((await canvas.findByShadowRole('textbox')) as HTMLInputElement, 'anything');
+      await waitFor(() => expect(endAttemptButton).toBeEnabled());
+    });
   }
 };
