@@ -1,4 +1,4 @@
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { getItemByUri } from '@qti-components/loader';
 
@@ -265,30 +265,56 @@ export const Q13_L2_D105: Story = {
 };
 
 /**
- * RESPONSE2, qti-match-tabular + qti-header-hidden: the column headers are not shown visually, but
- * stay identifiable to screen readers (the choices carry aria-label).
+ * > match-example-sv-2.xml , **RESPONSE2** : demonstrates **qti-match-tabular** combined with
+ * > **qti-header-hidden** shared vocabulary classes. The presentation/delivery system MUST render a visual
+ * > table (role="presentation") with the choices of the first Simple Match Set as the table row headers,
+ * > and the choices of the second Simple Match Set as the columns, but the simple-associable-choice values
+ * > MUST NOT be presented visually in the column headers (though they MUST be identifiable by
+ * > screen-readers -- this example uses aria-label) in the top row.
  *
- * Known to fail: qti-header-hidden is not implemented, so the column headers stay visible.
+ * Vocabulary §1.2.8.2: "Do not display the top row of the table where the column headers are
+ * displayed." Its Figure 67 shows a table "4 columns wide and 4 rows high", so the whole top row goes,
+ * the top-left cell with it. The table is an ARIA grid rather than `role="presentation"`: see D105.
+ *
+ * Known to fail: qti-header-hidden leaves the top row out with `display: none`, which also takes the
+ * column headers out of the accessibility tree, so screen readers cannot identify the columns. Kept
+ * that way by decision (2026-10-23).
  */
 export const Q13_L2_D106: Story = {
   name: 'Q13-L2-D106',
   tags: ['xfail'],
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE2');
     await ctx.interaction.updateComplete;
     expect(ctx.interaction).toHaveClass('qti-header-hidden');
+    const { grid, cells } = tabular(ctx.interaction);
 
-    for (const id of ['M', 'R', 'T']) {
-      const header = ctx.target(id);
-      expect(header).toHaveAttribute('role', 'columnheader');
-      expect(header).toHaveAccessibleName(header.getAttribute('aria-label')!);
-      // Visually hidden: in the accessibility tree, but with no visible box.
-      const { width, height } = header.getBoundingClientRect();
-      expect(width <= 1 || height <= 1 || !header.checkVisibility({ opacityProperty: true })).toBe(true);
-    }
-    // The row headers stay visible.
-    expect(ctx.source('C')).toBeVisible();
+    await step('The candidate sees the characters as row headers', async () => {
+      for (const id of ['C', 'D', 'L', 'P']) expect(ctx.source(id)).toBeVisible();
+    });
+
+    await step('The candidate sees no column-header row: the answer cells start at the top of the table', async () => {
+      expect(cells).toHaveLength(4 * 3);
+      expect(cells[0].getBoundingClientRect().top - grid.getBoundingClientRect().top).toBeLessThanOrEqual(1);
+      for (const id of ['M', 'R', 'T']) {
+        const header = ctx.target(id);
+        header.scrollIntoView({ block: 'center' });
+        const { left, top, width, height } = header.getBoundingClientRect();
+        // Nothing of the header is painted where it lies: that point hits something else.
+        expect(document.elementsFromPoint(left + width / 2, top + height / 2)).not.toContain(header);
+      }
+    });
+
+    await step('A screen reader still identifies each column by its aria-label', async () => {
+      for (const id of ['M', 'R', 'T']) {
+        const label = ctx.target(id).getAttribute('aria-label')!;
+        expect(within(ctx.interaction).getByRole('columnheader', { name: label })).toBe(ctx.target(id));
+        // getByRole walks light-DOM parents only; a display:none or visibility:hidden ancestor in the
+        // shadow root also takes the header out of the accessibility tree, and checkVisibility sees it.
+        expect(ctx.target(id).checkVisibility({ visibilityProperty: true })).toBe(true);
+      }
+    });
   },
   loaders: [loadItem('match-example-sv-2.xml')]
 };

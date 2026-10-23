@@ -26,9 +26,10 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @attr {number} [min-associations=0] - Minimum pairings for a valid response (QTI's default).
  * @attr {boolean} [shuffle=false] - Requests shuffling of both match sets. Applied by the
  *   transform pipeline (`qti-transformers`), not by this element.
- * @attr {'qti-match-tabular'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
+ * @attr {'qti-match-tabular'|'qti-header-hidden'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
  *   QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid
- *   instead of drag-and-drop; the `qti-choices-*` values position the source set.
+ *   instead of drag-and-drop, and with it `qti-header-hidden` leaves out the column-header row;
+ *   the `qti-choices-*` values position the source set.
  * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
  *   the widest chip so placement does not reflow the layout. The mixin default is `true`; this
  *   interaction is the one that overrides it to `false`, because a match target is a category card
