@@ -52,7 +52,7 @@ export const Test: Story = {
   // Quarantined: the submitted FormData 'RESPONSE' comes back null instead of the typed value — a
   // form-association/typing behavior issue unrelated to the drag-drop shadow-query work. Tracked to
   // revisit; remove this tag once the text-entry form-data path is fixed.
-  tags: ['skip-test'],
+  tags: ['xfail'],
   render: args => {
     return html`
       <form name="form" @submit=${e => e.preventDefault()}>

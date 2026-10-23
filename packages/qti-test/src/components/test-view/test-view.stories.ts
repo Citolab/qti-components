@@ -20,12 +20,12 @@ const meta: Meta<TestViewClass> = {
     actions: {
       handles: events
     }
-  },
-  tags: ['no-tests']
+  }
 };
 export default meta;
 
 export const Default: Story = {
+  tags: ['no-tests'],
   render: args =>
     html` <qti-test navigate="item">
       <test-navigation>
@@ -36,6 +36,9 @@ export const Default: Story = {
 };
 
 export const Test: Story = {
+  // Fails: it looks the item up by its title attribute, but the loader keeps an item's title as
+  // data-title, so 'T1 - Test Entry - Item 1' is not found.
+  tags: ['xfail'],
   render: args => html`
     <qti-test navigate="item">
       <test-navigation>
