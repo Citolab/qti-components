@@ -21,10 +21,9 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @customElement qti-match-interaction
  *
  * @attr {string} response-identifier - Required. Identifier of the bound response variable.
- * @attr {number} [max-associations=0] - Maximum pairings across the whole interaction; `0`
- *   means unlimited. QTI's own default is `1`; this element defaults to unlimited because a
- *   literal `1` breaks any multi-pair match item. See plans/interaction-attribute-spec-conformance.md.
- * @attr {number} [min-associations=1] - Minimum pairings for a valid response.
+ * @attr {number} [max-associations=1] - Maximum pairings across the whole interaction; `0`
+ *   means unlimited. Without the attribute it is QTI's default of 1 (information model §5.89).
+ * @attr {number} [min-associations=0] - Minimum pairings for a valid response (QTI's default).
  * @attr {boolean} [shuffle=false] - Requests shuffling of both match sets. Applied by the
  *   transform pipeline (`qti-transformers`), not by this element.
  * @attr {'qti-match-tabular'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
@@ -81,6 +80,10 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
    * their drops are exactly the widest chip plus the inset.
    */
   public override autoSizeDropzones = false;
+
+  /** QTI's defaults (information model §5.89). */
+  public override maxAssociations = 1;
+  public override minAssociations = 0;
 
   protected sourceChoices: QtiSimpleAssociableChoice[];
   protected targetChoices: QtiSimpleAssociableChoice[];

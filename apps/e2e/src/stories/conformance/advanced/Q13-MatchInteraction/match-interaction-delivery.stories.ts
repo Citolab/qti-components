@@ -378,27 +378,44 @@ export const Q13_L2_D109: Story = {
 };
 
 /**
- * RESPONSE3 has no max-associations (the spec default is 1) and no data-max-selections-message: trying
- * a second association shows the platform's default max message.
+ * > **match-example-sv-3.xml , RESPONSE3** the interaction with response-identifier RESPONSE3 has no
+ * > **max-associations** attribute and no **data-max-selections-message** attribute. If a candidate
+ * > attempts to make more than one association the candidate should be presented with the delivery
+ * > platform's default max-selections-message content which MUST be acknowledged by the candidate by
+ * > either changing the number of selections or acknowledging the message by closing the message window
+ * > or by other means of deliberate acknowledgement.
  *
- * Known to fail: the match interaction does not apply the default max-associations of 1 (only gap match
- * does), so a second association is accepted and no message is shown.
+ * The item says so itself: "The max-associations attribute is optional and defaults to a value of 1 when
+ * unspecified." (information model §5.89: default 1). The message text is the platform's own, so the
+ * story asserts that one is shown, not its wording.
  */
 export const Q13_L2_D110: Story = {
   name: 'Q13-L2-D110',
-  tags: ['xfail'],
   render,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const ctx = getInteraction(canvasElement, 'RESPONSE3');
     await ctx.interaction.updateComplete;
-    expect(ctx.interaction.hasAttribute('data-max-selections-message')).toBe(false);
+    expect(ctx.interaction).not.toHaveAttribute('data-max-selections-message');
 
-    await associate(ctx, ['C R', 'D M']);
-    expect(ctx.response()).toEqual(['C R']);
+    await step('The candidate makes one association', async () => {
+      await associate(ctx, ['C R']);
+      expect(ctx.response()).toEqual(['C R']);
+      expect(ctx.message()).not.toBeVisible();
+    });
 
-    ctx.assessmentItem.processResponse();
-    await waitFor(() => expect(ctx.message()).toHaveTextContent(/too many/i));
-    expect(ctx.message()).toBeVisible();
+    await step('Making a second association presents the default max-selections message', async () => {
+      await associate(ctx, ['D M']);
+      expect(ctx.response()).toEqual(['C R', 'D M']);
+      await waitFor(() => expect(ctx.message()).toBeVisible());
+      expect(ctx.message().textContent!.trim()).not.toBe('');
+    });
+
+    await step('Changing the number of associations acknowledges the message', async () => {
+      const placed = ctx.interaction.chipsIn(ctx.target('M'))[0];
+      await drag(placed, { to: ctx.sourceSet, duration: 100 });
+      expect(ctx.response()).toEqual(['C R']);
+      await waitFor(() => expect(ctx.message()).not.toBeVisible());
+    });
   },
   loaders: [loadItem('match-example-sv-3.xml')]
 };

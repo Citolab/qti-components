@@ -43,6 +43,9 @@ export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
 ) {
   static override styles: CSSResultGroup = styles;
 
+  /** QTI's default (information model §5.57). */
+  public override maxAssociations = 1;
+
   override render() {
     return html`<slot name="prompt"> </slot>
       <slot part="drags" name="drags"></slot>

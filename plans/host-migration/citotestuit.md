@@ -163,6 +163,16 @@ sets `disableAfterIfMaxChoicesReached: true` (`frontend/packages/ui/src/assessme
 Drop the option to get QTI's behaviour (go over, see the message).
 Evidence: read from `frontend/packages/ui/src/assessment-player/AssessmentPlayerView.tsx:99`, not run
 
+### A match interaction without `max-associations` allows one association (Q13-L2-D110)
+
+Status: breaking
+Members: `qti-match-interaction` `max-associations` / `min-associations`
+Do: items that leave `max-associations` out now take QTI's default of 1, so the candidate can make
+one pair without a message; a second is reported with the max-selections message. If your items rely on the old
+unlimited default, add `max-associations="0"` (unlimited) or the real limit to them. `min-associations` now defaults to 0, so an untouched match is no longer reported as
+"Please select at least 1 association."
+Evidence: not surveyed; whether CitoTestUit's items set `max-associations` is unknown
+
 ### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
 
 Status: none

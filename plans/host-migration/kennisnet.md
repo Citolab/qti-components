@@ -155,6 +155,18 @@ sets `disableAfterIfMaxChoicesReached: true` (`projects/shared/src/lib/qti/qti-t
 Drop the option to get QTI's behaviour (go over, see the message).
 Evidence: read from `projects/shared/src/lib/qti/qti-test.ts:74`, not run
 
+### A match interaction without `max-associations` allows one association (Q13-L2-D110)
+
+Status: breaking
+Members: `qti-match-interaction` `max-associations` / `min-associations`
+Do: items that leave `max-associations` out now take QTI's default of 1, so the candidate can make
+one pair without a message; a second is reported with the max-selections message. Our copies of Kennisnet items
+`ITEM007`–`ITEM010` and `ITEM017` have no `max-associations` and 5–7 correct pairs. To keep them
+working, add `max-associations="0"` (unlimited) or the real limit to those items. `min-associations` now defaults to 0, so an untouched match is no longer
+reported as "Please select at least 1 association."
+Evidence: from our fixtures `public/assets/api/kennisnet/ITEM0{07,08,09,10,17}.xml`; the host's item
+bank not surveyed, nothing run
+
 ### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
 
 Status: behaviour change; no API removed
