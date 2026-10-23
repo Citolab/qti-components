@@ -1,5 +1,86 @@
 # @citolab/qti-components
 
+## 10.0.0-next.14
+
+### Major Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `completionStatus` follows QTI 3 (info model §2.2.2, §2.5) and the 1EdTech conformance suite's Results Reporting reference results.
+
+  - **completionStatus is no longer derived from validity.** Before, a non-adaptive item set `completed` or `incomplete` on every answer, from whether its interactions were valid. Now it is `not_attempted` until the item is presented, `unknown` from then on, and `completed` once an attempt of a non-adaptive item ends (after `processResponse()`), unless response processing set a value itself. An adaptive item is completed only by its response processing, as before. Whether the answers are valid is `valid` in the item context and in the computed context; to know whether an item is answered, read `valid && !isDefaultResponse` per item instead of `completionStatus === 'completed'`.
+  - An item that is presented is never `not_attempted`: after a reset or a restore that says so, it is `unknown`. The test context still holds `not_attempted` for items that were never presented.
+  - Response processing no longer resets `completionStatus` before a run of a non-adaptive item: it is built in and has no default.
+  - `test-scoring-feedback` shows its "no response" text from the item's validity and default response, not from completionStatus.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major).
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-end-attempt-interaction` counts the attempt it ends unless it says `count-attempt="false"`. Before, only `count-attempt="true"` counted. QTI 3 gives the attribute no default; an absent value now counts, as QTI 2.x's default `true` did and as amp-up and QTI.JS do. Fixes [#341](https://github.com/Citolab/qti-components/issues/341).
+
+  An item whose hint or "show solution" button has no `count-attempt` now uses up an attempt when the candidate presses it, and in a test with the default `max-attempts` of 1 the item is then locked. Give such a button `count-attempt="false"`.
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - Response processing runs the way it would on a backend: once, after which the item applies the final outcome values in one update.
+
+  Before, `processResponse` published the item context at every step: the attempt count, the reset of a non-adaptive item's outcomes to their defaults, every `qti-set-outcome-value`, the completion status. Every consumer (feedback, `test-navigation`, `test-end-attempt`, a modal) saw the in-between states, such as a score of 0 or an empty FEEDBACK. Now `qti-response-processing` runs its rules on a copy of the item context (outcomes reset for a non-adaptive item, `numAttempts` already counted), so a rule still sees what an earlier rule wrote (`SCORE = SCORE + 1` twice gives +2). When the rules are done it sends every outcome in one `cito-item-set-outcomes`; the item applies them with the completion status and the validity in one publish, then sends one `cito-item-outcomes-changed`.
+
+  What a host notices:
+
+  - **Changed:** `cito-item-outcome-changed` and its legacy name `qti-outcome-changed` keep their name and `detail` (`{ item, outcomeIdentifier, value }`), but are sent once per outcome after each update, with the final value, after the context is published. A handler no longer sees the reset to the defaults or a rule's in-between value.
+  - **New:** `cito-item-outcomes-changed`, the same outcomes in one event: `detail` is `{ item, outcomes: [{ identifier, value }] }`, sent once per update. After `processResponse` it lists every outcome of the item.
+  - **New:** `cito-item-set-outcomes`, a request a host sends on the item with the outcomes a backend returned: `detail` is `{ outcomes: [{ identifier, value }], responseProcessed? }`. The item applies them in one update, synchronously. With `responseProcessed: true` it also ends the attempt the way `processResponse` does: a non-adaptive item whose processing left completionStatus `unknown` becomes `completed` (see the completionStatus changeset) and `qti-item-context-updated` goes out with `responseProcessed`.
+  - A run that throws counts the attempt and applies no outcomes. Before, it also left the outcomes the rules had set before the error, and completionStatus at `null`.
+  - `qti-set-outcome-value` no longer reaches the item: `qti-response-processing` takes it and writes to its own copy of the item context, which only a run sends to the item.
+  - `qti-response-processing`'s `process()` is now `processResponse({ numAttempts })`, with the attempt count the item keeps, and sends its result instead of applying it; call `item.processResponse()` to score. The item no longer knows the element's class, only that it has `processResponse`.
+  - **Removed:** `item.updateResponseVariable` from the helper a `qti-custom-operator` script gets: response processing reads responses, it does not change them. `item.getVariable` and `item.updateOutcomeVariable` stay.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major) (nothing to do).
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-navigation` disables an item once it has used its attempts, so the candidate can no longer change the answer after the last attempt is ended (`test-end-attempt`). The rule is the one `test-end-attempt` already used for its own button: a non-adaptive item with `max-attempts` above 0 (default 1) and `numAttempts >= max-attempts`. Adaptive items, `max-attempts="0"` (unlimited) and items in a `submission-mode="simultaneous"` part (one attempt each, processed when the part ends; the answer may change until then) are never disabled, and nothing is locked with `auto-score-items`, where every change is scored as an attempt.
+
+  It reads the computed context, so it holds for every item on screen (`navigate="section"`) and for a restored `qtiTest.state` (disabled as soon as the item loads), and it releases the item when its attempts are back to zero. Only an item the navigation disabled itself is released: a host or view that sets `disabled` on an item keeps it so.
+
+  A practice test that lets the candidate check again must say so in its package: `<qti-item-session-control max-attempts="0" />`. QTI's default is one attempt, also without `qti-item-session-control`, so a plain package now locks each item after its first attempt. Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major).
+
+### Minor Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - When an attempt ends, the response of every `qti-end-attempt-interaction` other than the one used is `false` (QTI info model §2.4.5): a hint requested in an earlier attempt no longer stays `true` when the candidate ends the next attempt another way.
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-end-attempt-interaction` follows its item: it cannot be pressed while the item is `disabled` or `readonly`, or once an adaptive item has set `completionStatus` to `completed`. QTI says an adaptive item that sets `completed` closes its session, so no further attempt can start (info model §2.2.2). Before, the button stayed enabled and every press ran response processing again. Fixes [#342](https://github.com/Citolab/qti-components/issues/342).
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`fbfc478`](https://github.com/Citolab/qti-components/commit/fbfc4785212a7ef6e146551b10057b995f99396d) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-end-attempt require-answer>` stays disabled until the item has a valid, non-default response, independent of `allow-skipping`.
+
+### Patch Changes
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`7bb058f`](https://github.com/Citolab/qti-components/commit/7bb058ff4a4755677fda7c4a2ebdddac42767f68) Thanks [@herrKlein](https://github.com/herrKlein)! - A `qti-response-if`, `qti-response-else-if`, `qti-outcome-if` or `qti-outcome-else-if` whose condition is a boolean variable or base value applies only when it is `true`. Before, `false` was read as the string `'false'`, which is truthy, so `<qti-response-if><qti-variable identifier="HINT"/>` ran whenever HINT had a value. The spec's own adaptive examples test booleans this way. Fixes [#340](https://github.com/Citolab/qti-components/issues/340).
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53) Thanks [@herrKlein](https://github.com/herrKlein)! - An inline choice can have an empty placeholder: `data-prompt=""` (or an empty `inlineChoicePrompt` in the item configuration) is kept. Before, an empty value counted as missing and the placeholder fell back to `select`.
+
+  An empty placeholder now lines up with the sentence: the closed field keeps the same text baseline as when it shows an answer, so the line no longer changes height once a choice is made.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53) Thanks [@herrKlein](https://github.com/herrKlein)! - An auto-sized inline choice opens a menu exactly as wide as the closed field. The option rows (`qti-inline-choice`) were `inline-flex`, so the shrink-to-fit menu measured them side by side and came out as wide as all options together; they are block-level `flex` rows now. The measured trigger width also counts the gap before the chevron (the widest option was cut off by a few pixels) and no longer adds the menu's border. An empty value or prompt (`data-prompt=""`) keeps the field and the prompt row one line tall instead of collapsing.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53) Thanks [@herrKlein](https://github.com/herrKlein)! - The open inline choice menu reads as one shape with the field: one border on the seam instead of the field's and the menu's stacked, and square corners at the bottom of the menu.
+
+  With an empty `data-prompt`, the empty prompt row is no longer shown while nothing is chosen. Once a choice is made, that row is a clear button (an x glyph) that empties the answer again; its accessible name is `Clear`, overridable with `data-clear-label`.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`b1cb7e9`](https://github.com/Citolab/qti-components/commit/b1cb7e90df09765608e1ffe2d766e7974883f8a2) Thanks [@herrKlein](https://github.com/herrKlein)! - A select-point picture scales with its column by default. The component already sized the slotted picture `max-width: 100%; height: auto`, but the item theme's reset gives every picture inside an interaction `max-width: none`, a light-DOM rule that outranks `::slotted()`, so a 1024px picture overflowed a narrower column. The theme now restates the fluid sizing for the select-point picture (a direct child), as it does for graphic-gap-match. A picture smaller than its column keeps its own size. Clicks are still recorded in the picture's own pixels (its `width`/`height`) and markers placed in percentages, so the answer is the same at any displayed size.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`5856bfc`](https://github.com/Citolab/qti-components/commit/5856bfc3bc60075b9c19b9e3a6a77f77ac50a3cd) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls look the same on a page that uses a CSS reset, such as Tailwind's preflight.
+
+  A reset like `*, ::before, ::after { margin: 0; padding: 0; border: 0 solid }` is a rule of the page, and a page rule beats the `:host` rules of a shadow root, whatever its layer or specificity. `test-next`, `test-prev`, `test-end-attempt`, `test-item-link`, `test-section-link`, `test-submit`, `test-check-item` and `test-bookmark` painted their padding and border on the host, so on such a page they lost both: a label against the edge of its fill, and no border.
+
+  The look now sits on an inner element, `<span class="control" part="button">`, in the shadow tree, where the page's `*` does not reach. The host keeps only what a reset leaves alone: its display, the cursor and the radius its focus ring follows. Nothing changes on a page without a reset. The inner element is also a new part: `test-next::part(button)` repaints the control from a host stylesheet.
+
+  `item-show-correct-response`, `item-show-candidate-correction` and `test-show-correct-response` get the same treatment: their padding is on the inner `div`.
+
+  If a host styled the controls by their host box (a `padding` or `border` set on `test-next` itself), that moves to `::part(button)`. The `--test-button-*` slots work as before.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`fbfc478`](https://github.com/Citolab/qti-components/commit/fbfc4785212a7ef6e146551b10057b995f99396d) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-end-attempt` ends the attempt of its own item when it has one, like `test-bookmark`.
+
+  Stamped into a `<template item-ref>`, each item gets its own button, which ends the attempt of that item and is `disabled` by that item's state (`max-attempts`, `numAttempts`, an optimal or completed attempt). With `<qti-test navigate="section">` every item of the section is on screen, so a candidate can check them one by one in any order. A new `item` attribute (an item-ref identifier) names the item from anywhere. In the toolbar, without either, it follows the item on screen as before.
+
+  `cito-test-end-attempt` carries the item as `{ itemId }`; `test-navigation` then processes that item's response instead of the one on screen. Without `itemId` nothing changes.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`85437ae`](https://github.com/Citolab/qti-components/commit/85437aef3e4febe3c8b1540485bdbfc6f2bc9540) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-navigation` no longer throws while building a section's `completed` when one of its items has no `completionStatus` in the test context.
+
 ## 10.0.0-next.13
 
 ### Major Changes

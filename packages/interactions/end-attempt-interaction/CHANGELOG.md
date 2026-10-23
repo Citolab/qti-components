@@ -1,5 +1,23 @@
 # @qti-components/end-attempt-interaction
 
+## 2.0.0-next.4
+
+### Major Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-end-attempt-interaction` counts the attempt it ends unless it says `count-attempt="false"`. Before, only `count-attempt="true"` counted. QTI 3 gives the attribute no default; an absent value now counts, as QTI 2.x's default `true` did and as amp-up and QTI.JS do. Fixes [#341](https://github.com/Citolab/qti-components/issues/341).
+
+  An item whose hint or "show solution" button has no `count-attempt` now uses up an attempt when the candidate presses it, and in a test with the default `max-attempts` of 1 the item is then locked. Give such a button `count-attempt="false"`.
+
+### Minor Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-end-attempt-interaction` follows its item: it cannot be pressed while the item is `disabled` or `readonly`, or once an adaptive item has set `completionStatus` to `completed`. QTI says an adaptive item that sets `completed` closes its session, so no further attempt can start (info model §2.2.2). Before, the button stayed enabled and every press ran response processing again. Fixes [#342](https://github.com/Citolab/qti-components/issues/342).
+
+### Patch Changes
+
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53)]:
+  - @qti-components/base@3.0.0-next.4
+  - @qti-components/interactions-core@2.2.0-next.5
+
 ## 1.1.6-next.3
 
 ### Patch Changes

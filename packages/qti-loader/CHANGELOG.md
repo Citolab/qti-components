@@ -1,5 +1,12 @@
 # @qti-components/loader
 
+## 1.3.4-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320)]:
+  - @qti-components/elements@2.0.0-next.5
+
 ## 1.3.4-next.0
 
 ### Patch Changes

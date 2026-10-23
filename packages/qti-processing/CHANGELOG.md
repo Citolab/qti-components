@@ -1,5 +1,13 @@
 # @qti-components/processing
 
+## 1.6.1-next.4
+
+### Patch Changes
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`7bb058f`](https://github.com/Citolab/qti-components/commit/7bb058ff4a4755677fda7c4a2ebdddac42767f68) Thanks [@herrKlein](https://github.com/herrKlein)! - A `qti-response-if`, `qti-response-else-if`, `qti-outcome-if` or `qti-outcome-else-if` whose condition is a boolean variable or base value applies only when it is `true`. Before, `false` was read as the string `'false'`, which is truthy, so `<qti-response-if><qti-variable identifier="HINT"/>` ran whenever HINT had a value. The spec's own adaptive examples test booleans this way. Fixes [#340](https://github.com/Citolab/qti-components/issues/340).
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320)]:
+  - @qti-components/base@3.0.0-next.4
+
 ## 1.6.1-next.3
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @qti-components/theme
 
+## 2.3.0-next.4
+
+### Patch Changes
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53) Thanks [@herrKlein](https://github.com/herrKlein)! - The open inline choice menu reads as one shape with the field: one border on the seam instead of the field's and the menu's stacked, and square corners at the bottom of the menu.
+
+  With an empty `data-prompt`, the empty prompt row is no longer shown while nothing is chosen. Once a choice is made, that row is a clear button (an x glyph) that empties the answer again; its accessible name is `Clear`, overridable with `data-clear-label`.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`b1cb7e9`](https://github.com/Citolab/qti-components/commit/b1cb7e90df09765608e1ffe2d766e7974883f8a2) Thanks [@herrKlein](https://github.com/herrKlein)! - A select-point picture scales with its column by default. The component already sized the slotted picture `max-width: 100%; height: auto`, but the item theme's reset gives every picture inside an interaction `max-width: none`, a light-DOM rule that outranks `::slotted()`, so a 1024px picture overflowed a narrower column. The theme now restates the fluid sizing for the select-point picture (a direct child), as it does for graphic-gap-match. A picture smaller than its column keeps its own size. Clicks are still recorded in the picture's own pixels (its `width`/`height`) and markers placed in percentages, so the answer is the same at any displayed size.
+
 ## 2.3.0-next.3
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # @qti-components/interactions
 
+## 1.10.5-next.6
+
+### Patch Changes
+
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53), [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53), [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53)]:
+  - @qti-components/base@3.0.0-next.4
+  - @qti-components/end-attempt-interaction@2.0.0-next.4
+  - @qti-components/inline-choice-interaction@3.0.0-next.4
+  - @qti-components/interactions-core@2.2.0-next.5
+
 ## 1.10.5-next.5
 
 ### Patch Changes
