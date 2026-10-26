@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/choice-interaction",
   "description": "QTI choice-interaction interaction",
-  "version": "1.2.0-next.3",
+  "version": "1.2.0-next.4",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",

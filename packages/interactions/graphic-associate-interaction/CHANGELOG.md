@@ -1,5 +1,13 @@
 # @qti-components/graphic-associate-interaction
 
+## 1.1.6-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3), [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8)]:
+  - @qti-components/interactions-core@3.0.0-next.6
+  - @qti-components/base@3.0.0-next.5
+
 ## 1.1.6-next.3
 
 ### Patch Changes

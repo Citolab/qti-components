@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/inline-choice-interaction",
   "description": "QTI inline-choice-interaction interaction",
-  "version": "3.0.0-next.4",
+  "version": "3.0.0-next.5",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",

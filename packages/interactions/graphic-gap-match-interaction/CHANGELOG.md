@@ -1,5 +1,14 @@
 # @qti-components/graphic-gap-match-interaction
 
+## 1.1.6-next.6
+
+### Patch Changes
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - A match interaction without `max-associations` now allows one association, QTI's default (information model §5.89), instead of any number; a second association is reported with the default max-selections message (refused only where the host sets `disableAfterMaxReached`). Without `min-associations` it requires none, also QTI's default, instead of one. Items that leave `max-associations` out and expect several pairs need `max-associations="0"` (unlimited) or their real limit. Conformance: Q13-L2-D110. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`. Each drag-and-drop interaction now declares its own QTI default: the shared mixin's `max-associations` is a plain property (0), and gap match and graphic gap match set 1 themselves instead of the mixin checking their tag names; their behaviour is unchanged.
+- Updated dependencies [[`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3), [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8)]:
+  - @qti-components/interactions-core@3.0.0-next.6
+  - @qti-components/base@3.0.0-next.5
+
 ## 1.1.6-next.5
 
 ### Patch Changes

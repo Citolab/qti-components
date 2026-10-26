@@ -1,5 +1,32 @@
 # @citolab/qti-components
 
+## 10.0.0-next.15
+
+### Major Changes
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - Drag-and-drop interactions (match, gap match, graphic gap match, associate, order) no longer disable their drop targets once `max-associations` is reached, unless the host sets `configContext.disableAfterMaxReached: true`. The candidate can go over the maximum and the max-selections message reports it, as QTI describes ("upon violation of the max-associations constraint", vocabulary §1.2.8.3) and as choice interactions already did. Per-choice `match-max` still refuses a full target. Conformance: Q13-L2-D2, D108, D110. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`, `plans/host-migration/examenkompas.md`.
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - A match interaction without `max-associations` now allows one association, QTI's default (information model §5.89), instead of any number; a second association is reported with the default max-selections message (refused only where the host sets `disableAfterMaxReached`). Without `min-associations` it requires none, also QTI's default, instead of one. Items that leave `max-associations` out and expect several pairs need `max-associations="0"` (unlimited) or their real limit. Conformance: Q13-L2-D110. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`. Each drag-and-drop interaction now declares its own QTI default: the shared mixin's `max-associations` is a plain property (0), and gap match and graphic gap match set 1 themselves instead of the mixin checking their tag names; their behaviour is unchanged.
+
+### Minor Changes
+
+- [#346](https://github.com/Citolab/qti-components/pull/346) [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3) Thanks [@herrKlein](https://github.com/herrKlein)! - Feedback asks the host before it shows or hides: `cito-feedback-show` and `cito-feedback-hide`, both cancelable, so a host can show feedback its own way (a toast, a dialog, an animation).
+
+  Both are sent by `qti-feedback-block`, `qti-feedback-inline` and `qti-modal-feedback`, just before `showStatus` changes, bubble and are composed. `detail` is `{ kind: 'block' | 'inline' | 'modal', identifier, outcomeIdentifier, element, itemIdentifier? }`. Calling `preventDefault()` on `cito-feedback-show` keeps the element hidden (a modal does not open), with its content still in the DOM for the host to read or clone; the host is not asked again until the condition has gone. Cancelling `cito-feedback-hide` keeps it showing. A feedback the host took over sends no hide event. A repeat attempt that ends in the same outcome sends nothing: the item publishes the final values once, so the feedback never passes through the reset to its default. Without a listener that cancels, nothing changes.
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - A tabular match interaction shows its `data-first-column-header` text in the table's top-left cell (Q13-L2-D107).
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - A tabular match interaction with the shared vocabulary class `qti-header-hidden` does not display its column-header row, the top-left cell included (Q13-L2-D106).
+
+- [#346](https://github.com/Citolab/qti-components/pull/346) [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3) Thanks [@herrKlein](https://github.com/herrKlein)! - The default theme gives rubric blocks and feedback a look of their own, makes its cards white, and gives its focus ring a colour.
+
+  - `qti-rubric-block`: a light-grey callout with a thick grey border on its start side, instead of the blue info border.
+  - `qti-feedback-block`, `qti-feedback-inline`, `qti-modal-feedback`: one look, a light-grey bubble with large rounded corners, no border and a hard darker shadow below it; inline feedback is the same as a pill and keeps the height of its line. Rubric and feedback are told apart by shape, so it holds in black and white.
+  - `.qti-well` is white by default (it was a light tint), for items on a light-grey page. `--cito-color-well` still sets another fill.
+  - The focus ring is a mid blue in the default theme (3:1 against both surfaces). A brand that sets `--cito-color-primary` keeps its primary as the ring, as before; `--cito-color-focus` sets the ring on its own.
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTransformItem()` has a `validateBindings()` step: it throws a `QTI validation error` listing every interaction bound to a response it cannot hold, by the base-type, cardinality and max-choices / max-associations rules the information model states for each interaction (for example an inline choice interaction bound to multiple cardinality, §5.74). `load()` and `parse()` do not run it; a host calls it and shows the error. Conformance: Q12-L2-I21, Q12-L2-D21.
+
 ## 10.0.0-next.14
 
 ### Major Changes

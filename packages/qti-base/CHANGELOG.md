@@ -1,5 +1,17 @@
 # @qti-components/base
 
+## 3.0.0-next.5
+
+### Minor Changes
+
+- [#346](https://github.com/Citolab/qti-components/pull/346) [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3) Thanks [@herrKlein](https://github.com/herrKlein)! - Feedback asks the host before it shows or hides: `cito-feedback-show` and `cito-feedback-hide`, both cancelable, so a host can show feedback its own way (a toast, a dialog, an animation).
+
+  Both are sent by `qti-feedback-block`, `qti-feedback-inline` and `qti-modal-feedback`, just before `showStatus` changes, bubble and are composed. `detail` is `{ kind: 'block' | 'inline' | 'modal', identifier, outcomeIdentifier, element, itemIdentifier? }`. Calling `preventDefault()` on `cito-feedback-show` keeps the element hidden (a modal does not open), with its content still in the DOM for the host to read or clone; the host is not asked again until the condition has gone. Cancelling `cito-feedback-hide` keeps it showing. A feedback the host took over sends no hide event. A repeat attempt that ends in the same outcome sends nothing: the item publishes the final values once, so the feedback never passes through the reset to its default. Without a listener that cancels, nothing changes.
+
+### Patch Changes
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - Drag-and-drop interactions (match, gap match, graphic gap match, associate, order) no longer disable their drop targets once `max-associations` is reached, unless the host sets `configContext.disableAfterMaxReached: true`. The candidate can go over the maximum and the max-selections message reports it, as QTI describes ("upon violation of the max-associations constraint", vocabulary §1.2.8.3) and as choice interactions already did. Per-choice `match-max` still refuses a full target. Conformance: Q13-L2-D2, D108, D110. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`, `plans/host-migration/examenkompas.md`.
+
 ## 3.0.0-next.4
 
 ### Major Changes
