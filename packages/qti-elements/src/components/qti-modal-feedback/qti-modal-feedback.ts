@@ -2,6 +2,8 @@ import { css, html } from 'lit';
 
 import { QtiFeedback } from '@qti-components/base';
 
+import { dispatchFeedback } from '../../internal/feedback-events';
+
 export class QtiModalFeedback extends QtiFeedback {
   static override styles = css`
     .cito-dialog {
@@ -67,6 +69,15 @@ export class QtiModalFeedback extends QtiFeedback {
       dialog.close();
       this.showStatus = 'off';
     }
+  }
+
+  /** `cito-feedback-show`: a listener that calls `preventDefault()` keeps this hidden and shows it itself. */
+  protected override feedbackShowing(): boolean {
+    return dispatchFeedback(this, 'cito-feedback-show', 'modal', this.identifier);
+  }
+
+  protected override feedbackHiding(): boolean {
+    return dispatchFeedback(this, 'cito-feedback-hide', 'modal', this.identifier);
   }
 
   public override connectedCallback(): void {

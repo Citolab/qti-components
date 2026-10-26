@@ -100,6 +100,16 @@ These two do not have a `cito-` name yet. Both bubble and are composed.
 | `qti-outcome-changed`           | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`, once per outcome per update, final value. |
 | `cito-item-outcomes-changed`    | **Supported** | `detail`: `{ item, outcomes: [{ identifier, value }] }`, once per update.                 |
 
+### Feedback events
+
+`qti-feedback-block`, `qti-feedback-inline` and `qti-modal-feedback` ask the host with these, just before they show or hide.
+Both bubble and are composed. `detail`: `{ kind: 'block' | 'inline' | 'modal', identifier, outcomeIdentifier, element, itemIdentifier? }`.
+
+| Event                | Kind                     | Notes                                                                                                                                                                                                              |
+| -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `cito-feedback-show` | Notification, cancelable | The feedback is about to show. `preventDefault()` keeps it hidden (a modal does not open); its content stays in the DOM (`detail.element`) to show yourself. You are not asked again until its condition has gone. |
+| `cito-feedback-hide` | Notification, cancelable | It is showing and its condition turned false. `preventDefault()` keeps it showing. Not sent for feedback you took over: dismiss your own toast or dialog.                                                          |
+
 ## Scoring and reviewing a single item
 
 Members of `<qti-assessment-item>`, for hosts that score outside the browser or show answers back.

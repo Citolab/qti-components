@@ -221,9 +221,10 @@ optional ones: `--cito-color-border` for a brand that wants every edge in its ow
 `--cito-color-chip-border` for a chip's edge, `--cito-icon-drag` and `--cito-color-drag-icon` for its
 handle, `--cito-shadow-chip` for a chip at rest and `--cito-shadow-drag` for one in flight,
 `--cito-color-order-placed` / `-content` / `-border` for an order interaction's placed chip when a brand
-gives it its own look (Kennisnet inverts it), `--cito-color-well` for the fill of a `.qti-well` (a
-brand on a coloured page makes it white), and `--cito-color-marker`, `--cito-icon-marker` and
-`--cito-marker-anchor` for the select-point marker.
+gives it its own look (Kennisnet inverts it), `--cito-color-well` for the fill of a `.qti-well` (white by
+default), `--cito-color-marker`, `--cito-icon-marker` and
+`--cito-marker-anchor` for the select-point marker, and `--cito-color-focus` for the focus ring (default:
+the brand's `--cito-color-primary` when it sets one, else a mid blue).
 
 **The `cito-` names are inputs, never declared by the theme.** Each is read once, with its default as
 the fallback, into a `qti-` name that every rule reads:
@@ -283,8 +284,21 @@ not walked twice.
 - **Shaped like a daisyUI theme.** A surface, its text colour, a few brand colours with their
   `-content` partners, the four verdict colours, three radii, two sizes, a border width and a depth.
   Everything else is derived, so a brand is a handful of values.
-- **The default is black and white.** Only the four verdict colours keep a hue; a brand adds its own.
-  Dark mode comes from `light-dark()` and the item's own text colour, not from a second token set.
+- **The default is black and white.** Only the four verdict colours and the focus ring keep a hue; a
+  brand adds its own. The ring is a mid blue that keeps 3:1 against both surfaces (WCAG 1.4.11): the
+  answer key's blue was ruled out, since a ring in it reads as a correction, and a brand that sets
+  `--cito-color-primary` keeps its primary as the ring.
+- **Rubric and feedback are told apart by shape, not colour,** so the difference holds in black and
+  white, in print and for a colour-blind candidate. A rubric block is a document: light grey with a
+  thick grey bar on its start side. Feedback is a reply: a light-grey bubble with large rounded
+  corners, no border and a hard darker shadow just below it; inline feedback is the same as a pill,
+  padded only at its sides so its line keeps its height. The theme does not paint a verdict on it: the
+  element does not know whether the answer was right. Feedback is painted on its `feedback` part,
+  which has a box only while the feedback shows. A speech-bubble tail was tried and left out: it needed
+  positioning in the components and several pseudo-elements, too much for a default; a brand can add
+  one on `::part(feedback)::before`.
+- **The default page is light grey, its cards white.** A `.qti-well` defaults to the surface colour
+  (`--cito-color-well` sets another).
 - **Interaction feel, as chosen for the default theme:**
   - The focus ring shows on `:focus`, so also after a mouse pick, except on a chip, where it waits
     for the release because a press may be the start of a drag. A text field rings on its host.

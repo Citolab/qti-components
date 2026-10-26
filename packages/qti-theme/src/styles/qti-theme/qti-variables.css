@@ -285,11 +285,11 @@
        without the theme a well got its padding and nothing else. Filled from the theme's own
        tokens: a brand that restyles its borders restyles the well and the bordered box with them.
        A well is a tinted surface inside the theme's border (§1.1.6.2: border plus background, the
-       background chosen by the platform); base-200 is the theme's tint for that, and a brand that
-       puts its items on a coloured page sets --cito-color-well (Kennisnet: white, like its cards). */
+       background chosen by the platform). The default is a white card, for items on a light-grey
+       page; a brand sets --cito-color-well for another fill. */
     --table-border-color: var(--qti-border-color);
     --foreground: var(--qti-color-base-content);
-    --well-bg: var(--cito-color-well, var(--qti-color-base-200)); /* t1 input: --cito-color-well, optional */
+    --well-bg: var(--cito-color-well, var(--qti-color-base-100)); /* t1 input: --cito-color-well, optional */
     --well-border: var(--qti-border);
     --well-box-shadow: none;
 
@@ -400,8 +400,10 @@
      * The focus ring (`@mixin foc`): one outline on `:focus-visible`, for everything. The test
      * controls read the same two tokens, so a page has one ring.
      *
-     * Primary, not the answer key's info blue: a ring is the brand's "you are here", and it must not
-     * be mistaken for the answer key. 2px, a hairline, so a length in px. It sits that far outside
+     * Not the answer key's info blue: it must not be mistaken for the answer key. The default theme is
+     * black and white, and the ring is its one colour: a mid blue that keeps 3:1 against both
+     * surfaces (WCAG 1.4.11). A brand that sets --cito-color-primary gets its primary as the ring, as
+     * before; --cito-color-focus sets the ring on its own. 2px, a hairline, so a length in px. It sits that far outside
      * the box, or that far inside it for a row in a list that clips (`@mixin foc-inset`).
      *
      * The four --qti-light-* and --qti-dark-* tokens that used to sit here are now
@@ -409,7 +411,26 @@
      * and dark theme, which is what the old names suggested and why they were mistaken for dead.
      */
     --qti-focus-border-width: 2px;
-    --qti-focus-color: var(--qti-primary);
+    --qti-color-focus: var(
+      --cito-color-focus,
+      var(--cito-color-primary, light-dark(oklch(60% 0.15 250), oklch(72% 0.13 250)))
+    ); /* t1 input: --cito-color-focus, optional; a brand's primary when it sets one */
+    --qti-focus-color: var(--qti-color-focus);
+
+    /*
+     * Rubric and feedback, told apart by shape so it holds in black and white. A rubric block is a
+     * document: light grey, a thick grey bar on its start side. Feedback is a reply: a light-grey bubble
+     * with large rounded corners, no border and a hard darker shadow just below it. Inline feedback is a
+     * pill, padded only at its sides so its line keeps its height.
+     */
+    --qti-callout-bg: var(--qti-color-base-300);
+    --qti-callout-accent-width: calc(var(--qti-border-width) * 4);
+    --qti-rubric-accent-color: color-mix(in oklab, var(--qti-color-base-content) 35%, var(--qti-color-base-100));
+    --qti-feedback-radius: calc(var(--qti-spacing) * 2.5);
+    --qti-feedback-radius-inline: calc(var(--qti-spacing) * 2);
+    --qti-feedback-padding-inline: var(--qti-spacing);
+    --qti-feedback-shadow-color: color-mix(in oklab, var(--qti-color-base-content) 22%, var(--qti-color-base-100));
+    --qti-feedback-shadow: 0 calc(var(--qti-border-width) * 2) 0 var(--qti-feedback-shadow-color);
     --qti-focus-offset: var(--qti-focus-border-width);
     --qti-focus-offset-inset: calc(-1 * var(--qti-focus-border-width));
     --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--qti-border-width));

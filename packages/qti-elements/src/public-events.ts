@@ -26,6 +26,19 @@ export interface RubricPlacement {
   element: Element;
 }
 
+/** The detail of `cito-feedback-show` and `cito-feedback-hide`. */
+export interface FeedbackEventDetail {
+  kind: 'block' | 'inline' | 'modal';
+  /** The feedback's `identifier`. */
+  identifier: string;
+  /** The outcome it follows (`outcome-identifier`). */
+  outcomeIdentifier: string;
+  /** The feedback element itself: read or clone its content (it stays in the DOM, hidden). */
+  element: Element;
+  /** The identifier of the item it is in, when it is in one. */
+  itemIdentifier?: string;
+}
+
 export interface PublicItemEventMap {
   // `cito-item-rendered` (detail: the `QtiAssessmentItem`) is added by qti-assessment-item.ts, so this
   // module imports no element: that import would be a cycle.
@@ -41,6 +54,13 @@ export interface PublicItemEventMap {
   'cito-item-outcomes-changed': CustomEvent<OutcomesChangedDetails>;
   /** Cancelable: `preventDefault()` keeps the rubric block where it is. */
   'cito-item-rubric-placement': CustomEvent<RubricPlacement>;
+  /**
+   * Cancelable: the feedback element is about to show (its condition turned true). `preventDefault()`
+   * keeps it hidden, so the host can show the content itself. Sent once per showing.
+   */
+  'cito-feedback-show': CustomEvent<FeedbackEventDetail>;
+  /** The condition of a feedback that was shown (or taken over by the host) turned false again. */
+  'cito-feedback-hide': CustomEvent<FeedbackEventDetail>;
 }
 
 export type PublicItemEventName = keyof PublicItemEventMap;
@@ -56,7 +76,9 @@ export const PUBLIC_ITEM_EVENTS: Record<PublicItemEventName, PublicEventDeclarat
     kind: 'notification',
     scope: 'item',
     deprecated: 'qti-rubric:discretionary-placement'
-  }
+  },
+  'cito-feedback-show': { kind: 'notification', scope: 'item' },
+  'cito-feedback-hide': { kind: 'notification', scope: 'item' }
 };
 
 declare global {
