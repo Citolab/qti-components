@@ -70,15 +70,20 @@
   color: var(--drag-color, var(--qc-color-chip-content, var(--cito-color-chip-content, inherit)));
 }
 
-/* The chip's handle: a grip glyph before its label, in `--qti-grip-color` (the chip's own colour by default). */
+/* The chip's handle: a grip glyph before its label. Quiet by default — one column of dots, in a
+   faded text colour — so the word, not the handle, is what a chip shows. `--qti-grip-color` and
+   the `--qc-color-drag-icon` input override the colour; `--qc-icon-drag` the shape. */
 @define-mixin grip {
   content: '';
   display: inline-block;
   vertical-align: middle;
-  width: 0.75em;
+  width: var(--qti-grip-width);
   height: 1em;
-  margin-right: var(--qti-glyph-gap);
-  background-color: var(--qti-grip-color, var(--qc-color-drag-icon, var(--cito-color-drag-icon, currentColor)));
+  margin-right: var(--qti-grip-gap);
+  background-color: var(
+    --qti-grip-color,
+    var(--qc-color-drag-icon, var(--cito-color-drag-icon, color-mix(in oklab, currentColor 40%, transparent)))
+  );
   mask: var(--qti-grip-mask) no-repeat center / contain;
   -webkit-mask: var(--qti-grip-mask) no-repeat center / contain;
 }

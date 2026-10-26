@@ -17,6 +17,9 @@ The public prefix is `qc-` (qti-components); `cito-` is its old name and keeps w
   (a well is the surface colour, the in-flight shadow and the marker colour derive from the text colour
   and the primary; a brand that wants another paints `.qti-well` or `::part(point)`). Tier 1 is 36
   inputs.
+- **A quieter handle:** the default grip is one column of dots in a faded text colour, narrower and
+  closer to the label, so the word is what a chip shows; `--qc-size-drag-icon` sets the handle's width
+  for a brand with a wider icon.
 - **Two faces:** `--qc-font-family-heading` sets the font of `h1`–`h6` in an item alone; unset, headings
   keep the reading font (`--qc-font-family`). The Cito preset uses PT Sans for headings only.
 - **Events:** every public event `cito-*` is dispatched and handled as `qc-*` (`qc-test-navigated`,

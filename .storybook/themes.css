@@ -64,12 +64,13 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   --qc-color-neutral-content: oklch(100% 0 none);
   --qc-color-focus: oklch(60% 0.15 250); /* the focus ring: the default theme's mid blue, not the brand colour */
 
-  /* Chips: primary fill, white text, no edge, a 3px lift in the brand colour; the handle is the theme's six dots (Font Awesome's grip-vertical) */
+  /* Chips: primary fill, white text, no edge, a 3px lift in the brand colour; the handle is Kennisnet's six dots (Font Awesome's grip-vertical, once the theme's default) */
   --qc-color-chip: var(--qc-color-primary);
   --qc-color-chip-content: var(--qc-color-primary-content);
   --qc-color-chip-border: transparent;
   --qc-color-drag-icon: currentColor; /* the handle's colour */
   --qc-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Ccircle cx='3' cy='3' r='1.4'/%3E%3Ccircle cx='7' cy='3' r='1.4'/%3E%3Ccircle cx='3' cy='8' r='1.4'/%3E%3Ccircle cx='7' cy='8' r='1.4'/%3E%3Ccircle cx='3' cy='13' r='1.4'/%3E%3Ccircle cx='7' cy='13' r='1.4'/%3E%3C/svg%3E"); /* six dots, a mask */
+  --qc-size-drag-icon: 0.75em; /* this two-column icon keeps the box the theme's one-column default no longer needs */
   --qc-shadow-chip: 0 3px color-mix(in oklab, var(--qc-color-primary) 50%, transparent); /* at rest */
   --qc-color-order-placed: oklch(100% 0 none); /* an order interaction's placed chip, when it gets its own look */
   --qc-color-order-placed-content: var(--qc-color-base-content);
@@ -136,12 +137,13 @@ html[data-qti-theme][data-qti-theme='kennisnet'] body {
   --qc-color-neutral-content: oklch(100% 0 none); /* 3.8:1, bold labels only */
   --qc-color-focus: oklch(60% 0.15 250); /* the focus ring: the default theme's mid blue, not the brand colour */
 
-  /* Chips like cito.nl's cards: white with a grey edge and lift, #333 text, the handle in the logo's pink like the arrows on those cards */
+  /* Chips like cito.nl's cards: white with a grey edge and lift, #333 text, a quiet grey handle */
   --qc-color-chip: oklch(100% 0 none);
   --qc-color-chip-content: oklch(32.11% 0 none);
   --qc-color-chip-border: oklch(90% 0 none); /* the same grey as the lift below, so card and shadow read as one */
-  --qc-color-drag-icon: oklch(64.31% 0.2584 4.97); /* the handle's colour */
-  --qc-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1l2.5 2.5H9v3.5h3.5V5.5L15 8l-2.5 2.5V9H9v3.5h1.5L8 15l-2.5-2.5H7V9H3.5v1.5L1 8l2.5-2.5V7H7V3.5H5.5z'/%3E%3C/svg%3E"); /* four-way arrow */
+  --qc-color-drag-icon: oklch(75% 0 none); /* a light grey: the handle is there, the word is what you read */
+  --qc-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 16'%3E%3Ccircle cx='2' cy='3' r='1.4'/%3E%3Ccircle cx='2' cy='8' r='1.4'/%3E%3Ccircle cx='2' cy='13' r='1.4'/%3E%3C/svg%3E"); /* the theme's three dots */
+  --qc-size-drag-icon: 0.25em;
   --qc-shadow-chip: 0 3px 0 oklch(90% 0 none); /* a flat grey lift under the white card, as on the screenshot */
   /* --qc-color-order-placed: unset — the placed chip keeps the chip look */
   /* --qc-color-order-placed-content: unset */

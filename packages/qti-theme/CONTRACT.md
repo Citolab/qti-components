@@ -294,7 +294,7 @@ keeps it. `cito-` is the prefix these had before; every input is read as `var(--
 
 Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows, and the
 optional ones: `--qc-color-border` for a brand that wants every edge in its own colour (Kennisnet),
-`--qc-color-chip-border` for a chip's edge, `--qc-icon-drag` and `--qc-color-drag-icon` for its
+`--qc-color-chip-border` for a chip's edge, `--qc-icon-drag`, `--qc-size-drag-icon` (its width; the height is the line) and `--qc-color-drag-icon` for its
 handle, `--qc-shadow-chip` for a chip at rest,
 `--qc-color-order-placed` / `-content` / `-border` for an order interaction's placed chip when a brand
 gives it its own look (Kennisnet inverts it), `--qc-icon-marker` and

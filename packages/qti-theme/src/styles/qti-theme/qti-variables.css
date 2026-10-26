@@ -75,7 +75,7 @@
     --qc-icon-drag,
     var(
       --cito-icon-drag,
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Ccircle cx='3' cy='3' r='1.4'/%3E%3Ccircle cx='7' cy='3' r='1.4'/%3E%3Ccircle cx='3' cy='8' r='1.4'/%3E%3Ccircle cx='7' cy='8' r='1.4'/%3E%3Ccircle cx='3' cy='13' r='1.4'/%3E%3Ccircle cx='7' cy='13' r='1.4'/%3E%3C/svg%3E")
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 16'%3E%3Ccircle cx='2' cy='3' r='1.4'/%3E%3Ccircle cx='2' cy='8' r='1.4'/%3E%3Ccircle cx='2' cy='13' r='1.4'/%3E%3C/svg%3E")
     )
   );
   --qti-drag-lift: var(
@@ -145,6 +145,14 @@
   --qti-drag-padding: calc(var(--qti-spacing) * 0.75) calc(var(--qti-spacing) * 1.5);
   --qti-choice-box-padding: var(--qti-drag-padding);
   --qti-glyph-gap: 0.5em;
+  --qti-grip-width: var(
+    --qc-size-drag-icon,
+    0.25em
+  ); /* the handle's box; one column of dots by default, a brand with a wider icon sets the input */
+  --qti-grip-gap: max(
+    0.375em,
+    calc(var(--qti-grip-width) * 2 / 3)
+  ); /* between the handle and the label: 0.375em for the default, 0.5em for a 0.75em icon */
   --qti-correction-size: 1em;
   --qti-correction-inset: var(--qti-gap);
   --qti-correction-gutter: calc(var(--qti-correction-inset) + var(--qti-correction-size) + var(--qti-glyph-gap));

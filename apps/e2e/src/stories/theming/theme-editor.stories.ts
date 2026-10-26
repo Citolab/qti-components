@@ -90,6 +90,7 @@ const INPUTS: Record<string, Input> = {
   chipContent: { token: '--qc-color-chip-content', control: 'color', group: 'Brand' },
   chipBorder: { token: '--qc-color-chip-border', control: 'color', group: 'Brand' },
   dragIcon: { token: '--qc-color-drag-icon', control: 'color', group: 'Brand' },
+  dragIconSize: { token: '--qc-size-drag-icon', control: 'text', group: 'Brand' },
   border: { token: '--qc-color-border', control: 'color', group: 'Brand' },
   focus: { token: '--qc-color-focus', control: 'color', group: 'Brand' },
   info: { token: '--qc-color-info', control: 'color', group: 'States' },
