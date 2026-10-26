@@ -12,8 +12,9 @@ import itemCss from '@qti-components/theme/item-css';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 /**
- * The theme editor — the tier-1 inputs (`--cito-*`, packages/qti-theme/CONTRACT.md §8) as controls,
- * and every interaction the theme paints, once, on one page.
+ * The theme editor — the tier-1 inputs (`--qc-*`, packages/qti-theme/CONTRACT.md §8; the older
+ * `--cito-*` names still work as fallbacks this major) as controls, and every interaction the
+ * theme paints, once, on one page.
  *
  * Pick a preset in the toolbar (Default, Light, Dark, Kennisnet, Cito: .storybook/themes.css), then
  * change any input in the Controls panel. A control left empty keeps the preset's value. The block
@@ -79,43 +80,42 @@ type Input = {
 };
 
 const INPUTS: Record<string, Input> = {
-  base100: { token: '--cito-color-base-100', control: 'color', group: 'Surface' },
-  baseContent: { token: '--cito-color-base-content', control: 'color', group: 'Surface' },
-  primary: { token: '--cito-color-primary', control: 'color', group: 'Brand' },
-  primaryContent: { token: '--cito-color-primary-content', control: 'color', group: 'Brand' },
-  neutral: { token: '--cito-color-neutral', control: 'color', group: 'Brand' },
-  neutralContent: { token: '--cito-color-neutral-content', control: 'color', group: 'Brand' },
-  chip: { token: '--cito-color-chip', control: 'color', group: 'Brand' },
-  chipContent: { token: '--cito-color-chip-content', control: 'color', group: 'Brand' },
-  chipBorder: { token: '--cito-color-chip-border', control: 'color', group: 'Brand' },
-  dragIcon: { token: '--cito-color-drag-icon', control: 'color', group: 'Brand' },
-  marker: { token: '--cito-color-marker', control: 'color', group: 'Brand' },
-  border: { token: '--cito-color-border', control: 'color', group: 'Brand' },
-  focus: { token: '--cito-color-focus', control: 'color', group: 'Brand' },
-  info: { token: '--cito-color-info', control: 'color', group: 'States' },
-  success: { token: '--cito-color-success', control: 'color', group: 'States' },
-  warning: { token: '--cito-color-warning', control: 'color', group: 'States' },
-  error: { token: '--cito-color-error', control: 'color', group: 'States' },
+  base100: { token: '--qc-color-base-100', control: 'color', group: 'Surface' },
+  baseContent: { token: '--qc-color-base-content', control: 'color', group: 'Surface' },
+  primary: { token: '--qc-color-primary', control: 'color', group: 'Brand' },
+  primaryContent: { token: '--qc-color-primary-content', control: 'color', group: 'Brand' },
+  neutral: { token: '--qc-color-neutral', control: 'color', group: 'Brand' },
+  neutralContent: { token: '--qc-color-neutral-content', control: 'color', group: 'Brand' },
+  chip: { token: '--qc-color-chip', control: 'color', group: 'Brand' },
+  chipContent: { token: '--qc-color-chip-content', control: 'color', group: 'Brand' },
+  chipBorder: { token: '--qc-color-chip-border', control: 'color', group: 'Brand' },
+  dragIcon: { token: '--qc-color-drag-icon', control: 'color', group: 'Brand' },
+  border: { token: '--qc-color-border', control: 'color', group: 'Brand' },
+  focus: { token: '--qc-color-focus', control: 'color', group: 'Brand' },
+  info: { token: '--qc-color-info', control: 'color', group: 'States' },
+  success: { token: '--qc-color-success', control: 'color', group: 'States' },
+  warning: { token: '--qc-color-warning', control: 'color', group: 'States' },
+  error: { token: '--qc-color-error', control: 'color', group: 'States' },
   radiusField: {
-    token: '--cito-radius-field',
+    token: '--qc-radius-field',
     control: { type: 'range', min: 0, max: 24, step: 1 },
     unit: 'px',
     group: 'Shape'
   },
   radiusSelector: {
-    token: '--cito-radius-selector',
+    token: '--qc-radius-selector',
     control: { type: 'range', min: 0, max: 24, step: 1 },
     unit: 'px',
     group: 'Shape'
   },
   radiusBox: {
-    token: '--cito-radius-box',
+    token: '--qc-radius-box',
     control: { type: 'range', min: 0, max: 32, step: 1 },
     unit: 'px',
     group: 'Shape'
   },
   borderWidth: {
-    token: '--cito-border-width',
+    token: '--qc-border-width',
     control: { type: 'range', min: 0, max: 4, step: 1 },
     unit: 'px',
     group: 'Shape'
@@ -127,20 +127,20 @@ const INPUTS: Record<string, Input> = {
     group: 'Size'
   },
   sizeSelector: {
-    token: '--cito-size-selector',
+    token: '--qc-size-selector',
     control: { type: 'range', min: 0.15, max: 0.5, step: 0.025 },
     unit: 'em',
     group: 'Size'
   },
   sizeField: {
-    token: '--cito-size-field',
+    token: '--qc-size-field',
     control: { type: 'range', min: 0, max: 0.5, step: 0.0625 },
     unit: 'rem',
     group: 'Size'
   },
-  fontFamily: { token: '--cito-font-family', control: 'text', group: 'Type' },
-  depth: { token: '--cito-depth', control: { type: 'range', min: 0, max: 1, step: 0.25 }, group: 'Feel' },
-  dragShadow: { token: '--cito-shadow-drag', control: 'text', group: 'Feel' }
+  fontFamily: { token: '--qc-font-family', control: 'text', group: 'Type' },
+  fontFamilyHeading: { token: '--qc-font-family-heading', control: 'text', group: 'Type' },
+  depth: { token: '--qc-depth', control: { type: 'range', min: 0, max: 1, step: 0.25 }, group: 'Feel' }
 };
 
 type Args = Partial<Record<keyof typeof INPUTS, string | number>>;
@@ -237,7 +237,82 @@ const showFeedback = (root: ShadowRoot) => {
   }
 };
 
+/* Plain author prose, as an item body carries it: what the reading font, the heading font and the
+   text colour do, and what the theme leaves to the browser (lists, emphasis, a table). */
+const prose = card(
+  'Prose',
+  html`<h3>De waterkringloop</h3>
+    <p>
+      Water verdampt uit <strong>zeeën en meren</strong>, stijgt op als waterdamp en koelt af tot <em>wolken</em>.
+      Daarna valt het als neerslag terug op aarde.
+    </p>
+    <ul>
+      <li>verdamping</li>
+      <li>condensatie</li>
+      <li>neerslag</li>
+    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Fase</th>
+          <th>Temperatuur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Verdamping</td>
+          <td>boven 0 °C</td>
+        </tr>
+        <tr>
+          <td>Condensatie</td>
+          <td>onder het dauwpunt</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="qti-fullwidth qti-bordered">
+      <caption>
+        Gemiddelde neerslag in De Bilt
+      </caption>
+      <thead>
+        <tr>
+          <th class="qti-align-right">Maand</th>
+          <th class="qti-align-left">Neerslag (mm)</th>
+          <th class="qti-align-left">Dagen met neerslag</th>
+          <th class="qti-align-center">Natste maand</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="qti-align-right">januari</td>
+          <td class="qti-align-left">70,1</td>
+          <td class="qti-align-left">18</td>
+          <td class="qti-align-center"></td>
+        </tr>
+        <tr>
+          <td class="qti-align-right">april</td>
+          <td class="qti-align-left">41,4</td>
+          <td class="qti-align-left">13</td>
+          <td class="qti-align-center"></td>
+        </tr>
+        <tr>
+          <td class="qti-align-right">juli</td>
+          <td class="qti-align-left">85,2</td>
+          <td class="qti-align-left">15</td>
+          <td class="qti-align-center">✓</td>
+        </tr>
+        <tr>
+          <td class="qti-align-right">oktober</td>
+          <td class="qti-align-left">82,8</td>
+          <td class="qti-align-left">17</td>
+          <td class="qti-align-center"></td>
+        </tr>
+      </tbody>
+    </table>`,
+  true
+);
+
 const answered = [
+  prose,
   card(
     'Choice',
     html`<qti-choice-interaction response-identifier="R" max-choices="1" response="xenon"

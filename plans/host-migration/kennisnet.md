@@ -228,9 +228,51 @@ allow one attempt need nothing.
   lock never fires there.
   Evidence: from the Formative test docs page, not from Kennisnet's source; not run
 
+### One vocabulary for parts and states (feat/parts-states-vocabulary)
+
+Status: breaking in the next major; old names still set in this one
+Members: `:state(drag)`, `::part(drag)`, `:state(dragging)`, `:state(candidate-partially-correct)`,
+`::part(correction-correct|-incorrect|-partially-correct)`, `[data-drag-clone]`
+Do: read the new names from qti-theme `CONTRACT.md` §3 and move the selectors in `draggables.ts`,
+`match-interaction.scss`, `gap-match-interaction.scss` and `buttons.scss` (entries 2.2 and 2.3 of the
+9.x guide): chips `:state(chip)`, dropped chips `::part(chip)`, while dragging `:state(lifted)`, a
+used-up bank chip `:state(used)`, a target under the chip `:state(drag-over)` or `::part(drop drag-over)`,
+a full target `:state(full)` / `::part(drop full)`; verdicts `:state(candidate-correct)`,
+`:state(candidate-incorrect)`, `:state(candidate-partial)` and the badge
+`::part(correction candidate-correct)` etc.; the answer key `:state(answer-key)` on a choice in the key and on the
+full-mode clone (was `correct-response` and the `.full-correct-response` class), `:state(answer-key-shown)` on an
+interaction showing its key inline (was `show-correct-response`). `[data-drag-clone]`
+is unchanged. The old names keep working until the next major.
+Evidence: read from `draggables.ts:17-78`, `buttons.scss:183-228`, not run
+
+### Theme inputs renamed `--qc-*`; buttons read `--button-*` (feat/parts-states-vocabulary)
+
+Status: recommended; old names read as fallbacks for one major
+Members: `--cito-*` (the 9.x guide's token list), `--test-button-*`, `--qti-spacing`, `--qti-motion`
+Do: rename `--cito-x` to `--qc-x` in the brand block (same names after the prefix); `--qti-spacing` and
+`--qti-motion` become `--qc-spacing` and `--qc-motion`; `--test-button-*` on the test controls becomes
+`--button-*` (the end-attempt and upload buttons read the same slots). Nothing breaks until the next
+major: the theme reads `--qc-x` first and `--cito-x` second. The `--qti-*` tokens listed as "still the
+same" in the 9.x guide are internal from now on (CONTRACT §11): read `--qc-*`, parts and states, and
+put host CSS in `test-container`'s `<template><style>` (the supported replacement for injecting a
+sheet into its shadow root, `player.ts:189-226`).
+Gone, not aliased: `--cito-color-well` (a well is the surface colour; paint `.qti-well` for another),
+`--cito-shadow-drag`, `--cito-color-marker`.
+Evidence: read from `qti-vars.scss`, `icon-mask-css-vars.ts`, `player.ts`, not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.
 - Shadow DOM patching (`player.ts:189-226`, `qti/item/*.ts`, `draggables.ts:65`) and internal class
   names (`.full-correct-response`, `span.correct-option`, `part~="point"`) are internal and may
   change in a minor. The styling tier in `plans/public-api.md` tracks a supported replacement.
+
+### Public events renamed `qc-*` (feat/parts-states-vocabulary)
+
+Status: breaking for the 7.x names; `cito-*` deprecated, still sent for one major
+Members: `qti-request-navigation`, `on-test-switch-view`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-assessment-item-ref-connected`, `qti-interaction-changed`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`
+Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-navigate`, `cito-test-rendered` →
+`qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
+names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-request-navigation`, `on-test-switch-view`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-assessment-item-ref-connected`, `qti-interaction-changed`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`) are no
+longer sent or handled: every listener or dispatch on one of them (the 9.x guide, entries on events) moves to its `qc-*` name in the same upgrade.
+Evidence: read from the event rows of `plans/public-api.md` (K), not run

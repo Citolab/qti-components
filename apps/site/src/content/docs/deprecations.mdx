@@ -17,11 +17,11 @@ How you are told:
 
 ## Removed in the next major release
 
-| Deprecated                                           | Use instead                                          | Console warning |
-| ---------------------------------------------------- | ---------------------------------------------------- | --------------- |
-| `test-navigation.qtiContext`                         | `qtiTest.qtiContext`: the same value, same behaviour | yes, on write   |
-| `qti-test-context-updated` event                     | `qti-state-changed`, and `qtiTest.state` to restore  | no              |
-| `SessionContext.navItemLoading` and `navTestLoading` | nothing: the library never set them                  | no              |
+| Deprecated                                           | Use instead                                             | Console warning |
+| ---------------------------------------------------- | ------------------------------------------------------- | --------------- |
+| `test-navigation.qtiContext`                         | `qtiTest.qtiContext`: the same value, same behaviour    | yes, on write   |
+| `qti-test-context-updated` event                     | `qc-test-state-changed`, and `qtiTest.state` to restore | no              |
+| `SessionContext.navItemLoading` and `navTestLoading` | nothing: the library never set them                     | no              |
 
 `test-navigation.qtiContext` is an alias today: it reads and writes the enclosing `qti-test`'s
 value, so setting the shuffle seed there keeps working. See [Persist & restore](/qti-test/persist-and-restore/).
@@ -33,7 +33,7 @@ These are decided but not deprecated in code yet, so nothing warns about them.
 | Planned                                                                | Replacement                                              |
 | ---------------------------------------------------------------------- | -------------------------------------------------------- |
 | `sessionContext.view`                                                  | `view` in the config, mirrored until the old one goes    |
-| Dispatching `on-test-switch-view` and `test-show-candidate-correction` | a `view` property and a `showCandidateCorrection` method |
+| Dispatching `qc-test-switch-view` and `test-show-candidate-correction` | a `view` property and a `showCandidateCorrection` method |
 
 ## Deprecated, no removal date
 

@@ -29,15 +29,18 @@ reads from its own version downward.
 
 ## Changes that hit every host
 
-| Change                                                                                                                                                         | Since             | Status                            |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | --------------------------------- |
-| `qtiTest.state` + `qti-state-changed`                                                                                                                          | PR #225           | recommended                       |
-| Public test events renamed `cito-*`; new `cito-test-navigated`                                                                                                 | PR #285           | recommended, old names sent       |
-| `qti-test-context-updated`, `SessionContext.navItemLoading` / `navTestLoading`                                                                                 | PR #225           | deprecated, removed in next major |
-| Restored template values are kept                                                                                                                              | PR #226           | behaviour change                  |
-| Session context labelled `sessionContext`                                                                                                                      | PR #227           | devtools only                     |
-| Interactions, feedback and `readonly` follow the item context; `qti-register-feedback` removed                                                                 | PR #228           | behaviour change                  |
-| Tier-1 theme tokens (`--cito-color-*`, `--cito-radius-*`, `--cito-size-*`, `--cito-border-width`, `--cito-font-family`, `--cito-depth`); old names are aliases | feat/theme-tokens | recommended                       |
+| Change                                                                                                                                                         | Since                        | Status                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ---------------------------------------- |
+| `qtiTest.state` + `qti-state-changed`                                                                                                                          | PR #225                      | recommended                              |
+| Public test events renamed `cito-*`; new `cito-test-navigated`                                                                                                 | PR #285                      | recommended, old names sent              |
+| Public events renamed `qc-*`; `cito-*` still sent for one major; the 7.x names (`qti-request-navigation`, `test-end-attempt`, …) are gone                      | feat/parts-states-vocabulary | breaking (7.x names), aliases now        |
+| `qti-test-context-updated`, `SessionContext.navItemLoading` / `navTestLoading`                                                                                 | PR #225                      | deprecated, removed in next major        |
+| Restored template values are kept                                                                                                                              | PR #226                      | behaviour change                         |
+| Session context labelled `sessionContext`                                                                                                                      | PR #227                      | devtools only                            |
+| Interactions, feedback and `readonly` follow the item context; `qti-register-feedback` removed                                                                 | PR #228                      | behaviour change                         |
+| Tier-1 theme tokens (`--cito-color-*`, `--cito-radius-*`, `--cito-size-*`, `--cito-border-width`, `--cito-font-family`, `--cito-depth`); old names are aliases | feat/theme-tokens            | recommended                              |
+| One vocabulary for parts and states (qti-theme `CONTRACT.md` §3); old names still set                                                                          | feat/parts-states-vocabulary | breaking in next major, aliases now      |
+| Theme inputs `--cito-*` → `--qc-*`, `--test-button-*` → `--button-*`, `qti-variables.css` internal; CONTRACT §11 is the override contract                      | feat/parts-states-vocabulary | recommended, old names read as fallbacks |
 
 ## Changes that hit one host
 

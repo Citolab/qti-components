@@ -206,3 +206,35 @@ computed context (or `itemContext.valid` on the item).
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.
 - Deep shadow queries (39 `shadowRoot` uses) and `internals.states` reads in the admin stats are
   internal and may change in a minor.
+
+### One vocabulary for parts and states (feat/parts-states-vocabulary)
+
+Status: breaking in the next major; old names still set in this one
+Members: `::part(button)`, `internals.states` (stats)
+Do: `::part(button)` is unchanged. Where the stats code reads `internals.states` of a choice or chip,
+the names it will see are the new ones from qti-theme `CONTRACT.md` §3 (`chip`, `lifted`, `used`,
+`candidate-partial`, `answer-key`) next to the old ones; read the new ones. Any own CSS on
+`::part(drag)`, `::part(drags)` or `::part(correction-*)` moves to `::part(chip)`, `::part(bank)`,
+`::part(correction candidate-correct)`.
+Evidence: read from `AssessmentPlayerView.tsx`, `ttsControls.ts`, not run
+
+### Public events renamed `qc-*` (feat/parts-states-vocabulary)
+
+Status: breaking for the 7.x names; `cito-*` deprecated, still sent for one major
+Members: `qti-request-navigation`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-interaction-changed`, `qti-outcome-changed`, and the `cito-test-navigation-started` listener
+Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-navigate`, `cito-test-rendered` →
+`qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
+names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-request-navigation`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-interaction-changed`, `qti-outcome-changed`) are no
+longer sent or handled: the navigation fallback that dispatches `qti-request-navigation` and the loading spinner on `qti-navigation-loading-started` move to `qc-test-navigate` and `qc-test-navigation-started` in the same upgrade; `cito-test-navigation-started` keeps working until then.
+Evidence: read from the event rows of `plans/public-api.md` (C), not run
+
+### Theme inputs renamed `--qc-*`; buttons read `--button-*` (feat/parts-states-vocabulary)
+
+Status: recommended; old names read as fallbacks for one major
+Members: `--test-button-*` (`ttsControls.ts:28-39`), `::part(button)`
+Do: the seven `--test-button-*` values on `test-item-to-speech` become `--button-*` (`--button-size`,
+`--button-border-color`, `--button-background-color`, `--button-color`,
+`--button-hover-background-color`, `--button-selected-background-color`, `--button-selected-color`);
+the selected TTS button also carries `:state(selected)`. `::part(button)` is unchanged. Brand colours,
+when the player sets any, go in `--qc-*` on `:root` (CONTRACT §8, §11).
+Evidence: read from `ttsControls.ts:28-55`, not run

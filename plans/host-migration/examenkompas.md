@@ -132,3 +132,31 @@ computed context (or `itemContext.valid` on the item).
 - `apps/functions/src/app-specific/examenkompas.ts:339-341`: the report's `completed` feeds
   `toetsVolledigBeantwoord`.
   Evidence: read, not run
+
+### One vocabulary for parts and states (feat/parts-states-vocabulary)
+
+Status: breaking in the next major; old names still set in this one
+Members: `::part(textarea)`, `::part(input)`, `::part(trigger)`
+Do: these three are unchanged. Any own CSS on drag chips, verdict badges or the answer key moves to the
+names in qti-theme `CONTRACT.md` §3 (`::part(chip)`, `::part(bank)`, `::part(correction candidate-correct)`,
+`:state(answer-key)`); the old names keep working until the next major.
+Evidence: read from `assessment.tsx:1063-1071`, not run
+
+### Public events renamed `qc-*` (feat/parts-states-vocabulary)
+
+Status: breaking for the 7.x names; `cito-*` deprecated, still sent for one major
+Members: `qti-interaction-changed`, `qti-outcome-changed`
+Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-navigate`, `cito-test-rendered` →
+`qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
+names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-interaction-changed`, `qti-outcome-changed`) are no
+longer sent or handled: the answer and score listeners in `assessment.tsx` move to `qc-item-response-changed` and `qc-item-outcome-changed` (same `detail`) in the same upgrade.
+Evidence: read from the event rows of `plans/public-api.md` (examenkompas), not run
+
+### Theme inputs renamed `--qc-*`; buttons read `--button-*` (feat/parts-states-vocabulary)
+
+Status: recommended; old names read as fallbacks for one major
+Members: `::part(textarea)`, `::part(input)`, `::part(trigger)`; the Tailwind classes on `test-next` / `test-prev`
+Do: nothing breaks. The controls keep their classes and `::part(button)`; a brand look for the items
+is a block of `--qc-*` values on `:root` (CONTRACT §8), and any CSS on parts or states goes in
+`test-container`'s `<template><style>` (CONTRACT §11).
+Evidence: read from `assessment.tsx:1063-1071`, not run

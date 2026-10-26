@@ -10,7 +10,7 @@ our code happens to do. They are allowed to fail: a failing story is a to-do for
 Two things are kept apart from now on:
 
 - **QTI behaviour**: what the spec says, cited by section. The reader is a test constructor.
-- **Our own API**: `processResponse(countNumAttempts)`, `auto-score-items`, `cito-item-set-outcomes`,
+- **Our own API**: `processResponse(countNumAttempts)`, `auto-score-items`, `qc-item-set-outcomes`,
   `optimal`/`done`, restore through `variables`, … The reader is a host developer. These stories
   exist and stay, but never in the same file as a QTI behaviour story. Reviewing them for conflicts
   with QTI is a later step (see "Fixes that fall out").
@@ -106,7 +106,7 @@ Set aside, not in the branch (still uncommitted in the root checkout on `next`, 
 - **Attempts lock**: `test-navigation` disables an item once its attempts are used. It breaks
   `docs/formative-test.stories.ts`: that demo keeps the package plain (default `max-attempts` 1) and
   lets the candidate check again, as Kennisnet does. Open decision.
-- **Feedback events** (`cito-feedback-show` / `cito-feedback-hide`): written against the old
+- **Feedback events** (`qc-feedback-show` / `qc-feedback-hide`): written against the old
   processing, where a repeat attempt reset the outcome first. Since `66e61155` the item publishes
   once, so the spec "asks again on a repeat attempt … turns off and on" fails and the changeset
   text is wrong. Needs rework on top of this branch.

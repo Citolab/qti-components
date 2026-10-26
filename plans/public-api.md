@@ -100,12 +100,12 @@ Status: **S** supported (document + contract story), **D** deprecated (keep unti
 
 ### Styling tier: currently missing
 
-| What hosts do today                                                                    | Hosts                                                     | Status                                            |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------- |
-| inject a stylesheet into `test-container.shadowRoot`                                   | K (`player.ts:189-226`)                                   | **I**; need a supported way to theme              |
-| patch interaction shadow DOM (icons, info text), MutationObservers on our shadow roots | K (`qti/item/*.ts`), C (deep query, 39 `shadowRoot` uses) | **I**                                             |
-| read `internals.states` / set `internals.ariaChecked`                                  | K (`draggables.ts:65`), C (stats)                         | **I**                                             |
-| internal class names `.full-correct-response`, `span.correct-option`, `part~="point"`  | K                                                         | **I** unless promoted to `::part` / custom states |
+| What hosts do today                                                                    | Hosts                                                     | Status                                                                                                                                                  |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| inject a stylesheet into `test-container.shadowRoot`                                   | K (`player.ts:189-226`)                                   | **I**; need a supported way to theme                                                                                                                    |
+| patch interaction shadow DOM (icons, info text), MutationObservers on our shadow roots | K (`qti/item/*.ts`), C (deep query, 39 `shadowRoot` uses) | **I**                                                                                                                                                   |
+| read `internals.states` / set `internals.ariaChecked`                                  | K (`draggables.ts:65`), C (stats)                         | **I**                                                                                                                                                   |
+| internal class names `.full-correct-response`, `span.correct-option`, `part~="point"`  | K                                                         | **S** as `:state(answer-key)`, `::part(correction …)`, `::part(point …)` (CONTRACT §3); the class names stay **I**. See host-migration/kennisnet.mdates |
 
 ### Plugin tier: test plugins
 
@@ -200,40 +200,52 @@ The name of an event says whether it is public. Today `qti-` covers both plumbin
 and `test-`/`item-` are used by elements and by internal or deprecated requests
 (`test-show-correct-response`, `item-switch-view`), so neither prefix tells you.
 
-- **Public events use one prefix that nothing else uses.** Decided: `cito-`, in line with the
-  namespace policy (`qti-` belongs to 1EdTech; ours are `cito-`). The scope follows the prefix:
-  `cito-test-*`, `cito-item-*`. Alternatives considered: `test-`/`item-` (shares the prefix with
+- **Public events use one prefix that nothing else uses.** Decided: `qc-` (qti-components), in line
+  with the namespace policy (`qti-` belongs to 1EdTech). 9.x used `cito-`; since 2026-10-26 the
+  `cito-*` names are deprecated aliases, sent and handled for one major. The scope follows the
+  prefix: `qc-test-*`, `qc-item-*`. Alternatives considered: `test-`/`item-` (shares the prefix with
   element tags and internal requests).
 - **Everything else is internal** and keeps its name (`qti-*`, `register-*`, `activate-*`, …).
   Internal names may change in any release and are not documented.
 - **Public is checkable, not only a convention:** one module declares the public events (name,
-  `detail` type, scope, kind) and augments `HTMLElementEventMap`; a spec fails when a `cito-` event
+  `detail` type, scope, kind) and augments `HTMLElementEventMap`; a spec fails when a `qc-` event
   is dispatched that is not in it, or a declared one is removed.
 - **Requests are verbs, notifications are past tense.** All public events bubble and are composed.
   No `on-` prefix (frameworks read `on` as a handler prefix) and no `:` (Angular reads `(a:b)` as a
   target).
 
-| Today                                             | Public name                                                | Kind         | Hosts                  | Path                                                                       |
-| ------------------------------------------------- | ---------------------------------------------------------- | ------------ | ---------------------- | -------------------------------------------------------------------------- |
-| `qti-request-navigation` `{type,id}`              | `cito-test-navigate`                                       | request      | K, C, P, Playground, … | old name **D**, both handled until the next major                          |
-| `test-end-attempt`                                | `cito-test-end-attempt`                                    | request      | —                      | old name **D**, both handled: no host uses it, but topic pages document it |
-| `test-update-outcome-variable`                    | `cito-test-update-outcome`                                 | request      | —                      | old name **D**, both handled: no host uses it, but topic pages document it |
-| `on-test-switch-view`                             | `cito-test-switch-view`                                    | request      | K, C, Playground, …    | old name **D**; decision 6 adds the `view` property too                    |
-| — (new)                                           | `cito-test-navigated` `{type,id}`                          | notification | —                      | new                                                                        |
-| `qti-navigation-loading-started`                  | `cito-test-navigation-started`                             | notification | C, Playground          | old name **D**, both sent                                                  |
-| `qti-navigation-error`                            | `cito-test-navigation-failed`                              | notification | Playground             | old name **D**, both sent                                                  |
-| `qti-navigation-loading-ended`                    | — (use navigated / failed)                                 | —            | Playground             | **D**: it also fires on failure and cancellation                           |
-| `qti-test-loaded` `[{identifier,element}]`        | `cito-test-rendered`                                       | notification | K, C, P, Playground, … | old name **D**, both sent                                                  |
-| `qti-assessment-test-connected`                   | `cito-test-loaded`                                         | notification | all                    | old name **D**, both sent                                                  |
-| `qti-assessment-item-connected`                   | `cito-item-rendered`                                       | notification | all                    | old name stays as internal plumbing; **D** for hosts                       |
-| `qti-assessment-item-ref-connected`               | `cito-item-ref-connected`                                  | notification | K                      | old name **D**, both sent                                                  |
-| `qti-state-changed`                               | `cito-test-state-changed`                                  | notification | —                      | old name **D**, both sent                                                  |
-| `qti-interaction-changed` / `qti-outcome-changed` | `cito-item-response-changed` / `cito-item-outcome-changed` | notification | K, C, P, examenkompas  | old names **D**, both sent; on `next` also `cito-item-outcomes-changed`    |
-| `qti-rubric:discretionary-placement`              | `cito-item-rubric-placement`                               | notification | K, qti-player          | old name **D**, both sent                                                  |
-| `qti-test-context-updated`                        | —                                                          | —            | K, C                   | stays **D** (decision 8); no new name                                      |
+| 7.x name (removed)                                | Public name                                            | Deprecated alias (9.x, sent and handled for one major)     | Kind                  | Hosts                  |
+| ------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------- | --------------------- | ---------------------- |
+| `qti-request-navigation` `{type,id}`              | `qc-test-navigate`                                     | `cito-test-navigate`                                       | request               | K, C, P, Playground, … |
+| `test-end-attempt`                                | `qc-test-end-attempt`                                  | `cito-test-end-attempt`                                    | request               | —                      |
+| `test-update-outcome-variable`                    | `qc-test-update-outcome`                               | `cito-test-update-outcome`                                 | request               | —                      |
+| `on-test-switch-view`                             | `qc-test-switch-view`                                  | `cito-test-switch-view`                                    | request               | K, C, Playground, …    |
+| —                                                 | `qc-test-submit`                                       | `cito-test-submit`                                         | request               | —                      |
+| —                                                 | `qc-test-update-plugin-state`                          | `cito-test-update-plugin-state`                            | request               | —                      |
+| —                                                 | `qc-test-submitted`                                    | `cito-test-submitted`                                      | notification          | —                      |
+| —                                                 | `qc-test-navigated` `{type,id}`                        | `cito-test-navigated`                                      | notification          | —                      |
+| `qti-navigation-loading-started`                  | `qc-test-navigation-started`                           | `cito-test-navigation-started`                             | notification          | C, Playground          |
+| `qti-navigation-error`                            | `qc-test-navigation-failed`                            | `cito-test-navigation-failed`                              | notification          | Playground             |
+| `qti-navigation-loading-ended`                    | — (use navigated / failed)                             | —                                                          | —                     | Playground             |
+| `qti-test-loaded` `[{identifier,element}]`        | `qc-test-rendered`                                     | `cito-test-rendered`                                       | notification          | K, C, P, Playground, … |
+| `qti-assessment-test-connected`                   | `qc-test-loaded`                                       | `cito-test-loaded`                                         | notification          | all                    |
+| —                                                 | `qc-test-items-skipped`, `qc-test-end-reached`         | `cito-test-items-skipped`, `cito-test-end-reached`         | notification          | —                      |
+| `qti-assessment-item-connected`                   | `qc-item-rendered`                                     | `cito-item-rendered`                                       | notification          | all                    |
+| `qti-assessment-item-ref-connected`               | `qc-item-ref-connected`                                | `cito-item-ref-connected`                                  | notification          | K                      |
+| `qti-state-changed`                               | `qc-test-state-changed`                                | `cito-test-state-changed`                                  | notification          | —                      |
+| `qti-interaction-changed` / `qti-outcome-changed` | `qc-item-response-changed` / `qc-item-outcome-changed` | `cito-item-response-changed` / `cito-item-outcome-changed` | notification          | K, C, P, examenkompas  |
+| —                                                 | `qc-item-outcomes-changed`, `qc-item-set-outcomes`     | `cito-item-outcomes-changed`, `cito-item-set-outcomes`     | notification, request | —                      |
+| `qti-rubric:discretionary-placement`              | `qc-item-rubric-placement`                             | `cito-item-rubric-placement`                               | notification          | K, qti-player          |
+| —                                                 | `qc-feedback-show`, `qc-feedback-hide`                 | `cito-feedback-show`, `cito-feedback-hide`                 | notification          | —                      |
+| `qti-test-context-updated`                        | —                                                      | —                                                          | —                     | K, C                   |
 
-"Both sent / both handled" means one helper dispatches (or listens for) the old and the new name
-for one minor; the old name goes in the next major, with `plans/host-migration/*` entries.
+`qti-assessment-item-connected` stays as internal plumbing next to `qc-item-rendered`;
+`qti-test-context-updated` stays deprecated (decision 8) with no new name. `qti-navigation-loading-ended`
+also fires on failure and cancellation, hence no replacement.
+
+One helper (`dispatchPublic` / `listenPublic`) dispatches, or listens for, the `qc-*` name and its
+`cito-*` alias for one major; the alias goes in the major after, with `plans/host-migration/*` entries.
+The 7.x names in the first column were the aliases of 9.x and are no longer sent or handled.
 
 ## Decisions and gaps
 
