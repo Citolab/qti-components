@@ -5,10 +5,10 @@
  * so they mean the same thing everywhere and are styled once here instead of being copied
  * into each interaction's stylesheet.
  *
- * Per-interaction states (`checked`, `radio`, `dragzone-active`, …) stay in their own files.
+ * Per-interaction states (`checked`, `radio`, `drag-active`, …) stay in their own files.
  *
  * The chip vocabulary used to live here too — one unscoped rule giving `@mixin drag` and `@mixin
- * grip` to every `:state(drag)` element and every floating clone. It is now declared once per
+ * grip` to every `:state(chip)` element and every floating clone. It is now declared once per
  * drag-drop interaction, in that interaction's own file (gap-match, order, associate, match), still
  * in this `global` layer so the cascade is unchanged.
  *
@@ -20,17 +20,26 @@
  * graphic-gap-match simply never states one, and there is no exception to write down anywhere.
  */
 ::part(message) {
-  @mixin validation-message;
+  color: var(--qti-fg);
+  background-color: color-mix(in oklab, var(--qti-warning) 5%, var(--qti-bg));
+  padding: var(--qti-padding-box);
+  border: var(--qti-border-thickness) solid var(--qti-warning);
+  border-radius: var(--qti-radius-box);
+  margin-top: var(--qti-gap);
 }
 
 /*
- * The interaction is presenting the answer key rather than the candidate's own response.
- * Set on the interaction host by `Interaction.toggleInternalCorrectResponse`.
+ * The interaction shows its answer key inline, next to the candidate's own response:
+ * `answer-key-shown`, set on the interaction host by `toggleInternalCorrectResponse` (the old
+ * `show-correct-response`). Not `answer-key`: that is what the full-mode clone IS.
  *
  * Reaches the host wherever that base implementation runs, which is more than it looks: besides
  * `qti-extended-text-interaction`, both `ChoiceCorrectionMixin` and most per-interaction overrides
  * call `super`, so choice, hottext, select-point, slider, graphic-order and the rest set the host
- * state AND mark their individual choices with `correct-response` / `incorrect-response`.
+ * state AND mark their individual choices in the key with the same `answer-key` state. The choice's
+ * mark is painted per interaction; this outline is the host's alone, hence the host list: one name
+ * for both (CONTRACT.md §3) means a bare `:state(answer-key)` would ring every key choice too;
+ * `:where()` keeps the bare rule's specificity.
  *
  * Three do not, and so never paint this outline: the drag-drop mixin replaces the implementation
  * outright, and the two inline interactions — text-entry and inline-choice — hand internal mode to
@@ -41,7 +50,23 @@
  * paint. If the double indication ever reads as too much, the fix is here or in the mixin, not
  * a display value.
  */
-:state(show-correct-response) {
+:where(
+    qti-choice-interaction,
+    qti-hottext-interaction,
+    qti-inline-choice-interaction,
+    qti-text-entry-interaction,
+    qti-extended-text-interaction,
+    qti-gap-match-interaction,
+    qti-order-interaction,
+    qti-associate-interaction,
+    qti-match-interaction,
+    qti-hotspot-interaction,
+    qti-graphic-order-interaction,
+    qti-graphic-associate-interaction,
+    qti-graphic-gap-match-interaction,
+    qti-select-point-interaction,
+    qti-slider-interaction
+  ):state(answer-key-shown) {
   outline: var(--qti-border-thickness) dashed var(--qti-correct);
   outline-offset: 0.25rem;
 }

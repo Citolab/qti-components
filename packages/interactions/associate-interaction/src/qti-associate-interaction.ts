@@ -27,11 +27,15 @@ const SlottedBase = DragDropSlottedMixin(
  * @slot prompt - The prompt shown above the choices.
  * @slot qti-simple-associable-choice - The associable choice sources.
  *
- * @csspart drags - Wrapper around the associable choice slot.
+ * @csspart bank - The slot holding the unplaced chips (was `drags`).
  * @csspart drops - The container holding all drop targets.
- * @csspart drop-row - Container for one left/right drop pair.
- * @csspart drop - Each individual drop target.
+ * @csspart row - One left/right drop pair (was `drop-row`).
+ * @csspart drop - Each individual drop target. Tokens: `filled`, `full`, `drag-active`, `drag-over`
+ *   (a plain div cannot carry `:state()`, so the state names are part tokens here).
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
 export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
@@ -137,13 +141,13 @@ export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(Slotte
 
   override render() {
     return html` <slot name="prompt"></slot>
-      <slot part="drags" name="qti-simple-associable-choice"></slot>
+      <slot part="bank drags" name="qti-simple-associable-choice"></slot>
       <div part="drops">
         ${this._childrenMap.length > 0 &&
         Array.from(
           { length: this.#rowCount },
           (_, index) =>
-            html`<div part="drop-row">
+            html`<div part="row drop-row">
               ${this.#renderDrop(`droplist${index}_left`, `left${index}`)}
               ${this.#renderDrop(`droplist${index}_right`, `right${index}`)}
             </div>`

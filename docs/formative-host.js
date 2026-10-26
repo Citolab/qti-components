@@ -78,11 +78,11 @@ export function startFormativeTest(
     }
   };
 
-  test.addEventListener('cito-test-loaded', event => {
+  test.addEventListener('qc-test-loaded', event => {
     itemIds = [...event.detail.querySelectorAll('qti-assessment-item-ref')].map(ref => ref.identifier);
     render();
   });
-  test.addEventListener('cito-test-state-changed', event => {
+  test.addEventListener('qc-test-state-changed', event => {
     state = event.detail;
     save();
     render();
@@ -91,7 +91,7 @@ export function startFormativeTest(
     item = event.detail;
     render();
   });
-  test.addEventListener('qti-interaction-changed', () => {
+  test.addEventListener('qc-item-response-changed', () => {
     if (checks(current()) === 0) return;
     changed.add(current());
     save();
@@ -101,7 +101,7 @@ export function startFormativeTest(
   part('check').addEventListener('click', () => {
     changed.delete(current());
     // Ends the attempt: the item is scored and its numAttempts goes up, which arrives as a state change.
-    navigation.dispatchEvent(new CustomEvent('cito-test-end-attempt', { bubbles: true, composed: true }));
+    navigation.dispatchEvent(new CustomEvent('qc-test-end-attempt', { bubbles: true, composed: true }));
   });
   part('previous').addEventListener('click', () => test.navigateTo('item', itemIds[itemIds.indexOf(current()) - 1]));
   part('next').addEventListener('click', () => {

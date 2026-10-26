@@ -154,11 +154,11 @@ export const TabularAardrijkskunde = {
         time-dependent="false"
         label="3297cq"
          ${ref(testRef)}
-              @qti-interaction-changed="${(e: { detail: any }) => {
+              @qc-item-response-changed="${(e: { detail: any }) => {
                 testRef?.value?.processResponse();
                 action(JSON.stringify(e.detail))();
               }}"
-      @qti-outcome-changed="${(e: { detail: any }) => {
+      @qc-item-outcome-changed="${(e: { detail: any }) => {
         action(JSON.stringify(e.detail))();
       }}"
         xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"

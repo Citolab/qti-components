@@ -1,11 +1,6 @@
 import type { InteractionChangedDetails } from './../event-types';
 
+/** The detail of `qc-item-response-changed`; `qti-interaction-changed` is no longer sent. */
 export type QtiInteractionChanged = CustomEvent<InteractionChangedDetails>;
-
-declare global {
-  interface GlobalEventHandlersEventMap {
-    'qti-interaction-changed': QtiInteractionChanged;
-  }
-}
 
 export default QtiInteractionChanged;

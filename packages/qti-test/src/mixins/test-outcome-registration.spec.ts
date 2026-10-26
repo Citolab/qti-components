@@ -11,7 +11,7 @@ import type { QtiTest } from '../components/qti-test/qti-test';
  *
  * Those declarations are children of `qti-assessment-test`, so they connect —
  * and register — before the test element itself announces
- * `qti-assessment-test-connected`. Anything that resets the test context on
+ * `qc-test-loaded`. Anything that resets the test context on
  * that announcement therefore throws their registrations away, and every later
  * read of a test-level outcome finds nothing declared.
  */

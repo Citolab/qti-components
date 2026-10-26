@@ -111,8 +111,7 @@
 @layer qti-components.interactions.corrections {
   qti-hottext-interaction {
     qti-hottext {
-      &:state(correct-response),
-      &[data-correct-response='true'] {
+      &:state(answer-key) {
         &::after {
           content: '\02714';
           color: var(--qti-correct);
@@ -144,10 +143,11 @@
     }
   }
 
-  .full-correct-response qti-hottext-interaction.qti-input-control-hidden qti-hottext:state(checked),
-  .full-correct-response qti-hottext-interaction.qti-unselected-hidden qti-hottext:state(checked),
-  .full-correct-response
-    qti-hottext-interaction:not(.qti-input-control-hidden, .qti-unselected-hidden)
+  /* The answer-key clone: `answer-key` on the cloned host (CorrectResponseMixin), where the
+     `.full-correct-response` wrapper class used to be read. */
+  qti-hottext-interaction.qti-input-control-hidden:state(answer-key) qti-hottext:state(checked),
+  qti-hottext-interaction.qti-unselected-hidden:state(answer-key) qti-hottext:state(checked),
+  qti-hottext-interaction:not(.qti-input-control-hidden, .qti-unselected-hidden):state(answer-key)
     qti-hottext:state(checked) {
     @mixin answer;
 

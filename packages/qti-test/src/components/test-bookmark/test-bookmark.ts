@@ -125,7 +125,7 @@ export class TestBookmark extends LitElement {
     const marked = bookmarkedItems(this.computedContext);
     const next = marked.includes(active) ? marked.filter(id => id !== active) : [...marked, active];
     // An empty list removes the entry, so a test nobody bookmarked keeps no trace in the state.
-    dispatchPublic(this, 'cito-test-update-plugin-state', {
+    dispatchPublic(this, 'qc-test-update-plugin-state', {
       plugin: 'bookmarks',
       value: next.length > 0 ? next : null
     });

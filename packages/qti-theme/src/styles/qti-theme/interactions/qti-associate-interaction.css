@@ -15,24 +15,24 @@
    part, no attribute — could style it.
 
    This interaction is the one that needed the global rule most: every `@mixin drag` further down
-   targets `::part(drag)`, the PLACED chip, so the light-DOM bank chip drew its fill, radius, cursor
+   targets `::part(chip)`, the PLACED chip, so the light-DOM bank chip drew its fill, radius, cursor
    and text colour from the removed rule and nothing else. Deleting that rule without this block
    turned the associate bank chips transparent, square and un-grabbable — measured, not guessed. */
 @layer qti-components.global {
-  qti-associate-interaction :state(drag),
+  qti-associate-interaction :state(chip),
   [data-drag-clone][data-drag-interaction='qti-associate-interaction'] {
     @mixin drag;
   }
 
-  /* The bank chip's own ring. The rules below ring only the PLACED chip (::part(drag)), so a bank
+  /* The bank chip's own ring. The rules below ring only the PLACED chip (::part(chip)), so a bank
      chip reached with Tab showed the browser's ring instead of the theme's. */
-  qti-associate-interaction :state(drag):focus:not(:state(placeholder), :active) {
+  qti-associate-interaction :state(chip):focus:not(:state(used), :active) {
     @mixin foc;
   }
 
-  qti-associate-interaction :state(drag)::part(control)::before,
-  qti-associate-interaction::part(drag-control)::before,
-  qti-associate-interaction ::part(drag-control)::before,
+  qti-associate-interaction :state(chip)::part(control)::before,
+  qti-associate-interaction::part(chip-control)::before,
+  qti-associate-interaction ::part(chip-control)::before,
   [data-drag-clone][data-drag-interaction='qti-associate-interaction']::part(control)::before {
     @mixin grip;
   }
@@ -59,21 +59,19 @@
       padding: var(--qti-drag-padding);
     }
 
-    &:state(dragzone-active) slot[name='qti-simple-associable-choice'] {
-      @mixin dropping;
-    }
-    &:state(dragzone-enabled) slot[name='qti-simple-associable-choice'] {
-      @mixin dropping;
-    }
-    /* A placed chip lives in a shadow root; `::part(drag)` is the only way in. This used to be
+    /* No bank highlight. The `:state(dragzone-*) slot[name='qti-simple-associable-choice']` rules
+       that were here reached into the shadow root from the document, which a descendant selector
+       cannot do, so they never matched; the bank is `::part(bank)`, which this interaction leaves
+       unpainted on purpose (see qti-match-interaction.css). */
+    /* A placed chip lives in a shadow root; `::part(chip)` is the only way in. This used to be
        `::part(qti-simple-associable-choice)`, a part named after the tag. Its hover and ring
        are in the states layer below. Deleted here: `&[dragging] { @mixin dragging }`. An attribute
        selector after ::part() never matches. */
-    & qti-simple-associable-choice::part(drag) {
+    & qti-simple-associable-choice::part(chip) {
       @mixin drag;
     }
     /* Editor fake-drag projected into the interaction's drop-target shadow. */
-    &::part(drag) {
+    &::part(chip) {
       @mixin drag;
     }
     /* `display: grid` lives in qti-associate-interaction.styles.ts, which already declares it on
@@ -102,55 +100,52 @@
      *
     * Deleted here: `&::part(drop)[dragging] { @mixin act }`. An attribute selector after ::part()
      * never matches; that rule has never applied.
+     *
+     * `drag-active` is the one token for the old pair `active` + `enabled`, which painted alike.
      */
-    &::part(active) {
-      background-color: var(--qti-bg-active);
-    }
-
-    &::part(enabled) {
+    &::part(drop drag-active) {
       background-color: var(--qti-bg-active);
     }
   }
 }
 
 @layer qti-components.interactions.states {
-  qti-simple-associable-choice::part(drag),
-  qti-associate-interaction::part(drag) {
+  qti-simple-associable-choice::part(chip),
+  qti-associate-interaction::part(chip) {
     @mixin drag;
   }
 
   /*
-   * A placed chip's hover and focus ring. Written flat: nested under `&::part(drag)` they
-   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(chip)` they
+   * compiled to `:is(…::part(chip)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
    * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
    * `background-color` and must not out-rank the hover.
    */
-  qti-associate-interaction qti-simple-associable-choice::part(drag):hover,
-  qti-associate-interaction::part(drag):hover {
+  qti-associate-interaction qti-simple-associable-choice::part(chip):hover,
+  qti-associate-interaction::part(chip):hover {
     @mixin drag-hover;
   }
-  qti-associate-interaction qti-simple-associable-choice::part(drag):focus:not(:active),
-  qti-associate-interaction::part(drag):focus:not(:active) {
+  qti-associate-interaction qti-simple-associable-choice::part(chip):focus:not(:active),
+  qti-associate-interaction::part(chip):focus:not(:active) {
     @mixin foc;
   }
 
-  qti-associate-interaction::part(active),
-  qti-associate-interaction::part(enabled) {
+  qti-associate-interaction::part(drop drag-active) {
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
 
-  /* After `enabled`, which every target carries during a drag: the one under the chip. */
-  qti-associate-interaction::part(hover) {
+  /* After `drag-active`, which every target carries during a drag: the one under the chip. */
+  qti-associate-interaction::part(drop drag-over) {
     @mixin drop-over;
   }
 
-  qti-associate-interaction qti-simple-associable-choice:state(placeholder) {
+  qti-associate-interaction qti-simple-associable-choice:state(used) {
     @mixin drag-placeholder;
     border-color: transparent;
     pointer-events: none;
   }
 
-  qti-associate-interaction qti-simple-associable-choice:state(dragging) {
+  qti-associate-interaction qti-simple-associable-choice:state(lifted) {
     @mixin drag-placeholder;
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
@@ -158,17 +153,17 @@
     pointer-events: none;
   }
 
-  qti-associate-interaction qti-simple-associable-choice:state(placeholder) > *,
-  qti-associate-interaction qti-simple-associable-choice:state(dragging) > * {
+  qti-associate-interaction qti-simple-associable-choice:state(used) > *,
+  qti-associate-interaction qti-simple-associable-choice:state(lifted) > * {
     visibility: hidden;
   }
 
-  qti-associate-interaction qti-simple-associable-choice:state(placeholder)::part(label),
-  qti-associate-interaction qti-simple-associable-choice:state(dragging)::part(label) {
+  qti-associate-interaction qti-simple-associable-choice:state(used)::part(label),
+  qti-associate-interaction qti-simple-associable-choice:state(lifted)::part(label) {
     visibility: hidden;
   }
 
-  qti-associate-interaction qti-simple-associable-choice:state(return-anchor) {
+  qti-associate-interaction qti-simple-associable-choice:state(return-target) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
       color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
@@ -177,20 +172,20 @@
 
 @layer qti-components.interactions.corrections {
   /* A corrected chip — in the bank, and where it landed. Moved here from the shared
-     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     qti-corrections.css, which claimed `:state(chip)` for EVERY interaction in one unscoped rule:
      the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
      `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
      carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
      that selector never matched anything. */
-  qti-associate-interaction :state(drag):state(candidate-correct),
-  qti-simple-associable-choice::part(drag):state(candidate-correct),
-  qti-associate-interaction::part(drag):state(candidate-correct) {
+  /* No `qti-associate-interaction::part(chip):state(candidate-*)` arm: nothing sets a verdict on a
+     chip in this interaction's own shadow root (plans/parts-and-states-naming.md). */
+  qti-associate-interaction :state(chip):state(candidate-correct),
+  qti-simple-associable-choice::part(chip):state(candidate-correct) {
     @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
-  qti-associate-interaction :state(drag):state(candidate-incorrect),
-  qti-simple-associable-choice::part(drag):state(candidate-incorrect),
-  qti-associate-interaction::part(drag):state(candidate-incorrect) {
+  qti-associate-interaction :state(chip):state(candidate-incorrect),
+  qti-simple-associable-choice::part(chip):state(candidate-incorrect) {
     @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 

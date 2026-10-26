@@ -11,13 +11,13 @@
      * `--qti-select-point-marker-color` is the seam the component already publishes, and the one the
      * corrections mixin writes to. Setting it here rather than `color` leaves the prompt inheriting
      * ordinary body text, and corrections still win: they set the same variable on the point element
-     * itself (`[part~='correct']`), which is deeper than this host declaration.
+     * itself (`[part~='candidate-correct']`), which is deeper than this host declaration.
      *
-     * A theme sets it through the optional input --cito-color-marker (the primary by default), and
-     * the marker's shape through --cito-icon-marker. The halo round it follows the colour on its own
+     * The primary; a brand that wants another colour sets it on `::part(point)`. The marker's
+     * shape is the input --qc-icon-marker. The halo round it follows the colour on its own
      * (qti-select-point-interaction.styles.ts).
      */
-    --qti-select-point-marker-color: var(--cito-color-marker, var(--qti-primary));
+    --qti-select-point-marker-color: var(--qti-primary);
 
     /*
      * The picture narrows with its column and never grows past its own size; its height follows
@@ -45,11 +45,11 @@
   qti-select-point-interaction {
     /* Same knob as the resting colour above — these set `color` before, which stopped reaching the
        marker once it was no longer painted with `currentColor`. */
-    &::part(correct) {
+    &::part(point candidate-correct) {
       --qti-select-point-marker-color: var(--qti-correct);
     }
 
-    &::part(incorrect) {
+    &::part(point candidate-incorrect) {
       --qti-select-point-marker-color: var(--qti-incorrect);
     }
   }

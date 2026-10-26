@@ -17,7 +17,7 @@ type Story = StoryObj<TestScoringButtons & typeof args>;
  *
  * - `<test-scoring-buttons>` stamps its `<template>` with `scores` (0 up to the item's `MAXSCORE`), the
  *   current `score` and `disabled` (the buttons only work for items scored by a human). Clicking an
- *   `<input>` writes that value to the item's `SCORE` through `cito-test-update-outcome`.
+ *   `<input>` writes that value to the item's `SCORE` through `qc-test-update-outcome`.
  * - `<test-scoring-feedback>` shows a line for the active item: no response, correct or incorrect from
  *   its `SCORE`, or an informational text. The texts come from `data-text-*` attributes.
  *

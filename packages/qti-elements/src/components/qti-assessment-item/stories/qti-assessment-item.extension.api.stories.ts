@@ -94,7 +94,7 @@ export const PublishesThroughSaveResponse: StoryObj = {
   play: async ({ canvasElement }) => {
     const { item, interaction } = await ready(canvasElement);
     const changed = fn();
-    item.addEventListener('qti-interaction-changed', changed);
+    item.addEventListener('qc-item-response-changed', changed);
 
     interaction.pick('a');
 

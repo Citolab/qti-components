@@ -229,7 +229,7 @@ export const DropzoneAutoSizeMixin = <T extends Constructor<LitElement>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]'
+  dragContainersSelector = 'slot[part~="bank"]'
 ) => {
   abstract class DropzoneAutoSizeElement extends superClass {
     @property({ type: Boolean, attribute: 'auto-size-dropzones' })

@@ -101,7 +101,7 @@ export const ItemWithTemplate: Story = {
  * Proof that the Kennisnet brand can be a CLASSLESS overlay adopted INTO the item shadow (rather
  * than a `.qti-theme-kennisnet` class on <html>, which can't cross the shadow boundary). The
  * `<template>` content is rendered inside item-container's shadow, right next to the chips, so
- * plain `:state(drag)` / `::part(drag)` selectors reach them — no class, no --qti-chip-* tokens.
+ * plain `:state(chip)` / `::part(chip)` selectors reach them — no class, no --qti-chip-* tokens.
  */
 export const ItemWithKennisnetOverlay: Story = {
   render: () => html`
@@ -114,14 +114,14 @@ export const ItemWithKennisnetOverlay: Story = {
                so 'brand' would land below 'base' and lose. */
             @layer qti-components.reset, qti-components.global, qti-components.interactions.base,
               qti-components.interactions.brand, qti-components.interactions.states,
-              qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
+              qti-components.interactions.corrections, qti-components.elements;
 
             @layer qti-components.interactions.brand {
-              :state(drag),
+              :state(chip),
               [data-drag-clone],
-              qti-gap::part(drag),
-              qti-associate-interaction::part(drag),
-              qti-simple-associable-choice::part(drag) {
+              qti-gap::part(chip),
+              qti-associate-interaction::part(chip),
+              qti-simple-associable-choice::part(chip) {
                 --drag-background-color: var(--qti-primary);
                 --drag-color: var(--qti-primary-fg);
                 --drag-box-shadow: 0 3px color-mix(in srgb, var(--qti-primary) 50%, transparent);
@@ -129,7 +129,7 @@ export const ItemWithKennisnetOverlay: Story = {
               }
             }
             @layer qti-components.interactions.states {
-              :state(placeholder) {
+              :state(used) {
                 --drag-background-color: var(--qti-placeholder-bg);
                 --drag-border-color: transparent;
                 --drag-box-shadow: inset var(--qti-placeholder-shadow);

@@ -103,7 +103,7 @@ export abstract class QtiFeedback extends LitElement {
 
   /**
    * Called when this feedback is about to show. Return `false` to keep it hidden: the host shows the
-   * content itself. The elements dispatch `cito-feedback-show` here.
+   * content itself. The elements dispatch `qc-feedback-show` here.
    */
   protected feedbackShowing(): boolean {
     return true;

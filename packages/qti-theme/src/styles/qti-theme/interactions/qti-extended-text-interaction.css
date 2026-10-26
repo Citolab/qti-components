@@ -36,7 +36,9 @@
       padding-block: var(--qti-spacing);
       padding-inline: var(--qti-correction-inset) var(--qti-correction-gutter);
 
-      @mixin text;
+      @mixin paint text;
+
+      cursor: text;
     }
 
     /*
@@ -77,7 +79,7 @@
  * all along: a gutter reserved for a glyph that until now was never drawn.
  *
  * The gutter is spacing, not paint, so it stays a direct declaration. The badge that sits in it is
- * positioned by the component and painted by ::part(correction-*) in qti-corrections.css.
+ * positioned by the component and painted by `::part(correction candidate-*)` in qti-corrections.css.
  */
 @layer qti-components.interactions.corrections {
   qti-extended-text-interaction {
@@ -91,7 +93,7 @@
        verbatim from the dead class-based rules, where it had never rendered and so was never seen to
        be wrong. With --qti-fg now correctly resolving to `inherit`, it would have been more visibly
        wrong still. */
-    &:state(candidate-partially-correct)::part(textarea) {
+    &:state(candidate-partial)::part(textarea) {
       @mixin candidate text, var(--qti-partially-correct), var(--qti-partially-correct-light);
     }
 

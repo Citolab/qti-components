@@ -14,11 +14,11 @@ import type { QtiTestState } from '../types/qti-test-state';
 
 /**
  * The requests of the public test plugin API, pinned the way a plugin uses them: dispatched from
- * an element inside `<test-navigation>` with `bubbles: true, composed: true`, by their `cito-`
+ * an element inside `<test-navigation>` with `bubbles: true, composed: true`, by their `qc-`
  * name, and nothing else. The plugin below imports no test code, so a renamed event, a changed
  * `detail` or a handler that moved to another element fails the matching story here.
  *
- * `computedContext` is pinned by the "Test plugins" story; `cito-test-update-plugin-state` by
+ * `computedContext` is pinned by the "Test plugins" story; `qc-test-update-plugin-state` by
  * `test-bookmark`.
  */
 const meta: Meta = {
@@ -87,7 +87,7 @@ export const Navigate: Story = {
   play: async ({ canvasElement }) => {
     await loadedItem(canvasElement, ITEM_1);
 
-    request(pluginOf(canvasElement), 'cito-test-navigate', { type: 'item', id: ITEM_2_ID });
+    request(pluginOf(canvasElement), 'qc-test-navigate', { type: 'item', id: ITEM_2_ID });
 
     await loadedItem(canvasElement, ITEM_2);
   }
@@ -98,12 +98,12 @@ export const EndAttempt: Story = {
   render: testMarkup,
   play: async ({ canvasElement }) => {
     const saved = fn();
-    testOf(canvasElement).addEventListener('cito-test-state-changed', e => saved(e.detail));
+    testOf(canvasElement).addEventListener('qc-test-state-changed', e => saved(e.detail));
     const item = await loadedItem(canvasElement, ITEM_1);
     within(item).getByText('Correct').click();
     expect(variable(saved, ITEM_1_ID, 'SCORE')).not.toBe(1);
 
-    request(pluginOf(canvasElement), 'cito-test-end-attempt');
+    request(pluginOf(canvasElement), 'qc-test-end-attempt');
 
     await waitFor(() => expect(Number(variable(saved, ITEM_1_ID, 'SCORE'))).toBe(1));
   }
@@ -114,10 +114,10 @@ export const UpdateOutcome: Story = {
   render: testMarkup,
   play: async ({ canvasElement }) => {
     const saved = fn();
-    testOf(canvasElement).addEventListener('cito-test-state-changed', e => saved(e.detail));
+    testOf(canvasElement).addEventListener('qc-test-state-changed', e => saved(e.detail));
     await loadedItem(canvasElement, ITEM_1);
 
-    request(pluginOf(canvasElement), 'cito-test-update-outcome', {
+    request(pluginOf(canvasElement), 'qc-test-update-outcome', {
       assessmentItemRefId: ITEM_1_ID,
       outcomeVariableId: 'SCORE',
       value: 7
@@ -135,7 +135,7 @@ export const SwitchView: Story = {
     const view = () => pluginOf(canvasElement).shadowRoot?.querySelector('output')?.textContent;
     await waitFor(() => expect(view()).toBe('candidate'));
 
-    request(pluginOf(canvasElement), 'cito-test-switch-view', 'scorer');
+    request(pluginOf(canvasElement), 'qc-test-switch-view', 'scorer');
 
     await waitFor(() => expect(view()).toBe('scorer'));
   }

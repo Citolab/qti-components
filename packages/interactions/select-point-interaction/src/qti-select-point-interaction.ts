@@ -28,7 +28,10 @@ import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
  * @slot prompt - The prompt shown above the image.
  * @slot - Default slot for the base image.
  *
- * @csspart point - Each selected point marker.
+ * @csspart point - Each selected point marker. Tokens: `candidate-correct` |
+ *   `candidate-incorrect` when `qti-corrections` has marked it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  * @cssprop --qti-select-point-icon - Marker mask image (SVG data URL). Should be a solid silhouette for color inheritance.
  * @cssprop --qti-select-point-marker-size - Marker size.
  * @cssprop --qti-select-point-marker-anchor - Vertical translate anchor (`-100%` for bottom tip, `-50%` for center).

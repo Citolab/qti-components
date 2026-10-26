@@ -20,7 +20,7 @@ const itemRefOf = (element: Element): string | undefined => {
 
 /**
  * A button that ends the attempt of an item: its response is processed, `numAttempts` goes up and
- * feedback is shown as the item's session control allows. It dispatches `cito-test-end-attempt`,
+ * feedback is shown as the item's session control allows. It dispatches `qc-test-end-attempt`,
  * which `<test-navigation>` handles.
  *
  * Put it inside `<test-navigation>`, either in the toolbar, where it ends the attempt of the item on
@@ -69,7 +69,7 @@ export class TestEndAttempt extends LitElement {
         // An item of its own goes along, so the navigation ends that item's attempt and not the
         // one on screen; without one, the navigation takes the item on screen, as before.
         const itemId = this.#ownItem;
-        dispatchPublic(this, 'cito-test-end-attempt', itemId ? { itemId } : {});
+        dispatchPublic(this, 'qc-test-end-attempt', itemId ? { itemId } : {});
       }
     });
   }

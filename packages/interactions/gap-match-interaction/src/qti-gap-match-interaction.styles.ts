@@ -51,7 +51,7 @@ export default [
     /* An answer key shows the answer, not the bank you would have dragged it from. The attribute is
        set on the clone by the correct-response mixin; the theme used to do this with a
        '.full-correct-response' descendant selector, from the document. */
-    :host([answer-key]) [part~='drags'] {
+    :host([answer-key]) [part~='bank'] {
       display: none;
     }
   `

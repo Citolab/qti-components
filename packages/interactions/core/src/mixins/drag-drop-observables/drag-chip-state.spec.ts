@@ -27,13 +27,13 @@ describe('drag chip states', () => {
     await settle();
 
     const a = chip('A');
-    expect(a.internals.states.has('placeholder'), 'placed chip is a placeholder').toBe(true);
+    expect(a.internals.states.has('used'), 'placed chip is used').toBe(true);
     // The role survives being spent. `drag` says what this element IS — the same noun `part="drags"`
     // uses for the bank — so a placed one is still a drag. The theme draws its box from :state(drag)
     // and only repaints it from :state(placeholder), so dropping the role here would collapse the
     // hole the placeholder is meant to hold open. Pickability is the separate question, asserted on
     // the two attributes below.
-    expect(a.internals.states.has('drag'), 'a spent drag is still a drag').toBe(true);
+    expect(a.internals.states.has('chip'), 'a used chip is still a chip').toBe(true);
     expect(a.hasAttribute('qti-draggable'), 'spent source is not exposed as draggable').toBe(false);
     expect(a.hasAttribute('tabindex'), 'spent source leaves keyboard tab order').toBe(false);
 
@@ -50,10 +50,10 @@ describe('drag chip states', () => {
     await settle();
 
     const a = chip('A');
-    expect(a.internals.states.has('placeholder')).toBe(false);
-    expect(a.internals.states.has('dragging')).toBe(false);
+    expect(a.internals.states.has('used')).toBe(false);
+    expect(a.internals.states.has('lifted')).toBe(false);
     // it is still a drag source
-    expect(a.internals.states.has('drag')).toBe(true);
+    expect(a.internals.states.has('chip')).toBe(true);
     expect(a.getAttribute('qti-draggable')).toBe('true');
     expect(a.getAttribute('tabindex')).toBe('0');
   });
@@ -71,12 +71,12 @@ describe('drag chip states', () => {
     const a = chip('A');
 
     // simulate the source being hidden while its clone is in flight, then a successful landing
-    a.internals.states.add('dragging');
+    a.internals.states.add('lifted');
     interaction.dragState = { ...interaction.dragState, dragging: true, dragSource: a, currentTarget: drops[0] };
     interaction.handleDragEnd();
     await settle();
 
-    expect(a.internals.states.has('dragging'), 'transient state is cleared on a successful drop').toBe(false);
+    expect(a.internals.states.has('lifted'), 'transient state is cleared on a successful drop').toBe(false);
     // it may still be a placeholder — that is handleDrop's decision, not handleDragEnd's
   });
 
@@ -86,6 +86,6 @@ describe('drag chip states', () => {
 
     const img = chip('A');
     expect(img.internals).toBeTruthy();
-    expect(() => img.internals.states.add('placeholder')).not.toThrow();
+    expect(() => img.internals.states.add('used')).not.toThrow();
   });
 });

@@ -41,11 +41,16 @@ const SlottedBase = DragDropSlottedMixin(Interaction, `qti-simple-choice`, `[par
  * @slot prompt - The prompt shown above the interaction.
  * @slot drags - The draggable choice sources.
  *
- * @csspart container - The outer container wrapping drags and drops.
- * @csspart drags - Wrapper around the drag sources slot.
+ * @csspart container - The outer container wrapping the bank and the drops.
+ * @csspart bank - The slot holding the unplaced chips (was `drags`).
  * @csspart drops - The drop-target region.
- * @csspart drop - Each individual drop target.
- * @csspart drag - A choice that has been placed into a drop target.
+ * @csspart drop - Each individual drop target. Tokens: `filled`, `full`, `drag-active`, `drag-over`
+ *   (a plain div cannot carry `:state()`, so the state names are part tokens here).
+ * @csspart chip - A choice placed into a drop target (was `drag`).
+ * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
 export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
   static override styles = styles;
@@ -65,7 +70,7 @@ export class QtiOrderInteraction extends DragDropSlottedSortableMixin(SlottedBas
 
     return html` <slot name="prompt"> </slot>
       <div part="container">
-        <slot part="drags"> </slot>
+        <slot part="bank drags"> </slot>
         <div part="drops">
           ${[...Array(this.nrChoices)].map((_, i) => {
             const identifier = `droplist${i}`;

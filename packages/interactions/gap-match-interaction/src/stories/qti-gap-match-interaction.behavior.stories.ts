@@ -306,8 +306,8 @@ export const DontDropInOtherInteraction = {
   name: 'Not-Allowed-To-Drop-In-Other-Interaction',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -316,8 +316,8 @@ export const DontDropInOtherInteraction = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -374,8 +374,8 @@ export const CanRedrop: Story = {
   name: 'Can-Redrop-In-Same-Gap',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -384,8 +384,8 @@ export const CanRedrop: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -441,8 +441,8 @@ export const DraggableContainerHasDropInDication: Story = {
   name: 'Dropzone-has-drop-indication',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -451,8 +451,8 @@ export const DraggableContainerHasDropInDication: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}

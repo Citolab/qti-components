@@ -49,16 +49,16 @@ Answer wrong twice here: the correct response shows, the question locks and **Ne
 
 - **The corrections build** gives `<qti-assessment-item>` its `showCandidateCorrection(show)` and
   `showCorrectResponse(show)`. The script gets the item on screen from `qti-assessment-item-connected`.
-- **Check** ends the attempt with `cito-test-end-attempt`, dispatched on `<test-navigation>`. The test scores
+- **Check** ends the attempt with `qc-test-end-attempt`, dispatched on `<test-navigation>`. The test scores
   the item and adds one to its `numAttempts`; it does not stop at one attempt, because there is no session
   control to say so.
-- **Everything else comes from the state.** On every `cito-test-state-changed` the script reads the item's
+- **Everything else comes from the state.** On every `qc-test-state-changed` the script reads the item's
   `numAttempts`, `SCORE` and `MAXSCORE` from `detail.test.items` and the position from
   `detail.session.navItemRefId`, decides what the candidate may do, and saves the state.
 - **Resuming** is the [State](?path=/docs/implementation-state--docs) page: the saved state is assigned before
   the test loads. The script saves two things of its own next to it: whether the test is finished, and
   which questions were changed after their last check.
-- **A changed answer** arrives as `qti-interaction-changed`; the script clears the marks.
+- **A changed answer** arrives as `qc-item-response-changed`; the script clears the marks.
 
 `<test-end-attempt>` is not used for **Check**: without session control it applies QTI's default of one attempt
 and disables itself after the first check.

@@ -9,6 +9,10 @@ import type { CSSResultGroup } from 'lit';
  * Upload interaction: candidates attach a file as their response.
  *
  * @slot prompt - The prompt shown above the file input.
+ *
+ * @csspart input - The file input element.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiUploadInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;

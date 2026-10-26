@@ -92,7 +92,7 @@ export class TestNext extends LitElement {
   }
 
   protected _requestItem(identifier: string): void {
-    dispatchPublic(this, 'cito-test-navigate', { type: 'item', id: identifier });
+    dispatchPublic(this, 'qc-test-navigate', { type: 'item', id: identifier });
   }
 
   override render() {

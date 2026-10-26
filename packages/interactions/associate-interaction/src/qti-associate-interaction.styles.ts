@@ -24,7 +24,7 @@ export default [
        then compresses the chips instead of moving them down: a bank of six squeezed the last chip
        until only its grip was left, at no width the author could see coming. A chip is a fixed
        thing, so the only place the overflow can go is the next line. */
-    slot[part~='drags'] {
+    slot[part~='bank'] {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
@@ -52,7 +52,7 @@ export default [
       gap: 0.5rem;
     }
 
-    :host::part(drop-row) {
+    :host::part(row) {
       display: flex;
       justify-content: space-between;
       background: linear-gradient(

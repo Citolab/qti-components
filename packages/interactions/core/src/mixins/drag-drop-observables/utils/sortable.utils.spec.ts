@@ -81,7 +81,8 @@ describe('sortable.utils', () => {
       transitionDuration: 300
     });
 
-    expect(placeholder.getAttribute('data-drop-placeholder')).toBe('true');
+    expect(placeholder.getAttribute('data-drop-preview')).toBe('true');
+    expect(placeholder.getAttribute('data-drop-placeholder'), 'old name kept for one major').toBe('true');
     expect(placeholder.style.width).toBe('120px');
     expect(placeholder.style.height).toBe('40px');
     expect(placeholder.style.border).toContain('dotted');

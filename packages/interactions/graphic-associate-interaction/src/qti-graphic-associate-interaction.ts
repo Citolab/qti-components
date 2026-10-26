@@ -17,10 +17,12 @@ import type { CSSResultGroup } from 'lit';
  * @slot prompt - The prompt shown above the image.
  * @slot - Default slot for hotspot choices layered over the image.
  *
- * @csspart line - Each line drawn by the candidate.
- * @csspart correct-line - Each line displayed as part of the correct response.
- * @csspart point - Each in-progress endpoint indicator.
+ * @csspart line - Each line drawn by the candidate. Tokens: `answer-key` on a line of the correct
+ *   response, drawn by `qti-corrections` (was the part `correct-line`).
+ * @csspart point - The in-progress line from the first chosen hotspot to the pointer.
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiGraphicAssociateInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;

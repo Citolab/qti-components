@@ -8,6 +8,7 @@ import {
 } from './utils/sortable.utils';
 import { captureMultipleFlipStates, animateMultipleFlips, type FlipAnimationOptions } from './utils/flip.utils';
 import { detectCollision } from './utils/collision.utils';
+import { setDropFull } from './utils/drag-drop.utils';
 
 import type { DragDropSlotted } from './drag-drop-slotted.mixin';
 
@@ -231,7 +232,7 @@ export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlott
             if (this.#slotAllowsMultiple(slot) && this.#isSlotAtCapacity(slot)) {
               return;
             }
-            slot.removeAttribute('disabled');
+            setDropFull(slot, false);
             this.#temporarilyEnabledSlots.add(slot);
           }
         });

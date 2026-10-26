@@ -16,10 +16,10 @@ which item is on screen, where it lives, what the candidate answered, and a way 
 
 \`\`\`js
 // Where each item lives: every item-ref announces itself when it connects.
-test.addEventListener('cito-item-ref-connected', e => hrefs.set(e.detail.identifier, e.detail.href));
+test.addEventListener('qc-item-ref-connected', e => hrefs.set(e.detail.identifier, e.detail.href));
 
 // What was answered, and which item is on screen: the state the test already emits.
-test.addEventListener('cito-test-state-changed', e => (state = e.detail));
+test.addEventListener('qc-test-state-changed', e => (state = e.detail));
 const current = () => state.session.navItemRefId;
 
 // Hand the score back. It reaches \`state\`, so it is saved with everything else.
@@ -68,8 +68,8 @@ export const ScoreOnABackend: StoryObj = {
 
     const hrefs = new Map<string, string>();
     let state: QtiTestState | undefined;
-    test.addEventListener('cito-item-ref-connected', e => hrefs.set(e.detail.identifier, e.detail.href));
-    test.addEventListener('cito-test-state-changed', e => (state = e.detail));
+    test.addEventListener('qc-item-ref-connected', e => hrefs.set(e.detail.identifier, e.detail.href));
+    test.addEventListener('qc-test-state-changed', e => (state = e.detail));
 
     check.addEventListener('click', async () => {
       const identifier = state?.session.navItemRefId;

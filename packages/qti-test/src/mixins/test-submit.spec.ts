@@ -47,12 +47,12 @@ describe('test submit', () => {
     expect(Number(qtiTest.getOutcome('TOTAL').value)).toBe(1);
   });
 
-  it('submits on cito-test-submit and announces it', () => {
+  it('submits on qc-test-submit and announces it', () => {
     const seen: string[] = [];
-    qtiTest.addEventListener('cito-test-submitted', () => seen.push(String(qtiTest.getOutcome('TOTAL').value)));
+    qtiTest.addEventListener('qc-test-submitted', () => seen.push(String(qtiTest.getOutcome('TOTAL').value)));
 
-    qtiTest.dispatchEvent(new CustomEvent('cito-test-submit', { bubbles: true, composed: true, detail: {} }));
-    qtiTest.dispatchEvent(new CustomEvent('cito-test-submit', { bubbles: true, composed: true, detail: {} }));
+    qtiTest.dispatchEvent(new CustomEvent('qc-test-submit', { bubbles: true, composed: true, detail: {} }));
+    qtiTest.dispatchEvent(new CustomEvent('qc-test-submit', { bubbles: true, composed: true, detail: {} }));
 
     expect(seen).toEqual(['1', '1']);
   });

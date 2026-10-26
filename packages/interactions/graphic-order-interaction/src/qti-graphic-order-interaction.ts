@@ -20,6 +20,8 @@ type HotspotChoice = Choice & { order: number | null };
  * @slot - Default slot for the image and hotspot choices.
  *
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;

@@ -8,7 +8,7 @@ type TestElement = HTMLElement & { state?: QtiTestState };
 
 /**
  * Shows the test's state (`qtiTest.state`) as a tree you can fold open and shut, and keeps it current
- * on every `cito-test-state-changed`. A debug helper: drop it anywhere inside `<qti-test>`.
+ * on every `qc-test-state-changed`. A debug helper: drop it anywhere inside `<qti-test>`.
  *
  * The first two levels start open. A list entry with an `identifier` (an item, a variable) is labelled
  * by it. The element only lays out the tree; give it a font, colour and height from the page.
@@ -47,13 +47,13 @@ export class TestPrintState extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.#test = this.closest<TestElement>('qti-test');
-    this.#test?.addEventListener('cito-test-state-changed', this.#onStateChanged);
+    this.#test?.addEventListener('qc-test-state-changed', this.#onStateChanged);
     this.testState = this.#test?.state;
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.#test?.removeEventListener('cito-test-state-changed', this.#onStateChanged);
+    this.#test?.removeEventListener('qc-test-state-changed', this.#onStateChanged);
     this.#test = null;
   }
 

@@ -58,7 +58,7 @@ export const KeyboardNavigation: Story = {
       await fireEvent.keyDown(trigger, { key: 'Enter' });
       await interaction.updateComplete;
 
-      const promptOption = await waitFor(() => root.querySelector<HTMLElement>('button[part~="option-prompt"]'));
+      const promptOption = await waitFor(() => root.querySelector<HTMLElement>('button[part~="prompt"]'));
       await waitFor(() => {
         expect(getDeepActiveElement()).toBe(promptOption);
       });

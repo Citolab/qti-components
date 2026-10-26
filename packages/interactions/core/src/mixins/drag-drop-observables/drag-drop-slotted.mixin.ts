@@ -10,6 +10,7 @@ import {
   getMatchMaxValue,
   hasDragChipState,
   setDropFilled,
+  setDropFull,
   setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
@@ -69,7 +70,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]',
+  dragContainersSelector = 'slot[part~="bank"]',
   collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCornersWithInventoryPriority'
 ) => {
   /*
@@ -519,7 +520,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // it travels there. The clone is still alive at this point — `handleDragEnd` removes it
         // only after `handleInvalidDrop` returns — so its rect is the chip's last real position.
         this.dropDraggableInDroppable(dragSource, sourceDroppable, this.dragState.dragClone?.getBoundingClientRect());
-      } else if (hasDragChipState(dragSource, 'dragging')) {
+      } else if (hasDragChipState(dragSource, 'lifted')) {
         // Drag started from inventory: simply restore inventory visual state.
         this.restoreInventoryItem(dragSource, this.dragState.dragClone?.getBoundingClientRect());
         const identifier = dragSource.getAttribute('identifier');
@@ -689,18 +690,29 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // from the document — `::part()` is the only way in, and a bare `::part(drag)` matches in
         // any shadow root. Without this the chip renders unstyled, which the invariance spec
         // catches as "a chip is not the same size wherever it lives".
-        // A text chip also carries `drag-text`, so a theme can give a word a label box where it
-        // leaves an image tile plain (graphic-gap-match takes both).
-        cleanClone.setAttribute('part', cleanClone.localName === 'qti-gap-text' ? 'drag drag-text' : 'drag');
-        // Parts do not chain: `::part(drag)::part(control)` is inert. The chip forwards its own
-        // inner part up one level, renamed, so a theme can still reach the drag handle as
-        // `::part(drag-control)`. Drawing the grip on the chip host instead would have worked too,
-        // but it moves the glyph for every *other* interaction's chips as well.
-        // `correction*` forwarded under its own name: the theme reaches the badge with a bare
-        // `::part(correction-correct)` whether the chip is in the bank or inside this target.
+        // A text chip also carries `text`, so a theme can give a word a label box where it leaves
+        // an image tile plain (graphic-gap-match takes both). The old tokens `drag` and `drag-text`
+        // ride along for one major (CONTRACT.md §3).
+        cleanClone.setAttribute(
+          'part',
+          cleanClone.localName === 'qti-gap-text' ? 'chip text drag drag-text' : 'chip drag'
+        );
+        // Parts do not chain: `::part(chip)::part(control)` is inert. The chip forwards its own
+        // inner parts up one level as `chip-control` / `chip-label` (CONTRACT.md §3 rule 9): under
+        // their bare names they would collide with the target's own `control` and `label` in the
+        // same shadow root, and a `::part(label)` meant for the card would pad the chip too. The old
+        // names `drag-control` / `drag-label` are forwarded as well for one major. Drawing the grip
+        // on the chip host instead would have worked, but it moves the glyph for every *other*
+        // interaction's chips as well.
+        // `correction` and its verdict tokens are forwarded under their own names: the theme reaches
+        // the badge with a bare `::part(correction candidate-correct)` wherever the chip lives.
         cleanClone.setAttribute(
           'exportparts',
-          'control: drag-control, label: drag-label, correction, correction-correct, correction-incorrect'
+          [
+            'control: chip-control, control: drag-control, label: chip-label, label: drag-label',
+            'correction, candidate-correct, candidate-incorrect, candidate-partial',
+            'correction-correct, correction-incorrect, correction-partially-correct'
+          ].join(', ')
         );
         // Cloned once, here — never inside `render()`, which would mint a new node per update and
         // lose focus, transitions and the chip's own shadow root.
@@ -827,7 +839,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       // This source chip's copies are all placed — it becomes the hole they left behind.
       inventoryItems.forEach(item => {
-        setDragChipState(item, 'placeholder', matchMax !== 0 && placedInDropzones >= matchMax);
+        setDragChipState(item, 'used', matchMax !== 0 && placedInDropzones >= matchMax);
       });
     }
 
@@ -844,11 +856,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         const isDragSource = droppable.hasAttribute('data-drag-source');
         const isAtCapacity = this.droppableAtCapacityFromState(droppable);
 
-        if ((isAtCapacity || (disableAtMax && maxReached)) && !isDragSource) {
-          droppable.setAttribute('disabled', '');
-        } else {
-          droppable.removeAttribute('disabled');
-        }
+        setDropFull(droppable, (isAtCapacity || (disableAtMax && maxReached)) && !isDragSource);
       });
     }
 

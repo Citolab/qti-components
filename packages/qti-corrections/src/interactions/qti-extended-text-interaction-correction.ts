@@ -35,6 +35,11 @@ import type { CandidateCorrection } from '../mixins/active-element-correction.mi
  *   - The verdict survives typing. It is a property, not the `showCandidateCorrection` toggle, so
  *     `afterResponseVariableUpdated()` does not clear it. If a stale grade should be dropped when the
  *     candidate edits their answer, that is an explicit decision for the host app to make.
+ *
+ * @cssstate candidate-correct - The verdict pushed in is `correct`.
+ * @cssstate candidate-incorrect - The verdict pushed in is `incorrect`.
+ * @cssstate candidate-partial - The verdict pushed in is `partially-correct` (alias `candidate-partially-correct`, one major).
+ * @csspart correction - The verdict badge in the field's top end corner; its second token is the verdict state, followed by the old `correction-<verdict>` token for one major.
  */
 export class QtiExtendedTextInteractionCorrection extends ActiveElementCorrectionMixin(QtiExtendedTextInteraction) {
   static override styles = [

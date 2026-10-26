@@ -30,9 +30,12 @@ import type { CSSResultGroup } from 'lit';
  *   single-line input has no formatting to render: it can show neither preserved line breaks nor
  *   markup. The field is always plain text, so this is not planned either.
  *
- * @csspart answer - The answer-key line, revealed above the field when the correct response is shown.
+ * @csspart answer-key - The correct answer, revealed above the field when the correct response is
+ *   shown (was `answer`).
  * @csspart input - The text input element.
  * @csspart message - The validation message, hidden until `reportValidity` shows it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
@@ -106,7 +109,7 @@ export class QtiTextEntryInteraction extends Interaction {
 
   /** The answer-key line, revealed above the field when the correct response is shown. */
   protected renderAnswer(): unknown {
-    return html`<div part="answer" aria-hidden="true"></div>`;
+    return html`<div part="answer-key answer" aria-hidden="true"></div>`;
   }
 
   /** The field itself. */

@@ -38,8 +38,8 @@ export const Q8_L2_D108: Story = {
   name: 'Q8-L2-D108',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -48,8 +48,8 @@ export const Q8_L2_D108: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -96,7 +96,7 @@ export const Q8_L2_D108: Story = {
       'qti-graphic-gap-match-interaction[class="qti-choices-top qti-selections-dark"]'
     ) as HTMLElement;
 
-    const dragSlot = qtiGapMatchInteraction.shadowRoot.querySelector('slot[part="drags"]');
+    const dragSlot = qtiGapMatchInteraction.shadowRoot.querySelector('slot[part~="bank"]');
     const responseArea = qtiGapMatchInteraction.shadowRoot.querySelector('slot[part="image"]');
     const gapChoices = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-gap-img'));
     const responseHotspots = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-associable-hotspot'));
@@ -133,7 +133,7 @@ export const Q8_L2_D108: Story = {
       'qti-graphic-gap-match-interaction[class="qti-choices-top qti-selections-light"]'
     ) as HTMLElement;
 
-    const dragSlotLight = qtiGapMatchInteractionLight.shadowRoot.querySelector('slot[part="drags"]');
+    const dragSlotLight = qtiGapMatchInteractionLight.shadowRoot.querySelector('slot[part~="bank"]');
     const responseAreaLight = qtiGapMatchInteractionLight.shadowRoot.querySelector('slot[part="image"]');
     const gapChoicesLight = Array.from(qtiGapMatchInteractionLight.querySelectorAll('qti-gap-img'));
     const responseHotspotsLight = Array.from(qtiGapMatchInteractionLight.querySelectorAll('qti-associable-hotspot'));

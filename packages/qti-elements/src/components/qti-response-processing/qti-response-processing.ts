@@ -20,7 +20,7 @@ const responseProcessingTemplates: Record<string, string> = {
 
 /**
  * Response processing as the item's own backend: it reads the item context, runs its rules once and
- * sends the outcomes and the attempt count back in one `cito-item-set-outcomes`. The item applies
+ * sends the outcomes and the attempt count back in one `qc-item-set-outcomes`. The item applies
  * them; a host that scores elsewhere sends the same event instead.
  */
 export class QtiResponseProcessing extends LitElement {
@@ -76,7 +76,7 @@ export class QtiResponseProcessing extends LitElement {
   /**
    * Scores the attempt on the copy: sets `numAttempts` to the count the item hands over, resets a
    * non-adaptive item's outcomes to their defaults (QTI info model §2.5), runs the rules and sends
-   * every outcome and `numAttempts` in one `cito-item-set-outcomes`. The item applies them and publishes, which gives this element a
+   * every outcome and `numAttempts` in one `qc-item-set-outcomes`. The item applies them and publishes, which gives this element a
    * fresh copy. A rule that throws ends the run and the error propagates; nothing is sent, and the
    * run's writes stay in the copy until the item's next update.
    */
@@ -94,7 +94,7 @@ export class QtiResponseProcessing extends LitElement {
 
     this.#runRules();
 
-    dispatchPublic(this, 'cito-item-set-outcomes', {
+    dispatchPublic(this, 'qc-item-set-outcomes', {
       outcomes: copy.variables
         .filter(v => v.type === 'outcome' || v.identifier === 'numAttempts')
         .map(({ identifier, value }) => ({ identifier, value })),

@@ -12,7 +12,7 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 /**
  * Some states classify an element rather than describe a moment in an interaction.
  *
- * :state(drag) means "this element is a drag" — the noun, the same one `part="drags"` uses for the
+ * :state(chip) means "this element is a chip" — the noun (CONTRACT.md §3), as `part="bank"` for the
  * bank. It is set from the interaction's draggablesSelector and holds for as long as the element is
  * one, including while it is lifted or spent. It is where a theme legitimately gives a drag its
  * padding and drag handle. :state(radio) and :state(checkbox) are the same kind of thing: they say
@@ -21,7 +21,7 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
  * Everything else — dragging, placeholder, checked, hover, candidate-correct — toggles while the
  * user is interacting. Those may only paint.
  */
-const STRUCTURAL_STATES = new Set(['drag', 'radio', 'checkbox']);
+const STRUCTURAL_STATES = new Set(['chip', 'drop', 'drag', 'radio', 'checkbox']);
 
 /**
  * Properties that change an element's box or its position in flow.
@@ -91,7 +91,14 @@ const isOutOfFlowPseudoElement = ruleNode => {
  */
 const isAnswerKeyScope = ruleNode => {
   for (let node = ruleNode; node; node = node.parent) {
-    if (node.type === 'rule' && /\.full-correct-response\b/.test(node.selector)) return true;
+    // The answer-key clone is a document of its own: `:state(answer-key)` on an interaction host
+    // never toggles (CONTRACT.md §3), so a rule under it may size the key's marks. `answer-key-shown`
+    // (the inline mode) does toggle and gets no exemption.
+    if (
+      node.type === 'rule' &&
+      (/\.full-correct-response\b/.test(node.selector) || /interaction[^,\s]*:state\(answer-key\)/.test(node.selector))
+    )
+      return true;
   }
   return false;
 };

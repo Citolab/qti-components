@@ -64,14 +64,14 @@ ${markup}`
     await step('Pressing it marks the correct choice', async () => {
       await waitFor(() => expect(button).not.toHaveAttribute('disabled'));
       await userEvent.click(button);
-      await waitFor(() => expect(light.matches(':state(correct-response)')).toBe(true));
+      await waitFor(() => expect(light.matches(':state(answer-key)')).toBe(true));
       expect(button.shadowRoot!.textContent).toBe('Hide correct response');
     });
 
     await step('Enter on the focused button hides it again', async () => {
       button.focus();
       await userEvent.keyboard('{Enter}');
-      await waitFor(() => expect(light.matches(':state(correct-response)')).toBe(false));
+      await waitFor(() => expect(light.matches(':state(answer-key)')).toBe(false));
       expect(button.shadowRoot!.textContent).toBe('Show correct response');
     });
   }

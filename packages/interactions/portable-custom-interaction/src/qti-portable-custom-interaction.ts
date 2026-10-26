@@ -51,6 +51,15 @@ function hasCorrectResponseValue(value: PciResponseValue | null | undefined): bo
   return value !== '';
 }
 
+/**
+ * Portable custom interaction (PCI): hosts a third-party interaction module.
+ *
+ * No parts: the PCI renders its own markup into the default slot (or into an iframe) and the
+ * element adds nothing of its own to theme.
+ *
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ */
 export class QtiPortableCustomInteraction extends Interaction {
   #value: PciResponseValue;
 

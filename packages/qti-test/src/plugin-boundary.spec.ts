@@ -53,7 +53,11 @@ const PLUGINS: Plugin[] = [
       /^\.\.\/components\/styles$/,
       /^\.\.\/components\/qti-assessment-item-ref\/qti-assessment-item-ref$/, // public element, type only
       /^\.\.\/public-events$/
-    ]
+    ],
+    // The public-events spec skips this plugin in its no-direct-literal check: it listens to
+    // `qc-test-navigate` and its `cito-` alias directly, because `listenPublic` has no unsubscribe
+    // and the player must let go of the host on disconnect.
+    consumers: ['/packages/qti-test/src/public-events.spec.ts']
   },
   {
     name: 'stamp',

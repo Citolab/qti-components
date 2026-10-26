@@ -59,6 +59,9 @@ let warnedAboutXhtml = false;
  * @slot prompt - The prompt shown above the textarea.
  *
  * @csspart textarea - The textarea input element.
+ * @csspart message - The validation message, hidden until `reportValidity` shows it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiExtendedTextInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;

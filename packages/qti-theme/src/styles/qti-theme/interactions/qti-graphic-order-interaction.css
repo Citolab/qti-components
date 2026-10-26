@@ -47,22 +47,22 @@
         @mixin foc;
       }
 
-      &[aria-ordervalue] {
+      &[data-order] {
         border: 0 !important;
         box-shadow: none;
         background-color: color-mix(in oklab, var(--qti-selected-bg) 35%, transparent);
       }
 
-      &[aria-ordervalue]:hover,
-      &[aria-ordervalue]:focus {
+      &[data-order]:hover,
+      &[data-order]:focus {
         border-color: transparent !important;
       }
-      &[aria-ordercorrectvalue][aria-ordervalue]:not([shape='circle'])::after {
-        content: 'C=' attr(aria-ordercorrectvalue) '  R=' attr(aria-ordervalue) !important;
+      &[data-order-correct][data-order]:not([shape='circle'])::after {
+        content: 'C=' attr(data-order-correct) '  R=' attr(data-order) !important;
         color: var(--qti-correct);
       }
-      &[aria-ordercorrectvalue]:not([aria-ordervalue]):not([shape='circle'])::after {
-        content: 'C=' attr(aria-ordercorrectvalue) !important;
+      &[data-order-correct]:not([data-order]):not([shape='circle'])::after {
+        content: 'C=' attr(data-order-correct) !important;
         color: var(--qti-correct);
       }
     }
@@ -113,44 +113,26 @@
         box-shadow: none;
       }
 
-      &[aria-ordervalue]:state(checked),
-      &[aria-ordervalue] {
+      &[data-order]:state(checked),
+      &[data-order] {
         border-color: transparent !important;
       }
     }
 
     /* No qti-selections-light / -dark here. Appendix B.1 of the QTI 3 implementation guide defines
        that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
-       item in this repo ever set it on a graphic-order interaction. What was here overrode the neutral
-       drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
-    &:state(dragzone-active)::part(drags) {
-      /* Direct properties, not slots: ::part(drags) is a bare slot container with no paint role of
-         its own (the other interactions paint it with `@mixin dropping`, also direct), so there is
-         no --<role>-* to switch. Inlined from `@mixin act`. */
-      border-color: var(--qti-border-active);
-      background-color: var(--qti-bg-active);
-    }
-
-    &:state(dragzone-enabled)::part(drags) {
-      @mixin dropping;
-    }
+       item in this repo ever set it on a graphic-order interaction. The `:state(dragzone-*)::part(drags)`
+       bank highlight that followed is gone too: this interaction has no drag bank, so neither the
+       state nor the part was ever set (plans/parts-and-states-naming.md). */
   }
 }
 
 @layer qti-components.interactions.corrections {
   qti-graphic-order-interaction {
+    /* No `:state(answer-key)` (once `correct-response`) arm on the hotspot: this interaction's
+       correction never sets it (qti-graphic-order-interaction-correction.ts); the key is shown by
+       `data-order-correct` above. */
     & qti-hotspot-choice {
-      &[shape='circle']:state(correct-response),
-      &[shape='rect']:state(correct-response),
-      &[shape='ellipse']:state(correct-response) {
-        background-color: color-mix(in oklab, var(--qti-answer-bg) 75%, transparent);
-      }
-
-      &[shape='poly']:state(correct-response) {
-        background-color: color-mix(in oklab, var(--qti-answer-bg) 80%, transparent);
-        box-shadow: none;
-      }
-
       &[shape='circle']:state(candidate-correct),
       &[shape='rect']:state(candidate-correct),
       &[shape='ellipse']:state(candidate-correct) {
@@ -173,9 +155,8 @@
         box-shadow: none;
       }
 
-      &[aria-ordervalue]:state(correct-response),
-      &[aria-ordervalue]:state(candidate-correct),
-      &[aria-ordervalue]:state(candidate-incorrect) {
+      &[data-order]:state(candidate-correct),
+      &[data-order]:state(candidate-incorrect) {
         border-color: transparent !important;
       }
     }

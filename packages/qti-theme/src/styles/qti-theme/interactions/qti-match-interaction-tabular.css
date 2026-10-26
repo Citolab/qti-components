@@ -5,12 +5,12 @@
       background-color: var(--qti-bg-active);
     }
 
-    &::part(input-cell) {
+    &::part(cell) {
       border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
       padding: var(--qti-padding-box);
       transition: background-color 0.1s ease;
     }
-    &::part(input-cell):hover {
+    &::part(cell):hover {
       background-color: var(--qti-bg-active);
     }
 
@@ -20,7 +20,8 @@
        The cells are plain spans in this interaction's shadow root, so they have no
        ElementInternals and cannot carry `:state()` — and `::part(x):state(y)` needs the state on
        the part's own element. They therefore carry variant *part tokens*, which deliberately
-       reuse the state vocabulary: radio | checkbox, checked, correct | incorrect. */
+       reuse the state vocabulary: radio | checkbox, checked, candidate-correct | candidate-incorrect
+       (CONTRACT.md §3, rule 4). */
     &::part(control radio) {
       @mixin radio;
     }
@@ -82,14 +83,14 @@
     }
 
     &::part(corner),
-    &::part(input-cell) {
+    &::part(cell) {
       border: none;
       background-color: var(--qti-bg);
     }
 
     /* A cell's radio or checkbox is a real input, visually hidden: the cell rings while it has
        focus, inside its own edge, because the grid clips. */
-    &::part(input-cell):focus-within {
+    &::part(cell):focus-within {
       @mixin foc-inset;
     }
 
@@ -118,23 +119,25 @@
   qti-match-interaction.qti-match-tabular {
     /* Correct / incorrect overlays — border on the outer box, and a matching fill on the inner
        indicator when checked. */
-    &::part(control correct) {
+    &::part(control candidate-correct) {
       border-color: var(--qti-correct);
     }
-    &::part(control incorrect) {
+    &::part(control candidate-incorrect) {
       border-color: var(--qti-incorrect);
     }
 
-    &::part(control checked correct) {
+    &::part(control checked candidate-correct) {
       @mixin control-selected var(--qti-correct);
     }
 
-    &::part(control checked incorrect) {
+    &::part(control checked candidate-incorrect) {
       @mixin control-selected var(--qti-incorrect);
     }
   }
 
-  .full-correct-response qti-match-interaction.qti-match-tabular {
+  /* The answer-key clone: `answer-key` on the cloned host (CorrectResponseMixin), where the
+     `.full-correct-response` wrapper class used to be read. */
+  qti-match-interaction.qti-match-tabular:state(answer-key) {
     &::part(control checked) {
       @mixin answer;
     }

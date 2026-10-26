@@ -67,7 +67,8 @@ describe('extended-text, corrected from outside', () => {
       `<qti-extended-text-interaction response-identifier="R" candidate-correction="partially-correct"></qti-extended-text-interaction>`
     );
 
-    expect(el.internals.states.has('candidate-partially-correct'), 'attribute reached internals').toBe(true);
+    expect(el.internals.states.has('candidate-partial'), 'attribute reached internals').toBe(true);
+    expect(el.internals.states.has('candidate-partially-correct'), 'old name still set for one major').toBe(true);
     expect(el.internals.states.has('candidate-correct')).toBe(false);
     expect(el.internals.states.has('candidate-incorrect')).toBe(false);
   });
@@ -112,7 +113,7 @@ describe('extended-text, corrected from outside', () => {
 
   /**
    * The end-to-end one: the verdict has to survive all the way to a painted glyph. This is the case
-   * that proves the new --qti-partial-mask token and the new ::part(correction-partially-correct)
+   * that proves the new --qti-partial-mask token and the new ::part(correction candidate-partial)
    * theme rule are actually connected — before this change that badge was sized but never painted,
    * in every interaction, not just this one.
    */
@@ -123,7 +124,7 @@ describe('extended-text, corrected from outside', () => {
 
     const AMBER = tokenColor('--qti-partially-correct');
     const badge = badgeOf(el)!;
-    expect(badge.getAttribute('part')).toBe('correction correction-partially-correct');
+    expect(badge.getAttribute('part')).toBe('correction candidate-partial correction-partially-correct');
 
     const badgeStyle = getComputedStyle(badge);
     expect(badgeStyle.display, 'the badge is shown').not.toBe('none');

@@ -159,10 +159,10 @@ describe('qti-assessment-item response processing scope', () => {
     expect(valueOf(second[0], 'SCORE')).toBe('4');
   });
 
-  it('sends one cito-item-outcomes-changed per run, after the publish, with the final values', async () => {
+  it('sends one qc-item-outcomes-changed per run, after the publish, with the final values', async () => {
     const { item, process } = await setup(itemWith('false'));
     const events: { outcome: string; value: unknown; published: unknown }[][] = [];
-    item.addEventListener('cito-item-outcomes-changed', (e: Event) => {
+    item.addEventListener('qc-item-outcomes-changed', (e: Event) => {
       const { outcomes } = (e as CustomEvent).detail;
       events.push(
         outcomes.map((o: { identifier: string; value: unknown }) => ({
@@ -190,11 +190,11 @@ describe('qti-assessment-item response processing scope', () => {
     for (const e of outcomes) expect(e.value).toEqual(e.published);
   });
 
-  it('sends cito-item-outcome-changed and qti-outcome-changed once per outcome, after the publish, with the final values', async () => {
+  it('sends qc-item-outcome-changed and cito-item-outcome-changed once per outcome, after the publish, with the final values', async () => {
     const { item, process } = await setup(itemWith('false'));
     const seen: Record<string, { outcome: string; value: unknown; published: unknown }[]> = {
-      'cito-item-outcome-changed': [],
-      'qti-outcome-changed': []
+      'qc-item-outcome-changed': [],
+      'cito-item-outcome-changed': []
     };
     for (const name of Object.keys(seen)) {
       item.addEventListener(name, (e: Event) => {
@@ -207,8 +207,8 @@ describe('qti-assessment-item response processing scope', () => {
     for (const list of Object.values(seen)) list.length = 0;
     process(); // a repeat attempt: no SCORE 0 or empty FEEDBACK from the reset in between
 
-    expect(seen['qti-outcome-changed']).toEqual(seen['cito-item-outcome-changed']);
-    const events = seen['cito-item-outcome-changed'];
+    expect(seen['cito-item-outcome-changed']).toEqual(seen['qc-item-outcome-changed']);
+    const events = seen['qc-item-outcome-changed'];
     const identifiers = events.map(e => e.outcome);
     expect(new Set(identifiers).size).toBe(identifiers.length);
     expect(events.filter(e => e.outcome === 'SCORE')).toEqual([{ outcome: 'SCORE', value: '2', published: '2' }]);
@@ -247,11 +247,11 @@ describe('qti-assessment-item response processing scope', () => {
     expect(valueOf(after[0], 'numAttempts')).toBe('3');
   });
 
-  it('cito-item-set-outcomes from a host applies several outcomes in one publish', async () => {
+  it('qc-item-set-outcomes from a host applies several outcomes in one publish', async () => {
     const { item, published } = await setup(itemWith('false'));
     const changed: string[] = [];
     const attemptsEnded: unknown[] = [];
-    item.addEventListener('cito-item-outcomes-changed', (e: Event) =>
+    item.addEventListener('qc-item-outcomes-changed', (e: Event) =>
       changed.push(...(e as CustomEvent).detail.outcomes.map((o: { identifier: string }) => o.identifier))
     );
     item.addEventListener('qti-item-context-updated', (e: Event) =>
@@ -259,7 +259,7 @@ describe('qti-assessment-item response processing scope', () => {
     );
 
     item.dispatchEvent(
-      new CustomEvent('cito-item-set-outcomes', {
+      new CustomEvent('qc-item-set-outcomes', {
         detail: {
           outcomes: [
             { identifier: 'SCORE', value: '5' },
@@ -285,7 +285,7 @@ describe('qti-assessment-item response processing scope', () => {
     );
 
     item.dispatchEvent(
-      new CustomEvent('cito-item-set-outcomes', {
+      new CustomEvent('qc-item-set-outcomes', {
         detail: {
           outcomes: [
             { identifier: 'SCORE', value: '1' },

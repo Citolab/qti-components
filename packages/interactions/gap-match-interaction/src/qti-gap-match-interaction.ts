@@ -33,9 +33,13 @@ import type { CSSResultGroup } from 'lit';
  * @slot drags - The draggable choice sources.
  * @slot - Default slot for the drop targets (gaps).
  *
- * @csspart drags - Wrapper around the drag sources slot.
- * @csspart drops - Wrapper around the drop targets slot.
+ * @csspart bank - The slot holding the unplaced chips (was `drags`).
+ * @csspart drops - Wrapper around the drop targets slot. The targets themselves are `qti-gap`
+ *   elements in the light DOM; they carry their own states (`drop`, `filled`, `full`, …).
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
 export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part~='drags']`),
@@ -48,7 +52,7 @@ export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
 
   override render() {
     return html`<slot name="prompt"> </slot>
-      <slot part="drags" name="drags"></slot>
+      <slot part="bank drags" name="drags"></slot>
       <slot part="drops"></slot>
       <div role="alert" part="message" id="validation-message"></div>`;
   }

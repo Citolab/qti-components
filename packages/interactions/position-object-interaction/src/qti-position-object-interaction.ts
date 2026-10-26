@@ -8,6 +8,8 @@ import type { CSSResultGroup } from 'lit';
  * Position-object interaction: candidates place draggable objects onto a stage image.
  *
  * @slot - Default slot for the object choices and stage.
+ *
+ * No parts and no states: the element is a slot and has no internals.
  */
 export class QtiPositionObjectInteraction extends LitElement {
   static override styles: CSSResultGroup = styles;

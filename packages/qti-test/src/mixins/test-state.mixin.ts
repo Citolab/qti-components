@@ -9,12 +9,6 @@ import type { TestBaseInterface } from './test-base';
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 type Value = string | string[] | null;
 
-declare global {
-  interface GlobalEventHandlersEventMap {
-    'qti-state-changed': CustomEvent<QtiTestState>;
-  }
-}
-
 export interface ITestStateMixin {
   /**
    * The candidate's persistable state: what they answered and where they are.
@@ -71,9 +65,9 @@ const toState = (test: Readonly<TestContext>, session: Readonly<SessionContext>)
 
 /**
  * Persist and resume a test session through one value, `state`, and one event,
- * `qti-state-changed`.
+ * `qc-test-state-changed`.
  *
- * Sits directly on top of `TestBaseMixin`, so its `qti-assessment-test-connected` listener runs
+ * Sits directly on top of `TestBaseMixin`, so its `qc-test-loaded` listener runs
  * after the base has built `testContext.items` from the item-refs, and before the navigation
  * mixin's listener picks the first item to load.
  */
@@ -97,8 +91,8 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
         this.#ready = false;
         this.#lastEmitted = null;
       });
-      listenPublic(this, 'cito-test-update-plugin-state', ({ detail }) => this.#updatePluginState(detail));
-      listenPublic(this, 'cito-test-loaded', () => {
+      listenPublic(this, 'qc-test-update-plugin-state', ({ detail }) => this.#updatePluginState(detail));
+      listenPublic(this, 'qc-test-loaded', () => {
         if (this.#pending) {
           this.#apply(this.#pending);
           this.#pending = null;
@@ -156,7 +150,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
       const serialized = JSON.stringify(state);
       if (serialized === this.#lastEmitted) return;
       this.#lastEmitted = serialized;
-      dispatchPublic(this, 'cito-test-state-changed', state);
+      dispatchPublic(this, 'qc-test-state-changed', state);
     }
 
     #apply(state: QtiTestState): void {
@@ -196,7 +190,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     }
 
     #requestNavigation(type: 'item' | 'section', id: string): void {
-      dispatchPublic(this, 'cito-test-navigate', { type, id });
+      dispatchPublic(this, 'qc-test-navigate', { type, id });
     }
   }
 

@@ -15,7 +15,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-print-sta
 type Story = StoryObj<TestPrintState & typeof args>;
 
 /**
- * `<test-print-state>` shows the test's state (`qtiTest.state`, what `cito-test-state-changed` sends)
+ * `<test-print-state>` shows the test's state (`qtiTest.state`, what `qc-test-state-changed` sends)
  * as a tree you can fold open and shut. Drop it anywhere inside `<qti-test>`; it follows every change.
  * It only lays out the tree: the font, colour and height come from the page.
  */

@@ -12,14 +12,15 @@ import type { CSSResultGroup } from 'lit';
  *
  * @slot - item body content.
  * @slot qti-rubric-block - the qti rubric block is placed above the item
- * @part qti-rubric-block - the qti rubric block part
+ *
+ * @csspart rubrics - The rubric-block slot (was `qti-rubric-blocks`).
  */
 
 export class QtiItemBody extends LitElement {
   static override styles: CSSResultGroup = styles;
 
   override render() {
-    return html`<slot part="qti-rubric-blocks" name="qti-rubric-block"></slot><slot></slot>`;
+    return html`<slot part="rubrics qti-rubric-blocks" name="qti-rubric-block"></slot><slot></slot>`;
   }
 }
 

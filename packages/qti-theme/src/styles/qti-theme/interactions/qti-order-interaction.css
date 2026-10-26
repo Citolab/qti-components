@@ -14,14 +14,14 @@
    sat on document.body it was in a different tree from the adopted stylesheet, and nothing — no
    part, no attribute — could style it. */
 @layer qti-components.global {
-  qti-order-interaction :state(drag),
+  qti-order-interaction :state(chip),
   [data-drag-clone][data-drag-interaction='qti-order-interaction'] {
     @mixin drag;
   }
 
-  qti-order-interaction :state(drag)::part(control)::before,
-  qti-order-interaction::part(drag-control)::before,
-  qti-order-interaction ::part(drag-control)::before,
+  qti-order-interaction :state(chip)::part(control)::before,
+  qti-order-interaction::part(chip-control)::before,
+  qti-order-interaction ::part(chip-control)::before,
   [data-drag-clone][data-drag-interaction='qti-order-interaction']::part(control)::before {
     @mixin grip;
   }
@@ -29,35 +29,31 @@
 
 @layer qti-components.interactions.base {
   qti-order-interaction {
-    &:state(dragzone-active)::part(drags) {
-      @mixin dropping;
-    }
-    &:state(dragzone-enabled)::part(drags) {
+    /* The bank while a chip from a target is in flight (`drag-active` on the bank itself): it can
+       take the chip back. A chip lifted out of the bank leaves it unlit. */
+    &::part(bank drag-active) {
       @mixin dropping;
     }
     & qti-simple-choice {
       @mixin drag;
-      &[dragging] {
-        @mixin dragging;
-      }
       &:hover {
         @mixin drag-hover;
       }
-      &:focus:not(:state(placeholder), :active) {
+      &:focus:not(:state(used), :active) {
         @mixin foc;
       }
     }
     /* A placed chip, and the editor's fake-drag projected into the drop-target shadow. Its hover,
        and ring are in the states layer below. The three --drag-* slots take a brand's placed-chip
-       look (--cito-color-order-placed*); unset, they are invalid and the chip keeps its own. */
-    &::part(drag) {
+       look (--qc-color-order-placed*); unset, they are invalid and the chip keeps its own. */
+    &::part(chip) {
       @mixin drag;
       --drag-background-color: var(--qti-order-placed-fill);
       --drag-color: var(--qti-order-placed-color);
       --drag-border-color: var(--qti-order-placed-border-color);
     }
     /* The drag's box — flex, centred, clipped — is in qti-order-interaction.styles.ts. */
-    &::part(drag) {
+    &::part(chip) {
       /*
        * No `width: 100%`. It stretched a placed chip to its slot, which is why order was the one
        * entry in CHIP_BOX_KNOWN_BAD ("the placed chip stretches to fill its drop slot") — a 55px
@@ -75,12 +71,9 @@
      *
      * The drop's flags are part tokens rather than attributes: an attribute selector cannot follow
      * `::part()`, and a <div> cannot carry a custom state (attachInternals throws). See setDropFlag.
+     * `drag-active` is the one token for the old pair `active` + `enabled`, which painted alike.
      */
-    &::part(active) {
-      background-color: var(--qti-bg-active);
-    }
-
-    &::part(enabled) {
+    &::part(drop drag-active) {
       background-color: var(--qti-bg-active);
     }
 
@@ -94,19 +87,19 @@
     &::part(drops) {
       gap: var(--qti-gap);
     }
-    &::part(drags) {
+    &::part(bank) {
       gap: var(--qti-gap);
     }
     /* Flat, not nested under `&::part(drop)`: that compiled to `:is(…::part(drop)):focus-visible`,
        which never matched. Deleted: a nested `&[enabled] { @mixin dropping }`. An attribute
-       selector after ::part() never matches; `::part(enabled)` is the hook. */
+       selector after ::part() never matches; `::part(drop drag-active)` is the hook. */
     &::part(drop) {
       @mixin drop;
     }
     &::part(drop):focus {
       @mixin foc;
     }
-    &::part(active) {
+    &::part(drop drag-active) {
       @mixin dropping;
     }
   }
@@ -129,18 +122,14 @@
       background-image: var(--qti-drop-bg-img, revert-layer);
     }
 
-    &::part(active) {
-      background-color: var(--qti-bg-active);
-    }
-
-    &::part(enabled) {
+    &::part(drop drag-active) {
       background-color: var(--qti-bg-active);
     }
 
     /* `align-self` on a populated drop, and the drops' and drag's `overflow: visible` that let a
        chip's shadow escape its column, are laid out in qti-order-interaction.styles.ts. */
     /* The placed order chip's INVERTED look (white fill, dark text, a border) is a brand choice —
-       Kennisnet's — made through the --cito-color-order-placed* inputs on ::part(drag) above. In the
+       Kennisnet's — made through the --qc-color-order-placed* inputs on ::part(chip) above. In the
        base theme a placed chip is just the neutral chip (@mixin drag), and its corrections route
        through --drag-* like every other chip. */
     & qti-simple-choice {
@@ -166,7 +155,7 @@
      */
     &[orientation='vertical'] {
       & qti-simple-choice,
-      &::part(drag) {
+      &::part(chip) {
         width: auto;
       }
     }
@@ -175,24 +164,24 @@
 
 @layer qti-components.interactions.states {
   /*
-   * A placed chip's hover and focus ring. Written flat: nested under `&::part(drag)` they
-   * compiled to `:is(…::part(drag)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(chip)` they
+   * compiled to `:is(…::part(chip)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
    * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
    * `background-color` and must not out-rank the hover.
    */
-  qti-order-interaction::part(drag):hover {
+  qti-order-interaction::part(chip):hover {
     @mixin drag-hover;
   }
-  qti-order-interaction::part(drag):focus:not(:active) {
+  qti-order-interaction::part(chip):focus:not(:active) {
     @mixin foc;
   }
 
-  qti-order-interaction qti-simple-choice:state(placeholder) {
+  qti-order-interaction qti-simple-choice:state(used) {
     @mixin drag-placeholder;
     pointer-events: none;
   }
 
-  qti-order-interaction qti-simple-choice:state(dragging) {
+  qti-order-interaction qti-simple-choice:state(lifted) {
     @mixin drag-placeholder;
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
@@ -200,19 +189,18 @@
     pointer-events: none;
   }
 
-  qti-order-interaction qti-simple-choice:state(return-anchor) {
+  qti-order-interaction qti-simple-choice:state(return-target) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
       color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
 
-  qti-order-interaction::part(active),
-  qti-order-interaction::part(enabled) {
+  qti-order-interaction::part(drop drag-active) {
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
 
-  /* After `enabled`, which every target carries during a drag: the one under the chip. */
-  qti-order-interaction::part(hover) {
+  /* After `drag-active`, which every target carries during a drag: the one under the chip. */
+  qti-order-interaction::part(drop drag-over) {
     @mixin drop-over;
   }
 }
@@ -235,18 +223,18 @@
    * parsed consistently by the browser toolchain.
    */
   /* A corrected chip — in the bank, and where it landed. Moved here from the shared
-     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     qti-corrections.css, which claimed `:state(chip)` for EVERY interaction in one unscoped rule:
      the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
      `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
      carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
      that selector never matched anything. */
-  qti-order-interaction :state(drag):state(candidate-correct),
-  qti-order-interaction::part(drag):state(candidate-correct) {
+  qti-order-interaction :state(chip):state(candidate-correct),
+  qti-order-interaction::part(chip):state(candidate-correct) {
     @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
-  qti-order-interaction :state(drag):state(candidate-incorrect),
-  qti-order-interaction::part(drag):state(candidate-incorrect) {
+  qti-order-interaction :state(chip):state(candidate-incorrect),
+  qti-order-interaction::part(chip):state(candidate-incorrect) {
     @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 

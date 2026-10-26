@@ -21,8 +21,8 @@ export class TestCheckItem extends LitElement {
   constructor() {
     super();
     this.addEventListener('click', () => {
-      dispatchPublic(this, 'cito-test-end-attempt', {});
-      dispatchPublic(this, 'cito-test-switch-view', this.view);
+      dispatchPublic(this, 'qc-test-end-attempt', {});
+      dispatchPublic(this, 'qc-test-switch-view', this.view);
     });
   }
 

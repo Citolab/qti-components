@@ -75,7 +75,7 @@ export const SetOutcomeVariable: StoryObj = {
   play: async ({ canvasElement }) => {
     const { item } = await readyItem(canvasElement);
     const changed = fn();
-    item.addEventListener('qti-outcome-changed', changed);
+    item.addEventListener('qc-item-outcome-changed', changed);
     const feedback = (id: string) =>
       item.querySelector<HTMLElement & { showStatus: string }>(`qti-modal-feedback[identifier="${id}"]`);
 

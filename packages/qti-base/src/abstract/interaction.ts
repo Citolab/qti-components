@@ -5,6 +5,7 @@ import { property } from 'lit/decorators.js';
 import { configContext } from '../context/config.context';
 import { interactionContext } from '../context/interaction.context';
 import { itemContext } from '../context/item.context';
+import { setState } from '../utils/state-aliases';
 
 import type { PropertyValues } from 'lit';
 import type { InteractionContext } from '../context/interaction.context';
@@ -342,6 +343,17 @@ export abstract class Interaction extends LitElement implements ValidatableInter
         }
       })
     );
+  }
+
+  /**
+   * `disabled` and `readonly` are states as well as attributes (qti-theme CONTRACT.md §3): a theme
+   * reads `:state(disabled)` on the host the way it reads it on a choice. The attribute stays
+   * reflected, so `[disabled]` keeps matching.
+   */
+  protected override update(changed: PropertyValues): void {
+    super.update(changed);
+    if (changed.has('disabled')) setState(this._internals.states, 'disabled', this.disabled);
+    if (changed.has('readonly')) setState(this._internals.states, 'readonly', this.readonly);
   }
 
   constructor() {

@@ -48,8 +48,8 @@ describe('drag-drop characterization — response is currently derived from the 
     expect(interaction.response).toBe('B,A');
 
     // both sources are spent
-    expect(byId('A').internals.states.has('placeholder')).toBe(true);
-    expect(byId('B').internals.states.has('placeholder')).toBe(true);
+    expect(byId('A').internals.states.has('used')).toBe(true);
+    expect(byId('B').internals.states.has('used')).toBe(true);
 
     // the clone lands inside the shadow drop target
     expect(drops[0].querySelectorAll('qti-simple-choice')).toHaveLength(1);
@@ -71,8 +71,8 @@ describe('drag-drop characterization — response is currently derived from the 
     await settle();
 
     expect(interaction.response).toBe('ht_zuur gap_low');
-    expect(byId('ht_zuur').internals.states.has('placeholder'), 'matchMax=1 exhausted').toBe(true);
-    expect(byId('ht_bas').internals.states.has('placeholder'), 'untouched chip unaffected').toBe(false);
+    expect(byId('ht_zuur').internals.states.has('used'), 'matchMax=1 exhausted').toBe(true);
+    expect(byId('ht_bas').internals.states.has('used'), 'untouched chip unaffected').toBe(false);
     // qti-gap renders its own chips now: the clone is in the gap's shadow root, not its light DOM.
     expect(gapLow.shadowRoot!.querySelectorAll('qti-gap-text'), 'the gap renders the clone').toHaveLength(1);
     expect((gapLow as any).drags, 'and knows what it holds').toHaveLength(1);
@@ -135,7 +135,7 @@ describe('drag-drop characterization — response is currently derived from the 
     // `data-has-drop` was set here and nowhere else. An occupied target now carries `:state(filled)`
     // when it is a custom element, and a `filled` part token when it is a plain shadow div.
     expect(target.internals.states.has('filled'), 'occupied target is flagged').toBe(true);
-    expect(byId('S1').internals.states.has('placeholder')).toBe(true);
+    expect(byId('S1').internals.states.has('used')).toBe(true);
   });
 
   test('graphic-gap-match: a gap-img dropped on a hotspot yields "<dragId> <hotspotId>"', async () => {
@@ -153,7 +153,7 @@ describe('drag-drop characterization — response is currently derived from the 
 
     expect(interaction.response).toBe('G1 H1');
     // qti-gap-img has ElementInternals (it is the one draggable without ActiveElementMixin)
-    expect(byId('G1').internals.states.has('placeholder')).toBe(true);
+    expect(byId('G1').internals.states.has('used')).toBe(true);
   });
 
   test('an invalid drop clears the chip states, returning it to the bank', async () => {
@@ -168,12 +168,12 @@ describe('drag-drop characterization — response is currently derived from the 
     const chip = byId('ht_zuur');
 
     // simulate the source being hidden mid-drag, then the drag ending nowhere
-    chip.internals.states.add('dragging');
+    chip.internals.states.add('lifted');
     interaction.handleInvalidDrop(chip);
     await settle();
 
-    expect(chip.internals.states.has('dragging')).toBe(false);
-    expect(chip.internals.states.has('placeholder')).toBe(false);
+    expect(chip.internals.states.has('lifted')).toBe(false);
+    expect(chip.internals.states.has('used')).toBe(false);
   });
 
   test('a spent chip is not a drag source — keyboard nav and pointerdown both skip it', async () => {
@@ -191,8 +191,8 @@ describe('drag-drop characterization — response is currently derived from the 
     // `isDragChipHidden` gates both the pointerdown filter and the keyboard draggables list. It does
     // not gate the `drag` role state: a spent drag is still a drag, and keeps its box.
     const chip = byId('ht_zuur');
-    expect(chip.internals.states.has('placeholder')).toBe(true);
-    expect(chip.internals.states.has('drag'), 'role survives; only pickability is withdrawn').toBe(true);
+    expect(chip.internals.states.has('used')).toBe(true);
+    expect(chip.internals.states.has('chip'), 'role survives; only pickability is withdrawn').toBe(true);
     expect(chip.hasAttribute('qti-draggable')).toBe(false);
     expect(chip.hasAttribute('tabindex')).toBe(false);
     expect(chip.style.opacity, 'presentation is not written inline any more').toBe('');
@@ -213,15 +213,15 @@ describe('drag-drop characterization — response is currently derived from the 
     interaction.handleDrop(chip, gap);
     await settle();
     expect(interaction.response).toBe('ht_winter gap_1');
-    expect(chip.internals.states.has('placeholder')).toBe(true);
+    expect(chip.internals.states.has('used')).toBe(true);
 
     // Simulate an attempted re-drag from the spent source that ends invalid.
-    chip.internals.states.add('dragging');
+    chip.internals.states.add('lifted');
     interaction.handleInvalidDrop(chip);
     await settle();
 
     // Source remains spent because its placed copy still exists.
-    expect(chip.internals.states.has('placeholder')).toBe(true);
+    expect(chip.internals.states.has('used')).toBe(true);
     expect(interaction.response).toBe('ht_winter gap_1');
     expect(gap.shadowRoot!.querySelectorAll('qti-gap-text')).toHaveLength(1);
   });

@@ -10,6 +10,11 @@ import type { CSSResultGroup } from 'lit';
  *
  * @slot prompt - The prompt shown above the media element.
  * @slot - Default slot for the embedded media element.
+ *
+ * No parts: the media element is slotted light DOM and is styled directly.
+ *
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiMediaInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;

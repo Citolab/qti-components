@@ -29,7 +29,7 @@ export default [
       display: block;
     }
 
-    [part='drags'] {
+    [part~='bank'] {
       display: flex;
       align-items: flex-start;
       flex: 1;
@@ -60,8 +60,8 @@ export default [
       gap: 0.5rem;
     }
 
-    :host([orientation='horizontal']) [part='drags'],
-    :host(.qti-orientation-horizontal) [part='drags'] {
+    :host([orientation='horizontal']) [part~='bank'],
+    :host(.qti-orientation-horizontal) [part~='bank'] {
       flex-direction: row;
     }
     /*
@@ -74,8 +74,8 @@ export default [
      * wrapped and the '.qti-orientation-horizontal' class did not. The theme's rule is gone and so
      * is this one; both spellings now wrap, which is what the attribute already did.
      */
-    :host([orientation='vertical']) [part='drags'],
-    :host(.qti-orientation-vertical) [part='drags'] {
+    :host([orientation='vertical']) [part~='bank'],
+    :host(.qti-orientation-vertical) [part~='bank'] {
       flex-direction: column;
     }
     :host([orientation='vertical']) [part='drops'],
@@ -127,7 +127,7 @@ export default [
      * never done anything; it is left in the theme rather than deleted here, since removing it is a
      * decision about how a long label should behave, not a relocation.
      */
-    [part~='drag'] {
+    [part~='chip'] {
       display: flex;
       align-items: center;
       overflow: visible;

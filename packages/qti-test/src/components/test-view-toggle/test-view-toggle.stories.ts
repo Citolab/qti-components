@@ -22,7 +22,7 @@ type Story = StoryObj<TestViewToggle & typeof args>;
  * - `<test-check-item>` ends the attempt on the current item and switches to a view (default
  *   `scorer`), for example to reveal a rubric after the candidate has answered.
  *
- * All three send `cito-test-switch-view`; `computedContext.view` follows.
+ * All three send `qc-test-switch-view`; `computedContext.view` follows.
  */
 const meta: Meta<TestViewToggle> = {
   title: 'QTI Test/Plugins/View/test-view-toggle',

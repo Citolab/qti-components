@@ -226,7 +226,7 @@ export class QtiAssessmentItem extends LitElement {
       // The verdict goes in first, so whoever hears the item connect reads it with the rest.
       this.validate(false);
       this.#beginFirstAttempt();
-      dispatchPublic(this, 'cito-item-rendered', this);
+      dispatchPublic(this, 'qc-item-rendered', this);
       // Internal plumbing: the test and the item container listen for this name.
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
@@ -248,7 +248,7 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-register-variable', this.#handleRegisterVariable);
     this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.addEventListener('end-attempt', this.#handleEndAttempt);
-    this.addEventListener('cito-item-set-outcomes', this.#handleSetOutcomes);
+    this.addEventListener('qc-item-set-outcomes', this.#handleSetOutcomes);
     this.addEventListener('qti-set-template-value', this.#handleSetTemplateValue);
     this.addEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.addEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
@@ -258,7 +258,7 @@ export class QtiAssessmentItem extends LitElement {
     this.removeEventListener('qti-register-variable', this.#handleRegisterVariable);
     this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.removeEventListener('end-attempt', this.#handleEndAttempt);
-    this.removeEventListener('cito-item-set-outcomes', this.#handleSetOutcomes);
+    this.removeEventListener('qc-item-set-outcomes', this.#handleSetOutcomes);
     this.removeEventListener('qti-set-template-value', this.#handleSetTemplateValue);
     this.removeEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.removeEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
@@ -386,7 +386,7 @@ export class QtiAssessmentItem extends LitElement {
 
   /**
    * Scores the attempt. The item does not score itself: its response processing does, like a
-   * backend, and sends the outcomes back in `cito-item-set-outcomes`, which the item applies in one
+   * backend, and sends the outcomes back in `qc-item-set-outcomes`, which the item applies in one
    * update. The item keeps the attempt count (QTI info model §2.2.2: the delivery engine maintains
    * numAttempts) and hands the new count to the run, whose rules may read it. Without response
    * processing the item only counts the attempt. A run that throws still counts the attempt and applies
@@ -415,7 +415,7 @@ export class QtiAssessmentItem extends LitElement {
       }
       return true;
     }
-    dispatchPublic(this, 'cito-item-set-outcomes', {
+    dispatchPublic(this, 'qc-item-set-outcomes', {
       outcomes: [{ identifier: 'numAttempts', value: String(numAttempts) }],
       responseProcessed: true
     });
@@ -493,7 +493,7 @@ export class QtiAssessmentItem extends LitElement {
 
     this.afterResponseVariableUpdated();
 
-    dispatchPublic(this, 'cito-item-response-changed', {
+    dispatchPublic(this, 'qc-item-response-changed', {
       item: this.identifier,
       responseIdentifier: identifier,
       response: Array.isArray(value) ? [...value] : value
@@ -618,8 +618,8 @@ export class QtiAssessmentItem extends LitElement {
   }
 
   /**
-   * Publishes the outcomes (and the validity) in one update, then a `cito-item-outcome-changed` per
-   * outcome with its final value and one `cito-item-outcomes-changed` with all of them.
+   * Publishes the outcomes (and the validity) in one update, then a `qc-item-outcome-changed` per
+   * outcome with its final value and one `qc-item-outcomes-changed` with all of them.
    * An identifier the item does not declare is skipped with a warning; a later entry for the same
    * identifier wins.
    */
@@ -646,13 +646,13 @@ export class QtiAssessmentItem extends LitElement {
 
     if (values.size > 0) {
       for (const [outcomeIdentifier, value] of values) {
-        dispatchPublic(this, 'cito-item-outcome-changed', {
+        dispatchPublic(this, 'qc-item-outcome-changed', {
           item: this.identifier,
           outcomeIdentifier,
           value: value as string | string[]
         });
       }
-      dispatchPublic(this, 'cito-item-outcomes-changed', {
+      dispatchPublic(this, 'qc-item-outcomes-changed', {
         item: this.identifier,
         outcomes: [...values].map(([identifier, value]) => ({ identifier, value }))
       });
@@ -714,6 +714,6 @@ declare global {
 declare module '../../public-events' {
   interface PublicItemEventMap {
     /** The item rendered: its interactions are in the DOM and its validity is known. */
-    'cito-item-rendered': CustomEvent<QtiAssessmentItem>;
+    'qc-item-rendered': CustomEvent<QtiAssessmentItem>;
   }
 }

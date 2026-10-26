@@ -14,7 +14,7 @@ export const SEED = 'session-1';
 /**
  * The chrome a host puts around a `<qti-test>` to save and resume it, for the cookbook stories.
  *
- * - Keeps the state from `cito-test-state-changed`, whose `detail` is the state. A
+ * - Keeps the state from `qc-test-state-changed`, whose `detail` is the state. A
  *   `<test-print-state>` dropped into the test shows it, to the right of the player.
  * - "Restart from saved state" builds a fresh test and assigns the kept `state` and the same seed
  *   before the test is attached, which is what a host does after a page reload.
@@ -63,7 +63,7 @@ export const stateHost = (markup: TemplateResult | string): HTMLElement => {
         : html`<qti-test navigate="item" .qtiContext=${qtiContext}>${content}</qti-test>`,
       container
     );
-    container.querySelector('qti-test')!.addEventListener('cito-test-state-changed', event => {
+    container.querySelector('qti-test')!.addEventListener('qc-test-state-changed', event => {
       saved = event.detail;
       restart.disabled = false;
     });
