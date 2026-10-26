@@ -11,7 +11,7 @@ import { positionShapes } from '@qti-components/interactions-core/internal/hotsp
 import styles from './qti-select-point-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
-import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
+import type { QtiAreaMapEntry, QtiAreaMapping, ValidityKind, ValidityTrigger } from '@qti-components/base';
 /**
  * Select-point interaction: candidates place points onto a background image.
  *
@@ -30,6 +30,7 @@ import type { QtiAreaMapEntry, QtiAreaMapping } from '@qti-components/base';
  *
  * @csspart point - Each selected point marker. Tokens: `candidate-correct` |
  *   `candidate-incorrect` when `qti-corrections` has marked it.
+ * @csspart message - The validation message, hidden until `reportValidity` shows it.
  * @cssstate disabled - The interaction is switched off.
  * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  * @cssprop --qti-select-point-icon - Marker mask image (SVG data URL). Should be a solid silhouette for color inheritance.
@@ -84,6 +85,16 @@ export class QtiSelectPointInteraction extends Interaction {
 
   @state()
   private _areaEntries: QtiAreaMapEntry[] = [];
+
+  /**
+   * Every route into the response (a click, a removed marker, a restore, a reset) updates the form
+   * value and the validity; a click or a removal also reports, as a change.
+   */
+  @watch('response')
+  protected _handleResponseChange = () => {
+    this._internals.setFormValue(serializeResponseAttribute(this.response) || null);
+    this.validate();
+  };
 
   @watch('areaMappings' as never)
   protected _handleAreaMappingsChange = () => {
@@ -160,6 +171,8 @@ export class QtiSelectPointInteraction extends Interaction {
     }
     // Save the response with the calculated points
     this.saveResponse(this.response);
+    this.validate();
+    this.reportValidity({ trigger: 'change' });
   };
 
   override connectedCallback() {
@@ -239,6 +252,8 @@ export class QtiSelectPointInteraction extends Interaction {
                   e.stopPropagation();
                   this.response = (this.response || []).filter((_, i) => i !== index);
                   this.saveResponse(this.response);
+                  this.validate();
+                  this.reportValidity({ trigger: 'change' });
                 }}
               ></button>
             `;
@@ -246,7 +261,8 @@ export class QtiSelectPointInteraction extends Interaction {
         )}
         ${this.renderSupplementalLayer()}
         <slot></slot>
-      </point-container>`;
+      </point-container>
+      <div part="message" role="alert" id="validation-message" style="display:none;"></div>`;
   }
 
   validate(): boolean {
@@ -256,25 +272,28 @@ export class QtiSelectPointInteraction extends Interaction {
 
     let isValid = true;
     let validityMessage = '';
+    let kind: ValidityKind = 'other';
 
     if (exceedsMax) {
       isValid = false;
+      kind = 'max';
       validityMessage =
         this.dataset.maxSelectionsMessage ||
         `Please select no more than ${this.maxChoices} ${this.maxChoices === 1 ? 'point' : 'points'}.`;
     } else if (belowMin) {
       isValid = false;
+      kind = 'min';
       validityMessage =
         this.dataset.minSelectionsMessage ||
         `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'point' : 'points'}.`;
     }
 
-    this.setInteractionValidity(isValid, validityMessage, this.#imgElement ?? this, { suppressInline: true });
+    this.setInteractionValidity(isValid, validityMessage, this.#imgElement ?? this, { suppressInline: true, kind });
     return isValid;
   }
 
-  public override reportValidity(): boolean {
-    return super.reportValidity();
+  public override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+    return super.reportValidity(options);
   }
 
   #calculateScale() {

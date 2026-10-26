@@ -18,6 +18,7 @@ packages/qti-theme/src/styles/qti-theme/index.css:
 5. qti-components.interactions.states
 6. qti-components.interactions.corrections
 7. qti-components.elements
+8. qti-components.motion
 
 Precedence rule: later layer wins at equal specificity. `interactions.brand` is empty in the theme
 on purpose: it is where a brand's resting look goes (§11), and it must stay declared so that paint
@@ -63,6 +64,14 @@ so every layer reads every token.
 
 - A brand sheet's resting look (a host's own brand CSS). Above base, below states, so a state still wins.
 - Empty in the theme. Declares no tokens.
+
+### qti-components.motion
+
+- How a state change feels, for every interaction: transitions, the press, the chip's tilt
+  arriving. One file, `qti-motion.css`, last in the theme.
+- Only `transition-*`, `scale` and `rotate`: nothing that lays out.
+- Every duration and the press scale derive from `--qti-motion` (`--qc-motion`; 0 under
+  prefers-reduced-motion), so one value switches all of it off.
 
 ### qti-components.elements
 
@@ -131,7 +140,8 @@ then in `global`; state paint never reflows (§7); do not chain `::part()` acros
 | `row`                                                                               | one associate pair                                                         | `qti-associate-interaction` (was `drop-row`)                                                                   |
 | `container`                                                                         | order's outer box                                                          | `qti-order-interaction`                                                                                        |
 | `image`                                                                             | the background image                                                       | `qti-graphic-gap-match-interaction`                                                                            |
-| `point`                                                                             | a placed marker                                                            | select-point, graphic-associate                                                                                |
+| `object`                                                                            | the image to place, beside the stage (tokens `selected`, `used`)           | `qti-position-object-interaction`                                                                              |
+| `point`                                                                             | a placed marker                                                            | select-point, graphic-associate, position-object (a placed copy)                                               |
 | `line`                                                                              | an association line                                                        | `qti-graphic-associate-interaction`                                                                            |
 | `input`, `textarea`                                                                 | the text field                                                             | text-entry, upload; extended-text                                                                              |
 | `answer-key`                                                                        | the correct answer shown next to a text field                              | `qti-text-entry-interaction` (was `answer`)                                                                    |

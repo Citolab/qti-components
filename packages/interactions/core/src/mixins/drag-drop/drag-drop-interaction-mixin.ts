@@ -525,7 +525,10 @@ export const DragDropInteractionMixin = <T extends Constructor<Interaction>>(
           `You haven't selected enough associations. Minimum required is ${this.minAssociations}.`;
       }
       const lastElementChild = this.lastElementChild as HTMLElement;
-      this.setInteractionValidity(isValid, validityMessage, lastElementChild, { suppressInline: true });
+      this.setInteractionValidity(isValid, validityMessage, lastElementChild, {
+        suppressInline: true,
+        kind: isValid ? 'other' : validAssociations < this.minAssociations ? 'min' : 'max'
+      });
       return isValid;
     }
 

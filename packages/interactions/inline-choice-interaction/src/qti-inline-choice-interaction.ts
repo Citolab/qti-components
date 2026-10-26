@@ -11,7 +11,7 @@ import { MenuAutoSizeMixin } from '@qti-components/interactions-core/mixins/menu
 import styles from './qti-inline-choice-interaction.styles.js';
 
 import type { PropertyValues } from 'lit';
-import type { ConfigContext } from '@qti-components/base';
+import type { ConfigContext, ValidityTrigger } from '@qti-components/base';
 import type { ActiveElementMixinInterface } from '@qti-components/interactions-core/mixins/active-element/active-element.mixin';
 
 interface OptionType {
@@ -144,7 +144,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   @watch(['required', 'minChoices'], { waitUntilFirstUpdate: true })
   protected _handleRequiredChange = () => {
     this.validate();
-    this.reportValidity();
+    this.reportValidity({ trigger: 'change' });
   };
 
   /*
@@ -391,15 +391,18 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     const isValid = hasSelection || !answerDemanded;
 
     const validityMessage = this.dataset.minChoicesMessage || 'Please select an option.';
-    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true });
+    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true, kind: 'min' });
     return isValid;
   }
 
-  public override reportValidity(): boolean {
-    return super.reportValidity();
+  public override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+    return super.reportValidity(options);
   }
 
   public override reset() {
+    // Not `super.reset()` (it would null the response before the options are rebuilt); the base's
+    // validity bookkeeping is reset here instead, so a fresh attempt waits for a submit again.
+    this.resetValidityReport();
     this.#setDropdownOpen(false);
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
     this.#syncSlottedChoices();
@@ -431,7 +434,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
     this.#syncSlottedChoices();
     this.validate();
-    this.reportValidity();
+    this.reportValidity({ trigger: 'change' });
     this.saveResponse(value);
     this.#setDropdownOpen(false);
   }
@@ -571,6 +574,9 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   }
 
   async #syncSlottedChoices() {
+    // Every route into the selection passes here (a pick, a restore, a reset), so the form value
+    // follows it here: a form holding this interaction carries the chosen identifier, or nothing.
+    this._internals.setFormValue(this.response);
     await this.updateComplete;
     const selectedValue = this.options.find(option => option.selected)?.value ?? '';
     const choices = Array.from(this.querySelectorAll<InlineChoiceOptionElement>('qti-inline-choice'));

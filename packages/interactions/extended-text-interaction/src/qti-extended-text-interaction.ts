@@ -8,6 +8,7 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-extended-text-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+import type { ValidityTrigger } from '@qti-components/base';
 /** Rows rendered when neither the class vocabulary nor either length hint resolves. */
 const DEFAULT_ROWS = 5;
 
@@ -209,21 +210,23 @@ export class QtiExtendedTextInteraction extends Interaction {
       isValid = textarea.checkValidity();
     }
 
+    let kind: 'min' | 'other' = 'other';
     if (isValid && !this.response && this.minStrings >= 1) {
       isValid = false;
+      kind = 'min';
     }
 
     if (!isValid && !validityMessage) {
       validityMessage = textarea.validationMessage || 'Invalid value.';
     }
 
-    this.setInteractionValidity(isValid, validityMessage, textarea, { suppressInline: true });
+    this.setInteractionValidity(isValid, validityMessage, textarea, { suppressInline: true, kind });
     return isValid;
   }
 
-  override reportValidity() {
+  override reportValidity(options?: { trigger?: ValidityTrigger }) {
     this.validate();
-    return super.reportValidity();
+    return super.reportValidity(options);
   }
 
   /*
@@ -256,7 +259,7 @@ export class QtiExtendedTextInteraction extends Interaction {
       @keyup="${this.textChanged}"
       @change="${this.textChanged}"
       @blur="${(_: FocusEvent) => {
-        this.reportValidity();
+        this.reportValidity({ trigger: 'change' });
       }}"
       placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
       rows="${this._rows}"
@@ -284,6 +287,9 @@ export class QtiExtendedTextInteraction extends Interaction {
     if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
+      // Report as the candidate types, like text entry: a shown message clears the moment the
+      // answer is acceptable, not when the field loses focus.
+      this.reportValidity({ trigger: 'change' });
     }
   }
 }

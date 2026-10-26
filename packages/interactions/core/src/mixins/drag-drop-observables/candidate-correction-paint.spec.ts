@@ -38,7 +38,9 @@ const TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
 const applyTheme = () => {
   document.querySelectorAll('style[data-corr]').forEach(s => s.remove());
-  for (const css of [normalizeCss, itemCss]) {
+  // The theme fades a verdict in (qti-motion.css); a computed colour read right after the state is
+  // set would be mid-fade. Its one knob is an inherited input, so zeroing it here reaches every root.
+  for (const css of [normalizeCss, itemCss, ':root { --qc-motion: 0; }']) {
     const style = document.createElement('style');
     style.setAttribute('data-corr', '');
     style.textContent = css;

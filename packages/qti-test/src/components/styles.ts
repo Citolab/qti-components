@@ -168,6 +168,16 @@ export const button = css`
   :host(:active:not([disabled])) .control {
     ${btnActive};
   }
+  /* The press the theme gives a choice (qti-motion.css), from the same knob: a touch smaller while
+     the button is down, springing back on release; 0 motion means no press. */
+  .control {
+    transition:
+      background-color calc(200ms * var(--qti-motion, 1)) cubic-bezier(0.2, 0, 0, 1),
+      scale calc(200ms * var(--qti-motion, 1)) cubic-bezier(0.2, 0, 0, 1);
+  }
+  :host(:active:not([disabled])) .control {
+    scale: calc(1 - 0.03 * var(--qti-motion, 1));
+  }
   :host(:focus-visible) {
     ${focusRing};
   }

@@ -32,9 +32,6 @@
 
     background-color: transparent;
     cursor: pointer;
-    transition:
-      background-color 0.15s ease,
-      box-shadow 0.15s ease;
   }
 
   /* Box shapes: the ring is an inset shadow, with a halo just inside it and 1px just outside. */

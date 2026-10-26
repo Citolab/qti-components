@@ -38,10 +38,11 @@
        that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction only, and no
        item in this repo ever set it on a gap-match interaction. What was here overrode the neutral
        drag-bank highlight below with --qti-light-* and --qti-dark-* colours that nothing could reach. */
-    /* The bank while a chip from a target is in flight (`drag-active` on the bank itself): it can
-       take the chip back. A chip lifted out of the bank leaves it unlit. */
-    &::part(bank drag-active) {
-      @mixin dropping;
+    /* The bank, while a chip from a target is in flight, is never filled: the cue is a ring around it
+       when the chip crosses it (`drag-over`), nothing before. */
+    &::part(bank drag-over) {
+      outline: var(--qti-drop-highlight-border-width) solid var(--qti-drop-highlight-border-color);
+      outline-offset: var(--qti-focus-offset);
     }
     & qti-gap {
       @mixin inline;
@@ -191,11 +192,9 @@
     pointer-events: none;
   }
 
-  qti-gap-match-interaction qti-gap-text:state(return-target) {
-    border-color: var(--qti-drop-highlight-border-color);
-    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
-  }
+  /* `:state(return-target)` (the bank chip a lifted placed chip goes back to) is set but not painted:
+     the cue is the bank as a whole, lit while the chip is in flight and ringed when the chip is over
+     it, not the one slot it came from. */
 
   qti-gap-match-interaction qti-gap:state(drag-active) {
     background-color: var(--qti-drop-highlight-enabled-bg);

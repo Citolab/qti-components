@@ -12,9 +12,6 @@
       background-color: color-mix(in oklab, var(--qti-border-color) 18%, transparent);
       padding: 0;
       cursor: pointer;
-      transition:
-        background-color var(--qti-motion-duration-fast, 0.15s) ease,
-        border-color var(--qti-motion-duration-fast, 0.15s) ease;
 
       &[shape='circle'] {
         min-width: calc(var(--qti-graphic-order-pin-size) * 0.6);

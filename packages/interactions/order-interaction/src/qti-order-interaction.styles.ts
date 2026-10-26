@@ -30,10 +30,18 @@ export default [
     }
 
     [part~='bank'] {
+      /* The bank, the same in every drag-drop interaction: flush with the container (no padding, no
+         margin, no edge of its own), chips a --qti-gap apart. Its lit and ringed looks while a chip is
+         in flight are the theme's ('::part(bank drag-active)', '::part(bank drag-over)'). */
       display: flex;
+      flex-wrap: wrap;
       align-items: flex-start;
       flex: 1;
-      flex-wrap: wrap;
+      gap: var(--qti-gap, 0.5rem);
+      padding: 0;
+      margin: 0;
+      border: 0;
+      border-radius: var(--qti-radius-box, 0.2rem);
     }
 
     [part='drops'] {

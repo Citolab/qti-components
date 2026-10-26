@@ -9,6 +9,7 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+import type { ValidityTrigger } from '@qti-components/base';
 
 /**
  * Text-entry interaction: single-line inline text input.
@@ -89,15 +90,17 @@ export class QtiTextEntryInteraction extends Interaction {
       isValid = this._input.checkValidity();
     }
 
+    let kind: 'min' | 'other' = 'other';
     if (isValid && this.response === '') {
       isValid = false;
+      kind = 'min';
     }
 
     if (!isValid && !validityMessage) {
       validityMessage = this._input.validationMessage || 'Invalid value.';
     }
 
-    this.setInteractionValidity(isValid, validityMessage, this._input, { suppressInline: true });
+    this.setInteractionValidity(isValid, validityMessage, this._input, { suppressInline: true, kind });
     return isValid;
   }
 
@@ -120,7 +123,7 @@ export class QtiTextEntryInteraction extends Interaction {
       spellcheck="false"
       autocomplete="off"
       @blur="${(_: FocusEvent) => {
-        this.reportValidity();
+        this.reportValidity({ trigger: 'change' });
       }}"
       @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
       @keyup="${this.textChanged}"
@@ -153,9 +156,9 @@ export class QtiTextEntryInteraction extends Interaction {
     }
   }
 
-  override reportValidity(): boolean {
+  override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
     this.validate();
-    return super.reportValidity();
+    return super.reportValidity(options);
   }
 
   override reset(): void {

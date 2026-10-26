@@ -16,7 +16,7 @@
 
 @layer qti-components.reset, qti-components.global, qti-components.interactions.base,
   qti-components.interactions.brand, qti-components.interactions.states,
-  qti-components.interactions.corrections, qti-components.elements;
+  qti-components.interactions.corrections, qti-components.elements, qti-components.motion;
 
 @import url('./reset.css') layer(qti-components.reset);
 @import url('./prose.css') layer(qti-components.elements);
@@ -33,3 +33,6 @@
 @import url('./qti-elements.css') layer(qti-components.elements);
 @import url('./qti-vocabulary.css') layer(qti-components.elements);
 @import url('./qti-states.css') layer(qti-components.global);
+
+/* How state changes feel: transitions and the press, for every interaction, gated by --qti-motion. */
+@import url('./qti-motion.css') layer(qti-components.motion);

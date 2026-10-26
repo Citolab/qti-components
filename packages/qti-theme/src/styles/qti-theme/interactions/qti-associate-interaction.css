@@ -163,11 +163,9 @@
     visibility: hidden;
   }
 
-  qti-associate-interaction qti-simple-associable-choice:state(return-target) {
-    border-color: var(--qti-drop-highlight-border-color);
-    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
-  }
+  /* `:state(return-target)` (the bank chip a lifted placed chip goes back to) is set but not painted:
+     the cue is the bank as a whole, lit while the chip is in flight and ringed when the chip is over
+     it, not the one slot it came from. */
 }
 
 @layer qti-components.interactions.corrections {

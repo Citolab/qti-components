@@ -1,27 +1,68 @@
 @layer qti-components.interactions.base {
   qti-graphic-associate-interaction {
     /*
-     * qti-associable-hotspot does not use ActiveElementMixin, so it carries no
-     * checked/disabled/readonly custom states. Selection and correction are drawn as
-     * ::part(line) / ::part(point) instead. Give it a `part="chip"` and the
-     * ActiveElementMixin states before adding state-dependent rules here.
+     * The points to connect. Drawn exactly as a hotspot in qti-hotspot-interaction: a ring with a
+     * thin halo on each side, so it reads on any image, darker under the pointer. Until this rule a
+     * point was only `background-color: transparent`, so nothing showed where to click.
      *
-     * No `interactions.states` layer: the `:state(dragzone-*)::part(drags)` bank highlight that was
-     * there is gone, because this interaction has no drag bank, so neither the state nor the part
-     * was ever set (plans/parts-and-states-naming.md). Nor qti-selections-light / -dark: Appendix
-     * B.1 defines that class pair for qti-hotspot-interaction and qti-graphic-gap-match-interaction
-     * only.
+     * qti-associable-hotspot does not use ActiveElementMixin, so it carries no
+     * checked/disabled/readonly custom states; the chosen start of a line and the associations
+     * themselves are drawn as ::part(point) / ::part(line). Nor qti-selections-light / -dark:
+     * Appendix B.1 defines that class pair for qti-hotspot-interaction and
+     * qti-graphic-gap-match-interaction only.
      */
     & qti-associable-hotspot {
-      /* `[shape='square']` used to be in this selector. It is not a QTI shape — the spec has
-         circle, default, ellipse, poly and rect — positionShapes has no branch for it, and no item
-         in the repo sets it. */
-      &[shape='circle'] {
-        background-color: transparent;
-        &:focus {
-          @mixin foc;
-        }
+      --hs-ring: color-mix(in oklab, var(--qti-hotspot-ring-color, var(--qti-border-color)) 60%, transparent);
+      --hs-width: var(--qti-hotspot-ring-width, 2px);
+      --hs-halo: var(--qti-hotspot-halo);
+
+      background-color: transparent;
+      cursor: pointer;
+
+      &:not([shape='poly']) {
+        box-shadow:
+          inset 0 0 0 var(--hs-width) var(--hs-ring),
+          inset 0 0 0 calc(var(--hs-width) + 1px) var(--hs-halo),
+          0 0 0 1px var(--hs-halo);
       }
+
+      &:hover {
+        --hs-ring: color-mix(in oklab, var(--qti-hotspot-ring-color, var(--qti-border-active)) 90%, transparent);
+      }
+
+      &:focus {
+        @mixin foc;
+      }
+
+      /* The chosen start of a line: the ring the hotspot interaction gives a checked hotspot. */
+      &:state(checked) {
+        --hs-ring: var(--qti-hotspot-ring-color, var(--qti-selected-bg));
+        --hs-width: calc(var(--qti-hotspot-ring-width, 2px) * 2);
+      }
+
+      /* At its `match-max`: it takes no more lines. */
+      &:state(full) {
+        cursor: not-allowed;
+      }
+    }
+
+    /*
+     * The lines: black with a white outline, so a line reads on any image, light or dark, as the
+     * hotspot rings do (the halo is the same fixed `--qti-hotspot-halo`, drawn over an author's
+     * image and deliberately not following the theme). The line in progress (`point`) looks the
+     * same. Not arrows: the response is `pair`, undirected, so "A B" is "B A".
+     */
+    &::part(line),
+    &::part(point) {
+      stroke: oklch(0% 0 none);
+      stroke-width: 3px;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 1px var(--qti-hotspot-halo)) drop-shadow(0 0 1px var(--qti-hotspot-halo));
+    }
+
+    /* The answer key's lines keep the answer-key colour, with the same outline. */
+    &::part(line answer-key) {
+      stroke: var(--qti-answer-fg);
     }
   }
 }

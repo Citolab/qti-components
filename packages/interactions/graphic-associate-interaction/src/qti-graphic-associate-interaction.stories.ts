@@ -35,7 +35,8 @@ export default meta;
 export const Default: Story = {
   render: () => html`
     ${template(
-      args,
+      // Several routes, like the packaged item: QTI's default `max-associations` is 1.
+      { ...args, 'max-associations': 3 },
       html`
         <qti-prompt> Mark the airline's new routes on the airport map: </qti-prompt>
         <img src=${ukPng} alt="Map of United Kingdom airports" width="206" height="280" />
@@ -85,8 +86,13 @@ export const ConnectAndRemoveAssociation: Story = {
     });
 
     await step('Remove the association by clicking the line', async () => {
-      const line = await waitFor(() => interaction.shadowRoot?.querySelector<SVGLineElement>('line[part="line"]'));
-      line.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+      // Each line has a remove control: a wide invisible stroke over it, a button named after the pair.
+      const remove = await waitFor(() => {
+        const hit = interaction.shadowRoot?.querySelector<SVGLineElement>('line[data-hit]');
+        expect(hit?.getAttribute('aria-label')).toMatch(/^Remove line/);
+        return hit;
+      });
+      remove.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
 
       await waitFor(() => {
         const response = interaction.response as string[] | null;

@@ -26,7 +26,7 @@ import {
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
-import type { Interaction, RegisteredInteraction } from '@qti-components/base';
+import type { Interaction, RegisteredInteraction, ValidityKind, ValidityTrigger } from '@qti-components/base';
 import type { DragDropState } from '../../context/drag-drop.context';
 import type { DragDropCore } from './drag-drop-core.mixin';
 import type { DropzoneAutoSize } from '../dropzone-auto-size/dropzone-auto-size.mixin';
@@ -40,7 +40,7 @@ export type DragDropSlotted = DragDropCore &
     disableAnimations: boolean;
     enableFlipAnimations: boolean;
     validate(): boolean;
-    reportValidity(): boolean;
+    reportValidity(options?: { trigger?: ValidityTrigger }): boolean;
     reset(): void;
     saveResponse(value?: string | string[]): void;
     shouldTreatBlockedMaxAsInvalid(): boolean;
@@ -383,6 +383,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       this._internals.setFormValue(JSON.stringify(this._response));
+      // A restored or host-written response changes validity like a drop does (silently: a validate
+      // never shows a message), so a form or an end attempt judges what is there now.
+      if (this.trackedDroppables?.length) this.validate();
     }
 
     public override afterCache(): void {
@@ -494,7 +497,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // Always refresh configured validity UI after user-driven drop changes.
       // This ensures inline messages clear immediately when state becomes valid again.
       this.validate();
-      this.reportValidity();
+      this.reportValidity({ trigger: 'change' });
     }
 
     public override handleInvalidDrop(dragSource: HTMLElement | null): void {
@@ -544,7 +547,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       this._dropBlockedDueToMax = attemptedDisabledTarget && maxReached;
       this.validate();
-      this.reportValidity();
+      this.reportValidity({ trigger: 'change' });
     }
 
     /**
@@ -910,6 +913,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       this.resetDragState();
       this.cacheInteractiveElements();
+      // Every target is empty again, so none is full: recompute capacity, or a target that held a
+      // chip before the reset keeps refusing drops. And a fresh attempt waits for a submit before
+      // it shows a too-few message (Interaction.reportValidity); this override skips super.reset().
+      this.trackedDroppables.forEach(droppable => setDropFull(droppable, false));
+      this.checkAllMaxAssociations();
+      this.resetValidityReport();
 
       this._response = [];
       this._internals.setFormValue(JSON.stringify(this._response));
@@ -928,9 +937,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       let validityMessage = '';
       let isValid = true;
+      let kind: ValidityKind = 'other';
 
       // Priority order: exceedsMax > (atMaxCapacity && blockedDrop) > belowMin
       if (exceedsMax) {
+        kind = 'max';
         // QTI conformance: default platform message format
         validityMessage =
           this.getFirstMessageAttribute(['data-max-associations-message', 'data-max-selections-message']) ||
@@ -939,6 +950,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
         isValid = false;
       } else if (atMaxCapacity && this._dropBlockedDueToMax && this.shouldTreatBlockedMaxAsInvalid()) {
+        kind = 'max';
         validityMessage =
           this.getFirstMessageAttribute(['data-max-associations-message', 'data-max-selections-message']) ||
           this.dataset.maxAssociationsMessage ||
@@ -946,6 +958,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
         isValid = false;
       } else if (belowMin) {
+        kind = 'min';
         validityMessage =
           this.getFirstMessageAttribute(['data-min-associations-message', 'data-min-selections-message']) ||
           this.dataset.minAssociationsMessage ||
@@ -960,13 +973,13 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       const validityAnchor = this.trackedDroppables[0] ?? this.trackedDraggables[0] ?? this;
-      this.setInteractionValidity(isValid, validityMessage, validityAnchor, { suppressInline: true });
+      this.setInteractionValidity(isValid, validityMessage, validityAnchor, { suppressInline: true, kind });
 
       return isValid;
     }
 
-    public override reportValidity(): boolean {
-      return super.reportValidity();
+    public override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+      return super.reportValidity(options);
     }
   }
 

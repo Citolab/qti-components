@@ -313,7 +313,6 @@ const prose = card(
 );
 
 const answered = [
-  prose,
   card(
     'Choice',
     html`<qti-choice-interaction response-identifier="R" max-choices="1" response="xenon"
@@ -373,13 +372,6 @@ const answered = [
       </p>
     </qti-hottext-interaction>`
   ),
-  card('Gap match', html`<qti-gap-match-interaction response-identifier="G">${gapText}</qti-gap-match-interaction>`),
-  card(
-    'Order',
-    html`<qti-order-interaction response-identifier="O" shuffle="false" orientation="horizontal"
-      >${orderChoices}</qti-order-interaction
-    >`
-  ),
   card(
     'Match, as a table',
     html`<qti-match-interaction class="qti-match-tabular" response-identifier="M">${matchSets}</qti-match-interaction>`,
@@ -402,47 +394,6 @@ const answered = [
       <img src="/assets/docs/theme-editor/planets.jpg" width="480" height="320" alt="De zon en de acht planeten" />
     </qti-select-point-interaction>`,
     true
-  ),
-  card(
-    'Graphic gap match, words on an image',
-    html`<qti-graphic-gap-match-interaction response-identifier="GG" max-associations="4">
-      <qti-prompt>Sleep elk woord naar het juiste deel van de plant.</qti-prompt>
-      <img src="/assets/docs/theme-editor/plant.jpg" width="320" height="480" alt="Een bloeiende plant" />
-      <qti-gap-text identifier="petal" match-max="1">petal</qti-gap-text>
-      <qti-gap-text identifier="leaf" match-max="1">leaf</qti-gap-text>
-      <qti-gap-text identifier="stem" match-max="1">stem</qti-gap-text>
-      <qti-gap-text identifier="roots" match-max="1">roots</qti-gap-text>
-      <qti-associable-hotspot identifier="A" match-max="1" shape="rect" coords="175,60,275,96"></qti-associable-hotspot>
-      <qti-associable-hotspot
-        identifier="B"
-        match-max="1"
-        shape="rect"
-        coords="40,190,140,226"
-      ></qti-associable-hotspot>
-      <qti-associable-hotspot
-        identifier="C"
-        match-max="1"
-        shape="rect"
-        coords="165,285,265,321"
-      ></qti-associable-hotspot>
-      <qti-associable-hotspot
-        identifier="D"
-        match-max="1"
-        shape="rect"
-        coords="110,405,210,441"
-      ></qti-associable-hotspot>
-    </qti-graphic-gap-match-interaction>`,
-    true
-  ),
-  card(
-    'Associate',
-    html`<qti-associate-interaction response-identifier="A" max-associations="2">
-      <qti-prompt>Koppel elk land aan zijn hoofdstad.</qti-prompt>
-      <qti-simple-associable-choice identifier="fr" match-max="1">Frankrijk</qti-simple-associable-choice>
-      <qti-simple-associable-choice identifier="parijs" match-max="1">Parijs</qti-simple-associable-choice>
-      <qti-simple-associable-choice identifier="es" match-max="1">Spanje</qti-simple-associable-choice>
-      <qti-simple-associable-choice identifier="madrid" match-max="1">Madrid</qti-simple-associable-choice>
-    </qti-associate-interaction>`
   ),
   card(
     'Hotspot',
@@ -511,6 +462,58 @@ const answered = [
     html`<qti-end-attempt-interaction response-identifier="EA" title="Nakijken"></qti-end-attempt-interaction>`
   )
 ];
+/* Every drag-drop interaction side by side: the bank, the chips and the targets are one vocabulary
+   and should look like it. */
+const dragDrop = [
+  card('Gap match', html`<qti-gap-match-interaction response-identifier="G">${gapText}</qti-gap-match-interaction>`),
+  card(
+    'Order',
+    html`<qti-order-interaction response-identifier="O" shuffle="false" orientation="horizontal"
+      >${orderChoices}</qti-order-interaction
+    >`
+  ),
+  card(
+    'Graphic gap match, words on an image',
+    html`<qti-graphic-gap-match-interaction response-identifier="GG" max-associations="4">
+      <qti-prompt>Sleep elk woord naar het juiste deel van de plant.</qti-prompt>
+      <img src="/assets/docs/theme-editor/plant.jpg" width="320" height="480" alt="Een bloeiende plant" />
+      <qti-gap-text identifier="petal" match-max="1">petal</qti-gap-text>
+      <qti-gap-text identifier="leaf" match-max="1">leaf</qti-gap-text>
+      <qti-gap-text identifier="stem" match-max="1">stem</qti-gap-text>
+      <qti-gap-text identifier="roots" match-max="1">roots</qti-gap-text>
+      <qti-associable-hotspot identifier="A" match-max="1" shape="rect" coords="175,60,275,96"></qti-associable-hotspot>
+      <qti-associable-hotspot
+        identifier="B"
+        match-max="1"
+        shape="rect"
+        coords="40,190,140,226"
+      ></qti-associable-hotspot>
+      <qti-associable-hotspot
+        identifier="C"
+        match-max="1"
+        shape="rect"
+        coords="165,285,265,321"
+      ></qti-associable-hotspot>
+      <qti-associable-hotspot
+        identifier="D"
+        match-max="1"
+        shape="rect"
+        coords="110,405,210,441"
+      ></qti-associable-hotspot>
+    </qti-graphic-gap-match-interaction>`,
+    true
+  ),
+  card(
+    'Associate',
+    html`<qti-associate-interaction response-identifier="A" max-associations="2">
+      <qti-prompt>Koppel elk land aan zijn hoofdstad.</qti-prompt>
+      <qti-simple-associable-choice identifier="fr" match-max="1">Frankrijk</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="parijs" match-max="1">Parijs</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="es" match-max="1">Spanje</qti-simple-associable-choice>
+      <qti-simple-associable-choice identifier="madrid" match-max="1">Madrid</qti-simple-associable-choice>
+    </qti-associate-interaction>`
+  )
+];
 
 /* Corrections: the candidate's answer marked, and the answer key below it. Attributes are written as
    a string because show-candidate-correction is read when the element connects. Extended text has
@@ -562,6 +565,10 @@ ${css.length
       <section>
         <h2 class="te-h">At rest and answered</h2>
         <div class="te-g">${answered}</div>
+      </section>
+      <section>
+        <h2 class="te-h">Drag and drop</h2>
+        <div class="te-g">${dragDrop}</div>
       </section>
       <section>
         <h2 class="te-h">Rubric and feedback</h2>
