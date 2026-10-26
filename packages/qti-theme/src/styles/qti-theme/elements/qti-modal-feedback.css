@@ -1,4 +1,23 @@
 /*
+ * The feedback bubble, the same as qti-feedback-block: light grey, no border, large rounded corners and
+ * a hard darker shadow. Its box stays the dialog's own (qti-modal-feedback.ts); the theme paints it.
+ */
+qti-modal-feedback::part(feedback) {
+  border: 0;
+  border-radius: var(--qti-feedback-radius);
+  background-color: var(--qti-callout-bg);
+  box-shadow: var(--qti-feedback-shadow);
+}
+
+/* The dialog's padding is its spacing: no extra margin above the first or below the last paragraph. */
+qti-modal-feedback > :first-child {
+  margin-top: 0;
+}
+qti-modal-feedback > :last-child {
+  margin-bottom: 0;
+}
+
+/*
  * Neither selector below matches anything this repo renders — `qti-modal-feedback-custom` is not a
  * registered element and nothing sets `.custom-modal-feedback`. They are kept as a downstream
  * integration point rather than deleted from a published stylesheet.
@@ -13,4 +32,12 @@
   border-radius: var(--qti-radius-box);
   padding: var(--qti-padding-box);
   margin-top: var(--qti-gap);
+}
+
+/* The dialog's padding is its spacing, and the icon lines up with the first line: no extra margin above the first or below the last paragraph. */
+qti-modal-feedback > :first-child {
+  margin-top: 0;
+}
+qti-modal-feedback > :last-child {
+  margin-bottom: 0;
 }

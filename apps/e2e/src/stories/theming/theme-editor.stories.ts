@@ -57,6 +57,8 @@ const chromeCss = `
   /* Each card is a QTI well (.qti-well, vocabulary §1.1.6.2), drawn by the theme: its tint, border
      and radius follow the preset. Only the grid placement is the editor's. */
   .te-c { margin: 0; min-width: 0; overflow-x: auto; }
+  /* A transform makes the card the containing block of the modal's fixed dialog, so it stays in the card. */
+  .te-c--holds-fixed { transform: translateZ(0); min-height: 10rem; }
   .te-c > figcaption { margin: 0 0 0.75rem; font-size: 0.75rem; font-weight: 600; opacity: 0.75; }
   .te-c--wide { grid-column: span 2; }
   @media (max-width: 40rem) { .te-c--wide { grid-column: auto; } }
@@ -89,6 +91,7 @@ const INPUTS: Record<string, Input> = {
   dragIcon: { token: '--cito-color-drag-icon', control: 'color', group: 'Brand' },
   marker: { token: '--cito-color-marker', control: 'color', group: 'Brand' },
   border: { token: '--cito-color-border', control: 'color', group: 'Brand' },
+  focus: { token: '--cito-color-focus', control: 'color', group: 'Brand' },
   info: { token: '--cito-color-info', control: 'color', group: 'States' },
   success: { token: '--cito-color-success', control: 'color', group: 'States' },
   warning: { token: '--cito-color-warning', control: 'color', group: 'States' },
@@ -194,6 +197,45 @@ const matchSets = html`
   </qti-simple-match-set>
 `;
 const correction = 'show-candidate-correction show-full-correct-response';
+
+/**
+ * Rubric and feedback, as an item shows them. A feedback shows only in an item whose outcome calls for
+ * it, so each one sits in an item of its own, and `showFeedback` sets that outcome once the page is up.
+ * The modal's dialog is `position: fixed`; its card holds it (`.te-c--holds-fixed`).
+ */
+const feedbackItem = (body: string) =>
+  `<qti-assessment-item identifier="feedback"><qti-outcome-declaration identifier="FEEDBACK" cardinality="single" base-type="identifier"></qti-outcome-declaration><qti-item-body>${body}</qti-item-body></qti-assessment-item>`;
+const feedback = (tag: string, text: string) =>
+  `<${tag} outcome-identifier="FEEDBACK" identifier="shown" show-hide="show">${text}</${tag}>`;
+const content = [
+  [
+    'Rubric block',
+    `<qti-item-body><qti-rubric-block><p>Read the text first. Then answer the questions.</p></qti-rubric-block></qti-item-body>`
+  ],
+  [
+    'Feedback block',
+    feedbackItem(
+      `<p>Which is acidic?</p>${feedback('qti-feedback-block', '<p>Not quite: a pH below 7 is acidic.</p>')}`
+    )
+  ],
+  [
+    'Feedback inline',
+    feedbackItem(
+      `<p>Plants make their own food. In their leaves, light turns water and carbon dioxide into sugar, and ${feedback('qti-feedback-inline', 'the gas they give off is oxygen')}, which leaves the leaf through tiny openings. The roots take up the water the plant needs from the soil.</p>`
+    )
+  ],
+  ['Modal feedback', feedbackItem(feedback('qti-modal-feedback', '<p>Well done: that is right.</p>'))]
+] as const;
+
+/** Switches every feedback on, the way a host replays an outcome, once the page is in the document. */
+const showFeedback = (root: ShadowRoot) => {
+  if (!root.host.isConnected) return void requestAnimationFrame(() => showFeedback(root));
+  for (const item of root.querySelectorAll<HTMLElement & { setOutcomeVariable(id: string, value: string): void }>(
+    'qti-assessment-item'
+  )) {
+    item.setOutcomeVariable('FEEDBACK', 'shown');
+  }
+};
 
 const answered = [
   card(
@@ -446,6 +488,18 @@ ${css.length
         <div class="te-g">${answered}</div>
       </section>
       <section>
+        <h2 class="te-h">Rubric and feedback</h2>
+        <div class="te-g">
+          ${content.map(
+            ([label]) =>
+              html`<figure class="qti-well te-c ${label === 'Modal feedback' ? 'te-c--holds-fixed' : ''}">
+                <figcaption>${label}</figcaption>
+                <div data-slot=${label}></div>
+              </figure>`
+          )}
+        </div>
+      </section>
+      <section>
         <h2 class="te-h">Corrected</h2>
         <div class="te-g">${corrected.map(([label]) => card(label, html`<div data-slot=${label}></div>`))}</div>
       </section>
@@ -454,7 +508,9 @@ ${css.length
   );
   let markup = scratch.innerHTML;
   render(nothing, scratch);
-  for (const [label, specimen] of corrected) markup = markup.replace(`<div data-slot="${label}"></div>`, specimen);
+  for (const [label, specimen] of [...corrected, ...content]) {
+    markup = markup.replace(`<div data-slot="${label}"></div>`, specimen);
+  }
 
   const host = document.createElement('div');
   host.setAttribute('data-testid', 'theme-editor');
@@ -462,6 +518,7 @@ ${css.length
   const shadow = host.attachShadow({ mode: 'open', customElementRegistry: registry });
   shadow.adoptedStyleSheets = [itemSheet, chromeSheet];
   shadow.innerHTML = `<div>${markup}</div>`;
+  showFeedback(shadow);
   return host;
 };
 

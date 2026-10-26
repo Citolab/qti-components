@@ -17,8 +17,15 @@
  * Storybook only. The brand presets are not published with @qti-components/theme.
  */
 
-/* Every preset but `default` paints the page from the tokens, so a dark or tinted surface has text
-   that reads on it. `default` leaves the page alone, as a host's page would be. */
+/* `default` gives the page a light grey: the page the default theme is made for, with white cards
+   (.qti-well) on it. */
+html[data-qti-theme='default'] body,
+html:not([data-qti-theme]) body {
+  background-color: oklch(96.5% 0 none);
+}
+
+/* Every other preset paints the page from the tokens, so a dark or tinted surface has text that
+   reads on it. */
 html[data-qti-theme]:not([data-qti-theme='default']) body {
   background-color: var(--qti-color-base-100);
   color: var(--qti-color-base-content);
