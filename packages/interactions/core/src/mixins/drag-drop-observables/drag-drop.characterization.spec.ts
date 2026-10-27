@@ -193,7 +193,7 @@ describe('drag-drop characterization — response is currently derived from the 
     const chip = byId('ht_zuur');
     expect(chip.internals.states.has('used')).toBe(true);
     expect(chip.internals.states.has('chip'), 'role survives; only pickability is withdrawn').toBe(true);
-    expect(chip.hasAttribute('qti-draggable')).toBe(false);
+    expect(chip.hasAttribute('data-draggable')).toBe(false);
     expect(chip.hasAttribute('tabindex')).toBe(false);
     expect(chip.style.opacity, 'presentation is not written inline any more').toBe('');
   });

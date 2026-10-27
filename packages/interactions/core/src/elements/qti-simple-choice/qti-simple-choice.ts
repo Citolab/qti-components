@@ -29,7 +29,7 @@ import type { CSSResultGroup } from 'lit';
  * @csspart marker - The order-number badge, when `marker` is set.
  */
 /* A choice selects the moment it is pressed, not on release. Not while it is a drag chip (order
-   interaction): ActiveElementMixin checks `qti-draggable` and then waits for the click. */
+   interaction): ActiveElementMixin checks `data-draggable` and then waits for the click. */
 export class QtiSimpleChoice extends ActiveElementMixin(LitElement, 'qti-simple-choice', { activateOn: 'press' }) {
   static override styles: CSSResultGroup = styles;
 

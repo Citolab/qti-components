@@ -96,9 +96,9 @@ export const SortableSwapFilledGaps: Story = {
       await step('Response and associations are updated after swap', async () => {
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['Sp G1', 'W G2', 'Su G3']);
-        expect(deepQuerySelectorAll(getGap(interaction, 'G1'), '[qti-draggable="true"]').length).toBe(1);
-        expect(deepQuerySelectorAll(getGap(interaction, 'G2'), '[qti-draggable="true"]').length).toBe(1);
-        expect(deepQuerySelectorAll(getGap(interaction, 'G3'), '[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G1'), '[data-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G2'), '[data-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G3'), '[data-draggable="true"]').length).toBe(1);
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback as EventListener);
@@ -163,9 +163,9 @@ export const SortableSwapPartialGaps: Story = {
       await step('Response remains partial and reflects swapped assignments', async () => {
         const lastResponse = callback.mock.calls.at(-1)?.[0].detail.response;
         expect(lastResponse).toEqual(['Sp G1', 'W G2']);
-        expect(deepQuerySelectorAll(getGap(interaction, 'G1'), '[qti-draggable="true"]').length).toBe(1);
-        expect(deepQuerySelectorAll(getGap(interaction, 'G2'), '[qti-draggable="true"]').length).toBe(1);
-        expect(deepQuerySelectorAll(getGap(interaction, 'G3'), '[qti-draggable="true"]').length).toBe(0);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G1'), '[data-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G2'), '[data-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(getGap(interaction, 'G3'), '[data-draggable="true"]').length).toBe(0);
       });
     } finally {
       interaction.removeEventListener('qti-interaction-response', callback as EventListener);
@@ -212,7 +212,7 @@ export const SortableAppendWhenGapAllowsMultiple: Story = {
 
         expect((await within(gap1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
         expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
-        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(1);
+        expect(deepQuerySelectorAll(gap2, '[data-draggable="true"]').length).toBe(1);
       });
 
       await step('Move winter from G1 onto occupied G2 to append (no swap-out)', async () => {
@@ -223,8 +223,8 @@ export const SortableAppendWhenGapAllowsMultiple: Story = {
         expect(within(gap1).queryAllByShadowText('winter')).toHaveLength(0);
         expect((await within(gap2).findAllByShadowText('winter')).length).toBeGreaterThan(0);
         expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
-        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(2);
-        expect(deepQuerySelectorAll(gap3, '[qti-draggable="true"]').length).toBe(0);
+        expect(deepQuerySelectorAll(gap2, '[data-draggable="true"]').length).toBe(2);
+        expect(deepQuerySelectorAll(gap3, '[data-draggable="true"]').length).toBe(0);
       });
 
       await step('Response reflects both associations on G2', async () => {
@@ -277,7 +277,7 @@ export const SortableAppendBlockedAtGapMatchMax: Story = {
         await drag(summer, { to: gap2, duration: 300 });
         await settleInteraction(interaction);
 
-        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(2);
+        expect(deepQuerySelectorAll(gap2, '[data-draggable="true"]').length).toBe(2);
       });
 
       await step('Move winter from G1 onto full G2; drop should be blocked', async () => {
@@ -286,7 +286,7 @@ export const SortableAppendBlockedAtGapMatchMax: Story = {
         await settleInteraction(interaction);
 
         expect((await within(gap1).findAllByShadowText('winter')).length).toBeGreaterThan(0);
-        expect(deepQuerySelectorAll(gap2, '[qti-draggable="true"]').length).toBe(2);
+        expect(deepQuerySelectorAll(gap2, '[data-draggable="true"]').length).toBe(2);
         expect((await within(gap2).findAllByShadowText('spring')).length).toBeGreaterThan(0);
         expect((await within(gap2).findAllByShadowText('summer')).length).toBeGreaterThan(0);
       });

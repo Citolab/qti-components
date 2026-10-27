@@ -34,7 +34,7 @@ describe('drag chip states', () => {
     // hole the placeholder is meant to hold open. Pickability is the separate question, asserted on
     // the two attributes below.
     expect(a.internals.states.has('chip'), 'a used chip is still a chip').toBe(true);
-    expect(a.hasAttribute('qti-draggable'), 'spent source is not exposed as draggable').toBe(false);
+    expect(a.hasAttribute('data-draggable'), 'spent source is not exposed as draggable').toBe(false);
     expect(a.hasAttribute('tabindex'), 'spent source leaves keyboard tab order').toBe(false);
 
     // presentation must no longer be painted onto the element
@@ -54,7 +54,7 @@ describe('drag chip states', () => {
     expect(a.internals.states.has('lifted')).toBe(false);
     // it is still a drag source
     expect(a.internals.states.has('chip')).toBe(true);
-    expect(a.getAttribute('qti-draggable')).toBe('true');
+    expect(a.getAttribute('data-draggable')).toBe('true');
     expect(a.getAttribute('tabindex')).toBe('0');
   });
 

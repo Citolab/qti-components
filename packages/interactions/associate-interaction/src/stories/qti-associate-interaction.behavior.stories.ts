@@ -178,10 +178,10 @@ export const SortableCrossRowSwapPartial: Story = {
       });
 
       await step('Association completeness is recalculated after sortable swap', async () => {
-        expect(left0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(right0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(left1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(right1.querySelectorAll('[qti-draggable="true"]').length).toBe(0);
+        expect(left0.querySelectorAll('[data-draggable="true"]').length).toBe(1);
+        expect(right0.querySelectorAll('[data-draggable="true"]').length).toBe(1);
+        expect(left1.querySelectorAll('[data-draggable="true"]').length).toBe(1);
+        expect(right1.querySelectorAll('[data-draggable="true"]').length).toBe(0);
         const response = Array.isArray(interaction.response) ? interaction.response : interaction.response.split(',');
         expect(response).toEqual(['C B']);
       });
@@ -256,10 +256,10 @@ export const SortableCrossRowSwap: Story = {
       });
 
       await step('Associations remain complete after sortable swap', async () => {
-        expect(left0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(right0.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(left1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
-        expect(right1.querySelectorAll('[qti-draggable="true"]').length).toBe(1);
+        expect(left0.querySelectorAll('[data-draggable="true"]').length).toBe(1);
+        expect(right0.querySelectorAll('[data-draggable="true"]').length).toBe(1);
+        expect(left1.querySelectorAll('[data-draggable="true"]').length).toBe(1);
+        expect(right1.querySelectorAll('[data-draggable="true"]').length).toBe(1);
         const response = Array.isArray(interaction.response) ? interaction.response : interaction.response.split(',');
         expect(response.length).toBe(2);
       });

@@ -249,8 +249,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       const lightDraggables = collect(draggablesSelector, this);
       const shadowDraggables = collect(draggablesSelector, this.shadowRoot);
 
-      const lightClones = collect('[qti-draggable="true"]:not([data-drag-clone])', this);
-      const shadowClones = collect('[qti-draggable="true"]:not([data-drag-clone])', this.shadowRoot);
+      const lightClones = collect('[data-draggable="true"]:not([data-drag-clone])', this);
+      const shadowClones = collect('[data-draggable="true"]:not([data-drag-clone])', this.shadowRoot);
 
       // The registry finds chips a query cannot reach — one shadow root deeper, inside a drop
       // target that renders its own contents. It is a union, not a replacement: an element that
@@ -291,7 +291,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
        *
        * Pickability is the separate question, and still filtered: isDragChipHidden is consulted
        * directly at the drag-start and keyboard-navigation sites below, and a spent drag still loses
-       * `qti-draggable` and its tabindex.
+       * `data-draggable` and its tabindex.
        */
       const dragRoleSet = dragDropEnabled ? draggableSet : new Set<HTMLElement>();
       const effectiveDroppableSet = dragDropEnabled ? droppableSet : new Set<HTMLElement>();
@@ -307,7 +307,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       /*
        * Drag-drop ownership of the drag/droppable role states.
        *
-       * `droppable` is the drop-side twin of `qti-draggable`, and it is the ONLY marker. Three of
+       * `droppable` is the drop-side twin of `data-draggable`, and it is the ONLY marker. Three of
        * the five drop targets are light-DOM elements authored in the item body (`qti-gap`,
        * `qti-associable-hotspot`, `qti-simple-associable-choice`), so no part can name them — a part
        * only exists inside the shadow tree that declares it — and a stylesheet needs some way to say
@@ -353,7 +353,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           draggable.style.touchAction = 'none'; // Prevent ALL default touch behaviors
           draggable.style.webkitUserSelect = 'none'; // Safari compatibility
           (draggable.style as any).webkitTouchCallout = 'none'; // Prevent iOS callout
-          draggable.setAttribute('qti-draggable', 'true');
+          draggable.setAttribute('data-draggable', 'true');
           draggable.setAttribute('tabindex', '0');
         } else {
           draggable.style.cursor = '';
@@ -361,7 +361,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           draggable.style.touchAction = '';
           draggable.style.webkitUserSelect = '';
           (draggable.style as any).webkitTouchCallout = '';
-          draggable.removeAttribute('qti-draggable');
+          draggable.removeAttribute('data-draggable');
           if (draggable.getAttribute('tabindex') === '0') {
             draggable.removeAttribute('tabindex');
           }
@@ -1032,7 +1032,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       clone.style.touchAction = 'none'; // Prevent touch interactions
       clone.style.userSelect = 'none'; // Prevent selection
 
-      clone.removeAttribute('qti-draggable');
+      clone.removeAttribute('data-draggable');
       clone.removeAttribute('tabindex');
       clone.setAttribute('data-drag-clone', 'true');
       // Which interaction this chip came from, for theme rules that need to tell one in flight from

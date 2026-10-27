@@ -401,10 +401,10 @@ export const ResetAndProgrammaticResponse: Story = {
     await step('Reset clears all hotspots', async () => {
       interaction.reset();
       await settleInteraction(interaction);
-      expect(hotspotA.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
-      expect(hotspotB.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
-      expect(hotspotC.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
-      expect(hotspotD.shadowRoot!.querySelector('[qti-draggable="true"]')).toBeFalsy();
+      expect(hotspotA.shadowRoot!.querySelector('[data-draggable="true"]')).toBeFalsy();
+      expect(hotspotB.shadowRoot!.querySelector('[data-draggable="true"]')).toBeFalsy();
+      expect(hotspotC.shadowRoot!.querySelector('[data-draggable="true"]')).toBeFalsy();
+      expect(hotspotD.shadowRoot!.querySelector('[data-draggable="true"]')).toBeFalsy();
     });
 
     await step('Programmatic response rebuilds placements', async () => {

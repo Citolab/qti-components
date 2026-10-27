@@ -5,11 +5,11 @@ export function findDraggableTarget(event: Event, draggablesSelector: string): H
 
   for (const element of composedPath) {
     if (element instanceof HTMLElement && element.tagName !== 'SLOT') {
-      if (element.matches(draggablesSelector) || element.hasAttribute('qti-draggable')) {
+      if (element.matches(draggablesSelector) || element.hasAttribute('data-draggable')) {
         return element;
       }
 
-      const closest = element.closest(draggablesSelector) || element.closest('[qti-draggable="true"]');
+      const closest = element.closest(draggablesSelector) || element.closest('[data-draggable="true"]');
       if (closest) {
         return closest as HTMLElement;
       }
@@ -223,7 +223,7 @@ export function getMatchMaxValue(draggables: HTMLElement[], identifier: string):
  * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
  * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
  * documents the exact counting semantics that method reproduces:
- * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * response uses the structural selector, capacity uses max(selector, [data-draggable]).
  * Delete once drop targets render from the context.
  */
 export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector: string): boolean {
@@ -232,7 +232,7 @@ export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector
   if (matchMax === 0) return false;
 
   const selectorMatches = droppable.querySelectorAll(draggablesSelector);
-  const attributeMatches = droppable.querySelectorAll('[qti-draggable="true"]');
+  const attributeMatches = droppable.querySelectorAll('[data-draggable="true"]');
   const current = Math.max(selectorMatches.length, attributeMatches.length);
 
   return current >= matchMax;
@@ -242,13 +242,13 @@ export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector
  * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
  * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
  * documents the exact counting semantics that method reproduces:
- * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * response uses the structural selector, capacity uses max(selector, [data-draggable]).
  * Delete once drop targets render from the context.
  */
 export function countTotalAssociations(droppables: HTMLElement[], draggablesSelector: string): number {
   return droppables.reduce((total, droppable) => {
     const selectorMatches = droppable.querySelectorAll(draggablesSelector).length;
-    const attributeMatches = droppable.querySelectorAll('[qti-draggable="true"]').length;
+    const attributeMatches = droppable.querySelectorAll('[data-draggable="true"]').length;
     return total + Math.max(selectorMatches, attributeMatches);
   }, 0);
 }
@@ -257,7 +257,7 @@ export function countTotalAssociations(droppables: HTMLElement[], draggablesSele
  * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
  * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
  * documents the exact counting semantics that method reproduces:
- * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * response uses the structural selector, capacity uses max(selector, [data-draggable]).
  * Delete once drop targets render from the context.
  */
 export function collectResponseData(droppables: HTMLElement[], draggablesSelector: string): string[] {

@@ -7,7 +7,6 @@ import {
   DragDropSlottedSortableMixin
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
-// import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
 import tabularStyles from './qti-match-interaction-tabular.styles';
 
@@ -69,7 +68,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
     'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
     'qti-simple-match-set:first-of-type'
   ),
-  '[qti-draggable="true"]'
+  '[data-draggable="true"]'
 ) {
   static override styles: CSSResultGroup = [styles, tabularStyles];
 

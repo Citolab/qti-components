@@ -140,7 +140,7 @@ This behavior is implemented in `dropDraggableInDroppable`:
 1. `cacheInteractiveElements`
 
 - collect draggables, droppables, inventory containers from light and shadow scopes
-- apply baseline draggable attributes/styles (`qti-draggable`, cursor, `tabindex`, touch-action)
+- apply baseline draggable attributes/styles (`data-draggable`, cursor, `tabindex`, touch-action)
 
 2. `initiateDrag`
 

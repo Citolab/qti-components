@@ -33,7 +33,10 @@ const SlottedBase = DragDropSlottedMixin(
  * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
-export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
+export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(
+  SlottedBase,
+  '[data-draggable="true"]'
+) {
   static override styles: CSSResultGroup = styles;
 
   /** QTI's default (information model §5.60). */

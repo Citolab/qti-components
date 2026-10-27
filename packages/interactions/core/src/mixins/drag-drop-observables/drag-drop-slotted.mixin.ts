@@ -225,7 +225,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         const bySelector = this.chipsIn(droppable);
         const byAttribute = this.isDeclarativeTarget(droppable)
           ? bySelector
-          : Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+          : Array.from(droppable.querySelectorAll<HTMLElement>('[data-draggable="true"]'));
 
         // Response uses the structural selector only; capacity uses whichever finds more.
         // These differ, and collapsing them would silently change matchMax behaviour.
@@ -643,14 +643,14 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const allowsMultiple = matchMax === 0 || matchMax > 1;
 
       // FLIP: First - capture positions of existing children in droppable
-      const existingChildren = Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+      const existingChildren = Array.from(droppable.querySelectorAll<HTMLElement>('[data-draggable="true"]'));
       const flipStates =
         this.enableFlipAnimations && existingChildren.length > 0 ? captureMultipleFlipStates(existingChildren) : null;
 
       if (!allowsMultiple) {
         const existing =
           this.chipsIn(droppable)[0] ??
-          (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[qti-draggable="true"]'));
+          (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[data-draggable="true"]'));
         if (existing) {
           const existingId = existing.getAttribute('identifier');
           // Where the evicted occupant is standing right now. Taken before it is removed, because
@@ -684,7 +684,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const cleanClone = draggable.cloneNode(true) as HTMLElement;
       cleanClone.removeAttribute('style'); // Remove inline styles from the clone
       cleanClone.removeAttribute('data-keyboard-dragging'); // Remove keyboard dragging indicator
-      cleanClone.setAttribute('qti-draggable', 'true');
+      cleanClone.setAttribute('data-draggable', 'true');
       cleanClone.setAttribute('tabindex', '0');
 
       // FLIP: Last - add the new element (this may cause siblings to shift)
@@ -805,7 +805,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const shiftingItems: HTMLElement[] = [];
       this.trackedDragContainers.forEach(container => {
         container
-          .querySelectorAll<HTMLElement>('[qti-draggable="true"]')
+          .querySelectorAll<HTMLElement>('[data-draggable="true"]')
           .forEach(item => !returning.has(item) && shiftingItems.push(item));
       });
 

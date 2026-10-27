@@ -8,7 +8,6 @@ import {
   DragDropSlottedSortableMixin
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
-// import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-associate-interaction.styles';
 
 import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-core/elements/qti-simple-associable-choice';
@@ -37,7 +36,7 @@ const SlottedBase = DragDropSlottedMixin(
  * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
-export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
+export class QtiAssociateInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[data-draggable="true"]') {
   static override styles: CSSResultGroup = styles;
   @state() protected _childrenMap: Element[] = [];
 

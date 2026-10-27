@@ -24,7 +24,7 @@ export interface DragDropState {
    * Target identifier -> how many chips it holds for capacity purposes.
    *
    * Deliberately *not* `dragsByTarget[id].length`. Capacity counts
-   * `max(draggablesSelector matches, [qti-draggable] matches)`, because a dropped clone may not
+   * `max(draggablesSelector matches, [data-draggable] matches)`, because a dropped clone may not
    * match the interaction's structural selector (match-interaction's nested choices do; a bare
    * clone elsewhere may only carry the attribute). Response serialisation uses the selector
    * only. Collapsing the two would silently change `matchMax` behaviour.

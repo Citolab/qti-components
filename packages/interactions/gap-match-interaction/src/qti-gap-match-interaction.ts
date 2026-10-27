@@ -6,7 +6,6 @@ import {
   DragDropSlottedSortableMixin
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
-// import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop/drag-drop-interaction-mixin.js';
 import styles from './qti-gap-match-interaction.styles.js';
 
 import type { CSSResultGroup } from 'lit';
@@ -43,7 +42,7 @@ import type { CSSResultGroup } from 'lit';
  */
 export class QtiGapMatchInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(Interaction, 'qti-gap-text', 'qti-gap', `slot[part~='drags']`),
-  '[qti-draggable="true"]'
+  '[data-draggable="true"]'
 ) {
   static override styles: CSSResultGroup = styles;
 

@@ -27,7 +27,7 @@ interface ShiftState {
 
 export const DragDropSlottedSortableMixin = <T extends Constructor<DragDropSlotted>>(
   superClass: T,
-  sortableItemSelector = '[qti-draggable="true"]'
+  sortableItemSelector = '[data-draggable="true"]'
 ) => {
   abstract class DragDropSlottedSortableElement extends superClass {
     #sourceSlot: HTMLElement | null = null;

@@ -310,7 +310,7 @@ export const DuplicateDropIsolationRegression: Story = {
       'Moving Alpha from Target 2 into occupied Target 3 preserves unrelated Alpha and swaps local occupants',
       async () => {
         const alphaInTarget2 = await waitFor(() => {
-          const dropped = deepQuerySelector(target2, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+          const dropped = deepQuerySelector(target2, '[identifier="A"][data-draggable="true"]') as HTMLElement | null;
           expect(dropped).not.toBeNull();
           return dropped as HTMLElement;
         });
@@ -350,7 +350,7 @@ export const SortableAppendWhenTargetAllowsMultiple: Story = {
 
     await step('Move Alpha from Target 2 onto occupied Target 3 (match-max=2)', async () => {
       const alphaInTarget2 = await waitFor(() => {
-        const dropped = deepQuerySelector(target2, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        const dropped = deepQuerySelector(target2, '[identifier="A"][data-draggable="true"]') as HTMLElement | null;
         expect(dropped).not.toBeNull();
         return dropped as HTMLElement;
       });
@@ -361,7 +361,7 @@ export const SortableAppendWhenTargetAllowsMultiple: Story = {
       expect(within(target2).queryAllByShadowText('Alpha').length).toBe(0);
       expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
       expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
-      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
+      expect(deepQuerySelectorAll(target3, '[data-draggable="true"]').length).toBe(2);
     });
   }
 };
@@ -385,21 +385,21 @@ export const SortableRespectsPerTargetMatchMax: Story = {
       expect(within(target1).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
       expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
       expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
-      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
+      expect(deepQuerySelectorAll(target3, '[data-draggable="true"]').length).toBe(2);
     });
 
     await step(
       'Move Alpha from Target 1 onto full Target 3; drop should be blocked by per-target match-max',
       async () => {
         const alphaInTarget1 = await waitFor(() => {
-          const dropped = deepQuerySelector(target1, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+          const dropped = deepQuerySelector(target1, '[identifier="A"][data-draggable="true"]') as HTMLElement | null;
           expect(dropped).not.toBeNull();
           return dropped as HTMLElement;
         });
         await drag(alphaInTarget1, { to: target3, duration: 350 });
 
         // Target 3 remains at capacity with original two items.
-        expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
+        expect(deepQuerySelectorAll(target3, '[data-draggable="true"]').length).toBe(2);
         expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
         expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
 
@@ -432,12 +432,12 @@ export const SortableAppendWhenTargetIsUnlimited: Story = {
       expect(within(target2).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
       expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
       expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
-      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(2);
+      expect(deepQuerySelectorAll(target3, '[data-draggable="true"]').length).toBe(2);
     });
 
     await step('Move Alpha from Target 2 onto occupied unlimited Target 3; item should append', async () => {
       const alphaInTarget2 = await waitFor(() => {
-        const dropped = deepQuerySelector(target2, '[identifier="A"][qti-draggable="true"]') as HTMLElement | null;
+        const dropped = deepQuerySelector(target2, '[identifier="A"][data-draggable="true"]') as HTMLElement | null;
         expect(dropped).not.toBeNull();
         return dropped as HTMLElement;
       });
@@ -446,7 +446,7 @@ export const SortableAppendWhenTargetIsUnlimited: Story = {
       expect(within(target2).queryAllByShadowText('Alpha').length).toBe(0);
       expect(within(target3).queryAllByShadowText('Alpha').length).toBeGreaterThan(0);
       expect(within(target3).queryAllByShadowText('Beta').length).toBeGreaterThan(0);
-      expect(deepQuerySelectorAll(target3, '[qti-draggable="true"]').length).toBe(3);
+      expect(deepQuerySelectorAll(target3, '[data-draggable="true"]').length).toBe(3);
     });
   }
 };
