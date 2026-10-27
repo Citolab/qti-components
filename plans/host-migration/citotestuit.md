@@ -201,12 +201,6 @@ computed context (or `itemContext.valid` on the item).
   hyphen, which is no QTI value: use `'not_attempted'`.
   Evidence: read from `frontend/` and `QtiBackend.Core/`, not run
 
-## Not in the library, still in the host
-
-- `item.resetInteractions` no longer exists; the host already calls it with `?.`.
-- Deep shadow queries (39 `shadowRoot` uses) and `internals.states` reads in the admin stats are
-  internal and may change in a minor.
-
 ### One vocabulary for parts and states (feat/parts-states-vocabulary)
 
 Status: breaking in the next major; old names still set in this one
@@ -226,7 +220,7 @@ Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-n
 `qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
 names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-request-navigation`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-interaction-changed`, `qti-outcome-changed`) are no
 longer sent or handled: the navigation fallback that dispatches `qti-request-navigation` and the loading spinner on `qti-navigation-loading-started` move to `qc-test-navigate` and `qc-test-navigation-started` in the same upgrade; `cito-test-navigation-started` keeps working until then.
-Evidence: read from the event rows of `plans/public-api.md` (C), not run
+Evidence: read from the event table of the public-API survey (C), not run
 
 ### Theme inputs renamed `--qc-*`; buttons read `--button-*` (feat/parts-states-vocabulary)
 
@@ -238,3 +232,42 @@ Do: the seven `--test-button-*` values on `test-item-to-speech` become `--button
 the selected TTS button also carries `:state(selected)`. `::part(button)` is unchanged. Brand colours,
 when the player sets any, go in `--qc-*` on `:root` (CONTRACT §8, §11).
 Evidence: read from `ttsControls.ts:28-55`, not run
+
+### Validity messages are timed like a native form (feat/parts-states-vocabulary)
+
+Status: behaviour change; nothing required
+Members: `configContext` (`validationDisplayMode: 'none'`, `reportValidityAfterScoring: false`)
+Do: nothing. With `'none'` no message is rendered, before or after. What changed underneath: a too-few
+message (below `min-choices`, `min-associations`, `min-strings`) now shows only after a submit or end
+attempt, too-many shows at once, and validity is set from the first render. The reason given for
+`'none'` in `AssessmentPlayerView.tsx:80-108` (emptying a match interaction or tabbing out of an
+untouched extended text popped "select at least one …") no longer happens with the default
+`'inline'`, so `'none'` is now a choice, not a workaround. Keep it if students should never see a
+message, also not after an end attempt.
+Evidence: read from `AssessmentPlayerView.tsx:80-108`, not run
+
+### Position object is a real interaction; graphic associate follows QTI (feat/parts-states-vocabulary)
+
+Status: breaking (graphic associate `max-associations` default, position object response); review stats keep working
+Members: `QtiPositionObjectInteraction` (subclassed by `StatsInteractionMixin`), `QtiGraphicAssociateInteractionCorrection`
+Do:
+
+- `qti-position-object-interaction` now extends `Interaction` and records a `point` response: one
+  `"x y"` per placement, the object's centre in the stage image's own pixels, `max-choices` default 1.
+  Before, it recorded nothing, so stored attempts have no value for it. Review stats will now see
+  coordinates; group them into areas (the item's `qti-area-mapping`) before counting, or every
+  placement is its own row. The `-stats` subclass in `genericInteractionStats.ts:54` still works:
+  the class is still exported from `@citolab/qti-components` and `render()` still chains.
+- `qti-graphic-associate-interaction` without `max-associations` now allows one line (the QTI
+  default); an item that relied on unlimited lines needs the attribute. A pair is undirected, so
+  "B A" is stored as the existing "A B", and a point cannot pair with itself. The review fixture
+  `graphic-associate.xml` sets `max-associations="2"` and is not affected. The correction class keeps
+  its name.
+  Evidence: read from `genericInteractionStats.ts:1-60`, `reviewStatsModel.ts:64-74`,
+  `withStats.ts:120-160`, `review-interactions/items/graphic-associate.xml:23`, not run
+
+## Not in the library, still in the host
+
+- `item.resetInteractions` no longer exists; the host already calls it with `?.`.
+- Deep shadow queries (39 `shadowRoot` uses) and `internals.states` reads in the admin stats are
+  internal and may change in a minor.

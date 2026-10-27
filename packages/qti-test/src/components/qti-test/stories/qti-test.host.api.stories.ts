@@ -16,7 +16,7 @@ import type { QtiTest } from '../qti-test';
 import type { QtiTestState } from '../../../types/qti-test-state';
 
 /**
- * The host tier of the public API (`plans/public-api.md`): what a page embedding a `<qti-test>`
+ * The host tier of the public API (`plans/host-api.md`): what a page embedding a `<qti-test>`
  * calls and listens to, exercised through nothing else. A host that depends on one of these
  * members should break a story here, not in production.
  *

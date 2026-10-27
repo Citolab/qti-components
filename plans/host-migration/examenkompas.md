@@ -9,7 +9,7 @@ and its own navigation (list, thumbnails, previous/next). It keeps the whole `Te
 (`qtiApi.setTestContext`), plus its own fields (`navItemId`, `referrer`, scores).
 
 The 7.28 → 9.3 steps in `kennisnet-migration-guide-9x.md` apply as far as they concern members used here;
-the entries below say which. `plans/public-api.md` has no column for this host yet.
+the entries below say which.
 
 ## 7.27.4 → 9.3.0
 
@@ -150,7 +150,7 @@ Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-n
 `qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
 names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-interaction-changed`, `qti-outcome-changed`) are no
 longer sent or handled: the answer and score listeners in `assessment.tsx` move to `qc-item-response-changed` and `qc-item-outcome-changed` (same `detail`) in the same upgrade.
-Evidence: read from the event rows of `plans/public-api.md` (examenkompas), not run
+Evidence: read from the event table of the public-API survey (examenkompas), not run
 
 ### Theme inputs renamed `--qc-*`; buttons read `--button-*` (feat/parts-states-vocabulary)
 
@@ -160,3 +160,13 @@ Do: nothing breaks. The controls keep their classes and `::part(button)`; a bran
 is a block of `--qc-*` values on `:root` (CONTRACT §8), and any CSS on parts or states goes in
 `test-container`'s `<template><style>` (CONTRACT §11).
 Evidence: read from `assessment.tsx:1063-1071`, not run
+
+### Validity messages are timed like a native form (feat/parts-states-vocabulary)
+
+Status: behaviour change; nothing required
+Members: `configContext` (`reportValidityAfterScoring: false`; `validationDisplayMode` left at `'inline'`)
+Do: nothing. Students stop seeing "Please select at least 1 …" while answering (for example after
+dragging a chip back out of a target): a too-few message now shows only after a submit or end
+attempt; too-many still shows at once. Validity is set from the first render, which matters only
+inside a `<form>`; the player has none.
+Evidence: read from `assessment.tsx:460-472`, not run

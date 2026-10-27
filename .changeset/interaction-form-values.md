@@ -22,3 +22,5 @@ Every interaction that carries a response now works inside a `<form>`.
   lines are reachable by keyboard.
 - Graphic order validates after the click is applied (it was one click behind).
 - Extended text reports as the candidate types, not only on blur.
+
+Host notes: `plans/host-migration/citotestuit.md`.

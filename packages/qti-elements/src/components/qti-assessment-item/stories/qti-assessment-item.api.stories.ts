@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '../qti-assessment-item';
 
 /**
- * The item tier of the public API (`plans/public-api.md`): what a host calls on a single
+ * The item tier of the public API (`plans/host-api.md`): what a host calls on a single
  * `<qti-assessment-item>` to score it from outside, lock it, or show someone's answers in review.
  * Kennisnet scores through a backend and CitoTestUit reviews answers; both go through these members
  * and nothing else.

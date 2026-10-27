@@ -265,7 +265,7 @@ Evidence: read from `qti-vars.scss`, `icon-mask-css-vars.ts`, `player.ts`, not r
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.
 - Shadow DOM patching (`player.ts:189-226`, `qti/item/*.ts`, `draggables.ts:65`) and internal class
   names (`.full-correct-response`, `span.correct-option`, `part~="point"`) are internal and may
-  change in a minor. The styling tier in `plans/public-api.md` tracks a supported replacement.
+  change in a minor. `plans/host-api.md`, "Hooks" ("Checked against Kennisnet"), maps each patch to its supported replacement.
 
 ### Public events renamed `qc-*` (feat/parts-states-vocabulary)
 
@@ -275,4 +275,4 @@ Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-n
 `qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
 names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-request-navigation`, `on-test-switch-view`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-assessment-item-ref-connected`, `qti-interaction-changed`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`) are no
 longer sent or handled: every listener or dispatch on one of them (the 9.x guide, entries on events) moves to its `qc-*` name in the same upgrade.
-Evidence: read from the event rows of `plans/public-api.md` (K), not run
+Evidence: read from the event table of the public-API survey (K), not run

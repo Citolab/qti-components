@@ -55,4 +55,4 @@ Renames (old → new):
   `data-drop-preview`.
 - `@qti-components/base` exports `setState` / `hasState` / `STATE_ALIASES`.
 
-Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`.
+Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.

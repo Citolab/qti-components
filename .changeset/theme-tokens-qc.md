@@ -41,4 +41,4 @@ The public prefix is `qc-` (qti-components); `cito-` is its old name and keeps w
 - **The override contract** is CONTRACT §11 and the docs page "Styling and theming": set `--qc-*`;
   override on parts and states, unlayered; put that CSS in the container's `<template><style>`.
 
-Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`.
+Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.

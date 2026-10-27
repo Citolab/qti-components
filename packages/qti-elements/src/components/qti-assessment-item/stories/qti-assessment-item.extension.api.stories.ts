@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '../qti-assessment-item';
 
 /**
- * The extension tier of the public API (`plans/public-api.md`): a host that adds its own
+ * The extension tier of the public API (`plans/host-api.md`): a host that adds its own
  * interaction by subclassing `Interaction`. PeilingLezen does it about 17 times. This is the
  * contract such a subclass lives by, written as the subclass would write it and run inside a real
  * item, so changing how children register with the item (Phase 4) cannot pass unnoticed.

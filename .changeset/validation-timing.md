@@ -25,3 +25,5 @@ refusing drops.
 Before, dragging a chip into a target and back showed "Please select at least 1 association." at
 once. `reportValidity()` takes an optional `{ trigger: 'change' | 'submit' }` (default `submit`);
 `ValidityKind` and `ValidityTrigger` are exported from `@qti-components/base`.
+
+Host notes: `plans/host-migration/citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.

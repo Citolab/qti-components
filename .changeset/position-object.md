@@ -16,3 +16,5 @@ Parts `object` (tokens `selected`, `used`), `point`, `message`; state `used`.
 `qti-position-object-stage` is now layout only: it no longer moves the object image itself.
 
 `mapResponsePoint` no longer throws on an unanswered single `point` response.
+
+Host notes: `plans/host-migration/citotestuit.md`.
