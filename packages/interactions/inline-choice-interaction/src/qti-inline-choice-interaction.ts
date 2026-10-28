@@ -314,7 +314,10 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     const answerDemanded = this.required || this.minChoices >= 1;
     const isValid = hasSelection || !answerDemanded;
 
-    const validityMessage = this.dataset.minChoicesMessage || 'Please select an option.';
+    // `data-min-selections-message` is the QTI 3 vocabulary name, as on every sibling interaction.
+    // `data-min-choices-message` is what this element used to read; kept so existing items still work.
+    const validityMessage =
+      this.dataset.minSelectionsMessage || this.dataset.minChoicesMessage || 'Please select an option.';
     this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true });
     return isValid;
   }
