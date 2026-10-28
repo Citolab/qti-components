@@ -96,7 +96,8 @@ export interface ConfigContext {
 
   /**
    * Attributes for the iframe every portable custom interaction runs in, read when the frame is created (a running PCI is
-   * not reloaded when this changes). Absent, the frame has neither: it is same-origin with the page, as before.
+   * not reloaded when this changes). Set it on `qti-test` for every item of the test, or on `qti-item` for one item.
+   * Absent, the frame has neither: it is same-origin with the page, as before.
    * - `sandbox`: the frame's `sandbox` attribute. `'allow-scripts'` gives the PCI an opaque origin, so its code cannot
    *   reach the host page's DOM, storage or cookies; the PCI still works, all its communication is postMessage. Without
    *   `allow-scripts` the PCI does not run at all. Note that an opaque origin never gets the camera or microphone, whatever
