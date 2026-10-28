@@ -120,6 +120,13 @@ const PLUGINS: Plugin[] = [
     allow: EXTENDED
   },
   {
+    name: 'lock',
+    package: 'qti-extended',
+    folders: ['test-lock/'],
+    reference: /test-lock|TestLock|lockState|LockState/,
+    allow: EXTENDED
+  },
+  {
     name: 'submit',
     folders: ['components/test-submit/'],
     reference: /(?<![\w-])test-submit(?![\w-])|TestSubmit/,

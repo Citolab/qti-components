@@ -665,7 +665,7 @@ Decided before this plan, in the public-API survey, and still in force:
   the host's model of responses and outcomes, not plugin API.
 - **Plugins ship in two packages** (2026-10-28, replacing "inside `@qti-components/test`"): the ones a
   test runner needs inside `@qti-components/test`, registered with it (submit; `test-next`, `test-prev`
-  and `test-end-attempt` stay core elements); the navigation links, stamp, the scoring, print and view helpers, bookmark, text-to-speech, zoom and the character sheet in `@qti-components/extended`, installed and imported on its own and never
+  and `test-end-attempt` stay core elements); the navigation links, stamp, the scoring, print and view helpers, lock, bookmark, text-to-speech, zoom and the character sheet in `@qti-components/extended`, installed and imported on its own and never
   through the umbrella or `/corrections`. It has `@citolab/qti-components` as a peer dependency and
   reaches the test only through the umbrella's subpaths (`/qti-test/plugin-api`, `/qti-test`,
   `/qti-base`), so a host keeps one copy of base and its context symbols. No per-plugin packages or entry

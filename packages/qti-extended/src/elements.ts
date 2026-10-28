@@ -1,6 +1,7 @@
 import { TestBookmark } from './test-bookmark/test-bookmark.js';
 import { TestCharacterSheet } from './test-character-sheet/test-character-sheet.js';
 import { TestItemLink } from './test-item-link/test-item-link.js';
+import { TestLock } from './test-lock/test-lock.js';
 import { TestPrintContext } from './test-print-context/test-print-context.js';
 import { TestPrintVariables } from './test-print-item-variables/test-print-item-variables.js';
 import { TestPrintState } from './test-print-state/test-print-state.js';
@@ -16,6 +17,8 @@ import { ttsElements } from './tts/elements.js';
 export * from './tts/elements.js';
 
 export { bookmarkedItems } from './test-bookmark/test-bookmark.js';
+export { lockState } from './test-lock/test-lock.js';
+export type { LockState } from './test-lock/test-lock.js';
 export { formatVariableValue } from './test-print-item-variables/test-print-item-variables.js';
 export { zoomElements, zoomLevel } from './test-zoom/test-zoom.js';
 export { ttsContext } from './tts/test-item-to-speech.js';
@@ -25,6 +28,7 @@ export {
   TestBookmark,
   TestCharacterSheet,
   TestItemLink,
+  TestLock,
   TestPrintContext,
   TestPrintState,
   TestPrintVariables,
@@ -47,6 +51,7 @@ export const qtiExtendedElements = [
   { tag: 'test-bookmark', ctor: TestBookmark },
   { tag: 'test-character-sheet', ctor: TestCharacterSheet },
   { tag: 'test-item-link', ctor: TestItemLink },
+  { tag: 'test-lock', ctor: TestLock },
   { tag: 'test-print-context', ctor: TestPrintContext },
   { tag: 'test-print-item-variables', ctor: TestPrintVariables },
   { tag: 'test-print-state', ctor: TestPrintState },
