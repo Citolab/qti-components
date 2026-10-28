@@ -1,5 +1,29 @@
 # @qti-components/interactions
 
+## 1.10.5-next.8
+
+### Patch Changes
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/interactions-core@3.0.0-next.7
+  - @qti-components/order-interaction@3.0.0-next.5
+  - @qti-components/associate-interaction@2.0.0-next.5
+  - @qti-components/gap-match-interaction@2.0.0-next.5
+  - @qti-components/match-interaction@3.0.0-next.5
+  - @qti-components/graphic-gap-match-interaction@2.0.0-next.7
+  - @qti-components/inline-choice-interaction@3.0.0-next.6
+  - @qti-components/select-point-interaction@2.0.0-next.5
+  - @qti-components/upload-interaction@1.2.0-next.5
+  - @qti-components/graphic-associate-interaction@2.0.0-next.5
+  - @qti-components/graphic-order-interaction@2.0.0-next.5
+  - @qti-components/extended-text-interaction@2.0.0-next.6
+  - @qti-components/base@3.0.0-next.6
+  - @qti-components/choice-interaction@2.0.0-next.5
+  - @qti-components/slider-interaction@2.0.0-next.6
+  - @qti-components/text-entry-interaction@2.0.0-next.5
+  - @qti-components/position-object-interaction@2.0.0-next.5
+  - @qti-components/portable-custom-interaction@1.3.0-next.7
+
 ## 1.10.5-next.7
 
 ### Patch Changes

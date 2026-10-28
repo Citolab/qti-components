@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/gap-match-interaction",
   "description": "QTI gap-match-interaction interaction",
-  "version": "1.2.1-next.4",
+  "version": "2.0.0-next.5",
   "author": "",
   "dependencies": {
     "@qti-components/base": "workspace:^",

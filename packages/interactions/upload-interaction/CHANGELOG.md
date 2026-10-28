@@ -1,5 +1,32 @@
 # @qti-components/upload-interaction
 
+## 1.2.0-next.5
+
+### Minor Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - Every interaction that carries a response now works inside a `<form>`.
+
+  - Inline choice, select point and upload write a form value (the chosen identifier; the points as
+    `x y,x y`; the file as a base64 data URL). Select point sets validity with `min-choices` /
+    `max-choices` and renders `::part(message)`.
+  - Graphic associate reads `min-associations` and `max-associations`; the latter defaults to 1, as
+    QTI specifies (breaking: an item without the attribute used to accept any number of lines). It
+    writes a form value and sets validity. Its points are visible (rings), its lines are black with a
+    white outline, a point cannot be paired with itself, "B A" is the existing "A B", each point's
+    `match-max` is enforced (`:state(full)`), the chosen start point carries `:state(checked)`, Escape
+    or a click on the image cancels a started line, lines have a wide remove target, and points and
+    lines are reachable by keyboard.
+  - Graphic order validates after the click is applied (it was one click behind).
+  - Extended text reports as the candidate types, not only on blur.
+
+  Host notes: `plans/host-migration/citotestuit.md`.
+
+### Patch Changes
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/interactions-core@3.0.0-next.7
+  - @qti-components/base@3.0.0-next.6
+
 ## 1.2.0-next.4
 
 ### Patch Changes

@@ -1,5 +1,29 @@
 # @qti-components/position-object-interaction
 
+## 2.0.0-next.5
+
+### Major Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-position-object-interaction` is a real QTI interaction (3.2.16). It extends `Interaction`, so it
+  has a `response-identifier`, a `point` response (each placement's centre point in the stage image's
+  own coordinates), a form value, validity with `min-choices` / `max-choices` (default 1) and the
+  change/submit message timing, `center-point`, `reset`, and restore through `response`. Placing: drag
+  the object onto the stage or click it and then the stage; drag a copy to move it or off the stage
+  to remove it; keyboard Enter places a copy at the stage centre, arrows move it, Delete removes it.
+  Parts `object` (tokens `selected`, `used`), `point`, `message`; state `used`.
+
+  `qti-position-object-stage` is now layout only: it no longer moves the object image itself.
+
+  `mapResponsePoint` no longer throws on an unanswered single `point` response.
+
+  Host notes: `plans/host-migration/citotestuit.md`.
+
+### Patch Changes
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/interactions-core@3.0.0-next.7
+  - @qti-components/base@3.0.0-next.6
+
 ## 1.1.6-next.4
 
 ### Patch Changes
