@@ -42,7 +42,7 @@ any minor, without notice.
 | **Call and set** | the properties, attributes and methods on this page; `config` as a whole object                                                                                               | other public-looking members (`getLoadingProgress`, `updateAssessmentItemView`, `_testElement`, …); mutate `state`, `config` or a context object in place                                        |
 | **Listen**       | the `qc-*` events on this page, on `<qti-test>` or `<qti-item>`                                                                                                               | `qti-*` and other internal events; `cito-*` after the next major                                                                                                                                 |
 | **Send**         | the `qc-*` requests, from a plugin inside `<qti-test>` or `<qti-item>`                                                                                                        | requests from the host page (call the method instead); internal events                                                                                                                           |
-| **Style**        | `--qc-*` variables; `::part()` and `:state()` names from CONTRACT §3; unlayered CSS in a container's `<template><style>`                                                      | `--qti-*` variables; our class names or attributes (`.full-correct-response`, `[dragging]`, `data-draggable`, …); our cascade layers; `@mixin`s                                                   |
+| **Style**        | `--qc-*` variables; `::part()` and `:state()` names from CONTRACT §3; unlayered CSS in a container's `<template><style>`                                                      | `--qti-*` variables; our class names or attributes (`.full-correct-response`, `[dragging]`, `data-draggable`, …); our cascade layers; `@mixin`s                                                  |
 | **Alter**        | item and test XML through the transform callbacks; which element renders a QTI tag (`extendElementName`); feedback and rubric placement through the cancelable events         | nodes inside our shadow roots: add, remove or rewrite them; attributes we set on our own elements                                                                                                |
 | **Add**          | markup next to an interaction or item (in `qc-item-rendered`, `qc-item-answer-key-shown`, `qc-item-correction-shown`); per-item markup with `<template item-ref>`; plugins    | markup inside an interaction; MutationObservers on our DOM (use a hook; if one is missing, that is our bug)                                                                                      |
 | **Extend**       | subclass `Interaction`, `QtiFeedback`, a `Qti*Interaction` or `Qti*InteractionCorrection` class, overriding their documented members                                          | override private (`#`) or undocumented members; register your elements under a `qti-` or `qc-` name                                                                                              |
@@ -58,42 +58,48 @@ part token; the verdict badge is `::part(correction candidate-correct|candidate-
 
 ## `<qti-test>` properties and attributes
 
-| Property                        | Attribute                       | Type                                       | What it is                                                                                              | Now                                                  |
-| ------------------------------- | ------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `src`                           | `src`                           | `string`                                   | URL of the `assessmentTest` XML. Changing it loads another test.                                        | on `test-container` as `testURL` / `test-url`        |
-| `state`                         | —                               | `QtiTestState`                             | The candidate's persistable state. Read it to save, assign it to resume. Assigning before load is fine. | exists                                               |
-| `navigate`                      | `navigate`                      | `'item' \| 'section'`                      | One item or one section at a time.                                                                      | exists                                               |
-| `view`                          | `view`                          | `View` (`candidate`, `scorer`, …)          | Who looks at the test. Shows the matching `[view]` elements and feedback.                               | request event `qc-test-switch-view` only             |
-| `config`                        | —                               | `ConfigContext`                            | All delivery options as one object: a view over the option attributes (see Delivery options).           | exists as `configContext`, also on `test-navigation` |
-| `qtiContext`                    | —                               | `QtiContext`                               | Candidate, environment and the shuffle `seed`. Pass the same seed on resume.                            | exists; alias on `test-navigation`                   |
-| `itemData`                      | —                               | `{ identifier, …fields }[]`                | Your own per-item fields, merged into each item that plugins and `<test-stamp>` templates read.         | on `test-navigation` as `initContext`                |
-| `requestTimeout`                | `request-timeout`               | `number` (ms, default 30000)               | How long an item may take to load before `qc-test-navigation-failed`.                                   | exists                                               |
-| `postLoadTransformCallback`     | —                               | `(transformer, itemRef) => transformer`    | Change each item's XML after it loads, before it renders.                                               | exists                                               |
-| `postLoadTestTransformCallback` | —                               | `(transformer) => transformer`             | Same, for the test XML.                                                                                 | exists                                               |
-| `autoScoreItems`                | `auto-score-items`              | `boolean`                                  | Score every answer change, without counting an attempt.                                                 | attribute on `test-navigation`                       |
-| `validationDisplayMode`         | `validation-display-mode`       | `'inline' \| 'native' \| 'both' \| 'none'` | Where validity messages show (default `inline`).                                                        | `config` only                                        |
-| `reportValidityAfterScoring`    | `report-validity-after-scoring` | `boolean`                                  | Show validity messages when an attempt ends.                                                            | `config` only                                        |
-| `disableAtMaxChoices`           | `disable-at-max-choices`        | `boolean`                                  | Disable the other choices once `max-choices` is reached.                                                | `config` only, two names                             |
-| `allowReorder`                  | `allow-reorder`                 | `'true' \| 'false'`                        | Let placed chips be reordered (default per interaction).                                                | `config` only                                        |
-| `inlineChoicePrompt`            | `inline-choice-prompt`          | `string`                                   | The inline choice's empty option (default `select`).                                                    | `config` only                                        |
-| `inlineChoiceAutosize`          | `inline-choice-autosize`        | `'true' \| 'false'`                        | Size an inline choice to its widest option (default `true`).                                            | `config` only                                        |
-| `infoItemCategory`              | `info-item-category`            | `string`                                   | Items with this category are not numbered as questions.                                                 | `config` only                                        |
+| Property                        | Attribute                       | Type                                            | What it is                                                                                                                                                                                                                           | Now                                                  |
+| ------------------------------- | ------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| `src`                           | `src`                           | `string`                                        | URL of the `assessmentTest` XML. Changing it loads another test.                                                                                                                                                                     | on `test-container` as `testURL` / `test-url`        |
+| `state`                         | —                               | `QtiTestState \| Promise<QtiTestState \| null>` | The candidate's persistable state, including the shuffle `seed` (`session.seed`). Read it to save; assign it to resume. A promise means "a state is coming": the test waits for it before it starts, and `null` means a first start. | exists; promise and seed in state new (#328)         |
+| `navigate`                      | `navigate`                      | `'item' \| 'section'` (default `item`)          | The unit the test pages by. It no longer decides whether the test starts.                                                                                                                                                            | exists; default and no `null` new (#328)             |
+| `startAt`                       | `start-at`                      | `string`                                        | The item-ref to start on (a deep link). Wins over the position in `state`.                                                                                                                                                           | new (#328)                                           |
+| `view`                          | `view`                          | `View` (`candidate`, `scorer`, …)               | Who looks at the test. Shows the matching `[view]` elements and feedback.                                                                                                                                                            | request event `qc-test-switch-view` only             |
+| `config`                        | —                               | `ConfigContext`                                 | All delivery options as one object: a view over the option attributes (see Delivery options).                                                                                                                                        | exists as `configContext`, also on `test-navigation` |
+| `qtiContext`                    | —                               | `QtiContext`                                    | Candidate, environment and the shuffle `seed`. Pass the same seed on resume.                                                                                                                                                         | exists; alias on `test-navigation`                   |
+| `itemData`                      | —                               | `{ identifier, …fields }[]`                     | Your own per-item fields, merged into each item that plugins and `<test-stamp>` templates read.                                                                                                                                      | on `test-navigation` as `initContext`                |
+| `requestTimeout`                | `request-timeout`               | `number` (ms, default 30000)                    | How long an item may take to load before `qc-test-navigation-failed`.                                                                                                                                                                | exists                                               |
+| `postLoadTransformCallback`     | —                               | `(transformer, itemRef) => transformer`         | Change each item's XML after it loads, before it renders.                                                                                                                                                                            | exists                                               |
+| `postLoadTestTransformCallback` | —                               | `(transformer) => transformer`                  | Same, for the test XML.                                                                                                                                                                                                              | exists                                               |
+| `autoScoreItems`                | `auto-score-items`              | `boolean`                                       | Score every answer change, without counting an attempt.                                                                                                                                                                              | attribute on `test-navigation`                       |
+| `validationDisplayMode`         | `validation-display-mode`       | `'inline' \| 'native' \| 'both' \| 'none'`      | Where validity messages show (default `inline`).                                                                                                                                                                                     | `config` only                                        |
+| `reportValidityAfterScoring`    | `report-validity-after-scoring` | `boolean`                                       | Show validity messages when an attempt ends.                                                                                                                                                                                         | `config` only                                        |
+| `disableAtMaxChoices`           | `disable-at-max-choices`        | `boolean`                                       | Disable the other choices once `max-choices` is reached.                                                                                                                                                                             | `config` only, two names                             |
+| `allowReorder`                  | `allow-reorder`                 | `'true' \| 'false'`                             | Let placed chips be reordered (default per interaction).                                                                                                                                                                             | `config` only                                        |
+| `inlineChoicePrompt`            | `inline-choice-prompt`          | `string`                                        | The inline choice's empty option (default `select`).                                                                                                                                                                                 | `config` only                                        |
+| `inlineChoiceAutosize`          | `inline-choice-autosize`        | `'true' \| 'false'`                             | Size an inline choice to its widest option (default `true`).                                                                                                                                                                         | `config` only                                        |
+| `infoItemCategory`              | `info-item-category`            | `string`                                        | Items with this category are not numbered as questions.                                                                                                                                                                              | `config` only                                        |
+
+**Start-up.** The test starts once: when the test has loaded and `state` has settled (a promise
+has resolved). It starts at `startAt` if set, else at the position in `state`, else at the first
+item. `navigateTo` is for moving during the test, not for starting it.
 
 The rows from `autoScoreItems` down are the delivery options: what each means, and how `config`
 relates to them, is under Delivery options.
 
 ## `<qti-test>` methods
 
-| Method                           | Returns                          | What it does                                                                                                                | Now                                                                       |
-| -------------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `navigateTo(type, id?)`          | `void`                           | Go to an item or section. Linear tests may refuse; listen to `qc-test-navigated` or `-failed`.                              | exists                                                                    |
-| `endAttempt(itemId?)`            | `void`                           | End the attempt on the current (or given) item, as QTI defines it (§2.5): `numAttempts` + 1, response processing, feedback. | request event `qc-test-end-attempt` only                                  |
-| `submit()`                       | `boolean`                        | Score the test (outcome processing from the declared defaults), then send `qc-test-submitted`.                              | exists                                                                    |
-| `item(identifier)`               | `QtiAssessmentItem \| undefined` | The rendered item for an item-ref, or `undefined` when it is not rendered.                                                  | `computedContext.itemElement(identifier)`                                 |
-| `setOutcomes(outcomes, itemId?)` | `void`                           | Apply scores from a backend or a human scorer: on the test, or on one item with `itemId`.                                   | `updateOutcomeVariable`, `updateItemVariables`, item `setOutcomeVariable` |
-| `getOutcome(identifier)`         | `OutcomeVariable`                | A test-level outcome.                                                                                                       | exists                                                                    |
-| `showCorrectResponse(show)`      | `void`                           | Show the answer key in every rendered item.                                                                                 | per item, corrections package                                             |
-| `showCandidateCorrection(show)`  | `void`                           | Mark the candidate's answers right or wrong in every rendered item.                                                         | per item, corrections package; host event in 7.x                          |
+| Method                           | Returns                          | What it does                                                                                                                                  | Now                                                                       |
+| -------------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `navigateTo(type, id?)`          | `void`                           | Go to an item or section. Linear tests may refuse; listen to `qc-test-navigated` or `-failed`.                                                | exists                                                                    |
+| `endAttempt(itemId?)`            | `void`                           | End the attempt on the current (or given) item, as QTI defines it (§2.5): `numAttempts` + 1, response processing, feedback.                   | request event `qc-test-end-attempt` only                                  |
+| `submit()`                       | `boolean`                        | Score the test (outcome processing from the declared defaults), then send `qc-test-submitted`.                                                | exists                                                                    |
+| `reset(itemId?)`                 | `void`                           | Reset the current (or given) item, as `qti-item.reset()` does: responses, outcomes and attempts back to their defaults; template values stay. | new (#244)                                                                |
+| `item(identifier)`               | `QtiAssessmentItem \| undefined` | The rendered item for an item-ref, or `undefined` when it is not rendered.                                                                    | `computedContext.itemElement(identifier)`                                 |
+| `setOutcomes(outcomes, itemId?)` | `void`                           | Apply scores from a backend or a human scorer: on the test, or on one item with `itemId`.                                                     | `updateOutcomeVariable`, `updateItemVariables`, item `setOutcomeVariable` |
+| `getOutcome(identifier)`         | `OutcomeVariable`                | A test-level outcome.                                                                                                                         | exists                                                                    |
+| `showCorrectResponse(show)`      | `void`                           | Show the answer key in every rendered item. Added by `@qti-components/corrections`, on the elements it registers; the core does not know it.  | per item, corrections package                                             |
+| `showCandidateCorrection(show)`  | `void`                           | Mark the candidate's answers right or wrong in every rendered item. Added by `@qti-components/corrections`.                                   | per item, corrections package; host event in 7.x                          |
 
 `setOutcomes` takes `[{ identifier, value }]`, the shape `qc-item-outcomes-changed` sends, so a
 backend result goes back in unchanged.
@@ -257,8 +263,8 @@ PCI's). An item stored from a test restores into a `qti-item` and back without c
 | `setOutcomes(outcomes)`         | `void`                           | Apply scores from a backend or a human scorer.                                                                                   | `setOutcomeVariable` on the inner element          |
 | `getOutcome(identifier)`        | `OutcomeVariable`                | One outcome.                                                                                                                     | on the inner element                               |
 | `reset()`                       | `void`                           | Back to the declared defaults: responses, outcomes, attempts. Template values stay.                                              | `resetResponses()` on the inner element            |
-| `showCorrectResponse(show)`     | `void`                           | Show the answer key.                                                                                                             | corrections package, inner element                 |
-| `showCandidateCorrection(show)` | `void`                           | Mark the candidate's answers right or wrong.                                                                                     | corrections package, inner element                 |
+| `showCorrectResponse(show)`     | `void`                           | Show the answer key. Added by `@qti-components/corrections`, on the elements it registers; the core does not know it.            | corrections package, inner element                 |
+| `showCandidateCorrection(show)` | `void`                           | Mark the candidate's answers right or wrong. Added by `@qti-components/corrections`.                                             | corrections package, inner element                 |
 | `item` (getter)                 | `QtiAssessmentItem \| undefined` | The rendered item: the same handle `qti-test.item(id)` returns.                                                                  | reachable only through `item-container.shadowRoot` |
 
 ### `<qti-item>` events you listen to
@@ -385,6 +391,16 @@ Three things, nothing else (qti-theme `CONTRACT.md` §8, §3, §11):
    which it adopts into its shadow root.
 
 `--qti-*` variables, class names inside our shadow roots and the theme's layers are not API.
+
+**States of the host elements.** `qti-test` and `qti-item` carry `:state(loading)` while the test
+or an item loads, so a loading indicator needs CSS only (#243; replaces the never-set
+`navItemLoading` / `navTestLoading`).
+
+**Browser support for `:state()`.** Native from Chrome and Edge 125 and Safari 17.4. Older browsers
+get the same names through a shim that mirrors each state into `data-state`, and the theme carries
+`[data-state~=…]` fallbacks. A host's own `:state()` rules do not reach those browsers; write the
+`[data-state~=…]` arm as well where they matter (#326). Placed drag chips show no verdict colour
+there.
 
 ### `--qc-*` variables
 
@@ -523,6 +539,7 @@ These still work for one major, then go. Each warns once in development.
 | `auto-score-items` (on `test-navigation`)                                                                                                                          | `auto-score-items` on `qti-test`                                                                          |                                                                                  |
 | `disableAfterIfMaxChoicesReached`, `disableAfterMaxReached`                                                                                                        | `disable-at-max-choices` / `disableAtMaxChoices`                                                          | Both keys still accepted in `config`.                                            |
 | Old part and state names (`:state(drag)`, `::part(drags)`, `:state(dragging)`, `:state(placeholder)`, `::part(correction-correct)`, `:state(correct-response)`, …) | the CONTRACT §3 names (`chip`, `bank`, `lifted`, `used`, `correction candidate-correct`, `answer-key`, …) | Set next to the new names; the theme reads only the new ones.                    |
+| `navigate` unset or `null` to stop the test from starting                                                                                                          | `state` as a promise, or `start-at`                                                                       | `navigate` is the unit only, default `item`.                                     |
 | `cito-*` events                                                                                                                                                    | the `qc-*` name                                                                                           | Sent and handled next to the new name.                                           |
 
 `updateItemVariables(itemRefId, variables, state?)` stays as it is for now: it also sets the
@@ -548,11 +565,25 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   root and cannot be heard from outside. `public-events.spec.ts` fails on an undeclared `qc-` event.
 - **Autocomplete:** the custom-elements manifest lists only the members on this page.
 - **Deprecations:** `cito-*` aliases and moved properties warn once in development.
+- **Contract stories:** every member on this page has a story whose play function fails when the
+  member breaks (#240), plus tests that use the library the way each host does (#251).
 - **Not enforceable:** a host can still set `--qti-*` and query open shadow roots. This page says it
   is unsupported; closing the shadow roots would break hosts today.
 
 ## Decided
 
+- **Folded-in issues** (2026-10-27): `test-navigation` folds into `qti-test` (closes #249); a standalone
+  `qti-item` has `state` (closes #236); this plan replaces the public-API review topic (closes #321).
+- **`testHostContext` stays internal** (#304): the fold removes `test-navigation`'s use of it.
+  `test-container` and `qti-assessment-item-ref` still read the test transform callback and
+  `<template item-ref>` from `qti-test` across the shadow root, so the context stays, internal and
+  narrowed to those two. They do not move into `config`, which holds only how items behave.
+- **The core does not know the corrections package** (#245): `showCorrectResponse`,
+  `showCandidateCorrection`, `correct-response-mode` and `full-correct-response-only-when-incorrect`
+  are added by `@qti-components/corrections` to the elements it registers.
+- **Start-up is explicit** (#328): `state` may be a promise, the seed is in the state, `start-at`
+  wins over the stored position, `navigate` defaults to `item` and no longer means "do not start"
+  (`null` is deprecated for one major).
 - **After-state hooks** (2026-10-27): `qc-item-answer-key-shown` and `qc-item-correction-shown` are
   sent once the answer key or the verdicts have rendered, with the rendered elements in `detail`. A
   host decorates them there (Kennisnet's "Juiste antwoord" heading, its verdict icons) instead of
@@ -580,7 +611,26 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   handles `qc-test-end-attempt` and `qc-test-set-outcomes` itself, so a host needs only `qti-test` and
   `test-container`, and plugins work anywhere inside `qti-test`. `<test-navigation>` stays for one
   major as a deprecated wrapper that does nothing; its properties (`configContext`, `initContext`,
-  `qtiContext`, `auto-score-items`) forward to `qti-test`.
+  `qtiContext`, `auto-score-items`) forward to `qti-test`. The wrapper listens to nothing, so a host
+  that keeps it does not get an attempt ended twice.
+
+  The concerns stay apart inside `qti-test`, as units rather than elements:
+
+  | Unit                                                                   | Owns                                                                                                             | Reads                           | Writes                                      |
+  | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------- |
+  | Test model (`TestBaseMixin`, `TestProcessingMixin`, `TestStateMixin`)  | `testContext`: responses, outcomes, test outcomes, outcome processing, `state`                                   | the items                       | `testContext`, `sessionContext`             |
+  | Navigation (`TestNavigationMixin`)                                     | loading and showing items, `navigate`, sequencing                                                                | `sessionContext`                | which item is shown                         |
+  | Session rules (new: `test-navigation`'s body, one mixin or controller) | `computedContext`: item session control, attempts, done, the attempts lock, end-attempt and set-outcome requests | `testContext`, `sessionContext` | `computedContext`, `disabled` on used items |
+
+  The session-rules unit keeps `afterAttemptEnded` and `activeAssessmentItem` as its protected
+  extension point; the corrections package's `qti-test` subclass overrides them instead of
+  subclassing `TestNavigation`. Its specs run on the unit without the rest of `qti-test`.
+
+  Handler order changes: `test-navigation` was a descendant, so it heard `qc-test-loaded`,
+  `qti-assessment-item-connected` and `qti-item-context-updated` before `qti-test`. On one element
+  the registration order decides; the session-rules unit registers after the test model, as
+  `TestStateMixin` already assumes. The fold is done when the attempts-used and end-attempt specs and
+  the linear, sequencing and adaptive stories pass both with and without `<test-navigation>`.
 
 ### Carried over from the host survey
 
@@ -608,12 +658,16 @@ Decided before this plan, in the public-API survey, and still in force:
 
 ## Open decisions
 
-- **Our options against QTI.** Review where an option or behaviour of ours overlaps a QTI rule:
-  `auto-score-items` (must not count an attempt, #299), `require-answer` next to QTI's
-  `validate-responses`, and the `optimal` gating of Next.
-- **Highlights** become a test plugin (CitoTestUit, the Playground and examenkompas use
-  `dep-textmarker`, kept in localStorage per item). They need anchors that survive a reload (item
-  identifier and text position); design those first.
-- **Navigation controls** (`test-next`, `test-prev`, `test-item-link`, …): stay in core, or become one
-  `navigation` plugin.
-- **Lane:** moving members and dropping events breaks hosts, so this is `next` work, after PR #347.
+The order in which this plan is built, and what depends on what, is in [ROADMAP.md](ROADMAP.md).
+
+- **Our options against QTI**: research in [options-against-qti.md](options-against-qti.md).
+- **Scoring that follows `submission-mode`** (#299): `auto-score-items` stays until scoring follows
+  `submission-mode`, then is deprecated for one major. Research in
+  [submission-mode-scoring.md](submission-mode-scoring.md).
+- **PeilingLezen** is surveyed by imports only; survey its 7.14 → 9.x gap before it upgrades.
+
+Settled 2026-10-27:
+
+- **Lane:** `next`, after PR #347.
+- **Navigation controls** stay in core; a separate package would be too small.
+- **Highlights** are out of this plan.

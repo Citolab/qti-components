@@ -124,9 +124,11 @@ Two lanes, one backlog.
 
 - **`main`** is the current major. Always releasable. Fixes and non-breaking features land here.
 - **`next`** is the integration branch for the next major. Breaking and architectural changes land here.
-- **The backlog is GitHub issues.** Nothing else holds open work. `plans/` is for design
-  decisions only (e.g. `host-api.md`); a plan with open tasks turns those tasks into issues and
-  is deleted when it ships.
+- **The backlog is `plans/ROADMAP.md`** for planned work, and GitHub issues for bugs and requests
+  from outside. The roadmap orders the phases, says what each needs first and where each stands,
+  and links a plan per phase. `plans/host-api.md` holds the decisions; a phase with research has its
+  own plan, deleted when the phase ships. The PR that ships a phase updates the roadmap in the same
+  commit. Read the roadmap before starting planned work.
 
 ### Choosing the lane
 
