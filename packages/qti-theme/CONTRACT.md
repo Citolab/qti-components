@@ -426,7 +426,9 @@ browser.
 
 ## 11. Overriding the theme: the third-party contract
 
-Three rules, and nothing else to learn.
+Three rules, and nothing else to learn. What a host may rely on across releases, and how each kind of
+change is released, is `plans/host-api.md` → Styling → What we promise; a change to this section
+changes that page in the same commit.
 
 1. **Set the inputs.** `--qc-*` on `:root`, or on any element that carries `data-qti-theme`. That is
    the whole theme for most hosts (§8). `--cito-*` still works for one major.
@@ -436,13 +438,19 @@ Three rules, and nothing else to learn.
    is only for a host that wants its own ordering. One exception: a brand's _resting_ look that the
    theme's state and correction paint must still beat (a chip colour that `:state(used)` still turns
    into a hole) goes in `@layer qti-components.interactions.brand`, the one theme layer a host may
-   name. `item-container.stories.ts` (`ItemWithKennisnetOverlay`) shows it.
+   name. `item-container.stories.ts` (`ItemWithKennisnetOverlay`) shows it. A host may also select
+   QTI element names (`qti-assessment-item-ref`, `qti-item-body`, `qti-feedback-block`, an
+   interaction's own box) and the QTI shared vocabulary classes an item carries: those names are
+   1EdTech's, not ours.
 3. **Put the CSS where the items render.** Items render inside the shadow root of `test-container`
    or `item-container`; a document stylesheet does not cross it, custom properties do. Both
    containers adopt the content of a `<template>` child into their shadow root, so a host's
    overrides go in `<test-container><template><style>…</style></template></test-container>`.
 
-Not API: `--qti-*` (internal, may change in a minor), the theme's layers, the mixins (compiled away).
+Not API: `--qti-*` (internal, may change in a minor), the theme's other layers, the mixins (compiled
+away), and the default look itself: a changed default is a minor, named under "Look" in its
+changeset. A value a host needs and cannot reach through tier 1, a part or a state becomes a new
+`--qc-*` input (§8); a `--qti-*` name is never made public instead.
 A `test-*` control paints itself from the tier and the `--button-*` slots and exposes
 `::part(button)`; that split is deliberate, so a control works on a page that loads no theme.
 

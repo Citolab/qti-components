@@ -260,6 +260,33 @@ Gone, not aliased: `--cito-color-well` (a well is the surface colour; paint `.qt
 `--cito-shadow-drag`, `--cito-color-marker`.
 Evidence: read from `qti-vars.scss`, `icon-mask-css-vars.ts`, `player.ts`, not run
 
+### The theme contract: a tier-1 block plus a brand sheet (docs/theme-contract)
+
+Status: recommended; nothing breaks on upgrade
+Members: `--qc-*`, parts and states, QTI element names and vocabulary classes (`plans/host-api.md` →
+Styling → What we promise)
+Do: rebuild the player sheets (`scss/qti-styles.scss` and `scss/qti/*.scss`, 1,147 lines) on what is
+promised, in this order:
+
+- The brand values in `qti-vars.scss` (correct, incorrect, partial, background, border, radius,
+  focus, selected) become one `--qc-*` block: `--qc-color-success|error|warning|primary|base-100|border`,
+  `--qc-radius-*`, `--qc-color-focus`.
+- Drop the copies of the QTI vocabulary classes in `qti-styles.scss:49-112` (`.qti-align-*`,
+  `.qti-valign-*`, `.qti-underline`, `.qti-fullwidth`, `.qti-hidden`, `.qti-visually-hidden`,
+  `.qti-bordered`, `.qti-well`): `item.css` ships them.
+- The verdict icons drawn with `::before` and mask icons (text entry, hottext, order chips) become
+  the `correction` badge part with its verdict token; the answer-key paint (`.full-correct-response`)
+  becomes `:state(answer-key)`.
+- What is left and is Kennisnet's own look (bold feedback, the rubric block as a bordered info box,
+  chip shadows, the match-table edges) goes on parts and states in
+  `@layer qti-components.interactions.brand`, inside `test-container`'s `<template><style>`.
+- The Bootstrap `.btn` definitions for author HTML and the progress bar stay the host's own.
+
+Workarounds this replaces: `[style*='opacity: 0']`, the `!important` against the bank's own
+`display`, `::part(slot) { display: inline !important }`, and every old part name (`ch`, `cha`,
+`slot`, `dropslot`, `qti-simple-choice`) and `:state(--checked)`, which 9.x no longer sets.
+Evidence: read from the host's `scss/` folder, not run
+
 ### The test plugins moved to `@qti-components/extended` (feat/extended)
 
 Status: none for this host
