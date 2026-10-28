@@ -9,10 +9,59 @@ status here and ticks its steps in the same commit, so this file never runs behi
 starts only when everything in **Needs** is `done`. When something found in a phase changes a
 decision, the decision goes into `host-api.md` and the phase gets a line under **Found**.
 
+## Decided before the phases: the accessibility gate
+
+Decided 2026-10-28; built in the guardrails work, before phase 1. Not built yet.
+
+Every story is checked by axe (`@storybook/addon-a11y`), and a violation fails the story, locally
+and in CI: `a11y: { test: 'error' }` in `.storybook/preview.ts`, which today has `'todo'` locally
+and `'off'` in CI, so axe fails nothing.
+
+A story opts out only with the `a11y-todo` tag and a reason that names an issue or a phase:
+
+```ts
+export const Default: Story = {
+  // a11y-todo: #412 hotspot areas have no accessible name
+  tags: ['a11y-todo']
+};
+```
+
+- The tag is `a11y-todo`, never `todo`: `todo` means "placeholder", and vitest skips those stories
+  entirely.
+- One story at a time: never on a file's `meta`, and never by switching off a single axe rule.
+- The tagged stories are the list of known violations. It is visible in the sidebar as a badge
+  (`.storybook/manager.ts`, next to `todo` and `xfail`) and through the tag filter, and it only
+  shrinks. The stories that fail when the gate goes on get the tag, with a reason that names this
+  work.
+
+How it is enforced:
+
+- `.storybook/preview.ts`:
+  - a `beforeEach` turns the tag into `parameters.a11y.test = 'todo'` (the addon reads only the
+    parameter, never tags);
+  - an `afterEach` fails a tagged story once its axe report is `passed`
+    ("axe passes now: remove the a11y-todo tag"), so a fix must remove the tag.
+- `story-policy.spec.ts` fails on an `a11y-todo` tag with no `// a11y-todo: #123 …` or `phase N`
+  reason above it.
+- Review catches a new story that arrives with the tag; nothing else stops it.
+
+To check when building it:
+
+- whether `parameters` changed in the project's `beforeEach` reach the addon's `afterEach`;
+- whether the project's `afterEach` runs after the addon's, so the report exists when it looks.
+
+If not, the stale check moves into a vitest setup file, as `.storybook/vitest.vrt.setup.ts` does.
+
 ## Dependencies
 
 ```mermaid
 graph LR
+  PG[G Guardrails] --> P1
+  PG --> P13[13 Side-effect-free registration]
+  PG --> P15[15 QTI 3 only]
+  PG --> P16[16 Docs prose on the site]
+  P1 --> P14[14 qc- names for our elements]
+  P14 --> P10
   P0[0 PR #347] --> P1[1 Fold test-navigation]
   P0 --> P5[5 Options research]
   P1 --> P2[2 src and start-up]
@@ -36,26 +85,31 @@ graph LR
   P12 --> P11
 ```
 
-Critical path: 0 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separate worktrees: 5 and 12 next to 1;
-2 and 3 after 1; 7, 8 and 9 once their needs are done.
+Critical path: G1 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separate worktrees: 5 and 12 next to 1;
+2 and 3 after 1; 7, 8 and 9 once their needs are done; G2–G5 next to everything after G1.
 
 ## Status
 
-| #   | Phase                                           | Needs      | Status                   |
-| --- | ----------------------------------------------- | ---------- | ------------------------ |
-| 0   | Land PR #347                                    | none       | done (PR #347, 0f2339a8) |
-| 1   | Fold `test-navigation` into `qti-test`          | 0          | todo                     |
-| 2   | `src` on `qti-test` and start-up                | 1          | todo                     |
-| 3   | Corrections out of the core                     | 1          | todo                     |
-| 4   | Core stories in the plain markup                | 2, 3       | todo                     |
-| 5   | Options against QTI: research and docs page     | 0          | todo                     |
-| 6   | Options as attributes, `config` as a view       | 1, 5       | todo                     |
-| 7   | Scoring that follows `submission-mode`          | 1, 5       | todo                     |
-| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6       | todo                     |
-| 9   | Hooks, `:state(loading)`, `reset`               | 2, 3       | todo                     |
-| 10  | Enforcement                                     | 4, 7, 8, 9 | todo                     |
-| 11  | Ship the major                                  | 10, 12     | todo                     |
-| 12  | Design tokens: one source for the tier-1 inputs | 0          | todo                     |
+| #   | Phase                                           | Needs          | Status                   |
+| --- | ----------------------------------------------- | -------------- | ------------------------ |
+| G   | Guardrails: the rulebook and its checks         | none           | in progress (G1)         |
+| 0   | Land PR #347                                    | none           | done (PR #347, 0f2339a8) |
+| 1   | Fold `test-navigation` into `qti-test`          | 0, G1          | todo                     |
+| 2   | `src` on `qti-test` and start-up                | 1              | todo                     |
+| 3   | Corrections out of the core                     | 1              | todo                     |
+| 4   | Core stories in the plain markup                | 2, 3           | todo                     |
+| 5   | Options against QTI: research and docs page     | 0              | todo                     |
+| 6   | Options as attributes, `config` as a view       | 1, 5           | todo                     |
+| 7   | Scoring that follows `submission-mode`          | 1, 5           | todo                     |
+| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6           | todo                     |
+| 9   | Hooks, `:state(loading)`, `reset`               | 2, 3           | todo                     |
+| 10  | Enforcement                                     | 4, 7, 8, 9, 14 | todo                     |
+| 11  | Ship the major                                  | 10, 12         | todo                     |
+| 12  | Design tokens: one source for the tier-1 inputs | 0              | todo                     |
+| 13  | Side-effect-free registration                   | G1             | todo                     |
+| 14  | `qc-` names for our own elements                | 1              | todo                     |
+| 15  | QTI 3 only                                      | G3             | todo                     |
+| 16  | Docs prose on the Astro site                    | G1             | todo                     |
 
 ## In every phase
 
@@ -63,13 +117,44 @@ Critical path: 0 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separ
 - A host-migration entry for every host that uses a member the phase touches, linked from the changeset.
 - A contract story for every member the phase adds or changes (#240), so phase 10 only closes gaps.
 - A renamed or moved story moves its VRT baseline; a re-blessed PNG is checked, not trusted.
-- Where the code and QTI or the 1EdTech conformance suite disagree, follow the suite literally. When
-  the suite itself looks wrong, present the evidence and ask; never pre-pick a deviation or add a
-  non-QTI switch to keep old behaviour. Hosts that break get a host-migration entry instead.
+- Where the code and QTI disagree, QTI wins, in this order (decided 2026-10-28; it replaces "follow
+  the suite literally"): the XSD for structure, then the spec text for behaviour, then the 1EdTech
+  conformance suite. When two of them disagree, present the evidence and ask; never pre-pick a
+  deviation or add a non-QTI switch to keep old behaviour. Hosts that break get a host-migration
+  entry instead.
+- The rules in `CLAUDE.md` and `.claude/rules/` apply to every phase; a phase that has to break one
+  says so in its PR and changes the rule in the same commit.
 - `next` has no required checks, so `gh pr merge --auto` merges at once: wait for CI to pass
   (`gh pr checks <n> --watch --fail-fast`), then merge.
 
 ## Phases
+
+### G. Guardrails: the rulebook and its checks
+
+Plan: this section. Decided with the user on 2026-10-28, topic by topic; the decisions are the rules
+in `CLAUDE.md` and `.claude/rules/`. Each step is its own PR into `next`.
+
+- [ ] **G1** One rulebook and the Claude setup: `CLAUDE.md` is the one instruction file (`AGENTS.md`,
+      `SKILLS.md` and `.github/skills/` folded in), path-scoped rules, permissions and git hooks for
+      Claude, skills, two read-only reviewer agents, `.mcp.json` with the QTI servers.
+- [ ] **G2** `guidance-references.spec.ts` (every path and script a rule names exists) and
+      `story-policy.spec.ts` (suffix taxonomy, one docs story per component, `query-exception:`,
+      reasons on `todo`/`xfail`/`a11y-todo`, the `storySort` table of contents), each with a
+      shrink-only list of today's violations.
+- [ ] **G3** Every fixture validates against the QTI 3 XSD (pinned to the suite's version); first
+      measure which Invalid Examples the XSD rejects, the rest are rejected by the runtime and their
+      stories assert it.
+- [ ] **G4** CI gates: `tsc` over stories, specs and tools; the accessibility gate above; `astro check`
+      and build; changeset presence; Chromatic removed; and, once confirmed, `prettier --check`,
+      stylelint over `*.styles.ts`, ESLint on `tools/**/*.mjs`, code under `docs/` out of the skip
+      filter.
+- [ ] **G5** The design-system contract as specs, generic over the CEM: every `part=` has `@csspart`
+      and every `:state()` has `@cssstate`; interactions work with no theme; states never reflow;
+      the `--qc-*` inputs the theme reads equal the tier-1 list and the Theming page; JSDoc on every
+      host-api member; the CONTRACT §6 VRT guard restored.
+
+Done when: CI fails on a broken rule reference, a story outside the taxonomy, an invalid fixture, an
+axe violation without `a11y-todo`, a type error in a story or spec, and an undocumented part or state.
 
 ### 0. Land PR #347
 
@@ -196,9 +281,6 @@ Plan: [host-api.md](host-api.md) → How this is enforced (#240, #251).
 - [ ] The custom-elements manifest lists only the public members.
 - [ ] Contract stories for every member; host-shaped tests (Kennisnet first).
 
-- [ ] Before freezing: decide the host element names (`qti-test`, `qti-item`) against the `qti-`
-      namespace policy (host-api.md → Open decisions).
-
 Done when: CI fails on any change to the public surface that `host-api.md` does not list.
 
 ### 11. Ship the major
@@ -216,6 +298,52 @@ page, `.storybook/themes.css`, the docs site's styling guide. Touches no host-AP
 next to every other phase.
 
 Done when: that plan's "Done when".
+
+### 13. Side-effect-free registration
+
+Plan: `.claude/rules/lit.md`. Scope: every package with elements.
+
+- [ ] No `@customElement` decorator: a class file never defines its element; `register.ts` /
+      `elements.ts` of each package does. The JSDoc `@customElement` tag stays (the CEM reads it).
+- [ ] Importing a class module registers nothing; a spec imports every class module and finds
+      `customElements` unchanged.
+
+Done when: the corrections and qti-extended subclasses register without a double-define guard.
+
+### 14. `qc-` names for our own elements
+
+Plan: [host-api.md](host-api.md) → Decided "Our elements are `qc-`". Scope: `test-*`,
+`item-container`, `test-container`, the qti-extended plugins, QTI-Editor in step. `qti-test` and
+`qti-item` keep their names.
+
+- [ ] Every element that is ours, not 1EdTech's, takes `qc-`, except the host elements `qti-test` and
+      `qti-item`; the old name is a deprecated alias for one major that warns once.
+- [ ] The remaining `qti-` theme hooks (`qti-dialog`, `qti-theme-kennisnet`,
+      `qti-graphic-order-marker`, `qti-base-stimulus`, `qti-shared-stimulus`) are renamed.
+- [ ] Host-migration entries for every host; the docs and stories use the new names.
+
+Done when: a vocabulary spec finds no `qti-` name in our elements (other than `qti-test` and
+`qti-item`), events, attributes or tokens that QTI does not define.
+
+### 15. QTI 3 only
+
+Plan: `.claude/rules/qti-spec.md`. Scope: `qti-transformers`, the docs.
+
+- [ ] QTI 2.x input is no longer supported: the 2.x transforms and their docs go; hosts that feed
+      2.x items get a host-migration entry.
+
+Done when: nothing in the published packages or the docs mentions QTI 2.x as supported.
+
+### 16. Docs prose on the Astro site
+
+Plan: `.claude/rules/docs.md`. Scope: `docs/*.mdx`, `apps/site`.
+
+- [ ] Every prose page lives in `apps/site`; Storybook keeps autodocs and live examples and links
+      to the site. No page exists in both.
+- [ ] Each qti-extended plugin has a site page.
+
+Done when: `docs/` holds no prose page that the site also has, and every Storybook docs page that
+remains is a live example.
 
 ## Found
 

@@ -626,6 +626,16 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
 
 ## Decided
 
+- **Our elements are `qc-`** (2026-10-28, replaces the open decision on the `qti-` namespace):
+  `qti-` belongs to 1EdTech (impl. guide §2.2.2), so every element that is ours, not QTI's, takes
+  `qc-`, in this major: the `test-*` controls, `item-container`, `test-container` and the
+  qti-extended plugins. The old names are deprecated aliases for one major; QTI-Editor moves in step.
+  **Exception: the host elements keep their names, `qti-test` and `qti-item`** (user, 2026-10-28).
+  The internal theme hooks that still carry `qti-` (`qti-dialog`,
+  `qti-theme-kennisnet`, `qti-graphic-order-marker(--poly)`, `qti-base-stimulus`,
+  `qti-shared-stimulus`) are renamed with them. `--qti-*` custom properties stay internal (the spec
+  defines none, so nothing collides). Built in roadmap phase 14, before phase 10 freezes the surface;
+  the exact new names are part of that phase.
 - **The theme contract** (2026-10-28): a host styles with `--qc-*` variables, parts and states, QTI
   element names and the QTI shared vocabulary classes, nothing else (Styling → What we promise).
   `--qti-*` stays internal: 145 names, grown per component, some measured at runtime, against 37
@@ -736,14 +746,6 @@ The order in which this plan is built, and what depends on what, is in [ROADMAP.
   Styling list above, so today they are not API. Either list the
   slots a host may set, or give the controls `--qc-*` inputs (primary and neutral already exist) and
   leave the rest to `::part(button)` with its states. Decide before phase 10.
-- **The `qti-` namespace.** `qti-` belongs to 1EdTech (impl. guide §2.2.2); no lint checks it since
-  `lint:vocab` was removed (#220), and three surfaces still carry it:
-  - internal theme hooks: `qti-dialog`, `qti-theme-kennisnet`, `qti-graphic-order-marker(--poly)`,
-    `qti-base-stimulus`, `qti-shared-stimulus` (the last in four fixture XMLs);
-  - the `--qti-*` custom properties, which the spec does not define, so nothing collides; they are
-    tier 2 and 3 behind the `--qc-*` inputs (phase 12);
-  - the host elements `qti-test` and `qti-item`, the names this whole page is about. A rename needs
-    aliases for one major and QTI-Editor in step. Decide before phase 10 freezes the surface.
 
 Settled 2026-10-27:
 

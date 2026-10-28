@@ -1,31 +1,117 @@
 {
-    "outputStyle": "Concise",
-    "attribution": {
-        "commit": "",
-        "pr": ""
-    },
-    "permissions": {
-        "allow": [
-            "Bash(gh api:*)",
-            "WebFetch(domain:www.imsglobal.org)",
-            "mcp__chrome-devtools__get_console_message",
-            "mcp__chrome-devtools__evaluate_script",
-            "mcp__chrome-devtools__navigate_page",
-            "mcp__chrome-devtools__take_screenshot",
-            "mcp__chrome-devtools__list_console_messages",
-            "mcp__chrome-devtools__list_network_requests",
-            "mcp__chrome-devtools__take_snapshot",
-            "mcp__chrome-devtools__click"
-        ],
-        "deny": [
-            "Read(.env*)",
-            "Edit(.env*)",
-            "Bash(cat *.env*)",
-            "Bash(head *.env*)",
-            "Bash(tail *.env*)",
-            "Bash(less *.env*)",
-            "Bash(more *.env*)",
-            "Bash(grep . *.env*)"
+  "outputStyle": "Concise",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(pnpm run tsc*)",
+      "Bash(pnpm run lint*)",
+      "Bash(pnpm run test*)",
+      "Bash(pnpm exec vitest *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh pr list *)",
+      "Bash(gh issue view *)",
+      "Bash(gh issue list *)",
+      "Bash(gh run view *)",
+      "Bash(gh run list *)",
+      "WebFetch(domain:www.imsglobal.org)",
+      "mcp__qti-azure__get_qti_doc_outline",
+      "mcp__qti-azure__get_qti_doc_section",
+      "mcp__qti-azure__get_qti_element_spec",
+      "mcp__qti-azure__search_qti_docs",
+      "mcp__qti-azure__list_interaction_types",
+      "mcp__qti-azure__get_example_item",
+      "mcp__qti-azure__validate_qti_item",
+      "mcp__qti-roundtrip__validateQti",
+      "mcp__qti-roundtrip__schemaToJson",
+      "mcp__chrome-devtools__get_console_message",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__list_console_messages",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git branch -d *)",
+      "Bash(git branch -D *)",
+      "Bash(git branch --delete *)",
+      "Bash(git switch *)",
+      "Bash(git checkout *)",
+      "Bash(git reset --hard*)",
+      "Bash(git worktree remove *)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh pr close *)",
+      "Bash(gh issue create *)",
+      "Bash(gh workflow run *)",
+      "Bash(gh release *)",
+      "Bash(gh api * -X *)",
+      "Bash(gh api * --method *)",
+      "Bash(gh api * -f *)",
+      "Bash(gh api * -F *)",
+      "Bash(gh api * --field *)",
+      "Bash(gh api * --raw-field *)",
+      "Bash(gh api * --input *)",
+      "Bash(pnpm run test:vrt:update*)",
+      "Bash(pnpm exec changeset *)",
+      "Edit(/**/CHANGELOG.md)"
+    ],
+    "deny": [
+      "Read(.env*)",
+      "Edit(.env*)",
+      "Bash(cat *.env*)",
+      "Bash(head *.env*)",
+      "Bash(tail *.env*)",
+      "Bash(less *.env*)",
+      "Bash(more *.env*)",
+      "Bash(grep . *.env*)",
+      "Bash(gh pr merge *--admin*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f)",
+      "Bash(git push origin main*)",
+      "Bash(git push origin next*)",
+      "Bash(git push origin HEAD:main*)",
+      "Bash(git push origin HEAD:next*)",
+      "Bash(npm pack*)",
+      "Bash(npm publish*)",
+      "Bash(pnpm publish*)",
+      "Bash(pnpm run ci:publish*)",
+      "Bash(pnpm exec changeset publish*)",
+      "Bash(changeset publish*)",
+      "Edit(/public/mockServiceWorker.js)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-context.mjs"
+          }
         ]
-    }
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-git.mjs"
+          }
+        ]
+      }
+    ]
+  }
 }
