@@ -209,13 +209,12 @@ Required outcomes:
 Run at minimum:
 
 1. pnpm run build
-2. VRT=1 pnpm vitest run --project vrt --reporter=dot
+2. pnpm run test:vrt (the kennisnet stories, compared by `.storybook/vitest.vrt.setup.ts`)
 
-Regression gate:
-
-- .storybook/vitest.vrt.setup.ts contains a story-specific assertion for
-  qti-corrections-qti-corrections-kennisnet-all-items--sleepvraag-opties-boven.
-- That assertion must continue to detect both green and red dropped-drag candidate tints.
+Regression gate: **missing.** A story-specific assertion that the §4 outcomes (green and red
+dropped-drag candidate tints, blue full-correct-response) still render used to live in
+`.storybook/vitest.vrt.setup.ts`; it no longer does, so today only the pixel comparison guards
+them. Restoring it is roadmap phase G5.
 
 If this contract changes, update this file and the VRT guard in the same PR.
 
