@@ -1,7 +1,7 @@
 {
   "name": "@qti-components/extended",
   "description": "Test plugins for @citolab/qti-components: navigation links, end attempt, scoring, print and view helpers, bookmark, text-to-speech, zoom and a character sheet",
-  "version": "0.0.0",
+  "version": "1.0.0-next.0",
   "author": "",
   "dependencies": {
     "@qti-components/utilities": "workspace:^"

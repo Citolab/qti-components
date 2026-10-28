@@ -1,5 +1,28 @@
 # @qti-components/corrections
 
+## 1.0.0-next.10
+
+### Major Changes
+
+- [#349](https://github.com/Citolab/qti-components/pull/349) [`e059bf8`](https://github.com/Citolab/qti-components/commit/e059bf818ff8cb52e1ae9235718b45ccd447d4c4) Thanks [@herrKlein](https://github.com/herrKlein)! - New package `@qti-components/extended`: the test plugins. These move here out of `@qti-components/test`: `<test-item-link>`, `<test-section-link>`, `<test-scoring-buttons>`, `<test-scoring-feedback>`, `<test-view>`, `<test-view-toggle>`, `<test-print-context>`, `<test-print-item-variables>`, `<test-print-state>` (with `formatVariableValue`), `<test-stamp>`, `<test-bookmark>` (with `bookmarkedItems`) and text-to-speech (`<test-item-to-speech>`, the `test-tts-*` buttons, `ttsElements`). The new zoom and character-sheet plugins are here too. `@qti-components/test` keeps `<test-next>`, `<test-prev>`, `<test-end-attempt>`, `<test-container>`, `<test-navigation>` and the plugin `<test-submit>`.
+
+  **Removed:** `<test-check-item>` (`TestCheckItem`), and with it the corrections build's `TestCheckItemCorrection`. It ended the attempt of the item on screen without the guards `<test-end-attempt>` has (attempts used, answer not valid yet) and then switched the test to the scorer view. Use `<test-end-attempt>`, and `<test-view-toggle>` where the view should change too. No surveyed host used it.
+
+  **Breaking:** `@qti-components/test`, `@citolab/qti-components` and `@citolab/qti-components/corrections` no longer register or export these plugins, and the umbrella's CDN bundle and React types no longer contain them. The extended package is not part of the umbrella: install it next to it and import it once (`import '@qti-components/extended'`). It has `@citolab/qti-components` as a peer dependency and imports from its subpaths, so the plugins share the umbrella's single copy of the test and its contexts. It registers only its own tags, so it loads in any order next to the package root or `/corrections`. `@qti-components/extended/elements` gives the `{ tag, ctor }` pairs (`qtiExtendedElements`) for a scoped registry. Tags, attributes, parts, tokens and the state entries (`session.plugins.bookmarks`) are unchanged. Two type changes come with the move: `QtiTestPluginState` no longer declares `bookmarks`, so `pluginState(context, 'bookmarks')` is a type error now (use `bookmarkedItems(context)`); and the umbrella's React types (`@citolab/qti-components/react`) no longer list the moved tags, which come from `@qti-components/extended/react` instead. The umbrella's CDN bundle is self-contained, so the extended package needs the npm build of the umbrella: loading the CDN bundle by script tag and the plugins from npm gives two copies of the test, and the plugins never see it.
+
+  `@qti-components/test` gains a `plugin-api` entry, and the umbrella exposes it as `@citolab/qti-components/qti-test/plugin-api`. It registers nothing: the public events and their helpers, `pluginState`, the state types and `controlStyles`, the look of the test controls. A plugin in its own package builds on it through the umbrella, with the umbrella as a peer dependency.
+
+  Host notes: `plans/host-migration/citotestuit.md` (uses text-to-speech; item links and scoring in templates), `plans/host-migration/examenkompas.md`, `plans/host-migration/kennisnet.md`, `plans/host-migration/peilinglezen.md`.
+
+### Patch Changes
+
+- [#349](https://github.com/Citolab/qti-components/pull/349) [`e059bf8`](https://github.com/Citolab/qti-components/commit/e059bf818ff8cb52e1ae9235718b45ccd447d4c4) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-show-correct-response` paints its box again. Its padding and border moved to an inner `div` (so a page's CSS reset leaves them alone), but its render still put the text straight in the shadow root, so the control showed as bare text. The text is in the `div` now, which is also `part="button"`, like the other test controls.
+
+  It also stays "shown" after a click: it reset itself to "show" whenever the computed context was rebuilt, because it compared the active item by object identity, and the context is rebuilt on every change, including the one its own toggle causes. It compares the item's identifier now, so it switches back only when another item comes on screen.
+
+- Updated dependencies [[`e059bf8`](https://github.com/Citolab/qti-components/commit/e059bf818ff8cb52e1ae9235718b45ccd447d4c4)]:
+  - @qti-components/test@2.0.0-next.15
+
 ## 1.0.0-next.9
 
 ### Major Changes
