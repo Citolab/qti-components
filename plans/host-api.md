@@ -665,6 +665,14 @@ The order in which this plan is built, and what depends on what, is in [ROADMAP.
   `submission-mode`, then is deprecated for one major. Research in
   [submission-mode-scoring.md](submission-mode-scoring.md).
 - **PeilingLezen** is surveyed by imports only; survey its 7.14 → 9.x gap before it upgrades.
+- **The `qti-` namespace.** `qti-` belongs to 1EdTech (impl. guide §2.2.2); `npm run lint:vocab`
+  fails on a `qti-` tag or class that is not in its vocabulary, and three surfaces still carry it:
+  - internal theme hooks: `qti-dialog`, `qti-theme-kennisnet`, `qti-graphic-order-marker(--poly)`,
+    `qti-base-stimulus`, `qti-shared-stimulus` (the last in four fixture XMLs);
+  - the `--qti-*` custom properties, which the spec does not define, so nothing collides; they are
+    tier 2 and 3 behind the `--qc-*` inputs (phase 12);
+  - the host elements `qti-test` and `qti-item`, the names this whole page is about. A rename needs
+    aliases for one major and QTI-Editor in step. Decide before phase 10 freezes the surface.
 
 Settled 2026-10-27:
 

@@ -41,21 +41,21 @@ Critical path: 0 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separ
 
 ## Status
 
-| #   | Phase                                           | Needs      | Status                                       |
-| --- | ----------------------------------------------- | ---------- | -------------------------------------------- |
-| 0   | Land PR #347                                    | none       | in progress (`feat/parts-states-vocabulary`) |
-| 1   | Fold `test-navigation` into `qti-test`          | 0          | todo                                         |
-| 2   | `src` on `qti-test` and start-up                | 1          | todo                                         |
-| 3   | Corrections out of the core                     | 1          | todo                                         |
-| 4   | Core stories in the plain markup                | 2, 3       | todo                                         |
-| 5   | Options against QTI: research and docs page     | 0          | todo                                         |
-| 6   | Options as attributes, `config` as a view       | 1, 5       | todo                                         |
-| 7   | Scoring that follows `submission-mode`          | 1, 5       | todo                                         |
-| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6       | todo                                         |
-| 9   | Hooks, `:state(loading)`, `reset`               | 2, 3       | todo                                         |
-| 10  | Enforcement                                     | 4, 7, 8, 9 | todo                                         |
-| 11  | Ship the major                                  | 10, 12     | todo                                         |
-| 12  | Design tokens: one source for the tier-1 inputs | 0          | todo                                         |
+| #   | Phase                                           | Needs      | Status                   |
+| --- | ----------------------------------------------- | ---------- | ------------------------ |
+| 0   | Land PR #347                                    | none       | done (PR #347, 0f2339a8) |
+| 1   | Fold `test-navigation` into `qti-test`          | 0          | todo                     |
+| 2   | `src` on `qti-test` and start-up                | 1          | todo                     |
+| 3   | Corrections out of the core                     | 1          | todo                     |
+| 4   | Core stories in the plain markup                | 2, 3       | todo                     |
+| 5   | Options against QTI: research and docs page     | 0          | todo                     |
+| 6   | Options as attributes, `config` as a view       | 1, 5       | todo                     |
+| 7   | Scoring that follows `submission-mode`          | 1, 5       | todo                     |
+| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6       | todo                     |
+| 9   | Hooks, `:state(loading)`, `reset`               | 2, 3       | todo                     |
+| 10  | Enforcement                                     | 4, 7, 8, 9 | todo                     |
+| 11  | Ship the major                                  | 10, 12     | todo                     |
+| 12  | Design tokens: one source for the tier-1 inputs | 0          | todo                     |
 
 ## In every phase
 
@@ -63,6 +63,11 @@ Critical path: 0 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separ
 - A host-migration entry for every host that uses a member the phase touches, linked from the changeset.
 - A contract story for every member the phase adds or changes (#240), so phase 10 only closes gaps.
 - A renamed or moved story moves its VRT baseline; a re-blessed PNG is checked, not trusted.
+- Where the code and QTI or the 1EdTech conformance suite disagree, follow the suite literally. When
+  the suite itself looks wrong, present the evidence and ask; never pre-pick a deviation or add a
+  non-QTI switch to keep old behaviour. Hosts that break get a host-migration entry instead.
+- `next` has no required checks, so `gh pr merge --auto` merges at once: wait for CI to pass
+  (`gh pr checks <n> --watch --fail-fast`), then merge.
 
 ## Phases
 
@@ -70,8 +75,8 @@ Critical path: 0 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separ
 
 Plan: [host-api.md](host-api.md), the host-migration notes. Branch `feat/parts-states-vocabulary`.
 
-- [ ] Commit the plan updates (host-api, roadmap, the two research plans).
-- [ ] CI green, review, merge.
+- [x] Commit the plan updates (host-api, roadmap, the two research plans).
+- [x] CI green, review, merge.
 
 Done when: merged into `main` and synced into `next`.
 
@@ -99,8 +104,17 @@ Scope: `qti-test`, `test-container`, the state mixin.
 - [ ] `src` on `qti-test`; `test-url` on `test-container` a deprecated alias.
 - [ ] `state` may be a promise; the seed in `session.seed`; `start-at`; `navigate` defaults to `item`.
 
-Done when: `<qti-test src="…"><test-container></test-container></qti-test>` loads and starts, and a
-restore from a promise resumes at the stored item.
+- [ ] Host-migration entries from #328: Kennisnet (no change), CitoTestUit (`state = fetchState()`
+      instead of its own first `navigateTo`), qti-player (`start-at` instead of `navigateTo` on load).
+
+The `item` default ships only together with the promise `state` and `start-at`. On its own it was
+tried and reverted: CitoTestUit leaves `navigate` unset and navigates itself once its state is in, so
+a default start would show item 1 first.
+
+Done when: `<qti-test src="…"><test-container></test-container></qti-test>` loads and starts, the
+#328 play functions pass (a sync state opens the saved item with one navigation; a promise state
+resolving after load never shows item 1; `null` opens item 1; `start-at` wins; `section` restores
+the section), and CitoTestUit's start-up is checked against the new contract.
 
 ### 3. Corrections out of the core
 
@@ -181,6 +195,9 @@ Plan: [host-api.md](host-api.md) → How this is enforced (#240, #251).
 - [ ] Members not in `host-api.md` are `@internal` and stripped from the `.d.ts`; an API report in CI.
 - [ ] The custom-elements manifest lists only the public members.
 - [ ] Contract stories for every member; host-shaped tests (Kennisnet first).
+
+- [ ] Before freezing: decide the host element names (`qti-test`, `qti-item`) against the `qti-`
+      namespace policy (host-api.md → Open decisions).
 
 Done when: CI fails on any change to the public surface that `host-api.md` does not list.
 
