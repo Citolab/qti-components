@@ -742,6 +742,12 @@ export class QtiPortableCustomInteraction extends Interaction {
     const iframeName = `qti-pci-${this.responseIdentifier}-${Date.now()}`;
     this.iframe.name = iframeName;
 
+    // What the delivery environment decides for every PCI frame (ConfigContext.pciIframe), before the frame loads:
+    // a sandbox applies only to a document loaded after it is set.
+    const { sandbox, allow } = this.configContext?.pciIframe ?? {};
+    if (sandbox !== undefined) this.iframe.setAttribute('sandbox', sandbox);
+    if (allow) this.iframe.setAttribute('allow', allow);
+
     // Generate iframe HTML content with all required scripts
     const iframeContent = this.generateIframeContent();
 
@@ -750,8 +756,9 @@ export class QtiPortableCustomInteraction extends Interaction {
     // serves package resources through a Service Worker (CacheStorage, virtual paths) would see
     // every request made from inside the PCI - module scripts, images, media, stylesheets, fetches -
     // bypass it and hit the network instead. An `srcdoc` frame inherits this document's URL and
-    // stays controlled by the same Service Worker. It is same-origin either way, and messages are
-    // posted with a `'*'` target origin, so nothing about postMessage changes.
+    // stays controlled by the same Service Worker. It is same-origin either way (unless the host sandboxes
+    // it, ConfigContext.pciIframe: then it has an opaque origin), and messages are posted with a `'*'`
+    // target origin, so nothing about postMessage changes.
     this.iframe.srcdoc = iframeContent;
 
     // Append iframe to component
