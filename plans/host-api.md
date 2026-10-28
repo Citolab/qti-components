@@ -36,16 +36,16 @@ The contract for implementers, in one table. "May" is supported: it keeps workin
 changes only with a migration note. "May not" works today in places but is internal: it can break in
 any minor, without notice.
 
-|                  | You may                                                                                                                                                                       | You may not                                                                                                                                                                                      |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Access**       | `<qti-test>` and `<qti-item>`; the item handle from `item(id)` / `qti-item.item`; `computedContext` and `computedItemContext` from a plugin; the entry points of each package | query our shadow roots; read `internals` or `internals.states` from script; consume `testContext`, `sessionContext`, `configContext` or `qtiContext` as a component; import below an entry point |
-| **Call and set** | the properties, attributes and methods on this page; `config` as a whole object                                                                                               | other public-looking members (`getLoadingProgress`, `updateAssessmentItemView`, `_testElement`, …); mutate `state`, `config` or a context object in place                                        |
-| **Listen**       | the `qc-*` events on this page, on `<qti-test>` or `<qti-item>`                                                                                                               | `qti-*` and other internal events; `cito-*` after the next major                                                                                                                                 |
-| **Send**         | the `qc-*` requests, from a plugin inside `<qti-test>` or `<qti-item>`                                                                                                        | requests from the host page (call the method instead); internal events                                                                                                                           |
-| **Style**        | `--qc-*` variables; `::part()` and `:state()` names from CONTRACT §3; unlayered CSS in a container's `<template><style>`                                                      | `--qti-*` variables; our class names or attributes (`.full-correct-response`, `[dragging]`, `data-draggable`, …); our cascade layers; `@mixin`s                                                  |
-| **Alter**        | item and test XML through the transform callbacks; which element renders a QTI tag (`extendElementName`); feedback and rubric placement through the cancelable events         | nodes inside our shadow roots: add, remove or rewrite them; attributes we set on our own elements                                                                                                |
-| **Add**          | markup next to an interaction or item (in `qc-item-rendered`, `qc-item-answer-key-shown`, `qc-item-correction-shown`); per-item markup with `<template item-ref>`; plugins    | markup inside an interaction; MutationObservers on our DOM (use a hook; if one is missing, that is our bug)                                                                                      |
-| **Extend**       | subclass `Interaction`, `QtiFeedback`, a `Qti*Interaction` or `Qti*InteractionCorrection` class, overriding their documented members                                          | override private (`#`) or undocumented members; register your elements under a `qti-` or `qc-` name                                                                                              |
+|                  | You may                                                                                                                                                                                                                                                                  | You may not                                                                                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Access**       | `<qti-test>` and `<qti-item>`; the item handle from `item(id)` / `qti-item.item`; `computedContext` and `computedItemContext` from a plugin; the entry points of each package                                                                                            | query our shadow roots; read `internals` or `internals.states` from script; consume `testContext`, `sessionContext`, `configContext` or `qtiContext` as a component; import below an entry point |
+| **Call and set** | the properties, attributes and methods on this page; `config` as a whole object                                                                                                                                                                                          | other public-looking members (`getLoadingProgress`, `updateAssessmentItemView`, `_testElement`, …); mutate `state`, `config` or a context object in place                                        |
+| **Listen**       | the `qc-*` events on this page, on `<qti-test>` or `<qti-item>`                                                                                                                                                                                                          | `qti-*` and other internal events; `cito-*` after the next major                                                                                                                                 |
+| **Send**         | the `qc-*` requests, from a plugin inside `<qti-test>` or `<qti-item>`                                                                                                                                                                                                   | requests from the host page (call the method instead); internal events                                                                                                                           |
+| **Style**        | `--qc-*` variables; `::part()` and `:state()` names from CONTRACT §3; QTI element names and the QTI shared vocabulary classes an item carries; unlayered CSS in a container's `<template><style>`; `@layer qti-components.interactions.brand` for a brand's resting look | `--qti-*` variables; our class names or attributes (`.full-correct-response`, `[dragging]`, `data-draggable`, …); the structure inside our shadow roots; our other cascade layers; `@mixin`s     |
+| **Alter**        | item and test XML through the transform callbacks; which element renders a QTI tag (`extendElementName`); feedback and rubric placement through the cancelable events                                                                                                    | nodes inside our shadow roots: add, remove or rewrite them; attributes we set on our own elements                                                                                                |
+| **Add**          | markup next to an interaction or item (in `qc-item-rendered`, `qc-item-answer-key-shown`, `qc-item-correction-shown`); per-item markup with `<template item-ref>`; plugins                                                                                               | markup inside an interaction; MutationObservers on our DOM (use a hook; if one is missing, that is our bug)                                                                                      |
+| **Extend**       | subclass `Interaction`, `QtiFeedback`, a `Qti*Interaction` or `Qti*InteractionCorrection` class, overriding their documented members                                                                                                                                     | override private (`#`) or undocumented members; register your elements under a `qti-` or `qc-` name                                                                                              |
 
 **Parts and states are named by rule** (CONTRACT §3), so a name can be guessed from its meaning: one
 name per meaning and one meaning per name; roles are nouns (`chip`, `drop`, `bank`, `choice`,
@@ -400,16 +400,48 @@ you do not talk to them. They keep one property and one slot:
 
 ## Styling
 
-Three things, nothing else (qti-theme `CONTRACT.md` §8, §3, §11):
+What you style with, nothing else (qti-theme `CONTRACT.md` §8, §3, §11):
 
 1. **`--qc-*` variables** on `:root`, or on any element with `data-qti-theme` for a subtree. The
-   tables below are all of them. Each also reads its old `--cito-*` name for one major.
+   tables below are all of them. Each also reads its old `--cito-*` name for one major. Most hosts
+   need nothing else.
 2. **Parts and states** (`::part(…)`, `:state(…)`) for anything a variable does not reach, written
    unlayered.
-3. **Where that CSS goes:** in a `<template><style>` inside `test-container` or `item-container`,
-   which it adopts into its shadow root.
+3. **QTI element names and the QTI shared vocabulary classes.** `qti-assessment-item-ref`,
+   `qti-item-body`, `qti-feedback-block`, `qti-rubric-block`, an interaction's own box, and the
+   `qti-*` classes an item's XML carries (`.qti-well`, `.qti-layout-row`, …). The names are
+   1EdTech's, so they do not change with us. Classes an author invents are the author's.
+4. **Where that CSS goes:** in a `<template><style>` inside `test-container` or `item-container`,
+   which it adopts into its shadow root. A brand's resting look that state and correction paint must
+   still beat goes in `@layer qti-components.interactions.brand`; everything else unlayered.
 
-`--qti-*` variables, class names inside our shadow roots and the theme's layers are not API.
+`--qti-*` variables, class names and structure inside our shadow roots, and the theme's other layers
+are not API. When a host needs a value no `--qc-*` variable reaches, and a part or state cannot
+reach it either, that is a missing `--qc-*` variable: ask for it. It is added as a new input, never
+by making a `--qti-*` public.
+
+### What we promise
+
+| Kind of change                                                                                   | Released as                                                    |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| Rename or remove a `--qc-*` variable, a part, a state, or the brand layer; change what one means | Major, with the old name working and warning for that major    |
+| Move a part or state to another element; stop reaching a QTI element or vocabulary class         | Major                                                          |
+| A new `--qc-*` variable, part or state                                                           | Minor                                                          |
+| A different default look (a tier-2 value, a default shadow, spacing)                             | Minor, named under "Look" in the changeset; VRT baselines move |
+| Paint that was wrong (a state not painted, a token not read)                                     | Patch                                                          |
+
+Always true, in every release:
+
+- **States paint, they never lay out.** Checking, dragging, a verdict or the answer key changes
+  colour, border and shadow, never a box's size or place (CONTRACT §7).
+- **The components work without the theme.** Load no `item.css` and every interaction is still laid
+  out and usable; only the paint is gone.
+- **Your unlayered rule beats the theme** at any specificity, because the theme is entirely
+  layered.
+- **Light and dark follow `color-scheme`**, and `prefers-reduced-motion` turns motion off.
+
+Not promised: the exact pixels of the default look, the specificity of our own rules, `--qti-*`, our
+other layers and mixins, and anything inside a shadow root that is not a part.
 
 **States of the host elements.** `qti-test` and `qti-item` carry `:state(loading)` while the test
 or an item loads, so a loading indicator needs CSS only (#243; replaces the never-set
@@ -586,11 +618,21 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
 - **Deprecations:** `cito-*` aliases and moved properties warn once in development.
 - **Contract stories:** every member on this page has a story whose play function fails when the
   member breaks (#240), plus tests that use the library the way each host does (#251).
+- **Styling:** every part and state is documented with `@csspart` / `@cssstate` (CONTRACT §3, rule
+  10); a spec that fails on an undocumented one is planned (roadmap phase G5). The theme reads every
+  `--qc-*` variable and declares none (CONTRACT §8).
 - **Not enforceable:** a host can still set `--qti-*` and query open shadow roots. This page says it
   is unsupported; closing the shadow roots would break hosts today.
 
 ## Decided
 
+- **The theme contract** (2026-10-28): a host styles with `--qc-*` variables, parts and states, QTI
+  element names and the QTI shared vocabulary classes, nothing else (Styling → What we promise).
+  `--qti-*` stays internal: 145 names, grown per component, some measured at runtime, against 37
+  inputs. A knob a host needs becomes a new `--qc-*` input. Evidence: the qti-player examples and
+  Kennisnet's player sheets need parts (feedback, buttons, chips, the verdict badge), not only
+  tokens; Kennisnet's sheets read `--qti-*` 110 times, against names that have since changed or gone
+  internal. "Works without the theme" has no test yet (roadmap phase G).
 - **Folded-in issues** (2026-10-27): `test-navigation` folds into `qti-test` (closes #249); a standalone
   `qti-item` has `state` (closes #236); this plan replaces the public-API review topic (closes #321).
 - **`testHostContext` stays internal** (#304): the fold removes `test-navigation`'s use of it.
@@ -689,8 +731,13 @@ The order in which this plan is built, and what depends on what, is in [ROADMAP.
   `submission-mode`, then is deprecated for one major. Research in
   [submission-mode-scoring.md](submission-mode-scoring.md).
 - **PeilingLezen** is surveyed by imports only; survey its 7.14 → 9.x gap before it upgrades.
-- **The `qti-` namespace.** `qti-` belongs to 1EdTech (impl. guide §2.2.2); `npm run lint:vocab`
-  fails on a `qti-` tag or class that is not in its vocabulary, and three surfaces still carry it:
+- **The `--button-*` slots.** The `test-*` controls paint from `--button-*` (old name
+  `--test-button-*`), and hosts set them: 8 of the 10 qti-player examples do. They are not in the
+  Styling list above, so today they are not API. Either list the
+  slots a host may set, or give the controls `--qc-*` inputs (primary and neutral already exist) and
+  leave the rest to `::part(button)` with its states. Decide before phase 10.
+- **The `qti-` namespace.** `qti-` belongs to 1EdTech (impl. guide §2.2.2); no lint checks it since
+  `lint:vocab` was removed (#220), and three surfaces still carry it:
   - internal theme hooks: `qti-dialog`, `qti-theme-kennisnet`, `qti-graphic-order-marker(--poly)`,
     `qti-base-stimulus`, `qti-shared-stimulus` (the last in four fixture XMLs);
   - the `--qti-*` custom properties, which the spec does not define, so nothing collides; they are
