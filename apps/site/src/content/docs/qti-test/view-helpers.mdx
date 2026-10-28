@@ -7,6 +7,8 @@ description: Switching and inspecting what's displayed — test-view, test-view-
 
 QTI defines several audiences for the same item content — `author`, `candidate`, `proctor`, `scorer`, `testConstructor`, `tutor` — controlled via `sessionContext.view`. Elements tagged with a `view` attribute inside the loaded test are shown/hidden by toggling a `.show` class whenever the view changes (handled by `TestViewMixin` on `<qti-test>`); switching to `'scorer'` also calls `showCorrectResponse(true)` on the active item.
 
+`<test-view>`, `<test-view-toggle>`, the print helpers and `<test-stamp>` on this page are plugins. From `@qti-components/extended`, a package installed next to `@citolab/qti-components` (`import '@qti-components/extended'`); the umbrella does not register them.
+
 - **`<test-view>`** — a `<select>` dropdown for choosing the current view. `label` sets the accompanying `<label>` text (default `"view"`); `view-options` restricts the offered choices to a comma-separated subset of the six views above. Dispatches `qc-test-switch-view` on change.
 - **`<test-view-toggle>`** — a simpler candidate/scorer toggle button. Content is rendered from a `<template>` child (Heximal templates), receiving `{ view }`; clicking cycles between `'candidate'` and `'scorer'`.
 
@@ -29,7 +31,7 @@ This is what makes a `qti-rubric-block view="scorer"` — the answer model a mar
 
 ## Text-to-speech: `<test-item-to-speech>`
 
-Reads an item, a shared reading text, or other marked HTML aloud, with `test-tts-*` buttons to control it. It is an opt-in [test plugin](https://qti-components.citolab.nl/?path=/docs/guides-test-plugins--docs): `import '@citolab/qti-components/tts';` registers it (the plain package entry still does until the next major).
+Reads an item, a shared reading text, or other marked HTML aloud, with `test-tts-*` buttons to control it. It is a [test plugin](https://qti-components.citolab.nl/?path=/docs/guides-test-plugins--docs) from `@qti-components/extended`, a package installed next to `@citolab/qti-components`: `import '@qti-components/extended';` registers it; the umbrella does not.
 
 ```html
 <test-item-to-speech language="nl-NL">
@@ -42,7 +44,7 @@ What it reads depends on where you place it. See the [Storybook docs](https://qt
 
 ## Other
 
-- **`<test-end-attempt>`** — a plain button that dispatches `test-end-attempt` on click (see [Scoring & State](/qti-test/scoring-and-state/)).
+- **`<test-end-attempt>`** — a button that ends an item's attempt (it dispatches `qc-test-end-attempt`), disabled when the item's attempts are used up or the answer is not valid yet (see [Scoring & State](/qti-test/scoring-and-state/)).
 - **`<qti-test-feedback>`** — extends the item-level `QtiModalFeedback` for test-level modal feedback (e.g. an end-of-test message).
 
 ## Stamp components

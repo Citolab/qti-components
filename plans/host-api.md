@@ -329,11 +329,30 @@ are the third kind. Everything on this list is already in the tables above. This
 | `qc-item-correction-shown`                                 | event            | the candidate's verdicts have rendered | Decorate the verdicts.                                                                          |
 | `<template item-ref>` in `qti-test`                        | template         | each item renders                      | Your markup per item.                                                                           |
 | `<template><style>` in `test-container` / `item-container` | template         | the container's shadow root is created | Your CSS (see Styling).                                                                         |
+| `qc-item-attempt-ended`                                    | event            | an attempt ended, outcomes are final   | Act on the result: switch the view, show the answer key, log the attempt.                       |
 
 Not hooks: `qc-test-state-changed`, `qc-item-response-changed` and `qc-item-outcomes-changed` report
 only; the request events are commands from plugins; subclassing `Interaction` or `QtiFeedback` is
 Extending. There is deliberately no hook that puts markup inside an interaction's shadow root: what a
 host wants there is an input (a `--qc-*` icon, a part, a state) or belongs next to the interaction.
+
+**After an attempt: `qc-item-attempt-ended`** (2026-10-28, replaces `<test-check-item>`). The
+removed `<test-check-item>` ended the attempt of the item on screen and then switched the test to the
+`scorer` view, with none of the guards `<test-end-attempt>` has, and it switched before the outcomes
+were final. A host that wants that behaviour listens for the end of the attempt instead:
+
+```js
+// After every ended attempt, show the scorer's view (rubrics, answer key).
+qtiTest.addEventListener('qc-item-attempt-ended', () => {
+  qtiTest.view = 'scorer';
+});
+```
+
+It covers every way an attempt ends: `<test-end-attempt>`, a QTI end-attempt interaction, and
+`endAttempt()` from script, and it runs once the outcomes are final. Not built yet: the event is not
+dispatched, and `view` is only reachable through the `qc-test-switch-view` request, not as a
+property. Until both land, a host listens for `qc-test-state-changed` and dispatches
+`qc-test-switch-view` itself.
 
 A candidate, not decided: a cancelable `qc-test-navigation-started`, so a host can stop a navigation
 ("you have unanswered questions"). No surveyed host needs it yet.
@@ -644,7 +663,12 @@ Decided before this plan, in the public-API survey, and still in force:
 - **`qti-test-context-updated` stays, deprecated,** until both main hosts persist on `state`.
 - **Plugins read one context, `computedContext`,** with `itemElement(identifier)`; `testContext` is
   the host's model of responses and outcomes, not plugin API.
-- **Plugins ship inside `@qti-components/test`**, registered with it; no per-plugin packages or entry
+- **Plugins ship in two packages** (2026-10-28, replacing "inside `@qti-components/test`"): the ones a
+  test runner needs inside `@qti-components/test`, registered with it (submit; `test-next`, `test-prev`
+  and `test-end-attempt` stay core elements); the navigation links, stamp, the scoring, print and view helpers, lock, bookmark, text-to-speech, zoom and the character sheet in `@qti-components/extended`, installed and imported on its own and never
+  through the umbrella or `/corrections`. It has `@citolab/qti-components` as a peer dependency and
+  reaches the test only through the umbrella's subpaths (`/qti-test/plugin-api`, `/qti-test`,
+  `/qti-base`), so a host keeps one copy of base and its context symbols. No per-plugin packages or entry
   points. `plugin-boundary.spec.ts` fails when the core refers to a plugin or a plugin imports test
   internals. Plugin tags and events do not use `qti-`.
 - **Events:** public events carry `qc-` and nothing else does; one module per package declares them

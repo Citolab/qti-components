@@ -170,3 +170,48 @@ dragging a chip back out of a target): a too-few message now shows only after a 
 attempt; too-many still shows at once. Validity is set from the first render, which matters only
 inside a `<form>`; the player has none.
 Evidence: read from `assessment.tsx:460-472`, not run
+
+### The test plugins moved to `@qti-components/extended` (feat/extended)
+
+Status: breaking
+Members: `<test-item-link>`, `<test-scoring-buttons>`, `<test-scoring-feedback>`, `<test-view>`, `<test-bookmark>`, `bookmarkedItems`
+Do: add `@qti-components/extended` as a dependency (it has `@citolab/qti-components` as a peer, same major) and
+import it once next to `@citolab/qti-components` in `src/main.tsx:10` and `.storybook/preview.tsx:5`
+(`import '@qti-components/extended';`). The umbrella no longer registers these tags; without the import the item
+links (`item-thumbs.tsx:68`, `item-navigation.tsx:49`, `item-list.tsx:68`), the scoring buttons
+(`assessment.tsx:514,769`) and the scoring feedback (`assessment.tsx:570,825`) stay unknown elements. Their
+attributes and markup are unchanged, so `digitaal.tsx:178` (finding `test-scoring-buttons` by tag) and the CSS for
+`test-view` and `test-scoring-feedback` (`styles.css:216-225`) keep working. The JSX types of these tags come from
+`@qti-components/extended/react` now, next to `@citolab/qti-components/react`. Import `bookmarkedItems` from
+`@qti-components/extended`. The zoom and character-sheet entries below need the same import.
+Evidence: read from the files named, not run
+
+### Zoom: `<test-zoom-in>`, `<test-zoom-out>`, `<test-zoom-reset>` replace the own zoom pill (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-zoom-in>`, `<test-zoom-out>`, `<test-zoom-reset>`, `zoomLevel`, `state.session.plugins.zoom`
+Do: put the three buttons in the `ek-zoom-pill` instead of the own buttons (`assessment.tsx:697-720`),
+drop the `zoom` state with `zoomIn` / `zoomOut` / `resetZoom` (`:149, 312-314`) and the
+`style={{ zoom }}` on `<test-container>` (`:977`): the plugin sets `zoom` on each rendered
+`qti-assessment-item` instead, so the container's padding and scrollbar stay at 100%.
+`step="0.1" min="0.75"` on the out button and `max="1.75"` on the in button keep the limits. The
+level is part of `state`, which you store, so it survives a reload. Replaces the workaround of
+zooming the container from React state.
+Evidence: read from `apps/examenkompas/src/lib/ui/components/examen/assessment.tsx:149,312-314,697-720,977`, not run
+
+### Character sheet: `<test-character-sheet>` replaces `dep-symbol-picker` (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-character-sheet>`, `::part(sheet)`, `::part(key)`
+Do: put `<test-character-sheet characters="+ € è é ë ê ï ö à á § ±">` in the toolbar and drop
+`dep-symbol-picker` (`dep-web-components/dep-symbol-picker.ts`, registered in
+`dep-web-components/register.ts:3`; as far as read it is registered but not placed in
+`assessment.tsx`). The plugin follows the focus itself (the last answer field of a rendered item that
+had focus, through shadow roots), inserts at the caret, replacing a selection, and dispatches `change`
+as well as `input`, so the interaction records the answer without the host's walk through
+`shadowRoot.activeElement` (`dep-symbol-picker.ts:79-106`). It is disabled until a field had focus and
+has no draggable window. Style it with `::part(sheet)` and `::part(key)` instead of the `buttoncolor`
+/ `hovercolor` / `textcolor` attributes. Replaces the workaround of a host-side picker that finds the
+active element itself.
+Evidence: read from `apps/examenkompas/src/lib/ui/dep-web-components/dep-symbol-picker.ts:1-20,79-120,160-190`,
+`register.ts:3`, not run

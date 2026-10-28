@@ -1,6 +1,6 @@
 ---
 title: Scoring & state
-description: Outcome processing and per-item state — qti-outcome-processing, qti-test-variables, test-check-item, test-scoring-buttons, test-scoring-feedback.
+description: Outcome processing and per-item state — qti-outcome-processing, qti-test-variables, test-end-attempt, test-scoring-buttons, test-scoring-feedback.
 ---
 
 ## `<qti-outcome-processing>`
@@ -94,12 +94,11 @@ const atEnd = qtiTest.getTestFeedback('atEnd').map(feedback => feedback.innerHTM
 A feedback applies when its `outcome-identifier` holds its `identifier` (`show-hide="show"`), or does not
 (`show-hide="hide"`); `feedback.matches(value)` answers that for any value.
 
-## `<test-check-item>`
+## `<test-end-attempt>`
 
-A "submit this attempt" button. On click it:
+A button that ends an attempt: it dispatches `qc-test-end-attempt` (bubbles), picked up by `<test-navigation>`, which processes the item's response. In the toolbar it ends the attempt of the item on screen; stamped into an item (`<template item-ref>`) or with an `item` attribute, that item's. It disables itself when the item's attempts are used up, or, with `require-answer`, while the response is not valid yet. To also show a scorer's rubric afterwards, switch the view with `<test-view-toggle>`.
 
-1. Dispatches `qc-test-end-attempt` (bubbles), picked up by `<test-navigation>`, which calls `processResponse(true, ...)` on the active item.
-2. Dispatches `qc-test-switch-view` with its `view` attribute (default `scorer`), so the test switches to that view and shows the `[view]` content for it, such as a scorer's rubric. The view stays until something switches it back, for example `<test-view-toggle>`.
+The scoring helpers below are plugins from `@qti-components/extended`, a package installed next to `@citolab/qti-components` (`import '@qti-components/extended'`); the umbrella does not register them.
 
 ## `test-scoring-buttons`
 

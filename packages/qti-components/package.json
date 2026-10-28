@@ -50,6 +50,10 @@
       "types": "./dist/test.d.ts",
       "import": "./dist/test.js"
     },
+    "./qti-test/plugin-api": {
+      "types": "./dist/test-plugin-api.d.ts",
+      "import": "./dist/test-plugin-api.js"
+    },
     "./qti-loader": {
       "types": "./dist/loader.d.ts",
       "import": "./dist/loader.js"

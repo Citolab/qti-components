@@ -64,17 +64,18 @@ export class TestShowCorrectResponse extends LitElement {
   @property({ type: String }) hideCorrectText = 'Hide correct response';
   @property({ type: String }) noCorrectResponseText = 'No correct response specified';
 
-  #previousActiveItem?: unknown; // Store previous active item reference
+  #previousActiveItem?: string; // The identifier of the item the control last showed
 
   override willUpdate(_changedProperties: Map<string | number | symbol, unknown>) {
     const activeItem = this.computedContext?.testParts
       .flatMap(testPart => testPart.sections.flatMap(section => section.items))
       .find(item => item.active);
 
-    // If active item changed, reset shown before the update
-    if (this.#previousActiveItem !== activeItem) {
+    // Another item on screen: back to "show". By identifier, because the context is rebuilt (new
+    // objects) on every change, also on the one this control's own toggle causes.
+    if (this.#previousActiveItem !== activeItem?.identifier) {
       this.shown = false;
-      this.#previousActiveItem = activeItem; // Update previous active item
+      this.#previousActiveItem = activeItem?.identifier;
     }
 
     if (activeItem) {
@@ -106,7 +107,8 @@ export class TestShowCorrectResponse extends LitElement {
   }
 
   override render() {
-    return html`${this.#getDisplayedText()}`;
+    // The look is on this inner element (see `styles`), where a page's CSS reset does not reach.
+    return html`<div part="button">${this.#getDisplayedText()}</div>`;
   }
 }
 

@@ -52,3 +52,4 @@ reads from its own version downward.
 | Item validity published by the item (`ComputedItem.valid` stays right after a restore)                             | PeilingLezen | PR #231                      | behaviour change                   |
 | Components find their `qti-test` through context (callback and `<template item-ref>` now work across shadow roots) | CitoTestUit  | PR #232                      | behaviour change                   |
 | Position object records a `point` response; graphic associate `max-associations` defaults to 1                     | CitoTestUit  | feat/parts-states-vocabulary | breaking                           |
+| Text-to-speech and bookmark moved to `@qti-components/extended`, not in the umbrella                               | CitoTestUit  | feat/extended                | breaking                           |

@@ -48,6 +48,9 @@ processing,transformers,loader,corrections}.ts`, one entry point per package):
   - `qti-transformers` — content transforms (e.g. XML/PCI transforms).
   - `qti-loader` — loads/parses QTI packages/items.
   - `qti-corrections` — formative-assessment correction overlays for interactions.
+  - `qti-extended` — the test plugins: navigation links, stamp, scoring, print and view
+    helpers, lock, bookmark, text-to-speech, zoom, character sheet. Published on its own, with the umbrella
+    as a peer dependency; never re-exported from the umbrella or `/corrections`.
   - `qti-theme` — CSS theming; semantic styles live here, not in component packages (see
     Styling below).
   - `qti-utilities` — generic shared helpers with no QTI-specific semantics.

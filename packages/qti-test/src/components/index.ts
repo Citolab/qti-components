@@ -16,7 +16,5 @@ export * from '../components/qti-item-session-control/qti-item-session-control';
 export * from './test-navigation/test-navigation';
 export * from './test-next/test-next';
 export * from './test-prev/test-prev';
-export * from './test-item-link/test-item-link';
 export * from './test-end-attempt/test-end-attempt';
 export * from './test-container/test-container';
-export * from './test-section-link/test-section-link';

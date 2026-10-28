@@ -41,6 +41,10 @@ The single-item runtime: `<qti-item>` + `<item-container>` (used in the [Quick S
 
 The full test runner — navigation, test-level outcome processing, scoring UI, views. Documented in its own section: see [qti-test](/qti-test/overview/).
 
+## `@qti-components/extended`
+
+Test plugins: the navigation links `<test-item-link>` and `<test-section-link>`, `<test-stamp>`, `<test-lock>` (locks the test when the candidate leaves the page), the scoring helpers `<test-scoring-buttons>` and `<test-scoring-feedback>`, the views `<test-view>` and `<test-view-toggle>`, the debug printers `<test-print-context>`, `<test-print-item-variables>` and `<test-print-state>`, and for a candidate's toolbar `<test-bookmark>`, `<test-item-to-speech>` with its `test-tts-*` buttons, `<test-zoom-in>`/`<test-zoom-out>`/`<test-zoom-reset>` and `<test-character-sheet>`. Each sits inside `<test-navigation>` and reads only the test's public context. This package is **not** part of `@citolab/qti-components`: install it next to the umbrella (it has `@citolab/qti-components` as a peer dependency, so both share one copy of the test) and `import '@qti-components/extended'` once. React users get the tags' JSX types from `@qti-components/extended/react`, next to `@citolab/qti-components/react`. It needs the npm build of the umbrella: the CDN bundle carries its own copy of the test, which plugins installed from npm cannot see. It registers only its own tags, so it loads in any order next to the package root or `/corrections`.
+
 ## `@qti-components/loader`
 
 Small standalone fetch helpers that don't require mounting any component: `getManifestInfo(manifestURL)` walks an `imsmanifest.xml` to a fully-resolved test structure (identifier, items, hrefs), and `getItemByUri(itemUri)` fetches and transforms a single item. Useful if you need a test's structure (e.g. to build a custom table of contents) before deciding what to render.

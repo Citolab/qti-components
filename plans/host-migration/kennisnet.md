@@ -260,6 +260,14 @@ Gone, not aliased: `--cito-color-well` (a well is the surface colour; paint `.qt
 `--cito-shadow-drag`, `--cito-color-marker`.
 Evidence: read from `qti-vars.scss`, `icon-mask-css-vars.ts`, `player.ts`, not run
 
+### The test plugins moved to `@qti-components/extended` (feat/extended)
+
+Status: none for this host
+Members: the test plugins (`<test-item-link>`, `<test-stamp>`, scoring, print and view helpers, text-to-speech, bookmark)
+Do: nothing. These plugins left `@citolab/qti-components` for `@qti-components/extended`, a package
+installed and imported on its own; this host uses none of them.
+Evidence: searched the host source for the tags, not run
+
 ## Not in the library, still in the host
 
 - `cache-transform` no longer exists; Kennisnet still sets it, which does nothing. Remove it.

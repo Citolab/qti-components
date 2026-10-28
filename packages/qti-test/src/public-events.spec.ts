@@ -34,12 +34,8 @@ describe('public events', () => {
   });
 
   it('no source dispatches or listens to a cito- or 7.x name directly', () => {
-    // The text-to-speech plugin still listens to the old names itself (see plugin-boundary.spec.ts).
     const own = Object.entries(raw)
-      .filter(
-        ([path]) =>
-          !/\.(spec|stories)\.ts$/.test(path) && !path.endsWith('/public-events.ts') && !path.includes('/tts/')
-      )
+      .filter(([path]) => !/\.(spec|stories)\.ts$/.test(path) && !path.endsWith('/public-events.ts'))
       .map(([, source]) => source)
       .join('\n');
     expect(own.match(/'cito-[a-z-]+'/g)).toBeNull();

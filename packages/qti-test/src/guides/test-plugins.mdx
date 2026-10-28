@@ -15,10 +15,10 @@ A **test plugin** is a set of custom elements you add to a `<qti-test>` that use
 public API. The test's own code does not know about it: nothing in the core imports or refers to it.
 Delete the plugin and nothing in the test needs to change.
 
-`@qti-components/test` ships the plugins in this repository (print, scoring, stamp, text-to-speech and
-view) and registers them with the rest of its elements, so one install gives you all of them. Build
-on the packages underneath (`@qti-components/base`, `@qti-components/elements`, …) when you want a
-test without them.
+The plugins in this repository live in two packages. `@qti-components/test` keeps one (submit) and registers them with the rest of its elements. The others (the navigation links, stamp, the scoring, print and view helpers, bookmark, text-to-speech, zoom and the character sheet) are
+`@qti-components/extended`, a package of its own that is not part of `@citolab/qti-components`: install it next to the umbrella and import it once
+(`import '@qti-components/extended'`). It registers only its own tags, so it loads in any order next
+to the package root or `/corrections`.
 
 Write a plugin when you add something _to_ a test — reading aloud, a scoring aid, a debug panel.
 When you need to change how the test itself behaves, a plugin is the wrong tool: that is a change
@@ -80,9 +80,9 @@ Dispatch with `bubbles: true, composed: true`. The element that handles it must 
 | `qc-test-update-outcome` | `{ assessmentItemRefId, outcomeVariableId, value }` | `test-navigation` | `test-scoring-buttons`        |
 | `qc-test-switch-view`    | the `View`                                          | `qti-test`        | `test-view`                   |
 
-`dispatchPublic` and `listenPublic` (`packages/qti-test/src/public-events.ts`) send and handle the 9.x
+`dispatchPublic` and `listenPublic` (`@citolab/qti-components/qti-test/plugin-api`) send and handle the 9.x
 names (`cito-test-navigate`, `cito-test-end-attempt`, …) alongside these until the next major. The 7.x
-names (`qc-test-navigate`, `test-end-attempt`, …) are gone.
+names (`qti-request-navigation`, `test-end-attempt`, …) are gone.
 
 ### Keeping state
 
@@ -98,15 +98,34 @@ state, under its own name, and does not store anything itself:
   host that already stores `state` (and listens to `qc-test-state-changed`) stores it, and assigning
   that state back restores it. Entries of plugins that are not loaded are kept, so a round trip never
   drops another plugin's data.
-- **Type it:** augment `QtiTestPluginState` with your entry (`interface QtiTestPluginState { bookmarks: string[] }`
-  in a `declare module` on `types/qti-test-state`); the test itself never reads an entry.
+- **Type it:** inside `@qti-components/test`, augment `QtiTestPluginState` with your entry
+  (`interface QtiTestPluginState { notes: string[] }` in a `declare module` on `types/qti-test-state`) and
+  read it with `pluginState`. In a package of its own, read `computedContext.plugins.<name>` and check its
+  shape in one typed helper (see below); the test itself never reads an entry.
 
-`<test-bookmark>` (`packages/qti-test/src/components/test-bookmark/`) is the worked example: it reads
-`bookmarks` with `pluginState`, writes the new list with `qc-test-update-plugin-state`, and types its entry
-by augmenting `QtiTestPluginState`.
+`<test-bookmark>` (`packages/qti-extended/src/test-bookmark/`) is the worked example: `bookmarkedItems`
+reads `plugins.bookmarks` and keeps only strings, and the button writes the new list with
+`qc-test-update-plugin-state`.
 
 Keep an entry small and plain: it is stored with the candidate's data, so it is not for the answer key or
 for anything the host should rederive.
+
+### From another package: `@citolab/qti-components/qti-test/plugin-api`
+
+A plugin in its own package takes what it needs from one entry, which registers nothing:
+`dispatchPublic`, `listenPublic` and `PUBLIC_EVENTS` with their types, `pluginState`, the
+`QtiTestState` and `QtiTestPluginState` types, and `controlStyles`, the look of the test controls
+(`controlStyles.button` with `controlStyles.control` draws a button like `<test-next>`).
+`computedContext` comes from `@citolab/qti-components/qti-base`, and the public elements are types from
+`@citolab/qti-components/qti-test`.
+
+Import them through the umbrella, `@citolab/qti-components`, and make it a **peer dependency**, not
+`@qti-components/base` or `@qti-components/test` as dependencies. The umbrella bundles its own copy of
+those packages, and the contexts are keyed with a `Symbol()` of each copy: a plugin that installs a
+second copy asks for a key the test never provides, and silently never gets the context.
+`@qti-components/extended` is built this way. For the same reason, type your state entry where you
+read it (as `zoomLevel` and `bookmarkedItems` do) rather than by augmenting `QtiTestPluginState`: the
+umbrella's bundled types keep the interface `pluginState` reads in an internal chunk.
 
 ### Not public
 
@@ -115,7 +134,7 @@ Do not use these from a plugin; they change without notice:
 - anything under `@qti-components/test/internal` (such as `testHostContext`);
 - `sessionContext`, `testContext`, `configContext` and `qtiContext` (see above);
 - `test-container`'s shadow root, or any other component's;
-- the private styles module of `@qti-components/test`.
+- the styles module itself (`components/styles`); take `controlStyles` from the plugin API.
 
 ## Naming
 
@@ -124,9 +143,16 @@ repository use `test-`. Your own use your own prefix.
 
 ## Packaging a plugin in this repository
 
-A plugin is a set of files, and only those files and one line in `plugins/elements.ts` know it exists.
-The elements stay where they are in `components/<element>/`; text-to-speech
-(`packages/qti-test/src/tts/`) is the reference and has its own folder.
+A plugin is a set of files, and only those files and one line in its package's elements entry know it
+exists. A new plugin goes in `@qti-components/extended`, in `src/<element>/`; `@qti-components/test` keeps
+only submit, in `components/<element>/`, listed
+in `plugins/elements.ts`. Something for the candidate beyond the QTI specification goes in
+`@qti-components/extended`, in `src/<element>/`, listed in its `elements.ts` (`qtiExtendedElements`);
+text-to-speech (`packages/qti-extended/src/tts/`) is the reference there. A class there is also listed
+in the JSX-types `exclude` in `cem.config.mjs`, because the umbrella's React types do not cover that
+package.
+
+The rest of this section is about `@qti-components/test`.
 
 `plugins/elements.ts` is the one place that composes them: it re-exports each plugin's classes and
 lists their `{ tag, ctor }` entries as `pluginElements`. `qti-test`'s own `elements.ts` spreads
@@ -141,7 +167,7 @@ Wiring a new plugin:
 - tooling, when it has its own folder: a `directory` entry in `.storybook/main.ts`, and a glob plus a
   `componentTypePath` row in `cem.config.mjs`;
 - the boundary spec: one entry in `PLUGINS` in `packages/qti-test/src/plugin-boundary.spec.ts` (its
-  folders and a pattern that matches anything naming the plugin).
+  package, folders and a pattern that matches anything naming the plugin).
 
 That entry is what keeps a plugin a plugin: without it, the first convenient import from the test
 into the plugin, or from the plugin into the test's internals, goes unnoticed.

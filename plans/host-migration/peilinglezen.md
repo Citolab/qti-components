@@ -175,6 +175,16 @@ returns a boolean sets no form validity, so its messages and `ComputedItem.valid
 For the built-in interactions a too-few message now shows only after a submit or end attempt.
 Evidence: read from `player/src/components/opzoekvragen/*.ts` (16 files), `main.ts:288, 324`, not run
 
+### The test plugins moved to `@qti-components/extended` (feat/extended)
+
+Status: breaking only if the player shows `<test-scoring-buttons>` or `<test-view-toggle>`
+Members: `<test-scoring-buttons>`, `<test-view-toggle>` (and the other test plugins)
+Do: `apps/leesvaardigheid/src/styles.scss:60,88` styles both tags, but no markup with them was found in the host
+source; the built player in `public/player/` may render them. If the player does, add `@qti-components/extended`
+next to `@citolab/qti-components` in `player/` and `import '@qti-components/extended';` once in `player/src/main.ts`.
+The tags and their parts are unchanged, so the SCSS keeps working.
+Evidence: searched the host source for the tags, not run; the compiled player was not read
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

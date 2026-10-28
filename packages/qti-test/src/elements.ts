@@ -13,11 +13,9 @@ import { QtiTestVariables } from './components/qti-test-variables/qti-test-varia
 import { QtiTest } from './components/qti-test/qti-test';
 import { TestContainer } from './components/test-container/test-container';
 import { TestEndAttempt } from './components/test-end-attempt/test-end-attempt';
-import { TestItemLink } from './components/test-item-link/test-item-link';
 import { TestNavigation } from './components/test-navigation/test-navigation';
 import { TestNext } from './components/test-next/test-next';
 import { TestPrev } from './components/test-prev/test-prev';
-import { TestSectionLink } from './components/test-section-link/test-section-link';
 import { pluginElements } from './plugins/elements';
 
 export * from './plugins/elements';
@@ -38,11 +36,9 @@ export {
   QtiTestVariables,
   TestContainer,
   TestEndAttempt,
-  TestItemLink,
   TestNavigation,
   TestNext,
-  TestPrev,
-  TestSectionLink
+  TestPrev
 };
 
 export const qtiTestElements = [
@@ -61,10 +57,8 @@ export const qtiTestElements = [
   { tag: 'qti-test-variables', ctor: QtiTestVariables },
   { tag: 'test-container', ctor: TestContainer },
   { tag: 'test-end-attempt', ctor: TestEndAttempt },
-  { tag: 'test-item-link', ctor: TestItemLink },
   { tag: 'test-navigation', ctor: TestNavigation },
   { tag: 'test-next', ctor: TestNext },
   { tag: 'test-prev', ctor: TestPrev },
-  { tag: 'test-section-link', ctor: TestSectionLink },
   ...pluginElements
 ] as const;
