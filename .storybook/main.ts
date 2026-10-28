@@ -100,11 +100,11 @@ const config: StorybookConfig = {
             files: '**/*.mdx'
           },
           {
-            directory: '../packages/qti-test/src/tts',
+            directory: '../packages/qti-extended/src',
             files: '**/*.stories.*'
           },
           {
-            directory: '../packages/qti-test/src/tts',
+            directory: '../packages/qti-extended/src',
             files: '**/*.mdx'
           },
           {

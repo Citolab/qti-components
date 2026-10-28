@@ -6,9 +6,9 @@ import '../register';
  * A page's CSS reset (Tailwind's preflight: `*, ::before, ::after { margin: 0; padding: 0; border: 0 solid }`)
  * is a rule of the page, and a page rule beats the `:host` rules of a shadow root. A test control that paints
  * its padding and border on its host would lose them. They are painted on an inner element, in the shadow tree,
- * where the page's `*` does not reach. (The controls that belong to a plugin are checked in their own folder.)
+ * where the page's `*` does not reach. (The controls that belong to a plugin are checked in their own package.)
  */
-const controls = ['test-next', 'test-prev', 'test-end-attempt', 'test-item-link', 'test-section-link'];
+const controls = ['test-next', 'test-prev', 'test-end-attempt'];
 
 describe('test controls under a page reset', () => {
   let reset: HTMLStyleElement;

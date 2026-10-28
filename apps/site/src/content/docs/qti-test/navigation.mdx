@@ -53,4 +53,6 @@ All of these read `computedContext` to know the active test part/section/item an
 - **`<test-item-link item-id="...">`** — jump straight to a specific item by identifier.
 - **`<test-section-link section-id="...">`** — jump to the first item of a specific section.
 
+The two links are plugins: From `@qti-components/extended`, a package installed next to `@citolab/qti-components` (`import '@qti-components/extended'`); the umbrella does not register them.
+
 All four ultimately dispatch the same `qc-test-navigate` event described above — they're thin, replaceable wrappers around it.

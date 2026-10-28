@@ -36,6 +36,8 @@ import { toBePositionedRelativeTo } from '../tools/testing/setup/toBePositionedR
 import { baselineOverlayDecorator, baselineOverlayGlobalTypes } from './extensions/baseline-overlay';
 import { webComponentInspectDecorator, webComponentInspectGlobalTypes } from './extensions/webcomponent-inspect';
 import '../packages/qti-components/src';
+// Not part of the umbrella: the extended plugins register themselves next to it, as a host does.
+import '../packages/qti-extended/src';
 
 import type { Preview } from '@storybook/web-components-vite';
 

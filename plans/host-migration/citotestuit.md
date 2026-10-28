@@ -266,6 +266,50 @@ Do:
   Evidence: read from `genericInteractionStats.ts:1-60`, `reviewStatsModel.ts:64-74`,
   `withStats.ts:120-160`, `review-interactions/items/graphic-associate.xml:23`, not run
 
+### The test plugins moved to `@qti-components/extended` (feat/extended)
+
+Status: breaking
+Members: `<test-item-to-speech>`, `test-tts-*`, `<test-item-link>`, `<test-scoring-buttons>`, `<test-scoring-feedback>`,
+`<test-stamp>`, `<test-bookmark>`, `bookmarkedItems`, `ttsElements` (and every other plugin listed in the changeset)
+Do: add `@qti-components/extended` as a dependency next to `@citolab/qti-components` (its peer, same major) and import it once
+where the player registers the components (`import '@qti-components/extended';`, next to the import of
+`@citolab/qti-components`). The umbrella and `/corrections` no longer register these tags, so without
+the import `<test-item-to-speech>` and its buttons stay unknown elements and nothing is read aloud.
+Tags, attributes, parts and `--test-tts-*` tokens are unchanged, so `ttsControls.ts` and its CSS stay
+as they are. Import `bookmarkedItems` from `@qti-components/extended`, not the umbrella.
+
+The same import registers `<test-stamp>`, which the player renders throughout (`AssessmentPlayerView.tsx:2220-2674`,
+the outer one wrapping the stamped header and four nested ones), so without it the header renders nothing. It also
+registers `<test-item-link>`, `<test-scoring-buttons>` and `<test-scoring-feedback>`, which
+the student app's templates use (`apps/student/src/features/assessment/components/templates/paging-template-*.html:2`,
+`scorer-template.html:10,21`). No code was found that loads those template files, so they may be unused.
+
+The JSX types move too: the TSX in `AssessmentPlayerView.tsx:2319-2324` and `AssessmentOverviewScreen.tsx:46-54`
+writes `<test-item-to-speech>` and `<test-tts-*>`, which `@citolab/qti-components/react` no longer lists. In
+the `declare module 'react'` block (`AssessmentPlayerView.tsx:66-76`), add
+`import type { CustomElements as ExtendedElements } from '@qti-components/extended/react';` and extend both:
+`interface IntrinsicElements extends CustomElements, ExtendedElements`.
+Evidence: read from `frontend/packages/ui/src/assessment-player/ttsControls.ts:1-31`,
+`AssessmentPlayerView.tsx:30,66-76,2319-2324`, `questionHeader.ts`, `AssessmentOverviewScreen.tsx:46-54`,
+`stimulus-references/applyStimulusReferences.ts`, not run
+
+### Zoom: `<test-zoom-in>`, `<test-zoom-out>`, `<test-zoom-reset>` replace the own zoom (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-zoom-in>`, `<test-zoom-out>`, `<test-zoom-reset>`, `zoomLevel`, `state.session.plugins.zoom`
+Do: with `@qti-components/extended` imported (see above), put the three buttons in the toolbar instead of the `onZoomIn` / `onZoomOut` / `onResetZoom` and
+`zoomLevel` props (`ToolBar.tsx:14-17, 124-142`); `test-zoom-reset` shows the percentage itself. Drop
+the `zoomLevel` state, `clampZoom` and the handlers (`AssessmentPlayerView.tsx:215, 523-545`) and the
+effect that sets `style.zoom` on the main content or the vertical document (`:411-434`): the plugin
+sets `zoom` on each rendered `qti-assessment-item`, so the side pane stays unscaled in vertical mode
+without the switch. `step="0.1" min="0.5" max="2"` are the defaults, the same as `clampZoom`. The level
+is part of `state`, which you store, so it survives a reload; where the host needs it (the `zoom_in` /
+`zoom_out` log lines, or chrome of its own in the content area that should scale along) read
+`zoomLevel(computedContext)` on `qc-test-state-changed`. Replaces the workaround of zooming the
+content element from React state.
+Evidence: read from `frontend/packages/ui/src/assessment-player/ToolBar.tsx:14-17,124-142`,
+`AssessmentPlayerView.tsx:213-216,411-434,523-545`, not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.
