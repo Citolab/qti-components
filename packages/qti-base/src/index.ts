@@ -32,5 +32,6 @@ export * from './lib/qti-rule-base';
 export * from './lib/custom-operators';
 
 export * from './utils/custom-state-set';
+export * from './utils/state-aliases';
 export * from './utils/scoring-helper';
 export * from './utils/utils';

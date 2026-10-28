@@ -31,7 +31,7 @@ export class TestViewToggle extends LitElement {
   }
 
   _switchView(view: string) {
-    dispatchPublic(this, 'cito-test-switch-view', view as View);
+    dispatchPublic(this, 'qc-test-switch-view', view as View);
   }
 
   protected override firstUpdated(_changedProperties: PropertyValues): void {

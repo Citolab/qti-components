@@ -11,7 +11,7 @@ import { MenuAutoSizeMixin } from '@qti-components/interactions-core/mixins/menu
 import styles from './qti-inline-choice-interaction.styles.js';
 
 import type { PropertyValues } from 'lit';
-import type { ConfigContext } from '@qti-components/base';
+import type { ConfigContext, ValidityTrigger } from '@qti-components/base';
 import type { ActiveElementMixinInterface } from '@qti-components/interactions-core/mixins/active-element/active-element.mixin';
 
 interface OptionType {
@@ -47,12 +47,19 @@ let inlineChoiceMenuCounter = 0;
  *
  * @csspart trigger - The dropdown trigger button.
  * @csspart value - The currently displayed value inside the trigger.
- * @csspart dropdown-icon - The chevron icon inside the trigger; also carries `dropdown-icon-open` when open.
+ * @csspart icon - The chevron inside the trigger (was `dropdown-icon`). Tokens: `open` while the
+ *   menu is open (was `dropdown-icon-open`).
  * @csspart menu - The popover element containing the option list.
- * @csspart option - Each option button; also carries `option-prompt`, `option-selected` and
- *   `option-clear` (the prompt row as a clear button, see `data-clear-label`) variants.
- * @csspart option-content - The content wrapper inside each option.
+ * @csspart option - The prompt row in the menu: the way back to "nothing chosen". Tokens: `prompt`;
+ *   `selected` while nothing is chosen; `clear` when the row is the clear button (see
+ *   `data-clear-label`). Were `option-prompt`, `option-selected`, `option-clear`. The other rows
+ *   are `qti-inline-choice` elements and carry their own parts and states.
+ * @csspart option-content - The content wrapper inside the prompt row.
  * @csspart clear-icon - The x glyph inside the clear row.
+ * @csspart message - The validation message, hidden until `reportValidity` shows it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate open - The menu is open. The chosen option carries `checked`, on the `qti-inline-choice`.
  */
 export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   constructor() {
@@ -137,7 +144,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   @watch(['required', 'minChoices'], { waitUntilFirstUpdate: true })
   protected _handleRequiredChange = () => {
     this.validate();
-    this.reportValidity();
+    this.reportValidity({ trigger: 'change' });
   };
 
   /*
@@ -166,7 +173,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
       >
         <span part="value">${selected?.content}</span>
         <span
-          part="${this._dropdownOpen ? 'dropdown-icon dropdown-icon-open' : 'dropdown-icon'}"
+          part="${this._dropdownOpen ? 'icon open dropdown-icon dropdown-icon-open' : 'icon dropdown-icon'}"
           aria-hidden="true"
         ></span>
       </button>
@@ -186,7 +193,16 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     const nothingChosen = prompt?.selected ?? true;
     const hidden = promptEmpty && nothingChosen;
     const clear = promptEmpty && !nothingChosen;
-    const parts = ['option', 'option-prompt', prompt?.selected ? 'option-selected' : '', clear ? 'option-clear' : '']
+    // Contract tokens first; the `option-*` spellings stay as aliases for one major (CONTRACT.md §3).
+    const parts = [
+      'option',
+      'prompt',
+      prompt?.selected ? 'selected' : '',
+      clear ? 'clear' : '',
+      'option-prompt',
+      prompt?.selected ? 'option-selected' : '',
+      clear ? 'option-clear' : ''
+    ]
       .filter(Boolean)
       .join(' ');
 
@@ -354,7 +370,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
    * up mid-animation.)
    */
   public override menuAutoSizeExtraWidth(): number {
-    const icon = this.renderRoot.querySelector<HTMLElement>('span[part~="dropdown-icon"]');
+    const icon = this.renderRoot.querySelector<HTMLElement>('span[part~="icon"]');
     if (!icon) return 0;
     // Plus the gap between value and chevron: the trigger spends it and a row does not. Without it
     // the widest option did not fit and was cut off with an ellipsis (measured: 8px gap, 4px short).
@@ -375,15 +391,18 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     const isValid = hasSelection || !answerDemanded;
 
     const validityMessage = this.dataset.minChoicesMessage || 'Please select an option.';
-    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true });
+    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true, kind: 'min' });
     return isValid;
   }
 
-  public override reportValidity(): boolean {
-    return super.reportValidity();
+  public override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+    return super.reportValidity(options);
   }
 
   public override reset() {
+    // Not `super.reset()` (it would null the response before the options are rebuilt); the base's
+    // validity bookkeeping is reset here instead, so a fresh attempt waits for a submit again.
+    this.resetValidityReport();
     this.#setDropdownOpen(false);
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
     this.#syncSlottedChoices();
@@ -415,7 +434,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
     this.#syncSlottedChoices();
     this.validate();
-    this.reportValidity();
+    this.reportValidity({ trigger: 'change' });
     this.saveResponse(value);
     this.#setDropdownOpen(false);
   }
@@ -555,6 +574,9 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   }
 
   async #syncSlottedChoices() {
+    // Every route into the selection passes here (a pick, a restore, a reset), so the form value
+    // follows it here: a form holding this interaction carries the chosen identifier, or nothing.
+    this._internals.setFormValue(this.response);
     await this.updateComplete;
     const selectedValue = this.options.find(option => option.selected)?.value ?? '';
     const choices = Array.from(this.querySelectorAll<InlineChoiceOptionElement>('qti-inline-choice'));

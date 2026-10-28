@@ -9,7 +9,7 @@ describe('test-submit', () => {
     const el = document.createElement('test-submit');
     document.body.append(el);
     const seen: unknown[] = [];
-    el.addEventListener('cito-test-submit', e => seen.push((e as CustomEvent).detail));
+    el.addEventListener('qc-test-submit', e => seen.push((e as CustomEvent).detail));
     el.click();
     el.remove();
     expect(seen).toEqual([{}]);

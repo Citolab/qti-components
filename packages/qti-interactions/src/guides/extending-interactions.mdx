@@ -76,7 +76,7 @@ when the answer changes, as the example does.
 ## What you call
 
 `saveResponse(value, state?)` when the candidate answers. It reaches the item's variables and fires
-`qti-interaction-changed`. Pass `state` for opaque state that should survive a reload, such as a
+`qc-item-response-changed`. Pass `state` for opaque state that should survive a reload, such as a
 portable custom interaction's `getState()`.
 
 ## What the base class does for you
@@ -160,5 +160,5 @@ only what is drawn changes. Two things to know when you subclass a built-in:
   interaction, as above, or style it through the theme (see Theming).
 - **Reach a built-in's private members** (`#`-fields and methods). Use its public properties,
   `response`, `saveResponse` and the protected hooks it documents.
-- **Rely on events that do not start with `cito-`** where a `cito-` name exists. The old names are
+- **Rely on events that do not start with `qc-`** where a `qc-` name exists. The 9.x `cito-` names are
   still sent, but go in the next major.

@@ -45,7 +45,7 @@ export interface ActiveElementOptions {
   /*
    * When a pointer activates the element: on `click` (release, the native default) or on `press`
    * (pointer-down). Only for an element that is not also a drag source: there pointer-down has to
-   * start the drag, so an element carrying `qti-draggable` always waits for the click. Keyboard
+   * start the drag, so an element carrying `data-draggable` always waits for the click. Keyboard
    * activation (keyup) and a programmatic `.click()` behave the same either way.
    */
   activateOn?: 'click' | 'press';
@@ -227,7 +227,7 @@ export function ActiveElementMixin<T extends Constructor<LitElement>>(
     private _onPointerDown = (event: PointerEvent) => {
       this.#pressActivated = false;
       if (activateOn !== 'press' || event.button !== 0 || !event.isPrimary) return;
-      if (this.hasAttribute('qti-draggable') || this.disabled || this.readonly) return;
+      if (this.hasAttribute('data-draggable') || this.disabled || this.readonly) return;
       this.#pressActivated = true;
       this.focus();
       this._activate();

@@ -1,10 +1,5 @@
 import type { OutcomeChangedDetails } from './../event-types';
+/** The detail of `qc-item-outcome-changed`; `qti-outcome-changed` is no longer sent. */
 export type QtiOutcomeChanged = CustomEvent<OutcomeChangedDetails>;
-
-declare global {
-  interface GlobalEventHandlersEventMap {
-    'qti-outcome-changed': QtiOutcomeChanged;
-  }
-}
 
 export default QtiOutcomeChanged;

@@ -16,7 +16,7 @@ const SlottedBase = DragDropSlottedMixin(
   Interaction,
   'qti-gap-img, qti-gap-text',
   'qti-associable-hotspot',
-  `slot[part~='drags']`
+  `slot[part~='bank']`
 );
 
 /**
@@ -27,10 +27,16 @@ const SlottedBase = DragDropSlottedMixin(
  * @slot - Default slot for the base image and hotspots.
  *
  * @csspart image - Wrapper around the image slot.
- * @csspart drags - Wrapper around the drag sources slot.
+ * @csspart bank - The slot holding the unplaced chips (was `drags`).
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
-export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(SlottedBase, '[qti-draggable="true"]') {
+export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(
+  SlottedBase,
+  '[data-draggable="true"]'
+) {
   static override styles: CSSResultGroup = styles;
 
   /** QTI's default (information model §5.60). */
@@ -59,7 +65,7 @@ export class QtiGraphicGapMatchInteraction extends DragDropSlottedSortableMixin(
     const scale = `--qti-graphic-scale: ${this._graphicScale}`;
     return html` <slot name="prompt"></slot>
       <slot part="image" style=${scale}></slot>
-      <slot part="drags" name="drags" class="hover-border" style=${scale}></slot>
+      <slot part="bank drags" name="drags" class="hover-border" style=${scale}></slot>
       <div role="alert" part="message" id="validation-message"></div>`;
   }
 

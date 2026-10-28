@@ -14,7 +14,7 @@ public API, so a breaking change shows up as a failing story, not as a broken ho
 Start with the **Extending** table on that page. It lists what you can hook into:
 
 - `Interaction`, and the interactions you can subclass: see [Creating an extended interaction](?path=/docs/extending-qti-creating-an-extended-interaction--docs).
-- Test plugins that read `computedContext` and send `cito-` requests: see [Creating a plugin](?path=/docs/extending-qti-creating-a-plugin-guide--docs).
+- Test plugins that read `computedContext` and send `qc-` requests: see [Creating a plugin](?path=/docs/extending-qti-creating-a-plugin-guide--docs).
 - `postLoadTransformCallback`, `postLoadTestTransformCallback`, `<template item-ref>` and the
   transformer's `extendElementName`.
 
@@ -23,7 +23,7 @@ docs page of its component, generated from the custom elements manifest.
 
 Two rules apply to everything you write:
 
-- Events that start with `cito-` are public. Any other event is internal plumbing; the old names
-  still work until the next major but are deprecated.
+- Events that start with `qc-` are public. Any other event is internal plumbing; the 9.x `cito-`
+  names still work until the next major but are deprecated.
 - Do not reach into our shadow DOM or private members. If you need something that is not public,
   tell us so it can be added or replaced.

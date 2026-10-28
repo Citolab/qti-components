@@ -7,14 +7,14 @@ import type { FeedbackEventDetail } from '../../public-events';
 export default { title: 'Elements/qti-feedback/events' };
 
 /**
- * A host that shows feedback its own way. It cancels `cito-feedback-show`, so the feedback element
+ * A host that shows feedback its own way. It cancels `qc-feedback-show`, so the feedback element
  * stays hidden, and puts the feedback's text in its own box under the question instead.
  *
  * Choose an answer and press Check: the box shows the feedback. Press Check again with the same
  * answer: nothing changes, the outcome is the same. Choose the other answer and press Check: the box
  * shows the other feedback.
  *
- * A feedback the host took over sends no `cito-feedback-hide`: the host clears its own box.
+ * A feedback the host took over sends no `qc-feedback-hide`: the host clears its own box.
  */
 export const HostShowsFeedback = {
   render: () => {
@@ -24,7 +24,7 @@ export const HostShowsFeedback = {
       hostBox.textContent = e.detail.element.textContent?.trim() ?? '';
     };
 
-    return html`<div @cito-feedback-show=${showInHostBox}>
+    return html`<div @qc-feedback-show=${showInHostBox}>
       <qti-assessment-item>
         <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
           <qti-correct-response><qti-value>true</qti-value></qti-correct-response>

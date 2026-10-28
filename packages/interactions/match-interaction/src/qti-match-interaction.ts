@@ -7,7 +7,6 @@ import {
   DragDropSlottedSortableMixin
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
-// import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
 import tabularStyles from './qti-match-interaction-tabular.styles';
 
@@ -46,18 +45,21 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  *
  * @csspart grid - The tabular grid container.
  * @csspart corner - The top-left corner cell of the grid; shows `data-first-column-header`.
- * @csspart cols-wrap - Wrapper row for the column headers.
- * @csspart c-header - The column header slot wrapper.
- * @csspart rows-wrap - Wrapper column for the row headers.
- * @csspart r-header - The row header slot wrapper.
- * @csspart checkbox-grid - The interactive cell grid area.
- * @csspart input-cell - Each cell's label element.
- * @csspart control - The visible checkbox/radio box (tabular mode). Also carries the variant
- *   tokens `radio` | `checkbox`, `checked`, and `correct` | `incorrect` — e.g.
- *   `::part(control radio checked correct)`. These mirror the custom-state vocabulary; the cells
- *   are plain spans in the shadow root, so they cannot carry real `:state()`.
- * @csspart control-mark - The inner mark element; carries the same variant tokens as `control`.
+ * @csspart columns - Wrapper row for the column headers (was `cols-wrap`).
+ * @csspart column-header - The column header slot (was `c-header`).
+ * @csspart rows - Wrapper column for the row headers (was `rows-wrap`).
+ * @csspart row-header - The row header slot (was `r-header`).
+ * @csspart cells - The interactive cell grid area (was `checkbox-grid`).
+ * @csspart cell - Each cell's label element (was `input-cell`).
+ * @csspart control - The visible checkbox/radio box (tabular mode). Tokens: `radio` | `checkbox`,
+ *   `checked`, `candidate-correct` | `candidate-incorrect` — e.g.
+ *   `::part(control radio checked candidate-correct)`. These mirror the custom-state vocabulary;
+ *   the cells are plain spans in the shadow root, so they cannot carry real `:state()`.
+ * @csspart control-mark - The inner mark element; carries the same tokens as `control`.
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
 export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(
@@ -66,7 +68,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
     'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
     'qti-simple-match-set:first-of-type'
   ),
-  '[qti-draggable="true"]'
+  '[data-draggable="true"]'
 ) {
   static override styles: CSSResultGroup = [styles, tabularStyles];
 
@@ -264,9 +266,11 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
               style="--qti-match-rows: ${this.sourceChoices.length}; --qti-match-cols: ${this.targetChoices.length};"
             >
               <div part="corner">${this.dataFirstColumnHeader ?? nothing}</div>
-              <div part="cols-wrap" role="row"><slot name="match-cols" part="c-header"></slot></div>
-              <div part="rows-wrap"><slot name="match-rows" part="r-header"></slot></div>
-              <div part="checkbox-grid">
+              <div part="columns cols-wrap" role="row">
+                <slot name="match-cols" part="column-header c-header"></slot>
+              </div>
+              <div part="rows rows-wrap"><slot name="match-rows" part="row-header r-header"></slot></div>
+              <div part="cells checkbox-grid">
                 ${this.sourceChoices.map(
                   (row, r) => html`
                     <div role="row" style="display: contents;">
@@ -298,7 +302,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                             : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
                         return html`
                           <label
-                            part="input-cell"
+                            part="cell input-cell"
                             role="gridcell"
                             style="grid-row: ${r + 1}; grid-column: ${c +
                             1}; display: flex; align-items: center; justify-content: center; cursor: pointer;"

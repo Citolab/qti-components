@@ -29,7 +29,7 @@ type DragEventSource = 'pointer' | 'mouse' | 'touch';
 export const DragDropSortableMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]',
+  dragContainersSelector = 'slot[part~="bank"]',
   sortingStrategy: SortingStrategy = defaultSortingStrategy,
   collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCenter'
 ) => {

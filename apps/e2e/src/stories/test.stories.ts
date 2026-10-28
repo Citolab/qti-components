@@ -38,8 +38,8 @@ export const QtiTest: Story = {
         @qti-test-connected=${(e: CustomEvent) => {
           console.log('qti-test-connected', e);
         }}
-        @qti-test-loaded=${(e: CustomEvent) => {
-          console.log('qti-test-loaded', e);
+        @qc-test-rendered=${(e: CustomEvent) => {
+          console.log('qc-test-rendered', e);
         }}
         @qti-load-item-request=${() => {
           // e.detail.returnedPromise = new Promise((resolve, reject) => {
@@ -60,29 +60,29 @@ export const QtiTest: Story = {
         @qti-assessment-stimulus-ref-connected=${(e: CustomEvent) => {
           console.log('qti-assessment-stimulus-ref-connected', e);
         }}
-        @qti-assessment-test-connected=${(e: CustomEvent) => {
-          console.log('qti-assessment-test-connected', e);
+        @qc-test-loaded=${(e: CustomEvent) => {
+          console.log('qc-test-loaded', e);
         }}
-        @qti-outcome-changed=${(e: CustomEvent) => {
-          console.log('qti-outcome-changed', e);
+        @qc-item-outcome-changed=${(e: CustomEvent) => {
+          console.log('qc-item-outcome-changed', e);
         }}
-        @qti-interaction-changed=${(e: CustomEvent) => {
-          console.log('qti-interaction-changed', e);
+        @qc-item-response-changed=${(e: CustomEvent) => {
+          console.log('qc-item-response-changed', e);
         }}
         @qti-request-test-section=${(e: CustomEvent) => {
           console.log('qti-request-test-section', e);
         }}
-        @qti-request-navigation=${(e: CustomEvent) => {
-          console.log('qti-request-navigation', e);
+        @qc-test-navigate=${(e: CustomEvent) => {
+          console.log('qc-test-navigate', e);
         }}
-        @qti-state-changed=${(e: CustomEvent) => {
-          console.log('qti-state-changed', e);
+        @qc-test-state-changed=${(e: CustomEvent) => {
+          console.log('qc-test-state-changed', e);
         }}
       >
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
-          @qti-request-navigation=${({ detail }) => {
+          @qc-test-navigate=${({ detail }) => {
             updateArgs({ itemIdentifier: detail.id });
           }}
         >

@@ -1,15 +1,15 @@
-/* End attempt is one button, drawn as a test control (`@mixin test-button`). Flat: a pseudo-class
+/* End attempt is one button, drawn as a test control (`@mixin button`). Flat: a pseudo-class
    after ::part() in a nested list compiles to a dead `:is()`. */
 qti-end-attempt-interaction::part(button) {
-  @mixin test-button;
+  @mixin button;
 }
 
 qti-end-attempt-interaction::part(button):hover {
-  @mixin test-button-hover;
+  @mixin button-hover;
 }
 
 qti-end-attempt-interaction::part(button):active {
-  @mixin test-button-active;
+  @mixin button-active;
 }
 
 qti-end-attempt-interaction::part(button):focus-visible {

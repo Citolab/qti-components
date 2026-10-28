@@ -47,19 +47,19 @@ export default [
      outer grid's tracks. This structure is shared with the editor's tabular
      template so both can inherit the same theme CSS. No per-choice inline
      style writes are needed — auto-flow + subgrid handle placement. */
-    :host(.qti-match-tabular) [part='cols-wrap'] {
+    :host(.qti-match-tabular) [part~='columns'] {
       grid-column: 2 / -1;
       grid-row: 1;
       display: grid;
       grid-template-columns: subgrid;
     }
-    :host(.qti-match-tabular) [part='rows-wrap'] {
+    :host(.qti-match-tabular) [part~='rows'] {
       grid-column: 1;
       grid-row: 2 / -1;
       display: grid;
       grid-template-rows: subgrid;
     }
-    :host(.qti-match-tabular) [part='checkbox-grid'] {
+    :host(.qti-match-tabular) [part~='cells'] {
       grid-column: 2 / -1;
       grid-row: 2 / -1;
       display: grid;
@@ -77,10 +77,10 @@ export default [
     :host(.qti-match-tabular.qti-header-hidden) [part='grid'] {
       grid-template-rows: repeat(var(--qti-match-rows, 1), auto);
     }
-    :host(.qti-match-tabular.qti-header-hidden) :is([part='corner'], [part='cols-wrap']) {
+    :host(.qti-match-tabular.qti-header-hidden) :is([part='corner'], [part~='columns']) {
       display: none;
     }
-    :host(.qti-match-tabular.qti-header-hidden) :is([part='rows-wrap'], [part='checkbox-grid']) {
+    :host(.qti-match-tabular.qti-header-hidden) :is([part~='rows'], [part~='cells']) {
       grid-row: 1 / -1;
     }
 

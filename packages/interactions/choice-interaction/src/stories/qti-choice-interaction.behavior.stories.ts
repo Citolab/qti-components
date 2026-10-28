@@ -506,7 +506,7 @@ export const TwoChoicesSelected: Story = {
     const choiceA = canvas.getByText<QtiSimpleChoice>('Option A');
     const choiceB = canvas.getByText<QtiSimpleChoice>('Option B');
 
-    // Set up a spy to check if 'qti-interaction-changed' event is triggered
+    // Set up a spy to check if 'qti-interaction-response' event is triggered
     const interactionChangedSpy = fn();
     canvasElement.addEventListener('qti-interaction-response', interactionChangedSpy);
 
@@ -517,7 +517,7 @@ export const TwoChoicesSelected: Story = {
     expect(choiceA.checked).toBeTruthy();
     expect(choiceB.checked).toBeTruthy();
 
-    // Assert that the 'qti-interaction-changed' event was called
+    // Assert that the 'qti-interaction-response' event was called
     expect(interactionChangedSpy).toHaveBeenCalled();
 
     // Extract the event data from the spy's second call

@@ -56,7 +56,7 @@ not read `valid`.
 
 Status: recommended, once on 9.x
 Do: PeilingLezen is a candidate first user of bookmarks and highlights in `state.session`
-(`plans/public-api.md`, decisions 3 and 4).
+(`plans/host-api.md`, "Carried over from the host survey" and "Open decisions").
 
 ### Restored template values are kept (PR #226)
 
@@ -117,6 +117,63 @@ computed context (or `itemContext.valid` on the item).
 - `player/src/components/qti-navigation-bar.ts:103-107`: the "open" count (finishing allowed at 0)
   reads `completed`; count items that are not `valid && !isDefaultResponse` instead.
   Evidence: read from `player/src`, not run
+
+### Public events renamed `qc-*`; the 7.x names are gone (feat/parts-states-vocabulary)
+
+Status: breaking: the 7.x names this host listens to are no longer sent; `cito-*` still sent for one major
+Members: `qti-test-loaded`, `qti-assessment-test-connected`, `qti-request-navigation`, `qti-interaction-changed`, `qti-outcome-changed`
+Do: move every listener to its `qc-*` name in the same upgrade (same `detail`). Without it the player
+silently stops working:
+
+- `player/src/main.ts:110` `@qti-test-loaded` → `@qc-test-rendered`. This handler restores ranges,
+  applies flags and sets the container visible; if it never runs the test stays invisible.
+- `player/src/main.ts:129` `@qti-assessment-test-connected` → `@qc-test-loaded`. It sets
+  `postLoadTransformCallback`; if it never runs items load untransformed.
+- `player/src/main.ts:235` `@qti-request-navigation` → `@qc-test-navigated`. The handler cleans up
+  after a navigation, so listen to the notification that it happened, not the request.
+- `player/src/main.ts:233-234`: the empty `qti-outcome-changed` / `qti-interaction-changed`
+  handlers can go.
+- `apps/leesvaardigheid/.../assessment-test.component.tsx:143-149`: `qti-interaction-changed` →
+  `qc-item-response-changed`, `qti-outcome-changed` → `qc-item-outcome-changed`; remove both in the
+  cleanup (`:162-`, which forgets the outcome one today).
+- Unchanged: `qti-assessment-item-connected` (`main.ts:107`) stays as internal plumbing (the public
+  name is `qc-item-rendered`); `qti-test-connected` is internal and still sent; `qti-flag-item`,
+  `qti-mark-item` and `qti-assessment-item-log-event` are the host's own.
+  Evidence: read from `player/src/main.ts:104-245`, `assessment-test.component.tsx:140-165`, not run
+
+### One vocabulary for parts and states (feat/parts-states-vocabulary)
+
+Status: none of the names this PR renames are used; the 7.x names below were already gone in 9.x
+Members: `::part(ch)`, `::part(slot)`, `::part(dropslot)`, `::part(correct-option)`, `[dragging=""]`
+Do: the host's CSS targets 7.x parts (`ch`, `slot` on `qti-simple-choice`, `dropslot`,
+`correct-option`) that 9.x no longer renders. When upgrading, rewrite them against qti-theme
+`CONTRACT.md` §3, which lists every part and state. The cleanup in `main.ts:120-127, 238-245` queries
+`qti-simple-associable-choice[dragging=""]`; on 9.x a chip in flight carries `:state(lifted)` and no
+attribute, so check whether the cleanup is still needed at all.
+Evidence: read from `apps/leesvaardigheid/src/app/components/item.css:50-139`, `player/src/components/opzoekvragen/*.ts`, `player/src/main.ts`, not run
+
+### Theme inputs are `--qc-*`; `--qti-*` is internal (feat/parts-states-vocabulary)
+
+Status: recommended; nothing breaks
+Members: `--qti-primary`, `--qti-primary-light`, `--qti-padding-md`, `--qti-bg-active`, `--qti-border-active`, `--qti-bg`
+Do: `player/src/index.css:5-9, 203-207` sets `--qti-*` tokens. They are internal (CONTRACT §11) and
+may change in a minor; `--qti-primary`, `--qti-bg`, `--qti-bg-active` and `--qti-border-active`
+still exist, `--qti-primary-light` and `--qti-padding-md` do nothing. Set `--qc-color-primary` on
+`:root` instead of `--qti-primary` (the tints follow from it), and put part or state CSS in
+`test-container`'s `<template><style>` rather than overriding internal tokens.
+Evidence: read from `player/src/index.css`, `apps/admin/src/app/components/qti-item.css:30`, not run
+
+### Validity messages are timed like a native form (feat/parts-states-vocabulary)
+
+Status: behaviour change; nothing required if `validate()` has no side effects
+Members: subclass `Interaction` (16 custom interactions override `validate()`), `configContext` (`reportValidityAfterScoring: false`)
+Do: the base class now calls `validate()` right after the first render and again two frames later,
+not only on a change, so it must be safe to call before any answer and must not dispatch or
+re-render (`museum-1.ts:105` returns `!!this.selectedBus`, which is fine). A subclass that only
+returns a boolean sets no form validity, so its messages and `ComputedItem.valid` behave as before.
+`reportValidity()` takes an optional `{ trigger: 'change' | 'submit' }`; without one it is a submit.
+For the built-in interactions a too-few message now shows only after a submit or end attempt.
+Evidence: read from `player/src/components/opzoekvragen/*.ts` (16 files), `main.ts:288, 324`, not run
 
 ## Open
 

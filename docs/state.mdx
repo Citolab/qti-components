@@ -25,17 +25,17 @@ off, and the answer is still there. To the right, a `<test-print-state>` dropped
 
 | Input                         | Set on             | What it does                                                                                                                                                   |
 | ----------------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `test-url`                    | `<test-container>` | Loads the assessment test. When it has loaded, the test fires `cito-test-loaded`.                                                                              |
+| `test-url`                    | `<test-container>` | Loads the assessment test. When it has loaded, the test fires `qc-test-loaded`.                                                                                |
 | `qtiContext.QTI_CONTEXT.seed` | `<qti-test>`       | Seeds the shuffling of items and choices. Read when `test-url` loads. A resumed test needs the same seed, or items and choices come back in a different order. |
 | `state`                       | `<qti-test>`       | A `QtiTestState`: the answers, the outcomes and the position (`session.navItemRefId`).                                                                         |
 | `navigate`                    | `<qti-test>`       | `item` shows one item at a time, `section` all items of a section. **Unset (the default), the test loads but opens nothing**: you call `navigateTo` yourself.  |
 
-And one output: `cito-test-state-changed` fires on every change, and its `detail` is the state. Store it
+And one output: `qc-test-state-changed` fires on every change, and its `detail` is the state. Store it
 wherever you like.
 
 ## Start or resume, in this order
 
-Set the seed and the saved state **before** `test-url`. On `cito-test-loaded` the test applies the state, then
+Set the seed and the saved state **before** `test-url`. On `qc-test-loaded` the test applies the state, then
 `navigate` opens the saved item, or the first item when there is no state.
 
 ```html
@@ -46,7 +46,7 @@ Set the seed and the saved state **before** `test-url`. On `cito-test-loaded` th
 
 ```js
 const test = document.querySelector('qti-test');
-test.addEventListener('cito-test-state-changed', e => save(candidateId, e.detail));
+test.addEventListener('qc-test-state-changed', e => save(candidateId, e.detail));
 
 test.qtiContext = { QTI_CONTEXT: { testIdentifier, candidateIdentifier, environmentIdentifier: 'default', seed } };
 const saved = await load(candidateId); // the seed is not in the state: store it next to it
@@ -63,5 +63,5 @@ document.querySelector('test-container').testURL = '/path/to/assessment.xml';
   yourself after both are in.
 - **`navigate` means two things:** the unit (`item` or `section`), and, unset, "do not start".
 - **The seed lives outside the state.** Resuming needs both the state and the same `qtiContext` seed.
-- **A deep link is a `navigateTo` on `cito-test-loaded`,** which runs after the test already opened its start
+- **A deep link is a `navigateTo` on `qc-test-loaded`,** which runs after the test already opened its start
   item.

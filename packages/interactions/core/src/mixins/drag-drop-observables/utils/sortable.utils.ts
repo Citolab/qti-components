@@ -73,6 +73,8 @@ export function createDropPlaceholder(source: HTMLElement, rect: DOMRect, config
   const mergedConfig = { ...defaultPlaceholderConfig, ...config };
   const placeholder = document.createElement('div');
 
+  // `data-drop-preview` (CONTRACT.md §3): the old `data-drop-placeholder` rides along for one major.
+  placeholder.setAttribute('data-drop-preview', 'true');
   placeholder.setAttribute('data-drop-placeholder', 'true');
   placeholder.style.width = `${rect.width}px`;
   placeholder.style.height = `${rect.height}px`;

@@ -1,7 +1,7 @@
 /**
  * Everything a host needs to persist to resume a candidate's test session, and nothing else.
  *
- * Read it from `qtiTest.state` or the `qti-state-changed` event, store it wherever you like —
+ * Read it from `qtiTest.state` or the `qc-test-state-changed` event, store it wherever you like —
  * a database, `localStorage`, `sessionStorage` — and assign it back to `qtiTest.state` to resume.
  *
  * Deliberately not here:
@@ -44,7 +44,7 @@ export interface QtiTestStateValue {
  * `pluginState(computedContext, 'bookmarks')`. The test never reads an entry; it
  * stores and restores it, so a value must survive `JSON.stringify`.
  */
- 
+
 export interface QtiTestPluginState {}
 
 /** Where the candidate is, and what plugins keep. */

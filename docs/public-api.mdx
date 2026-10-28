@@ -27,20 +27,20 @@ Everything you call on, listen to or configure around a `<qti-test>`.
 | Member                                     | Status         | Notes                                                                                          |
 | ------------------------------------------ | -------------- | ---------------------------------------------------------------------------------------------- |
 | `qtiTest.state`                            | **Supported**  | Assign to resume. Safe before or after the test loads. See Persist & restore on the docs site. |
-| `cito-test-state-changed`                  | **Supported**  | Fires on every change. `detail` is the state to save. Debounce your writes.                    |
-| `qti-state-changed`                        | **Deprecated** | Use `cito-test-state-changed`. Same `detail`.                                                  |
+| `qc-test-state-changed`                    | **Supported**  | Fires on every change. `detail` is the state to save. Debounce your writes.                    |
+| `cito-test-state-changed`                  | **Deprecated** | Use `qc-test-state-changed`. Same `detail`; still sent for one major.                          |
 | `qtiTest.updateItemVariables(ref, values)` | **Supported**  | Write a value you computed elsewhere, such as a backend score. It reaches `state`.             |
-| `qti-test-context-updated`                 | **Deprecated** | Use `cito-test-state-changed`. The payload includes the answer key.                            |
+| `qti-test-context-updated`                 | **Deprecated** | Use `qc-test-state-changed`. The payload includes the answer key.                              |
 | Assigning `qtiTest.testContext`            | **Deprecated** | Use `state`.                                                                                   |
 
 ### Navigating
 
-| Member                                   | Status         | Notes                                                             |
-| ---------------------------------------- | -------------- | ----------------------------------------------------------------- |
-| `navigateTo('item' \| 'section', id?)`   | **Supported**  | Without an id it stays at the current position.                   |
-| `navigate="item"` / `navigate="section"` | **Supported**  | What one screen shows: a single item, or every item of a section. |
-| `cito-test-navigate` (dispatched by you) | **Supported**  | The event `navigateTo` sends. Use it where you only have the DOM. |
-| `qti-request-navigation`                 | **Deprecated** | Use `cito-test-navigate`. Same `detail`.                          |
+| Member                                   | Status         | Notes                                                               |
+| ---------------------------------------- | -------------- | ------------------------------------------------------------------- |
+| `navigateTo('item' \| 'section', id?)`   | **Supported**  | Without an id it stays at the current position.                     |
+| `navigate="item"` / `navigate="section"` | **Supported**  | What one screen shows: a single item, or every item of a section.   |
+| `qc-test-navigate` (dispatched by you)   | **Supported**  | The event `navigateTo` sends. Use it where you only have the DOM.   |
+| `cito-test-navigate`                     | **Deprecated** | Use `qc-test-navigate`. Same `detail`; still handled for one major. |
 
 ### Scoring the test
 
@@ -60,69 +60,77 @@ Everything you call on, listen to or configure around a `<qti-test>`.
 
 ### Public events
 
-The name tells you an event is public: every one starts with `cito-`. Any other event is internal
+The name tells you an event is public: every one starts with `qc-`. Any other event is internal
 plumbing and may change in any release. All of them bubble and are composed, so one listener on
 `qti-test` hears them. **Requests** are verbs: you dispatch them at the test. **Notifications** are
-past tense: the test dispatches them. `cito-test-end-attempt` is the exception: `<test-navigation>`
+past tense: the test dispatches them. `qc-test-end-attempt` is the exception: `<test-navigation>`
 handles it, so dispatch it on that element or from inside it.
 
-| Event                          | Kind         | `detail`                                             | Replaces (deprecated)               |
-| ------------------------------ | ------------ | ---------------------------------------------------- | ----------------------------------- |
-| `cito-test-navigate`           | Request      | `{ type: 'item' \| 'section', id }`                  | `qti-request-navigation`            |
-| `cito-test-end-attempt`        | Request      | none                                                 | `test-end-attempt`                  |
-| `cito-test-submit`             | Request      | none                                                 | new                                 |
-| `cito-test-update-outcome`     | Request      | `{ assessmentItemRefId, outcomeVariableId, value }`  | `test-update-outcome-variable`      |
-| `cito-test-switch-view`        | Request      | the view                                             | `on-test-switch-view`               |
-| `cito-test-submitted`          | Notification | none                                                 | new                                 |
-| `cito-test-navigated`          | Notification | `{ type, id }`                                       | new                                 |
-| `cito-test-navigation-started` | Notification | `{ type, id }`                                       | `qti-navigation-loading-started`    |
-| `cito-test-navigation-failed`  | Notification | `{ message, details?, itemId?, sectionId? }`         | `qti-navigation-error`              |
-| `cito-test-rendered`           | Notification | `{ identifier, element }[]`, the items just rendered | `qti-test-loaded`                   |
-| `cito-test-loaded`             | Notification | the `QtiAssessmentTest`                              | `qti-assessment-test-connected`     |
-| `cito-test-state-changed`      | Notification | the state to save                                    | `qti-state-changed`                 |
-| `cito-item-ref-connected`      | Notification | `{ identifier, href, category }`                     | `qti-assessment-item-ref-connected` |
+| Event                         | Kind         | `detail`                                             | Deprecated alias (9.x name)     | Removed (7.x name)                  |
+| ----------------------------- | ------------ | ---------------------------------------------------- | ------------------------------- | ----------------------------------- |
+| `qc-test-navigate`            | Request      | `{ type: 'item' \| 'section', id }`                  | `cito-test-navigate`            | `qti-request-navigation`            |
+| `qc-test-end-attempt`         | Request      | `{ itemId? }`                                        | `cito-test-end-attempt`         | `test-end-attempt`                  |
+| `qc-test-submit`              | Request      | none                                                 | `cito-test-submit`              |                                     |
+| `qc-test-update-outcome`      | Request      | `{ assessmentItemRefId, outcomeVariableId, value }`  | `cito-test-update-outcome`      | `test-update-outcome-variable`      |
+| `qc-test-switch-view`         | Request      | the view                                             | `cito-test-switch-view`         | `on-test-switch-view`               |
+| `qc-test-update-plugin-state` | Request      | `{ plugin, value }`                                  | `cito-test-update-plugin-state` |                                     |
+| `qc-test-submitted`           | Notification | none                                                 | `cito-test-submitted`           |                                     |
+| `qc-test-navigated`           | Notification | `{ type, id }`                                       | `cito-test-navigated`           |                                     |
+| `qc-test-navigation-started`  | Notification | `{ type, id }`                                       | `cito-test-navigation-started`  | `qti-navigation-loading-started`    |
+| `qc-test-navigation-failed`   | Notification | `{ message, details?, itemId?, sectionId? }`         | `cito-test-navigation-failed`   | `qti-navigation-error`              |
+| `qc-test-rendered`            | Notification | `{ identifier, element }[]`, the items just rendered | `cito-test-rendered`            | `qti-test-loaded`                   |
+| `qc-test-loaded`              | Notification | the `QtiAssessmentTest`                              | `cito-test-loaded`              | `qti-assessment-test-connected`     |
+| `qc-test-state-changed`       | Notification | the state to save                                    | `cito-test-state-changed`       | `qti-state-changed`                 |
+| `qc-test-items-skipped`       | Notification | `{ ids }`                                            | `cito-test-items-skipped`       |                                     |
+| `qc-test-end-reached`         | Notification | none                                                 | `cito-test-end-reached`         |                                     |
+| `qc-item-ref-connected`       | Notification | `{ identifier, href, category }`                     | `cito-item-ref-connected`       | `qti-assessment-item-ref-connected` |
 
-`cito-test-navigated` is sent only after a navigation succeeded and rendered. In linear mode a
-refused navigation still fires the deprecated `qti-request-navigation` but never
-`cito-test-navigated`. Until the next major, the test sends both names with the same `detail`, and a
-request sent under an old name logs a one-time `console.warn` naming the new one.
+`qc-test-navigated` is sent only after a navigation succeeded and rendered. In linear mode a
+refused navigation fires `qc-test-navigate` but never `qc-test-navigated`. The 9.x `cito-*` names
+are deprecated aliases: until the next major the test sends both names with the same `detail`, and a
+request sent under a `cito-*` name logs a one-time `console.warn` naming the `qc-*` one. The 7.x
+names (the last column) are no longer sent or handled.
 `qti-navigation-loading-ended` has no replacement: it also fires on failure and cancellation, so use
-`cito-test-navigated` or `cito-test-navigation-failed`.
+`qc-test-navigated` or `qc-test-navigation-failed`.
 
-### Other lifecycle events
+### Item events
 
-These two do not have a `cito-` name yet. Both bubble and are composed.
+All bubble and are composed. Each has a deprecated `cito-item-*` alias for one major; the 7.x names
+(`qti-interaction-changed`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`) are gone.
+`qti-assessment-item-connected` is the one event without a `qc-` name.
 
 | Event                           | Status        | Notes                                                                                     |
 | ------------------------------- | ------------- | ----------------------------------------------------------------------------------------- |
 | `qti-assessment-item-connected` | **Supported** | `detail` is the item element.                                                             |
-| `qti-interaction-changed`       | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`.               |
-| `qti-outcome-changed`           | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`, once per outcome per update, final value. |
-| `cito-item-outcomes-changed`    | **Supported** | `detail`: `{ item, outcomes: [{ identifier, value }] }`, once per update.                 |
+| `qc-item-rendered`              | **Supported** | `detail` is the item element, once it has rendered.                                       |
+| `qc-item-response-changed`      | **Supported** | The candidate answered. `detail`: `{ item, responseIdentifier, response }`.               |
+| `qc-item-outcome-changed`       | **Supported** | `detail`: `{ item, outcomeIdentifier, value }`, once per outcome per update, final value. |
+| `qc-item-outcomes-changed`      | **Supported** | `detail`: `{ item, outcomes: [{ identifier, value }] }`, once per update.                 |
+| `qc-item-rubric-placement`      | **Supported** | Cancelable: `preventDefault()` keeps the rubric block where it is.                        |
 
 ### Feedback events
 
 `qti-feedback-block`, `qti-feedback-inline` and `qti-modal-feedback` ask the host with these, just before they show or hide.
 Both bubble and are composed. `detail`: `{ kind: 'block' | 'inline' | 'modal', identifier, outcomeIdentifier, element, itemIdentifier? }`.
 
-| Event                | Kind                     | Notes                                                                                                                                                                                                              |
-| -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `cito-feedback-show` | Notification, cancelable | The feedback is about to show. `preventDefault()` keeps it hidden (a modal does not open); its content stays in the DOM (`detail.element`) to show yourself. You are not asked again until its condition has gone. |
-| `cito-feedback-hide` | Notification, cancelable | It is showing and its condition turned false. `preventDefault()` keeps it showing. Not sent for feedback you took over: dismiss your own toast or dialog.                                                          |
+| Event              | Kind                     | Notes                                                                                                                                                                                                              |
+| ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `qc-feedback-show` | Notification, cancelable | The feedback is about to show. `preventDefault()` keeps it hidden (a modal does not open); its content stays in the DOM (`detail.element`) to show yourself. You are not asked again until its condition has gone. |
+| `qc-feedback-hide` | Notification, cancelable | It is showing and its condition turned false. `preventDefault()` keeps it showing. Not sent for feedback you took over: dismiss your own toast or dialog.                                                          |
 
 ## Scoring and reviewing a single item
 
 Members of `<qti-assessment-item>`, for hosts that score outside the browser or show answers back.
 
-| Member                                      | Status         | Notes                                                                                                                                                                                                                                                                                         |
-| ------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `item.setOutcomeVariable(id, value)`        | **Supported**  | Replays a stored outcome. Feedback that depends on it is shown by the time the call returns.                                                                                                                                                                                                  |
-| `cito-item-set-outcomes` (send on the item) | **Supported**  | `detail`: `{ outcomes: [{ identifier, value }], responseProcessed? }`. Applies the outcomes a backend returned in one update, then one `cito-item-outcomes-changed`. `responseProcessed: true` ends the attempt: a non-adaptive item left `unknown` becomes `completed` and the test is told. |
-| `item.processResponse(countAttempts?)`      | **Supported**  | Scores the candidate's answer. The rules run on a copy of the context and send every outcome in one `cito-item-set-outcomes`; the item publishes once.                                                                                                                                        |
-| `item.variables`                            | **Supported**  | Read and assign. Assigning shows the values in the interactions, possibly on the next update.                                                                                                                                                                                                 |
-| `item.responses`                            | **Deprecated** | Use `variables`.                                                                                                                                                                                                                                                                              |
-| `item.disabled`                             | **Supported**  | Locks a submitted item.                                                                                                                                                                                                                                                                       |
-| `item.assessmentItemRefId`                  | **Supported**  | The item-ref's identifier, which differs from the item's own.                                                                                                                                                                                                                                 |
+| Member                                    | Status         | Notes                                                                                                                                                                                                                                                                                       |
+| ----------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `item.setOutcomeVariable(id, value)`      | **Supported**  | Replays a stored outcome. Feedback that depends on it is shown by the time the call returns.                                                                                                                                                                                                |
+| `qc-item-set-outcomes` (send on the item) | **Supported**  | `detail`: `{ outcomes: [{ identifier, value }], responseProcessed? }`. Applies the outcomes a backend returned in one update, then one `qc-item-outcomes-changed`. `responseProcessed: true` ends the attempt: a non-adaptive item left `unknown` becomes `completed` and the test is told. |
+| `item.processResponse(countAttempts?)`    | **Supported**  | Scores the candidate's answer. The rules run on a copy of the context and send every outcome in one `qc-item-set-outcomes`; the item publishes once.                                                                                                                                        |
+| `item.variables`                          | **Supported**  | Read and assign. Assigning shows the values in the interactions, possibly on the next update.                                                                                                                                                                                               |
+| `item.responses`                          | **Deprecated** | Use `variables`.                                                                                                                                                                                                                                                                            |
+| `item.disabled`                           | **Supported**  | Locks a submitted item.                                                                                                                                                                                                                                                                     |
+| `item.assessmentItemRefId`                | **Supported**  | The item-ref's identifier, which differs from the item's own.                                                                                                                                                                                                                               |
 
 `qti-assessment-item-correction` (package `@qti-components/corrections`) adds
 `showCorrectResponse(show)` and `showCandidateCorrection(show)`, and the same package's

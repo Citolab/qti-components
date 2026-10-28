@@ -137,7 +137,7 @@ export class QtiAssessmentItemRef extends LitElement {
 
     await this.updateComplete;
 
-    dispatchPublic(this, 'cito-item-ref-connected', {
+    dispatchPublic(this, 'qc-item-ref-connected', {
       identifier: this.identifier,
       href: this.href,
       category: this.category

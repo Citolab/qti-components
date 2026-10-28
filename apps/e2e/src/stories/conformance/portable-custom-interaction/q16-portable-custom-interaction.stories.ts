@@ -279,7 +279,7 @@ const navigateToItemRef = (qtiTest: any, itemRefId: string) => {
     return;
   }
   qtiTest?.dispatchEvent(
-    new CustomEvent('qti-request-navigation', {
+    new CustomEvent('qc-test-navigate', {
       detail: { type: 'item', id: itemRefId },
       bubbles: true,
       composed: true

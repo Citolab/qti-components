@@ -1,706 +1,232 @@
-/* QTI base — design variables. The theme's tokens; a substrate overrides their VALUES to
- * express its look (value first). Split from qti-base.css. See also qti-mixins.css.
+/*
+ * The theme's tokens. INTERNAL: these `--qti-*` names may change in a minor. The public inputs are
+ * the `--qc-*` names read in the first group (CONTRACT.md §8); a host sets those, on `:root` or on any
+ * element with `data-qti-theme`, and reads parts and states for everything else (§3, §12).
  *
- * Grouped into the same cascade layers the rest of the theme uses (see index.css and
- * CONTRACT.md §2), so the declaring layer documents which kind of rule OWNS a token.
+ * One block, declared on `:root, :host, [data-qti-theme]`: a custom property's `var()` resolves on the
+ * element that declares it, so a subtree with its own inputs re-derives everything below. One line per
+ * token; the reasons behind the values are CONTRACT.md §9.
  *
- * The layer is documentation, not scope: custom properties are inherited computed values, so a
- * token declared in `global` is readable from a rule in any layer, and `var()` substitution across
- * these blocks (--qti-correct reads --qti-success) is layer-independent. Nothing here renders
- * differently for being grouped this way.
- *
- * Tiers (CONTRACT.md §8): a token tagged `t1` is a brand knob and the only kind that holds a
- * literal; every other token here is tier 2, derived from tier 1. Every block is declared on
- * `:root, :host, [data-qti-theme]`, so a subtree themed with `data-qti-theme` re-derives tier 2 from
- * its own tier 1.
+ * Not declared here, on purpose: `--qti-dropzone-min-*`, `--qti-drag-container-min-height` (measured
+ * per interaction; a root value would override the measurement), `--qti-select-point-*` (set in
+ * qti-select-point-interaction.css), `--qti-match-rows/-cols`, `--qti-graphic-scale` (published by the
+ * component), `--qti-input-width`, `--qti-inline-choice-width` (unset means auto), `--qti-bookmark-color`
+ * (a test control's own). Each is read with a fallback where it is used.
  */
-
-/* ============================================================================
- * global — the foundation every layer reads.
- * ========================================================================== */
-@layer qti-components.global {
-  :root,
-  :host,
-  [data-qti-theme] {
-    /*
-     * ── Tier 1: the theme ──────────────────────────────────────────────────────────────────────
-     *
-     * Modelled on a daisyUI theme block. Setting these, and nothing else, makes a complete theme;
-     * every other token in this file is derived from them (CONTRACT.md §8). They are the public
-     * styling API, so they carry the public prefix, `cito-`, like the `cito-` events. Everything
-     * derived from them keeps `qti-`.
-     *
-     * Colours are written in oklch. Each `-content` colour is the one that reads ON its partner:
-     * text on a primary fill, a label on a neutral button, the text of a chip. base-100 is the
-     * surface an item sits on; base-content is what is drawn against it.
-     *
-     * Light and dark are one set. The base and neutral colours are `light-dark()`, so they follow
-     * the `color-scheme` of the page around the item. The theme sets no `color-scheme` itself: a
-     * page that declares none stays light. The semantic colours are one value for both.
-     *
-     * The default theme is black and white: the surface is white (light) or near-black (dark), and
-     * the primary, which marks what is selected, active or focused, is the text colour itself, so a
-     * selected choice is a black fill with white text, and white on black in dark mode. Only the
-     * four state colours carry hue, because they carry meaning: the answer key, correct, partially
-     * correct, incorrect. A brand sets its colour through --cito-color-primary. Today's names below
-     * are aliases of these.
-     *
-     * HOW THEY ARE READ. The theme never declares a `--cito-*` name. Each line below reads one, with
-     * the default as its fallback, into the `--qti-` name every rule uses:
-     *
-     *     --qti-color-primary: var(--cito-color-primary, oklch(…));
-     *
-     * An undeclared custom property inherits through every shadow boundary, so a `--cito-*` value a
-     * host sets anywhere above an item reaches it, also inside a shadow root that adopts this sheet
-     * (test-container, an item's own root). Declaring the `--cito-*` names here, on `:host`, would
-     * reset them to the defaults in every such root. Two inputs have no `--qti-` line because their
-     * default is `inherit`, which a custom property cannot hold: --cito-color-chip-content (read in
-     * `@mixin drag`) and --cito-font-family (read in reset.css). The optional --cito-color-border is
-     * read by --qti-border-color, below.
-     */
-    --qti-color-base-100: var(--cito-color-base-100, light-dark(oklch(100% 0 none), oklch(20% 0 none))); /* t1 */
-    --qti-color-base-content: var(--cito-color-base-content, light-dark(oklch(21% 0 none), oklch(96% 0 none))); /* t1 */
-
-    --qti-color-primary: var(
-      --cito-color-primary,
-      light-dark(oklch(21% 0 none), oklch(96% 0 none))
-    ); /* t1 — selection, active border, focus ring */
-    --qti-color-primary-content: var(
-      --cito-color-primary-content,
-      light-dark(oklch(100% 0 none), oklch(21% 0 none))
-    ); /* t1 */
-
-    /* The colour of an unbranded control that still has to stand out: the test's Next button. */
-    --qti-color-neutral: var(--cito-color-neutral, light-dark(oklch(17.76% 0 none), oklch(92% 0 none))); /* t1 */
-    --qti-color-neutral-content: var(
-      --cito-color-neutral-content,
-      light-dark(oklch(100% 0 none), oklch(17.76% 0 none))
-    ); /* t1 */
-
-    /*
-     * A drag chip: the surface by default, so a chip is an outlined box; a brand that wants filled
-     * chips sets its own colour here. Its text is the surrounding text unless a brand says otherwise.
-     */
-    --qti-color-chip: var(--cito-color-chip, var(--qti-color-base-100)); /* t1 */
-
-    --qti-color-info: var(--cito-color-info, oklch(56.14% 0.1437 245.8)); /* t1 — the answer key */
-    --qti-color-success: var(--cito-color-success, oklch(53.64% 0.166 139.96)); /* t1 — correct */
-    --qti-color-warning: var(--cito-color-warning, oklch(79.62% 0.1708 71.71)); /* t1 — partially correct, validation */
-    --qti-color-error: var(--cito-color-error, oklch(56.75% 0.2329 29.23)); /* t1 — incorrect */
-
-    /*
-     * Radii, by what a box is: a selector is a small thing you pick (checkbox, chip), a field is a
-     * thing you type or choose in (text entry, choice, dropdown), a box holds content (menu, modal,
-     * rubric, validation message).
-     *
-     * Selector and box default to the field radius, read through its old name, so a brand that sets
-     * --qti-border-radius still rounds all three.
-     */
-    --qti-radius-field: var(--cito-radius-field, 0.2rem); /* t1 */
-    --qti-radius-selector: var(--cito-radius-selector, var(--qti-border-radius)); /* t1 */
-    --qti-radius-box: var(--cito-radius-box, var(--qti-border-radius)); /* t1 */
-
-    /*
-     * Sizes. The selector unit is a quarter of a radio or checkbox (`em`, so a control follows the
-     * text it labels; see --qti-control-size). The field unit is an inline field's block padding:
-     * the room above and below the text in a text entry, an inline choice or a gap.
-     */
-    --qti-size-selector: var(--cito-size-selector, 0.25em); /* t1 */
-    --qti-size-field: var(--cito-size-field, 0.125rem); /* t1 */
-
-    /* The width of every border. A hairline, so a length in px. */
-    --qti-border-width: var(--cito-border-width, 1px); /* t1 */
-
-    /*
-     * Depth: 0 or 1. At 1 a chip stands off the page with a small lift under it; at 0 (the default)
-     * it is flat. A multiplier, like --qti-motion, so it can also be set in between.
-     */
-    --qti-depth: var(--cito-depth, 0); /* t1 */
-
-    /*
-     * Two surfaces a step darker than base-100, derived so the three cannot drift apart: a little
-     * base-content mixed in (2.5% and 6% reproduce the 98% and 95% greys of the light default).
-     */
-    --qti-color-base-200: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 2.5%);
-    --qti-color-base-300: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 6%);
-
-    /* What a disabled interaction is drawn in: text, edges, controls and the selected mark, all one
-       muted grey (interactions/qti-disabled.css). 40% of the text colour into the surface; WCAG
-       exempts disabled controls from contrast, and this keeps them readable but plainly off. */
-    --qti-color-disabled: color-mix(in oklab, var(--qti-color-base-content) 40%, var(--qti-color-base-100));
-
-    /* ── Today's names, as aliases of tier 1 ──
-       Rules and components read these, so a brand that sets one still wins. */
-    --qti-primary: var(--qti-color-primary);
-    --qti-success: var(--qti-color-success);
-    --qti-warning: var(--qti-color-warning);
-    --qti-error: var(--qti-color-error);
-    --qti-info: var(--qti-color-info);
-
-    /* Foreground on a primary fill. */
-    --qti-primary-fg: var(--qti-color-primary-content);
-
-    /* ── Rhythm ──
-     *
-     * --qti-spacing is THE unit, and the only knob here a substrate normally touches. Everything
-     * else in this group is a multiple of it, so retuning the whole theme's rhythm is one value.
-     *
-     * It replaces --qti-padding-vertical (0.5rem) and --qti-padding-horizontal (1rem). Those were
-     * always the unit and twice the unit, and every derived value in the theme was a half, whole
-     * or double of one of them, so the pair carried no information the single token doesn't.
-     *
-     * This is the SPACING axis — distance between and around things. The SIZING axis is separate
-     * and deliberately not derived from it: --qti-control-size (radio/checkbox), --qti-correction-size,
-     * --qti-graphic-order-pin-size, --qti-select-point-marker-size. A control's size tracks its
-     * content and its hit target, not the page's rhythm, so the two scales move independently.
-     *
-     * THE CONTRACT: an interaction reads exactly one of the three composites below, whole. Never
-     * --qti-spacing itself, and never a calc() over one of them — a call site that needs "half of
-     * a gap" is describing a fourth value that does not exist in the vocabulary, and the answer is
-     * to pick the nearest of the three, not to do arithmetic:
-     *
-     *   --qti-padding-box     the block box   (choice, rubric, modal, field, listbox row, cell)
-     *   --qti-padding-inline  the inline box  (hottext, inline-choice trigger, gap)
-     *   --qti-gap             every scalar    (flex/grid gap, margin, offset, inset)
-     *
-     * --qti-spacing is the unit those are cut from, not a value to paint with. It is the only knob
-     * a substrate normally sets; the three move with it.
-     *
-     * --qti-gap doubling as "every scalar" is the load-bearing compromise. Two of the three tokens
-     * are shorthands, so nothing else in the vocabulary can express a bare length — which is why
-     * the theme's old 0.25rem and 0.5rem one-off offsets are now all 1rem. That was chosen over
-     * adding scalar steps: one obvious gap everywhere beats six near-identical spacings nobody can
-     * tell apart. If a specific spot genuinely needs to be tighter, give it a NAMED component token
-     * (like --qti-drag-padding below) rather than reaching back for --qti-spacing.
-     *
-     * --qti-padding-inline was the literal `2px 4px`, which is exactly a quarter and a half of the
-     * unit at a 16px root. Deriving it means it now scales with the rhythm rather than staying
-     * pinned to device pixels — the same reason nothing else here is a literal.
-     *
-     * Widening boxes without touching the vertical rhythm means re-declaring --qti-padding-box,
-     * which is deliberate: that is a different look, not a different unit. */
-    --qti-spacing: 0.5rem; /* t1 */
-    --qti-padding-box: var(--qti-spacing) calc(var(--qti-spacing) * 2);
-    --qti-padding-inline: calc(var(--qti-spacing) / 4) calc(var(--qti-spacing) / 2);
-    --qti-gap: calc(var(--qti-spacing) * 2);
-
-    /*
-     * Inline fields: a text entry, an inline choice, a gap, anything that sits in a line of text.
-     *
-     * Named, not computed at the call site (the contract above): they are the quarter-unit values
-     * the three composites do not offer, and each is read whole.
-     *
-     *   --qti-inline-gap            space either side of the field, so it never touches the words
-     *                               around it; the sentence's own space supplies the rest and
-     *                               collapses at a line break, where a margin would leave an indent
-     *   --qti-inline-padding-block  the field's block padding: a quarter unit, so the line holding a
-     *                               field stays near the height of the lines around it
-     *   --qti-inline-padding-inline the field's inline padding: one spacing unit, half the padding a
-     *                               block box gets (--qti-gap), so a field in a sentence stays compact
-     *                               without its text touching the side edges
-     *   --qti-inline-field-padding  the field's box, those two together
-     *
-     * --qti-line-height is derived from the same parts, so a line of text is exactly as tall as a
-     * field set in it: a field line then sits level with the lines around it. It is a length, so it
-     * is the same in every element of the item, whatever its font size.
-     */
-    --qti-inline-gap: calc(var(--qti-spacing) / 4);
-    --qti-inline-padding-block: var(--qti-size-field);
-    --qti-inline-padding-inline: var(--qti-spacing);
-    --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-inline-padding-inline);
-    --qti-line-height: calc(
-      var(--qti-field-line-height) * 1em + 2 * var(--qti-inline-padding-block) + 2 * var(--qti-component-border-width)
-    );
-
-    /*
-     * How far a stacked choice is pulled out toward the edge of the prose around it: the room it
-     * reserves for its selected paint, which is its inline padding (--qti-gap, the inline half of
-     * --qti-padding-box) and its border, less the reach of the focus ring round its radio or
-     * checkbox. The control then sits just inside the prose edge, so its ring stays inside the
-     * column instead of being cut off by it.
-     */
-    --qti-choice-outdent: calc(
-      var(--qti-gap) + var(--qti-component-border-width) - var(--qti-focus-offset) - var(--qti-focus-border-width)
-    );
-
-    --qti-popover-z-index: 1000;
-    --qti-overlay-z-index: 1;
-    /* Motion master switch — a unitless multiplier every animation scales by. 1 = normal, 0 = no
-       motion. CSS transitions read it through the calc below; the drag-drop FLIP engine reads
-       --qti-motion directly (see flip.utils.ts resolveMotionScale), so this one token silences both
-       CSS motion and JS FLIP. A theme or PNP profile can set 0.5 to slow motion or 0 to stop it. */
-    --qti-motion: 1; /* t1 */
-    --qti-motion-duration-fast: calc(150ms * var(--qti-motion));
-
-    /* ── The component surface ──
-       The theme's base surface and border. Read by the paint contract below, and — separately — by
-       ~30 rules that draw a box WITHOUT going through it (tables, the modal, hotspot rings, the
-       slider track). Those two readerships are why this group and the --qti-component-* group below
-       are not one group: this is "the theme's surface colour", that is "what a component paints when
-       it says nothing", and only the second is the paint contract's business. */
-    --qti-bg: var(--qti-color-base-100);
-
-    /*
-     * THE body text colour — the foreground half of the --qti-bg / --qti-fg pair.
-     *
-     * `inherit`, deliberately: the base theme does not impose a text colour. What a candidate reads
-     * is the host page's, and a brand that wants its own sets this token, or paints the page in its
-     * base-content colour as the Storybook presets do (Kennisnet's #3e144e reaches the text that way). A base theme that cannot pick the colour also cannot pick a failing one.
-     *
-     * This is a FIX that changes nothing, which is the point. It read `var(#aaaaaa)` — a value
-     * wrapped in var() by mistake in 925bdf14. var() takes a custom-property name, so `#aaaaaa` made
-     * the whole thing invalid and --qti-fg computed to the guaranteed-invalid value; every
-     * `color: var(--qti-fg)` was then invalid at computed-value time and, `color` being inherited,
-     * fell back to the inherited colour. Measured, and `inherit` is precisely that behaviour said out
-     * loud.
-     *
-     * Not restored to a literal `#aaaaaa`: at 2.3:1 on white that fails WCAG AA for body text, and
-     * the readers here are the candidate's own typed answer (@mixin field-typography paints the
-     * text-entry input and the extended-text textarea), the inline-choice value, the validation
-     * message and modal feedback.
-     *
-     * Every reader is a colour context, which is what makes the keyword safe: it reaches `color`
-     * either directly or through a role slot (--field-color, --drag-color, @mixin candidate).
-     */
-    --qti-fg: inherit; /* t1 */
-    --qti-border-thickness: var(--qti-border-width); /* some places need the width alone (invariance, calcs) */
-    --qti-border-style: solid; /* t1 */
-    /*
-     * THE border colour, the border half of the --qti-bg / --qti-fg pair. A neutral, worked out from
-     * the base colours: base-content mixed into the surface, just far enough (about 3.3:1 on white) to
-     * meet the 3:1 WCAG asks of a field's edge. It was the primary colour, which drew every field,
-     * table and drop in the brand's blue at rest; the primary now marks only what is active or
-     * selected (--qti-border-active). A brand that wants its colour on every edge sets this token,
-     * as the Kennisnet preset does.
-     */
-    --qti-border-color: var(
-      --cito-color-border,
-      color-mix(in oklab, var(--qti-color-base-content) 45%, var(--qti-color-base-100))
-    ); /* t1 input: --cito-color-border, optional */
-    --qti-border-radius: var(--qti-radius-field);
-    --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
-
-    /* The QTI 3 shared CSS (qti-native/qti3p0.css, vocabulary §2.12) leaves the colours of
-       .qti-bordered, .qti-underline and .qti-well to these hooks and defines none of them, so
-       without the theme a well got its padding and nothing else. Filled from the theme's own
-       tokens: a brand that restyles its borders restyles the well and the bordered box with them.
-       A well is a tinted surface inside the theme's border (§1.1.6.2: border plus background, the
-       background chosen by the platform). The default is a white card, for items on a light-grey
-       page; a brand sets --cito-color-well for another fill. */
-    --table-border-color: var(--qti-border-color);
-    --foreground: var(--qti-color-base-content);
-    --well-bg: var(--cito-color-well, var(--qti-color-base-100)); /* t1 input: --cito-color-well, optional */
-    --well-border: var(--qti-border);
-    --well-box-shadow: none;
-
-    /* ── The paint contract's resting look ──
-     *
-     * One token per PAINT property, and the whole of what a role paints when it sets nothing. These
-     * used to be written inline in the mixin, as the second half of `var(--component-x, var(--qti-y))`
-     * — the fallbacks were the resting look, but you had to read the mixin to find out what it was.
-     * They are tokens now, so the resting box reads in one place and a substrate can retune it here
-     * (value first) without touching a mixin.
-     *
-     * `@mixin paint $role` in qti-mixins.css binds each property to exactly one of these, behind a
-     * per-role override SLOT: `var(--drag-background-color, var(--qti-component-background-color))`.
-     * Two tiers, and they are different kinds of name on purpose —
-     *   --qti-component-*  a TOKEN. Declared here, has a value, applies to every role at once.
-     *   --drag-* / --drop-*  a SLOT. Declared nowhere; only ever read with this fallback. Setting one
-     *                        repaints that role alone, so a drop can no longer leak its fill into a
-     *                        chip standing in it (custom properties inherit — the old single
-     *                        --component-* namespace meant every nested component shared one value).
-     *
-     * `color: inherit` is the resting rule for text, not a colour: a component's text is whatever the
-     * text around it is. It reaches `color` through the same two-tier chain as everything else, and
-     * lands on the inherited colour either way — the keyword substitutes, and if a browser rejects a
-     * CSS-wide keyword out of var() it is invalid at computed-value time, which for an inherited
-     * property is also the inherited value. */
-    --qti-component-background-color: var(--qti-bg);
-    --qti-component-background-image: none;
-    --qti-component-border-width: var(--qti-border-thickness);
-    --qti-component-border-style: var(--qti-border-style);
-    --qti-component-border-color: var(--qti-border-color);
-    --qti-component-border-radius: var(--qti-border-radius);
-    --qti-component-box-shadow: none;
-    --qti-component-color: inherit;
-    --qti-component-opacity: 1;
-    --qti-component-filter: none;
-
-    /*
-     * Depth, worked out from --cito-depth (tier 1).
-     *
-     *   --qti-drag-lift       a chip at rest: a hard shadow under it, as tall as two borders. At
-     *                         depth 0 its colour mixes to nothing, so the chip is flat. A theme sets
-     *                         its own with --cito-shadow-chip (Kennisnet: a taller lift in its brand
-     *                         colour).
-     *   --qti-drag-elevation  a chip in flight, at any depth: picked up is always off the page. A
-     *                         theme sets its own with --cito-shadow-drag (`none` for flat).
-     *   --qti-hover-mix       how much base-content a hover mixes into a fill.
-     *   --qti-active-mix      how much a press mixes in: twice the hover, so a press reads as one.
-     */
-    --qti-drag-lift: var(
+:root,
+:host,
+[data-qti-theme] {
+  /* Inputs, read once. `--qc-*` (and `--cito-*`, its old name, for one major) are the theme's public inputs
+      (CONTRACT.md §8): never declared here, so a value set anywhere above inherits into every shadow root.
+      Each is read once into the `--qti-*` name every rule uses, with the default theme as the fallback. */
+  --qti-color-base-100: var(
+    --qc-color-base-100,
+    var(--cito-color-base-100, light-dark(oklch(100% 0 none), oklch(20% 0 none)))
+  );
+  --qti-color-base-content: var(
+    --qc-color-base-content,
+    var(--cito-color-base-content, light-dark(oklch(21% 0 none), oklch(96% 0 none)))
+  );
+  --qti-color-primary: var(
+    --qc-color-primary,
+    var(--cito-color-primary, light-dark(oklch(21% 0 none), oklch(96% 0 none)))
+  );
+  --qti-color-primary-content: var(
+    --qc-color-primary-content,
+    var(--cito-color-primary-content, light-dark(oklch(100% 0 none), oklch(21% 0 none)))
+  );
+  --qti-color-neutral: var(
+    --qc-color-neutral,
+    var(--cito-color-neutral, light-dark(oklch(17.76% 0 none), oklch(92% 0 none)))
+  );
+  --qti-color-neutral-content: var(
+    --qc-color-neutral-content,
+    var(--cito-color-neutral-content, light-dark(oklch(100% 0 none), oklch(17.76% 0 none)))
+  );
+  --qti-color-chip: var(--qc-color-chip, var(--cito-color-chip, var(--qti-color-base-100)));
+  --qti-color-info: var(--qc-color-info, var(--cito-color-info, oklch(56.14% 0.1437 245.8)));
+  --qti-color-success: var(--qc-color-success, var(--cito-color-success, oklch(53.64% 0.166 139.96)));
+  --qti-color-warning: var(--qc-color-warning, var(--cito-color-warning, oklch(79.62% 0.1708 71.71)));
+  --qti-color-error: var(--qc-color-error, var(--cito-color-error, oklch(56.75% 0.2329 29.23)));
+  --qti-radius-field: var(--qc-radius-field, var(--cito-radius-field, 0.2rem));
+  --qti-radius-selector: var(--qc-radius-selector, var(--cito-radius-selector, var(--qti-border-radius)));
+  --qti-radius-box: var(--qc-radius-box, var(--cito-radius-box, var(--qti-border-radius)));
+  --qti-size-selector: var(--qc-size-selector, var(--cito-size-selector, 0.25em));
+  --qti-size-field: var(--qc-size-field, var(--cito-size-field, 0.125rem));
+  --qti-border-width: var(--qc-border-width, var(--cito-border-width, 1px));
+  --qti-depth: var(--qc-depth, var(--cito-depth, 0));
+  --qti-spacing: var(--qc-spacing, 0.5rem);
+  --qti-motion: var(--qc-motion, 1);
+  --qti-fg: inherit;
+  --qti-border-style: var(--qc-border-style, solid);
+  --qti-field-line-height: var(--qc-line-height, 1.5);
+  --qti-border-color: var(
+    --qc-color-border,
+    var(--cito-color-border, color-mix(in oklab, var(--qti-color-base-content) 45%, var(--qti-color-base-100)))
+  );
+  --qti-color-focus: var(
+    --qc-color-focus,
+    var(
+      --cito-color-focus,
+      var(--qc-color-primary, var(--cito-color-primary, light-dark(oklch(60% 0.15 250), oklch(72% 0.13 250))))
+    )
+  );
+  --qti-grip-mask: var(
+    --qc-icon-drag,
+    var(
+      --cito-icon-drag,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 16'%3E%3Ccircle cx='2' cy='3' r='1.4'/%3E%3Ccircle cx='2' cy='8' r='1.4'/%3E%3Ccircle cx='2' cy='13' r='1.4'/%3E%3C/svg%3E")
+    )
+  );
+  --qti-drag-lift: var(
+    --qc-shadow-chip,
+    var(
       --cito-shadow-chip,
       0 calc(2 * var(--qti-border-width)) 0
         color-mix(in oklab, var(--qti-color-base-content) calc(var(--qti-depth) * 20%), transparent)
-    ); /* t1 input: --cito-shadow-chip, optional */
-    --qti-drag-elevation: var(
-      --cito-shadow-drag,
-      0 var(--qti-spacing) calc(var(--qti-spacing) * 1.5)
-        color-mix(in oklab, var(--qti-color-base-content) 20%, transparent),
-      0 calc(var(--qti-spacing) / 2) var(--qti-spacing)
-        color-mix(in oklab, var(--qti-color-base-content) 10%, transparent)
-    ); /* t1 input: --cito-shadow-drag, optional */
-    --qti-hover-mix: 8%;
+    )
+  );
+  --qti-drag-elevation:
+    0 var(--qti-spacing) calc(var(--qti-spacing) * 1.5)
+      color-mix(in oklab, var(--qti-color-base-content) 20%, transparent),
+    0 calc(var(--qti-spacing) / 2) var(--qti-spacing)
+      color-mix(in oklab, var(--qti-color-base-content) 10%, transparent);
+  --qti-order-placed-fill: var(--qc-color-order-placed, var(--cito-color-order-placed));
+  --qti-order-placed-color: var(--qc-color-order-placed-content, var(--cito-color-order-placed-content));
+  --qti-order-placed-border-color: var(--qc-color-order-placed-border, var(--cito-color-order-placed-border));
+  --well-bg: var(--qti-color-base-100);
 
-    /* A chip's resting fill: the tier-1 chip colour. `press` reads --qti-<role>-fill, so a pressed
-       chip darkens from the chip colour; other roles fall back to the component surface. */
-    --qti-drag-fill: var(--qti-color-chip);
-    /* An order interaction's PLACED chip, when a brand gives it a look of its own: Kennisnet inverts
-       it (a white chip with dark text and a border on its filled bank) so a dropped answer reads as
-       settled. Optional and unset by default — then a placed order chip is the same chip as in the
-       bank. Unset, these compute to the guaranteed-invalid value, and the role slots they feed fall
-       back to the chip's own look. */
-    --qti-order-placed-fill: var(--cito-color-order-placed); /* t1 input, optional */
-    --qti-order-placed-color: var(--cito-color-order-placed-content); /* t1 input, optional */
-    --qti-order-placed-border-color: var(--cito-color-order-placed-border); /* t1 input, optional */
-    --qti-active-mix: 16%; /* a press: the same mix, twice as far */
+  /* Derived colours: every value here is a mix of the inputs (oklab, so a tint stays between its two ends). */
+  --qti-color-base-200: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 2.5%);
+  --qti-color-base-300: color-mix(in oklab, var(--qti-color-base-100), var(--qti-color-base-content) 6%);
+  --qti-color-disabled: color-mix(in oklab, var(--qti-color-base-content) 40%, var(--qti-color-base-100));
+  --qti-bg-active: color-mix(in oklab, var(--qti-primary) 8%, var(--qti-bg));
+  --qti-border-active: var(--qti-primary);
+  --qti-rubric-accent-color: color-mix(in oklab, var(--qti-color-base-content) 35%, var(--qti-color-base-100));
+  --qti-feedback-shadow-color: color-mix(in oklab, var(--qti-color-base-content) 22%, var(--qti-color-base-100));
+  --qti-callout-bg: var(--qti-color-base-300);
+  --qti-drag-fill: var(--qti-color-chip);
+  --qti-hover-mix: 8%;
+  --qti-active-mix: 16%;
 
-    /* Interaction icon masks. Kept in the QTI namespace so the theme has no FontAwesome runtime
-       dependency. One vocabulary, kept together. --qti-times-mask is also the inline choice's clear
-       glyph (qti-inline-choice-interaction.styles.ts). */
-    --qti-check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
-    --qti-times-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E");
-    /* fa-minus. The third verdict glyph, beside the tick and the cross: neither right nor wrong.
-       A SHAPE rather than a shade, deliberately — colour alone would leave partial credit
-       indistinguishable from correct for a colour-blind candidate, or in greyscale print. */
-    --qti-partial-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z'/%3E%3C/svg%3E");
-    /* The drag handle (`@mixin grip`): six small round dots by default, a theme sets its own shape
-       with --cito-icon-drag (a mask) and its colour with --cito-color-drag-icon. */
-    --qti-grip-mask: var(
-      --cito-icon-drag,
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Ccircle cx='3' cy='3' r='1.4'/%3E%3Ccircle cx='7' cy='3' r='1.4'/%3E%3Ccircle cx='3' cy='8' r='1.4'/%3E%3Ccircle cx='7' cy='8' r='1.4'/%3E%3Ccircle cx='3' cy='13' r='1.4'/%3E%3Ccircle cx='7' cy='13' r='1.4'/%3E%3C/svg%3E")
-    ); /* t1 input: --cito-icon-drag, optional */
-    --qti-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E");
+  /* Shape and size. */
+  --qti-border-radius: var(--qti-radius-field);
+  --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+  --qti-control-size: round(calc(var(--qti-size-selector) * 4), 2px);
+  --qti-focus-border-width: 2px;
+  --qti-focus-offset: var(--qti-focus-border-width);
+  --qti-focus-offset-inset: calc(-1 * var(--qti-focus-border-width));
+  --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--qti-border-width));
+  --qti-drop-outline-offset: calc(-1 * var(--qti-border-width));
+  --qti-callout-accent-width: calc(var(--qti-border-width) * 4);
+  --qti-feedback-radius: calc(var(--qti-spacing) * 2.5);
+  --qti-feedback-radius-inline: calc(var(--qti-spacing) * 2);
+  --qti-feedback-shadow: 0 calc(var(--qti-border-width) * 2) 0 var(--qti-feedback-shadow-color);
+  --qti-hotspot-ring-width: 2px;
+  --qti-hotspot-halo: oklch(100% 0 none / 85%);
+  --qti-drop-card-min-height: 4rem;
+  --qti-drop-track-min-width: 7.5rem;
 
-    /*
-     * Accent-tinted "active / selected surface" — the canonical pair, and one of the global knobs a
-     * theme flips. Read by `@mixin act` and ~27 call sites across drag-drop, inline-choice,
-     * match-tabular, slider and modal-feedback: the paint for "this box is active / open / a drop
-     * target." Derived from --qti-primary over --qti-bg so it tracks the accent colour (and, later, a
-     * light/dark surface). The --qti-drop-highlight-* vocabulary in interactions.states is the
-     * drop-specific SUPERSET that derives from THESE and adds the shadow + `enabled` variants.
-     *
-     * Deliberately in `global`: they are read from both interactions.base and interactions.states,
-     * so no single interaction layer could own them.
-     */
-    --qti-bg-active: color-mix(in oklab, var(--qti-primary) 8%, var(--qti-bg));
-    --qti-border-active: var(--qti-primary);
+  /* Rhythm: every padding and gap is a multiple of `--qti-spacing`, so one input scales the whole item.
+      The composites exist so an interaction never writes a `calc()` at the call site. */
+  --qti-padding-box: var(--qti-spacing) calc(var(--qti-spacing) * 2);
+  --qti-padding-inline: calc(var(--qti-spacing) / 4) calc(var(--qti-spacing) / 2);
+  --qti-gap: calc(var(--qti-spacing) * 2);
+  --qti-inline-gap: calc(var(--qti-spacing) / 4);
+  --qti-inline-padding-block: var(--qti-size-field);
+  --qti-inline-padding-inline: var(--qti-spacing);
+  --qti-inline-field-padding: var(--qti-inline-padding-block) var(--qti-inline-padding-inline);
+  --qti-line-height: calc(
+    var(--qti-field-line-height) * 1em + 2 * var(--qti-inline-padding-block) + 2 * var(--qti-component-border-width)
+  );
+  --qti-choice-outdent: calc(
+    var(--qti-gap) + var(--qti-component-border-width) - var(--qti-focus-offset) - var(--qti-focus-border-width)
+  );
+  --qti-drag-padding: calc(var(--qti-spacing) * 0.75) calc(var(--qti-spacing) * 1.5);
+  --qti-choice-box-padding: var(--qti-drag-padding);
+  --qti-glyph-gap: 0.5em;
+  --qti-grip-width: var(
+    --qc-size-drag-icon,
+    0.25em
+  ); /* the handle's box; one column of dots by default, a brand with a wider icon sets the input */
+  --qti-grip-gap: max(
+    0.375em,
+    calc(var(--qti-grip-width) * 2 / 3)
+  ); /* between the handle and the label: 0.375em for the default, 0.5em for a 0.75em icon */
+  --qti-correction-size: 1em;
+  --qti-correction-inset: var(--qti-gap);
+  --qti-correction-gutter: calc(var(--qti-correction-inset) + var(--qti-correction-size) + var(--qti-glyph-gap));
+  --qti-feedback-padding-inline: var(--qti-spacing);
+  --qti-motion-duration-fast: calc(150ms * var(--qti-motion));
 
-    /*
-     * The focus ring (`@mixin foc`): one outline on `:focus-visible`, for everything. The test
-     * controls read the same two tokens, so a page has one ring.
-     *
-     * Not the answer key's info blue: it must not be mistaken for the answer key. The default theme is
-     * black and white, and the ring is its one colour: a mid blue that keeps 3:1 against both
-     * surfaces (WCAG 1.4.11). A brand that sets --cito-color-primary gets its primary as the ring, as
-     * before; --cito-color-focus sets the ring on its own. 2px, a hairline, so a length in px. It sits that far outside
-     * the box, or that far inside it for a row in a list that clips (`@mixin foc-inset`).
-     *
-     * The four --qti-light-* and --qti-dark-* tokens that used to sit here are now
-     * --qti-selections-*, in the interactions.states block below. They are not a page-level light
-     * and dark theme, which is what the old names suggested and why they were mistaken for dead.
-     */
-    --qti-focus-border-width: 2px;
-    --qti-color-focus: var(
-      --cito-color-focus,
-      var(--cito-color-primary, light-dark(oklch(60% 0.15 250), oklch(72% 0.13 250)))
-    ); /* t1 input: --cito-color-focus, optional; a brand's primary when it sets one */
-    --qti-focus-color: var(--qti-color-focus);
+  /* The paint contract's resting look (`@mixin paint`, qti-mixins.css): a role slot (`--drag-*`, `--drop-*`, …)
+      falls back to these. States and brands switch slots; they never re-value these. */
+  --qti-component-background-color: var(--qti-bg);
+  --qti-component-background-image: none;
+  --qti-component-border-width: var(--qti-border-thickness);
+  --qti-component-border-style: var(--qti-border-style);
+  --qti-component-border-color: var(--qti-border-color);
+  --qti-component-border-radius: var(--qti-border-radius);
+  --qti-component-box-shadow: none;
+  --qti-component-color: inherit;
+  --qti-component-opacity: 1;
+  --qti-component-filter: none;
 
-    /*
-     * Rubric and feedback, told apart by shape so it holds in black and white. A rubric block is a
-     * document: light grey, a thick grey bar on its start side. Feedback is a reply: a light-grey bubble
-     * with large rounded corners, no border and a hard darker shadow just below it. Inline feedback is a
-     * pill, padded only at its sides so its line keeps its height.
-     */
-    --qti-callout-bg: var(--qti-color-base-300);
-    --qti-callout-accent-width: calc(var(--qti-border-width) * 4);
-    --qti-rubric-accent-color: color-mix(in oklab, var(--qti-color-base-content) 35%, var(--qti-color-base-100));
-    --qti-feedback-radius: calc(var(--qti-spacing) * 2.5);
-    --qti-feedback-radius-inline: calc(var(--qti-spacing) * 2);
-    --qti-feedback-padding-inline: var(--qti-spacing);
-    --qti-feedback-shadow-color: color-mix(in oklab, var(--qti-color-base-content) 22%, var(--qti-color-base-100));
-    --qti-feedback-shadow: 0 calc(var(--qti-border-width) * 2) 0 var(--qti-feedback-shadow-color);
-    --qti-focus-offset: var(--qti-focus-border-width);
-    --qti-focus-offset-inset: calc(-1 * var(--qti-focus-border-width));
-    --qti-focus-offset-past-border: calc(var(--qti-focus-offset) + var(--qti-border-width));
+  /* Selection, drag targets and the `.qti-well` card. */
+  --qti-selected-bg: var(--qti-primary);
+  --qti-selected-color: var(--qti-primary-fg);
+  --qti-placeholder-bg: color-mix(in oklab, var(--qti-primary) 20%, var(--qti-bg));
+  --qti-placeholder-shadow: 0 4px color-mix(in oklab, var(--qti-primary) 30%, var(--qti-bg));
+  --qti-drop-highlight-bg: var(--qti-bg-active);
+  --qti-drop-highlight-enabled-bg: color-mix(in oklab, var(--qti-drop-highlight-bg) 50%, transparent);
+  --qti-drop-highlight-border-color: var(--qti-border-active);
+  --qti-drop-highlight-border-width: 2px;
+  --well-border: var(--qti-border);
+  --well-box-shadow: none;
+  --table-border-color: var(--qti-border-color);
+  --foreground: var(--qti-color-base-content);
 
-    /* A drop edge drawn as an outline lies exactly where a border would (an inline gap). */
-    --qti-drop-outline-offset: calc(-1 * var(--qti-border-width));
-  }
+  /* Verdicts and the answer key, derived from the four semantic colours. The selections pair is drawn over an
+      author's image and deliberately does not follow the theme. */
+  --qti-correct: var(--qti-success);
+  --qti-incorrect: var(--qti-error);
+  --qti-partially-correct: var(--qti-warning);
+  --qti-correct-light: color-mix(in oklab, var(--qti-correct) 5%, var(--qti-bg));
+  --qti-incorrect-light: color-mix(in oklab, var(--qti-incorrect) 5%, var(--qti-bg));
+  --qti-partially-correct-light: color-mix(in oklab, var(--qti-partially-correct) 5%, var(--qti-bg));
+  --qti-answer-fg: var(--qti-info);
+  --qti-answer-bg: color-mix(in oklab, var(--qti-info) 5%, var(--qti-bg));
+  --qti-answer-border: var(--qti-info);
+  --qti-selections-light-bg: oklch(95.51% 0 none);
+  --qti-selections-light-border: oklch(85.76% 0 none);
+  --qti-selections-dark-bg: oklch(27.81% 0.0296 256.85);
+  --qti-selections-dark-border: oklch(55.44% 0.0407 257.42);
 
-  /* Honour the OS "reduce motion" request through the same knob, so CSS transitions and the JS FLIP
-     engine switch off together. A theme can still force motion back on by re-declaring --qti-motion
-     with higher specificity. */
-  @media (prefers-reduced-motion: reduce) {
-    :root,
-    :host,
-    [data-qti-theme] {
-      --qti-motion: 0;
-    }
-  }
+  /* Icon masks (painted in a colour with `mask`) and stacking. */
+  --qti-check-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+  --qti-times-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z'/%3E%3C/svg%3E");
+  --qti-partial-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z'/%3E%3C/svg%3E");
+  --qti-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E");
+  --qti-popover-z-index: 1000;
+  --qti-overlay-z-index: 1;
+
+  /* Aliases: the names these had before the inputs got their shape. Each is a plain reference, kept so a host
+      that sets or reads the old name still works. Removed at the next major. */
+  --qti-primary: var(--qti-color-primary);
+  --qti-primary-fg: var(--qti-color-primary-content);
+  --qti-success: var(--qti-color-success);
+  --qti-warning: var(--qti-color-warning);
+  --qti-error: var(--qti-color-error);
+  --qti-info: var(--qti-color-info);
+  --qti-bg: var(--qti-color-base-100);
+  --qti-border-thickness: var(--qti-border-width);
+  --qti-focus-color: var(--qti-color-focus);
 }
 
-/* ============================================================================
- * interactions.base — interaction-local geometry. Neutral, no judgement colour.
- * ========================================================================== */
-@layer qti-components.interactions.base {
+@media (prefers-reduced-motion: reduce) {
   :root,
   :host,
   [data-qti-theme] {
-    /*
-     * The radio/checkbox box. Named for what it is — every other name around it already says
-     * "control": part="control", part="control-mark", the control-selected mixin. "form" was the odd
-     * one out and needed a comment to say which form thing it meant.
-     *
-     * `em`, so a control is sized by the text it belongs to. A radio labels its choice; when that
-     * choice's text is set larger or smaller the control should follow, which `rem` cannot do — it
-     * is pinned to the root regardless of the type around it. Same reasoning, and the same value, as
-     * --qti-correction-size above: "em keeps a badge sized by the text it annotates". It is also
-     * what the SIZING note at the top of this file already claims for these tokens — that a
-     * control's size tracks its content rather than the page's rhythm.
-     *
-     * Costs nothing to adopt: every control host in the interactions renders at the root size today
-     * (measured across choice, tabular match and hottext), so 1em and 1rem compute identically and
-     * no baseline moves. It simply starts behaving when someone scales type.
-     *
-     * The one thing to watch is the hit target in deliberately small text, where the control now
-     * shrinks with it. Nothing in the theme sets a smaller size yet, so a floor would be a magic
-     * number guarding a case that does not exist; add `max()` here if a real one turns up.
-     */
-    /* Snapped to an even number of pixels, as are the marks drawn inside it (`mark-size`,
-       `radio-checked`): with a fractional control (19.2px at Playful's 0.3em) the gap round the dot
-       is fractional too, and the ring and the dot antialias differently, so the dot looks off
-       centre although it is not. Even sizes keep every gap a whole pixel. 16px is unchanged. */
-    --qti-control-size: round(calc(var(--qti-size-selector) * 4), 2px);
-
-    /* The correction badge's box. Named in two comments above and read by correction.styles.ts, but
-       never actually declared until now — every badge has been running on that file's `1em`
-       fallback. Declared at the same value, so nothing moves; it is a real token now rather than a
-       promise, and `em` keeps a badge sized by the text it annotates (same reasoning as
-       --qti-glyph-gap below). */
-    --qti-correction-size: 1em;
-
-    /*
-     * How far a correction badge sits from the trailing edge of the box it annotates.
-     *
-     * Only two interactions need it. Everywhere else the badge is a child of the element that carries
-     * the padding, so it is inset by that padding for free — 12.8px on a chip, 16px on a choice, 4px
-     * on a hottext, each matching how far that container insets its own text. text-entry and
-     * inline-choice are the exception: their field box is the HOST, but the padding lives on an inner
-     * ::part(input) / ::part(trigger), so their badge falls outside it and lands on the border. This
-     * gives it back the same inset the text has.
-     *
-     * A NAMED token rather than a calc over --qti-padding-box, which the rhythm contract above
-     * forbids; --qti-drag-padding is the precedent. It is --qti-gap because that IS the horizontal
-     * half of --qti-padding-box, which is the padding those two inner elements use.
-     */
-    --qti-correction-inset: var(--qti-gap);
-
-    /* The line-height @mixin field-typography gives a field. A token because the correction badge
-       has to be exactly one field-line tall to centre on the text, and `1lh` cannot be used for it:
-       that unit resolves against the badge's own inherited line-height, not the field's. */
-    --qti-field-line-height: 1.5; /* t1 */
-
-    /*
-     * The gutter at the end of the line a multi-line field reserves for its correction badge.
-     *
-     * DERIVED, so it cannot drift from the thing it makes room for: the badge's own inset, plus the
-     * badge, plus the gap that separates it from the first character. It used to be a literal
-     * `2.4rem` in the theme that had to be kept in agreement, by hand and across two packages, with a
-     * `0.75rem` left offset in the correction component.
-     *
-     * Reserved unconditionally, graded or not — padding is layout, and switching it on a verdict
-     * would re-wrap the candidate's answer at the moment they are marked.
-     */
-    --qti-correction-gutter: calc(var(--qti-correction-inset) + var(--qti-correction-size) + var(--qti-glyph-gap));
-
-    /* The gap between a masked glyph and the text it sits beside — the drag-handle grip before a
-       label, the correction badge after one. `em`, because a glyph is sized off the text it
-       annotates (see --qti-correction-size, --qti-grip-mask), so its gap has to scale with the same
-       text rather than with the root.
-       Deliberately NOT --qti-gap: that token is the page's rhythm at 1rem, an order of magnitude too
-       wide for a glyph sitting inside a line. This is the "named component token" escape hatch the
-       rhythm block above sanctions, and it is ONE token rather than two because the grip's 0.5em and
-       the badge's 0.4em were the same measurement written twice.
-       0.5em is the grip's old value, so the grip is untouched and the badge moved out by 0.1em. That
-       is not cosmetic in the VRT corpus: the badge is inline, so a tenth of an em reflows the line it
-       sits on, and 10 of 17 kennisnet snapshots shifted (up to 2.9% of pixels). Bisected the other
-       way, 0.4em holds the badge still and moves 5 drag/order snapshots instead — there is no value
-       that is neutral for both, which is exactly why the duplication was worth collapsing. */
-    --qti-glyph-gap: 0.5em;
-    /*
-     * ── Drop sizing ─────────────────────────────────────────────────────────────────────────────
-     *
-     * Four names, one job each, and — the load-bearing part — TWO OF THEM ARE DELIBERATELY NOT
-     * DECLARED HERE:
-     *
-     *   --qti-dropzone-min-height / -min-width   MEASURED. The box a drop reserves for one chip.
-     *   --qti-drag-min-width       MEASURED. A chip's own floor — the mixin writes it the same value
-     *                              as the drop's, which is what keeps a chip and its slot the same
-     *                              size without a rule relating the two. Unmeasured it is 0, from
-     *                              the fallback in `@mixin drag`, so a chip keeps its natural width.
-     *   --qti-drop-card-min-height a category card: match's targets, which collect several answers.
-     *   --qti-drop-track-min-width the floor of a drops-grid COLUMN. Not a drop's own width.
-     *
-     * Only the last two are declared below. The measured three are written at runtime and never
-     * declared anywhere — see the paragraph under this list, and no-declared-measured-token.mjs.
-     *
-     * WHY THE MEASURED PAIR MUST STAY UNDECLARED. Every consumer reads them as
-     * `var(--qti-dropzone-min-*, N)`, where N is what that drop is worth when nothing measured it.
-     * Declaring them here makes every one of those fallbacks unreachable — the inherited value
-     * always substitutes — so the whole "unmeasured" branch silently disappears, and code that
-     * DECLINES to publish a measurement (see `autoSizeDropzoneWidth`, which is how an authored
-     * `data-choices-container-width` takes the width axis) no longer means "no floor", it means
-     * "whatever is declared here". That is not hypothetical: declaring them at 3rem/8rem gave a
-     * graphic-gap-match hotspot a 128px min-width that beat its authored 100px `width`, and shrank
-     * match's cards from 4rem to 3rem without any rule mentioning cards. Both were one commit.
-     *
-     * If you want to size drops by hand with no mixin involved, set the two names on the
-     * interaction — closer than :root, which is where an owner of an axis is supposed to speak.
-     * `tools/stylelint/no-declared-measured-token.js` enforces the rule so this cannot come back.
-     *
-     * WHY A CHIP AND A DROP HAVE SEPARATE WIDTHS, when the measurement gives them the same value:
-     * their unmeasured defaults differ. A chip with no measurement keeps its natural width, so 0.
-     * A drop with no measurement is at its consumer's fallback. `@mixin drag` reads
-     * --qti-drag-min-width; everything else reads --qti-dropzone-min-width.
-     *
-     * WHY THE CARD IS SEPARATE: match publishes no measurement at all, so a card sized off
-     * --qti-dropzone-min-height depends entirely on a fallback literal — fragile, as above. Whether
-     * a drop is a slot or a card is a property of the INTERACTION, not of a drop's own `match-max`:
-     * a match-max="1" target is still a category that happens to take one answer, and it sits in a
-     * grid beside targets that take several.
-     *
-     * WHY THE TRACK IS SEPARATE: a column floor and a drop's own min-width are unrelated jobs that
-     * happened to want the same number in order. --qti-drop-min-width already died of exactly that
-     * conflation (it meant the track floor in order and a drop's min-width in the match target),
-     * and folding the track back into --qti-dropzone-min-width reintroduced it. A track that must
-     * also fit a measured chip asks for both by hand:
-     *     minmax(max(var(--qti-drop-track-min-width), var(--qti-dropzone-min-width, 0px)), 1fr)
-     *
-     * Everything else that used to be a token here is a plain declaration on the one rule that wants
-     * it, because `::part(drop)` already reaches every drop from the document and a custom property
-     * in between adds a name without adding reach:
-     *
-     *   --qti-drop-min-height, --qti-drop-min-width, --qti-match-target-min-width  collapsed into
-     *                         the names above.
-     *   --qti-dropzone-padding, --qti-drop-gap  deleted outright. A slot needs no inset at all (its
-     *                         reservation is already the chip's border-box, so nothing is squeezed
-     *                         and nothing shows), and the one drop that wants room — match's card —
-     *                         declares padding and gap on its own rule.
-     *
-     * See DROP-SIZING.md.
-     */
-    --qti-drop-card-min-height: 4rem;
-    --qti-drop-track-min-width: 7.5rem;
-
-    /* Hotspot selection ring (qti-hotspot-interaction.css). Resting stroke width — :state(checked)
-       and the correction states double it. The halo is the near-white outline either side of the
-       ring that keeps it legible over any background image (vocab §1.2.5.1 "suitable contrast").
-       --qti-hotspot-ring-color is intentionally NOT defined here: it is neutral by default and set
-       contextually by the qti-selections-* classes and the correction states. */
-    --qti-hotspot-ring-width: 2px;
-    --qti-hotspot-halo: oklch(100% 0 none / 85%);
-
-    /*
-     * A drag's own padding, deliberately not --qti-padding-box.
-     *
-     * `em`, so a drag scales with the text it wraps rather than with the root — a drag is a token
-     * around a word, and a word that grows should take its box with it.
-     *
-     * It is a token because the two mixins that used to draw a drag disagreed here: `drag` paid the
-     * horizontal padding (then --qti-padding-horizontal, now `calc(var(--qti-spacing) * 2)`) and
-     * the old `chip` paid `0.8em`, and which one you got depended on the layer the call site
-     * happened to sit in. That is the associate bug recorded in drag-drop.invariance.spec.ts — one
-     * drag, two box models, depending on where it was standing.
-     *
-     * Compact: three quarters of a spacing unit above and below, one and a half either side (6px ×
-     * 12px at the default unit), with the field line height (`@mixin drag`), so a chip is a
-     * word-sized box rather than a button. It was a whole unit by 0.8em. A choice drawn as a box takes the same, so a list of
-     * buttons and a bank of chips read as the same kind of thing. Gap match goes tighter still: its
-     * chips sit in a sentence (--qti-inline-field-padding).
-     */
-    --qti-drag-padding: calc(var(--qti-spacing) * 0.75) calc(var(--qti-spacing) * 1.5);
-    --qti-choice-box-padding: var(--qti-drag-padding);
-  }
-}
-
-/* ============================================================================
- * interactions.states — state paint. Selection, drag, and drop-target highlight.
- * ========================================================================== */
-@layer qti-components.interactions.states {
-  :root,
-  :host,
-  [data-qti-theme] {
-    /* Selection is a semantic alias of the primary action colour. */
-    --qti-selected-bg: var(--qti-primary);
-    --qti-selected-color: var(--qti-primary-fg);
-
-    /* The hole a lifted / placed chip leaves — derived from primary. */
-    --qti-placeholder-bg: color-mix(in oklab, var(--qti-primary) 20%, var(--qti-bg));
-    --qti-placeholder-shadow: 0 4px color-mix(in oklab, var(--qti-primary) 30%, var(--qti-bg));
-
-    /*
-     * Selections theming, for the two interactions Appendix B.1 of the QTI 3 implementation guide
-     * defines it on: qti-hotspot-interaction and qti-graphic-gap-match-interaction.
-     *
-     * `light` and `dark` name the colour the *selection* is drawn in, not a page theme — light for
-     * a selection sitting over a dark image, dark for one over a light image. The point is that a
-     * selection stays visible whatever the picture underneath it looks like, which is why the item
-     * author chooses, not the substrate.
-     *
-     * These were --qti-selections-light-bg and friends, in `global`. Both halves of that were wrong:
-     * the names read as a light/dark page theme, which is how they came to be mistaken for a dead
-     * feature, and `global` claimed an ownership they never had — nothing outside these two
-     * interactions' state rules reads them.
-     */
-    --qti-selections-light-bg: oklch(95.51% 0 none);
-    --qti-selections-light-border: oklch(85.76% 0 none);
-    --qti-selections-dark-bg: oklch(27.81% 0.0296 256.85);
-    --qti-selections-dark-border: oklch(55.44% 0.0407 257.42);
-
-    /* A drop-zone highlight is a background FILL only — no border, no ring — which keeps it
-       layout-invariant for free (a fill never reflows; the old inset ring existed only to avoid the
-       2px shift a real border would cause). One authored knob:
-         --qti-drop-highlight-bg           the fill on the hovered / active target (follows --qti-bg-active)
-         --qti-drop-highlight-enabled-bg   every droppable zone: a fainter wash, derived from it
-       --qti-drop-highlight-border-color / -border-width stay ONLY for the chip-in-flight outline
-       (the dragging / return-anchor states), which marks the dragged element, not the zone. */
-    --qti-drop-highlight-bg: var(--qti-bg-active);
-    --qti-drop-highlight-enabled-bg: color-mix(in oklab, var(--qti-drop-highlight-bg) 50%, transparent);
-    --qti-drop-highlight-border-color: var(--qti-border-active);
-    --qti-drop-highlight-border-width: 2px;
-  }
-}
-
-/* ============================================================================
- * interactions.corrections — answer-key and judgement paint.
- * ========================================================================== */
-@layer qti-components.interactions.corrections {
-  :root,
-  :host,
-  [data-qti-theme] {
-    /* ── Correction — derived from the semantic colours, never set directly. ── */
-    --qti-correct: var(--qti-success);
-    --qti-incorrect: var(--qti-error);
-    --qti-partially-correct: var(--qti-warning);
-    --qti-correct-light: color-mix(in oklab, var(--qti-correct) 5%, var(--qti-bg));
-    --qti-incorrect-light: color-mix(in oklab, var(--qti-incorrect) 5%, var(--qti-bg));
-    --qti-partially-correct-light: color-mix(in oklab, var(--qti-partially-correct) 5%, var(--qti-bg));
-
-    /* The answer key — the info blue, deliberately NOT the correct green. */
-    --qti-answer-fg: var(--qti-info);
-    --qti-answer-bg: color-mix(in oklab, var(--qti-info) 5%, var(--qti-bg));
-    --qti-answer-border: var(--qti-info);
+    --qti-motion: 0;
   }
 }

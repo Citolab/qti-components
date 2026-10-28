@@ -50,7 +50,7 @@ export const D108: Story = {
     )!;
     const gapContainers = gapInteraction.querySelectorAll('qti-gap');
     const passageText = gapInteraction.querySelector('blockquote')!;
-    const dragSlot = gapInteraction.shadowRoot!.querySelector('slot[part="drags"]')!;
+    const dragSlot = gapInteraction.shadowRoot!.querySelector('slot[part~="bank"]')!;
 
     expect(gapInteraction).not.toBeNull();
     expect(gapContainers.length).toBeGreaterThan(0);

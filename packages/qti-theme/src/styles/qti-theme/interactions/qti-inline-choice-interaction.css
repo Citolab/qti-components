@@ -5,7 +5,7 @@
        text, rather than the contract's `inherit`) is set as --field-* so it stays overridable — and
        being the field's own slot, it no longer inherits into the menu and message below. Those two
        still land on the same colour: they inherit the field's computed `color`. */
-    @mixin field;
+    @mixin paint field;
     @mixin inline;
     --field-color: var(--qti-fg);
 
@@ -30,22 +30,22 @@
       outline-offset: var(--qti-focus-offset-past-border);
     }
 
-    &:state(disabled)::part(trigger),
+    /* The attribute, not `:state(disabled)` / `:state(readonly)`: this host sets neither state
+       (plans/parts-and-states-naming.md, "Names that exist on one side only"). */
     &[disabled]::part(trigger) {
       cursor: not-allowed;
     }
 
-    &:state(readonly)::part(trigger),
     &[readonly]::part(trigger) {
       cursor: pointer;
     }
 
     /* ── Chevron icon: color only; transform/mask/size live in shadow DOM ────── */
-    &::part(dropdown-icon) {
+    &::part(icon) {
       color: inherit;
     }
 
-    &::part(dropdown-icon-open) {
+    &::part(icon open) {
       color: inherit;
     }
 
@@ -74,7 +74,8 @@
      * the menu is only painted while open anyway, so this never toggles.
      */
     &::part(menu) {
-      @mixin menu;
+      @mixin paint menu;
+      border-radius: var(--menu-border-radius, var(--qti-radius-box));
       padding: 0;
       margin-block-start: calc(-1 * var(--field-border-width, var(--qti-component-border-width)));
     }
@@ -125,7 +126,7 @@
       @mixin foc-inset;
     }
 
-    &::part(option-selected) {
+    &::part(option selected) {
       background-color: var(--qti-bg-active);
     }
 
@@ -160,7 +161,8 @@
        (fg text, amber-tinted fill, amber border) are --message-* overrides; width/style/radius
        come from the defaults. ── */
     &::part(message) {
-      @mixin message;
+      @mixin paint message;
+      border-radius: var(--message-border-radius, var(--qti-radius-box));
       --message-color: var(--qti-fg);
       --message-background-color: color-mix(in oklab, var(--qti-warning) 5%, var(--qti-bg));
       --message-border-color: var(--qti-warning);
@@ -171,8 +173,9 @@
 
 @layer qti-components.interactions.corrections {
   /* The answer key, moved here from the shared qti-corrections.css: it names this interaction, so
-     this file owns it. */
-  .full-correct-response qti-inline-choice-interaction {
+     this file owns it. Keyed on `answer-key` on the cloned host (CorrectResponseMixin), where the
+     `.full-correct-response` wrapper class used to be read. */
+  qti-inline-choice-interaction:state(answer-key) {
     @mixin answer;
 
     &::part(value) {

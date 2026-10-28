@@ -7,12 +7,12 @@ interface FeedbackElement extends Element {
 }
 
 /**
- * Send `cito-feedback-show` or `cito-feedback-hide` from a feedback element, just before it shows or
+ * Send `qc-feedback-show` or `qc-feedback-hide` from a feedback element, just before it shows or
  * hides. Both are cancelable; this returns `false` when the host cancels, i.e. takes over.
  */
 export function dispatchFeedback(
   element: FeedbackElement,
-  name: 'cito-feedback-show' | 'cito-feedback-hide',
+  name: 'qc-feedback-show' | 'qc-feedback-hide',
   kind: FeedbackEventDetail['kind'],
   identifier: string
 ): boolean {

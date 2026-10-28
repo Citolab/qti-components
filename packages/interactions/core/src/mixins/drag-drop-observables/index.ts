@@ -1,5 +1,3 @@
-// export { DragDropSlottedMixin as DragDropInteractionMixin } from './drag-drop-slotted.mixin';
-
 /*
  * Re-exported here as well as from its own folder: it used to be part of DragDropSlottedMixin, so
  * this is where a consumer looks for it. The editor imports it from the dedicated subpath.

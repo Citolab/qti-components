@@ -11,7 +11,7 @@ export class TestSectionLink extends LitElement {
   private sectionId: string = null;
 
   #requestItem(identifier: string) {
-    dispatchPublic(this, 'cito-test-navigate', { type: 'section', id: identifier });
+    dispatchPublic(this, 'qc-test-navigate', { type: 'section', id: identifier });
   }
 
   constructor() {

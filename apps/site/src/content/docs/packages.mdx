@@ -11,7 +11,7 @@ Shared, framework-level plumbing with no QTI knowledge of its own: the `@watch` 
 
 ## `@qti-components/theme`
 
-The CSS. Exports `item.css` (the theme every item/interaction/test expects to be loaded once, globally — this is what `import '@citolab/qti-components/item.css'` in the Quick Start actually pulls in) and `native.css`. It has no dark-mode variant, which is why every live example on this site renders inside a fixed light panel regardless of the site's own theme.
+The CSS. Exports `item.css` (the theme every item/interaction/test expects to be loaded once, globally — this is what `import '@citolab/qti-components/item.css'` in the Quick Start actually pulls in) and `native.css`. How to set its inputs, override a part or a state, and get CSS into the containers' shadow roots is in [Styling and theming](/guides/styling/). Its colours are `light-dark()` pairs that follow the page's `color-scheme`; the live examples on this site render inside a fixed light panel regardless of the site's own theme.
 
 ## `@qti-components/transformers`
 

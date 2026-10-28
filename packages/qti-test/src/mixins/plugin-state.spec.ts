@@ -15,7 +15,7 @@ import type { QtiTestState } from '../types/qti-test-state';
 
 /**
  * A plugin keeps what it wants remembered in `state.session.plugins`, by its own name: it writes
- * with `cito-test-update-plugin-state`, reads from `computedContext.plugins`, and the host that
+ * with `qc-test-update-plugin-state`, reads from `computedContext.plugins`, and the host that
  * already stores `state` stores it too. The test never reads an entry.
  */
 declare module '../types/qti-test-state' {
@@ -73,7 +73,7 @@ describe('plugin state', () => {
     qtiTest = host.querySelector('qti-test') as QtiTest;
     probe = host.querySelector('plugin-state-probe') as PluginProbe;
     emitted = [];
-    qtiTest.addEventListener('cito-test-state-changed', e => emitted.push(e.detail));
+    qtiTest.addEventListener('qc-test-state-changed', e => emitted.push(e.detail));
   });
 
   afterEach(() => host.remove());
@@ -91,7 +91,7 @@ describe('plugin state', () => {
 
   it('is written with the request, shows in computedContext and in the state a host stores', async () => {
     await connect();
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: ['a', 'b'] });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'probe-notes', value: ['a', 'b'] });
     await settle();
 
     expect(pluginState(probe.computed, 'probe-notes')).toEqual(['a', 'b']);
@@ -102,7 +102,7 @@ describe('plugin state', () => {
   it('keeps a copy: changing the value afterwards does not change the state', async () => {
     await connect();
     const notes = ['a'];
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: notes });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'probe-notes', value: notes });
     notes.push('b');
     await settle();
 
@@ -111,9 +111,9 @@ describe('plugin state', () => {
 
   it('removes the entry for null, and leaves other plugins alone', async () => {
     await connect();
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: ['a'] });
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'other', value: 1 });
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: null });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'probe-notes', value: ['a'] });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'other', value: 1 });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'probe-notes', value: null });
     await settle();
 
     expect(qtiTest.state.session.plugins).toEqual({ other: 1 });
@@ -123,7 +123,7 @@ describe('plugin state', () => {
     await connect();
     const cyclic: Record<string, unknown> = {};
     cyclic.self = cyclic;
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: cyclic });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'probe-notes', value: cyclic });
     await settle();
 
     expect(qtiTest.state.session.plugins).toBeUndefined();
@@ -153,7 +153,7 @@ describe('plugin state', () => {
 
   it('round-trips: what one test stores, another resumes from', async () => {
     await connect();
-    dispatchPublic(probe, 'cito-test-update-plugin-state', { plugin: 'probe-notes', value: ['a', 'b'] });
+    dispatchPublic(probe, 'qc-test-update-plugin-state', { plugin: 'probe-notes', value: ['a', 'b'] });
     await settle();
     const stored = JSON.parse(JSON.stringify(qtiTest.state)) as QtiTestState;
     host.remove();

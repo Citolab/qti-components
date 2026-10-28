@@ -20,7 +20,7 @@ export type ComputedItem = ComputedItemContext & {
 
 export type ComputedContext = {
   view: View;
-  /** What test plugins keep, by plugin name (`QtiTestState.session.plugins`). Read-only; write with `cito-test-update-plugin-state`. */
+  /** What test plugins keep, by plugin name (`QtiTestState.session.plugins`). Read-only; write with `qc-test-update-plugin-state`. */
   plugins?: Readonly<Record<string, unknown>>;
   identifier: string;
   title: string;

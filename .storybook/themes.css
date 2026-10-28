@@ -1,18 +1,23 @@
 /*
  * Theme presets for Storybook's toolbar (addon-themes, `withThemeByDataAttribute` in preview.ts).
  *
- * Each preset is tier-1 inputs only (`--cito-*`, packages/qti-theme/CONTRACT.md §8) on
- * <html data-qti-theme>. The theme never declares those names, so they inherit everywhere, into
- * every shadow root too, and the theme re-derives from them on <html> and on every `:host`.
+ * A brand preset is the COMPLETE set of tier-1 inputs (`--qc-*`, packages/qti-theme/CONTRACT.md §8)
+ * on <html data-qti-theme>, in §8's groups and always in the same order, so it doubles as a worked
+ * example of a whole theme and as the reference list of what a brand can set. The theme
+ * never declares these names, so they inherit everywhere, into every shadow root too, and the theme
+ * re-derives from them on <html> and on every `:host`. The theme reads `--qc-*` first and the old
+ * `--cito-*` as a fallback this major.
+ *
+ * Where a brand keeps the theme's default, the value written here IS that default, spelled out
+ * (the derivations too), so the block reads without the theme. A change to a default in
+ * qti-variables.css does not flow into a brand preset; update it here on purpose.
  *
  *   default    nothing at all: what a host gets with no configuration
- *   light      color-scheme: light, and the page painted from the base tokens
- *   dark       color-scheme: dark, the same; every light-dark() token flips
+ *   light      color-scheme: light; the theme's own defaults
+ *   dark       color-scheme: dark; the same, every light-dark() token flips
  *   kennisnet  the Kennisnet brand, as tokens; the Corrections visual regression suite runs on it
  *   cito       cito.nl: the logo's dark blue and pink, white cards on the warm page colour, and
  *              cito.nl's own :root values
- *   playful    a theme for young children, like a friendly learning app
- *   soft       playful without borders, on a beige page: the fill marks fields, choices and chips
  *
  * Storybook only. The brand presets are not published with @qti-components/theme.
  */
@@ -31,6 +36,9 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   color: var(--qti-color-base-content);
 }
 
+/* Light and dark set nothing but the scheme: every default in the theme is a `light-dark()` pair,
+   so the theme IS the light and the dark preset. The complete list of inputs is in the two brand
+   presets below and in CONTRACT.md §8. */
 [data-qti-theme='light'] {
   color-scheme: light;
 }
@@ -39,28 +47,65 @@ html[data-qti-theme]:not([data-qti-theme='default']) body {
   color-scheme: dark;
 }
 
+/* ── Kennisnet ── */
+
 [data-qti-theme='kennisnet'] {
   color-scheme: light;
-  --cito-color-base-content: oklch(28.82% 0.1066 315.18); /* #3e144e */
-  --cito-color-primary: oklch(36.34% 0.1411 314.28); /* #581d70 */
-  --cito-color-primary-content: oklch(100% 0 none);
-  --cito-color-chip: var(--cito-color-primary); /* filled chips */
-  --cito-color-chip-content: var(--cito-color-primary-content);
-  --cito-radius-field: 0.3rem;
-  --cito-depth: 1;
 
-  --cito-color-border: var(--cito-color-primary); /* every edge in the brand colour */
-  /* The chip: primary fill, white text, no edge, and a 3px lift in the brand colour. The handle is
-     the theme's own six dots, which is Kennisnet's (Font Awesome's grip-vertical). */
-  --cito-color-chip-border: transparent;
-  --cito-shadow-chip: 0 3px color-mix(in oklab, var(--cito-color-primary) 50%, transparent);
-  /* Order's placed chip is inverted — white, dark text, the brand edge — so a dropped answer reads
-     as settled against the filled bank. */
-  --cito-color-order-placed: oklch(100% 0 none);
-  --cito-color-order-placed-content: var(--cito-color-base-content);
-  --cito-color-order-placed-border: var(--cito-color-border);
-  /* Wells are white, like the cards of Kennisnet's player on its lavender page (below). */
-  --cito-color-well: oklch(100% 0 none);
+  /* Surface */
+  --qc-color-base-100: oklch(100% 0 none); /* the page and every field */
+  --qc-color-base-content: oklch(28.82% 0.1066 315.18); /* text on it */
+  --qc-color-border: var(--qc-color-primary); /* every edge in the brand colour */
+
+  /* Brand */
+  --qc-color-primary: oklch(36.34% 0.1411 314.28); /* #581d70 */
+  --qc-color-primary-content: oklch(100% 0 none);
+  --qc-color-neutral: oklch(17.76% 0 none); /* the filled button (Next) */
+  --qc-color-neutral-content: oklch(100% 0 none);
+  --qc-color-focus: oklch(60% 0.15 250); /* the focus ring: the default theme's mid blue, not the brand colour */
+
+  /* Chips: primary fill, white text, no edge, a 3px lift in the brand colour; the handle is Kennisnet's six dots (Font Awesome's grip-vertical, once the theme's default) */
+  --qc-color-chip: var(--qc-color-primary);
+  --qc-color-chip-content: var(--qc-color-primary-content);
+  --qc-color-chip-border: transparent;
+  --qc-color-drag-icon: currentColor; /* the handle's colour */
+  --qc-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Ccircle cx='3' cy='3' r='1.4'/%3E%3Ccircle cx='7' cy='3' r='1.4'/%3E%3Ccircle cx='3' cy='8' r='1.4'/%3E%3Ccircle cx='7' cy='8' r='1.4'/%3E%3Ccircle cx='3' cy='13' r='1.4'/%3E%3Ccircle cx='7' cy='13' r='1.4'/%3E%3C/svg%3E"); /* six dots, a mask */
+  --qc-size-drag-icon: 0.75em; /* this two-column icon keeps the box the theme's one-column default no longer needs */
+  --qc-shadow-chip: 0 3px color-mix(in oklab, var(--qc-color-primary) 50%, transparent); /* at rest */
+  --qc-color-order-placed: oklch(100% 0 none); /* an order interaction's placed chip, when it gets its own look */
+  --qc-color-order-placed-content: var(--qc-color-base-content);
+  --qc-color-order-placed-border: var(--qc-color-border);
+
+  /* States: the answer key, correct, partially correct (and validation), incorrect */
+  --qc-color-info: oklch(56.14% 0.1437 245.8);
+  --qc-color-success: oklch(53.64% 0.166 139.96);
+  --qc-color-warning: oklch(79.62% 0.1708 71.71);
+  --qc-color-error: oklch(56.75% 0.2329 29.23);
+
+  /* The select-point marker */
+  --qc-icon-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z'/%3E%3C/svg%3E"); /* a pin */
+  --qc-marker-anchor: -100%; /* a pin stands on the point; -50% centres a ring or a star on it */
+
+  /* Shape */
+  --qc-radius-field: 0.3rem; /* fields, chips, cells */
+  --qc-radius-selector: var(--qc-radius-field); /* checkboxes, the chip's corner */
+  --qc-radius-box: var(--qc-radius-field); /* wells, menus, messages */
+  --qc-border-width: 1px;
+  --qc-border-style: solid;
+
+  /* Size */
+  --qc-spacing: 0.5rem; /* every padding and gap is a multiple of it */
+  --qc-size-selector: 0.25em; /* a radio or checkbox is 4× this */
+  --qc-size-field: 0.125rem; /* an inline field's vertical padding */
+
+  /* Type */
+  --qc-font-family: inherit; /* reading text; inherit = the page's font */
+  --qc-font-family-heading: inherit; /* h1–h6 in an item; inherit = the reading font */
+  --qc-line-height: 1.5; /* text fields */
+
+  /* Feel */
+  --qc-depth: 1; /* 0 flat, 1 lifted chips */
+  --qc-motion: 1; /* 1 normal, 0.5 slow, 0 none */
 }
 
 /* The page colour of Kennisnet's player (toetsen.wikiwijs.nl, #edecf6), so white wells, fields and
@@ -69,121 +114,74 @@ html[data-qti-theme][data-qti-theme='kennisnet'] body {
   background-color: oklch(94.67% 0.0134 290.75); /* #edecf6 */
 }
 
+/* ── Cito ── */
+
 [data-qti-theme='cito'] {
   color-scheme: light;
-  --cito-color-base-100: oklch(100% 0 none);
-  --cito-color-base-content: oklch(32.11% 0 none); /* #333, cito.nl's --c-title */
 
-  /* The logo's pink (logo_cito.svg, #ff0078), as on cito.nl's buttons and arrows: selection,
-     active border, focus ring, the Next button. White on it is 3.8:1, enough for bold or large text
-     and for edges, not for small body text. The logo's dark blue stays the answer key. */
-  --cito-color-primary: oklch(64.31% 0.2584 4.97); /* pink #ff0078 */
-  --cito-color-primary-content: oklch(100% 0 none);
-  --cito-color-neutral: oklch(64.31% 0.2584 4.97); /* pink #ff0078: the Next button, as on cito.nl */
-  --cito-color-neutral-content: oklch(100% 0 none); /* 3.8:1, bold labels only */
-  /* Chips like cito.nl's cards: white, borderless, #333 text, on the warm page colour below, with
-     the handle in the logo's pink, like the arrows on those cards. */
-  --cito-color-chip: oklch(100% 0 none);
-  --cito-color-chip-content: oklch(32.11% 0 none);
-  --cito-color-chip-border: transparent;
-  --cito-color-drag-icon: oklch(64.31% 0.2584 4.97); /* pink #ff0078 */
-  --cito-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1l2.5 2.5H9v3.5h3.5V5.5L15 8l-2.5 2.5V9H9v3.5h1.5L8 15l-2.5-2.5H7V9H3.5v1.5L1 8l2.5-2.5V7H7V3.5H5.5z'/%3E%3C/svg%3E"); /* four-way arrow */
-  --cito-icon-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1a11 11 0 1 1 0 22 11 11 0 0 1 0-22zm0 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 3.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z'/%3E%3C/svg%3E"); /* a target ring, the select-point marker */
-  --cito-marker-anchor: -50%; /* centred on the point, not standing on it like a pin */
+  /* Surface */
+  --qc-color-base-100: oklch(100% 0 none); /* the page and every field */
+  --qc-color-base-content: oklch(32.11% 0 none); /* text on it */
+  --qc-color-border: color-mix(
+    in oklab,
+    var(--qc-color-base-content) 55%,
+    var(--qc-color-base-100)
+  ); /* 55% of #333: about 3.5:1 on white (WCAG 1.4.11); the default 45% lands at 2.7:1 with this lighter text */
 
-  /* Field and table edges. The theme's default mixes 45% of the text colour into the surface, which
-     with Cito's lighter #333 lands at 2.7:1 on white, under the 3:1 a field's edge needs (WCAG
-     1.4.11). 55% of #333 gives about 3.5:1 and keeps the edge a neutral grey. */
-  --cito-color-border: color-mix(in oklab, var(--cito-color-base-content) 55%, var(--cito-color-base-100));
+  /* Brand */
+  --qc-color-primary: oklch(
+    64.31% 0.2584 4.97
+  ); /* the logo's pink #ff0078, as on cito.nl's buttons and arrows; white on it is 3.8:1, for bold or large text and edges */
+  --qc-color-primary-content: oklch(100% 0 none);
+  --qc-color-neutral: oklch(64.31% 0.2584 4.97); /* pink: the Next button, as on cito.nl */
+  --qc-color-neutral-content: oklch(100% 0 none); /* 3.8:1, bold labels only */
+  --qc-color-focus: oklch(60% 0.15 250); /* the focus ring: the default theme's mid blue, not the brand colour */
 
-  /* cito.nl's state colours (--c-info, --c-success, --c-warning, --c-error). */
-  --cito-color-info: oklch(53.46% 0.1196 238.57); /* #0075aa, the same dark blue */
-  --cito-color-success: oklch(63.6% 0.179 149.09); /* #00a748 */
-  --cito-color-warning: oklch(86.13% 0.176 89.44); /* #ffca00 */
-  --cito-color-error: oklch(65.28% 0.2332 26.62); /* #ff3838 */
+  /* Chips like cito.nl's cards: white with a grey edge and lift, #333 text, a quiet grey handle */
+  --qc-color-chip: oklch(100% 0 none);
+  --qc-color-chip-content: oklch(32.11% 0 none);
+  --qc-color-chip-border: oklch(90% 0 none); /* the same grey as the lift below, so card and shadow read as one */
+  --qc-color-drag-icon: oklch(75% 0 none); /* a light grey: the handle is there, the word is what you read */
+  --qc-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 16'%3E%3Ccircle cx='2' cy='3' r='1.4'/%3E%3Ccircle cx='2' cy='8' r='1.4'/%3E%3Ccircle cx='2' cy='13' r='1.4'/%3E%3C/svg%3E"); /* the theme's three dots */
+  --qc-size-drag-icon: 0.25em;
+  --qc-shadow-chip: 0 3px 0 oklch(90% 0 none); /* a flat grey lift under the white card, as on the screenshot */
+  /* --qc-color-order-placed: unset — the placed chip keeps the chip look */
+  /* --qc-color-order-placed-content: unset */
+  /* --qc-color-order-placed-border: unset */
 
-  /* cito.nl's --r-sm and --r-lg, and its 5 × --s checkboxes and radios. */
-  --cito-radius-field: 5px;
-  --cito-radius-selector: 5px;
-  --cito-radius-box: 15px;
-  --cito-size-selector: 0.3125em;
-  --cito-font-family: 'PT Sans', Arial, sans-serif;
+  /* States: cito.nl's --c-info, --c-success, --c-warning, --c-error */
+  --qc-color-info: oklch(53.46% 0.1196 238.57); /* #0075aa, the logo's dark blue: the answer key */
+  --qc-color-success: oklch(63.6% 0.179 149.09); /* #00a748 */
+  --qc-color-warning: oklch(86.13% 0.176 89.44); /* #ffca00 */
+  --qc-color-error: oklch(65.28% 0.2332 26.62); /* #ff3838 */
+
+  /* The select-point marker */
+  --qc-icon-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M12 1a11 11 0 1 1 0 22 11 11 0 0 1 0-22zm0 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm0 3.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z'/%3E%3C/svg%3E"); /* a target ring */
+  --qc-marker-anchor: -50%; /* centred on the point, not standing on it like a pin */
+
+  /* Shape: cito.nl's --r-sm and --r-lg */
+  --qc-radius-field: 5px; /* fields, chips, cells */
+  --qc-radius-selector: 5px; /* checkboxes, the chip's corner */
+  --qc-radius-box: 15px; /* wells, menus, messages */
+  --qc-border-width: 1px;
+  --qc-border-style: solid;
+
+  /* Size: cito.nl's 5 × --s checkboxes and radios */
+  --qc-spacing: 0.5rem; /* every padding and gap is a multiple of it */
+  --qc-size-selector: 0.3125em; /* a radio or checkbox is 4× this */
+  --qc-size-field: 0.125rem; /* an inline field's vertical padding */
+
+  /* Type */
+  --qc-font-family: inherit; /* reading text; inherit = the page's font */
+  --qc-font-family-heading: 'PT Sans', Arial, sans-serif; /* headings only; reading text keeps the page's font */
+  --qc-line-height: 1.5; /* text fields */
+
+  /* Feel */
+  --qc-depth: 1; /* 1: chips lift off the page */
+  --qc-motion: 1; /* 1 normal, 0.5 slow, 0 none */
 }
 
 /* cito.nl's page colour (--c-background), so white fields and chips stand on it as its cards do. */
 html[data-qti-theme][data-qti-theme='cito'] body {
   background-color: oklch(97.09% 0.0045 78.3); /* #f7f5f2 */
-}
-
-/*
- * Playful: for young children, in the style of a friendly learning app. White cards on a pale sky
- * page, one clear blue for what is chosen, a green button to go on, white chips that stand off the
- * page with a soft 3D lift, generous rounding and a friendly typeface. Calm enough to read, bright
- * enough to feel like play.
- */
-[data-qti-theme='playful'],
-[data-qti-theme='soft'] {
-  color-scheme: light;
-  --cito-color-base-100: oklch(100% 0 none);
-  --cito-color-base-content: oklch(34% 0.04 255); /* slate blue text */
-  --cito-color-primary: oklch(57% 0.17 245); /* clear blue: selection, focus */
-  --cito-color-primary-content: oklch(100% 0 none);
-  --cito-color-neutral: oklch(62% 0.19 140); /* green: the Next button */
-  --cito-color-neutral-content: oklch(100% 0 none);
-  --cito-color-chip: oklch(100% 0 none);
-  --cito-color-chip-content: oklch(34% 0.04 255);
-  --cito-color-chip-border: oklch(88% 0.02 250);
-  --cito-color-drag-icon: oklch(57% 0.17 245);
-  --cito-icon-drag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Ccircle cx='3' cy='3' r='1.8'/%3E%3Ccircle cx='8' cy='3' r='1.8'/%3E%3Ccircle cx='13' cy='3' r='1.8'/%3E%3Ccircle cx='3' cy='9' r='1.8'/%3E%3Ccircle cx='8' cy='9' r='1.8'/%3E%3Ccircle cx='13' cy='9' r='1.8'/%3E%3C/svg%3E"); /* six round dots, side by side */
-  --cito-icon-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l3.1 6.6 7.2.8-5.4 4.9 1.5 7.2L12 17.4 5.6 21l1.5-7.2L1.7 8.9l7.2-.8z'/%3E%3C/svg%3E"); /* a star marks the point you chose */
-  --cito-marker-anchor: -50%;
-  --cito-color-marker: oklch(68% 0.2 45); /* orange */
-  --cito-color-border: oklch(78% 0.03 250);
-  --cito-color-info: oklch(52% 0.16 265);
-  --cito-color-success: oklch(55% 0.16 145);
-  --cito-color-warning: oklch(62% 0.15 60);
-  --cito-color-error: oklch(56% 0.2 25);
-  --cito-radius-field: 0.75rem;
-  --cito-radius-selector: 0.75rem;
-  --cito-radius-box: 1.25rem;
-  --cito-border-width: 2px;
-  --cito-size-selector: 0.3em;
-  --cito-size-field: 0.25rem;
-  --cito-depth: 1;
-  --cito-font-family: 'Avenir Next', Nunito, 'Segoe UI', system-ui, sans-serif;
-}
-
-/* The pale sky page the white cards and chips stand on. */
-html[data-qti-theme]:is([data-qti-theme='playful'], [data-qti-theme='soft']) body {
-  background-color: oklch(97.5% 0.015 235);
-}
-
-/*
- * Soft: Playful without lines, on a warm beige page. On a page with a background every edge competes
- * with it, so the fill does the work: fields, choices, hottext, the table and the chips are white and
- * draw no border, and a radio or checkbox is a beige dot. The border width stays, transparent, so
- * no box changes size.
- *
- * One edge stays: the dashed edge of an empty drop, which is otherwise an invisible hole (`--drop-*`,
- * set here on the page so it inherits; a filled drop still hides it). A checked control still fills
- * with the primary.
- *
- * No edge means no 3:1 field boundary (WCAG 1.4.11): the white fill on the beige page marks the
- * field. A host that needs the contrast keeps Playful.
- */
-[data-qti-theme='soft'] {
-  --cito-color-border: transparent;
-  --cito-color-chip-border: transparent;
-  --radio-border-color: transparent;
-  --checkbox-border-color: transparent;
-  /* Without a ring a white control vanishes on a white surface (a table cell), so an unchecked one
-     is filled a step darker than the page: it shows on the page and on white alike. */
-  --radio-background-color: oklch(86% 0.03 78);
-  --checkbox-background-color: oklch(86% 0.03 78);
-  --drop-border-color: oklch(78% 0.03 75);
-}
-
-/* The beige page the white fields and chips stand on. */
-html[data-qti-theme][data-qti-theme='soft'] body {
-  background-color: oklch(93% 0.025 80);
 }

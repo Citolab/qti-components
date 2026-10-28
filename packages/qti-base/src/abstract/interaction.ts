@@ -5,6 +5,7 @@ import { property } from 'lit/decorators.js';
 import { configContext } from '../context/config.context';
 import { interactionContext } from '../context/interaction.context';
 import { itemContext } from '../context/item.context';
+import { setState } from '../utils/state-aliases';
 
 import type { PropertyValues } from 'lit';
 import type { InteractionContext } from '../context/interaction.context';
@@ -12,6 +13,11 @@ import type { ConfigContext, ValidationDisplayMode } from '../context/config.con
 import type { ItemContext } from '../context/types/item.types';
 import type { ValidatableInteraction } from '../lib/interaction.interface';
 import type { ResponseVariable } from '../lib/variables';
+
+/** Why an interaction is invalid: too few (`min`), too many (`max`), or something else (`other`). */
+export type ValidityKind = 'min' | 'max' | 'other';
+/** What asked for the report: the candidate changing the response, or a submit (end attempt, form). */
+export type ValidityTrigger = 'change' | 'submit';
 
 /**
  * Shared QTI interaction base. Formative correction behavior is supplied by the
@@ -192,12 +198,50 @@ export abstract class Interaction extends LitElement implements ValidatableInter
   abstract get response(): string | string[] | null;
   abstract set response(val: string | string[] | null);
 
-  public reportValidity(): boolean {
+  /** Why the interaction is invalid right now; `undefined` while it is valid. */
+  protected _validityKind?: ValidityKind;
+  /** Set once a submit has reported; from then on every change reports in full. */
+  protected _validityReported = false;
+  /** True while this element asks its own internals to report, so its `invalid` is not a submit. */
+  protected _reportingNatively = false;
+
+  /** Forget that a submit has reported: a reset or a new attempt waits for a submit again. */
+  protected resetValidityReport(): void {
+    this._validityReported = false;
+    this.clearInlineValidationMessage();
+  }
+
+  /**
+   * Show the validity state, in the configured mode.
+   *
+   * When it shows depends on what asked: a `change` (the candidate picked or dropped something)
+   * reports what they just did wrong, too many, at once; too few is not an error until they say they
+   * are done, so a `submit` (the item's end attempt, a form's submit) is what first shows it. After
+   * that first submit, changes report in full, so the message clears the moment the minimum is met
+   * and comes back if it is lost again. The validity itself is always set: a form with a
+   * below-minimum interaction cannot submit either way.
+   */
+  public reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+    const trigger = options?.trigger ?? 'submit';
+    // A submit judges the response as it is now, whatever changed it (a restore, a host write).
+    if (trigger === 'submit') this.validate?.();
     const isValid = this._internals.validity.valid;
     const mode = this.validationDisplayMode;
 
+    if (trigger === 'submit') this._validityReported = true;
+    if (trigger === 'change' && !this._validityReported && this._validityKind === 'min') {
+      this.clearInlineValidationMessage();
+      return isValid;
+    }
+
     if (mode === 'native' || mode === 'both') {
-      this._internals.reportValidity();
+      // `internals.reportValidity()` fires `invalid` on this host; that one is ours, not a submit.
+      this._reportingNatively = true;
+      try {
+        this._internals.reportValidity();
+      } finally {
+        this._reportingNatively = false;
+      }
     }
 
     if (mode === 'inline' || mode === 'both') {
@@ -258,10 +302,11 @@ export abstract class Interaction extends LitElement implements ValidatableInter
     isValid: boolean,
     validityMessage = '',
     anchor?: HTMLElement | null,
-    options?: { suppressInline?: boolean }
+    options?: { suppressInline?: boolean; kind?: ValidityKind }
   ): void {
     const validityAnchor = anchor ?? this;
     this._internals.setValidity(isValid ? {} : { customError: true }, validityMessage, validityAnchor);
+    this._validityKind = isValid ? undefined : (options?.kind ?? 'other');
 
     if (
       options?.suppressInline !== true &&
@@ -302,10 +347,12 @@ export abstract class Interaction extends LitElement implements ValidatableInter
   }
 
   public reset(): void {
+    this.resetValidityReport();
     this.response = null;
   }
 
   public formResetCallback(): void {
+    this.resetValidityReport();
     this.reset();
   }
 
@@ -344,9 +391,44 @@ export abstract class Interaction extends LitElement implements ValidatableInter
     );
   }
 
+  /**
+   * `disabled` and `readonly` are states as well as attributes (qti-theme CONTRACT.md §3): a theme
+   * reads `:state(disabled)` on the host the way it reads it on a choice. The attribute stays
+   * reflected, so `[disabled]` keeps matching.
+   */
+  protected override update(changed: PropertyValues): void {
+    const first = !this.hasUpdated;
+    super.update(changed);
+    // Validity from the start, not only from the candidate's first change: an untouched interaction
+    // below its minimum is invalid, so a form holding it does not submit. Silent: a validate never
+    // shows a message, a report does. Twice and no more: once after the first render, and once two
+    // frames later, when a restored response has been applied (choices' checked states and placed
+    // chips land in the updates after the first). A submit validates again (reportValidity).
+    // Bounded on purpose: a validate can cause an update, so validating per update loops.
+    if (first) {
+      const run = () => this.isConnected && this.validate();
+      void this.updateComplete.then(run);
+      requestAnimationFrame(() => requestAnimationFrame(run));
+    }
+    if (changed.has('disabled')) setState(this._internals.states, 'disabled', this.disabled);
+    if (changed.has('readonly')) setState(this._internals.states, 'readonly', this.readonly);
+  }
+
   constructor() {
     super();
     this._internals = this.attachInternals();
+    // A form's submit runs the browser's own validation, which fires `invalid` on an invalid
+    // element and shows the native message at its anchor. That is a submit: show the inline
+    // message too, and from now on report every change in full. Ignored while this element
+    // reports through its own internals (that fires `invalid` too). A host calling
+    // `form.checkValidity()` also lands here and cannot be told apart from a submit; it counts as one.
+    this.addEventListener('invalid', () => {
+      if (this._reportingNatively) return;
+      this._validityReported = true;
+      if (this.validationDisplayMode === 'inline' || this.validationDisplayMode === 'both') {
+        this.updateInlineValidationMessage();
+      }
+    });
     this.addEventListener('qti-interaction-response', (e: Event) => {
       this.#lastResponse = JSON.stringify((e as CustomEvent).detail?.response ?? null);
     });

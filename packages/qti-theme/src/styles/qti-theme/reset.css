@@ -57,9 +57,20 @@
 @scope (qti-item-body) {
   :scope {
     line-height: var(--qti-line-height);
-    font-family: var(--cito-font-family, inherit); /* the page's font, unless a brand sets one */
+    font-family: var(--qc-font-family, var(--cito-font-family, inherit)); /* the page's font, unless a brand sets one */
     /* The theme's text colour, so the words flip with the surfaces when the page is dark. Inheriting
        the page's colour left dark text on the dark fields of a page that had not set its own. */
     color: var(--qti-color-base-content);
+  }
+
+  /* A brand may set a second face for headings alone (`--qc-font-family-heading`); unset, headings
+     keep the reading font. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--qc-font-family-heading, inherit);
   }
 }

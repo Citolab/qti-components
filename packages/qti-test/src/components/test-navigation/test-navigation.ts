@@ -127,14 +127,14 @@ export class TestNavigation extends LitElement {
 
   constructor() {
     super();
-    listenPublic(this, 'cito-test-loaded', this.#handleTestConnected.bind(this));
+    listenPublic(this, 'qc-test-loaded', this.#handleTestConnected.bind(this));
     this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
-    listenItemPublic(this, 'cito-item-response-changed', this.#handleInteractionChanged.bind(this));
+    listenItemPublic(this, 'qc-item-response-changed', this.#handleInteractionChanged.bind(this));
     this.addEventListener('qti-item-context-updated', this.#handleItemContextUpdated.bind(this));
 
-    listenPublic(this, 'cito-test-end-attempt', this.#handleTestEndAttempt.bind(this));
-    listenPublic(this, 'cito-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
+    listenPublic(this, 'qc-test-end-attempt', this.#handleTestEndAttempt.bind(this));
+    listenPublic(this, 'qc-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
   }
 
   /**

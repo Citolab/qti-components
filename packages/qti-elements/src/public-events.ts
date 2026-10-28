@@ -7,17 +7,18 @@ import type {
 
 /**
  * The public events of the item. The name tells you it is public: everything declared here starts
- * with `cito-`; every other event is internal plumbing and may change in any release.
+ * with `qc-`; every other event is internal plumbing and may change in any release.
  *
  * Requests are verbs, notifications are past tense. All bubble and are composed.
  *
- * `deprecated` is the name the event had before it became public. `dispatchPublic` sends and
- * `listenPublic` handles both until the next major, then the field goes.
+ * `deprecated` is the `cito-` name the event had in 9.x. `dispatchPublic` sends and `listenPublic`
+ * handles both until the next major, then the field goes. The 7.x names (`qti-interaction-changed`,
+ * `qti-outcome-changed`, `qti-rubric:discretionary-placement`) are no longer sent or handled.
  */
 export interface PublicEventDeclaration {
   kind: 'request' | 'notification';
   scope: 'test' | 'item';
-  /** The name before it was public. Dispatched and handled alongside the new one. */
+  /** The previous name. Dispatched and handled alongside the new one. */
   deprecated?: string;
 }
 
@@ -26,7 +27,7 @@ export interface RubricPlacement {
   element: Element;
 }
 
-/** The detail of `cito-feedback-show` and `cito-feedback-hide`. */
+/** The detail of `qc-feedback-show` and `qc-feedback-hide`. */
 export interface FeedbackEventDetail {
   kind: 'block' | 'inline' | 'modal';
   /** The feedback's `identifier`. */
@@ -40,45 +41,41 @@ export interface FeedbackEventDetail {
 }
 
 export interface PublicItemEventMap {
-  // `cito-item-rendered` (detail: the `QtiAssessmentItem`) is added by qti-assessment-item.ts, so this
+  // `qc-item-rendered` (detail: the `QtiAssessmentItem`) is added by qti-assessment-item.ts, so this
   // module imports no element: that import would be a cycle.
-  'cito-item-response-changed': CustomEvent<InteractionChangedDetails>;
+  'qc-item-response-changed': CustomEvent<InteractionChangedDetails>;
   /**
    * Request: the item applies these outcomes in one update. Response processing sends it; a host
    * that scores on a backend sends it on the item with the outcomes the backend returned.
    */
-  'cito-item-set-outcomes': CustomEvent<SetOutcomesDetails>;
+  'qc-item-set-outcomes': CustomEvent<SetOutcomesDetails>;
   /** One per outcome an update applied, with its final value, after the item context is published. */
-  'cito-item-outcome-changed': CustomEvent<OutcomeChangedDetails>;
+  'qc-item-outcome-changed': CustomEvent<OutcomeChangedDetails>;
   /** All the outcomes one update applied, after the item context is published. */
-  'cito-item-outcomes-changed': CustomEvent<OutcomesChangedDetails>;
+  'qc-item-outcomes-changed': CustomEvent<OutcomesChangedDetails>;
   /** Cancelable: `preventDefault()` keeps the rubric block where it is. */
-  'cito-item-rubric-placement': CustomEvent<RubricPlacement>;
+  'qc-item-rubric-placement': CustomEvent<RubricPlacement>;
   /**
    * Cancelable: the feedback element is about to show (its condition turned true). `preventDefault()`
    * keeps it hidden, so the host can show the content itself. Sent once per showing.
    */
-  'cito-feedback-show': CustomEvent<FeedbackEventDetail>;
+  'qc-feedback-show': CustomEvent<FeedbackEventDetail>;
   /** The condition of a feedback that was shown (or taken over by the host) turned false again. */
-  'cito-feedback-hide': CustomEvent<FeedbackEventDetail>;
+  'qc-feedback-hide': CustomEvent<FeedbackEventDetail>;
 }
 
 export type PublicItemEventName = keyof PublicItemEventMap;
 
 export const PUBLIC_ITEM_EVENTS: Record<PublicItemEventName, PublicEventDeclaration> = {
   // The old name `qti-assessment-item-connected` stays as internal plumbing: it is sent separately.
-  'cito-item-rendered': { kind: 'notification', scope: 'item' },
-  'cito-item-response-changed': { kind: 'notification', scope: 'item', deprecated: 'qti-interaction-changed' },
-  'cito-item-set-outcomes': { kind: 'request', scope: 'item' },
-  'cito-item-outcome-changed': { kind: 'notification', scope: 'item', deprecated: 'qti-outcome-changed' },
-  'cito-item-outcomes-changed': { kind: 'notification', scope: 'item' },
-  'cito-item-rubric-placement': {
-    kind: 'notification',
-    scope: 'item',
-    deprecated: 'qti-rubric:discretionary-placement'
-  },
-  'cito-feedback-show': { kind: 'notification', scope: 'item' },
-  'cito-feedback-hide': { kind: 'notification', scope: 'item' }
+  'qc-item-rendered': { kind: 'notification', scope: 'item', deprecated: 'cito-item-rendered' },
+  'qc-item-response-changed': { kind: 'notification', scope: 'item', deprecated: 'cito-item-response-changed' },
+  'qc-item-set-outcomes': { kind: 'request', scope: 'item', deprecated: 'cito-item-set-outcomes' },
+  'qc-item-outcome-changed': { kind: 'notification', scope: 'item', deprecated: 'cito-item-outcome-changed' },
+  'qc-item-outcomes-changed': { kind: 'notification', scope: 'item', deprecated: 'cito-item-outcomes-changed' },
+  'qc-item-rubric-placement': { kind: 'notification', scope: 'item', deprecated: 'cito-item-rubric-placement' },
+  'qc-feedback-show': { kind: 'notification', scope: 'item', deprecated: 'cito-feedback-show' },
+  'qc-feedback-hide': { kind: 'notification', scope: 'item', deprecated: 'cito-feedback-hide' }
 };
 
 declare global {

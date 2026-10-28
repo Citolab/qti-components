@@ -36,7 +36,7 @@ const getInteraction = (assessmentItem: QtiAssessmentItem, className: string) =>
   const interaction = assessmentItem.querySelector<QtiGapMatchInteraction>(
     `qti-gap-match-interaction[class="${className}"]`
   )!;
-  const dragSlot = interaction.shadowRoot!.querySelector('slot[part="drags"]')!;
+  const dragSlot = interaction.shadowRoot!.querySelector('slot[part~="bank"]')!;
   const passageText = interaction.querySelector('blockquote')!;
   return { interaction, dragSlot, passageText };
 };

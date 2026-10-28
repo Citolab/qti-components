@@ -14,7 +14,7 @@ export interface SessionContext {
   /**
    * What test plugins keep, by plugin name: JSON the test stores and restores without reading it.
    * Part of the persisted state (`QtiTestState.session.plugins`); written through the
-   * `cito-test-update-plugin-state` request.
+   * `qc-test-update-plugin-state` request.
    */
   plugins?: Readonly<Record<string, unknown>>;
 }

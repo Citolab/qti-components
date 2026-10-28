@@ -52,7 +52,7 @@ import {
 
 class MyInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(Interaction, 'qti-simple-choice', 'qti-gap', 'slot[part="drags"]'),
-  '[qti-draggable="true"]' // selector for sortable items within slots
+  '[data-draggable="true"]' // selector for sortable items within slots
 ) {
   // Items can be dragged from inventory to slots (slotted behavior)
   // Once placed, items can be reordered within their slot (sortable behavior)

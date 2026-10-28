@@ -26,7 +26,7 @@ export default [
 
     /* A placed chip keeps the box it had in the bank, even in a hotspot narrower than it (a boxed
        word on a small region): shrinking would wrap or squeeze its text (drag-drop.invariance). */
-    [part~='drag'] {
+    [part~='chip'] {
       flex-shrink: 0;
     }
   `

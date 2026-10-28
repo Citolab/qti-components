@@ -15,9 +15,11 @@ import type { CSSResultGroup, PropertyValues } from 'lit';
  * @csspart bounds - The min/max bounds label wrapper.
  * @csspart ticks - The tick marks along the rail.
  * @csspart rail - The rail element the knob slides along.
- * @csspart knob - The draggable knob.
- * @csspart value - The current value display (used twice in the layout).
- * @csspart knob-correct - Ghost knob shown at the correct response position.
+ * @csspart knob - The draggable knob. Tokens: `answer-key` on the ghost knob `qti-corrections`
+ *   draws at the correct response (was the part `knob-correct`).
+ * @csspart value - The current value display.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiSliderInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;

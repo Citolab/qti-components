@@ -40,7 +40,7 @@ The test announces its state whenever it changes. Save what it sends, and give i
 const test = document.querySelector('qti-test');
 
 // Store: fires on every change.
-test.addEventListener('cito-test-state-changed', e => localStorage.setItem('session', JSON.stringify(e.detail)));
+test.addEventListener('qc-test-state-changed', e => localStorage.setItem('session', JSON.stringify(e.detail)));
 
 // Restore: no event to wait for. Assigned before the test has loaded it is held until the test
 // connects, and after that it jumps to the saved position.

@@ -38,7 +38,7 @@ export class TestScoringButtons extends LitElement {
     const sectionItems = testPart.sections.flatMap(section => section.items);
     const currentItemIdentifier = sectionItems.find(item => item.active)?.identifier;
 
-    dispatchPublic(this, 'cito-test-update-outcome', {
+    dispatchPublic(this, 'qc-test-update-outcome', {
       assessmentItemRefId: currentItemIdentifier,
       outcomeVariableId: 'SCORE',
       value

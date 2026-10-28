@@ -26,7 +26,7 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
         };
         e.stopPropagation();
       });
-      listenPublic(this, 'cito-test-submit', () => this.submit());
+      listenPublic(this, 'qc-test-submit', () => this.submit());
       // wordt aangeroepen vanuit de processingtemplate
       this.addEventListener(
         'qti-set-outcome-value',
@@ -60,11 +60,11 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
 
     /**
      * Ends the test for scoring: runs `outcomeProcessing()`, then tells the host with
-     * `cito-test-submitted`. Returns false, and sends nothing, when the test has no outcome processing.
+     * `qc-test-submitted`. Returns false, and sends nothing, when the test has no outcome processing.
      */
     submit(): boolean {
       if (!this.outcomeProcessing()) return false;
-      dispatchPublic(this, 'cito-test-submitted', {});
+      dispatchPublic(this, 'qc-test-submitted', {});
       return true;
     }
 

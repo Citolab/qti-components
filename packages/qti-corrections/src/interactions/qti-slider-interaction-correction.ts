@@ -4,13 +4,17 @@ import { QtiSliderInteraction } from '@qti-components/slider-interaction/element
 
 import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
 
+/**
+ * @csspart knob - The ghost knob at the correct response position carries the `answer-key` token
+ *   (`knob answer-key`), followed by the old `knob-correct` token for one major.
+ */
 export class QtiSliderInteractionCorrection extends CandidateCorrectionMixin(QtiSliderInteraction) {
   #correctResponseNumber: number | null = null;
 
   static override styles = [
     QtiSliderInteraction.styles,
     css`
-      [part='knob-correct'] {
+      [part~='knob'][part~='answer-key'] {
         background-color: var(--qti-correct-light);
         border: 2px solid var(--qti-correct);
         position: relative;
@@ -44,7 +48,7 @@ export class QtiSliderInteractionCorrection extends CandidateCorrectionMixin(Qti
   protected override renderRailSupplement(): unknown {
     return this.#correctResponseNumber === null
       ? nothing
-      : html`<div id="knob-correct" part="knob-correct">
+      : html`<div id="knob-correct" part="knob answer-key knob-correct">
           <div id="value" part="value">${this.#correctResponseNumber}</div>
         </div>`;
   }

@@ -206,7 +206,7 @@ export const MaxSelectionsMessageAttribute: Story = {
     await settle(interaction);
 
     const message = interaction.shadowRoot?.querySelector<HTMLElement>('#validation-message');
-    const drags = interaction.shadowRoot?.querySelector<HTMLElement>("slot[part~='drags']");
+    const drags = interaction.shadowRoot?.querySelector<HTMLElement>("slot[part~='bank']");
     const dropGroup = interaction.shadowRoot?.querySelector<HTMLElement>("[part='drops']");
 
     expect(message).toBeTruthy();

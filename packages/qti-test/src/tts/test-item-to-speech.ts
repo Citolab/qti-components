@@ -29,11 +29,11 @@ function getHighlightSheet(): CSSStyleSheet {
     highlightSheet = new CSSStyleSheet();
     highlightSheet.replaceSync(`
       ::highlight(${HIGHLIGHT_ELEMENT}) {
-        background-color: var(--test-tts-element-highlight, color-mix(in oklab, var(--qti-color-info, var(--cito-color-info, Highlight)) 15%, transparent));
+        background-color: var(--test-tts-element-highlight, color-mix(in oklab, var(--qti-color-info, var(--qc-color-info, var(--cito-color-info, Highlight))) 15%, transparent));
         color: inherit;
       }
       ::highlight(${HIGHLIGHT_WORD}) {
-        background-color: var(--test-tts-word-highlight, color-mix(in oklab, var(--qti-color-warning, var(--cito-color-warning, Mark)) 55%, transparent));
+        background-color: var(--test-tts-word-highlight, color-mix(in oklab, var(--qti-color-warning, var(--qc-color-warning, var(--cito-color-warning, Mark))) 55%, transparent));
         color: inherit;
       }
     `);
@@ -102,7 +102,7 @@ abstract class TtsButtonBase extends LitElement {
     }
     button {
       ${styles.btn};
-      min-inline-size: var(--test-button-size, 2.25rem);
+      min-inline-size: var(--button-size, var(--test-button-size, 2.25rem));
       padding-inline: 0.5rem;
       /* Containing block for the visually hidden .label. Without it the label is placed against
          the nearest positioned ancestor, which can sit outside a scroll container and make the
@@ -123,10 +123,16 @@ abstract class TtsButtonBase extends LitElement {
     button:disabled {
       ${styles.dis};
     }
+    /* A toggle that is on (the pick button in pick mode). The host carries :state(selected) for a
+       page's own rules; in here the inner button's aria-pressed says the same thing and matches in
+       a browser without :state(), so the look keys on that. */
     button[aria-pressed='true'],
     button[aria-pressed='true']:hover {
-      background-color: var(--test-button-selected-background-color, var(--qti-selected-bg, Highlight));
-      color: var(--test-button-selected-color, var(--qti-selected-color, HighlightText));
+      background-color: var(
+        --button-selected-background-color,
+        var(--test-button-selected-background-color, var(--qti-selected-bg, Highlight))
+      );
+      color: var(--button-selected-color, var(--test-button-selected-color, var(--qti-selected-color, HighlightText)));
     }
     svg,
     ::slotted(svg) {
@@ -162,18 +168,28 @@ abstract class TtsButtonBase extends LitElement {
 
   #mirroredState: SpeechState | undefined;
   #mirroredPicking = false;
+  #mirroredSelected = false;
+
+  /** Whether this control is a toggle that is on; mirrored as `:state(selected)`. A plain button never is. */
+  protected get selected(): boolean {
+    return false;
+  }
 
   override updated(_changed: PropertyValues) {
     // `_tts` is a context field, not a reactive property, so it never shows up in `changed`:
     // compare against what was last mirrored instead.
     const state = this._tts?.state;
     const picking = this._tts?.picking ?? false;
-    if (state === this.#mirroredState && picking === this.#mirroredPicking) return;
+    const selected = this.selected;
+    if (state === this.#mirroredState && picking === this.#mirroredPicking && selected === this.#mirroredSelected)
+      return;
     this.#mirroredState = state;
     this.#mirroredPicking = picking;
+    this.#mirroredSelected = selected;
     this.#internals.states.clear();
     if (state) this.#internals.states.add(state);
     if (picking) this.#internals.states.add('picking');
+    if (selected) this.#internals.states.add('selected');
   }
 }
 
@@ -197,7 +213,9 @@ abstract class TtsButtonBase extends LitElement {
  * The controller lays its controls out as a wrapping row; each control draws an icon button,
  * and slotted content replaces the icon — a slotted `<svg>` is sized like the default one. Give a
  * control with a slotted icon a `label`, since an icon has no text to name the button by. Buttons read the qti-theme tokens (with the theme's
- * defaults as fallbacks) and can be sized with `--test-button-size` and `--test-tts-icon-size`.
+ * defaults as fallbacks), are painted through the `--button-*` slots every button in the theme shares
+ * (`--test-button-*` still works as an alias), and can be sized with `--button-size` and
+ * `--test-tts-icon-size`.
  *
  * ### Language resolution
  *
@@ -433,11 +451,14 @@ export class TestItemToSpeech extends LitElement {
       this.#eventHost = this.#itemRef;
       this.#eventHost.addEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
     } else {
-      // Cursor mode: cito-test-navigate fires synchronously on prev/next — stop right away
+      // Cursor mode: qc-test-navigate fires synchronously on prev/next — stop right away
       // instead of waiting for the new position to arrive through the computed context.
+      // Listened to directly, under both names, because `listenPublic` has no unsubscribe and
+      // this player must let go of the host on disconnect. `#stop()` is idempotent, so the alias
+      // copy of a dual dispatch is harmless.
       this.#eventHost = this.closest('test-navigation') ?? (this.getRootNode() as EventTarget);
-      this.#eventHost.addEventListener('cito-test-navigate', this.#boundHandleNavigation);
-      this.#eventHost.addEventListener('qti-request-navigation', this.#boundHandleNavigation); // deprecated name, still sent by hosts
+      this.#eventHost.addEventListener('qc-test-navigate', this.#boundHandleNavigation);
+      this.#eventHost.addEventListener('cito-test-navigate', this.#boundHandleNavigation); // old name, one major
     }
   }
 
@@ -451,8 +472,8 @@ export class TestItemToSpeech extends LitElement {
     this.#stopPicking();
     this.#clearAllHighlights();
     this.#eventHost?.removeEventListener('qti-assessment-item-connected', this.#boundHandleItemConnected);
+    this.#eventHost?.removeEventListener('qc-test-navigate', this.#boundHandleNavigation);
     this.#eventHost?.removeEventListener('cito-test-navigate', this.#boundHandleNavigation);
-    this.#eventHost?.removeEventListener('qti-request-navigation', this.#boundHandleNavigation);
     this.#eventHost = null;
     this.#itemRef = null;
     this.#stimulusObserver?.disconnect();
@@ -1083,13 +1104,20 @@ export class TestTtsNext extends TtsButtonBase {
 
 /**
  * Pick button — toggles pick mode on the controller: every reading element is highlighted and
- * a click on one of them starts reading from there. Reflects the mode as `:state(picking)`.
+ * a click on one of them starts reading from there. Reflects the mode as `:state(picking)`, and,
+ * being the toggle that switched it on, as `:state(selected)`, painted through
+ * `--button-selected-background-color` / `--button-selected-color`.
  * @cssstate idle / playing / paused
  * @cssstate picking
+ * @cssstate selected - This toggle is on: pick mode is active
  * @csspart button
  */
 
 export class TestTtsPick extends TtsButtonBase {
+  protected override get selected(): boolean {
+    return this._tts?.picking ?? false;
+  }
+
   override render() {
     return html`
       <button

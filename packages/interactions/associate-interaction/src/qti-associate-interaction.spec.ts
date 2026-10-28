@@ -35,7 +35,7 @@ const build = async (maxAssociations: string, choiceCount: number, minAssociatio
 };
 
 const mount = async (maxAssociations: string, choiceCount: number) =>
-  (await build(maxAssociations, choiceCount)).shadowRoot.querySelectorAll('[part~="drop-row"]').length;
+  (await build(maxAssociations, choiceCount)).shadowRoot.querySelectorAll('[part~="row"]').length;
 
 const chip = (identifier: string) => document.querySelector(`[identifier="${identifier}"]`) as HTMLElement;
 const slot = (interaction: { shadowRoot: ShadowRoot }, id: string) =>

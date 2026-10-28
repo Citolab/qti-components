@@ -90,11 +90,11 @@ describe('test-end-attempt for an item of its own', () => {
     };
     await settle();
     ended.length = 0;
-    document.addEventListener('cito-test-end-attempt', onEnd);
+    document.addEventListener('qc-test-end-attempt', onEnd);
   });
 
   afterEach(() => {
-    document.removeEventListener('cito-test-end-attempt', onEnd);
+    document.removeEventListener('qc-test-end-attempt', onEnd);
     host.remove();
   });
 

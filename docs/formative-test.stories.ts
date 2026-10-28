@@ -218,7 +218,7 @@ export const SolutionAfterTwoChecks: StoryObj = {
     await userEvent.click(button('check'));
 
     await waitFor(() => expect(feedback()).toHaveTextContent('This is the right answer.'));
-    expect(choice('Light').matches(':state(correct-response)')).toBe(true);
+    expect(choice('Light').matches(':state(answer-key)')).toBe(true);
     expect((first as HTMLElement & { disabled: boolean }).disabled).toBe(true);
     expect(button('check')).not.toBeVisible();
     expect(button('next')).toBeEnabled();

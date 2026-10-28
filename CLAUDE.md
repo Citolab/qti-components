@@ -124,9 +124,11 @@ Two lanes, one backlog.
 
 - **`main`** is the current major. Always releasable. Fixes and non-breaking features land here.
 - **`next`** is the integration branch for the next major. Breaking and architectural changes land here.
-- **The backlog is GitHub issues.** Nothing else holds open work. `plans/` is for design
-  decisions only (e.g. `public-api.md`); a plan with open tasks turns those tasks into issues and
-  is deleted when it ships.
+- **The backlog is `plans/ROADMAP.md`** for planned work, and GitHub issues for bugs and requests
+  from outside. The roadmap orders the phases, says what each needs first and where each stands,
+  and links a plan per phase. `plans/host-api.md` holds the decisions; a phase with research has its
+  own plan, deleted when the phase ships. The PR that ships a phase updates the roadmap in the same
+  commit. Read the roadmap before starting planned work.
 
 ### Choosing the lane
 
@@ -204,16 +206,16 @@ Perform all work in the current working directory.
 
 ## Host migration notes
 
-`plans/public-api.md` lists each public member with the hosts that use it (K Kennisnet, C
-CitoTestUit, P PeilingLezen). `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md` say
-what each host must do. In the same commit as the change:
+`plans/host-api.md` is the host API: what implementing parties may use, change and rely on, and
+every decision about it. `plans/host-migration/{kennisnet,citotestuit,peilinglezen,examenkompas}.md`
+say what each host uses and must do. In the same commit as the change:
 
-- A change that touches a member in `public-api.md` adds or updates the entries for every host
-  whose letter is in that row, and its changeset links to them.
+- A change that touches a member in `host-api.md` adds or updates the entries for every host that
+  uses it, and its changeset links to them.
 - When a change gives hosts a better or simpler way to do something (a new member replacing a
   workaround), write it into the affected hosts' files as a `recommended` entry, naming the
   workaround it replaces.
-- When a survey shows a host using a member, add its letter to the row in `public-api.md`.
+- When a survey shows a host using a member, write it into that host's file.
 - Mark entries found by reading source, not running the host, as such.
 
 ## Releasing

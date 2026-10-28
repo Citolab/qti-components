@@ -66,7 +66,7 @@ attribute form for plain `<div>`s that cannot carry a property.
   `qti-graphic-gap-match-interaction`, inside the generic mixin.
 - **Tag-name branch** assigning `slot="qti-simple-associable-choice"` when the droppable is
   `QTI-SIMPLE-ASSOCIABLE-CHOICE` — match's drop element, named in generic code.
-- **`qti-draggable="true"` as a second, parallel chip identity**, independent of
+- **`data-draggable="true"` as a second, parallel chip identity**, independent of
   `draggablesSelector`, in ~12 places. `syncDragDropState` documents that the two deliberately
   disagree and that collapsing them would change `match-max` behaviour — so the divergence is real
   and load-bearing, it is just unnamed. It wants to be a fourth selector with a default.
@@ -107,7 +107,7 @@ export interface DragDropParts {
   droppables: string;
   dragContainers?: string; // default: 'slot[part="drags"]'
   /** How a chip re-identifies itself once cloned into a drop. Deliberately NOT `draggables` —
-   *  see the note in `syncDragDropState`. Default: '[qti-draggable="true"]'. */
+   *  see the note in `syncDragDropState`. Default: '[data-draggable="true"]'. */
   placedChips?: string;
 }
 
@@ -183,7 +183,7 @@ gives the invariant something to check against. That is its value. It is not a b
 
 Each step is independently shippable and the sequence can be abandoned after any of them.
 
-1. **Pure cleanup, no behaviour change.** Drop the redundant `'[qti-draggable="true"]'` argument
+1. **Pure cleanup, no behaviour change.** Drop the redundant `'[data-draggable="true"]'` argument
    repeated at all five `DragDropSlottedSortableMixin` call sites, where it equals the parameter's
    default. Delete `DragDropSortableMixin` (~293 lines, zero production call sites) and its export.
    Fix the comment above the `DragDropSlottedMixin` composition claiming a `'closestCorners'`

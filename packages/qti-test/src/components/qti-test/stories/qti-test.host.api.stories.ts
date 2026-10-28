@@ -16,11 +16,11 @@ import type { QtiTest } from '../qti-test';
 import type { QtiTestState } from '../../../types/qti-test-state';
 
 /**
- * The host tier of the public API (`plans/public-api.md`): what a page embedding a `<qti-test>`
+ * The host tier of the public API (`plans/host-api.md`): what a page embedding a `<qti-test>`
  * calls and listens to, exercised through nothing else. A host that depends on one of these
  * members should break a story here, not in production.
  *
- * Persistence (`state`, `cito-test-state-changed`) is exercised by the Implementation / State story
+ * Persistence (`state`, `qc-test-state-changed`) is exercised by the Implementation / State story
  * (docs/state.stories.ts) and, in detail, by test-state.spec.ts.
  */
 const meta: Meta = {
@@ -102,7 +102,7 @@ export const NavigateToSection: StoryObj = {
 };
 
 /**
- * `navigateTo` is a thin wrapper over the `qti-request-navigation` event. Both Kennisnet and
+ * `navigateTo` is a thin wrapper over the `qc-test-navigate` event. Both Kennisnet and
  * CitoTestUit dispatch it themselves as a fallback, so the event is part of the contract.
  */
 export const RequestNavigationEvent: StoryObj = {
@@ -113,7 +113,7 @@ export const RequestNavigationEvent: StoryObj = {
     await loadedItem(canvasElement, ITEM_1);
 
     test.dispatchEvent(
-      new CustomEvent('qti-request-navigation', {
+      new CustomEvent('qc-test-navigate', {
         detail: { type: 'item', id: 't1-test-entry-item2' },
         bubbles: true,
         composed: true
@@ -134,12 +134,7 @@ export const LifecycleEvents: StoryObj = {
   parameters: { testTimeout: 60000 },
   render: () => html`<div data-testid="host"></div>`,
   play: async ({ canvasElement }) => {
-    const names = [
-      'qti-assessment-test-connected',
-      'qti-assessment-item-ref-connected',
-      'qti-assessment-item-connected',
-      'qti-test-loaded'
-    ];
+    const names = ['qc-test-loaded', 'qc-item-ref-connected', 'qti-assessment-item-connected', 'qc-test-rendered'];
     const seen = Object.fromEntries(names.map(name => [name, fn()]));
 
     const container = document.createElement('div');
@@ -159,20 +154,20 @@ export const LifecycleEvents: StoryObj = {
     const [connected] = seen['qti-assessment-item-connected'].mock.calls[0] as [CustomEvent];
     expect(connected.detail.identifier).toBe('t1-test-entry-item1');
 
-    // `qti-test-loaded` lists the items that were just loaded: here the one that opens the test.
-    const [loaded] = seen['qti-test-loaded'].mock.calls[0] as [CustomEvent<{ identifier: string }[]>];
+    // `qc-test-rendered` lists the items that were just loaded: here the one that opens the test.
+    const [loaded] = seen['qc-test-rendered'].mock.calls[0] as [CustomEvent<{ identifier: string }[]>];
     expect(loaded.detail.map(i => i.identifier)).toEqual(['t1-test-entry-item1']);
   }
 };
 
-/** A candidate's input arrives as `qti-interaction-changed`, naming the item and the response. */
+/** A candidate's input arrives as `qc-item-response-changed`, naming the item and the response. */
 export const InteractionChangedEvent: StoryObj = {
   parameters: { testTimeout: 60000 },
   render: () => html`<div data-testid="host">${testMarkup('item')}</div>`,
   play: async ({ canvasElement }) => {
     const test = testOf(canvasElement);
     const changed = fn();
-    test.addEventListener('qti-interaction-changed', changed);
+    test.addEventListener('qc-item-response-changed', changed);
 
     const item = await loadedItem(canvasElement, ITEM_1);
     within(item).getByText('Correct').click();
@@ -193,7 +188,7 @@ export const UpdateItemVariables: StoryObj = {
   play: async ({ canvasElement }) => {
     const test = testOf(canvasElement);
     const saved = fn();
-    test.addEventListener('qti-state-changed', (e: Event) => saved((e as CustomEvent<QtiTestState>).detail));
+    test.addEventListener('qc-test-state-changed', (e: Event) => saved((e as CustomEvent<QtiTestState>).detail));
     await loadedItem(canvasElement, ITEM_1);
 
     test.updateItemVariables('t1-test-entry-item1', [{ identifier: 'SCORE', value: '1' }]);
@@ -209,7 +204,7 @@ export const UpdateItemVariables: StoryObj = {
 
 /**
  * Deprecated, but both main hosts still depend on it, so it keeps firing until they have moved to
- * `qti-state-changed`. Remove this story together with the event.
+ * `qc-test-state-changed`. Remove this story together with the event.
  */
 export const DeprecatedContextUpdatedEvent: StoryObj = {
   parameters: { testTimeout: 60000 },
@@ -250,7 +245,7 @@ const mountStimulusTest = async (
   render(testMarkup('item', STIMULUS_TEST), container);
   const test = container.querySelector<QtiTest>('qti-test');
   setup({ test, navigation: container.querySelector('test-navigation') });
-  const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+  const loaded = new Promise(resolve => test.addEventListener('qc-test-rendered', resolve, { once: true }));
   host.append(container);
   await loaded;
   return test;
@@ -449,7 +444,7 @@ export const SeedWrittenBeforeTheNavigationIsInTheTest: StoryObj = {
 
       navigation.append(container);
       test.append(navigation);
-      const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+      const loaded = new Promise(resolve => test.addEventListener('qc-test-rendered', resolve, { once: true }));
       host.append(test);
       await loaded;
 
@@ -546,7 +541,7 @@ const mountRequiredTest = async (canvasElement: HTMLElement, setup?: (test: QtiT
   );
   const test = container.querySelector<QtiTest>('qti-test');
   setup?.(test);
-  const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+  const loaded = new Promise(resolve => test.addEventListener('qc-test-rendered', resolve, { once: true }));
   host.append(container);
   await loaded;
   return test;
@@ -618,7 +613,7 @@ export const PostLoadTestTransformCallbackInsideAShadowRoot: StoryObj = {
     const root = wrapper.attachShadow({ mode: 'open' });
     root.innerHTML = `<test-navigation><test-container test-url="${STIMULUS_TEST}"></test-container></test-navigation>`;
     test.append(wrapper);
-    const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+    const loaded = new Promise(resolve => test.addEventListener('qc-test-rendered', resolve, { once: true }));
     hostOf(canvasElement).append(test);
     await loaded;
 
@@ -647,7 +642,7 @@ export const OutcomeProcessingInTheContainersShadowRoot: StoryObj = {
       container
     );
     const test = container.querySelector<QtiTest>('qti-test');
-    const loaded = new Promise(resolve => test.addEventListener('qti-test-loaded', resolve, { once: true }));
+    const loaded = new Promise(resolve => test.addEventListener('qc-test-rendered', resolve, { once: true }));
     host.append(container);
     await loaded;
 

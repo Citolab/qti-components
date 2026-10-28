@@ -131,7 +131,7 @@ const own = css`
      Rendered as a CSS mask so the theme controls its colour via color:.
      The span in the template is empty; this CSS provides the visual.
   */
-  [part~='dropdown-icon'] {
+  [part~='icon'] {
     flex: 0 0 auto;
     display: inline-block;
     width: 1em;
@@ -143,7 +143,7 @@ const own = css`
     transform-origin: center;
   }
 
-  [part~='dropdown-icon-open'] {
+  [part~='open'] {
     transform: rotate(180deg);
   }
 

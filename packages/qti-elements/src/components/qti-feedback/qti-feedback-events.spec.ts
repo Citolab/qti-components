@@ -51,7 +51,7 @@ const item = html`<qti-assessment-item identifier="feedback-events">
   </qti-modal-feedback>
 </qti-assessment-item>`;
 
-describe('cito-feedback-show / cito-feedback-hide', () => {
+describe('qc-feedback-show / qc-feedback-hide', () => {
   let host: HTMLDivElement;
   let root: ShadowRoot;
   let shown: FeedbackEventDetail[];
@@ -64,8 +64,8 @@ describe('cito-feedback-show / cito-feedback-hide', () => {
     root = host.attachShadow({ mode: 'open' });
     shown = [];
     hidden = [];
-    host.addEventListener('cito-feedback-show', e => shown.push(e.detail));
-    host.addEventListener('cito-feedback-hide', e => hidden.push(e.detail));
+    host.addEventListener('qc-feedback-show', e => shown.push(e.detail));
+    host.addEventListener('qc-feedback-hide', e => hidden.push(e.detail));
   });
 
   afterEach(() => host.remove());
@@ -121,7 +121,7 @@ describe('cito-feedback-show / cito-feedback-hide', () => {
   });
 
   it('preventDefault keeps a block, inline and modal feedback hidden, with its content in the DOM', async () => {
-    host.addEventListener('cito-feedback-show', e => e.preventDefault());
+    host.addEventListener('qc-feedback-show', e => e.preventDefault());
     const { answer, block, inline, modal, hideBlock } = await setup();
     await answer('ChoiceB');
 
@@ -159,7 +159,7 @@ describe('cito-feedback-show / cito-feedback-hide', () => {
   });
 
   it('cancelling hide keeps the feedback showing: the host hides it itself', async () => {
-    host.addEventListener('cito-feedback-hide', e => {
+    host.addEventListener('qc-feedback-hide', e => {
       if (e.detail.kind === 'block' && e.detail.identifier === 'incorrect') e.preventDefault();
     });
     const { answer, block } = await setup();
@@ -169,7 +169,7 @@ describe('cito-feedback-show / cito-feedback-hide', () => {
   });
 
   it('a feedback the host took over stays off and is asked again at every attempt, with no hide', async () => {
-    host.addEventListener('cito-feedback-show', e => {
+    host.addEventListener('qc-feedback-show', e => {
       if (e.detail.kind === 'modal') e.preventDefault();
     });
     const { answer, modal } = await setup();

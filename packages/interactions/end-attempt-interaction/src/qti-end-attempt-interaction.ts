@@ -16,6 +16,9 @@ import type { ItemContext } from '@qti-components/base';
  * session, so no further attempt can start (QTI info model §2.5).
  *
  * @csspart button - The end-attempt button element.
+ *
+ * No states: the element has no internals; `disabled` and `readonly` are read off the item and
+ * land on the button's `disabled` attribute.
  */
 export class QtiEndAttemptInteraction extends LitElement {
   static override styles: CSSResultGroup = styles;

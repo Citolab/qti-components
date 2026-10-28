@@ -18,45 +18,42 @@ packages/qti-theme/src/styles/qti-theme/index.css:
 5. qti-components.interactions.states
 6. qti-components.interactions.corrections
 7. qti-components.elements
-8. qti-components.overrides
+8. qti-components.motion
 
-Precedence rule: later layer wins at equal specificity. `interactions.brand` and `overrides` are
-empty in the theme on purpose: they are where a brand sheet and a host write, and they must stay
-declared so a brand's paint lands under states and corrections, not above them.
+Precedence rule: later layer wins at equal specificity. `interactions.brand` is empty in the theme
+on purpose: it is where a brand's resting look goes (§11), and it must stay declared so that paint
+lands under states and corrections, not above them. Above the theme there is only `qti-extended`
+(`item.css`) and unlayered host CSS.
 
 ## 2. Ownership by layer
 
-qti-variables.css groups its tokens into these same layers. The declaring layer records which kind
-of rule owns a token; it does not scope readability — custom properties are inherited computed
-values, so any layer can read a token declared in any other.
+The layers are the theme's own ordering: a host never names one (§11). Tokens are declared in no
+layer at all (`qti-variables.css` is one block); a custom property is an inherited computed value,
+so every layer reads every token.
 
 ### qti-components.global
 
 - Cross-interaction semantics only.
 - Shared chip, placeholder, drag-highlight, return-anchor, and correction-badge rules.
 - Must not contain interaction-specific geometry.
-- Tokens: brand palette, rhythm/timing, surfaces and border, icon masks.
 
 ### qti-components.interactions.base
 
 - Interaction-local baseline paint and structure.
 - Neutral appearance only (no candidate-correction judgement colors).
 - May define stable geometry needed for rendering.
-- Tokens: form/dropzone/inline geometry, field and textarea radii.
 
 ### qti-components.interactions.states
 
 - Interaction-local state paint for :state(...).
 - Must express dynamic UI states (checked, dragging, placeholder, candidate-\*, etc.).
 - Must not change layout metrics when toggling state.
-- Tokens: selection, chip placeholder, drop-target highlight vocabulary.
 
 ### qti-components.interactions.corrections
 
 - Answer-key and correction-view paint, including full-correct-response.
 - Owns answer-blue treatment and answer check glyphs.
 - Can override base/states paint where answer-key semantics require it.
-- Tokens: correct / incorrect / partially-correct (plus -light variants), answer key.
 
 ### qti-components.reset
 
@@ -68,36 +65,125 @@ values, so any layer can read a token declared in any other.
 - A brand sheet's resting look (a host's own brand CSS). Above base, below states, so a state still wins.
 - Empty in the theme. Declares no tokens.
 
+### qti-components.motion
+
+- How a state change feels, for every interaction: transitions, the press, the chip's tilt
+  arriving. One file, `qti-motion.css`, last in the theme.
+- Only `transition-*`, `scale` and `rotate`: nothing that lays out.
+- Every duration and the press scale derive from `--qti-motion` (`--qc-motion`; 0 under
+  prefers-reduced-motion), so one value switches all of it off.
+
 ### qti-components.elements
 
 - Non-interaction elements and prose (`prose.css`, rubric block, modal feedback).
 - Declares no tokens.
 
-### qti-components.overrides
+## 3. Selector contract: parts and states
 
-- Optional downstream overrides (vendor or host-specific).
-- Never used for fixing base contract violations.
-- Declares no tokens; it exists for downstream consumers.
+Every custom element in the workspace exposes its look through parts and states, under one
+vocabulary. These rules are the test for a name; the tables are the vocabulary.
 
-## 3. Selector contract
+### Rules
+
+1. **One name, one meaning.** A part or state name means the same thing on every element that has
+   it, and nothing else has a second name for that meaning.
+2. **A part is a role, and a noun.** It names what a shadow-internal box _is_ to a theme: `control`,
+   `label`, `message`, `chip`, `drop`, `bank`, `button`. Shared roles keep the shared name; an
+   element invents a name only for a role no other element has.
+3. **A state is an adjective or participle, and a `:state()`.** It says what the element _is right
+   now_: `checked`, `disabled`, `readonly`, `open`, `filled`, `full`, `lifted`, `used`. It lives on
+   the element that has internals.
+4. **A state on a part is a second token with the state's exact name.** `control checked`,
+   `drop filled`, `point candidate-correct`. Never a suffix (`option-selected`) and never a part
+   named after a state (`correct`).
+5. **Verdicts have one word each**, used as state and as part token alike: `candidate-correct`,
+   `candidate-incorrect`, `candidate-partial` for the candidate's answer; `answer-key` for the
+   correct response shown next to it. The badge is the part `correction`, with the verdict as its
+   second token.
+6. **Every styled box in a shadow root has a part, and every part is public.** Templates carry no
+   classes: the component's own stylesheet selects `[part~='rail']` and the theme selects
+   `::part(rail)`, so one box has one name.
+7. **Full words, kebab-case, no prefix.** No tag names as part names, no `qti-`, no `c-`/`r-`.
+8. **Parts and states are the only public channel.** Attributes (`data-*`, `aria-*`) and classes are
+   implementation; a theme rule reads a reflected attribute only where the element has no internals
+   (a `<div part="drop">` takes the state's name as a part token instead). The mouse and keyboard
+   paths set the same states on the same elements.
+9. **A child element owns its parts.** `qti-simple-choice::part(control)` belongs to the choice, not
+   the interaction; an interaction exports nothing (`::part()` does not chain). Export is only for
+   a chip cloned into another element's shadow root, and then prefixed with the chip's role:
+   `chip-control`, `chip-label`. Under their bare names they would collide with the target's own
+   `control` and `label` in the same shadow root, and a rule meant for the card would reach the
+   chip. The badge is the exception: `correction` and its verdict tokens are forwarded unchanged,
+   so one bare `::part(correction candidate-correct)` reaches it wherever the chip lives.
+10. **Every part and state is documented** with `@csspart` / `@cssstate` on the element that
+    exposes it; a part's state tokens are listed on its `@csspart` line.
+
+Rules of placement: a state rule belongs in `interactions.states` unless it is cross-interaction,
+then in `global`; state paint never reflows (§7); do not chain `::part()` across shadow boundaries.
+
+### Roles (parts)
+
+| Part                                                                                | Meaning                                                                    | On                                                                                                             |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `control`                                                                           | the box a candidate activates (a choice box, a chip's handle)              | `qti-simple-choice`, `qti-hottext`, `qti-gap-text`, chips, match cells                                         |
+| `control-mark`                                                                      | the tick or dot inside a control                                           | choice, hottext, match cells                                                                                   |
+| `label`                                                                             | the text of a choice or chip                                               | choice, hottext, chips                                                                                         |
+| `marker`                                                                            | a choice's letter or number                                                | `qti-simple-choice`                                                                                            |
+| `message`                                                                           | the validation message                                                     | every interaction                                                                                              |
+| `prompt`                                                                            | the prompt slot                                                            | `qti-choice-interaction`                                                                                       |
+| `choices`                                                                           | the slot holding the choices                                               | `qti-choice-interaction` (was `slot`)                                                                          |
+| `chip`                                                                              | an item you drag, in the bank or placed (+ `text` on a word chip)          | placed clones, order's chips (was `drag`, `drag-text`)                                                         |
+| `chip-control`, `chip-label`                                                        | a placed chip's handle and text, forwarded out of the target's shadow root | `qti-gap`, `qti-associable-hotspot`, `qti-simple-associable-choice` (were `drag-control`, `drag-label`)        |
+| `bank`                                                                              | where unplaced chips live                                                  | order, match, associate, gap-match, graphic-gap-match (was `drags`)                                            |
+| `drops`                                                                             | the area holding the drop targets                                          | order, associate, gap-match, graphic-gap-match                                                                 |
+| `drop`                                                                              | one drop target                                                            | order, associate, `qti-gap`, `qti-associable-hotspot`, `qti-simple-associable-choice`                          |
+| `row`                                                                               | one associate pair                                                         | `qti-associate-interaction` (was `drop-row`)                                                                   |
+| `container`                                                                         | order's outer box                                                          | `qti-order-interaction`                                                                                        |
+| `image`                                                                             | the background image                                                       | `qti-graphic-gap-match-interaction`                                                                            |
+| `object`                                                                            | the image to place, beside the stage (tokens `selected`, `used`)           | `qti-position-object-interaction`                                                                              |
+| `point`                                                                             | a placed marker                                                            | select-point, graphic-associate, position-object (a placed copy)                                               |
+| `line`                                                                              | an association line                                                        | `qti-graphic-associate-interaction`                                                                            |
+| `input`, `textarea`                                                                 | the text field                                                             | text-entry, upload; extended-text                                                                              |
+| `answer-key`                                                                        | the correct answer shown next to a text field                              | `qti-text-entry-interaction` (was `answer`)                                                                    |
+| `trigger`, `value`, `menu`, `option`, `option-content`, `clear-icon`, `icon`        | the dropdown and its pieces                                                | `qti-inline-choice-interaction` (`icon` was `dropdown-icon`)                                                   |
+| `slider`, `rail`, `ticks`, `bounds`, `knob`, `value`                                | the slider and its pieces                                                  | `qti-slider-interaction`                                                                                       |
+| `grid`, `corner`, `columns`, `rows`, `column-header`, `row-header`, `cells`, `cell` | the tabular match grid                                                     | `qti-match-interaction` (were `cols-wrap`, `rows-wrap`, `c-header`, `r-header`, `checkbox-grid`, `input-cell`) |
+| `button`                                                                            | the one box of a button-like control                                       | `qti-end-attempt-interaction`, every `test-*` control                                                          |
+| `correction`                                                                        | the verdict badge                                                          | every corrected element                                                                                        |
+| `feedback`                                                                          | the feedback box                                                           | `qti-feedback-inline`, `-block`, `qti-modal-feedback`                                                          |
+| `rubrics`                                                                           | the rubric-block slot                                                      | `qti-item-body` (was `qti-rubric-blocks`)                                                                      |
+| `select`, `label`, `form`, `key`, `value`, `count`                                  | test and correction UI pieces                                              | `test-view`, `item-correct-response-mode`, `test-scoring-buttons`, `test-print-state`                          |
 
 ### States
 
-- Use :state(...) for interaction semantics.
-- State rules belong in interactions.states unless the state is explicitly cross-interaction, then in global.
-- State styles should paint, not reflow.
+| State                                                           | Meaning                                                               | On                                                                              | Old name                                                                                                                   |
+| --------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `disabled`, `readonly`                                          | the interaction or choice is switched off / frozen                    | interaction hosts, choices                                                      |                                                                                                                            |
+| `checked`                                                       | chosen                                                                | choices, hottext, hotspot choice, inline-choice host                            |                                                                                                                            |
+| `radio`, `checkbox`                                             | which kind of choice                                                  | choices, hottext                                                                |                                                                                                                            |
+| `open`                                                          | the menu is open                                                      | inline-choice                                                                   |                                                                                                                            |
+| `chip`                                                          | can be dragged                                                        | bank chips                                                                      | `drag`                                                                                                                     |
+| `drop`                                                          | can take a chip                                                       | custom-element targets                                                          | `droppable`                                                                                                                |
+| `filled`                                                        | holds at least one chip                                               | drop targets                                                                    |                                                                                                                            |
+| `full`                                                          | takes no more chips                                                   | drop targets                                                                    | attribute `disabled`                                                                                                       |
+| `drag-active`                                                   | a drag is in progress (target: and could take it)                     | interaction host, drop targets; the bank only when the chip comes from a target | `dragzone-active`+`-enabled`; `active`+`enabled`                                                                           |
+| `drag-over`                                                     | the dragged chip is over this target                                  | drop targets                                                                    | `hover`                                                                                                                    |
+| `lifted`                                                        | this chip's clone is in flight; it shows as a hole                    | chips                                                                           | `dragging`                                                                                                                 |
+| `used`                                                          | every copy of this chip is placed                                     | bank chips                                                                      | `placeholder`                                                                                                              |
+| `return-target`                                                 | where a re-dragged placed chip goes back to                           | bank chips                                                                      | `return-anchor`                                                                                                            |
+| `candidate-correct`, `candidate-incorrect`, `candidate-partial` | the candidate's verdict                                               | corrected elements; as tokens on `correction`, `point`, `control`               | `candidate-partially-correct`; tokens `correction-*`, `correct`, `incorrect`                                               |
+| `answer-key`                                                    | this element is the correct response                                  | the answer-key clone, a choice in the key; as token on `line`, `knob`, `input`  | `correct-response`, attribute `answer-key`, class `.full-correct-response`; parts `correct-line`, `knob-correct`, `answer` |
+| `answer-key-shown`                                              | this interaction shows its key inline, next to the candidate's answer | interaction host (internal mode)                                                | `show-correct-response`                                                                                                    |
+| `idle`, `playing`, `paused`, `picking`                          | text-to-speech                                                        | `test-item-to-speech`                                                           |                                                                                                                            |
 
-### Parts
+A `<div>` target cannot carry a state, so it takes the state's name as a part token
+(`::part(drop drag-over)`); `setDropFlag` writes whichever the element can carry.
 
-- Use ::part(...) for shadow-resident affordances and correction badges.
-- Use stable part tokens (for example drag, drag-control, correction-\*).
-- Do not rely on chained ::part() across multiple shadow boundaries.
+### Aliases
 
-### Drag/drop channels
-
-- Light-DOM drags and floating clones are styled via state/attribute channels in global.
-- Shadow-resident dropped drags are styled via ::part(drag).
-- Both channels must remain visually equivalent for shared semantics.
+Every "old name" above is still set, next to the new one, for one major (`STATE_ALIASES` in
+`qti-base`, and a second part token in templates). The theme reads only the new names. Hosts: see
+`plans/host-migration/*`.
 
 ## 4. Visual precedence contract
 
@@ -197,40 +283,39 @@ The theme still decides; the box model stays with the component. The same patter
 
 ## 8. Token tiers
 
-A theme is a small set of values. Everything else is worked out from them. In
-`qti-variables.css` a line tagged `/* t1 */` reads a tier-1 input; every other token declared there
-is tier 2. Tier 3 is never declared there.
+A theme is a small set of values. Everything else is worked out from them. The first group of
+`qti-variables.css` reads the tier-1 inputs, one line each; every other token in that file is tier 2.
+Tier 3 is never declared there.
 
-The tier-1 tokens made for this set carry the public prefix `cito-`, like the public `cito-` events:
-the prefix says "this is what you style". `qti-` belongs to 1EdTech's vocabulary, and everything
-derived keeps it. Older tier-1 names (`--qti-spacing`, `--qti-motion`, `--qti-field-line-height`,
-`--qti-fg`) keep their names.
+The tier-1 tokens carry the public prefix `qc-` (qti-components), like the public `qc-` events: the
+prefix says "this is what you style". `qti-` belongs to 1EdTech's vocabulary, and everything derived
+keeps it. `cito-` is the prefix these had before; every input is read as `var(--qc-x, var(--cito-x,
+<default>))` for one major, then the old name goes.
 
-| Group   | Tier-1 tokens                                                                                              |
-| ------- | ---------------------------------------------------------------------------------------------------------- |
-| Surface | `--cito-color-base-100`, `--cito-color-base-content`                                                       |
-| Brand   | `--cito-color-primary` / `-content`, `--cito-color-neutral` / `-content`, `--cito-color-chip` / `-content` |
-| States  | `--cito-color-info` (answer key), `-success` (correct), `-warning` (partial), `-error` (incorrect)         |
-| Shape   | `--cito-radius-field`, `--cito-radius-selector`, `--cito-radius-box`, `--cito-border-width`                |
-| Size    | `--qti-spacing`, `--cito-size-selector`, `--cito-size-field`                                               |
-| Type    | `--cito-font-family`                                                                                       |
-| Feel    | `--cito-depth`, `--qti-motion`                                                                             |
+| Group   | Tier-1 tokens                                                                                                               |
+| ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Surface | `--qc-color-base-100`, `--qc-color-base-content`                                                                            |
+| Brand   | `--qc-color-primary` / `-content`, `--qc-color-neutral` / `-content`, `--qc-color-chip` / `-content`                        |
+| States  | `--qc-color-info` (answer key), `-success` (correct), `-warning` (partial), `-error` (incorrect)                            |
+| Shape   | `--qc-radius-field`, `--qc-radius-selector`, `--qc-radius-box`, `--qc-border-width`                                         |
+| Size    | `--qc-spacing`, `--qc-size-selector`, `--qc-size-field`                                                                     |
+| Type    | `--qc-font-family` (reading text), `--qc-font-family-heading` (h1–h6; unset: the reading font), `--qc-line-height` (fields) |
+| Feel    | `--qc-depth`, `--qc-motion`, `--qc-border-style`                                                                            |
 
 Plus `color-scheme`, a CSS property rather than a token, which every `light-dark()` follows, and the
-optional ones: `--cito-color-border` for a brand that wants every edge in its own colour (Kennisnet),
-`--cito-color-chip-border` for a chip's edge, `--cito-icon-drag` and `--cito-color-drag-icon` for its
-handle, `--cito-shadow-chip` for a chip at rest and `--cito-shadow-drag` for one in flight,
-`--cito-color-order-placed` / `-content` / `-border` for an order interaction's placed chip when a brand
-gives it its own look (Kennisnet inverts it), `--cito-color-well` for the fill of a `.qti-well` (white by
-default), `--cito-color-marker`, `--cito-icon-marker` and
-`--cito-marker-anchor` for the select-point marker, and `--cito-color-focus` for the focus ring (default:
-the brand's `--cito-color-primary` when it sets one, else a mid blue).
+optional ones: `--qc-color-border` for a brand that wants every edge in its own colour (Kennisnet),
+`--qc-color-chip-border` for a chip's edge, `--qc-icon-drag`, `--qc-size-drag-icon` (its width; the height is the line) and `--qc-color-drag-icon` for its
+handle, `--qc-shadow-chip` for a chip at rest,
+`--qc-color-order-placed` / `-content` / `-border` for an order interaction's placed chip when a brand
+gives it its own look (Kennisnet inverts it), `--qc-icon-marker` and
+`--qc-marker-anchor` for the select-point marker, and `--qc-color-focus` for the focus ring (default:
+the brand's `--qc-color-primary` when it sets one, else a mid blue).
 
-**The `cito-` names are inputs, never declared by the theme.** Each is read once, with its default as
+**The `qc-` names are inputs, never declared by the theme.** Each is read once, with its default as
 the fallback, into a `qti-` name that every rule reads:
 
 ```css
---qti-color-primary: var(--cito-color-primary, oklch(53.47% 0.1195 238.63));
+--qti-color-primary: var(--qc-color-primary, var(--cito-color-primary, oklch(53.47% 0.1195 238.63)));
 ```
 
 That is what lets a value set on a page reach every item: an undeclared custom property inherits
@@ -239,11 +324,11 @@ in every shadow root that adopts the theme (an item's own root, `test-container`
 
 | Tier | What it is                                                                                                                                                                                                           | Who sets it                                                                       | Where it is declared                                                                                                                  |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | **Brand knobs.** The values a theme is made of: surface and text colours, the semantic colours, radii, sizes, the border width, depth, the spacing unit.                                                             | A brand or a host. Setting only these gives a complete theme.                     | `qti-variables.css`, the only place in the theme that holds literals.                                                                 |
+| 1    | **Brand knobs.** The values a theme is made of: surface and text colours, the semantic colours, radii, sizes, the border width, depth, the spacing unit.                                                             | A brand or a host. Setting only these gives a complete theme.                     | `qti-variables.css`, first group: the only place in the theme that holds literals.                                                    |
 | 2    | **Derived defaults.** Everything that follows from tier 1: tints, the border colour, the focus ring, selection, corrections, the paint contract's resting look (`--qti-component-*`), the rhythm composites.         | Nobody, normally. A host may re-value one when the derived value is wrong for it. | `qti-variables.css`, as `var()`, `calc()` or `color-mix(in oklab, …)` over tier 1.                                                    |
 | 3    | **Handover variables.** A decision the theme makes and a component spends (§7): `--qti-choice-gap`, `--qti-control-display`, `--qti-choice-label-display`, `--qti-choice-align-items`, `--qti-chip-justify-content`. | The theme, on the element that needs it.                                          | Nowhere at the root. The theme sets it on a selector; the component reads it with a fallback that keeps it working without the theme. |
 
-Not a tier: the paint contract's **role slots** (`--drag-*`, `--button-*`, `--text-*`, …). A slot is
+Not a tier: the paint contract's **role slots** (`--drag-*`, `--drop-*`, `--choice-*`, `--text-*`, …), and the `--button-*` slots a test control and a button-like interaction share (`--test-button-*` are their old names, read as fallbacks for one major). A slot is
 declared nowhere and read only with a tier-2 fallback (see `@mixin paint`). States and brands switch
 slots; they never re-value a tier-2 token to repaint one role.
 
@@ -265,8 +350,8 @@ slots; they never re-value a tier-2 token to repaint one role.
   A dark theme is made by switching `color-scheme`, never by redefining the tokens.
 - **Set tier 1 anywhere; tier 2 follows where it is declared.** Every token block is declared on
   `:root, :host, [data-qti-theme]`. A custom property's `var()` resolves on the element that
-  declares it, so tier 2 follows a `--cito-*` value on `:root`, on any shadow host (every item root
-  re-derives), and on an element that carries `data-qti-theme`. Setting `--cito-*` on a plain light-DOM
+  declares it, so tier 2 follows a `--qc-*` value on `:root`, on any shadow host (every item root
+  re-derives), and on an element that carries `data-qti-theme`. Setting `--qc-*` on a plain light-DOM
   wrapper changes nothing below it until that wrapper also carries `data-qti-theme`. Because the
   inputs inherit, such a subtree keeps what its ancestors set and changes only what it states.
 - **Old names are aliases.** A token that was public before the tier set existed stays, as a tier-2
@@ -287,7 +372,7 @@ not walked twice.
 - **The default is black and white.** Only the four verdict colours and the focus ring keep a hue; a
   brand adds its own. The ring is a mid blue that keeps 3:1 against both surfaces (WCAG 1.4.11): the
   answer key's blue was ruled out, since a ring in it reads as a correction, and a brand that sets
-  `--cito-color-primary` keeps its primary as the ring.
+  `--qc-color-primary` keeps its primary as the ring.
 - **Rubric and feedback are told apart by shape, not colour,** so the difference holds in black and
   white, in print and for a colour-blind candidate. A rubric block is a document: light grey with a
   thick grey bar on its start side. Feedback is a reply: a light-grey bubble with large rounded
@@ -297,14 +382,13 @@ not walked twice.
   which has a box only while the feedback shows. A speech-bubble tail was tried and left out: it needed
   positioning in the components and several pseudo-elements, too much for a default; a brand can add
   one on `::part(feedback)::before`.
-- **The default page is light grey, its cards white.** A `.qti-well` defaults to the surface colour
-  (`--cito-color-well` sets another).
+- **The default page is light grey, its cards white.** A `.qti-well` is the surface colour; a brand
+  that wants another paints `.qti-well` itself.
 - **Interaction feel, as chosen for the default theme:**
   - The focus ring shows on `:focus`, so also after a mouse pick, except on a chip, where it waits
     for the release because a press may be the start of a drag. A text field rings on its host.
   - A choice selects on pointer press.
   - No grey hover or press washes.
-  - Borders distract on a tinted page, which is what the Soft preset shows.
 - **Rejected, and why:**
   - _Declaring the `cito-` inputs on `:root, :host`._ The presets then never reached an item: every
     shadow root that adopts the theme reset them to the default. Hence "inputs are never declared".
@@ -340,12 +424,34 @@ browser.
 
 ---
 
-## 11. See also
+## 11. Overriding the theme: the third-party contract
+
+Three rules, and nothing else to learn.
+
+1. **Set the inputs.** `--qc-*` on `:root`, or on any element that carries `data-qti-theme`. That is
+   the whole theme for most hosts (§8). `--cito-*` still works for one major.
+2. **Override anything else on parts and states.** `qti-gap::part(chip) { … }`,
+   `qti-simple-choice:state(checked)::part(control) { … }` (§3). The theme is entirely layered, so an
+   unlayered host rule wins at any specificity; `@layer qti-extended` (declared last in `item.css`)
+   is only for a host that wants its own ordering. One exception: a brand's _resting_ look that the
+   theme's state and correction paint must still beat (a chip colour that `:state(used)` still turns
+   into a hole) goes in `@layer qti-components.interactions.brand`, the one theme layer a host may
+   name. `item-container.stories.ts` (`ItemWithKennisnetOverlay`) shows it.
+3. **Put the CSS where the items render.** Items render inside the shadow root of `test-container`
+   or `item-container`; a document stylesheet does not cross it, custom properties do. Both
+   containers adopt the content of a `<template>` child into their shadow root, so a host's
+   overrides go in `<test-container><template><style>…</style></template></test-container>`.
+
+Not API: `--qti-*` (internal, may change in a minor), the theme's layers, the mixins (compiled away).
+A `test-*` control paints itself from the tier and the `--button-*` slots and exposes
+`::part(button)`; that split is deliberate, so a control works on a page that loads no theme.
+
+## 12. See also
 
 - **The theme editor** — Storybook `Implementation › Theming`
   (`apps/e2e/src/stories/theming/theme-editor.stories.ts`). The tier-1 inputs are its controls, and
   every interaction is on the page.
-- **The presets** — `.storybook/themes.css` (Default, Light, Dark, Kennisnet, Cito, Playful, Soft),
+- **The presets** — `.storybook/themes.css` (Default, Light, Dark, Kennisnet, Cito),
   switched with `data-qti-theme` in `.storybook/preview.ts`. Each is a worked example of a brand made
   of tier-1 values only.
 - **Host notes** — `plans/host-migration/README.md`, row "Tier-1 theme tokens".

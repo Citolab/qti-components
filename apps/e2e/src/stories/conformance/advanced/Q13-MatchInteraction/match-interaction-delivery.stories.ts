@@ -215,7 +215,7 @@ export const Q13_L2_D104: Story = {
 /** The column headers' and row headers' boxes, and the answer cells, of a tabular interaction. */
 const tabular = (interaction: QtiMatchInteraction) => {
   const grid = interaction.shadowRoot!.querySelector<HTMLElement>('[part="grid"]')!;
-  const cells = Array.from(interaction.shadowRoot!.querySelectorAll<HTMLElement>('[part="input-cell"]'));
+  const cells = Array.from(interaction.shadowRoot!.querySelectorAll<HTMLElement>('[part~="cell"]'));
   const corner = interaction.shadowRoot!.querySelector<HTMLElement>('[part="corner"]')!;
   return { grid, cells, corner };
 };

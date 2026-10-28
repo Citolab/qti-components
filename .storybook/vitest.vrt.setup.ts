@@ -74,6 +74,12 @@ const stabilizeStyles = (doc: Document) => {
   const style = doc.createElement('style');
   style.setAttribute('data-vrt-stabilize', '');
   style.textContent = `
+    /* The theme's own motion (qti-motion.css) runs inside shadow roots, where a document rule does
+       not reach; its one knob is an inherited custom property, so zeroing it here reaches every
+       item. The universal rule below covers the story's own document. */
+    :root {
+      --qc-motion: 0;
+    }
     *, *::before, *::after {
       animation-duration: 0s !important;
       animation-delay: 0s !important;

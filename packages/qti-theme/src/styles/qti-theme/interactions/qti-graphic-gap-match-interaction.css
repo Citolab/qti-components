@@ -1,28 +1,10 @@
 @layer qti-components.interactions.base {
   qti-graphic-gap-match-interaction {
-    &.qti-selections-light {
-      &:state(dragzone-active)::part(drags) {
-        background-color: var(--qti-selections-light-bg);
-        border-color: var(--qti-selections-light-border);
-      }
-      &:state(dragzone-enabled)::part(drags) {
-        background-color: var(--qti-selections-light-bg);
-      }
-    }
-    &.qti-selections-dark {
-      &:state(dragzone-active)::part(drags) {
-        background-color: var(--qti-selections-dark-bg);
-        border-color: var(--qti-selections-dark-border);
-      }
-      &:state(dragzone-enabled)::part(drags) {
-        background-color: var(--qti-selections-dark-bg);
-      }
-    }
-    &:state(dragzone-active)::part(drags) {
-      @mixin dropping;
-    }
-    &:state(dragzone-enabled)::part(drags) {
-      @mixin dropping;
+    /* The bank, while a chip from a target is in flight, is never filled: the cue is a ring around it
+       when the chip crosses it (`drag-over`), nothing before. */
+    &::part(bank drag-over) {
+      outline: var(--qti-drop-highlight-border-width) solid var(--qti-drop-highlight-border-color);
+      outline-offset: var(--qti-focus-offset);
     }
     /*
     * A graphic-gap-match chip is an image, not a card. No drag-card styling — no border, no padding,
@@ -30,7 +12,7 @@
      *
      * The bank chip and the placed chip must still be the same size (drag-drop.invariance.spec.ts),
     * and they are: NEITHER gets chip styling. The earlier 18px height jump came from the bank being
-    * plain while the placed chip picked up drag-card styling through `::part(drag)` — fixed then by
+    * plain while the placed chip picked up drag-card styling through `::part(chip)` — fixed then by
      * giving both the card, fixed better now by giving neither.
      */
     /* A chip here is a tile filling its hotspot, so it centres its content — see
@@ -41,14 +23,14 @@
       --qti-drag-justify-content: center;
       cursor: grab;
       /* The bank chip's own ring; the rule below rings only the placed one. */
-      &:focus:not(:state(placeholder), :active) {
+      &:focus:not(:state(used), :active) {
         @mixin foc;
       }
     }
     /* The placed chip, in the hotspot's shadow. Plain too, to match the bank. Focus ring only.
-       Written in one selector: nested under `&::part(drag)` it compiled to `:is(…::part(drag))`,
+       Written in one selector: nested under `&::part(chip)` it compiled to `:is(…::part(chip))`,
        and a pseudo-element cannot sit inside `:is()`, so the ring never matched. */
-    & qti-associable-hotspot::part(drag):focus:not(:active) {
+    & qti-associable-hotspot::part(chip):focus:not(:active) {
       @mixin foc;
     }
     /*
@@ -66,8 +48,8 @@
      * B.1 lists the class here, and §3.2.6's requirement is to hide hotspots in their unselected and
      * unfocused state — which this transparent border already does, for every item, whether or not
      * the author sets the class. An empty hotspot shows nothing; `:state(filled)` paints the
-     * selection, and `:state(enabled)` / `:state(hover)` / `:state(active)` bring the drop targets
-     * up for the duration of a drag so the candidate can still aim.
+     * selection, and `:state(drag-active)` / `:state(drag-over)` bring the drop targets up for the
+     * duration of a drag so the candidate can still aim.
      *
      * Adding a rule would be a redundant restatement of this line. Left as a note rather than code
      * because the absence is the kind of thing that reads as an oversight.
@@ -87,20 +69,15 @@
          see the :state(filled) rules below.
          A drop target lighting up mid-drag is not a "selection" anyway — Appendix B calls this
          Selections theming, and the selection is the chip once it has landed. */
-      &[enabled] {
+      /* A target during a drag: `drag-active`, once the pair `active` + `enabled`, which painted
+         alike. */
+      &:state(drag-active) {
         @mixin dropping;
       }
-      &[active] {
-        @mixin dropping;
-      }
-      &[disabled] {
+      /* At capacity: `full`, the state setDropFull sets beside the `disabled` attribute the drag
+         code still reads. */
+      &:state(full) {
         cursor: not-allowed;
-        &:not(:empty) {
-          cursor: default !important;
-        }
-      }
-      &:not(:empty) {
-        border-color: var(--qti-border) !important;
       }
       /*
        * Two rules were deleted here, both unreachable, both about padding:
@@ -117,14 +94,10 @@
        *
        * They are named here rather than silently dropped because they read like the hotspot's
        * padding story, and the next person to give drops an inset should know there isn't one.
+       * Three more `:not(:empty)` rules went the same way (a `cursor` on a full hotspot, a border
+       * colour, and a rotate reset with a ring on the hosted chip): never matched, for the reason
+       * above.
        */
-
-      /* `flex: 1` left with the rest of the drop's layout; dropRegion in qti-base gives a hosted
-         chip `flex: 0 0 auto`, which is the invariance rule this was quietly fighting. */
-      &:not(:empty) > * {
-        transform: rotate(0);
-        box-shadow: 0 0 0 var(--qti-border-width) var(--qti-color-base-300);
-      }
     }
     /* `:not(:empty)` tested light-DOM children. The hotspot renders its chips into its own shadow
        root now, so it is always "empty" to a selector — `:state(filled)` is the occupancy hook. */
@@ -159,20 +132,20 @@
 /* The placed word, in the hotspot's shadow. Flat: a pseudo-element in a nested list compiles to a
    dead `:is()`. */
 @layer qti-components.interactions.base {
-  qti-graphic-gap-match-interaction qti-associable-hotspot::part(drag-text) {
+  qti-graphic-gap-match-interaction qti-associable-hotspot::part(chip text) {
     @mixin drag;
   }
 }
 
 @layer qti-components.interactions.states {
-  qti-graphic-gap-match-interaction qti-gap-img:state(placeholder),
-  qti-graphic-gap-match-interaction qti-gap-text:state(placeholder) {
+  qti-graphic-gap-match-interaction qti-gap-img:state(used),
+  qti-graphic-gap-match-interaction qti-gap-text:state(used) {
     @mixin drag-placeholder;
     pointer-events: none;
   }
 
-  qti-graphic-gap-match-interaction qti-gap-img:state(dragging),
-  qti-graphic-gap-match-interaction qti-gap-text:state(dragging) {
+  qti-graphic-gap-match-interaction qti-gap-img:state(lifted),
+  qti-graphic-gap-match-interaction qti-gap-text:state(lifted) {
     @mixin drag-placeholder;
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
@@ -180,27 +153,24 @@
     pointer-events: none;
   }
 
-  qti-graphic-gap-match-interaction qti-gap-img:state(return-anchor),
-  qti-graphic-gap-match-interaction qti-gap-text:state(return-anchor) {
-    border-color: var(--qti-drop-highlight-border-color);
-    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
-  }
+  /* `:state(return-target)` (the bank chip a lifted placed chip goes back to) is set but not painted:
+     the cue is the bank as a whole, lit while the chip is in flight and ringed when the chip is over
+     it, not the one slot it came from. */
 
-  qti-graphic-gap-match-interaction qti-gap-img:state(placeholder) > *,
-  qti-graphic-gap-match-interaction qti-gap-text:state(placeholder) > *,
-  qti-graphic-gap-match-interaction qti-gap-img:state(dragging) > *,
-  qti-graphic-gap-match-interaction qti-gap-text:state(dragging) > * {
+  qti-graphic-gap-match-interaction qti-gap-img:state(used) > *,
+  qti-graphic-gap-match-interaction qti-gap-text:state(used) > *,
+  qti-graphic-gap-match-interaction qti-gap-img:state(lifted) > *,
+  qti-graphic-gap-match-interaction qti-gap-text:state(lifted) > * {
     visibility: hidden;
   }
 
-  qti-graphic-gap-match-interaction qti-associable-hotspot:state(active),
-  qti-graphic-gap-match-interaction qti-associable-hotspot:state(enabled) {
+  /* A target during a drag: `drag-active`, once the pair `active` + `enabled`, which painted alike. */
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(drag-active) {
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
 
-  /* After `enabled`, which every target carries during a drag: the one under the chip. */
-  qti-graphic-gap-match-interaction qti-associable-hotspot:state(hover) {
+  /* After `drag-active`, which every target carries during a drag: the one under the chip. */
+  qti-graphic-gap-match-interaction qti-associable-hotspot:state(drag-over) {
     @mixin drop-over;
   }
 }
@@ -216,16 +186,15 @@
    * routing the correction through a slot would simply erase it. Measured: a corrected ggm chip is
    * pale-green filled with a green tint on its text and no border at all.
    *
-   * Moved here from qti-corrections.css, whose unscoped `:state(drag)` rule covered these chips
-   * along with everyone else's.
+   * Moved here from qti-corrections.css, whose unscoped `:state(chip)` rule covered these chips
+   * along with everyone else's. No `qti-associable-hotspot::part(chip):state(candidate-*)` arm:
+   * nothing sets a verdict on the placed tile (plans/parts-and-states-naming.md).
    */
-  qti-graphic-gap-match-interaction :state(drag):state(candidate-correct),
-  qti-graphic-gap-match-interaction qti-associable-hotspot::part(drag):state(candidate-correct) {
+  qti-graphic-gap-match-interaction :state(chip):state(candidate-correct) {
     @mixin candidate-tint var(--qti-correct), var(--qti-correct-light);
   }
 
-  qti-graphic-gap-match-interaction :state(drag):state(candidate-incorrect),
-  qti-graphic-gap-match-interaction qti-associable-hotspot::part(drag):state(candidate-incorrect) {
+  qti-graphic-gap-match-interaction :state(chip):state(candidate-incorrect) {
     @mixin candidate-tint var(--qti-incorrect), var(--qti-incorrect-light);
   }
 }
