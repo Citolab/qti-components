@@ -74,12 +74,22 @@ chromeSheet.replaceSync(chromeCss);
 
 type Input = {
   token: string;
-  control: 'color' | 'text' | { type: 'range'; min: number; max: number; step: number };
+  control:
+    | 'color'
+    | 'text'
+    | { type: 'range'; min: number; max: number; step: number }
+    | { type: 'select'; options: string[] };
   unit?: string;
   group: string;
 };
 
 const INPUTS: Record<string, Input> = {
+  /* Not a token but a property: every light-dark() in the theme follows it. */
+  colorScheme: {
+    token: 'color-scheme',
+    control: { type: 'select', options: ['', 'light', 'dark', 'light dark'] },
+    group: 'Surface'
+  },
   base100: { token: '--qc-color-base-100', control: 'color', group: 'Surface' },
   baseContent: { token: '--qc-color-base-content', control: 'color', group: 'Surface' },
   primary: { token: '--qc-color-primary', control: 'color', group: 'Brand' },
@@ -91,6 +101,13 @@ const INPUTS: Record<string, Input> = {
   chipBorder: { token: '--qc-color-chip-border', control: 'color', group: 'Brand' },
   dragIcon: { token: '--qc-color-drag-icon', control: 'color', group: 'Brand' },
   dragIconSize: { token: '--qc-size-drag-icon', control: 'text', group: 'Brand' },
+  dragIconMask: { token: '--qc-icon-drag', control: 'text', group: 'Brand' },
+  chipShadow: { token: '--qc-shadow-chip', control: 'text', group: 'Brand' },
+  orderPlaced: { token: '--qc-color-order-placed', control: 'color', group: 'Brand' },
+  orderPlacedContent: { token: '--qc-color-order-placed-content', control: 'color', group: 'Brand' },
+  orderPlacedBorder: { token: '--qc-color-order-placed-border', control: 'color', group: 'Brand' },
+  markerIcon: { token: '--qc-icon-marker', control: 'text', group: 'Brand' },
+  markerAnchor: { token: '--qc-marker-anchor', control: 'text', group: 'Brand' },
   border: { token: '--qc-color-border', control: 'color', group: 'Brand' },
   focus: { token: '--qc-color-focus', control: 'color', group: 'Brand' },
   info: { token: '--qc-color-info', control: 'color', group: 'States' },
@@ -122,7 +139,7 @@ const INPUTS: Record<string, Input> = {
     group: 'Shape'
   },
   spacing: {
-    token: '--qti-spacing',
+    token: '--qc-spacing',
     control: { type: 'range', min: 0.25, max: 1, step: 0.125 },
     unit: 'rem',
     group: 'Size'
@@ -141,7 +158,14 @@ const INPUTS: Record<string, Input> = {
   },
   fontFamily: { token: '--qc-font-family', control: 'text', group: 'Type' },
   fontFamilyHeading: { token: '--qc-font-family-heading', control: 'text', group: 'Type' },
-  depth: { token: '--qc-depth', control: { type: 'range', min: 0, max: 1, step: 0.25 }, group: 'Feel' }
+  lineHeight: { token: '--qc-line-height', control: { type: 'range', min: 1, max: 2, step: 0.05 }, group: 'Type' },
+  depth: { token: '--qc-depth', control: { type: 'range', min: 0, max: 1, step: 0.25 }, group: 'Feel' },
+  motion: { token: '--qc-motion', control: { type: 'range', min: 0, max: 2, step: 0.25 }, group: 'Feel' },
+  borderStyle: {
+    token: '--qc-border-style',
+    control: { type: 'select', options: ['', 'solid', 'dashed', 'dotted', 'double'] },
+    group: 'Feel'
+  }
 };
 
 type Args = Partial<Record<keyof typeof INPUTS, string | number>>;
