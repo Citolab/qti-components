@@ -1,17 +1,89 @@
-# Roadmap: building the host API on `next`
+# The main roadmap
 
-The order in which [host-api.md](host-api.md) is built. `host-api.md` says what the API is and holds
-every decision; this file says what is built when, what waits on what, and where each phase stands.
-A phase with research has its own plan, linked below.
+Everything we plan to build on `next`, and everything QTI 3 has that we do not support yet, in one
+place. Work that is ready to build is a sub-roadmap with phases; the rest has a slot here (see
+"Not yet in a sub-roadmap"), so nothing we miss is out of sight. This file also holds what the
+sub-roadmaps share: the guardrails, the rules for every phase and what was found.
 
-Each phase is one branch, one worktree and one PR into `next`. The PR that ships a phase sets its
-status here and ticks its steps in the same commit, so this file never runs behind the code. A phase
-starts only when everything in **Needs** is `done`. When something found in a phase changes a
-decision, the decision goes into `host-api.md` and the phase gets a line under **Found**.
+## The sub-roadmaps, in order
+
+| #   | Roadmap                                                                     | Starts                            | Status |
+| --- | --------------------------------------------------------------------------- | --------------------------------- | ------ |
+| 1   | [QTI test navigation](roadmap-qti-navigation.md) (T0–T8)                    | after G1; now                     | todo   |
+| 2   | CitoTestUit server pilot (below)                                            | when roadmap 1 is done            | slot   |
+| 3   | [Response processing as pure functions](roadmap-pure-processing.md) (P1–P3) | when roadmap 1 is done, next to 2 | todo   |
+| 4   | [Adaptive selection (CAT)](roadmap-adaptive-selection.md) (A1–A4)           | when roadmap 2 is done            | todo   |
+| 5   | [The host API major](roadmap-host-api.md) (phases 2–16)                     | when roadmap 4 is done            | todo   |
+
+```mermaid
+graph LR
+  G[G Guardrails] --> R1[1 QTI test navigation]
+  R1 --> R2[2 CitoTestUit server pilot]
+  R1 --> R3[3 Pure processing]
+  R2 --> R4[4 Adaptive selection]
+  R4 --> R5[5 Host API major]
+  R1 -. delivery package .-> R2
+  R3 -. scoring under Node .-> R2
+```
+
+- **1** makes QTI 3 test parts complete: navigation and submission mode, item session control, the
+  processing order between items, test-part boundaries, selection, ordering and time limits. Its
+  rules live in `@qti-components/delivery`, a public package (0.x) with no browser globals, so
+  they can run on a server.
+- **2** tries server delivery with CitoTestUit: the same `delivery` code on a Node server, the
+  browser sending commands and showing what the server answers. Scoring is the .NET
+  [qti-scoring-engine](https://github.com/Citolab/qti-scoring-engine): the client sends only the
+  responses, the server reads default outcomes from the item XML and returns the outcomes. The
+  engine reads QTI Results Reporting 2.x `assessmentResult`s, so the pilot has one adapter from the
+  session state to that envelope and back (or the engine gets a JSON endpoint). A slot until it
+  gets a plan.
+- **3** makes response, outcome and template processing pure functions, the same code in the
+  custom elements and under Node. Not needed by 2, which scores in .NET; it runs next to it.
+- **4** adds `qti-adaptive-selection`: a section whose items an external CAT engine chooses (IMS
+  CAT 1.0), on 1's model and lifecycle.
+- **5** builds the host API in [host-api.md](host-api.md) on top of 1–4 and ships the major.
+
+The guardrails (G) run next to all of them. The licence stays GPL-3.0 (decided 2026-10-30).
+Results Reporting is out of scope (decided 2026-10-30); it has a row below.
+
+## Not yet in a sub-roadmap
+
+What QTI 3 has that no sub-roadmap builds yet. Read from the elements the library registers and the
+names its source mentions on 2026-10-30, not run against the conformance suite; each row is
+checked when it gets a phase.
+
+| QTI                                                                                                       | Today                     | Slot                 |
+| --------------------------------------------------------------------------------------------------------- | ------------------------- | -------------------- |
+| Results Reporting (`assessmentResult`, `itemResult`, `testResult`)                                        | not supported             | out of scope for now |
+| Template rules: `qti-template-condition`, `qti-set-default-value`, `qti-template-default` on the item-ref | not found in source       | after roadmap 5      |
+| Template content: `qti-template-block`, `qti-template-inline`                                             | not found in source       | after roadmap 5      |
+| `qti-outcome-processing-fragment`, `qti-variable-mapping`                                                 | not found in source       | after roadmap 5      |
+| `qti-drawing-interaction`                                                                                 | not found in source       | after roadmap 5      |
+| Companion materials: `qti-calculator`, `qti-protractor`, `qti-rule`                                       | not found in source       | after roadmap 5      |
+| Accessibility catalogs and PNP: `qti-catalog-info`, `qti-catalog`, `qti-card`                             | mentioned, not registered | after roadmap 5      |
+
+Not QTI features, but slots of their own:
+
+| What                                                                      | Today                              | Slot                    |
+| ------------------------------------------------------------------------- | ---------------------------------- | ----------------------- |
+| A processor for response, outcome and template processing without the DOM | processing runs as custom elements | roadmap 3               |
+| `test-container` holding only the current item, not the whole test        | the whole test is in the DOM       | roadmap 2 (CitoTestUit) |
+| A .NET port of `delivery`, checked against roadmap 1's test vectors       | none                               | after roadmap 2         |
+
+Test navigation (everything about moving through a `qti-assessment-test`) is in roadmap 1's "QTI
+test support" table; adaptive selection is roadmap 4.
+
+## How phases work
+
+Each phase is one branch, one worktree and one PR into `next` (or one PR per step, where it says
+so). The PR that ships a phase sets its status in its roadmap and ticks its steps in the same
+commit, so no roadmap runs behind the code. A phase starts only when everything in **Needs** is
+`done`. When something found in a phase changes a decision, the decision goes into `host-api.md`
+and the phase gets a line under **Found** here.
 
 ## Decided before the phases: the accessibility gate
 
-Decided 2026-10-28; built in the guardrails work, before phase 1. Not built yet.
+Decided 2026-10-28; built in the guardrails work (G4). Not built yet.
 
 Every story is checked by axe (`@storybook/addon-a11y`), and a violation fails the story, locally
 and in CI: `a11y: { test: 'error' }` in `.storybook/preview.ts`, which today has `'todo'` locally
@@ -52,72 +124,11 @@ To check when building it:
 
 If not, the stale check moves into a vitest setup file, as `.storybook/vitest.vrt.setup.ts` does.
 
-## Dependencies
-
-```mermaid
-graph LR
-  PG[G Guardrails] --> P17[17 Test model and computed context]
-  P17 --> P1
-  PG --> P13[13 Side-effect-free registration]
-  PG --> P15[15 QTI 3 only]
-  PG --> P16[16 Docs prose on the site]
-  P1 --> P14[14 qc- names for our elements]
-  P14 --> P10
-  P0[0 PR #347] --> P1[1 Fold test-navigation]
-  P0 --> P5[5 Options research]
-  P1 --> P2[2 src and start-up]
-  P1 --> P3[3 Corrections out]
-  P2 --> P4[4 Core stories plain]
-  P3 --> P4
-  P1 --> P6[6 Options as attributes]
-  P5 --> P6
-  P1 --> P7[7 Submission-mode scoring]
-  P5 --> P7
-  P2 --> P8[8 qti-item shape]
-  P6 --> P8
-  P2 --> P9[9 Hooks, loading, reset]
-  P3 --> P9
-  P4 --> P10[10 Enforcement]
-  P7 --> P10
-  P8 --> P10
-  P9 --> P10
-  P10 --> P11[11 Ship the major]
-  P0 --> P12[12 Design tokens]
-  P12 --> P11
-```
-
-Critical path: G1 → 17 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separate worktrees: 5 and 12 next to 1;
-2 and 3 after 1; 7, 8 and 9 once their needs are done; G2–G5 next to everything after G1.
-
-## Status
-
-| #   | Phase                                           | Needs          | Status                   |
-| --- | ----------------------------------------------- | -------------- | ------------------------ |
-| G   | Guardrails: the rulebook and its checks         | none           | in progress (G1)         |
-| 0   | Land PR #347                                    | none           | done (PR #347, 0f2339a8) |
-| 1   | Fold `test-navigation` into `qti-test`          | 0, G1, 17      | todo                     |
-| 2   | `src` on `qti-test` and start-up                | 1              | todo                     |
-| 3   | Corrections out of the core                     | 1              | todo                     |
-| 4   | Core stories in the plain markup                | 2, 3           | todo                     |
-| 5   | Options against QTI: research and docs page     | 0              | todo                     |
-| 6   | Options as attributes, `config` as a view       | 1, 5           | todo                     |
-| 7   | Scoring that follows `submission-mode`          | 1, 5           | todo                     |
-| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6           | todo                     |
-| 9   | Hooks, `:state(loading)`, `reset`               | 2, 3           | todo                     |
-| 10  | Enforcement                                     | 4, 7, 8, 9, 14 | todo                     |
-| 11  | Ship the major                                  | 10, 12         | todo                     |
-| 12  | Design tokens: one source for the tier-1 inputs | 0              | todo                     |
-| 13  | Side-effect-free registration                   | G1             | todo                     |
-| 14  | `qc-` names for our own elements                | 1              | todo                     |
-| 15  | QTI 3 only                                      | G3             | todo                     |
-| 16  | Docs prose on the Astro site                    | G1             | todo                     |
-| 17  | Test model and computed context                 | G1             | todo                     |
-
 ## In every phase
 
 - A changeset: `major` when it breaks, otherwise `minor` or `patch` (`next` is in pre mode).
 - A host-migration entry for every host that uses a member the phase touches, linked from the changeset.
-- A contract story for every member the phase adds or changes (#240), so phase 10 only closes gaps.
+- A contract story for every member the phase adds or changes (#240), so roadmap 5's phase 10 only closes gaps.
 - A renamed or moved story moves its VRT baseline; a re-blessed PNG is checked, not trusted.
 - Where the code and QTI disagree, QTI wins, in this order (decided 2026-10-28; it replaces "follow
   the suite literally"): the XSD for structure, then the spec text for behaviour, then the 1EdTech
@@ -129,9 +140,7 @@ Critical path: G1 → 17 → 1 → 6 → 8 → 10 → 11. Can run side by side, 
 - `next` has no required checks, so `gh pr merge --auto` merges at once: wait for CI to pass
   (`gh pr checks <n> --watch --fail-fast`), then merge.
 
-## Phases
-
-### G. Guardrails: the rulebook and its checks
+## G. Guardrails: the rulebook and its checks
 
 Plan: this section. Decided with the user on 2026-10-28, topic by topic; the decisions are the rules
 in `CLAUDE.md` and `.claude/rules/`. Each step is its own PR into `next`.
@@ -158,222 +167,29 @@ in `CLAUDE.md` and `.claude/rules/`. Each step is its own PR into `next`.
 Done when: CI fails on a broken rule reference, a story outside the taxonomy, an invalid fixture, an
 axe violation without `a11y-todo`, a type error in a story or spec, and an undocumented part or state.
 
-### 0. Land PR #347
-
-Plan: [host-api.md](host-api.md), the host-migration notes. Branch `feat/parts-states-vocabulary`.
-
-- [x] Commit the plan updates (host-api, roadmap, the two research plans).
-- [x] CI green, review, merge.
-
-Done when: merged into `main` and synced into `next`.
-
-### 1. Fold `test-navigation` into `qti-test`
-
-Plan: [host-api.md](host-api.md) → Decided, "`test-navigation` folds into `qti-test`" (the three
-units) and "`testHostContext` stays internal".
-Scope: `packages/qti-test` (mixins, `qti-test`, `test-navigation`), `packages/qti-corrections`
-(`TestNavigationCorrection` becomes part of its `qti-test` subclass).
-
-- [ ] Move `test-navigation`'s body into one session-rules mixin or controller on `qti-test`,
-      registered after the test model.
-- [ ] Keep `afterAttemptEnded` and `activeAssessmentItem` as its protected extension point.
-- [ ] `<test-navigation>`: a deprecated wrapper that listens to nothing and forwards its properties.
-- [ ] Narrow `testHostContext` to the transform callback and `<template item-ref>`.
-
-Done when: the attempts-used and end-attempt specs and the linear, sequencing and adaptive stories
-pass with and without `<test-navigation>`, and the session-rules spec runs on its own.
-
-### 2. `src` on `qti-test` and start-up
-
-Plan: [host-api.md](host-api.md) → `<qti-test>` properties, Decided "Start-up is explicit" (#328).
-Scope: `qti-test`, `test-container`, the state mixin.
-
-- [ ] `src` on `qti-test`; `test-url` on `test-container` a deprecated alias.
-- [ ] `state` may be a promise; the seed in `session.seed`; `start-at`; `navigate` defaults to `item`.
-
-- [ ] Host-migration entries from #328: Kennisnet (no change), CitoTestUit (`state = fetchState()`
-      instead of its own first `navigateTo`), qti-player (`start-at` instead of `navigateTo` on load).
-
-The `item` default ships only together with the promise `state` and `start-at`. On its own it was
-tried and reverted: CitoTestUit leaves `navigate` unset and navigates itself once its state is in, so
-a default start would show item 1 first.
-
-Done when: `<qti-test src="…"><test-container></test-container></qti-test>` loads and starts, the
-#328 play functions pass (a sync state opens the saved item with one navigation; a promise state
-resolving after load never shows item 1; `null` opens item 1; `start-at` wins; `section` restores
-the section), and CitoTestUit's start-up is checked against the new contract.
-
-### 3. Corrections out of the core
-
-Plan: [host-api.md](host-api.md) → Decided "The core does not know the corrections package" (#245).
-Scope: `packages/qti-corrections`, the four interaction `*.styles.ts` with `full-correct-response`
-(match, gap-match, associate, order), `qti-base` config, the item and interaction docs.
-
-- [ ] Every correction method, property, attribute and option lives on the corrections package's
-      extended elements; `correctResponseMode` and `fullCorrectResponseOnlyWhenIncorrect` leave the
-      core `ConfigContext`.
-- [ ] Correction stories, specs and VRT baselines move into the corrections package.
-- [ ] The core names no corrections package (the #245 list, and `qti-test.host.api.stories.ts`).
-
-Done when: `grep` finds no correction member or package name in the core, and the core builds and
-tests without `@qti-components/corrections` installed.
-
-### 4. Core stories in the plain markup
-
-Plan: this file. Scope: core stories in `packages/qti-test`, `qti-elements`, `interactions/*`.
-
-- [ ] Every core test story uses
-      `<qti-test src="…"><test-container></test-container><nav><test-prev></test-prev><test-next></test-next></nav></qti-test>`,
-      with no delivery option set.
-- [ ] A story that needs an option moves to the options docs page (phase 5).
-
-Done when: no core story sets an option; any failure is a departure from QTI and gets a line under
-Found, to be fixed or turned into an option.
-
-### 5. Options against QTI: research and docs page
-
-Plan: [options-against-qti.md](options-against-qti.md). Docs only; can start now.
-
-Done when: that plan's "Done when".
-
-### 6. Options as attributes, `config` as a view
-
-Plan: [host-api.md](host-api.md) → Delivery options, Decided "Options are attributes", "One disable
-option", "Names". Scope: `qti-base` config, `qti-test`, interactions core.
-
-- [ ] Every option that survives phase 5 is an attribute with a reflecting property.
-- [ ] `config` reads and merges; `configContext` a deprecated alias.
-- [ ] `disableAtMaxChoices` replaces both disable options.
-- [ ] `itemData` and `setOutcomes`; the old names deprecated aliases.
-
-Done when: each option works set as an attribute and through `config`, and the deprecated names warn once.
-
-### 7. Scoring that follows `submission-mode`
-
-Plan: [submission-mode-scoring.md](submission-mode-scoring.md) (#299).
-
-Done when: that plan's "Done when".
-
-### 8. `<qti-item>` has the shape of `<qti-test>`
-
-Plan: [host-api.md](host-api.md) → `<qti-item>`, Decided "`<qti-item>` has the shape of `<qti-test>`" (#236).
-Scope: `packages/qti-item`.
-
-- [ ] `src`, `xml`, `state`, `view`, `config`, `qtiContext`, `disabled`, `readonly`, the transform
-      callback on `qti-item`; `item-container` keeps only the registry and the `<template><style>`.
-- [ ] `QtiItemState` round-trips between a test and a standalone item; `qc-item-state-changed`.
-
-Done when: an item state saved in a test restores into a `qti-item` and back.
-
-### 9. Hooks, `:state(loading)`, `reset`
-
-Plan: [host-api.md](host-api.md) → Hooks, Styling (#243), `<qti-test>` methods (#244).
-
-- [ ] `qc-item-answer-key-shown` and `qc-item-correction-shown` (sent by the corrections package).
-- [ ] `:state(loading)` on `qti-test` and `qti-item`.
-- [ ] `reset(itemId?)` on `qti-test`, `reset()` on `qti-item`.
-
-Done when: the Kennisnet table in Hooks has a story per row.
-
-### 10. Enforcement
-
-Plan: [host-api.md](host-api.md) → How this is enforced (#240, #251).
-
-- [ ] Members not in `host-api.md` are `@internal` and stripped from the `.d.ts`; an API report in CI.
-- [ ] The custom-elements manifest lists only the public members.
-- [ ] Contract stories for every member; host-shaped tests (Kennisnet first).
-
-Done when: CI fails on any change to the public surface that `host-api.md` does not list.
-
-### 11. Ship the major
-
-Plan: CLAUDE.md → Releasing.
-
-- [ ] Survey PeilingLezen's 7.14 → 9.x gap.
-- [ ] Every host-migration file complete for the major.
-- [ ] Leave pre mode, merge `next` into `main`, release; cut `9.x` first.
-
-### 12. Design tokens: one source for the tier-1 inputs
-
-Plan: [design-tokens.md](design-tokens.md). Scope: `packages/qti-theme`, `tools/build`, the Theming
-page, `.storybook/themes.css`, the docs site's styling guide. Touches no host-API code, so it runs
-next to every other phase.
-
-Done when: that plan's "Done when".
-
-### 13. Side-effect-free registration
-
-Plan: `.claude/rules/lit.md`. Scope: every package with elements.
-
-- [ ] No `@customElement` decorator: a class file never defines its element; `register.ts` /
-      `elements.ts` of each package does. The JSDoc `@customElement` tag stays (the CEM reads it).
-- [ ] Importing a class module registers nothing; a spec imports every class module and finds
-      `customElements` unchanged.
-
-Done when: the corrections and qti-extended subclasses register without a double-define guard.
-
-### 14. `qc-` names for our own elements
-
-Plan: [host-api.md](host-api.md) → Decided "Our elements are `qc-`". Scope: `test-*`,
-`item-container`, `test-container`, the qti-extended plugins, QTI-Editor in step. `qti-test` and
-`qti-item` keep their names.
-
-- [ ] Every element that is ours, not 1EdTech's, takes `qc-`, except the host elements `qti-test` and
-      `qti-item`; the old name is a deprecated alias for one major that warns once.
-- [ ] The remaining `qti-` theme hooks (`qti-dialog`, `qti-theme-kennisnet`,
-      `qti-graphic-order-marker`, `qti-base-stimulus`, `qti-shared-stimulus`) are renamed.
-- [ ] Host-migration entries for every host; the docs and stories use the new names.
-
-Done when: a vocabulary spec finds no `qti-` name in our elements (other than `qti-test` and
-`qti-item`), events, attributes or tokens that QTI does not define.
-
-### 15. QTI 3 only
-
-Plan: `.claude/rules/qti-spec.md`. Scope: `qti-transformers`, the docs.
-
-- [ ] QTI 2.x input is no longer supported: the 2.x transforms and their docs go; hosts that feed
-      2.x items get a host-migration entry.
-
-Done when: nothing in the published packages or the docs mentions QTI 2.x as supported.
-
-### 16. Docs prose on the Astro site
-
-Plan: `.claude/rules/docs.md`. Scope: `docs/*.mdx`, `apps/site`.
-
-- [ ] Every prose page lives in `apps/site`; Storybook keeps autodocs and live examples and links
-      to the site. No page exists in both.
-- [ ] Each qti-extended plugin has a site page.
-
-Done when: `docs/` holds no prose page that the site also has, and every Storybook docs page that
-remains is a live example.
-
-### 17. Test model and computed context
-
-Plan: [test-model.md](test-model.md).
-Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`, `test-prev`,
-`test-end-attempt`, `qti-assessment-section`), `packages/qti-extended` (`test-stamp`),
-`packages/qti-base` (`computed.types.ts`, `qti-feedback`).
-
-- [ ] 17a The test model from the test XML, not the live DOM; nested sections right.
-- [ ] 17b All seven session-control attributes, resolved, as `item.sessionControl`.
-- [ ] 17c `stampContext` merged into `computedContext.active`.
-- [ ] 17d Item facts from the item XML.
-- [ ] 17e Host `itemData` under `item.data`, no longer overriding computed fields.
-- [ ] 17f Navigation and submission mode from the test part only.
-- [ ] 17g One rules module that the buttons, the lock and feedback read.
-
-Phase 1 then moves a provider that already reads the model and the rules module; its session-rules
-unit is 17g's function behind a mixin.
-
-Done when: that plan's "Done when".
-
 ## Found
 
-Things a phase found that changed the plan. Newest first.
+Things a phase found that changed the plan, in either roadmap. Newest first.
 
+- 2026-10-30: `delivery` is public (0.x), not private; the pilot scores with the .NET
+  qti-scoring-engine, sending only responses; response processing as pure functions is its own
+  roadmap 3, next to the pilot; Results Reporting is out of scope. Adaptive selection and the host
+  API major are now 4 and 5.
+- 2026-10-30: the rules of roadmap 1 go into a private package, `@qti-components/delivery`, with no
+  browser globals, to keep server delivery possible; a CitoTestUit server pilot is roadmap 2, so
+  adaptive selection, the host API major and results reporting are now 3, 4 and 5.
+- 2026-10-30: this file became the main roadmap: four sub-roadmaps in order (QTI test navigation,
+  adaptive selection, the host API major, results reporting) and a table of what QTI has that none
+  builds yet. Navigation gained T7 (test-part boundaries) and T8 (processing order).
+- 2026-10-30: the one roadmap is split in two: QTI test navigation first (T1–T6, with phase 7 as
+  T6), then the host API major (phases 2–16). Phase numbers are kept.
+- 2026-10-30: phase 0 (land PR #347: host-api, this roadmap, the research plans) was done
+  (0f2339a8) and is out of the table; 2, 5 and 12 need nothing.
+- 2026-10-30: phase 1 (fold `test-navigation` into `qti-test`) is dropped; `test-navigation` stays.
+  Phases 2, 3, 6, 7 and 14 no longer wait for it. `host-api.md` → Decided marks the fold withdrawn.
 - 2026-10-30: `computedContext` is read from the live DOM, mishandles nested sections, carries four
   of seven session-control attributes and reads `navigation-mode` off sections, which QTI
-  defines on the test part only; phase 17 comes before phase 1.
+  defines on the test part only; the T track (T1–T3) fixes that.
 - 2026-10-28: the Theming page set `--qti-spacing` and lacked ten tier-1 inputs; fixed by hand, and
   the reason for phase 12.
 - 2026-10-27: `allowReorder` defaults to on (`config.context.ts:73`), not off (phase 5).
