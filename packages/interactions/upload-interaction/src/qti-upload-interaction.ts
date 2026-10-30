@@ -9,6 +9,10 @@ import type { CSSResultGroup } from 'lit';
  * Upload interaction: candidates attach a file as their response.
  *
  * @slot prompt - The prompt shown above the file input.
+ *
+ * @csspart input - The file input element.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiUploadInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
@@ -17,8 +21,10 @@ export class QtiUploadInteraction extends Interaction {
   #base64: string | null = null;
 
   override reset() {
+    this.resetValidityReport();
     this.#file = null;
     this.#base64 = null;
+    this._internals.setFormValue(null);
     this.saveResponse(null);
   }
 
@@ -33,6 +39,8 @@ export class QtiUploadInteraction extends Interaction {
   set response(base64: string | null) {
     if (typeof base64 === 'string') {
       this.#base64 = base64;
+      // The form carries the file as the response holds it: a base64 data URL.
+      this._internals.setFormValue(base64);
       this.saveResponse(base64); // Save Base64 string as the response
     } else if (base64 === null) {
       this.reset();
@@ -51,7 +59,13 @@ export class QtiUploadInteraction extends Interaction {
     return html`
       <div>
         <slot name="prompt"></slot>
-        <input type="file" @change="${this.#onFileChange}" ?disabled="${this.disabled}" ?readonly="${this.readonly}" />
+        <input
+          type="file"
+          part="input"
+          @change="${this.#onFileChange}"
+          ?disabled="${this.disabled}"
+          ?readonly="${this.readonly}"
+        />
       </div>
     `;
   }
@@ -61,6 +75,7 @@ export class QtiUploadInteraction extends Interaction {
     if (input.files && input.files.length > 0) {
       this.#file = input.files[0];
       this.#base64 = await this.#convertToBase64(this.#file);
+      this._internals.setFormValue(this.#base64);
       this.saveResponse(this.#base64); // Save the Base64 string
       this.dispatchEvent(
         new CustomEvent('qti-interaction-response', {

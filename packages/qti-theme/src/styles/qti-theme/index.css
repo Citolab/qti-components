@@ -7,16 +7,16 @@
  * own `@layer` blocks; splitting them per layer is the only way to import-assign them, and is
  * not worth the file count.
  *
- * `interactions.brand` and `overrides` hold nothing here ON PURPOSE — they are the extension points
- * a brand sheet writes into (apps/e2e/src/stories/kennisnet/kennisnet.css uses `interactions.brand`).
- * They must stay DECLARED even while empty: a layer first created by a consumer's own `@layer`
- * block is appended after every declared layer, which would put brand paint above the state and
- * correction paint it is meant to sit under. Deleting the two names moved 7 of the 17 VRT baselines.
+ * `interactions.brand` holds nothing here ON PURPOSE: it is the one layer a host may write into, for
+ * a resting look that the theme's state and correction paint must still beat (CONTRACT.md §11). It
+ * must stay DECLARED while empty: a layer first created by a consumer's own `@layer` block is appended
+ * after every declared layer, which would put brand paint above the state paint it is meant to sit
+ * under. Everything above the theme goes in `qti-extended` (item.css) or unlayered.
  */
 
 @layer qti-components.reset, qti-components.global, qti-components.interactions.base,
   qti-components.interactions.brand, qti-components.interactions.states,
-  qti-components.interactions.corrections, qti-components.elements, qti-components.overrides;
+  qti-components.interactions.corrections, qti-components.elements, qti-components.motion;
 
 @import url('./reset.css') layer(qti-components.reset);
 @import url('./prose.css') layer(qti-components.elements);
@@ -31,4 +31,8 @@
 @import url('./qti-interactions.css');
 
 @import url('./qti-elements.css') layer(qti-components.elements);
+@import url('./qti-vocabulary.css') layer(qti-components.elements);
 @import url('./qti-states.css') layer(qti-components.global);
+
+/* How state changes feel: transitions and the press, for every interaction, gated by --qti-motion. */
+@import url('./qti-motion.css') layer(qti-components.motion);

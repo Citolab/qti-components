@@ -1,12 +1,64 @@
 # @qti-components/portable-custom-interaction
 
-## 1.3.1
+## 1.3.0-next.9
+
+### Minor Changes
+
+- [#356](https://github.com/Citolab/qti-components/pull/356) [`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264) Thanks [@herrKlein](https://github.com/herrKlein)! - `ConfigContext.pciIframe` sets the `sandbox` and `allow` attributes of the iframe every portable custom interaction runs in, so a delivery environment decides it once: on `qti-test` for every item of the test (`test.configContext = { pciIframe: { sandbox: 'allow-scripts' } }`), or on `qti-item` for one item. `sandbox: 'allow-scripts'` gives PCIs an opaque origin, away from the host page's DOM, storage and login (for PCIs from a source the host does not trust); `allow` delegates permissions such as `autoplay` or, without a sandbox, `microphone`. An opaque origin never gets the microphone or camera, so a host that sandboxes cannot run a recording PCI. Without the setting nothing changes: the frame is same-origin with the page and has no `allow`.
+
+### Patch Changes
+
+- Updated dependencies [[`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264)]:
+  - @qti-components/base@3.0.0-next.7
+
+## 1.3.0-next.8
+
+### Patch Changes
+
+- [#351](https://github.com/Citolab/qti-components/pull/351) [`0497eab`](https://github.com/Citolab/qti-components/commit/0497eab926dbaa5f315fd519737ce60c33a3723e) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - A PCI bound to a response with base-type `file` no longer loses its file. The item now stores the PCI's `{ data, mime, name }` as a data URL, the value `qti-upload-interaction` stores for the same file, instead of `"[object Object]"`. A PCI gets `{ data, mime }` back in `boundTo`, also for a data URL an upload interaction stored. The same applies to `list` file responses, `file` record fields, and template and context variables. The file name is not kept, as with an upload.
+
+## 1.3.0-next.7
+
+### Patch Changes
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/interactions-core@3.0.0-next.7
+  - @qti-components/base@3.0.0-next.6
+  - @qti-components/theme@3.0.0-next.6
+
+## 1.3.0-next.6
+
+### Patch Changes
+
+- Updated dependencies [[`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3), [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3)]:
+  - @qti-components/interactions-core@3.0.0-next.6
+  - @qti-components/base@3.0.0-next.5
+  - @qti-components/theme@2.3.0-next.5
+
+## 1.3.0-next.5
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/theme@2.3.0-next.3
+  - @qti-components/interactions-core@2.2.0-next.4
+
+## 1.3.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd)]:
+  - @qti-components/theme@2.3.0-next.2
+  - @qti-components/interactions-core@2.2.0-next.3
+
+## 1.3.0-next.3
 
 ### Patch Changes
 
 - [#316](https://github.com/Citolab/qti-components/pull/316) [`b58d409`](https://github.com/Citolab/qti-components/commit/b58d4093456e38c992bf08cbbbc85ddf97abea40) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - The PCI iframe is now exactly as high as its content: it no longer adds 100px of empty space below it. The iframe keeps the width of its host instead of a fixed pixel width, so a PCI follows the item layout when it gets narrower, e.g. when QTI layout columns stack.
 
-## 1.3.0
+## 1.3.0-next.2
 
 ### Minor Changes
 
@@ -20,7 +72,22 @@
 
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
-- Updated dependencies [[`f700c5d`](https://github.com/Citolab/qti-components/commit/f700c5d4d0acd4219797211b1078c539fa43c62c), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/interactions-core@2.1.4
-  - @qti-components/theme@2.3.0
-  - @qti-components/base@2.5.0
+- Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
+  - @qti-components/theme@2.3.0-next.1
+  - @qti-components/base@2.5.0-next.2
+
+## 1.2.1-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+  - @qti-components/interactions-core@2.1.4-next.1
+
+## 1.2.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+  - @qti-components/interactions-core@2.1.4-next.0

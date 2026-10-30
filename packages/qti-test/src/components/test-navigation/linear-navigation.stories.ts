@@ -16,7 +16,7 @@ import type { QtiGapMatchInteraction } from '@qti-components/gap-match-interacti
 import type { QtiGraphicAssociateInteraction } from '@qti-components/graphic-associate-interaction';
 
 const meta: Meta = {
-  title: 'test-navigation/Linear Navigation',
+  title: 'QTI Test/Navigation/Linear Navigation',
   component: 'qti-test'
 };
 export default meta;

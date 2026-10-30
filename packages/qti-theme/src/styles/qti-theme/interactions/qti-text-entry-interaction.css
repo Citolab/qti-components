@@ -1,6 +1,17 @@
 @layer qti-components.interactions.base {
   qti-text-entry-interaction {
-    @mixin text;
+    @mixin paint text;
+    cursor: text;
+
+    @mixin inline;
+
+    /* The host is the field's box, so the ring goes on the host, around the border a candidate
+       sees, and the input inside it draws none of its own: a browser's default ring there was a
+       second one, inside the first (and orange, in Chrome). Transparent rather than removed, so a
+       forced-colours mode that paints outlines still shows one. */
+    &:focus-within {
+      @mixin foc;
+    }
 
     &::part(input) {
       @mixin field-typography;
@@ -8,12 +19,16 @@
       border: none;
       background-color: transparent;
     }
+
+    &::part(input):focus-visible {
+      outline: var(--qti-focus-border-width) solid transparent;
+    }
   }
 }
 
 @layer qti-components.interactions.corrections {
   qti-text-entry-interaction {
-    &:state(candidate-partially-correct) {
+    &:state(candidate-partial) {
       @mixin candidate text, var(--qti-partially-correct), var(--qti-partially-correct-light);
     }
 
@@ -27,15 +42,16 @@
   }
 
   /* The answer key, moved here from the shared qti-corrections.css: it names this interaction, so
-     this file owns it. */
-  .full-correct-response qti-text-entry-interaction {
+     this file owns it. Keyed on `answer-key` on the cloned host (CorrectResponseMixin), where the
+     `.full-correct-response` wrapper class used to be read. */
+  qti-text-entry-interaction:state(answer-key) {
     @mixin answer;
 
     &::part(input) {
       color: var(--qti-answer-fg);
     }
 
-    &::part(answer) {
+    &::part(answer-key) {
       @mixin answer-check;
     }
   }

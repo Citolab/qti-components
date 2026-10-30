@@ -10,6 +10,7 @@ import type { QtiAssessmentStimulusRef } from './qti-assessment-stimulus-ref';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta = {
+  title: 'Elements/qti-assessment-stimulus-ref',
   component: 'qti-assessment-stimulus-ref'
 } satisfies Meta<QtiAssessmentStimulusRef>;
 

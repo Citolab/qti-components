@@ -127,14 +127,14 @@ export class TestNavigation extends LitElement {
 
   constructor() {
     super();
-    listenPublic(this, 'cito-test-loaded', this.#handleTestConnected.bind(this));
+    listenPublic(this, 'qc-test-loaded', this.#handleTestConnected.bind(this));
     this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
-    listenItemPublic(this, 'cito-item-response-changed', this.#handleInteractionChanged.bind(this));
+    listenItemPublic(this, 'qc-item-response-changed', this.#handleInteractionChanged.bind(this));
     this.addEventListener('qti-item-context-updated', this.#handleItemContextUpdated.bind(this));
 
-    listenPublic(this, 'cito-test-end-attempt', this.#handleTestEndAttempt.bind(this));
-    listenPublic(this, 'cito-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
+    listenPublic(this, 'qc-test-end-attempt', this.#handleTestEndAttempt.bind(this));
+    listenPublic(this, 'qc-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
   }
 
   /**
@@ -185,10 +185,13 @@ export class TestNavigation extends LitElement {
   #assessmentItemFor(identifier: string | undefined): QtiAssessmentItem | undefined {
     if (!identifier) return undefined;
     const itemRef = this.#testElement?.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${identifier}"]`
+      `qti-assessment-item-ref[identifier="${CSS.escape(identifier)}"]`
     );
     return itemRef?.assessmentItem ?? undefined;
   }
+
+  /** `computedContext.itemElement`: one function for the life of this element, carried along by every update. */
+  #itemElement = (identifier: string): HTMLElement | null => this.#assessmentItemFor(identifier) ?? null;
 
   /** The currently active assessment item, exposed for optional presentation extensions. */
   protected get activeAssessmentItem(): QtiAssessmentItem | undefined {
@@ -199,13 +202,12 @@ export class TestNavigation extends LitElement {
   }
 
   /**
-   * Handles the 'test-end-attempt' event.
-   * @private
-   * @listens TestNavigation#test-end-attempt
-   * @param {CustomEvent} event - The custom event object.
+   * Ends an attempt: the item named by `detail.itemId` (a `test-end-attempt` stamped into an item, or
+   * given an `item`), or else the item on screen.
    */
-  #handleTestEndAttempt(_event: CustomEvent) {
-    const qtiAssessmentItemEl = this.activeAssessmentItem;
+  #handleTestEndAttempt(event: CustomEvent<{ itemId?: string } | undefined>) {
+    const itemId = event.detail?.itemId;
+    const qtiAssessmentItemEl = itemId ? this.#assessmentItemFor(itemId) : this.activeAssessmentItem;
     if (!qtiAssessmentItemEl) return;
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
@@ -238,7 +240,6 @@ export class TestNavigation extends LitElement {
   }
 
   override render() {
-    // return this.myTemplate ? this.myTemplate(this.stampContext) : nothing;
     return html`<slot></slot>`;
   }
 
@@ -281,9 +282,11 @@ export class TestNavigation extends LitElement {
 
     const testPartElements = Array.from(this.#testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
     this.computedContext = {
+      itemElement: this.#itemElement,
       identifier: this.#testElement.identifier,
       title: this.#testElement.title,
       view: this._sessionContext?.view,
+      plugins: this._sessionContext?.plugins ?? {},
       testParts: testPartElements.map(testPart => {
         const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
         const testPartSessionControl = testPart.querySelector<QtiItemSessionControl>(
@@ -455,6 +458,7 @@ export class TestNavigation extends LitElement {
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
+      plugins: this._sessionContext?.plugins ?? {},
       testParts: this.computedContext.testParts.map(testPart => {
         return {
           ...testPart,
@@ -467,7 +471,7 @@ export class TestNavigation extends LitElement {
                 item =>
                   this._testContext.items
                     .find(i => i.identifier === item.identifier)
-                    ?.variables.find(v => v.identifier === 'completionStatus').value === 'completed'
+                    ?.variables.find(v => v.identifier === 'completionStatus')?.value === 'completed'
               ),
 
               items: section.items.map(item => {
@@ -494,7 +498,8 @@ export class TestNavigation extends LitElement {
                 // Published by the item. One that is not on screen has nothing to be invalid.
                 const valid = itemContext?.valid ?? true;
 
-                const responseVars = itemContext?.variables?.filter(v => v.type === 'response') || [];
+                const responseVars =
+                  itemContext?.variables?.filter(v => v.type === 'response' && v.identifier !== 'numAttempts') || [];
 
                 const isDefaultResponse = responseVars.every(v => {
                   if (v.value === undefined || v.value === null) {
@@ -596,6 +601,63 @@ export class TestNavigation extends LitElement {
         bubbles: true
       })
     );
+  }
+
+  protected override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    this.#lockUsedItems();
+  }
+
+  /** The items this navigation disabled because their attempts are used, so it releases only those. */
+  #lockedItems = new WeakSet<QtiAssessmentItem>();
+
+  /**
+   * Disables every rendered item whose attempts are used, from the computed context, so the
+   * candidate cannot change the answer once the last attempt is ended. Runs after every update:
+   * an item rendered later (another item, a section on screen, a restored state) is locked as it
+   * arrives, and one whose attempts are back to zero (a new state) is released.
+   *
+   * Only `disabled = true` is ever set here, and only on an item that was not disabled already; a
+   * host or view that disables or makes an item read-only itself keeps it so.
+   */
+  #lockUsedItems(): void {
+    if (!this.#testElement || !this.computedContext) return;
+    // In a simultaneous part every item has one attempt, processed when the part ends (QTI info model
+    // §2.8.2), so the candidate may change the answer until then: TAO keeps such an item open too.
+    const items = new Map(
+      this.computedContext.testParts.flatMap(part =>
+        part.sections.flatMap(section =>
+          (section.submissionMode || part.submissionMode) === 'simultaneous'
+            ? []
+            : section.items.map(item => [item.identifier, item] as const)
+        )
+      )
+    );
+    for (const itemRef of this.#testElement.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref')) {
+      const element = itemRef.assessmentItem;
+      if (!element) continue;
+      const used = this.#attemptsUsed(items.get(itemRef.identifier), element);
+      if (used && !element.disabled) {
+        element.disabled = true;
+        this.#lockedItems.add(element);
+      } else if (!used && this.#lockedItems.has(element)) {
+        this.#lockedItems.delete(element);
+        element.disabled = false;
+      }
+    }
+  }
+
+  /**
+   * The same rule as `test-end-attempt`'s max-attempts guard: a non-adaptive item with a
+   * `max-attempts` above 0 whose attempts reached it. Adaptive items end themselves, and 0 is
+   * unlimited. With `auto-score-items` every change is scored as an attempt, so the count is not
+   * the candidate's and locks nothing.
+   */
+  #attemptsUsed(item: ComputedItem | undefined, element: QtiAssessmentItem): boolean {
+    if (!item || this.autoScoreItems) return false;
+    if (item.adaptive || element.adaptive === 'true') return false;
+    const maxAttempts = item.maxAttempts ?? 1;
+    return maxAttempts > 0 && (item.numAttempts ?? 0) >= maxAttempts;
   }
 
   /**

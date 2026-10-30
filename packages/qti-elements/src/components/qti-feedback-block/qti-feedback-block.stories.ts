@@ -14,6 +14,7 @@ type Story = StoryObj<QtiFeedbackBlock & typeof args>;
  * # qti-feedback-block
  */
 const meta: Meta<QtiFeedbackBlock> = {
+  title: 'Elements/qti-feedback-block',
   component: 'qti-feedback-block',
   args,
   argTypes,
@@ -27,6 +28,8 @@ const meta: Meta<QtiFeedbackBlock> = {
 export default meta;
 
 export const FeedbackBlock: Story = {
+  // Shown on the Docs page; out of the sidebar so the element is one entry there.
+  tags: ['!dev'],
   render: _args =>
     html` <qti-assessment-item
       xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"

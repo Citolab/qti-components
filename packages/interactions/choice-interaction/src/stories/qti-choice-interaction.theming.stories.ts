@@ -17,7 +17,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: '02 Choice Interaction/Theming',
+  title: 'Interactions/Choice/Theming',
   tags: ['theming', 'iol']
 };
 export default meta;
@@ -207,7 +207,7 @@ export const CSSParts: Story = {
         font-weight: bold;
         color: navy;
       }
-      qti-choice-interaction::part(slot) {
+      qti-choice-interaction::part(choices) {
         padding: 16px;
         background: #f9f9f9;
       }
@@ -227,7 +227,7 @@ export const CSSParts: Story = {
 
     // Verify parts exist in shadow DOM
     const promptPart = interaction.shadowRoot?.querySelector('[part="prompt"]');
-    const slotPart = interaction.shadowRoot?.querySelector('[part="slot"]');
+    const slotPart = interaction.shadowRoot?.querySelector('[part~="choices"]');
     const messagePart = interaction.shadowRoot?.querySelector('[part="message"]');
 
     expect(promptPart).toBeTruthy();

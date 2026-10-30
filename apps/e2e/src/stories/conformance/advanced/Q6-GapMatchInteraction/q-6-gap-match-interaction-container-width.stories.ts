@@ -13,7 +13,7 @@ type Story = StoryObj;
  * Tests for gap container width behavior at different zoom levels.
  */
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-6 Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-6 Gap Match Interaction'
 };
 export default meta;
 
@@ -79,7 +79,7 @@ export const D106: Story = {
     )!;
     const gapContainers = gapInteraction.querySelectorAll('qti-gap');
     const passageText = gapInteraction.querySelector('blockquote')!;
-    const dragSlot = gapInteraction.shadowRoot!.querySelector('slot[part="drags"]')!;
+    const dragSlot = gapInteraction.shadowRoot!.querySelector('slot[part~="bank"]')!;
 
     expect(gapInteraction).not.toBeNull();
     expect(gapContainers.length).toBeGreaterThan(0);

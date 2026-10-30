@@ -58,9 +58,14 @@ export abstract class QtiConditionElseBase extends QtiConditionBranchBase {
  * remaining children are the sub-rules processed when it evaluates to true.
  */
 export abstract class QtiConditionIfBase extends QtiConditionBranchBase {
+  /**
+   * Variables and base values hold a boolean as the string `'true'` or `'false'`, and `'false'` is
+   * truthy, so the condition applies only to `true` itself; `false` and NULL do not.
+   */
   public shouldProcess() {
-    const expression = this.firstElementChild as QtiExpression<boolean>;
-    return expression.calculate();
+    const expression = this.firstElementChild as QtiExpression<boolean | string>;
+    const value = expression.calculate();
+    return value === true || value === 'true';
   }
 
   public getSubRules(): QtiRule[] {

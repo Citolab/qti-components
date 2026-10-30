@@ -23,8 +23,8 @@ export abstract class QtiRuleElement extends LitElement implements QtiRuleBase {
  * every one of those loops without each of them having to report upwards.
  *
  * `qti-response-processing` catches it at the top of the run. The outcomes set
- * before the exit are kept, because each `qti-set-outcome-value` has already
- * dispatched by the time this is thrown.
+ * before the exit are kept: they are already on the run's working copy, which
+ * the item applies once the run ends.
  */
 export class QtiExitResponseSignal extends Error {
   constructor() {

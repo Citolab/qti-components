@@ -39,11 +39,17 @@
  * an export named 'applyDropzoneAutoSizing'" — the mixin had been reverted by the hide, the spec
  * had not. The fix is ordering, not configuration: commit a new test alongside the code it tests.
  */
+import { readFileSync } from 'node:fs';
 import { relative } from 'node:path';
 
-// Files that cannot change what a test or a screenshot sees. Same split as the VRT gate in
-// .husky/pre-commit and the `changes` job in ci.yml.
-const NON_CODE = /^(plans|docs|\.changeset|\.github)\/|\.md$/;
+// Files that cannot change what a test or a screenshot sees. The list is shared with the VRT gate in
+// .husky/pre-commit (tools/ci/no-visual-change.txt); the `changes` job in ci.yml keeps its own copy.
+const NON_CODE = new RegExp(
+  readFileSync(new URL('./tools/ci/no-visual-change.txt', import.meta.url), 'utf8')
+    .split('\n')
+    .filter(line => line && !line.startsWith('#'))
+    .join('|')
+);
 
 export default {
   '*.{js,jsx,ts,tsx,mjs,cjs}': ['prettier --write', 'eslint --fix'],

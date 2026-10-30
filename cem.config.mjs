@@ -33,6 +33,26 @@ console.warn = (...args) => {
  */
 const outdir = './';
 const jsxTypesOutdir = 'packages/qti-components/dist';
+const extendedJsxTypesOutdir = 'packages/qti-extended/dist';
+const EXTENDED_SOURCE = 'packages/qti-extended/';
+
+/**
+ * Runs a manifest plugin on part of the manifest: a copy holding only the modules whose path passes
+ * `keep`. The JSX types are generated once per published package this way, so the umbrella's types
+ * never import a class it does not ship, and `@qti-components/extended` gets types of its own.
+ */
+function scopedPlugin(plugin, keep) {
+  return {
+    name: `${plugin.name} (scoped)`,
+    packageLinkPhase(context) {
+      const customElementsManifest = structuredClone(context.customElementsManifest);
+      customElementsManifest.modules = (customElementsManifest.modules || []).filter(moduleDoc =>
+        keep(moduleDoc.path || '')
+      );
+      return plugin.packageLinkPhase({ ...context, customElementsManifest });
+    }
+  };
+}
 
 /**
  * Keep CEM output deterministic.
@@ -166,11 +186,14 @@ export default {
     'packages/interactions/core/src/mixins/**/*.ts',
     'packages/qti-processing/src/components/**/*.ts',
     'packages/qti-corrections/src/components/**/*.ts',
+    'packages/qti-extended/src/**/*.ts',
     'packages/qti-item/src/elements.ts',
     'packages/qti-test/src/elements.ts',
+    'packages/qti-test/src/plugins/elements.ts',
     'packages/qti-elements/src/elements.ts',
     'packages/qti-processing/src/elements.ts',
-    'packages/qti-corrections/src/elements.ts'
+    'packages/qti-corrections/src/elements.ts',
+    'packages/qti-extended/src/elements.ts'
   ],
   /** Globs to exclude */
   exclude: ['packages/**/*.stories.ts', 'packages/**/*.spec.ts', 'packages/**/*.styles.ts'],
@@ -200,12 +223,27 @@ export default {
     // customElementVsCodePlugin({
     //   outdir: outdir + 'dist'
     // }),
-    jsxTypesPlugin({
-      outdir: jsxTypesOutdir,
-      exclude: [],
-      fileName: `qti-components-jsx.d.ts`,
-      componentTypePath
-    }),
+    // The umbrella's React types cover every package it bundles; `@qti-components/extended` is not one
+    // of them, so it gets its own file, generated from its part of the manifest.
+    scopedPlugin(
+      jsxTypesPlugin({
+        outdir: jsxTypesOutdir,
+        exclude: [],
+        fileName: `qti-components-jsx.d.ts`,
+        componentTypePath
+      }),
+      path => !path.startsWith(EXTENDED_SOURCE)
+    ),
+    scopedPlugin(
+      jsxTypesPlugin({
+        outdir: extendedJsxTypesOutdir,
+        exclude: [],
+        fileName: `qti-extended-jsx.d.ts`,
+        // Every class is exported from the package root.
+        componentTypePath: () => './index.js'
+      }),
+      path => path.startsWith(EXTENDED_SOURCE)
+    ),
     cemSorterPlugin({
       deprecatedLast: true
     }),

@@ -13,6 +13,10 @@ import type { CSSResultGroup } from 'lit';
  *
  * @slot prompt - The prompt shown above the image.
  * @slot - Default slot for the image and hotspot choices.
+ *
+ * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
@@ -45,7 +49,9 @@ export class QtiHotspotInteraction extends ChoicesMixin(Interaction, 'qti-hotspo
   }
 
   async #positionHotspot(hotspot: QtiHotspotChoice): Promise<void> {
-    const img = this.querySelector('img') as HTMLImageElement;
+    const img = this.querySelector('img') as HTMLImageElement | null;
+    // Positioning needs an <img>; an image given as <object> (QTI allows it) leaves the hotspots unplaced.
+    if (!img) return;
     const coords = hotspot.getAttribute('coords');
     const shape = hotspot.getAttribute('shape');
     const coordsNumber = coords.split(',').map(s => parseInt(s));

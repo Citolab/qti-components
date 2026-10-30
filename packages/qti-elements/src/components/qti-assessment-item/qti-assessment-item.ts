@@ -8,12 +8,11 @@ import { dispatchPublic } from '../../public-events';
 
 import type { PropertyValues } from 'lit';
 import type { QtiTemplateProcessing } from '../qti-template-processing/qti-template-processing.js';
-import type { InteractionChangedDetails, OutcomeChangedDetails } from '../../internal/event-types.ts';
+import type { InteractionChangedDetails, OutcomeEntry, SetOutcomesDetails } from '../../internal/event-types.ts';
 import type { ResponseInteraction } from '@qti-components/base';
 import type { RegisteredInteraction } from '@qti-components/base';
 import type { VariableDeclaration, VariableValue } from '@qti-components/base';
 import type { OutcomeVariable, ResponseVariable, TemplateVariable } from '@qti-components/base';
-import type { QtiResponseProcessing } from '../qti-response-processing/qti-response-processing.ts';
 import type QtiRegisterVariable from '../../internal/events/qti-register-variable.ts';
 import type { ItemContext } from '@qti-components/base';
 
@@ -27,6 +26,14 @@ import type { ItemContext } from '@qti-components/base';
  * @event qti-item-context-updated - Emitted when through a user action the itemContext is updated,
  * typically on interaction with the interactions, or calling response processing.
  */
+
+/**
+ * What the item needs of its response processing: start a run for an attempt. The result comes
+ * back as an event.
+ */
+interface ResponseProcessor {
+  processResponse(options: { numAttempts: number }): void;
+}
 
 export class QtiAssessmentItem extends LitElement {
   #itemTitle: string | undefined;
@@ -164,6 +171,7 @@ export class QtiAssessmentItem extends LitElement {
     // The interactions take the answers over from the context, some of them a moment from now, and
     // a different answer can mean a different verdict. Look once they have.
     void this.updateComplete.then(() => this.#revalidate());
+    if (this.isConnected) this.#beginFirstAttempt();
   }
 
   public get state(): ItemContext['state'] {
@@ -217,7 +225,8 @@ export class QtiAssessmentItem extends LitElement {
     this.updateComplete.then(() => {
       // The verdict goes in first, so whoever hears the item connect reads it with the rest.
       this.validate(false);
-      dispatchPublic(this, 'cito-item-rendered', this);
+      this.#beginFirstAttempt();
+      dispatchPublic(this, 'qc-item-rendered', this);
       // Internal plumbing: the test and the item container listen for this name.
       this.dispatchEvent(
         new CustomEvent<QtiAssessmentItem>('qti-assessment-item-connected', {
@@ -239,7 +248,7 @@ export class QtiAssessmentItem extends LitElement {
     this.addEventListener('qti-register-variable', this.#handleRegisterVariable);
     this.addEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.addEventListener('end-attempt', this.#handleEndAttempt);
-    this.addEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.addEventListener('qc-item-set-outcomes', this.#handleSetOutcomes);
     this.addEventListener('qti-set-template-value', this.#handleSetTemplateValue);
     this.addEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.addEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
@@ -249,7 +258,7 @@ export class QtiAssessmentItem extends LitElement {
     this.removeEventListener('qti-register-variable', this.#handleRegisterVariable);
     this.removeEventListener('qti-register-interaction', this.#handleRegisterInteraction);
     this.removeEventListener('end-attempt', this.#handleEndAttempt);
-    this.removeEventListener('qti-set-outcome-value', this.#handleSetOutcomeValue);
+    this.removeEventListener('qc-item-set-outcomes', this.#handleSetOutcomes);
     this.removeEventListener('qti-set-template-value', this.#handleSetTemplateValue);
     this.removeEventListener('qti-set-correct-response', this.#handleSetCorrectResponse);
     this.removeEventListener('qti-interaction-response', this.#handleUpdateResponseVariable);
@@ -275,14 +284,42 @@ export class QtiAssessmentItem extends LitElement {
     const { responseIdentifier, countAttempt } = e.detail;
     this.validate();
     this.updateResponseVariable(responseIdentifier, 'true');
-    this.processResponse(countAttempt);
+    this.#processResponse(countAttempt, true, responseIdentifier);
   };
 
-  #handleSetOutcomeValue = (e: CustomEvent<{ outcomeIdentifier: string; value: string | string[] }>) => {
+  /**
+   * Applies the outcomes of a processing run, ours or a backend's, in one update, with the
+   * interactions' validity.
+   *
+   * completionStatus is response processing's to set (QTI info model §2.2.2). When an attempt of a
+   * non-adaptive item ends and processing left it `unknown`, the item marks it `completed`: the
+   * attempt is done. TAO does the same, and the 1EdTech results-reporting reference results expect
+   * it. An adaptive item is completed only by its own processing.
+   */
+  #handleSetOutcomes = (e: CustomEvent<SetOutcomesDetails>) => {
     e.stopImmediatePropagation();
-    const { outcomeIdentifier, value } = e.detail;
-    this.updateOutcomeVariable(outcomeIdentifier, value);
-    e.stopPropagation();
+    const { outcomes = [], responseProcessed = false } = e.detail ?? {};
+    const completion: OutcomeEntry[] = [];
+    if (responseProcessed && this.adaptive === 'false') {
+      const sent = outcomes.find(o => o.identifier === 'completionStatus')?.value;
+      if ((sent ?? this.getVariable('completionStatus')?.value) === 'unknown') {
+        completion.push({ identifier: 'completionStatus', value: 'completed' });
+      }
+    }
+    this.#applyOutcomes([...outcomes, ...completion], this.#checkValidity(false));
+
+    if (responseProcessed) {
+      // `responseProcessed` marks this as the end of an attempt (vs. a plain
+      // selection, which fires the same event without the flag). Lets listeners
+      // react only when an attempt actually ends.
+      this.dispatchEvent(
+        new CustomEvent<{ itemContext: ItemContext; responseProcessed: boolean }>('qti-item-context-updated', {
+          bubbles: true,
+          composed: true,
+          detail: { itemContext: this._context, responseProcessed: true }
+        })
+      );
+    }
   };
 
   #handleSetTemplateValue = (e: CustomEvent<{ templateIdentifier: string; value: string | string[] | null }>) => {
@@ -347,46 +384,77 @@ export class QtiAssessmentItem extends LitElement {
     this.#initialContext = { ...this._context, variables: this._context.variables };
   }
 
+  /**
+   * Scores the attempt. The item does not score itself: its response processing does, like a
+   * backend, and sends the outcomes back in `qc-item-set-outcomes`, which the item applies in one
+   * update. The item keeps the attempt count (QTI info model §2.2.2: the delivery engine maintains
+   * numAttempts) and hands the new count to the run, whose rules may read it. Without response
+   * processing the item only counts the attempt. A run that throws still counts the attempt and applies
+   * no outcomes.
+   *
+   * @returns whether the item has response processing.
+   */
   public processResponse(countNumAttempts = true, reportValidityAfterScoring = true): boolean {
-    this.validate(reportValidityAfterScoring);
+    return this.#processResponse(countNumAttempts, reportValidityAfterScoring);
+  }
 
-    if (countNumAttempts) {
-      this.updateOutcomeVariable(
-        'numAttempts',
-        (+this._context.variables.find(v => v.identifier === 'numAttempts')?.value + 1).toString()
-      );
+  #processResponse(countNumAttempts: boolean, reportValidity: boolean, endedBy?: string): boolean {
+    this.#checkValidity(reportValidity);
+    this.#resetOtherEndAttempts(endedBy);
+
+    const numAttempts = +this.getVariable('numAttempts')?.value + (countNumAttempts ? 1 : 0);
+    const processor = this.querySelector<HTMLElement & Partial<ResponseProcessor>>('qti-response-processing');
+    if (typeof processor?.processResponse === 'function') {
+      try {
+        processor.processResponse({ numAttempts });
+      } catch (error) {
+        // The attempt started, so it counts (QTI info model §2.2.2), as in TAO and Amp-up; the
+        // outcomes of a run that failed are not applied.
+        this.#applyOutcomes([{ identifier: 'numAttempts', value: String(numAttempts) }]);
+        throw error;
+      }
+      return true;
     }
+    dispatchPublic(this, 'qc-item-set-outcomes', {
+      outcomes: [{ identifier: 'numAttempts', value: String(numAttempts) }],
+      responseProcessed: true
+    });
+    return false;
+  }
 
-    if (this.adaptive === 'false') {
-      this.#resetOutcomeVariablesBeforeResponseProcessing();
-    }
-
-    const responseProcessor = this.querySelector<QtiResponseProcessing>('qti-response-processing');
-    const canProcess = !!(responseProcessor && typeof responseProcessor.process === 'function');
-    if (canProcess) {
-      responseProcessor.process();
-    }
-    if (this.adaptive === 'false') {
-      // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
-    }
-
-    // `responseProcessed` marks this as the end of an attempt (vs. a plain
-    // selection, which fires the same event without the flag). Lets listeners
-    // react only when an attempt actually ends.
-    this.dispatchEvent(
-      new CustomEvent<{ itemContext: ItemContext; responseProcessed: boolean }>('qti-item-context-updated', {
-        bubbles: true,
-        composed: true,
-        detail: { itemContext: this._context, responseProcessed: true }
-      })
-    );
-
-    return canProcess;
+  /**
+   * QTI info model §2.4.5: when an attempt ends any other way than through an end-attempt
+   * interaction, that interaction's response is `false`.
+   */
+  #resetOtherEndAttempts(endedBy: string | undefined): void {
+    const others = Array.from(this.querySelectorAll('qti-end-attempt-interaction'), el =>
+      el.getAttribute('response-identifier')
+    ).filter(id => id && id !== endedBy);
+    if (others.length === 0) return;
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v => (others.includes(v.identifier) ? { ...v, value: 'false' } : v))
+    };
   }
 
   public resetResponses() {
     this._context = this.#initialContext;
+    if (this.isConnected) this.#beginFirstAttempt();
+  }
+
+  /**
+   * QTI info model §2.2.2: completionStatus is `not_attempted` until the first attempt starts, then
+   * `unknown`. The attempt starts when the candidate gets the item, so an item on screen is never
+   * `not_attempted` — also not after a reset or a restore that says so.
+   */
+  #beginFirstAttempt(): void {
+    if (this.getVariable('completionStatus')?.value !== 'not_attempted') return;
+    this._context = {
+      ...this._context,
+      variables: this._context.variables.map(v =>
+        v.identifier === 'completionStatus' ? { ...v, value: 'unknown' } : v
+      )
+    };
   }
 
   protected getResponse(identifier: string): Readonly<ResponseVariable> {
@@ -425,16 +493,14 @@ export class QtiAssessmentItem extends LitElement {
 
     this.afterResponseVariableUpdated();
 
-    dispatchPublic(this, 'cito-item-response-changed', {
+    dispatchPublic(this, 'qc-item-response-changed', {
       item: this.identifier,
       responseIdentifier: identifier,
       response: Array.isArray(value) ? [...value] : value
     });
 
-    if (this.adaptive === 'false') {
-      // if adaptive, completionStatus is set by the processing template
-      this.updateOutcomeVariable('completionStatus', this.#getCompletionStatus());
-    }
+    // A different answer can mean a different verdict.
+    this.validate(false);
   }
 
   /**
@@ -548,41 +614,62 @@ export class QtiAssessmentItem extends LitElement {
    * @param value - The new value for the response variable.
    */
   public updateOutcomeVariable(identifier: string, value: string | string[] | undefined) {
-    const outcomeVariable = this.getOutcome(identifier);
+    this.#applyOutcomes([{ identifier, value }]);
+  }
 
-    if (!outcomeVariable) {
-      console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
-      return;
+  /**
+   * Publishes the outcomes (and the validity) in one update, then a `qc-item-outcome-changed` per
+   * outcome with its final value and one `qc-item-outcomes-changed` with all of them.
+   * An identifier the item does not declare is skipped with a warning; a later entry for the same
+   * identifier wins.
+   */
+  #applyOutcomes(outcomes: readonly OutcomeEntry[], valid?: boolean) {
+    const values = new Map<string, OutcomeEntry['value']>();
+    for (const { identifier, value } of outcomes) {
+      const variable = this.getVariable(identifier);
+      if (!variable) {
+        console.warn(`Can not set qti-outcome-identifier: ${identifier}, it is not available`);
+        continue;
+      }
+      values.set(identifier, variable.cardinality === 'single' ? value : Array.isArray(value) ? value : [value]);
     }
+    const validChanged = valid !== undefined && valid !== this._context.valid;
+    if (values.size === 0 && !validChanged) return;
 
     this._context = {
       ...this._context,
-      variables: this._context.variables.map(v => {
-        if (v.identifier !== identifier) {
-          return v;
-        }
-        return {
-          ...v,
-          value: outcomeVariable.cardinality === 'single' ? value : Array.isArray(value) ? value : [value]
-        };
-      })
+      ...(validChanged ? { valid } : {}),
+      variables: this._context.variables.map(v =>
+        values.has(v.identifier) ? { ...v, value: values.get(v.identifier) as string | string[] | null } : v
+      )
     };
 
-    dispatchPublic(this, 'cito-item-outcome-changed', {
-      item: this.identifier,
-      outcomeIdentifier: identifier,
-      value: this._context.variables.find(v => v.identifier === identifier)?.value
-    });
+    if (values.size > 0) {
+      for (const [outcomeIdentifier, value] of values) {
+        dispatchPublic(this, 'qc-item-outcome-changed', {
+          item: this.identifier,
+          outcomeIdentifier,
+          value: value as string | string[]
+        });
+      }
+      dispatchPublic(this, 'qc-item-outcomes-changed', {
+        item: this.identifier,
+        outcomes: [...values].map(([identifier, value]) => ({ identifier, value }))
+      });
+    }
   }
 
   public validate(reportValidity = true): boolean {
-    const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
+    const isValid = this.#checkValidity(reportValidity);
     this.#publishValidity(isValid);
+    return isValid;
+  }
 
+  #checkValidity(reportValidity: boolean): boolean {
+    const isValid = this.interactionElements.every(interactionElement => interactionElement.validate());
     if (reportValidity) {
       this.reportValidity();
     }
-
     return isValid;
   }
 
@@ -616,40 +703,6 @@ export class QtiAssessmentItem extends LitElement {
       interactionElement.reportValidity();
     }
   }
-
-  #getCompletionStatus(): 'completed' | 'incomplete' | 'not_attempted' | 'unknown' {
-    const valid = this.validate(false);
-    if (valid === true) return 'completed';
-    if (valid === false) return 'incomplete';
-    return 'not_attempted';
-  }
-
-  #resetOutcomeVariablesBeforeResponseProcessing(): void {
-    this._context = {
-      ...this._context,
-      variables: this._context.variables.map(variable => {
-        if (variable.type !== 'outcome') {
-          return variable;
-        }
-
-        const hasDefaultValue = 'defaultValue' in variable;
-        const declaredDefault = hasDefaultValue ? variable.defaultValue : null;
-
-        let value = declaredDefault ?? null;
-        if (
-          (value === null || value === undefined) &&
-          (variable.baseType === 'integer' || variable.baseType === 'float')
-        ) {
-          value = '0';
-        }
-
-        return {
-          ...variable,
-          value
-        };
-      })
-    };
-  }
 }
 
 declare global {
@@ -661,6 +714,6 @@ declare global {
 declare module '../../public-events' {
   interface PublicItemEventMap {
     /** The item rendered: its interactions are in the DOM and its validity is known. */
-    'cito-item-rendered': CustomEvent<QtiAssessmentItem>;
+    'qc-item-rendered': CustomEvent<QtiAssessmentItem>;
   }
 }

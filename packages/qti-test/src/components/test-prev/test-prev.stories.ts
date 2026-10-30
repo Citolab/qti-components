@@ -1,10 +1,11 @@
-import { expect, fireEvent } from 'storybook/test';
+import { expect, fireEvent, waitFor } from 'storybook/test';
 import { html } from 'lit';
 import { findByShadowTitle, getByShadowText, within } from 'shadow-dom-testing-library';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 import { spread } from '@open-wc/lit-helpers';
 
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../../tools/testing/test-utils';
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { TestPrev } from '..';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -14,6 +15,7 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-prev');
 type Story = StoryObj<TestPrev & typeof args>;
 
 const meta: Meta<TestPrev> = {
+  title: 'QTI Test/Building blocks/test-prev',
   component: 'test-prev',
   args,
   argTypes,
@@ -29,9 +31,9 @@ export const Default: Story = {
   render: () => html`
     <qti-test>
       <test-navigation>
-        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-        ${template(args, html`vorige`)}
-        <test-next>volgende</test-next>
+        <test-container test-url=${SHOWCASE_TEST}> </test-container>
+        ${template(args, html`previous`)}
+        <test-next>next</test-next>
       </test-navigation>
     </qti-test>
   `
@@ -41,44 +43,40 @@ export const Test: Story = {
   render: () => html`
     <qti-test navigate="item">
       <test-navigation>
-        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
-        <test-prev>vorige</test-prev>
-        <test-next>volgende</test-next>
+        <test-container test-url=${SHOWCASE_TEST}> </test-container>
+        <test-prev>previous</test-prev>
+        <test-next>next</test-next>
       </test-navigation>
-      <test-item-link item-id="t1-test-entry-item4">link</test-item-link>
+      <test-item-link item-id="ITEM028">link</test-item-link>
     </qti-test>
   `,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const link = await canvas.findByShadowText('link');
 
-    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
+    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Multiple choice, one answer');
 
+    // jump to the third item
     await fireEvent.click(link);
 
-    const prevButton = canvas.getByShadowText('vorige');
-    const nextButton = canvas.getByShadowText('volgende');
+    const prevButton = canvas.getByShadowText('previous');
+    const nextButton = canvas.getByShadowText('next');
 
-    expect(prevButton).toBeDisabled();
-    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(
+    const thirdItem = await getAssessmentItemFromTestContainerByDataTitle(
       canvasElement,
-      'T1 - Extended Text Interaction'
+      'Multiple choice with pictures'
     );
-    expect(prevButton).not.toBeDisabled();
+    expect(thirdItem).toBeInTheDocument();
+    await waitFor(() => expect(prevButton).not.toBeDisabled());
+
+    await fireEvent.click(prevButton);
+    await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Multiple choice, several answers');
+    await fireEvent.click(prevButton);
+    const firstItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'Multiple choice, one answer');
     expect(firstItem).toBeInTheDocument();
-    await new Promise(resolve => setTimeout(resolve, 1));
-    await fireEvent.click(prevButton);
-    await new Promise(resolve => setTimeout(resolve, 1));
+    await waitFor(() => expect(prevButton).toBeDisabled());
 
-    await fireEvent.click(prevButton);
-    await new Promise(resolve => setTimeout(resolve, 1));
-
-    await fireEvent.click(prevButton);
-    const secondItem = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
-    expect(secondItem).toBeInTheDocument();
-    expect(prevButton).toBeDisabled();
     await fireEvent.click(nextButton);
-    await new Promise(resolve => setTimeout(resolve, 1));
-    expect(prevButton).not.toBeDisabled();
+    await waitFor(() => expect(prevButton).not.toBeDisabled());
   }
 };

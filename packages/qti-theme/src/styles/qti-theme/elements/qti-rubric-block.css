@@ -1,8 +1,21 @@
-/* `display: block` is declared by the element itself, in qti-rubric-block.ts. */
+/*
+ * A callout: light grey, a thick grey border on the start side, a little indentation. Information
+ * for the candidate, so the border is grey; feedback has a full-strength one (qti-feedback-block.css).
+ * `display: block` is declared by the element itself, in qti-rubric-block.ts.
+ */
 qti-rubric-block {
-  border: var(--qti-border-thickness) solid var(--qti-info);
-  background-color: color-mix(in srgb, var(--qti-info) 5%, white);
-  border-radius: var(--qti-border-radius);
+  border-inline-start: var(--qti-callout-accent-width) solid var(--qti-rubric-accent-color);
+  border-start-end-radius: var(--qti-radius-box);
+  border-end-end-radius: var(--qti-radius-box);
+  background-color: var(--qti-callout-bg);
   padding: var(--qti-padding-box);
   margin-top: var(--qti-gap);
+}
+
+/* The callout's padding is its spacing: no extra margin above the first or below the last paragraph. */
+qti-rubric-block > :first-child {
+  margin-top: 0;
+}
+qti-rubric-block > :last-child {
+  margin-bottom: 0;
 }

@@ -38,6 +38,8 @@
     "test:vrt": "VRT=1 vitest run --project vrt",
     "test:vrt:update": "VRT=1 vitest run --project vrt --update",
     "test:vrt:ui": "VRT=1 vitest --project vrt --ui",
+    "test:legacy": "LEGACY=1 vitest run --project legacy",
+    "test:legacy:install": "node tools/testing/legacy-chrome.mjs",
     "tsc": "tsc --noEmit",
     "clean": "pnpm -r run clean",
     "cem": "custom-elements-manifest analyze --config cem.config.mjs",

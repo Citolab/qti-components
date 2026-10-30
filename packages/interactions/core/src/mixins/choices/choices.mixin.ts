@@ -4,7 +4,7 @@ import { watch } from '@qti-components/utilities';
 import { responseAttributeConverter } from '@qti-components/base';
 
 import type { ComplexAttributeConverter } from 'lit';
-import type { Interaction, ValidatableInteraction } from '@qti-components/base';
+import type { Interaction, ValidatableInteraction, ValidityKind, ValidityTrigger } from '@qti-components/base';
 import type { ChoiceInterface } from '../active-element/active-element.mixin';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -137,7 +137,10 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       this._determineInputType();
 
       // Filter response to only include valid identifiers (handles removal)
-      const validIdentifiers = new Set(this._choiceElements.map(c => c.identifier));
+      // The attribute, not the property: parsed with the interaction (innerHTML, a restored item), a
+      // choice is not upgraded yet when this first runs, its `identifier` property is undefined, and
+      // filtering on it wiped a restored response before any choice could show it.
+      const validIdentifiers = new Set(this._choiceElements.map(c => c.getAttribute('identifier') ?? c.identifier));
       if (Array.isArray(this.response)) {
         const filteredResponse = this.response.filter(id => validIdentifiers.has(id));
         if (filteredResponse.length !== this.response.length) {
@@ -156,13 +159,16 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
       const selectedCount = selectedChoices.length;
       let isValid = true;
       let validityMessage = '';
+      let kind: ValidityKind = 'other';
       if (this.maxChoices !== 0 && selectedCount > this.maxChoices) {
         isValid = false;
+        kind = 'max';
         validityMessage =
           this.dataset.maxSelectionsMessage ||
           `Please select no more than ${this.maxChoices} ${this.maxChoices === 1 ? 'option' : 'options'}.`;
       } else if (selectedCount < this.minChoices) {
         isValid = false;
+        kind = 'min';
         validityMessage =
           this.dataset.minSelectionsMessage ||
           `Please select at least ${this.minChoices} ${this.minChoices === 1 ? 'option' : 'options'}.`;
@@ -170,13 +176,13 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
       // Always set validity state, regardless of whether there are selections.
       const anchor = this._choiceElements.find(c => this.contains(c)) || this;
-      this.setInteractionValidity(isValid, validityMessage, anchor, { suppressInline: true });
+      this.setInteractionValidity(isValid, validityMessage, anchor, { suppressInline: true, kind });
 
       return isValid;
     }
 
-    override reportValidity() {
-      return super.reportValidity();
+    override reportValidity(options?: { trigger?: ValidityTrigger }) {
+      return super.reportValidity(options);
     }
 
     /**
@@ -250,9 +256,9 @@ export const ChoicesMixin = <T extends Constructor<Interaction>>(superClass: T, 
 
       this.validate();
 
-      // Always update the configured validity UI mode after user-driven selection changes.
-      // This ensures inline messages are cleared immediately when state becomes valid again.
-      this.reportValidity();
+      // A change reports what the candidate just did wrong (too many) at once; too few waits for a
+      // submit (Interaction.reportValidity).
+      this.reportValidity({ trigger: 'change' });
 
       this.saveResponse(this.response);
     }

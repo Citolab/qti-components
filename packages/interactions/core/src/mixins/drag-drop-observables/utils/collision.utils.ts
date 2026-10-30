@@ -229,7 +229,10 @@ export function closestCornersWithInventoryPriorityCollision(
     dragContainers && dragContainers.length > 0
       ? dropzones.filter(zone => dragContainers.includes(zone))
       : dropzones.filter(
-          zone => zone.tagName === 'SLOT' && zone.hasAttribute('part') && zone.getAttribute('part')?.includes('drags')
+          zone =>
+            zone.tagName === 'SLOT' &&
+            zone.hasAttribute('part') &&
+            zone.getAttribute('part')?.split(/\s+/).includes('bank')
         );
   const allRegularDroppables = dropzones.filter(zone => !identifiedDragContainers.includes(zone));
 

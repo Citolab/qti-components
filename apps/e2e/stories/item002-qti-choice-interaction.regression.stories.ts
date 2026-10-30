@@ -7,11 +7,11 @@ import sourceXML from './fixtures/ITEM002.xml?raw';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
-import './kennisnet.css';
-
 const meta: Meta = {
-  title: 'QTI Kennisnet/Regression',
+  title: 'Testing/Regression',
   tags: ['no-tests'],
+  // Kennisnet's look comes from its theme preset (.storybook/themes.css).
+  globals: { theme: 'Kennisnet' },
   decorators: [regressionLayout]
 };
 

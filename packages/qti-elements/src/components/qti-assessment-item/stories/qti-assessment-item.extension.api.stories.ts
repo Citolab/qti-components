@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiAssessmentItem } from '../qti-assessment-item';
 
 /**
- * The extension tier of the public API (`plans/public-api.md`): a host that adds its own
+ * The extension tier of the public API (`plans/host-api.md`): a host that adds its own
  * interaction by subclassing `Interaction`. PeilingLezen does it about 17 times. This is the
  * contract such a subclass lives by, written as the subclass would write it and run inside a real
  * item, so changing how children register with the item (Phase 4) cannot pass unnoticed.
@@ -16,7 +16,7 @@ import type { QtiAssessmentItem } from '../qti-assessment-item';
  * `@citolab/qti-components/qti-base`.
  */
 const meta: Meta = {
-  title: 'qti-elements/qti-assessment-item/Extension API',
+  title: 'API Reference/Extension API',
   component: 'qti-assessment-item'
 };
 export default meta;
@@ -94,7 +94,7 @@ export const PublishesThroughSaveResponse: StoryObj = {
   play: async ({ canvasElement }) => {
     const { item, interaction } = await ready(canvasElement);
     const changed = fn();
-    item.addEventListener('qti-interaction-changed', changed);
+    item.addEventListener('qc-item-response-changed', changed);
 
     interaction.pick('a');
 

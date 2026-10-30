@@ -9,6 +9,10 @@ import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
 
 import type { QtiAreaMapEntry } from '@qti-components/base';
 
+/**
+ * @csspart point - A placed marker; once judged it carries the verdict token (`point candidate-correct`,
+ *   `point candidate-incorrect`), followed by the old bare `correct` / `incorrect` token for one major.
+ */
 export class QtiSelectPointInteractionCorrection extends CandidateCorrectionMixin(QtiSelectPointInteraction) {
   #correctAreas: Array<{ shape: string; coords: string }> = [];
 
@@ -17,10 +21,10 @@ export class QtiSelectPointInteractionCorrection extends CandidateCorrectionMixi
   static override styles = [
     QtiSelectPointInteraction.styles,
     css`
-      [part~='correct'] {
+      [part~='candidate-correct'] {
         --qti-select-point-marker-color: var(--qti-correct);
       }
-      [part~='incorrect'] {
+      [part~='candidate-incorrect'] {
         --qti-select-point-marker-color: var(--qti-incorrect);
       }
     `
@@ -85,7 +89,9 @@ export class QtiSelectPointInteractionCorrection extends CandidateCorrectionMixi
 
   protected override pointPart(_point: string, index: number): string {
     const verdict = this.#responseCorrection[index];
-    return verdict === undefined ? 'point' : `point ${verdict ? 'correct' : 'incorrect'}`;
+    if (verdict === undefined) return 'point';
+    // The verdict state's name as a token (CONTRACT.md §3), then the old bare token for one major.
+    return verdict ? 'point candidate-correct correct' : 'point candidate-incorrect incorrect';
   }
 
   protected override renderSupplementalLayer(): unknown {

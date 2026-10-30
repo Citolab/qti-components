@@ -7,7 +7,9 @@ description: Switching and inspecting what's displayed — test-view, test-view-
 
 QTI defines several audiences for the same item content — `author`, `candidate`, `proctor`, `scorer`, `testConstructor`, `tutor` — controlled via `sessionContext.view`. Elements tagged with a `view` attribute inside the loaded test are shown/hidden by toggling a `.show` class whenever the view changes (handled by `TestViewMixin` on `<qti-test>`); switching to `'scorer'` also calls `showCorrectResponse(true)` on the active item.
 
-- **`<test-view>`** — a `<select>` dropdown for choosing the current view. `label` sets the accompanying `<label>` text (default `"view"`); `view-options` restricts the offered choices to a comma-separated subset of the six views above. Dispatches `on-test-switch-view` on change.
+`<test-view>`, `<test-view-toggle>`, the print helpers and `<test-stamp>` on this page are plugins. From `@qti-components/extended`, a package installed next to `@citolab/qti-components` (`import '@qti-components/extended'`); the umbrella does not register them.
+
+- **`<test-view>`** — a `<select>` dropdown for choosing the current view. `label` sets the accompanying `<label>` text (default `"view"`); `view-options` restricts the offered choices to a comma-separated subset of the six views above. Dispatches `qc-test-switch-view` on change.
 - **`<test-view-toggle>`** — a simpler candidate/scorer toggle button. Content is rendered from a `<template>` child (Heximal templates), receiving `{ view }`; clicking cycles between `'candidate'` and `'scorer'`.
 
 ### On a standalone item
@@ -29,46 +31,22 @@ This is what makes a `qti-rubric-block view="scorer"` — the answer model a mar
 
 ## Text-to-speech: `<test-item-to-speech>`
 
-A controller + `@lit/context` provider for reading an item's body aloud via the Web Speech API. It collects block-level text elements (`p`, `h1`–`h6`, `li`, `blockquote`, `figcaption`, prompts and choices) from the item's `qti-item-body`, skipping anything that is not rendered (hidden feedback, a scorer-only rubric block), and exposes a `ttsContext` (`state: 'idle' | 'playing' | 'paused'`, `currentElementIndex`, `elementCount`, plus `play`/`pause`/`resume`/`stop`/`prevElement`/`nextElement`) for child controls to consume.
-
-Which item it reads depends on where the player is placed:
-
-- **Inside a `qti-assessment-item-ref`** — e.g. in a `<template item-ref>` on `<qti-test>`, so every item gets its own player: it reads that item, and ignores navigation.
-- **Anywhere else** — e.g. a toolbar: it follows the navigation cursor and reads the item `navItemRefId` points at.
+Reads an item, a shared reading text, or other marked HTML aloud, with `test-tts-*` buttons to control it. It is a [test plugin](https://qti-components.citolab.nl/?path=/docs/guides-test-plugins--docs) from `@qti-components/extended`, a package installed next to `@citolab/qti-components`: `import '@qti-components/extended';` registers it; the umbrella does not.
 
 ```html
-<!-- one player per item -->
-<qti-test>
-  <template item-ref>
-    <test-item-to-speech language="nl-NL">
-      <test-tts-play></test-tts-play>
-      <test-tts-stop></test-tts-stop>
-    </test-item-to-speech>
-    {{ xmlDoc }}
-  </template>
-  …
-</qti-test>
-
-<!-- one player in the toolbar, following navigation -->
 <test-item-to-speech language="nl-NL">
   <test-tts-play></test-tts-play>
-  <test-tts-prev></test-tts-prev>
-  <test-tts-next></test-tts-next>
   <test-tts-stop></test-tts-stop>
 </test-item-to-speech>
 ```
 
-The Storybook docs page for `test-item-to-speech` describes both modes in detail.
-
-Each control draws an icon button with an English accessible name; slotted content replaces the icon, and a slotted `<svg>` is sized like the default. `label` (and `pause-label` on `<test-tts-play>`) names the button — set it when you slot an icon of your own, which has no text to be named by. The buttons read the qti-theme tokens, with the theme's defaults as fallbacks, and `--test-button-size` / `--test-tts-icon-size` resize them.
-
-Speech stops on navigation (toolbar player) or when the item leaves the page (per-item player). Uses the CSS Custom Highlight API (`::highlight()`) to mark the current reading element and the word being spoken, and mirrors playback state onto each button's `ElementInternals` custom states (`:state(idle)`, `:state(playing)`, `:state(paused)`) for CSS-only styling.
+What it reads depends on where you place it. See the [Storybook docs](https://qti-components.citolab.nl/?path=/docs/test-test-item-to-speech--docs) for the placements, languages, buttons and styling.
 
 ## Other
 
-- **`<test-end-attempt>`** — a plain button that dispatches `test-end-attempt` on click (see [Scoring & State](/qti-test/scoring-and-state/)).
+- **`<test-end-attempt>`** — a button that ends an item's attempt (it dispatches `qc-test-end-attempt`), disabled when the item's attempts are used up or the answer is not valid yet (see [Scoring & State](/qti-test/scoring-and-state/)).
 - **`<qti-test-feedback>`** — extends the item-level `QtiModalFeedback` for test-level modal feedback (e.g. an end-of-test message).
 
-## Deprecated stamp components
+## Stamp components
 
-`<test-stamp>`, `<test-paging-buttons-stamp>`, and `<test-section-buttons-stamp>` are all marked `@deprecated` in source. They predate the `<template>`-driven pattern (`test-scoring-buttons`, `test-view-toggle`) and render item/section lists via a `<template>` child, iterating `computedContext`. No direct replacement is documented in source — check with the team before building on these.
+`<test-stamp>` renders its `<template>` child with the active item, section, test part and test (`activeItem`, `activeSection`, `activeTestpart`, `test`). Use `<template type="repeat" repeat="{{ activeTestpart.items }}">` for one entry per item, or `activeTestpart.sections` for one per section. `<test-paging-buttons-stamp>` and `<test-section-buttons-stamp>` are removed: use `<test-stamp>` with a `repeat` as above.

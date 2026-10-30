@@ -29,16 +29,11 @@ import {
 } from './interactions';
 import { QtiAssessmentItemCorrection } from './components/qti-assessment-item-correction';
 import { QtiItemCorrection } from './components/qti-item-correction';
-import {
-  QtiTestCorrection,
-  TestCheckItemCorrection,
-  TestNavigationCorrection
-} from './components/test-correction-elements';
+import { QtiTestCorrection, TestNavigationCorrection } from './components/test-correction-elements';
 
 /** Correction constructors keyed by their standard QTI tag names. */
 export const qtiCorrectionElements = [
   { tag: 'test-show-correct-response', ctor: TestShowCorrectResponse },
-  { tag: 'test-check-item', ctor: TestCheckItemCorrection },
   { tag: 'test-navigation', ctor: TestNavigationCorrection },
   { tag: 'qti-test', ctor: QtiTestCorrection },
   { tag: 'item-correct-response-mode', ctor: ItemCorrectResponseMode },

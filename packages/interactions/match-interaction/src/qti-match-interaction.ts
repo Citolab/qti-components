@@ -7,7 +7,6 @@ import {
   DragDropSlottedSortableMixin
 } from '@qti-components/interactions-core/mixins/drag-drop-observables';
 
-// import { DragDropInteractionMixin } from '@qti-components/interactions-core/mixins/drag-drop';
 import styles from './qti-match-interaction.styles';
 import tabularStyles from './qti-match-interaction-tabular.styles';
 
@@ -21,15 +20,17 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @customElement qti-match-interaction
  *
  * @attr {string} response-identifier - Required. Identifier of the bound response variable.
- * @attr {number} [max-associations=0] - Maximum pairings across the whole interaction; `0`
- *   means unlimited. QTI's own default is `1`; this element defaults to unlimited because a
- *   literal `1` breaks any multi-pair match item. See plans/interaction-attribute-spec-conformance.md.
- * @attr {number} [min-associations=1] - Minimum pairings for a valid response.
+ * @attr {number} [max-associations=1] - Maximum pairings across the whole interaction; `0`
+ *   means unlimited. Without the attribute it is QTI's default of 1 (information model §5.89).
+ * @attr {number} [min-associations=0] - Minimum pairings for a valid response (QTI's default).
+ * @attr {string} data-first-column-header - QTI shared vocabulary, with `qti-match-tabular`: the
+ *   text of the table's top-left cell.
  * @attr {boolean} [shuffle=false] - Requests shuffling of both match sets. Applied by the
  *   transform pipeline (`qti-transformers`), not by this element.
- * @attr {'qti-match-tabular'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
+ * @attr {'qti-match-tabular'|'qti-header-hidden'|'qti-choices-top'|'qti-choices-bottom'|'qti-choices-left'|'qti-choices-right'} class -
  *   QTI shared presentation vocabulary. `qti-match-tabular` renders a checkbox/radio grid
- *   instead of drag-and-drop; the `qti-choices-*` values position the source set.
+ *   instead of drag-and-drop, and with it `qti-header-hidden` leaves out the column-header row;
+ *   the `qti-choices-*` values position the source set.
  * @attr {boolean} [auto-size-dropzones=false] - Extension, not QTI. Sizes every drop target to
  *   the widest chip so placement does not reflow the layout. The mixin default is `true`; this
  *   interaction is the one that overrides it to `false`, because a match target is a category card
@@ -43,19 +44,22 @@ import type { QtiSimpleAssociableChoice } from '@qti-components/interactions-cor
  * @slot - Default slot for the two match sets (drag-and-drop mode).
  *
  * @csspart grid - The tabular grid container.
- * @csspart corner - The top-left corner cell of the grid.
- * @csspart cols-wrap - Wrapper row for the column headers.
- * @csspart c-header - The column header slot wrapper.
- * @csspart rows-wrap - Wrapper column for the row headers.
- * @csspart r-header - The row header slot wrapper.
- * @csspart checkbox-grid - The interactive cell grid area.
- * @csspart input-cell - Each cell's label element.
- * @csspart control - The visible checkbox/radio box (tabular mode). Also carries the variant
- *   tokens `radio` | `checkbox`, `checked`, and `correct` | `incorrect` — e.g.
- *   `::part(control radio checked correct)`. These mirror the custom-state vocabulary; the cells
- *   are plain spans in the shadow root, so they cannot carry real `:state()`.
- * @csspart control-mark - The inner mark element; carries the same variant tokens as `control`.
+ * @csspart corner - The top-left corner cell of the grid; shows `data-first-column-header`.
+ * @csspart columns - Wrapper row for the column headers (was `cols-wrap`).
+ * @csspart column-header - The column header slot (was `c-header`).
+ * @csspart rows - Wrapper column for the row headers (was `rows-wrap`).
+ * @csspart row-header - The row header slot (was `r-header`).
+ * @csspart cells - The interactive cell grid area (was `checkbox-grid`).
+ * @csspart cell - Each cell's label element (was `input-cell`).
+ * @csspart control - The visible checkbox/radio box (tabular mode). Tokens: `radio` | `checkbox`,
+ *   `checked`, `candidate-correct` | `candidate-incorrect` — e.g.
+ *   `::part(control radio checked candidate-correct)`. These mirror the custom-state vocabulary;
+ *   the cells are plain spans in the shadow root, so they cannot carry real `:state()`.
+ * @csspart control-mark - The inner mark element; carries the same tokens as `control`.
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate drag-active - A drag is in progress (was `dragzone-active`, `dragzone-enabled`).
  */
 export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(
@@ -64,7 +68,7 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
     'qti-simple-match-set:last-of-type > qti-simple-associable-choice',
     'qti-simple-match-set:first-of-type'
   ),
-  '[qti-draggable="true"]'
+  '[data-draggable="true"]'
 ) {
   static override styles: CSSResultGroup = [styles, tabularStyles];
 
@@ -82,11 +86,17 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
    */
   public override autoSizeDropzones = false;
 
+  /** QTI's defaults (information model §5.89). */
+  public override maxAssociations = 1;
+  public override minAssociations = 0;
+
   protected sourceChoices: QtiSimpleAssociableChoice[];
   protected targetChoices: QtiSimpleAssociableChoice[];
   protected lastCheckedRadio: HTMLInputElement | null = null;
 
   @property({ type: String }) class: string = '';
+
+  @property({ type: String, attribute: 'data-first-column-header' }) dataFirstColumnHeader: string;
 
   @state() protected _response: string | string[] = [];
   // dragDropApi: TouchDragAndDrop;
@@ -158,19 +168,29 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
       // grid-row/grid-column writes required. --qti-match-rows/-cols are set
       // inline on [part='grid'] from render() so the editor (which can't write
       // to host style under ProseMirror) shares the same mechanism.
+      // A header labels its row or column and does nothing when activated, so it leaves the tab
+      // order: Tab goes from one answer cell to the next, not through every label first.
       this.sourceChoices?.forEach(c => {
         stripSizing(c);
         c.setAttribute('role', 'rowheader');
+        c.tabIndex = -1;
       });
       this.targetChoices?.forEach(c => {
         stripSizing(c);
         c.setAttribute('role', 'columnheader');
+        c.tabIndex = -1;
       });
     } else {
       sourceSet?.removeAttribute('slot');
       targetSet?.removeAttribute('slot');
-      this.sourceChoices?.forEach(c => c.removeAttribute('role'));
-      this.targetChoices?.forEach(c => c.removeAttribute('role'));
+      this.sourceChoices?.forEach(c => {
+        c.removeAttribute('role');
+        c.tabIndex = c.disabled ? -1 : 0;
+      });
+      this.targetChoices?.forEach(c => {
+        c.removeAttribute('role');
+        c.tabIndex = c.disabled ? -1 : 0;
+      });
     }
   }
 
@@ -245,10 +265,12 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
               role="grid"
               style="--qti-match-rows: ${this.sourceChoices.length}; --qti-match-cols: ${this.targetChoices.length};"
             >
-              <div part="corner"></div>
-              <div part="cols-wrap" role="row"><slot name="match-cols" part="c-header"></slot></div>
-              <div part="rows-wrap"><slot name="match-rows" part="r-header"></slot></div>
-              <div part="checkbox-grid">
+              <div part="corner">${this.dataFirstColumnHeader ?? nothing}</div>
+              <div part="columns cols-wrap" role="row">
+                <slot name="match-cols" part="column-header c-header"></slot>
+              </div>
+              <div part="rows rows-wrap"><slot name="match-rows" part="row-header r-header"></slot></div>
+              <div part="cells checkbox-grid">
                 ${this.sourceChoices.map(
                   (row, r) => html`
                     <div role="row" style="display: contents;">
@@ -280,14 +302,13 @@ export class QtiMatchInteraction extends DragDropSlottedSortableMixin(
                             : row.matchMax !== 0 && selectedInRowCount >= row.matchMax && !checked;
                         return html`
                           <label
-                            part="input-cell"
+                            part="cell input-cell"
                             role="gridcell"
                             style="grid-row: ${r + 1}; grid-column: ${c +
                             1}; display: flex; align-items: center; justify-content: center; cursor: pointer;"
                           >
                             <input
                               type=${type}
-                              hidden
                               name=${rowId}
                               value=${value}
                               .checked=${checked}

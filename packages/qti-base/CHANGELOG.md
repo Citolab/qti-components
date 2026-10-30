@@ -1,6 +1,105 @@
 # @qti-components/base
 
-## 2.5.0
+## 3.0.0-next.7
+
+### Minor Changes
+
+- [#356](https://github.com/Citolab/qti-components/pull/356) [`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264) Thanks [@herrKlein](https://github.com/herrKlein)! - `ConfigContext.pciIframe` sets the `sandbox` and `allow` attributes of the iframe every portable custom interaction runs in, so a delivery environment decides it once: on `qti-test` for every item of the test (`test.configContext = { pciIframe: { sandbox: 'allow-scripts' } }`), or on `qti-item` for one item. `sandbox: 'allow-scripts'` gives PCIs an opaque origin, away from the host page's DOM, storage and login (for PCIs from a source the host does not trust); `allow` delegates permissions such as `autoplay` or, without a sandbox, `microphone`. An opaque origin never gets the microphone or camera, so a host that sandboxes cannot run a recording PCI. Without the setting nothing changes: the frame is same-origin with the page and has no `allow`.
+
+## 3.0.0-next.6
+
+### Major Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - A validity message is timed like a native form. Too many shows at once on the change that caused it;
+  too few (below `min-choices`, `min-associations`, `min-strings`, or `required`) shows only after a
+  submit, the item's end attempt or a form's submit, and from then on every change reports in full. A
+  reset forgets the submit. The validity itself is set on every change as before, so a form with a
+  below-minimum interaction still does not submit.
+
+  Validity is now also set before the first change and whenever a response is restored or written by a
+  host, so an untouched interaction below its minimum makes a form's submit fail (breaking: such a form
+  used to submit). Fixed along the way: a choice interaction parsed together with its choices (innerHTML,
+  a restored item) lost its `response` attribute; a drag-drop reset left targets that held a chip
+  refusing drops.
+
+  Before, dragging a chip into a target and back showed "Please select at least 1 association." at
+  once. `reportValidity()` takes an optional `{ trigger: 'change' | 'submit' }` (default `submit`);
+  `ValidityKind` and `ValidityTrigger` are exported from `@qti-components/base`.
+
+  Host notes: `plans/host-migration/citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.
+
+### Minor Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - One vocabulary for parts and states (qti-theme `CONTRACT.md` §3). Every part is a role and a noun;
+  every state is an adjective and a `:state()`; a state on a part is a second token with the state's
+  name; verdicts and the answer key have one word each. The old names are still set next to the new
+  ones for this major, so nothing breaks until the next one; the theme reads only the new names.
+
+  Renames (old → new):
+
+  - Chips and targets: `:state(drag)` → `:state(chip)`, `::part(drag)` → `::part(chip)`,
+    `::part(drag-text)` → `::part(chip text)`, `::part(drags)` → `::part(bank)`,
+    `:state(droppable)` → `:state(drop)`, `:state(dragging)` → `:state(lifted)`,
+    `:state(placeholder)` → `:state(used)`, `:state(return-anchor)` → `:state(return-target)`.
+  - A drag in progress: host `dragzone-active` + `dragzone-enabled` and target `active` + `enabled`
+    → `drag-active`; target `hover` → `drag-over`; a full target gets `full` (the `disabled` attribute
+    on a target stays for this major). A placed chip exports its handle and text as `chip-control` and
+    `chip-label` (`drag-control`, `drag-label` still exported).
+  - Keyboard drags now set the same states as pointer drags (`lifted`, `drag-active`, `drag-over`).
+  - The bank is `drag-active` (`::part(bank drag-active)`) only while a chip lifted out of a target is
+    in flight, when it can take the chip back; a chip lifted out of the bank leaves it unlit.
+  - Verdicts: `candidate-partially-correct` → `candidate-partial`; the badge is
+    `::part(correction candidate-correct|candidate-incorrect|candidate-partial)` (was
+    `correction-correct` …); select-point `::part(point correct)` → `::part(point candidate-correct)`;
+    match cells likewise. `:state(incorrect-response)` is gone (never styled).
+  - Answer key: `:state(correct-response)` → `:state(answer-key)` (a choice in the key, the full-mode
+    clone); `:state(show-correct-response)` → `:state(answer-key-shown)` (the host in internal mode);
+    `::part(answer)` → `::part(answer-key)`; `::part(correct-line)` → `::part(line answer-key)`;
+    `::part(knob-correct)` → `::part(knob answer-key)`. The theme no longer reads the
+    `correct-response` attribute or the `.full-correct-response` class.
+  - Other parts: choice `slot` → `choices`; inline-choice `option-selected|option-prompt|option-clear`
+    → `option selected|prompt|clear`, `dropdown-icon(-open)` → `icon (open)`; match `c-header`,
+    `r-header`, `cols-wrap`, `rows-wrap`, `checkbox-grid`, `input-cell` → `column-header`,
+    `row-header`, `columns`, `rows`, `cells`, `cell`; associate `drop-row` → `row`; item-body
+    `qti-rubric-blocks` → `rubrics`; graphic order `aria-ordervalue` / `aria-ordercorrectvalue` →
+    `data-order` / `data-order-correct`; the sortable preview `data-drop-placeholder` →
+    `data-drop-preview`.
+  - `@qti-components/base` exports `setState` / `hasState` / `STATE_ALIASES`.
+
+  Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.
+
+## 3.0.0-next.5
+
+### Minor Changes
+
+- [#346](https://github.com/Citolab/qti-components/pull/346) [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3) Thanks [@herrKlein](https://github.com/herrKlein)! - Feedback asks the host before it shows or hides: `cito-feedback-show` and `cito-feedback-hide`, both cancelable, so a host can show feedback its own way (a toast, a dialog, an animation).
+
+  Both are sent by `qti-feedback-block`, `qti-feedback-inline` and `qti-modal-feedback`, just before `showStatus` changes, bubble and are composed. `detail` is `{ kind: 'block' | 'inline' | 'modal', identifier, outcomeIdentifier, element, itemIdentifier? }`. Calling `preventDefault()` on `cito-feedback-show` keeps the element hidden (a modal does not open), with its content still in the DOM for the host to read or clone; the host is not asked again until the condition has gone. Cancelling `cito-feedback-hide` keeps it showing. A feedback the host took over sends no hide event. A repeat attempt that ends in the same outcome sends nothing: the item publishes the final values once, so the feedback never passes through the reset to its default. Without a listener that cancels, nothing changes.
+
+### Patch Changes
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - Drag-and-drop interactions (match, gap match, graphic gap match, associate, order) no longer disable their drop targets once `max-associations` is reached, unless the host sets `configContext.disableAfterMaxReached: true`. The candidate can go over the maximum and the max-selections message reports it, as QTI describes ("upon violation of the max-associations constraint", vocabulary §1.2.8.3) and as choice interactions already did. Per-choice `match-max` still refuses a full target. Conformance: Q13-L2-D2, D108, D110. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`, `plans/host-migration/examenkompas.md`.
+
+## 3.0.0-next.4
+
+### Major Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `completionStatus` follows QTI 3 (info model §2.2.2, §2.5) and the 1EdTech conformance suite's Results Reporting reference results.
+
+  - **completionStatus is no longer derived from validity.** Before, a non-adaptive item set `completed` or `incomplete` on every answer, from whether its interactions were valid. Now it is `not_attempted` until the item is presented, `unknown` from then on, and `completed` once an attempt of a non-adaptive item ends (after `processResponse()`), unless response processing set a value itself. An adaptive item is completed only by its response processing, as before. Whether the answers are valid is `valid` in the item context and in the computed context; to know whether an item is answered, read `valid && !isDefaultResponse` per item instead of `completionStatus === 'completed'`.
+  - An item that is presented is never `not_attempted`: after a reset or a restore that says so, it is `unknown`. The test context still holds `not_attempted` for items that were never presented.
+  - Response processing no longer resets `completionStatus` before a run of a non-adaptive item: it is built in and has no default.
+  - `test-scoring-feedback` shows its "no response" text from the item's validity and default response, not from completionStatus.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major).
+
+## 3.0.0-next.3
+
+### Major Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - `inlineChoiceAutosize` is on by default. An inline choice is as wide as its widest option from the start, so choosing an option no longer widens the field and reflows the sentence around it. A `qti-input-width-*` class still wins; set `configContext.inlineChoiceAutosize: false` for the old behaviour, where the field sizes to the option shown. Host notes: `plans/host-migration/kennisnet.md`, `plans/host-migration/citotestuit.md`.
+
+## 2.5.0-next.2
 
 ### Minor Changes
 
@@ -10,7 +109,22 @@
 
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
-## 2.4.1
+## 2.5.0-next.1
+
+### Minor Changes
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - Test plugins can keep state that survives a reload. `QtiTestState.session.plugins` holds one JSON entry per plugin name; a plugin writes it with the request `cito-test-update-plugin-state` (`{ plugin, value }`, `null` removes the entry) and reads it from `computedContext.plugins` (or `pluginState(computedContext, name)`, typed by augmenting `QtiTestPluginState`). A host that already stores `state` stores it, because a change fires `cito-test-state-changed`. Entries of plugins that are not loaded are kept on a round trip. No `version` bump: the field is optional.
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - The optional pieces of `qti-test` become plugins (`print`, `scoring`, `stamp`, `tts`, `view`): sets of files that use only the test's public API, with nothing in the core referring to them. Text-to-speech has its own folder; the others stay in `components/`. `@qti-components/test` still registers them, and the package root still exports them. The new entry `@qti-components/test/plugins/elements` lists every plugin's `{ tag, ctor }` entries for a scoped registry. A boundary spec (`plugin-boundary.spec.ts`) fails on a reference to a plugin from outside its folder and on an import of test internals; guide: Storybook "Guides / Test plugins".
+
+  - **`computedContext.itemElement(identifier)`** (`@qti-components/base` type, set by `test-navigation`): the rendered `qti-assessment-item` for an item-ref identifier, looked up when called. Text-to-speech now reads only `computedContext`; it no longer uses the session context, reaches into `test-container`'s shadow root, or uses the test's internal context. A player that follows navigation must sit inside `<test-navigation>` (CitoTestUit and qti-player already place it there).
+
+  Breaking:
+
+  - A text-to-speech player that follows navigation must sit inside `<test-navigation>`, where `computedContext` is provided. Before, it found the item from anywhere on the page; outside `<test-navigation>` it now reads nothing. CitoTestUit and qti-player already place it inside.
+  - Deep imports of the plugin files change: `components/test-item-to-speech/test-item-to-speech.js` is now `tts/test-item-to-speech.js`, and `components/index.js` no longer exports the plugins. Import from the package root or `@qti-components/test/plugins/elements`.
+
+## 2.4.1-next.0
 
 ### Patch Changes
 

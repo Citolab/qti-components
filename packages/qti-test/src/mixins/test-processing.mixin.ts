@@ -1,3 +1,5 @@
+import { dispatchPublic, listenPublic } from '../public-events';
+
 import type { QtiOutcomeProcessing } from '../components/qti-outcome-processing/qti-outcome-processing';
 import type { QtiTestFeedback } from '../components/qti-test-feedback/qti-test-feedback';
 import type { OutcomeVariable, VariableDeclaration } from '@qti-components/base';
@@ -10,6 +12,7 @@ declare class TestProcessingInterface {
   getOutcome(identifier: string): Readonly<OutcomeVariable>;
   getVariable(identifier: string): Readonly<VariableDeclaration<string | string[] | null>>;
   outcomeProcessing(): boolean;
+  submit(): boolean;
   getTestFeedback(access?: 'atEnd' | 'during'): QtiTestFeedback[];
 }
 export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(superClass: T) => {
@@ -23,6 +26,7 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
         };
         e.stopPropagation();
       });
+      listenPublic(this, 'qc-test-submit', () => this.submit());
       // wordt aangeroepen vanuit de processingtemplate
       this.addEventListener(
         'qti-set-outcome-value',
@@ -41,7 +45,26 @@ export const TestProcessingMixin = <T extends Constructor<TestBaseInterface>>(su
         'qti-outcome-processing'
       ) as unknown as QtiOutcomeProcessing;
       if (!outcomeProcessor) return false;
-      outcomeProcessor?.process();
+      // QTI starts every run of the test's outcome processing from the declared defaults, so an
+      // accumulating rule (`SCORE_TOTAL = sum + SCORE_TOTAL`) gives the same total on every run.
+      this.testContext = {
+        ...this.testContext,
+        testOutcomeVariables: this.testContext.testOutcomeVariables?.map(v => ({
+          ...v,
+          value: v.defaultValue ?? null
+        }))
+      };
+      outcomeProcessor.process();
+      return true;
+    }
+
+    /**
+     * Ends the test for scoring: runs `outcomeProcessing()`, then tells the host with
+     * `qc-test-submitted`. Returns false, and sends nothing, when the test has no outcome processing.
+     */
+    submit(): boolean {
+      if (!this.outcomeProcessing()) return false;
+      dispatchPublic(this, 'qc-test-submitted', {});
       return true;
     }
 

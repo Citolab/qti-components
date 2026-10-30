@@ -1,7 +1,7 @@
 {
   "name": "@citolab/qti-components",
   "description": "QTI component utilities",
-  "version": "9.6.2",
+  "version": "10.0.0-next.19",
   "author": "",
   "dependencies": {
     "@heximal/templates": "catalog:",
@@ -49,6 +49,10 @@
     "./qti-test": {
       "types": "./dist/test.d.ts",
       "import": "./dist/test.js"
+    },
+    "./qti-test/plugin-api": {
+      "types": "./dist/test-plugin-api.d.ts",
+      "import": "./dist/test-plugin-api.js"
     },
     "./qti-loader": {
       "types": "./dist/loader.d.ts",

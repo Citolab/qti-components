@@ -22,7 +22,16 @@ import { QtiExtendedTextInteractionCorrection } from './qti-extended-text-intera
 
 const settle = () => new Promise(r => setTimeout(r, 150));
 
-const AMBER = 'rgb(255, 167, 0)'; // --qti-warning, which --qti-partially-correct aliases
+// The partial verdict's colour, read from the theme's own token (--qti-partially-correct aliases
+// --qti-warning) so the test follows the theme instead of a literal.
+const tokenColor = (token: string) => {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${token})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+};
 
 type Corrected = HTMLElement & {
   internals: ElementInternals;
@@ -58,7 +67,8 @@ describe('extended-text, corrected from outside', () => {
       `<qti-extended-text-interaction response-identifier="R" candidate-correction="partially-correct"></qti-extended-text-interaction>`
     );
 
-    expect(el.internals.states.has('candidate-partially-correct'), 'attribute reached internals').toBe(true);
+    expect(el.internals.states.has('candidate-partial'), 'attribute reached internals').toBe(true);
+    expect(el.internals.states.has('candidate-partially-correct'), 'old name still set for one major').toBe(true);
     expect(el.internals.states.has('candidate-correct')).toBe(false);
     expect(el.internals.states.has('candidate-incorrect')).toBe(false);
   });
@@ -103,7 +113,7 @@ describe('extended-text, corrected from outside', () => {
 
   /**
    * The end-to-end one: the verdict has to survive all the way to a painted glyph. This is the case
-   * that proves the new --qti-partial-mask token and the new ::part(correction-partially-correct)
+   * that proves the new --qti-partial-mask token and the new ::part(correction candidate-partial)
    * theme rule are actually connected — before this change that badge was sized but never painted,
    * in every interaction, not just this one.
    */
@@ -112,8 +122,9 @@ describe('extended-text, corrected from outside', () => {
       `<qti-extended-text-interaction response-identifier="R" candidate-correction="partially-correct"></qti-extended-text-interaction>`
     );
 
+    const AMBER = tokenColor('--qti-partially-correct');
     const badge = badgeOf(el)!;
-    expect(badge.getAttribute('part')).toBe('correction correction-partially-correct');
+    expect(badge.getAttribute('part')).toBe('correction candidate-partial correction-partially-correct');
 
     const badgeStyle = getComputedStyle(badge);
     expect(badgeStyle.display, 'the badge is shown').not.toBe('none');
@@ -142,13 +153,15 @@ describe('extended-text, corrected from outside', () => {
     );
 
     const badge = badgeOf(el)!.getBoundingClientRect();
-    const field = (el.shadowRoot!.querySelector('[part~="textarea"]') as HTMLElement).getBoundingClientRect();
+    const textarea = el.shadowRoot!.querySelector('[part~="textarea"]') as HTMLElement;
+    const field = textarea.getBoundingClientRect();
+    const gutter = parseFloat(getComputedStyle(textarea).paddingRight);
 
     expect(field.height, 'sanity: the textarea has a box').toBeGreaterThan(0);
     expect(badge.top, 'badge starts below the top of the field').toBeGreaterThanOrEqual(Math.floor(field.top));
     expect(badge.bottom, 'and ends above its bottom').toBeLessThanOrEqual(Math.ceil(field.bottom));
-    expect(badge.left, 'sits inside the reserved left gutter').toBeGreaterThanOrEqual(Math.floor(field.left));
-    expect(badge.right, 'without reaching the text').toBeLessThanOrEqual(Math.ceil(field.left + 38.4)); // 2.4rem
+    expect(badge.right, 'sits inside the reserved end gutter').toBeLessThanOrEqual(Math.ceil(field.right));
+    expect(badge.left, 'without reaching the text').toBeGreaterThanOrEqual(Math.floor(field.right - gutter));
   });
 
   /**
@@ -161,13 +174,13 @@ describe('extended-text, corrected from outside', () => {
     const textarea = el.shadowRoot!.querySelector('[part~="textarea"]') as HTMLElement;
 
     const before = textarea.getBoundingClientRect();
-    const paddingBefore = getComputedStyle(textarea).paddingLeft;
+    const paddingBefore = getComputedStyle(textarea).paddingRight;
 
     el.candidateCorrection = 'incorrect';
     await settle();
 
     const after = textarea.getBoundingClientRect();
-    expect(getComputedStyle(textarea).paddingLeft, 'the gutter was already there').toBe(paddingBefore);
+    expect(getComputedStyle(textarea).paddingRight, 'the gutter was already there').toBe(paddingBefore);
     expect({ w: Math.round(after.width), h: Math.round(after.height) }).toEqual({
       w: Math.round(before.width),
       h: Math.round(before.height)

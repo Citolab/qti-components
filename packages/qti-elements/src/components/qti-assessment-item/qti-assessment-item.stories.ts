@@ -13,6 +13,7 @@ type Story = StoryObj<QtiAssessmentItem & typeof args>;
  * # qti-assessment-item
  */
 const meta: Meta<QtiAssessmentItem> = {
+  title: 'Elements/qti-assessment-item',
   component: 'qti-assessment-item',
   args: {
     ...args,
@@ -29,6 +30,8 @@ const meta: Meta<QtiAssessmentItem> = {
 
 export default meta;
 export const Default: Story = {
+  // Shown on the Docs page; out of the sidebar so the element is one entry there.
+  tags: ['!dev'],
   render: args =>
     html`${template(
       args,

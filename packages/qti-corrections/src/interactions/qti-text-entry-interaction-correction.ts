@@ -6,6 +6,10 @@ import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
 import { Correctness } from '../mixins/correct-response.mixin';
 import { correctionPart } from '../styles/correction.styles';
 
+/**
+ * @csspart correction - The verdict badge between the field and the validation message; see
+ *   `CandidateCorrectionMixin` for its tokens. The answer key itself is the base's `answer-key` part.
+ */
 export class QtiTextEntryInteractionCorrection extends CandidateCorrectionMixin(QtiTextEntryInteraction) {
   static override styles = [
     QtiTextEntryInteraction.styles,
@@ -29,15 +33,6 @@ export class QtiTextEntryInteractionCorrection extends CandidateCorrectionMixin(
       :host {
         position: relative;
         anchor-name: --text-entry-host, --qti-correction-anchor;
-      }
-      [part='correct'] {
-        position: absolute;
-        position-anchor: --text-entry-host;
-        position-area: top span-right;
-        margin-bottom: 0.25rem;
-        padding: var(--qti-padding-box);
-        background-color: var(--qti-bg);
-        white-space: nowrap;
       }
     `
   ];

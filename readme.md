@@ -36,7 +36,7 @@ import '@citolab/qti-components';
 
 ## Branch Preview Via StackBlitz
 
-For pull requests, a bot comment includes one-click StackBlitz links that open the PR branch and start Storybook in-browser. Setup details and manual URL templates are documented in [docs/publishing.mdx](docs/publishing.mdx#pull-request-stackblitz-links).
+For pull requests, a bot comment includes one-click StackBlitz links that open the PR branch and start Storybook in-browser.
 
 ## Contributing
 
@@ -50,7 +50,7 @@ Contributions are welcome! Please follow these guidelines when contributing:
 
 ## Publishing
 
-Release and publish workflow details are documented in [docs/publishing.mdx](docs/publishing.mdx). Automated releases use Changesets on `main`.
+Release steps are in [CONTRIBUTING.md](CONTRIBUTING.md#releasing-to-npm--auto-publishing-the-site). Automated releases use Changesets on `main`.
 
 ## Third-Party Components
 

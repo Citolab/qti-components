@@ -8,6 +8,7 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-extended-text-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+import type { ValidityTrigger } from '@qti-components/base';
 /** Rows rendered when neither the class vocabulary nor either length hint resolves. */
 const DEFAULT_ROWS = 5;
 
@@ -49,7 +50,9 @@ let warnedAboutXhtml = false;
  *   element renders a single textarea bound to one variable, so there is nothing for the bounds
  *   to count: reading them as a word or paragraph limit would invent a rule QTI does not state.
  *   Implement alongside multi-string rendering, not before it.
- * @attr {number} min-strings - Not implemented. See `max-strings`.
+ * @attr {number} [min-strings=0] - Whether a response is required. Below 1 an empty field is valid; from 1
+ *   it must hold a value. Only that threshold is read: the field is a single string, so the
+ *   count itself (see `max-strings`) has nothing to bound.
  * @attr {'plain'|'preformatted'|'xhtml'} [format=plain] - How the response is presented.
  *   `preformatted` renders the field monospaced; `xhtml` is accepted but downgraded to plain,
  *   because the field is a textarea with no rich-text editor behind it.
@@ -57,6 +60,9 @@ let warnedAboutXhtml = false;
  * @slot prompt - The prompt shown above the textarea.
  *
  * @csspart textarea - The textarea input element.
+ * @csspart message - The validation message, hidden until `reportValidity` shows it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiExtendedTextInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
@@ -96,6 +102,9 @@ export class QtiExtendedTextInteraction extends Interaction {
         'The interaction has no rich-text editor; the recorded response will contain no markup.'
     );
   };
+
+  /** Below 1 an empty field is valid; from 1 it must hold a value. Defaults to 0, as in the QTI spec. */
+  @property({ type: Number, attribute: 'min-strings' }) minStrings = 0;
 
   @property({ type: String, attribute: 'pattern-mask' }) patternMask: string;
 
@@ -201,21 +210,23 @@ export class QtiExtendedTextInteraction extends Interaction {
       isValid = textarea.checkValidity();
     }
 
-    if (isValid && !this.response) {
+    let kind: 'min' | 'other' = 'other';
+    if (isValid && !this.response && this.minStrings >= 1) {
       isValid = false;
+      kind = 'min';
     }
 
     if (!isValid && !validityMessage) {
       validityMessage = textarea.validationMessage || 'Invalid value.';
     }
 
-    this.setInteractionValidity(isValid, validityMessage, textarea, { suppressInline: true });
+    this.setInteractionValidity(isValid, validityMessage, textarea, { suppressInline: true, kind });
     return isValid;
   }
 
-  override reportValidity() {
+  override reportValidity(options?: { trigger?: ValidityTrigger }) {
     this.validate();
-    return super.reportValidity();
+    return super.reportValidity(options);
   }
 
   /*
@@ -248,7 +259,7 @@ export class QtiExtendedTextInteraction extends Interaction {
       @keyup="${this.textChanged}"
       @change="${this.textChanged}"
       @blur="${(_: FocusEvent) => {
-        this.reportValidity();
+        this.reportValidity({ trigger: 'change' });
       }}"
       placeholder="${ifDefined(this.placeholderText ? this.placeholderText : undefined)}"
       rows="${this._rows}"
@@ -276,6 +287,9 @@ export class QtiExtendedTextInteraction extends Interaction {
     if (this.response !== input.value) {
       this.value = input.value;
       this.saveResponse(input.value);
+      // Report as the candidate types, like text entry: a shown message clears the moment the
+      // answer is acceptable, not when the field loses focus.
+      this.reportValidity({ trigger: 'change' });
     }
   }
 }

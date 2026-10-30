@@ -10,13 +10,15 @@ export default [
       display: block;
     }
 
-    [part='slot'] {
+    /* No gap of its own: a choice carries its own padding, which already spaces a list. A theme sets
+       --qti-choice-gap where the choices are drawn as separate boxes and need air between them. */
+    [part~='choices'] {
       display: grid;
-      gap: 10px;
+      gap: var(--qti-choice-gap, 0);
     }
 
     /* Define the number of columns dynamically */
-    :host([class*='qti-choices-stacking-']) [part='slot'] {
+    :host([class*='qti-choices-stacking-']) [part~='choices'] {
       grid-template-columns: repeat(var(--stacking-count, 1), 1fr);
     }
 
@@ -45,24 +47,24 @@ export default [
     }
 
     /* Orientation styles */
-    :host(.qti-orientation-horizontal) [part='slot'] {
+    :host(.qti-orientation-horizontal) [part~='choices'] {
       grid-auto-flow: dense column;
       grid-auto-columns: 1fr;
     }
 
-    :host(.qti-orientation-vertical) [part='slot'] {
+    :host(.qti-orientation-vertical) [part~='choices'] {
       grid-auto-flow: row;
     }
 
     /* Vertical and horizontal stacking logic */
-    :host(.qti-orientation-vertical[class*='qti-choices-stacking-']) [part='slot'] {
+    :host(.qti-orientation-vertical[class*='qti-choices-stacking-']) [part~='choices'] {
       grid-auto-flow: dense column;
       grid-auto-columns: 1fr;
       grid-template-columns: repeat(var(--stacking-count), 1fr);
       grid-template-rows: repeat(calc(var(--item-count) / var(--stacking-count)), 1fr);
     }
 
-    :host(.qti-orientation-horizontal[class*='qti-choices-stacking-']) [part='slot'] {
+    :host(.qti-orientation-horizontal[class*='qti-choices-stacking-']) [part~='choices'] {
       grid-auto-flow: row;
       grid-template-columns: repeat(var(--stacking-count), 1fr);
       grid-template-rows: unset;

@@ -2,6 +2,8 @@ import { html } from 'lit';
 import { expect, waitFor } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
+import ukPng from './fixtures/uk.png';
+
 import type { QtiGraphicAssociateInteraction } from './qti-graphic-associate-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
@@ -19,7 +21,7 @@ type Story = StoryObj<QtiGraphicAssociateInteraction & typeof args>;
  */
 const meta: Meta<QtiGraphicAssociateInteraction> = {
   component: 'qti-graphic-associate-interaction',
-  title: '13 Graphic Associate',
+  title: 'Interactions/Graphic Associate/Overview',
   args,
   argTypes,
   parameters: {
@@ -33,15 +35,11 @@ export default meta;
 export const Default: Story = {
   render: () => html`
     ${template(
-      args,
+      // Several routes, like the packaged item: QTI's default `max-associations` is 1.
+      { ...args, 'max-associations': 3 },
       html`
         <qti-prompt> Mark the airline's new routes on the airport map: </qti-prompt>
-        <img
-          src="/assets/qti-graphic-associate-interaction/uk.png"
-          alt="Map of United Kingdom airports"
-          width="206"
-          height="280"
-        />
+        <img src=${ukPng} alt="Map of United Kingdom airports" width="206" height="280" />
         <qti-associable-hotspot shape="circle" coords="78,102,8" identifier="A" match-max="3"></qti-associable-hotspot>
         <qti-associable-hotspot shape="circle" coords="117,171,8" identifier="B" match-max="3"></qti-associable-hotspot>
         <qti-associable-hotspot shape="circle" coords="166,227,8" identifier="C" match-max="3"></qti-associable-hotspot>
@@ -88,8 +86,13 @@ export const ConnectAndRemoveAssociation: Story = {
     });
 
     await step('Remove the association by clicking the line', async () => {
-      const line = await waitFor(() => interaction.shadowRoot?.querySelector<SVGLineElement>('line[part="line"]'));
-      line.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+      // Each line has a remove control: a wide invisible stroke over it, a button named after the pair.
+      const remove = await waitFor(() => {
+        const hit = interaction.shadowRoot?.querySelector<SVGLineElement>('line[data-hit]');
+        expect(hit?.getAttribute('aria-label')).toMatch(/^Remove line/);
+        return hit;
+      });
+      remove.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
 
       await waitFor(() => {
         const response = interaction.response as string[] | null;

@@ -1,0 +1,54 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as GettingStarted from './qti-test.stories';
+
+<Meta title="Getting started" />
+
+# Getting started
+
+Deliver a whole QTI test in a page: load an `assessment.xml`, show one item at a time, move through it.
+
+## 1. Install and register
+
+```bash
+npm install @citolab/qti-components
+```
+
+```js
+import '@citolab/qti-components';
+```
+
+The import registers every element. Import the packages you need one by one instead if you want a smaller
+bundle (`@citolab/qti-components/qti-test`, `/qti-interactions`, ...).
+
+## 2. Put a test on the page
+
+<Canvas of={GettingStarted.Default} sourceState="shown" />
+
+- `qti-test` is the root. It owns the session and provides what the elements inside read.
+- `test-container` loads the test from `test-url` and renders the current item.
+- `test-prev` and `test-next` move through the test. The classes only give the demo a fixed height that scrolls. Any element inside `test-navigation` can be a plugin; see
+  _Extending QTI / Creating a plugin_.
+
+`navigate` decides what one screen shows: `item` is a single item, `section` is every item of a section.
+
+## 3. Store and restore the state
+
+The test announces its state whenever it changes. Save what it sends, and give it back to resume:
+
+```js
+const test = document.querySelector('qti-test');
+
+// Store: fires on every change.
+test.addEventListener('qc-test-state-changed', e => localStorage.setItem('session', JSON.stringify(e.detail)));
+
+// Restore: no event to wait for. Assigned before the test has loaded it is held until the test
+// connects, and after that it jumps to the saved position.
+test.state = JSON.parse(localStorage.getItem('session'));
+```
+
+## Where next
+
+- [Theming](?path=/story/implementation-theming--theming): make it look like your product.
+- [Build a player](?path=/docs/implementation-build-a-player--docs): add progress and numbered navigation.
+- [Plugins](?path=/docs/qti-test-plugins-bookmark--docs): bookmarks, text to speech and the other plugins live under QTI Test.

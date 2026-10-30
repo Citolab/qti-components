@@ -1,0 +1,6 @@
+# Paths that cannot change what a test or a screenshot sees. One extended regex per line (it works
+# for `grep -E` and for JavaScript). Read by .husky/pre-commit (the VRT gate) and .lintstagedrc.mjs
+# (the test run), so the two cannot drift apart. ci.yml's `changes` job keeps its own copy.
+^(plans|docs|\.changeset|\.github)/
+\.mdx?$
+^public/assets/docs/

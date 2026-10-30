@@ -49,6 +49,7 @@ describe('qti-assessment-item', () => {
     const variables = event.detail.itemContext.variables;
 
     expect(variables.find(v => v.identifier === 'numAttempts')?.value).toBe('1');
+    // The attempt of a non-adaptive item ended: completed.
     expect(variables.find(v => v.identifier === 'completionStatus')?.value).toBe('completed');
   });
 

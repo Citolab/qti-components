@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM018"
+                     title="Hotspot"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>venus</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="FEEDBACK" base-type="identifier" cardinality="single"/>
+
+    <qti-item-body>
+        <qti-hotspot-interaction response-identifier="RESPONSE" max-choices="1">
+            <qti-prompt>
+                <p>Which planet has the highest surface temperature? Click it.</p>
+            </qti-prompt>
+            <img src="resources/solar-system.svg" width="800" height="300" alt="The Sun and the eight planets in a row, each labelled with its name"/>
+            <qti-hotspot-choice identifier="mercury" shape="circle" coords="130,140,16"/>
+            <qti-hotspot-choice identifier="venus" shape="circle" coords="185,140,22"/>
+            <qti-hotspot-choice identifier="earth" shape="circle" coords="245,140,23"/>
+            <qti-hotspot-choice identifier="mars" shape="circle" coords="300,140,17"/>
+            <qti-hotspot-choice identifier="jupiter" shape="circle" coords="395,140,54"/>
+            <qti-hotspot-choice identifier="saturn" shape="circle" coords="520,140,46"/>
+            <qti-hotspot-choice identifier="uranus" shape="circle" coords="630,140,32"/>
+            <qti-hotspot-choice identifier="neptune" shape="circle" coords="730,140,31"/>
+        </qti-hotspot-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct: Venus. Mercury is closer to the Sun, but Venus's thick carbon dioxide atmosphere traps heat, so its surface is hotter (about 465 °C).</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-match>
+                    <qti-variable identifier="RESPONSE"/>
+                    <qti-correct identifier="RESPONSE"/>
+                </qti-match>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value base-type="float">1</qti-base-value>
+                </qti-set-outcome-value>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                    <qti-base-value base-type="identifier">correct</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-if>
+            <qti-response-else>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value base-type="float">0</qti-base-value>
+                </qti-set-outcome-value>
+                <qti-set-outcome-value identifier="FEEDBACK">
+                    <qti-base-value base-type="identifier">incorrect</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-else>
+        </qti-response-condition>
+    </qti-response-processing>
+
+    <qti-modal-feedback outcome-identifier="FEEDBACK" identifier="correct" show-hide="show" title="Well done">
+        <qti-content-body>
+            <p>Right: Venus. Its thick atmosphere of carbon dioxide traps the Sun's heat.</p>
+        </qti-content-body>
+    </qti-modal-feedback>
+    <qti-modal-feedback outcome-identifier="FEEDBACK" identifier="incorrect" show-hide="show" title="Not quite">
+        <qti-content-body>
+            <p>The answer is Venus. Mercury is closer to the Sun, but Venus's thick atmosphere traps more heat.</p>
+        </qti-content-body>
+    </qti-modal-feedback>
+</qti-assessment-item>

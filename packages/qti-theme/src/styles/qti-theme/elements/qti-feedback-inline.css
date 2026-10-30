@@ -1,2 +1,12 @@
+/*
+ * The feedback bubble, small enough for a line of text: a light-grey pill with the bubble's hard
+ * shadow. No border and no padding above or below, so the line it is on keeps the height of every
+ * other line (a shadow takes no room either). Painted on the `feedback` part, which exists only while
+ * the feedback shows.
+ */
 qti-feedback-inline::part(feedback) {
+  border-radius: var(--qti-feedback-radius-inline);
+  background-color: var(--qti-callout-bg);
+  box-shadow: var(--qti-feedback-shadow);
+  padding: 0 var(--qti-feedback-padding-inline);
 }
