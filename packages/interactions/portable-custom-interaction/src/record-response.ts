@@ -1,5 +1,7 @@
 import { inferRecordFieldBaseType, isRecordValue } from '@qti-components/base';
 
+import { dataUrlToFile, fileToDataUrl, isFileBaseType, isQtiFileData } from './file-response';
+
 import type { BaseType, RecordValue } from '@qti-components/base';
 import type { QtiBaseTypeJSON, QtiListTypeJSON, QtiRecordItem, QtiVariableJSON } from './interface';
 
@@ -20,6 +22,7 @@ const PAIR_BASE_TYPES = new Set<string>(['point', 'pair', 'directedPair']);
  */
 export const coerceBaseValue = (value: unknown, baseType: BaseType): unknown => {
   if (value === null || value === undefined) return value;
+  if (isFileBaseType(baseType)) return dataUrlToFile(value);
 
   switch (baseType) {
     case 'integer': {
@@ -170,6 +173,7 @@ export const recordResponseToQtiVariableJSON = (
 const toQtiLiteral = (value: unknown): string | null => {
   if (value === null || value === undefined) return null;
   if (Array.isArray(value)) return value.map(String).join(' ');
+  if (isQtiFileData(value)) return fileToDataUrl(value); // stored as the data URL an upload stores
   if (typeof value === 'object') {
     try {
       return JSON.stringify(value);

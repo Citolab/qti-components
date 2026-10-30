@@ -14,6 +14,7 @@ import {
 import nativeCss from '@qti-components/theme/native-css';
 
 import styles from './qti-portable-custom-interaction.styles';
+import { dataUrlToFile, fileToDataUrl, isFileBaseType } from './file-response';
 import {
   coerceBaseValue,
   recordFromQtiVariableJSON,
@@ -259,6 +260,13 @@ export class QtiPortableCustomInteraction extends Interaction {
             // eslint-disable-next-line no-prototype-builtins
             if (nestedObject.hasOwnProperty(nestedKey)) {
               const value = nestedObject[nestedKey as keyof typeof nestedObject];
+              if (nestedKey === 'file') {
+                // An object, so String() would store "[object Object]": store it as a data URL.
+                if (Array.isArray(value)) return value.map(fileToDataUrl).filter((v): v is string => v !== null);
+                const dataUrl = fileToDataUrl(value);
+                if (dataUrl !== null) return dataUrl;
+                continue;
+              }
               if (Array.isArray(value)) {
                 return value.map(String); // Convert each element in the array to string
               } else if (value !== undefined && value !== null) {
@@ -462,11 +470,13 @@ export class QtiPortableCustomInteraction extends Interaction {
     }
     if (cardinality !== 'single') {
       const list = { list: {} };
-      list.list[baseType] = input;
+      list.list[baseType] = isFileBaseType(baseType)
+        ? this.normalizeListValue(input).map(dataUrlToFile).filter(Boolean)
+        : input;
       return list;
     } else {
       const base = { base: {} };
-      base.base[baseType] = input;
+      base.base[baseType] = isFileBaseType(baseType) ? dataUrlToFile(input) : input;
       return base;
     }
   }

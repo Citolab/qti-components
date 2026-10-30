@@ -13,7 +13,8 @@ type Story = StoryObj<QtiPortableCustomInteraction>;
 /**
  * ## API Stories
  *
- * The response bridge between the item and a PCI for a response with record cardinality.
+ * The response bridge between the item and a PCI for responses that are not a plain string:
+ * record cardinality and base-type file.
  */
 const meta: Meta<QtiPortableCustomInteraction> = {
   component: 'qti-portable-custom-interaction',
@@ -153,6 +154,85 @@ export const RecordResponse: Story = {
           }),
         { timeout: 10000, interval: 250 }
       );
+    });
+  },
+  parameters: {
+    chromatic: { disableSnapshot: true }
+  }
+};
+
+/** "hello world" as the PCI reports it, and as the item stores it. */
+const HELLO_FILE = { data: 'aGVsbG8gd29ybGQ=', mime: 'text/plain' };
+const HELLO_DATA_URL = 'data:text/plain;base64,aGVsbG8gd29ybGQ=';
+
+/**
+ * A PCI bound to a response with base-type `file` (a recording, a drawing, an upload).
+ *
+ * The PCI reports `{ base: { file: { data, mime, name } } }`. The item stores it as a data URL, the
+ * value `qti-upload-interaction` stores for the same file, and on a later construction the PCI gets
+ * `{ data, mime }` back in `boundTo`. Before, the item stored `"[object Object]"` and the file was lost.
+ */
+export const FileResponse: Story = {
+  render: () =>
+    html`<qti-assessment-item
+      xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      identifier="pci-file-response"
+      title="PCI file response"
+      adaptive="false"
+      time-dependent="false"
+    >
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="file"></qti-response-declaration>
+      <qti-item-body>
+        <qti-portable-custom-interaction-test
+          response-identifier="RESPONSE"
+          module="filePci"
+          custom-interaction-type-identifier="urn:fdc:qti-components:test:filePci"
+          data-base-url="/assets/qti-portable-interaction/file-pci"
+        >
+          <qti-interaction-modules>
+            <qti-interaction-module id="filePci" primary-path="file-pci.js"></qti-interaction-module>
+          </qti-interaction-modules>
+          <qti-interaction-markup></qti-interaction-markup>
+        </qti-portable-custom-interaction-test>
+      </qti-item-body>
+    </qti-assessment-item>`,
+  play: async ({ canvasElement, step }) => {
+    const item = canvasElement.querySelector('qti-assessment-item') as unknown as QtiAssessmentItem;
+    const pci = canvasElement.querySelector(
+      'qti-portable-custom-interaction-test'
+    ) as unknown as QtiPortableCustomInteractionTest;
+    // The PCI configuration lives inside the iframe; there is no semantic query for it.
+    const configOf = () => (pci.querySelector('iframe')?.contentWindow as any)?.PCIManager?.pciConfig;
+    const responseValue = () => item.itemContext.variables.find(v => v.identifier === 'RESPONSE')?.value;
+
+    await pci.waitForReady(10000);
+
+    await step('the PCI reports a file, the item stores it as a data URL', async () => {
+      await waitFor(
+        async () => {
+          await pci.iFrameClickOnElementByText('Answer');
+          expect(responseValue()).toBe(HELLO_DATA_URL);
+        },
+        { timeout: 5000 }
+      );
+    });
+
+    await step('a new construction gets the file back in boundTo', async () => {
+      await pci.recreateIframe();
+      await waitFor(() => expect(configOf()?.boundTo).toEqual({ RESPONSE: { base: { file: HELLO_FILE } } }), {
+        timeout: 10000,
+        interval: 250
+      });
+    });
+
+    await step('a data URL as an upload interaction stores it reaches the PCI the same way', async () => {
+      // This one without ;base64, which a data URL may also be.
+      item.updateResponseVariable('RESPONSE', 'data:text/plain,hello%20world');
+      await pci.recreateIframe();
+      await waitFor(() => expect(configOf()?.boundTo).toEqual({ RESPONSE: { base: { file: HELLO_FILE } } }), {
+        timeout: 10000,
+        interval: 250
+      });
     });
   },
   parameters: {
