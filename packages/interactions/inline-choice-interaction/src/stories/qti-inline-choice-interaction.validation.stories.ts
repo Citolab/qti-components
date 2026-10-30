@@ -162,3 +162,56 @@ export const RequiredIsLive: Story = {
     expect(interaction.validate()).toBe(false);
   }
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MESSAGE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const validationMessageOf = (interaction: QtiInlineChoiceInteraction) =>
+  interaction.shadowRoot?.querySelector('#validation-message')?.textContent;
+
+export const MinSelectionsMessage: Story = {
+  name: 'message: data-min-selections-message is shown',
+  render: () => html`
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      min-choices="1"
+      data-min-selections-message="Pick a city first."
+      data-testid="interaction"
+    >
+      ${choices}
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const interaction = getInteraction(canvasElement);
+    await interaction.updateComplete;
+
+    interaction.validate();
+    interaction.reportValidity();
+
+    expect(validationMessageOf(interaction)).toBe('Pick a city first.');
+  }
+};
+
+export const MinChoicesMessageStillRead: Story = {
+  name: 'message: the older data-min-choices-message is still read',
+  render: () => html`
+    <qti-inline-choice-interaction
+      response-identifier="RESPONSE"
+      min-choices="1"
+      data-min-choices-message="Pick a city first."
+      data-testid="interaction"
+    >
+      ${choices}
+    </qti-inline-choice-interaction>
+  `,
+  play: async ({ canvasElement }) => {
+    const interaction = getInteraction(canvasElement);
+    await interaction.updateComplete;
+
+    interaction.validate();
+    interaction.reportValidity();
+
+    expect(validationMessageOf(interaction)).toBe('Pick a city first.');
+  }
+};

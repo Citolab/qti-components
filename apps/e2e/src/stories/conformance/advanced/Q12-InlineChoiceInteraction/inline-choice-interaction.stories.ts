@@ -499,10 +499,6 @@ export const Q12_L2_D102: Story = {
  * LESS THAN the min-choices value.
  *
  * _Scenario: submit without selecting — the min-selections message must be shown._
- *
- * Note: the implementation reads `data-min-choices-message` (not `data-min-selections-message`),
- * so the custom message text from the XML is not currently honoured. The test verifies that the
- * attribute is present and that a validation message is displayed.
  */
 export const Q12_L2_D103: Story = {
   name: 'Q12-L2-D103',
@@ -520,6 +516,7 @@ export const Q12_L2_D103: Story = {
 
     expect(validationMessage).toBeTruthy();
     expect(validationMessage).toBeVisible();
+    expect(validationMessage.textContent).toBe('More selections, please! You need at least one.');
   },
   loaders: [loaderSv3]
 };

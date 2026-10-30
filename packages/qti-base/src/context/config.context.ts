@@ -95,6 +95,20 @@ export interface ConfigContext {
    * precedence and autosizing is skipped regardless of this setting.
    */
   inlineChoiceAutosize?: boolean;
+
+  /**
+   * Attributes for the iframe every portable custom interaction runs in, read when the frame is created (a running PCI is
+   * not reloaded when this changes). Set it on `qti-test` for every item of the test, or on `qti-item` for one item.
+   * Absent, the frame has neither: it is same-origin with the page, as before.
+   * - `sandbox`: the frame's `sandbox` attribute. `'allow-scripts'` gives the PCI an opaque origin, so its code cannot
+   *   reach the host page's DOM, storage or cookies; the PCI still works, all its communication is postMessage. Without
+   *   `allow-scripts` the PCI does not run at all. Note that an opaque origin never gets the camera or microphone, whatever
+   *   `allow` says: a host that sandboxes cannot run a PCI that records.
+   * - `allow`: the frame's permissions policy, e.g. `'microphone; autoplay'` (a PCI that records an answer). Without a
+   *   sandbox the frame shares the page's origin and already gets what the page is allowed.
+   * Example: `{ sandbox: 'allow-scripts' }` for PCIs from a source the host does not trust.
+   */
+  pciIframe?: { sandbox?: string; allow?: string };
 }
 
 export const configContext = createContext<Readonly<ConfigContext>>(Symbol('configContext'));
