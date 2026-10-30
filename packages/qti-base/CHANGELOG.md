@@ -1,5 +1,11 @@
 # @qti-components/base
 
+## 3.0.0-next.7
+
+### Minor Changes
+
+- [#356](https://github.com/Citolab/qti-components/pull/356) [`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264) Thanks [@herrKlein](https://github.com/herrKlein)! - `ConfigContext.pciIframe` sets the `sandbox` and `allow` attributes of the iframe every portable custom interaction runs in, so a delivery environment decides it once: on `qti-test` for every item of the test (`test.configContext = { pciIframe: { sandbox: 'allow-scripts' } }`), or on `qti-item` for one item. `sandbox: 'allow-scripts'` gives PCIs an opaque origin, away from the host page's DOM, storage and login (for PCIs from a source the host does not trust); `allow` delegates permissions such as `autoplay` or, without a sandbox, `microphone`. An opaque origin never gets the microphone or camera, so a host that sandboxes cannot run a recording PCI. Without the setting nothing changes: the frame is same-origin with the page and has no `allow`.
+
 ## 3.0.0-next.6
 
 ### Major Changes

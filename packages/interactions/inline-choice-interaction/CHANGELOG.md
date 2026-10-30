@@ -1,5 +1,13 @@
 # @qti-components/inline-choice-interaction
 
+## 3.0.0-next.7
+
+### Patch Changes
+
+- [#356](https://github.com/Citolab/qti-components/pull/356) [`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-inline-choice-interaction` now shows the author's `data-min-selections-message` when an empty response is invalid (`required="true"` or `min-choices="1"`). It read `data-min-choices-message` instead, so the message the QTI 3 vocabulary and every other interaction use was ignored and the default "Please select an option." appeared. `data-min-choices-message` is still read as a fallback. Conformance item `Advanced/Q12-inline-choice/inline-choice-sv-3` (Q12-L2-D103) now asserts the message text.
+- Updated dependencies [[`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264)]:
+  - @qti-components/base@3.0.0-next.7
+
 ## 3.0.0-next.6
 
 ### Major Changes

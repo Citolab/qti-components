@@ -1,5 +1,15 @@
 # @citolab/qti-components
 
+## 10.0.0-next.19
+
+### Minor Changes
+
+- [#356](https://github.com/Citolab/qti-components/pull/356) [`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264) Thanks [@herrKlein](https://github.com/herrKlein)! - `ConfigContext.pciIframe` sets the `sandbox` and `allow` attributes of the iframe every portable custom interaction runs in, so a delivery environment decides it once: on `qti-test` for every item of the test (`test.configContext = { pciIframe: { sandbox: 'allow-scripts' } }`), or on `qti-item` for one item. `sandbox: 'allow-scripts'` gives PCIs an opaque origin, away from the host page's DOM, storage and login (for PCIs from a source the host does not trust); `allow` delegates permissions such as `autoplay` or, without a sandbox, `microphone`. An opaque origin never gets the microphone or camera, so a host that sandboxes cannot run a recording PCI. Without the setting nothing changes: the frame is same-origin with the page and has no `allow`.
+
+### Patch Changes
+
+- [#356](https://github.com/Citolab/qti-components/pull/356) [`7f5175a`](https://github.com/Citolab/qti-components/commit/7f5175a47b0024b1f1119915ea75fd29c819c264) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-inline-choice-interaction` now shows the author's `data-min-selections-message` when an empty response is invalid (`required="true"` or `min-choices="1"`). It read `data-min-choices-message` instead, so the message the QTI 3 vocabulary and every other interaction use was ignored and the default "Please select an option." appeared. `data-min-choices-message` is still read as a fallback. Conformance item `Advanced/Q12-inline-choice/inline-choice-sv-3` (Q12-L2-D103) now asserts the message text.
+
 ## 10.0.0-next.18
 
 ### Patch Changes
