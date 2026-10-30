@@ -56,7 +56,8 @@ If not, the stale check moves into a vitest setup file, as `.storybook/vitest.vr
 
 ```mermaid
 graph LR
-  PG[G Guardrails] --> P1
+  PG[G Guardrails] --> P17[17 Test model and computed context]
+  P17 --> P1
   PG --> P13[13 Side-effect-free registration]
   PG --> P15[15 QTI 3 only]
   PG --> P16[16 Docs prose on the site]
@@ -85,7 +86,7 @@ graph LR
   P12 --> P11
 ```
 
-Critical path: G1 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separate worktrees: 5 and 12 next to 1;
+Critical path: G1 → 17 → 1 → 6 → 8 → 10 → 11. Can run side by side, in separate worktrees: 5 and 12 next to 1;
 2 and 3 after 1; 7, 8 and 9 once their needs are done; G2–G5 next to everything after G1.
 
 ## Status
@@ -94,7 +95,7 @@ Critical path: G1 → 1 → 6 → 8 → 10 → 11. Can run side by side, in sepa
 | --- | ----------------------------------------------- | -------------- | ------------------------ |
 | G   | Guardrails: the rulebook and its checks         | none           | in progress (G1)         |
 | 0   | Land PR #347                                    | none           | done (PR #347, 0f2339a8) |
-| 1   | Fold `test-navigation` into `qti-test`          | 0, G1          | todo                     |
+| 1   | Fold `test-navigation` into `qti-test`          | 0, G1, 17      | todo                     |
 | 2   | `src` on `qti-test` and start-up                | 1              | todo                     |
 | 3   | Corrections out of the core                     | 1              | todo                     |
 | 4   | Core stories in the plain markup                | 2, 3           | todo                     |
@@ -110,6 +111,7 @@ Critical path: G1 → 1 → 6 → 8 → 10 → 11. Can run side by side, in sepa
 | 14  | `qc-` names for our own elements                | 1              | todo                     |
 | 15  | QTI 3 only                                      | G3             | todo                     |
 | 16  | Docs prose on the Astro site                    | G1             | todo                     |
+| 17  | Test model and computed context                 | G1             | todo                     |
 
 ## In every phase
 
@@ -345,10 +347,33 @@ Plan: `.claude/rules/docs.md`. Scope: `docs/*.mdx`, `apps/site`.
 Done when: `docs/` holds no prose page that the site also has, and every Storybook docs page that
 remains is a live example.
 
+### 17. Test model and computed context
+
+Plan: [test-model.md](test-model.md).
+Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`, `test-prev`,
+`test-end-attempt`, `qti-assessment-section`), `packages/qti-extended` (`test-stamp`),
+`packages/qti-base` (`computed.types.ts`, `qti-feedback`).
+
+- [ ] 17a The test model from the test XML, not the live DOM; nested sections right.
+- [ ] 17b All seven session-control attributes, resolved, as `item.sessionControl`.
+- [ ] 17c `stampContext` merged into `computedContext.active`.
+- [ ] 17d Item facts from the item XML.
+- [ ] 17e Host `itemData` under `item.data`, no longer overriding computed fields.
+- [ ] 17f Navigation and submission mode from the test part only.
+- [ ] 17g One rules module that the buttons, the lock and feedback read.
+
+Phase 1 then moves a provider that already reads the model and the rules module; its session-rules
+unit is 17g's function behind a mixin.
+
+Done when: that plan's "Done when".
+
 ## Found
 
 Things a phase found that changed the plan. Newest first.
 
+- 2026-10-30: `computedContext` is read from the live DOM, mishandles nested sections, carries four
+  of seven session-control attributes and reads `navigation-mode` off sections, which QTI
+  defines on the test part only; phase 17 comes before phase 1.
 - 2026-10-28: the Theming page set `--qti-spacing` and lacked ten tier-1 inputs; fixed by hand, and
   the reason for phase 12.
 - 2026-10-27: `allowReorder` defaults to on (`config.context.ts:73`), not off (phase 5).
