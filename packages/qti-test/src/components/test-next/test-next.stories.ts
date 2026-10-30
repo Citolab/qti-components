@@ -75,3 +75,50 @@ export const Test: Story = {
     expect(nextButton).toBeEnabled();
   }
 };
+
+/**
+ * A `<test-next>` that connects while the test is already running, as a host's
+ * footer does when it swaps its buttons back in after an overview.
+ *
+ * Fails today: `connectedCallback` calls `checkDisabled()`, which reads
+ * `this.sectionItems[this.itemIndex]`, but `sectionItems` is only filled in by
+ * `willUpdate`. The context arrives during `super.connectedCallback()`, so
+ * `checkDisabled()` gets past its `testPart` guard and throws
+ * "Cannot read properties of undefined (reading 'undefined')". Since #137.
+ */
+export const ConnectsIntoRunningTest: Story = {
+  name: 'Connects into a running test',
+  tags: ['xfail'],
+  render: () => html`
+    <qti-test navigate="item">
+      <test-navigation>
+        <test-container test-url="/assets/qti-conformance/Basic/T4-T7/assessment.xml"> </test-container>
+        <test-next>volgende</test-next>
+      </test-navigation>
+    </qti-test>
+  `,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(canvas.getByShadowText('volgende')).toBeEnabled());
+
+    // An exception in a custom element reaction is reported, not thrown to the caller.
+    const errors: string[] = [];
+    const onError = (event: ErrorEvent) => {
+      errors.push(event.message);
+      event.preventDefault();
+    };
+    window.addEventListener('error', onError);
+    const lateNext = document.createElement('test-next') as TestNext;
+    lateNext.textContent = 'later';
+    try {
+      canvasElement.querySelector('test-navigation')!.append(lateNext);
+      await lateNext.updateComplete;
+    } finally {
+      window.removeEventListener('error', onError);
+    }
+
+    expect(errors).toEqual([]);
+    // On the first of several items, so Next is available.
+    await waitFor(() => expect(lateNext).toBeEnabled());
+  }
+};
