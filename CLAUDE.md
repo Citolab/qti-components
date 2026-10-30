@@ -56,7 +56,7 @@ Vitest projects (`vitest.config.ts`): `stories` runs every story's play function
 | ------------------------------------------------ | ------------------------------------------------------ |
 | What hosts may use, every API decision           | `plans/host-api.md`                                    |
 | What each host uses and must change              | `plans/host-migration/*.md`                            |
-| What is built when, what is decided before it    | `plans/ROADMAP.md`                                     |
+| What is built when, what is decided before it    | `plans/ROADMAP.md` and the roadmaps it lists           |
 | Layers, parts, states, tokens, overrides         | `packages/qti-theme/CONTRACT.md`                       |
 | Lit, stories, tests, QTI, theme, docs, releasing | `.claude/rules/*.md` (load when you touch those paths) |
 
@@ -97,7 +97,7 @@ Two lanes, one backlog.
   "9.x". **`next`** is the next major: breaking and architectural changes, milestone "Next major".
   Would it break an existing user of a published package (removed or renamed member, changed
   behaviour, new required import)? Then `next`. Unsure: "Next major", decided at triage.
-- **The backlog** is `plans/ROADMAP.md` for planned work; GitHub issues only for bugs and outside
+- **The backlog** is `plans/ROADMAP.md` (the roadmaps, in order) for planned work; GitHub issues only for bugs and outside
   requests. Read the roadmap before planned work. The PR that ships a phase ticks it in the same
   commit.
 - Every push to `main` is merged into `next` automatically
@@ -131,12 +131,16 @@ Name the branch, the worktree and the PR number together when talking about any 
 
 ### Rules that bind Claude
 
-- Ask before every commit, push, PR, merge, branch deletion, workflow run and release. "Do what you
-  think is best" is not permission. `.claude/settings.json` enforces the asks and denies.
+- The user reviews every commit before it is made: show the files, the diff and the message, then
+  wait. Approval for one commit does not carry over to the next; "do what you think is best" is
+  not approval.
+- Ask before what others see: push, PR, merge, remote branch deletion, workflow run and release.
+  Routine local git (worktrees, staging, deleting a merged or empty local branch) needs no ask.
+  `.claude/settings.json` enforces the asks and denies.
 - Never `--admin`, never force-push, never push to `main` or `next` directly.
-- No destructive git (`reset --hard`, `clean`, `checkout -- .`, branch deletes) unless asked. Never
-  revert changes you did not make; other sessions work in this repo in parallel. When unexpected
-  modifications appear, stop and ask.
+- No destructive git (`reset --hard`, `clean`, `checkout -- .`, `branch -D`, removing a worktree
+  with changes) unless asked. Never revert changes you did not make; other sessions work in this
+  repo in parallel. When unexpected modifications appear, stop and ask.
 - When reporting back: what changed and why, file references, which checks ran and which did not,
   and known gaps.
 - Work in a worktree; `.claude/hooks/guard-git.mjs` refuses commits in the root checkout on a lane

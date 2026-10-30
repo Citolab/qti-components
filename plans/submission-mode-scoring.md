@@ -1,6 +1,6 @@
 # Scoring that follows `submission-mode`
 
-Roadmap phase 7 (#299). Decisions go into [host-api.md](host-api.md); this file is deleted when
+Roadmap 1, phase T6 (#299; was phase 7). Decisions go into [host-api.md](host-api.md); this file is deleted when
 the phase ships.
 
 ## The problem

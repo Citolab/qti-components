@@ -7,8 +7,8 @@ disable-model-invocation: true
 
 # Start a change
 
-1. **What.** Planned work is a phase in `plans/ROADMAP.md`: read it, check every **Needs** is
-   `done`, and read the plan it links. A bug or outside request is a GitHub issue
+1. **What.** Planned work is a phase in one of the roadmaps `plans/ROADMAP.md` lists, in their
+   order: read it, check every **Needs** is `done`, and read the plan it links. A bug or outside request is a GitHub issue
    (`gh issue view <n>`). Do not open an issue for planned work.
 2. **Lane.** Would it break an existing user of a published package (removed or renamed member,
    changed behaviour, new required import)? Yes → `next`; no → `main`; unsure → `next`. Roadmap

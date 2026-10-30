@@ -40,13 +40,10 @@
     "ask": [
       "Bash(git commit *)",
       "Bash(git push *)",
-      "Bash(git branch -d *)",
       "Bash(git branch -D *)",
-      "Bash(git branch --delete *)",
       "Bash(git switch *)",
       "Bash(git checkout *)",
       "Bash(git reset --hard*)",
-      "Bash(git worktree remove *)",
       "Bash(gh pr create *)",
       "Bash(gh pr merge *)",
       "Bash(gh pr close *)",
@@ -62,7 +59,10 @@
       "Bash(gh api * --input *)",
       "Bash(pnpm run test:vrt:update*)",
       "Bash(pnpm exec changeset *)",
-      "Edit(/**/CHANGELOG.md)"
+      "Edit(/**/CHANGELOG.md)",
+      "Bash(git worktree remove *--force*)",
+      "Bash(git worktree remove -f*)",
+      "Bash(git worktree remove * -f*)"
     ],
     "deny": [
       "Read(.env*)",

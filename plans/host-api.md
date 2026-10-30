@@ -678,7 +678,12 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   `config`, `qtiContext`, `disabled`, `readonly` and the transform callback move onto `qti-item`;
   `item-container` keeps only `customElementRegistry` and the `<template><style>`, like
   `test-container`. `QtiItemState` is the per-item entry of `QtiTestState`.
-- **`test-navigation` folds into `qti-test`** (2026-10-27): `qti-test` provides `computedContext` and
+- **Withdrawn 2026-10-30: the fold below.** `test-navigation` stays the element that provides
+  `computedContext` and handles the end-attempt and set-outcome requests; roadmap phase 1 is
+  dropped. Not yet revisited: the members this page puts on `qti-test` because of the fold
+  (`itemData`, `config`, `auto-score-items`, plugins anywhere inside `qti-test`), their rows under
+  Deprecated names, the `<test-navigation>` deprecation and the `testHostContext` narrowing.
+- ~~**`test-navigation` folds into `qti-test`**~~ (2026-10-27, withdrawn): `qti-test` provides `computedContext` and
   handles `qc-test-end-attempt` and `qc-test-set-outcomes` itself, so a host needs only `qti-test` and
   `test-container`, and plugins work anywhere inside `qti-test`. `<test-navigation>` stays for one
   major as a deprecated wrapper that does nothing; its properties (`configContext`, `initContext`,
