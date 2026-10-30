@@ -1,5 +1,11 @@
 # @qti-components/portable-custom-interaction
 
+## 1.3.0-next.8
+
+### Patch Changes
+
+- [#351](https://github.com/Citolab/qti-components/pull/351) [`0497eab`](https://github.com/Citolab/qti-components/commit/0497eab926dbaa5f315fd519737ce60c33a3723e) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - A PCI bound to a response with base-type `file` no longer loses its file. The item now stores the PCI's `{ data, mime, name }` as a data URL, the value `qti-upload-interaction` stores for the same file, instead of `"[object Object]"`. A PCI gets `{ data, mime }` back in `boundTo`, also for a data URL an upload interaction stored. The same applies to `list` file responses, `file` record fields, and template and context variables. The file name is not kept, as with an upload.
+
 ## 1.3.0-next.7
 
 ### Patch Changes
