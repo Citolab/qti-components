@@ -16,7 +16,8 @@
     &::part(textarea) {
       @mixin field-typography;
       /*
-       * The left gutter is reserved ALWAYS, graded or not.
+       * The gutter at the END of the line is reserved ALWAYS, graded or not (it was on the left, which
+       * indented every answer by the badge's room).
        *
        * It holds the correction badge, and it is stated here rather than in the corrections layer
        * because padding is layout: switching it on `:state(candidate-*)` would re-wrap every line of
@@ -32,10 +33,12 @@
        * padding and the badge's own offsets cannot drift apart. It was a literal 2.4rem that had to
        * be kept in agreement by hand with numbers in a different package.
        */
-      padding: var(--qti-spacing) var(--qti-correction-inset) var(--qti-spacing)
-        var(--qti-correction-gutter);
+      padding-block: var(--qti-spacing);
+      padding-inline: var(--qti-correction-inset) var(--qti-correction-gutter);
 
-      @mixin text;
+      @mixin paint text;
+
+      cursor: text;
     }
 
     /*
@@ -48,6 +51,11 @@
      * that makes the preserved indentation legible. Typography only — the box does not move, so
      * the layout-invariance contract holds.
      */
+    /* The textarea is the field's box itself, so the theme's ring replaces the browser's. */
+    &::part(textarea):focus-visible {
+      @mixin foc;
+    }
+
     &[format='preformatted']::part(textarea) {
       font-family: monospace;
       tab-size: 2;
@@ -71,7 +79,7 @@
  * all along: a gutter reserved for a glyph that until now was never drawn.
  *
  * The gutter is spacing, not paint, so it stays a direct declaration. The badge that sits in it is
- * positioned by the component and painted by ::part(correction-*) in qti-corrections.css.
+ * positioned by the component and painted by `::part(correction candidate-*)` in qti-corrections.css.
  */
 @layer qti-components.interactions.corrections {
   qti-extended-text-interaction {
@@ -85,7 +93,7 @@
        verbatim from the dead class-based rules, where it had never rendered and so was never seen to
        be wrong. With --qti-fg now correctly resolving to `inherit`, it would have been more visibly
        wrong still. */
-    &:state(candidate-partially-correct)::part(textarea) {
+    &:state(candidate-partial)::part(textarea) {
       @mixin candidate text, var(--qti-partially-correct), var(--qti-partially-correct-light);
     }
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM025"
+                     title="Placing an object"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="point" cardinality="single">
+        <qti-correct-response>
+            <qti-value>425 70</qti-value>
+        </qti-correct-response>
+        <qti-area-mapping default-value="0">
+            <qti-area-map-entry shape="rect" coords="410,0,440,140" mapped-value="1"/>
+        </qti-area-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <p>Drag the arrow to the point on the number line that shows <strong>¾</strong>.</p>
+        <qti-position-object-stage>
+            <img src="resources/number-line.svg" width="600" height="140" alt="A number line from 0 to 1, divided into eighths, with only 0 and 1 labelled"/>
+            <qti-position-object-interaction response-identifier="RESPONSE" max-choices="1">
+                <img src="resources/arrow-marker.svg" width="30" height="44" alt="Arrow"/>
+            </qti-position-object-interaction>
+        </qti-position-object-stage>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct: the sixth of the eight marks (¾ = 6⁄8), at x = 425 on the 600-pixel-wide picture. Any point from x = 410 to x = 440 scores the point.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response-point identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

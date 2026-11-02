@@ -1,13 +1,15 @@
+import { hasState, setState } from '@qti-components/base';
+
 export function findDraggableTarget(event: Event, draggablesSelector: string): HTMLElement | null {
   const composedPath = event.composedPath ? event.composedPath() : [event.target];
 
   for (const element of composedPath) {
     if (element instanceof HTMLElement && element.tagName !== 'SLOT') {
-      if (element.matches(draggablesSelector) || element.hasAttribute('qti-draggable')) {
+      if (element.matches(draggablesSelector) || element.hasAttribute('data-draggable')) {
         return element;
       }
 
-      const closest = element.closest(draggablesSelector) || element.closest('[qti-draggable="true"]');
+      const closest = element.closest(draggablesSelector) || element.closest('[data-draggable="true"]');
       if (closest) {
         return closest as HTMLElement;
       }
@@ -33,41 +35,40 @@ export function isDraggableDisabled(target: HTMLElement | null | undefined): boo
 }
 
 /**
- * Presentation states on a source chip in the drag bank. Both leave a hole where the chip was,
- * and both are styled by CSS rather than by writing `element.style.opacity` from here.
+ * Presentation states on a source chip in the drag bank (CONTRACT.md §3). Two of them leave a hole
+ * where the chip was; all are styled by CSS rather than by writing `element.style.opacity` here.
  *
- * - `dragging`    — this chip's clone is currently following the cursor.
- * - `placeholder` — this chip's copy sits in a dropzone (`matchMax` reached).
+ * - `lifted`        — this chip's clone is currently following the cursor.
+ * - `used`          — every copy of this chip sits in a dropzone (`matchMax` reached).
+ * - `return-target` — where a re-dragged placed chip goes back to on an invalid drop.
  *
- * They are distinct: a theme may want a dashed outline while dragging and a solid inset box
- * once placed.
+ * `lifted` and `used` are distinct: a theme may want a dashed outline while lifted and a solid inset
+ * box once used. Each is set with its old name too (`dragging`, `placeholder`, `return-anchor`) for
+ * one major; see `STATE_ALIASES` in qti-base.
  */
-export type DragChipState = 'dragging' | 'placeholder' | 'return-anchor';
+export type DragChipState = 'lifted' | 'used' | 'return-target';
 
 const internalsOf = (el: HTMLElement | null | undefined): ElementInternals | undefined =>
   (el as { internals?: ElementInternals } | null | undefined)?.internals;
 
 export function setDragChipState(el: HTMLElement | null | undefined, state: DragChipState, on: boolean): void {
-  const states = internalsOf(el)?.states;
-  if (!states) return;
-  if (on) states.add(state);
-  else states.delete(state);
+  setState(internalsOf(el)?.states, state, on);
 }
 
 export function hasDragChipState(el: HTMLElement | null | undefined, state: DragChipState): boolean {
-  return internalsOf(el)?.states?.has(state) ?? false;
+  return hasState(internalsOf(el)?.states, state);
 }
 
-/** Clear both hole-leaving states — the chip is back in the bank and interactive again. */
+/** Clear every bank-chip state — the chip is back in the bank and interactive again. */
 export function clearDragChipStates(el: HTMLElement | null | undefined): void {
-  setDragChipState(el, 'dragging', false);
-  setDragChipState(el, 'placeholder', false);
-  setDragChipState(el, 'return-anchor', false);
+  setDragChipState(el, 'lifted', false);
+  setDragChipState(el, 'used', false);
+  setDragChipState(el, 'return-target', false);
 }
 
 /** A chip that currently leaves a hole: not draggable, and skipped by keyboard navigation. */
 export function isDragChipHidden(el: HTMLElement | null | undefined): boolean {
-  return hasDragChipState(el, 'dragging') || hasDragChipState(el, 'placeholder');
+  return hasDragChipState(el, 'lifted') || hasDragChipState(el, 'used');
 }
 
 /**
@@ -91,14 +92,25 @@ export function isDragChipHidden(el: HTMLElement | null | undefined): boolean {
  * removed in two that could not.
  */
 /**
- * Flags a drop target carries, readable from a theme.
+ * Flags a drop target carries, readable from a theme (CONTRACT.md §3).
  *
- * `filled`   — holds at least one chip
- * `active`   — a drag is in progress and this target could receive it
- * `enabled`  — same, kept distinct because the themes distinguish them
- * `hover`    — the chip is currently over this target
+ * `filled`      — holds at least one chip
+ * `full`        — takes no more chips
+ * `drag-active` — a drag is in progress and this target could receive it
+ * `drag-over`   — the dragged chip is currently over this target
+ *
+ * Each is written with its old spelling too, for one major: `drag-active` was `active` + `enabled`
+ * (always set together, never painted apart), `drag-over` was `hover`. `full` is new; it replaces
+ * the `disabled` attribute, which `setDropFull` still writes because the drag code reads it.
  */
-export type DropFlag = 'filled' | 'active' | 'enabled' | 'hover';
+export type DropFlag = 'filled' | 'full' | 'drag-active' | 'drag-over';
+
+const DROP_FLAG_ALIASES: Readonly<Record<DropFlag, readonly string[]>> = {
+  filled: [],
+  full: [],
+  'drag-active': ['active', 'enabled'],
+  'drag-over': ['hover']
+};
 
 /**
  * Set a flag on a drop target, in the only spelling that element can carry.
@@ -120,23 +132,39 @@ export type DropFlag = 'filled' | 'active' | 'enabled' | 'hover';
 export function setDropFlag(el: HTMLElement | null | undefined, flag: DropFlag, on: boolean): void {
   if (!el) return;
 
-  if (on) el.setAttribute(flag, '');
-  else el.removeAttribute(flag);
+  const names = [flag, ...DROP_FLAG_ALIASES[flag]];
+  for (const name of names) {
+    if (on) el.setAttribute(name, '');
+    else el.removeAttribute(name);
+  }
 
   const states = internalsOf(el)?.states;
   if (states) {
-    if (on) states.add(flag);
-    else states.delete(flag);
+    setState(states, flag, on, DROP_FLAG_ALIASES[flag]);
     return;
   }
 
   const tokens = new Set((el.getAttribute('part') ?? '').split(/\s+/).filter(Boolean));
-  // Only a drop target takes the token. `allDropzones` also holds the drag container — a
-  // `<slot part="drags">` — and stamping it would rewrite a part list that other selectors read.
-  if (!tokens.has('drop')) return;
-  if (on) tokens.add(flag);
-  else tokens.delete(flag);
+  // A drop target or the bank (`<slot part="bank">`) takes the token; every selector that reads
+  // either part is a `~=` match, so a second token changes nothing else.
+  if (!tokens.has('drop') && !tokens.has('bank')) return;
+  for (const name of names) {
+    if (on) tokens.add(name);
+    else tokens.delete(name);
+  }
   el.setAttribute('part', [...tokens].join(' '));
+}
+
+/**
+ * A target at capacity. The drag code still reads the `disabled` attribute this writes (collision
+ * filtering, `allowDrop`, the sortable's peer handling); the theme reads `full`. `disabled` on a
+ * drop target goes when the alias period ends.
+ */
+export function setDropFull(el: HTMLElement | null | undefined, full: boolean): void {
+  if (!el) return;
+  if (full) el.setAttribute('disabled', '');
+  else el.removeAttribute('disabled');
+  setDropFlag(el, 'full', full);
 }
 
 export function setDropFilled(el: HTMLElement | null | undefined, filled: boolean): void {
@@ -195,7 +223,7 @@ export function getMatchMaxValue(draggables: HTMLElement[], identifier: string):
  * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
  * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
  * documents the exact counting semantics that method reproduces:
- * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * response uses the structural selector, capacity uses max(selector, [data-draggable]).
  * Delete once drop targets render from the context.
  */
 export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector: string): boolean {
@@ -204,7 +232,7 @@ export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector
   if (matchMax === 0) return false;
 
   const selectorMatches = droppable.querySelectorAll(draggablesSelector);
-  const attributeMatches = droppable.querySelectorAll('[qti-draggable="true"]');
+  const attributeMatches = droppable.querySelectorAll('[data-draggable="true"]');
   const current = Math.max(selectorMatches.length, attributeMatches.length);
 
   return current >= matchMax;
@@ -214,13 +242,13 @@ export function isDroppableAtCapacity(droppable: HTMLElement, draggablesSelector
  * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
  * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
  * documents the exact counting semantics that method reproduces:
- * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * response uses the structural selector, capacity uses max(selector, [data-draggable]).
  * Delete once drop targets render from the context.
  */
 export function countTotalAssociations(droppables: HTMLElement[], draggablesSelector: string): number {
   return droppables.reduce((total, droppable) => {
     const selectorMatches = droppable.querySelectorAll(draggablesSelector).length;
-    const attributeMatches = droppable.querySelectorAll('[qti-draggable="true"]').length;
+    const attributeMatches = droppable.querySelectorAll('[data-draggable="true"]').length;
     return total + Math.max(selectorMatches, attributeMatches);
   }, 0);
 }
@@ -229,7 +257,7 @@ export function countTotalAssociations(droppables: HTMLElement[], draggablesSele
  * @deprecated No longer used in production. DragDropSlottedMixin now derives placement once,
  * in `syncDragDropState()`, and publishes it on `dragDropContext`. Kept only because its spec
  * documents the exact counting semantics that method reproduces:
- * response uses the structural selector, capacity uses max(selector, [qti-draggable]).
+ * response uses the structural selector, capacity uses max(selector, [data-draggable]).
  * Delete once drop targets render from the context.
  */
 export function collectResponseData(droppables: HTMLElement[], draggablesSelector: string): string[] {

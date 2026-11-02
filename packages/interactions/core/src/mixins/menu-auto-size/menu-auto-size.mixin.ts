@@ -194,19 +194,16 @@ export const MenuAutoSizeMixin = <T extends Constructor<LitElement>>(
         }
         if (widest <= 0) return 0;
 
-        // The rows sit inside the menu's own padding and border, and the trigger has to be wide
-        // enough for the whole box, not just the text in it.
+        // The rows sit inside the menu's own padding, so the trigger gets that too. NOT the menu's
+        // border: the trigger sits inside the field's border just as the rows sit inside the menu's,
+        // and the menu anchors to the field, so the two borders cancel. Adding it made the trigger
+        // a border too wide on paper, and, being spent where the chevron gap should have been, hid
+        // that the gap was missing from the measurement.
         const menu = this.renderRoot?.querySelector<HTMLElement>(menuSelector);
         if (!menu) return widest;
 
         const menuStyle = getComputedStyle(menu);
-        return (
-          widest +
-          parseFloat(menuStyle.paddingLeft) +
-          parseFloat(menuStyle.paddingRight) +
-          parseFloat(menuStyle.borderLeftWidth) +
-          parseFloat(menuStyle.borderRightWidth)
-        );
+        return widest + parseFloat(menuStyle.paddingLeft) + parseFloat(menuStyle.paddingRight);
       });
     }
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM011"
+                     title="Selecting words"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE1" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_door</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_door" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE2" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_analyse</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_analyse" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE3" base-type="identifier" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>ht_flexibiliteit</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="ht_flexibiliteit" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="3">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <p>Select the word that introduces a cause:</p>
+            <qti-hottext-interaction response-identifier="RESPONSE1" max-choices="1">
+                <div class="qti-margin-s-5 qti-italic">
+                    Productivity <qti-hottext identifier="ht_daalde">fell</qti-hottext> sharply <qti-hottext identifier="ht_door">because</qti-hottext> of a <qti-hottext identifier="ht_tekort">shortage</qti-hottext> of raw materials.
+                </div>
+            </qti-hottext-interaction>
+        </div>
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <strong>Explanation:</strong> In this sentence, <em>because</em> introduces the cause.
+                It tells us why productivity fell: there was a shortage of raw materials.
+                The other words describe what happened (<em>fell</em>) and the cause itself (<em>shortage</em>), but not the link between cause and effect.
+            </qti-content-body>
+        </qti-rubric-block>
+
+        <div class="qti-padding-t-5">
+            <p>Select the word that means much the same as 'study':</p>
+            <qti-hottext-interaction response-identifier="RESPONSE2" max-choices="1">
+                <div class="qti-padding-s-5 qti-italic">
+                    The <qti-hottext identifier="ht_rapport">report</qti-hottext> describes how the <qti-hottext identifier="ht_analyse">analysis</qti-hottext> was carried out.
+                </div>
+            </qti-hottext-interaction>
+        </div>
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <strong>Explanation:</strong> Here, <em>analysis</em> means much the same as <em>study</em>.
+                An analysis is a systematic study in which data is examined to reach conclusions.
+                A <em>report</em> is only the written account of a study, not the study itself.
+            </qti-content-body>
+        </qti-rubric-block>
+
+        <div class="qti-padding-t-5">
+            <p>Select the word that names an advantage:</p>
+            <qti-hottext-interaction response-identifier="RESPONSE3" max-choices="1">
+                <div class="qti-padding-s-5 qti-italic">
+                    A hybrid <qti-hottext identifier="ht_werkmodel">working model</qti-hottext> gives <qti-hottext identifier="ht_medewerkers">employees</qti-hottext> more <qti-hottext identifier="ht_flexibiliteit">flexibility</qti-hottext>.
+                </div>
+            </qti-hottext-interaction>
+        </div>
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <strong>Explanation:</strong> <em>Flexibility</em> names the advantage of a hybrid working model.
+                It is a positive quality that gives employees more options.
+                The other words (<em>working model</em> and <em>employees</em>) are neutral and do not describe an advantage.
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-sum>
+                <qti-map-response identifier="RESPONSE1"/>
+                <qti-map-response identifier="RESPONSE2"/>
+                <qti-map-response identifier="RESPONSE3"/>
+            </qti-sum>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { expect, fireEvent, spyOn } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
-import { Test } from '../qti-choice-interaction.stories';
+import { optionsRender } from './qti-choice-interaction.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { QtiSimpleChoice } from '@qti-components/interactions-core/elements/qti-simple-choice';
@@ -22,7 +22,7 @@ type Story = StoryObj<QtiChoiceInteraction>;
  */
 const meta: Meta<QtiChoiceInteraction> = {
   component: 'qti-choice-interaction',
-  title: '02 Choice Interaction/Validation',
+  title: 'Interactions/Choice/Validation',
   tags: ['validation', 'specific', 'iol']
 };
 export default meta;
@@ -33,7 +33,7 @@ export default meta;
 
 const formTemplate = (storyArgs, context) => html`
   <form data-testid="form" role="form" @submit=${e => e.preventDefault()}>
-    ${Test.render(storyArgs, context)}
+    ${optionsRender(storyArgs, context)}
     <input type="submit" value="submit" />
   </form>
 `;

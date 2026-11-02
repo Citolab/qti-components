@@ -1,0 +1,25 @@
+/*
+ * The chip in flight: the clone the drag code builds at pointer-down and moves with the pointer
+ * (`[data-drag-clone]`, drag-drop-core.mixin.ts). Opaque, the chip as it is, raised off the page by
+ * --qti-drag-elevation, derived from the text colour and the spacing.
+ *
+ * Through the paint slot, so it composes with each interaction's `@mixin drag` on the clone. In
+ * `interactions.states`, above the resting chip's lift. A graphic-gap-match image tile reads no
+ * --drag-* slot and stays as it is: a picture.
+ */
+[data-drag-clone] {
+  --drag-box-shadow: var(--qti-drag-elevation);
+}
+
+/*
+ * While a chip is in flight, the others do not answer the pointer. The clone takes no pointer
+ * events, so the chips it passes over match :hover, and their hover edge (`@mixin drag-hover`) lit
+ * up under a drag that was not about them. `initial` makes the slot guaranteed-invalid, so the
+ * edge falls back to its resting colour, whatever the theme made that. Not on a placeholder, which
+ * keeps its own transparent edge. The drop the chip is over shows `@mixin drop-over` instead.
+ */
+:state(drag-active) :state(chip):hover:not(:state(used)),
+:state(drag-active)::part(chip):hover,
+:state(drag-active) ::part(chip):hover {
+  --drag-border-color: initial;
+}

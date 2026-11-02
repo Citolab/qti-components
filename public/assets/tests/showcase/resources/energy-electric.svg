@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 90" width="70" height="90">
+  <!-- Lightning bolt -->
+  <polygon points="42,4 18,48 36,48 28,86 52,42 34,42"
+           fill="#F1C40F" stroke="#D4AC0D" stroke-width="2"/>
+</svg>

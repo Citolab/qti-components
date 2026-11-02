@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" width="800" height="280" role="img" aria-labelledby="title">
+  <title id="title">Four inventions on cards, from left to right: the steam locomotive, the smartphone, the wheel and the printing press</title>
+  <rect width="800" height="280" fill="#ffffff"/>
+  <g fill="#dcedf6" stroke="#2f7fb5" stroke-width="3">
+    <rect x="30" y="40" width="170" height="200" rx="14"/>
+    <rect x="220" y="40" width="170" height="200" rx="14"/>
+    <rect x="410" y="40" width="170" height="200" rx="14"/>
+    <rect x="600" y="40" width="170" height="200" rx="14"/>
+  </g>
+
+  <!-- steam locomotive -->
+  <g transform="translate(115 130)">
+    <rect x="-60" y="-10" width="80" height="40" rx="6" fill="#1f5f8b"/>
+    <rect x="15" y="-40" width="45" height="70" rx="4" fill="#1f5f8b"/>
+    <rect x="25" y="-32" width="25" height="20" fill="#dcedf6"/>
+    <rect x="-48" y="-38" width="14" height="28" fill="#1f5f8b"/>
+    <circle cx="-52" cy="-52" r="9" fill="#ffffff" stroke="#9fb7c8" stroke-width="2"/>
+    <circle cx="-38" cy="-66" r="12" fill="#ffffff" stroke="#9fb7c8" stroke-width="2"/>
+    <circle cx="-40" cy="38" r="14" fill="#45a8ad"/><circle cx="-5" cy="38" r="14" fill="#45a8ad"/><circle cx="40" cy="38" r="14" fill="#45a8ad"/>
+  </g>
+
+  <!-- smartphone -->
+  <g transform="translate(305 135)">
+    <rect x="-32" y="-62" width="64" height="118" rx="10" fill="#1f5f8b"/>
+    <rect x="-26" y="-50" width="52" height="88" rx="3" fill="#9fd0e6"/>
+    <circle cx="0" cy="46" r="5" fill="#dcedf6"/>
+    <g fill="#ffffff"><rect x="-18" y="-40" width="14" height="14" rx="3"/><rect x="4" y="-40" width="14" height="14" rx="3"/><rect x="-18" y="-18" width="14" height="14" rx="3"/><rect x="4" y="-18" width="14" height="14" rx="3"/></g>
+  </g>
+
+  <!-- wheel -->
+  <g transform="translate(495 130)" stroke="#1f5f8b" fill="none">
+    <circle r="55" stroke-width="12"/>
+    <circle r="10" fill="#1f5f8b" stroke-width="0"/>
+    <g stroke-width="6"><path d="M0 -50 V50"/><path d="M-50 0 H50"/><path d="M-35 -35 L35 35"/><path d="M-35 35 L35 -35"/></g>
+  </g>
+
+  <!-- printing press -->
+  <g transform="translate(685 130)">
+    <rect x="-55" y="-70" width="12" height="110" fill="#1f5f8b"/>
+    <rect x="43" y="-70" width="12" height="110" fill="#1f5f8b"/>
+    <rect x="-60" y="-78" width="120" height="14" rx="3" fill="#1f5f8b"/>
+    <rect x="-5" y="-64" width="10" height="34" fill="#45a8ad"/>
+    <rect x="-36" y="-30" width="72" height="14" rx="2" fill="#45a8ad"/>
+    <rect x="-45" y="2" width="90" height="10" fill="#1f5f8b"/>
+    <rect x="-30" y="-6" width="60" height="8" fill="#ffffff" stroke="#9fb7c8"/>
+    <path d="M-20 -72 h40" stroke="#45a8ad" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <g fill="#1d3b53" font-family="Arial, Helvetica, sans-serif" font-size="16" text-anchor="middle">
+    <text x="115" y="225">Steam locomotive</text>
+    <text x="305" y="225">Smartphone</text>
+    <text x="495" y="225">Wheel</text>
+    <text x="685" y="225">Printing press</text>
+  </g>
+</svg>

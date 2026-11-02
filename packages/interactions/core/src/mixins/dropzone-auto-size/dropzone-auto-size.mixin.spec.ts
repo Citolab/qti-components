@@ -157,7 +157,7 @@ describe('applyDropzoneAutoSizing', () => {
     const propertyTarget = document.createElement('div');
     propertyTarget.setAttribute('part', 'container');
     const dragContainer = document.createElement('div');
-    dragContainer.setAttribute('part', 'drags');
+    dragContainer.setAttribute('part', 'bank');
     propertyTarget.appendChild(dragContainer);
     proseMirrorHost.shadowRoot?.appendChild(propertyTarget);
 

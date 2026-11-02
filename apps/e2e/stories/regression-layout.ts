@@ -2,9 +2,11 @@ import { html } from 'lit';
 
 import type { Decorator } from '@storybook/web-components-vite';
 
+import './regression-layout.css';
+
 /**
  * Constrain a regression story to the shared item measure (`--regression-item-width`, defined in
- * kennisnet.css).
+ * regression-layout.css).
  *
  * The width lives in CSS rather than in each story so qti-components and qti-editor render the item
  * at exactly the same size and can be compared side by side. qti-editor applies the same

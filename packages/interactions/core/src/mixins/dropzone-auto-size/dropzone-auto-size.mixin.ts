@@ -214,8 +214,7 @@ export type DropzoneAutoSize = LitElement & {
  *
  * A `ResizeObserver` over the chips is the trigger, because it catches all three causes (text
  * reflow, image load, font swap) in one mechanism. A `MutationObserver` would need
- * `characterData: true` and would still miss the image. The dead legacy mixin at
- * `mixins/drag-drop/drag-drop-interaction-mixin.ts` used both and still caught neither reliably.
+ * `characterData: true` and would still miss the image.
  *
  * ── Where the properties land ────────────────────────────────────────────────────────────────
  *
@@ -229,7 +228,7 @@ export const DropzoneAutoSizeMixin = <T extends Constructor<LitElement>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]'
+  dragContainersSelector = 'slot[part~="bank"]'
 ) => {
   abstract class DropzoneAutoSizeElement extends superClass {
     @property({ type: Boolean, attribute: 'auto-size-dropzones' })

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "qti-azure": {
+      "type": "http",
+      "url": "https://qti-mcp-slice.azurewebsites.net/mcp"
+    },
+    "qti-roundtrip": {
+      "type": "http",
+      "url": "https://qti-mcp-roundtrip-cpenc2c4ape5cbaj.swedencentral-01.azurewebsites.net/mcp"
+    }
+  }
+}

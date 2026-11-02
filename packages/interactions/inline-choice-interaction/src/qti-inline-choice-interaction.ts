@@ -1,5 +1,6 @@
 import { html } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { consume } from '@lit/context';
 
 import { watch } from '@qti-components/utilities';
@@ -10,7 +11,7 @@ import { MenuAutoSizeMixin } from '@qti-components/interactions-core/mixins/menu
 import styles from './qti-inline-choice-interaction.styles.js';
 
 import type { PropertyValues } from 'lit';
-import type { ConfigContext } from '@qti-components/base';
+import type { ConfigContext, ValidityTrigger } from '@qti-components/base';
 import type { ActiveElementMixinInterface } from '@qti-components/interactions-core/mixins/active-element/active-element.mixin';
 
 interface OptionType {
@@ -30,7 +31,11 @@ let inlineChoiceMenuCounter = 0;
  *
  * @attr {string} response-identifier - Required. Identifier of the bound response variable.
  * @attr {string} data-prompt - Placeholder shown before a choice is picked. Falls back to
- *   the item configuration's `inlineChoicePrompt`, then to `select`.
+ *   the item configuration's `inlineChoicePrompt`, then to `select`. An empty value
+ *   (`data-prompt=""`) is kept: the placeholder is then empty, and the menu leaves the empty
+ *   prompt row out until a choice is made; from then on that row is a clear button (an x glyph).
+ * @attr {string} [data-clear-label=Clear] - Accessible name of the clear row shown, in place of an
+ *   empty `data-prompt`, once a choice is made. Selecting that row clears the answer.
  * @attr {boolean} [shuffle=false] - Requests option shuffling. Applied by the transform
  *   pipeline (`qti-transformers`), not by this element.
  * @attr {boolean} [required=false] - Whether a choice must be selected for the response to be
@@ -42,10 +47,19 @@ let inlineChoiceMenuCounter = 0;
  *
  * @csspart trigger - The dropdown trigger button.
  * @csspart value - The currently displayed value inside the trigger.
- * @csspart dropdown-icon - The chevron icon inside the trigger; also carries `dropdown-icon-open` when open.
+ * @csspart icon - The chevron inside the trigger (was `dropdown-icon`). Tokens: `open` while the
+ *   menu is open (was `dropdown-icon-open`).
  * @csspart menu - The popover element containing the option list.
- * @csspart option - Each option button; also carries `option-prompt` and `option-selected` variants.
- * @csspart option-content - The content wrapper inside each option.
+ * @csspart option - The prompt row in the menu: the way back to "nothing chosen". Tokens: `prompt`;
+ *   `selected` while nothing is chosen; `clear` when the row is the clear button (see
+ *   `data-clear-label`). Were `option-prompt`, `option-selected`, `option-clear`. The other rows
+ *   are `qti-inline-choice` elements and carry their own parts and states.
+ * @csspart option-content - The content wrapper inside the prompt row.
+ * @csspart clear-icon - The x glyph inside the clear row.
+ * @csspart message - The validation message, hidden until `reportValidity` shows it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
+ * @cssstate open - The menu is open. The chosen option carries `checked`, on the `qti-inline-choice`.
  */
 export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   constructor() {
@@ -81,9 +95,16 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
    * manifest, the generated types and the Storybook controls — and so that changing it
    * re-renders, which reading `dataset` at render time never did.
    *
-   * Falls back to the item configuration's `inlineChoicePrompt`, then to `select`.
+   * Falls back to the item configuration's `inlineChoicePrompt`, then to `select`. An empty
+   * string is a value, not a missing one: `data-prompt=""` shows an empty placeholder.
    */
   @property({ type: String, attribute: 'data-prompt' }) dataPrompt: string;
+
+  /**
+   * Accessible name of the clear row: the prompt row when `data-prompt` is empty and a choice has
+   * been made. It has no text to read, only an x glyph, so it needs a name. Defaults to `Clear`.
+   */
+  @property({ type: String, attribute: 'data-clear-label' }) dataClearLabel: string;
 
   @watch('dataPrompt', { waitUntilFirstUpdate: true })
   protected _handleDataPromptChange = () => {
@@ -123,7 +144,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   @watch(['required', 'minChoices'], { waitUntilFirstUpdate: true })
   protected _handleRequiredChange = () => {
     this.validate();
-    this.reportValidity();
+    this.reportValidity({ trigger: 'change' });
   };
 
   /*
@@ -152,15 +173,39 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
       >
         <span part="value">${selected?.content}</span>
         <span
-          part="${this._dropdownOpen ? 'dropdown-icon dropdown-icon-open' : 'dropdown-icon'}"
+          part="${this._dropdownOpen ? 'icon open dropdown-icon dropdown-icon-open' : 'icon dropdown-icon'}"
           aria-hidden="true"
         ></span>
       </button>
     `;
   }
 
-  /** The popover listbox. */
+  /**
+   * The popover listbox. Its first row is the prompt — the way back to "nothing chosen", as the
+   * spec's figure of an open dropdown shows it. With an empty prompt there is nothing to read, so:
+   * while nothing is chosen the row is hidden (it would read as an empty option, and there is
+   * nothing to clear), and once something is chosen it is a clear button — an x glyph named by
+   * `data-clear-label`. Either way selecting it does the same: `#selectValue('')`.
+   */
   protected renderMenu(): unknown {
+    const prompt = this.options[0];
+    const promptEmpty = this.#promptIsEmpty();
+    const nothingChosen = prompt?.selected ?? true;
+    const hidden = promptEmpty && nothingChosen;
+    const clear = promptEmpty && !nothingChosen;
+    // Contract tokens first; the `option-*` spellings stay as aliases for one major (CONTRACT.md §3).
+    const parts = [
+      'option',
+      'prompt',
+      prompt?.selected ? 'selected' : '',
+      clear ? 'clear' : '',
+      'option-prompt',
+      prompt?.selected ? 'option-selected' : '',
+      clear ? 'option-clear' : ''
+    ]
+      .filter(Boolean)
+      .join(' ');
+
     return html`
       <div
         id="${this._menuId}"
@@ -171,13 +216,17 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
         @keydown=${this.#onCustomMenuKeyDown}
       >
         <button
-          part="${this.options[0]?.selected ? 'option option-prompt option-selected' : 'option option-prompt'}"
+          part="${parts}"
           type="button"
           role="option"
-          aria-selected="${this.options[0]?.selected ? 'true' : 'false'}"
+          ?hidden=${hidden}
+          aria-label=${ifDefined(clear ? this.dataClearLabel || 'Clear' : undefined)}
+          aria-selected="${prompt?.selected ? 'true' : 'false'}"
           @click=${() => this.#selectValue('')}
         >
-          <span part="option-content">${this.options[0]?.content}</span>
+          <span part="option-content"
+            >${clear ? html`<span part="clear-icon" aria-hidden="true"></span>` : prompt?.content}</span
+          >
         </button>
         <slot @slotchange=${this.#onChoicesSlotChange}></slot>
       </div>
@@ -238,13 +287,32 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     }
   }
 
+  /** True when the prompt row has no text of its own (`data-prompt=""`). */
+  #promptIsEmpty(): boolean {
+    const content = this.options[0]?.content;
+    return typeof content === 'string' && content.trim() === '';
+  }
+
+  /**
+   * Leaves the prompt row out of the width measurement when the prompt is empty. That row is hidden
+   * while nothing is chosen (measures 0) and a clear glyph once something is (measures a glyph), so
+   * counting it would let the closed field change width on the first choice. Its text is empty
+   * either way, so it has nothing to contribute.
+   */
+  public override menuAutoSizeRows(): HTMLElement[] {
+    const rows = super.menuAutoSizeRows();
+    if (!this.#promptIsEmpty()) return rows;
+    return rows.filter(row => !row.matches('button[part~="option-prompt"]'));
+  }
+
   #selectedOption(): OptionType | undefined {
     return this.options.find(option => option.selected) ?? this.options[0];
   }
 
   #updateOptions() {
     const choices = Array.from(this.querySelectorAll('qti-inline-choice'));
-    const prompt = this.dataPrompt || this.configContext?.inlineChoicePrompt || 'select';
+    // `??`, not `||`: an empty data-prompt (or inlineChoicePrompt) asks for an empty placeholder and is kept
+    const prompt = this.dataPrompt ?? this.configContext?.inlineChoicePrompt ?? 'select';
 
     // Pending value from `response="…"` attribute set before slotted options existed
     // takes precedence over any current selection.
@@ -277,20 +345,23 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   }
 
   /**
-   * Autosizing is opt-in through `configContext.inlineChoiceAutosize`, and an explicit
-   * `qti-input-width-*` class always wins.
+   * Autosizing is on unless a host turns it off (`configContext.inlineChoiceAutosize: false`), and an
+   * explicit `qti-input-width-*` class always wins. On by default because without it the field sizes
+   * to the option shown, so choosing a longer one widened the field and reflowed the sentence around
+   * it: a state that changed layout.
    *
    * That second check has to live here rather than in CSS: the measurement is written as an inline
    * style on the trigger, and the width classes set the same property on `:host`, so the cascade
    * would hand it to the measurement every time. Not writing at all is what makes the class win.
    */
   public override shouldAutoSizeMenu(): boolean {
-    if (!this.configContext?.inlineChoiceAutosize) return false;
+    if (this.configContext?.inlineChoiceAutosize === false) return false;
     return !Array.from(this.classList).some(c => c.startsWith('qti-input-width-'));
   }
 
   /**
-   * The chevron sits in the trigger and not in the menu, so the menu never measures it.
+   * The chevron (and the gap before it) sits in the trigger and not in the menu, so the menu never
+   * measures it.
    *
    * `offsetWidth`, NOT `getBoundingClientRect().width`: the icon rotates when the menu opens, and a
    * client rect reports the TRANSFORMED box — so a chevron caught mid-rotation measures wider than
@@ -299,8 +370,13 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
    * up mid-animation.)
    */
   public override menuAutoSizeExtraWidth(): number {
-    const icon = this.renderRoot.querySelector<HTMLElement>('span[part~="dropdown-icon"]');
-    return icon?.offsetWidth ?? 0;
+    const icon = this.renderRoot.querySelector<HTMLElement>('span[part~="icon"]');
+    if (!icon) return 0;
+    // Plus the gap between value and chevron: the trigger spends it and a row does not. Without it
+    // the widest option did not fit and was cut off with an ellipsis (measured: 8px gap, 4px short).
+    const trigger = this.renderRoot.querySelector<HTMLElement>('button[part="trigger"]');
+    const gap = trigger ? parseFloat(getComputedStyle(trigger).columnGap) || 0 : 0;
+    return icon.offsetWidth + gap;
   }
 
   public validate(): boolean {
@@ -318,15 +394,18 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     // `data-min-choices-message` is what this element used to read; kept so existing items still work.
     const validityMessage =
       this.dataset.minSelectionsMessage || this.dataset.minChoicesMessage || 'Please select an option.';
-    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true });
+    this.setInteractionValidity(isValid, isValid ? '' : validityMessage, this, { suppressInline: true, kind: 'min' });
     return isValid;
   }
 
-  public override reportValidity(): boolean {
-    return super.reportValidity();
+  public override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+    return super.reportValidity(options);
   }
 
   public override reset() {
+    // Not `super.reset()` (it would null the response before the options are rebuilt); the base's
+    // validity bookkeeping is reset here instead, so a fresh attempt waits for a submit again.
+    this.resetValidityReport();
     this.#setDropdownOpen(false);
     this.options = this.options.map((option, i) => ({ ...option, selected: i === 0 }));
     this.#syncSlottedChoices();
@@ -358,7 +437,7 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
     this.options = this.options.map(option => ({ ...option, selected: option.value === value }));
     this.#syncSlottedChoices();
     this.validate();
-    this.reportValidity();
+    this.reportValidity({ trigger: 'change' });
     this.saveResponse(value);
     this.#setDropdownOpen(false);
   }
@@ -498,6 +577,9 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   }
 
   async #syncSlottedChoices() {
+    // Every route into the selection passes here (a pick, a restore, a reset), so the form value
+    // follows it here: a form holding this interaction carries the chosen identifier, or nothing.
+    this._internals.setFormValue(this.response);
     await this.updateComplete;
     const selectedValue = this.options.find(option => option.selected)?.value ?? '';
     const choices = Array.from(this.querySelectorAll<InlineChoiceOptionElement>('qti-inline-choice'));
@@ -523,7 +605,8 @@ export class QtiInlineChoiceInteraction extends MenuAutoSizeMixin(Interaction) {
   }
 
   #allMenuOptions(): HTMLElement[] {
-    const promptOption = this.renderRoot.querySelector<HTMLElement>('button[part~="option"]');
+    // `:not([hidden])`: the empty prompt row, hidden while nothing is chosen, is not reachable.
+    const promptOption = this.renderRoot.querySelector<HTMLElement>('button[part~="option"]:not([hidden])');
     const slottedChoices = Array.from(this.querySelectorAll<HTMLElement>('qti-inline-choice'));
     return [...(promptOption ? [promptOption] : []), ...slottedChoices];
   }

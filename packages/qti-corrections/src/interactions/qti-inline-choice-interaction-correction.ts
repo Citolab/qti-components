@@ -5,6 +5,9 @@ import { QtiInlineChoiceInteraction } from '@qti-components/inline-choice-intera
 import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
 import { correctionPart } from '../styles/correction.styles';
 
+/**
+ * @csspart correction - The verdict badge after the validation message; see `CandidateCorrectionMixin` for its tokens.
+ */
 export class QtiInlineChoiceInteractionCorrection extends CandidateCorrectionMixin(QtiInlineChoiceInteraction) {
   static override get styles() {
     return [

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360" role="img" aria-labelledby="title">
+  <title id="title">Four living things in a meadow: grass (bottom left), a grasshopper (top, left of centre), a frog (bottom, right of centre) and a heron (top right)</title>
+  <rect width="800" height="360" fill="#eef6e8"/>
+  <path d="M0 300 Q 200 280 400 300 T 800 295 V360 H0 Z" fill="#cfe3c0"/>
+
+  <g fill="#ffffff" stroke="#2f7fb5" stroke-width="3">
+    <circle cx="120" cy="250" r="62"/>
+    <circle cx="320" cy="110" r="62"/>
+    <circle cx="510" cy="250" r="62"/>
+    <circle cx="690" cy="110" r="62"/>
+  </g>
+
+  <!-- grass -->
+  <g transform="translate(120 245)" fill="none" stroke="#4f9a4a" stroke-width="5" stroke-linecap="round">
+    <path d="M-25 15 Q -28 -10 -36 -28"/><path d="M-10 15 Q -10 -15 -16 -38"/><path d="M5 15 Q 6 -14 14 -40"/><path d="M20 15 Q 24 -8 34 -26"/>
+  </g>
+  <!-- grasshopper -->
+  <g transform="translate(320 105)">
+    <ellipse cx="0" cy="0" rx="34" ry="11" fill="#6fae3c"/>
+    <circle cx="34" cy="-4" r="9" fill="#6fae3c"/>
+    <circle cx="37" cy="-6" r="2.5" fill="#1d3b53"/>
+    <path d="M40 -12 q14 -18 24 -16 M36 -12 q8 -20 18 -22" fill="none" stroke="#4f8a2c" stroke-width="2"/>
+    <path d="M-10 0 l-22 -22 l-10 30" fill="none" stroke="#4f8a2c" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M10 8 l-4 16 M20 8 l6 16" stroke="#4f8a2c" stroke-width="3"/>
+  </g>
+  <!-- frog -->
+  <g transform="translate(510 240)">
+    <ellipse cx="0" cy="5" rx="36" ry="24" fill="#3f8f5a"/>
+    <circle cx="-16" cy="-18" r="11" fill="#3f8f5a"/><circle cx="16" cy="-18" r="11" fill="#3f8f5a"/>
+    <circle cx="-16" cy="-19" r="5" fill="#ffffff"/><circle cx="16" cy="-19" r="5" fill="#ffffff"/>
+    <circle cx="-15" cy="-19" r="2.5" fill="#1d3b53"/><circle cx="17" cy="-19" r="2.5" fill="#1d3b53"/>
+    <path d="M-14 4 q14 10 28 0" fill="none" stroke="#1d3b53" stroke-width="2"/>
+    <path d="M-36 20 q-10 8 -4 12 M36 20 q10 8 4 12" fill="none" stroke="#2e6b43" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <!-- heron -->
+  <g transform="translate(690 100)">
+    <ellipse cx="-4" cy="10" rx="28" ry="14" fill="#8a9aa8"/>
+    <path d="M14 4 Q 22 -20 8 -34" fill="none" stroke="#8a9aa8" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="8" cy="-36" r="7" fill="#8a9aa8"/>
+    <path d="M14 -37 l26 4 l-26 2 z" fill="#e3a23b"/>
+    <circle cx="7" cy="-38" r="1.8" fill="#1d3b53"/>
+    <path d="M-6 22 l-2 20 M4 22 l4 20" stroke="#e3a23b" stroke-width="3"/>
+  </g>
+
+  <g fill="#1d3b53" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle">
+    <text x="120" y="292">Grass</text>
+    <text x="320" y="152">Grasshopper</text>
+    <text x="510" y="292">Frog</text>
+    <text x="690" y="152">Heron</text>
+  </g>
+</svg>

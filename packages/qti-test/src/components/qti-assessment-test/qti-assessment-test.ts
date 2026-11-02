@@ -27,7 +27,7 @@ export class QtiAssessmentTest extends LitElement {
   override async connectedCallback(): Promise<void> {
     super.connectedCallback();
     await this.updateComplete;
-    dispatchPublic(this, 'cito-test-loaded', this);
+    dispatchPublic(this, 'qc-test-loaded', this);
   }
 
   override render() {
@@ -43,6 +43,6 @@ declare global {
 
 declare module '../../public-events' {
   interface PublicEventMap {
-    'cito-test-loaded': CustomEvent<QtiAssessmentTest>;
+    'qc-test-loaded': CustomEvent<QtiAssessmentTest>;
   }
 }

@@ -31,5 +31,5 @@ Everything else in this section is a component that either **describes the test 
 
 1. `<test-container>` loads and parses the test XML into `<qti-assessment-test>` / `<qti-test-part>` / `<qti-assessment-section>` / `<qti-assessment-item-ref>` elements.
 2. As those elements connect, `<qti-test>` and `<test-navigation>` build up `testContext` (raw item state: variables, completion status) and `computedContext` (a denormalized, render-friendly view: active test part/section/item, computed scores, indices).
-3. Navigation components (`test-next`, `test-prev`, `test-item-link`, `test-section-link`) dispatch a `qti-request-navigation` event; `<qti-test>`'s navigation logic loads the requested item(s) and updates context.
+3. Navigation components (`test-next`, `test-prev`, `test-item-link`, `test-section-link`) dispatch a `qc-test-navigate` event; `<qti-test>`'s navigation logic loads the requested item(s) and updates context.
 4. Scoring and view components read `computedContext`/`sessionContext` via `@lit/context` and re-render reactively — nothing polls, everything is event- and context-driven.

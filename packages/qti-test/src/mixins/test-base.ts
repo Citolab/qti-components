@@ -55,7 +55,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
      * before the item has loaded. To restore a whole session, assign `state` instead.
      *
      * The test context is replaced rather than changed in place, so its consumers update and
-     * `qti-state-changed` fires.
+     * `qc-test-state-changed` fires.
      *
      * @param itemRefID The `qti-assessment-item-ref` identifier, not the item's own identifier.
      * @param state Opaque per-interaction state keyed by response identifier, e.g. a PCI's `getState()`.
@@ -95,7 +95,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
        * A new test document means a new test and session context.
        *
        * This resets on the document being loaded rather than on
-       * `qti-assessment-test-connected`, because the new document's children —
+       * `qc-test-loaded`, because the new document's children —
        * test-level `qti-outcome-declaration` among them — connect and register
        * themselves into the context *before* the test element announces itself.
        * Resetting on that announcement discarded every one of those
@@ -111,7 +111,7 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
        * Registrations from the document's children are already present on the
        * context reset above, so this must preserve what is there.
        */
-      listenPublic(this, 'cito-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => {
+      listenPublic(this, 'qc-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => {
         this._testElement = e.detail;
         const items = Array.from(this._testElement.querySelectorAll('qti-assessment-item-ref')).map(itemRef => {
           return {

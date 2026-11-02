@@ -34,6 +34,25 @@ export default [
       position: absolute;
       top: 0px;
       left: 0px;
+      /* Lines take clicks; the empty canvas lets them through to the points underneath. */
+      pointer-events: none;
+    }
+    /* A wide invisible stroke over each line, so removing one does not take a 3px aim. */
+    line[data-hit] {
+      stroke: transparent;
+      stroke-width: 16px;
+      stroke-linecap: round;
+      pointer-events: stroke;
+      cursor: pointer;
+      outline: none;
+    }
+    /* A line under the pointer or keyboard focus shows that it can be removed. */
+    line[data-hit]:hover,
+    line[data-hit]:focus-visible {
+      stroke: color-mix(in srgb, currentColor 18%, transparent);
+    }
+    ::slotted(qti-associable-hotspot) {
+      cursor: pointer;
     }
   `
 ];

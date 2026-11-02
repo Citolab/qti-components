@@ -2,22 +2,21 @@ import { html } from 'lit';
 
 import { getManifestInfo } from '@qti-components/loader';
 
-import packages from '../assets/packages.json';
+import { PACKAGE_NAMES, PACKAGES, type PackageName } from './packages.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta: Meta = {
-  title: 'Qti-Item',
+  title: 'QTI Item/Examples',
   argTypes: {
     qtipkg: {
-      options: packages.packages,
+      options: PACKAGE_NAMES,
       control: { type: 'radio' }
     },
     itemIndex: { control: { type: 'number' } }
   },
   args: {
-    serverLocation: '/assets/api',
-    qtipkg: 'examples',
+    qtipkg: 'showcase',
     itemIndex: 0
   }
 };
@@ -34,7 +33,7 @@ export const QtiItem: Story = {
   },
   loaders: [
     async ({ args }) => {
-      const { items } = await getManifestInfo(`${args.serverLocation}/${args.qtipkg}/imsmanifest.xml`);
+      const { items } = await getManifestInfo(PACKAGES[args.qtipkg as PackageName]);
       return { items };
     }
   ]

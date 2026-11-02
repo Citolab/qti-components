@@ -11,10 +11,32 @@
       cursor: pointer;
     }
 
-    &.qti-input-control-hidden {
+    /* Nothing is drawn around a choice at rest, only the room reserved for what appears when it is
+       selected, so the control sits that far in from the prose around it. Pull a stacked choice out by
+       the room it reserves (its padding and its border): the control and the text then line up with the
+       paragraphs, and the selected paint reaches into the gutter. Not in a row or a grid, where the
+       neighbours would overlap. Set --qti-choice-outdent to 0 for a choice that should stay where its
+       padding puts it, or inside a box that clips. */
+    &:not(.qti-input-control-hidden, .qti-orientation-horizontal, [class*='qti-choices-stacking-']) {
       & qti-simple-choice {
-        @mixin button;
+        margin-inline-start: calc(-1 * var(--qti-choice-outdent));
+      }
+    }
+
+    &.qti-input-control-hidden {
+      /* Choices drawn as boxes: their borders are visible, so they need air between them. A list of
+         plain controls does not; its padding spaces it. */
+      --qti-choice-gap: var(--qti-spacing);
+
+      & qti-simple-choice {
+        @mixin choice;
+        /* A box, so a compact one: the chip's padding and the field line height, instead of the
+           roomy --qti-padding-box a plain choice pays for its selected paint. */
+        padding: var(--qti-choice-box-padding);
+        line-height: var(--qti-field-line-height);
         --qti-control-display: none;
+        /* On :focus, not :focus-visible: a choice is something you pick, so the ring shows which one
+           you just picked with the mouse too (see `@mixin foc`). */
         &:focus {
           @mixin foc;
         }
@@ -23,9 +45,22 @@
 
     &:not(.qti-input-control-hidden) {
       & qti-simple-choice {
-        @mixin check;
+        @mixin choice;
+        --choice-border-color: transparent;
+        --choice-background-color: transparent;
+        gap: 0.5rem;
+        cursor: pointer;
 
+        /* With a radio or checkbox shown, the ring goes round the control, as on a native one; the
+           choice itself is drawn as nothing at rest, so a ring round it would outline an invisible
+           box. Choices drawn as boxes (.qti-input-control-hidden, above) ring the whole box. The host
+           holds focus, so it is the host's :focus that picks the part; on :focus, so a choice picked
+           with the mouse shows its ring too. */
         &:focus {
+          outline: var(--qti-focus-border-width) solid transparent;
+        }
+
+        &:focus::part(control) {
           @mixin foc;
         }
 
@@ -46,9 +81,9 @@
          on arrival: it set `background-color: var(--qti-bg-active)` and the very next line overwrote
          it with the selected fill. Only its border-colour ever survived, which is written out here. */
       &:state(checked) {
-        --button-border-color: var(--qti-border-active);
-        --button-background-color: var(--qti-selected-bg);
-        --button-color: var(--qti-selected-color);
+        --choice-border-color: var(--qti-border-active);
+        --choice-background-color: var(--qti-selected-bg);
+        --choice-color: var(--qti-selected-color);
       }
 
       &:state(readonly) {
@@ -96,8 +131,7 @@
 @layer qti-components.interactions.corrections {
   qti-choice-interaction {
     & qti-simple-choice {
-      &:state(correct-response),
-      &[data-correct-response='true'] {
+      &:state(answer-key) {
         &::after {
           content: '\02714';
           color: var(--qti-correct);
@@ -114,8 +148,7 @@
        * costs no layout. The 30px that kept the label clear of the tick is reserved in the base
        * rule for this variant, whether or not a tick ever appears.
        */
-      &:state(correct-response),
-      &[data-correct-response='true'] {
+      &:state(answer-key) {
         border-color: var(--qti-correct) !important;
         box-shadow: inset 0 0 0 2px var(--qti-correct);
 
@@ -130,14 +163,14 @@
         }
       }
 
-      /* Candidate judgement follows checked/correct-response paint so it can
+      /* Candidate judgement follows checked/answer-key paint so it can
          recolour the same stable box without changing its geometry. */
       &:state(candidate-correct) {
-        @mixin candidate button, var(--qti-correct), var(--qti-correct-light);
+        @mixin candidate choice, var(--qti-correct), var(--qti-correct-light);
       }
 
       &:state(candidate-incorrect) {
-        @mixin candidate button, var(--qti-incorrect), var(--qti-incorrect-light);
+        @mixin candidate choice, var(--qti-incorrect), var(--qti-incorrect-light);
       }
     }
 
@@ -162,7 +195,9 @@
     }
   }
 
-  .full-correct-response qti-choice-interaction {
+  /* The answer-key clone: `answer-key` on the cloned host (CorrectResponseMixin), where the
+     `.full-correct-response` wrapper class used to be read. */
+  qti-choice-interaction:state(answer-key) {
     qti-simple-choice {
       &:state(radio):state(checked)::part(control),
       &:state(checkbox):state(checked)::part(control) {

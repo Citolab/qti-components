@@ -35,9 +35,9 @@ function makeElement(rect?: Rect, tag = 'div') {
 }
 
 describe('drag-drop.utils', () => {
-  it('findDraggableTarget returns element matching selector or qti-draggable attribute', () => {
+  it('findDraggableTarget returns element matching selector or data-draggable attribute', () => {
     const draggable = makeElement();
-    draggable.setAttribute('qti-draggable', 'true');
+    draggable.setAttribute('data-draggable', 'true');
 
     const child = document.createElement('span');
     draggable.appendChild(child);
@@ -86,7 +86,7 @@ describe('drag-drop.utils', () => {
   it('isDroppableAtCapacity respects match-max and counts by selector and attribute', () => {
     const droppable = document.createElement('div');
     droppable.setAttribute('match-max', '2');
-    droppable.innerHTML = `<div class="drag"></div><div qti-draggable="true"></div><div qti-draggable="true"></div>`;
+    droppable.innerHTML = `<div class="drag"></div><div data-draggable="true"></div><div data-draggable="true"></div>`;
     expect(isDroppableAtCapacity(droppable, '.drag')).toBe(true);
   });
 
@@ -94,7 +94,7 @@ describe('drag-drop.utils', () => {
     const d1 = document.createElement('div');
     d1.innerHTML = `<div class="drag"></div>`;
     const d2 = document.createElement('div');
-    d2.innerHTML = `<div qti-draggable="true"></div><div qti-draggable="true"></div>`;
+    d2.innerHTML = `<div data-draggable="true"></div><div data-draggable="true"></div>`;
     expect(countTotalAssociations([d1, d2], '.drag')).toBe(3);
   });
 

@@ -1,109 +1,41 @@
 # Working on qti-components
 
-This repo runs **trunk-based**: `main` is always releasable, changes land through
-**short-lived branches** that merge as soon as CI is green.
+The rules for people and for Claude are the same, and live in one place:
 
-## The four things you actually run
+- [`CLAUDE.md`](CLAUDE.md): commands, the repo map, the two lanes (`main`, `next`), how one change
+  goes from start to finish, and the definition of done.
+- [`.claude/rules/`](.claude/rules): the rules per area (Lit, interactions, stories, tests, QTI,
+  theme, plugins, host API, docs, releasing). Read the one for the area you change.
+- [`plans/ROADMAP.md`](plans/ROADMAP.md): the planned work, in order.
+- [`packages/qti-theme/CONTRACT.md`](packages/qti-theme/CONTRACT.md): the styling contract.
+- [`plans/host-api.md`](plans/host-api.md): what hosts may use and rely on.
 
-| command                | what it does                                             |
-|------------------------|---------------------------------------------------------|
-| `pnpm run storybook`   | dev server — Storybook + CEM watch                      |
-| `pnpm run test`        | full suite — `build` + `vitest run`                    |
-| `pnpm run changeset`   | describe a version bump (do this in your PR)            |
-| `pnpm run yalc:push`   | push packages to local consumers                       |
-
-Everything else is plumbing called by CI or the git hooks. You rarely touch it.
-(A `Justfile` menu is planned — see `plans/package-scripts-reorg.md`.)
-
-## Day-to-day: small change or refactor
-
-Same flow either way — a refactor's branch just lives a bit longer. Keep branches
-**short**: rebase on `main` often so you never drift far.
-
-Do each branch of work in its own `git worktree` rather than switching branches in place —
-this keeps multiple in-progress changes (and their installed `node_modules`/build state)
-from colliding:
+## Quick start
 
 ```bash
-git worktree add ../qti-components-feat-thing -b feat/thing   # or fix/…, refactor/…
-cd ../qti-components-feat-thing
 pnpm install
-# …edit…
-git commit -m "feat: thing"         # husky runs the fast checks (below)
-pnpm run changeset                  # only if this changes a published package
-git push -u origin HEAD
-gh pr create --fill
-gh pr merge --auto --squash         # merges itself the moment CI passes
-cd -
-git worktree remove ../qti-components-feat-thing
+pnpm run storybook   # the lab, port 6006
+pnpm run test        # the stories and specs
 ```
 
-`--auto` is the trunk-based trick: you open the PR and move on; GitHub squash-merges
-it into `main` as soon as the required check is green. No long-lived branches, and
-`main` stays gated.
+## What runs on commit
 
-> Direct `git push origin main` is disabled by the branch ruleset (below). That's the
-> deal that makes "CI blocks bad code" real — a required check can only gate merges,
-> not after-the-fact direct pushes.
+`.husky/pre-commit`: the VRT comparison (skipped for docs-only commits), then `lint-staged` on the
+staged files only (prettier, eslint, stylelint, and one `vitest run --changed`). Heavy checks
+(madge, publint, attw, the full suite) run in CI (`.github/workflows/ci.yml`), not on commit.
 
-## What runs on commit (husky pre-commit)
+## Branch protection
 
-One tier, same on every branch, deliberately **fast** — see `.husky/pre-commit`:
-
-1. `lint-staged` on **staged files only** — `prettier --write`, `eslint --fix`,
-   and `vitest related` (the minimal tests for what you touched).
-
-Heavy verification — full test suite, `madge`, `attw`, `publint` — is **CI's job**,
-not the commit's. Don't add it here; you'll hate committing.
-
-## The CI gate (how bad code is kept off main)
-
-`.github/workflows/ci.yml` runs `pnpm run ci:push-quality`
-(lint → madge → build → test → publint → attw) on every PR to `main`.
-
-To make it **blocking**, `main` has a branch ruleset requiring:
-- a pull request before merging,
-- the `ci` check to pass,
-- no direct pushes / force-pushes.
-
-Set it up once with the GitHub CLI (admin):
+`main` has a ruleset: a pull request, the `ci` check green, no direct or force pushes. It was set up
+once by an admin with:
 
 ```bash
 gh api -X POST repos/Citolab/qti-components/rulesets \
-  -f name='main-protection' \
-  -f target='branch' \
-  -f enforcement='active' \
+  -f name='main-protection' -f target='branch' -f enforcement='active' \
   -f 'conditions[ref_name][include][]=refs/heads/main' \
-  -f 'rules[][type]=pull_request' \
-  -f 'rules[][type]=non_fast_forward' \
+  -f 'rules[][type]=pull_request' -f 'rules[][type]=non_fast_forward' \
   -f 'rules[][type]=required_status_checks' \
   -F 'rules[][parameters][required_status_checks][][context]=ci'
 ```
 
-> The status-check **context** is the job id `ci` from `ci.yml`. If GitHub reports it
-> under a different name, open one PR, read the exact check name from the Checks tab,
-> and use that. You can also configure this in the UI: **Settings → Rules → Rulesets → New**.
-> Keep an admin-bypass entry so you're never locked out of an emergency fix.
-
-## Releasing to npm (+ auto-publishing the site)
-
-Releases are **deliberate and manual** — no accidental npm publishes.
-
-1. During normal work, add changesets (`pnpm run changeset`) describing bumps. They
-   accumulate in `.changeset/`.
-2. When ready to ship, run the **release** workflow from the Actions tab
-   (`Manual: release and publish packages (changesets)`), or:
-   ```bash
-   gh workflow run release.yml -f branch=main            # add -f dry_run=true to preview
-   ```
-   It versions the changesets, commits, builds, publishes to npm (OIDC trusted
-   publishing), and pushes tags.
-3. **On success, the Storybook site deploys automatically** — `deploy-sb.yml` is
-   chained to the release via `workflow_run`. A failed release does *not* deploy.
-   You can still deploy manually anytime (`gh workflow run deploy-sb.yml`).
-
-## TL;DR
-
-```
-worktree+branch → commit (fast hooks) → PR → auto-merge on green → (later) run release → site redeploys itself
-```
+`next` has no required checks: a PR into `next` with `gh pr merge --auto` merges at once.

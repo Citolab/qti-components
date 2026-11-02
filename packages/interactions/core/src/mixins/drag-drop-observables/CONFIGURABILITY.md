@@ -17,25 +17,25 @@ is worth doing on its own.
 
 Per-interaction variation is expressed through **nine** mechanisms today:
 
-| mechanism | examples |
-|---|---|
-| constructor arguments | 4 selectors + collision algorithm |
-| overridable methods | `isDragDropEnabled`, `afterCache`, `shouldTreatBlockedMaxAsInvalid`, `shouldReturnToInventoryOnInventoryDrop`, `totalAssociationsFromState`, `collectAutoSizeTargets`, `dropzonePropertyTarget`, `allowDrop`/`handleDrop`/`handleInvalidDrop` |
-| overridable getter | `autoSizeDropzoneWidth` |
-| class-field re-declaration | `autoSizeDropzones = false` (match), `collisionDetectionAlgorithm`, `flipAnimationConfig` |
-| HTML attributes | `auto-size-dropzones`, `data-choices-container-width`, `match-max`, `min`/`max-associations`, `data-declarative-drops` |
-| duck-typed element property | `acceptsDeclarativeDrops` |
-| CSS class on the host | `qti-match-tabular`, read 6× inside `qti-match-interaction.ts` |
-| CSS custom properties | the drop-sizing tokens — see `packages/qti-theme/DROP-SIZING.md` |
-| config context | `allowReorder`, `disableAfterMaxReached` |
+| mechanism                   | examples                                                                                                                                                                                                                                      |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| constructor arguments       | 4 selectors + collision algorithm                                                                                                                                                                                                             |
+| overridable methods         | `isDragDropEnabled`, `afterCache`, `shouldTreatBlockedMaxAsInvalid`, `shouldReturnToInventoryOnInventoryDrop`, `totalAssociationsFromState`, `collectAutoSizeTargets`, `dropzonePropertyTarget`, `allowDrop`/`handleDrop`/`handleInvalidDrop` |
+| overridable getter          | `autoSizeDropzoneWidth`                                                                                                                                                                                                                       |
+| class-field re-declaration  | `autoSizeDropzones = false` (match), `collisionDetectionAlgorithm`, `flipAnimationConfig`                                                                                                                                                     |
+| HTML attributes             | `auto-size-dropzones`, `data-choices-container-width`, `match-max`, `min`/`max-associations`, `data-declarative-drops`                                                                                                                        |
+| duck-typed element property | `acceptsDeclarativeDrops`                                                                                                                                                                                                                     |
+| CSS class on the host       | `qti-match-tabular`, read 6× inside `qti-match-interaction.ts`                                                                                                                                                                                |
+| CSS custom properties       | the drop-sizing tokens — see `packages/qti-theme/DROP-SIZING.md`                                                                                                                                                                              |
+| config context              | `allowReorder`, `disableAfterMaxReached`                                                                                                                                                                                                      |
 
 Adding positional arguments makes it ten. To answer "how does match differ from order?" you must
 today read a constructor argument, a class field, a getter, a CSS class and four tokens.
 
 Worth noting: `packages/qti-base/src/context/config.context.ts` already **states** the intended
-taxonomy — *options an author chooses per question are attributes; options only a developer chooses
+taxonomy — _options an author chooses per question are attributes; options only a developer chooses
 are factory arguments or method overrides; this context is for what a delivery environment decides
-across items*. It is a good rule. The leaks in §3 are precisely the places that obey none of the
+across items_. It is a good rule. The leaks in §3 are precisely the places that obey none of the
 three.
 
 ## 2. Where the instinct is right, with evidence
@@ -66,11 +66,11 @@ attribute form for plain `<div>`s that cannot carry a property.
   `qti-graphic-gap-match-interaction`, inside the generic mixin.
 - **Tag-name branch** assigning `slot="qti-simple-associable-choice"` when the droppable is
   `QTI-SIMPLE-ASSOCIABLE-CHOICE` — match's drop element, named in generic code.
-- **`qti-draggable="true"` as a second, parallel chip identity**, independent of
+- **`data-draggable="true"` as a second, parallel chip identity**, independent of
   `draggablesSelector`, in ~12 places. `syncDragDropState` documents that the two deliberately
   disagree and that collapsing them would change `match-max` behaviour — so the divergence is real
   and load-bearing, it is just unnamed. It wants to be a fourth selector with a default.
-- **`part="drags"` / `part~='drop'`** baked into four mixin defaults *and* into runtime fallbacks in
+- **`part="drags"` / `part~='drop'`** baked into four mixin defaults _and_ into runtime fallbacks in
   `collision.utils.ts` and `drag-drop.utils.ts`.
 - `qti-interaction-response` events and `--qti-*` property names emitted from generic code.
 
@@ -80,16 +80,16 @@ The first two are exactly where the `isDeclarativeTarget` pattern was not applie
 
 Five axes. The two marked ✅ are already parameters; the rest are ad hoc.
 
-| axis | values across the interactions | today |
-|---|---|---|
-| **Identity** — what is a chip / drop / bank | per interaction | selectors ✅ |
-| **Shape** — slot (one chip) vs card (many) | card only for match | `autoSizeDropzones = false` + CSS + a token |
-| **Size ownership, per axis** | measured / authored attribute / authored `coords` / theme floor | `autoSizeDropzoneWidth` + inline `width` + `positionShapes()` + tokens |
-| **Occupancy & validity** | return-on-inventory-drop (graphic-gap-match), blocked-max validity (order), pair counting (associate) | three separate overrides |
-| **Property host** | interaction host vs shadow node | `dropzonePropertyTarget()` ✅ |
+| axis                                        | values across the interactions                                                                        | today                                                                  |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Identity** — what is a chip / drop / bank | per interaction                                                                                       | selectors ✅                                                           |
+| **Shape** — slot (one chip) vs card (many)  | card only for match                                                                                   | `autoSizeDropzones = false` + CSS + a token                            |
+| **Size ownership, per axis**                | measured / authored attribute / authored `coords` / theme floor                                       | `autoSizeDropzoneWidth` + inline `width` + `positionShapes()` + tokens |
+| **Occupancy & validity**                    | return-on-inventory-drop (graphic-gap-match), blocked-max validity (order), pair counting (associate) | three separate overrides                                               |
+| **Property host**                           | interaction host vs shadow node                                                                       | `dropzonePropertyTarget()` ✅                                          |
 
 Layout — prose-inline, grid track, flex rows, absolute from `coords` — is deliberately **not** an
-axis here. It is the *reason* size ownership differs, and it lives in CSS where it belongs.
+axis here. It is the _reason_ size ownership differs, and it lives in CSS where it belongs.
 
 The size-ownership row exposes a latent bug that has nothing to do with any refactor: **a hotspot's
 box comes from its authored `coords`, always.** A measured `min-width` should never have applied to
@@ -105,9 +105,9 @@ nine.
 export interface DragDropParts {
   draggables: string;
   droppables: string;
-  dragContainers?: string;           // default: 'slot[part="drags"]'
+  dragContainers?: string; // default: 'slot[part="drags"]'
   /** How a chip re-identifies itself once cloned into a drop. Deliberately NOT `draggables` —
-   *  see the note in `syncDragDropState`. Default: '[qti-draggable="true"]'. */
+   *  see the note in `syncDragDropState`. Default: '[data-draggable="true"]'. */
   placedChips?: string;
 }
 
@@ -119,9 +119,9 @@ export interface DragDropOptions {
   sizing?: { width?: SizeOwner; height?: SizeOwner };
   behaviour?: {
     collision?: CollisionDetectionAlgorithm;
-    defaultMaxAssociations?: number;   // replaces the tag-name branch
-    inventoryDropClears?: boolean;     // replaces shouldReturnToInventoryOnInventoryDrop
-    blockedMaxIsInvalid?: boolean;     // replaces shouldTreatBlockedMaxAsInvalid
+    defaultMaxAssociations?: number; // replaces the tag-name branch
+    inventoryDropClears?: boolean; // replaces shouldReturnToInventoryOnInventoryDrop
+    blockedMaxIsInvalid?: boolean; // replaces shouldTreatBlockedMaxAsInvalid
   };
 }
 ```
@@ -135,20 +135,20 @@ Two call sites under it:
 // graphic-gap-match — one line states an invariant nothing says today
 DragDropSlottedMixin(Interaction, {
   parts: { draggables: 'qti-gap-img, qti-gap-text', droppables: 'qti-associable-hotspot' },
-  sizing: { width: 'authored' },        // a hotspot's box is its coords. Always.
+  sizing: { width: 'authored' }, // a hotspot's box is its coords. Always.
   behaviour: { defaultMaxAssociations: 1, inventoryDropClears: true }
 });
 
 // match — replaces `public override autoSizeDropzones = false`
 DragDropSlottedMixin(Interaction, {
   parts: { draggables: '…', droppables: '…', dragContainers: 'qti-simple-match-set:first-of-type' },
-  sizing: { width: 'authored', height: 'authored' }   // targets are cards, not slots
+  sizing: { width: 'authored', height: 'authored' } // targets are cards, not slots
 });
 ```
 
-**Rejected alternatives.** *More positional arguments* — five already, the fifth used once, and the
-things that vary most are methods rather than values. *Extracting a QTI-agnostic package with an
-adapter* — the genuinely reusable part has already been extracted and already has a second consumer;
+**Rejected alternatives.** _More positional arguments_ — five already, the fifth used once, and the
+things that vary most are methods rather than values. _Extracting a QTI-agnostic package with an
+adapter_ — the genuinely reusable part has already been extracted and already has a second consumer;
 what remains in `drag-drop-slotted.mixin.ts` is roughly 40% QTI response semantics, so extraction
 means designing an adapter interface for nobody. Revisit if a second non-QTI consumer appears.
 
@@ -158,7 +158,7 @@ Stated plainly because it is the thing most likely to be over-claimed.
 
 The bug: a `qti-graphic-gap-match-interaction` with `data-choices-container-width="100"` rendered its
 hotspots 128px wide, because the theme began declaring `--qti-dropzone-min-width: 8rem` while the JS
-had just switched from *write-then-undo* to *suppress-the-write*. Suppose `sizing: { width:
+had just switched from _write-then-undo_ to _suppress-the-write_. Suppose `sizing: { width:
 'authored' }` had existed. What could the mixin have done?
 
 1. **Write nothing** — today's behaviour. The declared `8rem` applies. Still 128px.
@@ -176,19 +176,19 @@ the invariant is now written down in `DROP-SIZING.md` §2 and enforced by
 > `coords` — must **set the token at a closer scope**, never merely decline to write it, and never
 > write a competing property that races it.
 
-`sizing` is still worth having: it makes ownership *declared* rather than inferred, which is what
+`sizing` is still worth having: it makes ownership _declared_ rather than inferred, which is what
 gives the invariant something to check against. That is its value. It is not a bug fix.
 
 ## 7. If it is ever wanted, in this order
 
 Each step is independently shippable and the sequence can be abandoned after any of them.
 
-1. **Pure cleanup, no behaviour change.** Drop the redundant `'[qti-draggable="true"]'` argument
+1. **Pure cleanup, no behaviour change.** Drop the redundant `'[data-draggable="true"]'` argument
    repeated at all five `DragDropSlottedSortableMixin` call sites, where it equals the parameter's
    default. Delete `DragDropSortableMixin` (~293 lines, zero production call sites) and its export.
    Fix the comment above the `DragDropSlottedMixin` composition claiming a `'closestCorners'`
    default — wrong twice over: the default is `'closestCornersWithInventoryPriority'`, and associate,
-   the interaction it names, is the one site that *overrides* it, to `'pointerWithin'`.
+   the interaction it names, is the one site that _overrides_ it, to `'pointerWithin'`.
 2. **Close the two tag-name leaks** with element capability opt-ins, following `isDeclarativeTarget`.
 3. **Fix the graphic-gap-match coords invariant** (§4) — independent of any refactor.
 4. **Stop `applyConfiguredChoicesContainerWidth` writing inline `style` to light-DOM droppables.**

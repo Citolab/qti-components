@@ -36,6 +36,39 @@ describe('custom-state-fallback', () => {
   });
 
   /**
+   * `[attr]` may not follow a pseudo-element, and `data-state` is on the host, not the part, so the
+   * paired form only ever worked through forgiving `:is()` parsing. Left as written instead.
+   */
+  it('leaves a state that follows ::part() as written', () => {
+    const css = 'a::part(drag):state(candidate-correct) { color: red; }';
+
+    expect(run(css)).toBe(css);
+  });
+
+  it('pairs only the states before ::part()', () => {
+    expect(run('a:state(radio)::part(drag):state(candidate-correct) { color: red; }')).toBe(
+      "a:is(:state(radio), [data-state~='radio'])::part(drag):state(candidate-correct) { color: red; }"
+    );
+  });
+
+  /**
+   * One unparseable selector drops the whole list. A browser without `:state()` cannot parse the
+   * post-::part arm, so kept in one rule it would take the bank chip's fallback arm down with it.
+   */
+  it('moves post-::part states out of a mixed list into a rule of their own', () => {
+    expect(run('a:state(drag):state(candidate-correct),\nb::part(drag):state(candidate-correct) { color: red; }')).toBe(
+      "a:is(:state(drag), [data-state~='drag']):is(:state(candidate-correct), [data-state~='candidate-correct']) { color: red; }\n" +
+        'b::part(drag):state(candidate-correct) { color: red; }'
+    );
+  });
+
+  it('does not split a selector list on the commas inside :is()', () => {
+    expect(run(':is(a, b):state(checked) { color: red; }')).toBe(
+      ":is(a, b):is(:state(checked), [data-state~='checked']) { color: red; }"
+    );
+  });
+
+  /**
    * The reason this runs on the parsed tree rather than over the file text: the
    * theme sources mention `:state(...)` in roughly twenty explanatory comments,
    * including forms like `:state(candidate-*)` that are not selectors at all.

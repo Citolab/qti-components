@@ -154,6 +154,36 @@ describe('qtiTransformItem API Methods', () => {
     expect(squareRoot?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
   });
 
+  it('should preserve a MathML namespace declared on the element itself', async () => {
+    // The shape of the real `math.xml` example: no prefix, the namespace is set on <math>, nested
+    // inside QTI elements. Only the root and QTI elements may lose their namespace.
+    const htmlDoc = qtiTransformItem()
+      .parse(
+        xml`
+        <qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0">
+          <qti-item-body>
+            <qti-prompt>
+              Which scientist is associated with <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mi>E</mi>
+                <mo>=</mo>
+                <mi>m</mi>
+              </math>
+            </qti-prompt>
+          </qti-item-body>
+        </qti-assessment-item>`
+      )
+      .htmlDoc();
+
+    const elements = Array.from(htmlDoc.querySelectorAll('*'));
+    const prompt = elements.find(element => element.localName === 'qti-prompt');
+    const math = elements.find(element => element.localName === 'math');
+    const identifier = elements.find(element => element.localName === 'mi');
+
+    expect(prompt?.namespaceURI).toBe('http://www.w3.org/1999/xhtml');
+    expect(math?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+    expect(identifier?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+  });
+
   it('should update elements with pciHooks correctly', async () => {
     const parsedXML = qtiTransformItem()
       .parse(

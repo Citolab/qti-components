@@ -18,7 +18,7 @@ export default [
     /*
      * Centred wherever it lives — this is the one-line follow-up the note here used to promise.
      *
-     * It read :host(:not([part~='drag'])), which reproduced an older accident: the centring rule
+     * It read :host(:not([part~='chip'])), which reproduced an older accident: the centring rule
      * used to be a document selector ('qti-gap-match-interaction qti-gap-text'), and a placed chip
      * lives inside qti-gap's shadow root where no document selector reaches. So a chip in the bank was
      * centred and the same chip in a gap was not, and the stylesheet gave no hint why.

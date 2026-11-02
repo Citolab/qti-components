@@ -19,6 +19,7 @@ import { extendElementName, extendElementsWithClass } from './item/extend';
 import { pciHooks } from './item/pci-hooks';
 import { shuffleInteractions } from './item/shuffle-interactions';
 import { stripStyleSheets } from './item/stylesheets';
+import { validateBindings } from './item/validate-bindings';
 import { warnMissingSeed } from './shared/missing-seed-warning';
 import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
 
@@ -41,6 +42,7 @@ export type transformItemApi = {
   convertCDATAtoComment: () => transformItemApi;
   shuffleInteractions: (seed?: string | number | null) => transformItemApi;
   stripStyleSheets: () => transformItemApi;
+  validateBindings: () => transformItemApi;
   html: () => string;
   xml: () => string;
   htmlDoc: (registry?: CustomElementRegistry) => DocumentFragment;
@@ -125,6 +127,11 @@ export const qtiTransformItem = () => {
     },
     stripStyleSheets(): typeof api {
       stripStyleSheets(xmlFragment);
+      return api;
+    },
+    /** Throws a QTI validation error when an interaction is bound to a response it cannot hold. */
+    validateBindings(): typeof api {
+      validateBindings(xmlFragment);
       return api;
     },
     html() {

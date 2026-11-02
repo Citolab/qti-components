@@ -61,16 +61,14 @@ describe('TestNavigation event handlers without a loaded test', () => {
         configurable: true
       });
     }
-    nav.dispatchEvent(
-      new CustomEvent('qti-assessment-test-connected', { detail: test as unknown as QtiAssessmentTest })
-    );
+    nav.dispatchEvent(new CustomEvent('qc-test-loaded', { detail: test as unknown as QtiAssessmentTest }));
   };
 
   const setSessionContext = (nav: TestNavigation): void => {
     (nav as unknown as { _sessionContext: unknown })._sessionContext = { navItemRefId: 'item1' };
   };
 
-  const candidateEvents = ['test-end-attempt', 'test-update-outcome-variable'];
+  const candidateEvents = ['qc-test-end-attempt', 'qc-test-update-outcome'];
 
   it.each(candidateEvents)('handles %s without a connected test', async eventName => {
     const nav = await mountNavigation();
@@ -114,14 +112,14 @@ describe('TestNavigation event handlers without a loaded test', () => {
    * session context, so it has its own way of finding nothing: an interaction
    * change that did not come from inside an assessment item.
    */
-  it('handles qti-interaction-changed raised outside an assessment item while autoscoring', async () => {
+  it('handles qc-item-response-changed raised outside an assessment item while autoscoring', async () => {
     const nav = await mountNavigation();
     nav.autoScoreItems = true;
     setSessionContext(nav);
     connectTest(nav, { processResponse: vi.fn() });
     await nav.updateComplete;
 
-    nav.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: {} }));
+    nav.dispatchEvent(new CustomEvent('qc-item-response-changed', { detail: {} }));
     await nav.updateComplete;
 
     expect(onError).not.toHaveBeenCalled();
@@ -134,7 +132,7 @@ describe('TestNavigation event handlers without a loaded test', () => {
     connectTest(nav, { processResponse });
     await nav.updateComplete;
 
-    nav.dispatchEvent(new CustomEvent('test-end-attempt'));
+    nav.dispatchEvent(new CustomEvent('qc-test-end-attempt'));
     await nav.updateComplete;
 
     expect(processResponse).toHaveBeenCalledWith(true, false);
@@ -149,7 +147,7 @@ describe('TestNavigation event handlers without a loaded test', () => {
     await nav.updateComplete;
 
     nav.dispatchEvent(
-      new CustomEvent('test-update-outcome-variable', {
+      new CustomEvent('qc-test-update-outcome', {
         detail: { assessmentItemRefId: 'item1', outcomeVariableId: 'SCORE', value: '1' }
       })
     );

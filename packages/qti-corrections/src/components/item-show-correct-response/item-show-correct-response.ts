@@ -14,6 +14,9 @@ export class ItemShowCorrectResponse extends LitElement {
 
   static override styles = css`
     :host {
+      ${styles.hostBox};
+    }
+    div {
       ${styles.btn};
     }
     :host([disabled]) {

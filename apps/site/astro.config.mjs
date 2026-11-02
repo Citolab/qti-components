@@ -23,6 +23,7 @@ export default defineConfig({
           items: [
             { label: 'Authoring Response Processing', slug: 'guides/response-processing' },
             { label: 'Showing Feedback', slug: 'guides/feedback' },
+            { label: 'Styling and Theming', slug: 'guides/styling' },
             { label: 'Extending Interactions', slug: 'guides/extending-interactions' }
           ]
         },

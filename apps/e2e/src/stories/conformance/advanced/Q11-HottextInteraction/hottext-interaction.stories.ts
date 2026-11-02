@@ -9,7 +9,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q11 - Hot-text Interaction',
+  title: 'Testing/Conformance/advanced/Q11 - Hot-text Interaction',
   tags: ['autodocs'],
   beforeEach: async () => {}
 };

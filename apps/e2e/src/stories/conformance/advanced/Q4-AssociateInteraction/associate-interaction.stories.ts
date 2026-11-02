@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q4 - Associate Interaction',
+  title: 'Testing/Conformance/advanced/Q4 - Associate Interaction',
   beforeEach: async () => {}
 };
 export default meta;

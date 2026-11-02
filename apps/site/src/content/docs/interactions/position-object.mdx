@@ -1,35 +1,52 @@
 ---
 title: Position object interaction
-description: qti-position-object-interaction — drag an image onto a background stage.
+description: qti-position-object-interaction — place an image, one or more times, on another image (the stage).
 ---
+
 import InteractionDemo from '../../../components/InteractionDemo.astro';
 
-**3.2.16 Position Object Interaction** — a single image which must be positioned on another graphic image (the stage) by the candidate.
+**3.2.16 Position Object Interaction** — a single image (the object) that the candidate places on another image (the stage), once or several times. The response has base type `point`: for each placement, where the object's centre point landed, in the stage image's own coordinates.
 
-:::caution
-Unlike every other interaction on this site, `qti-position-object-interaction` and its companion `qti-position-object-stage` extend plain `LitElement`, **not** the shared `Interaction` base — there's no `response-identifier`, `disabled`, `correct-response`, etc., and no wired `qti-interaction-response` event in current source. Dragging repositions the image visually, but nothing is persisted as a response yet.
-:::
+Also see the attributes shared by every interaction on the [overview page](/interactions/overview/).
 
 ## Example
 
-The stage and the interaction are siblings — the stage holds the background image, the interaction holds the draggable one.
-
 <InteractionDemo>
   <qti-position-object-stage>
-    <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />
-    <qti-position-object-interaction>
-      <img src="https://qti-convert.web.app/images/airport.png" alt="Drop Zone" />
+    <img src="https://qti-convert.web.app/images/uk.png" alt="Map of the United Kingdom" width="206" height="280" />
+    <qti-position-object-interaction response-identifier="RESPONSE" max-choices="3">
+      <img src="https://qti-convert.web.app/images/airport.png" alt="Airport" width="30" height="30" />
     </qti-position-object-interaction>
   </qti-position-object-stage>
 </InteractionDemo>
 
 ```html
 <qti-position-object-stage>
-  <img src="https://qti-convert.web.app/images/uk.png" width="206" height="280" />
-  <qti-position-object-interaction>
-    <img src="https://qti-convert.web.app/images/airport.png" alt="Drop Zone" />
+  <img src="uk.png" alt="Map of the United Kingdom" width="206" height="280" />
+  <qti-position-object-interaction response-identifier="RESPONSE" max-choices="3">
+    <img src="airport.png" alt="Airport" width="30" height="30" />
   </qti-position-object-interaction>
 </qti-position-object-stage>
 ```
 
-`qti-position-object-stage` finds the draggable image via `this.querySelector('qti-position-object-interaction > img')` and implements dragging directly with `mousedown`/`mousemove`/`mouseup` — it doesn't use the shared drag/drop mixins the other graphic interactions use.
+The stage holds the stage image and one or more interactions; each interaction holds its object. The object sits beside the stage, and every placed copy is drawn on the stage image.
+
+## Attributes
+
+| Attribute      | Type     | Default              | Notes                                                                                                            |
+| -------------- | -------- | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `max-choices`  | `number` | `1`                  | Most placements; `0` = no limit. At the maximum no further copy is placed and the host carries `:state(used)`.   |
+| `min-choices`  | `number` | `0`                  | Fewest placements for a valid response.                                                                          |
+| `center-point` | `string` | centre of the object | The object's centre point, `x y` from its top-left, in the object's own pixels. The response records this point. |
+| `response`     | `string` | —                    | Points as `x y,x y`, to restore a response.                                                                      |
+
+## Placing
+
+- **Pointer:** drag the object onto the stage, or click it and then click the stage. Drag a placed copy to move it, or off the stage to remove it.
+- **Keyboard:** focus the object and press Enter or Space to place a copy at the centre of the stage. On a placed copy, the arrow keys move it one unit (with Shift, ten) and Delete or Backspace removes it.
+
+Coordinates are in the stage image's `width`/`height` (or its natural size), so a stage shown smaller or larger records the same points. Area-mapping areas are never shown, only the candidate's placements.
+
+## Styling
+
+Parts: `object` (tokens `selected` while a click has picked it up, `used` at `max-choices`), `point` (each placed copy), `message`. States: `used`, `disabled`, `readonly`.

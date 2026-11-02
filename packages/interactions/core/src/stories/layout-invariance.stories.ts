@@ -28,7 +28,7 @@ import '@qti-components/interactions';
  * controls.
  */
 const meta: Meta = {
-  title: 'Diagnostics/Layout Invariance',
+  title: 'Testing/Diagnostics/Layout invariance',
   parameters: {
     chromatic: { disableSnapshot: true }
   }

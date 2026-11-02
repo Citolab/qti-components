@@ -3,6 +3,7 @@
 This document describes the drag-drop mixin system used across QTI interactions.
 
 > **See also**
+>
 > - [CONFIGURABILITY.md](./CONFIGURABILITY.md) — how per-interaction variation is expressed today
 >   (nine mechanisms), where QTI leaks into the generic machinery, and what a configurable,
 >   QTI-agnostic shape would look like. A design note; nothing in it is implemented.
@@ -51,7 +52,7 @@ import {
 
 class MyInteraction extends DragDropSlottedSortableMixin(
   DragDropSlottedMixin(Interaction, 'qti-simple-choice', 'qti-gap', 'slot[part="drags"]'),
-  '[qti-draggable="true"]' // selector for sortable items within slots
+  '[data-draggable="true"]' // selector for sortable items within slots
 ) {
   // Items can be dragged from inventory to slots (slotted behavior)
   // Once placed, items can be reordered within their slot (sortable behavior)

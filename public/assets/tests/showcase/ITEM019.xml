@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM019"
+                     title="Labelling a picture"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="directedPair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>evaporation gap_sea</qti-value>
+            <qti-value>condensation gap_cloud</qti-value>
+            <qti-value>precipitation gap_rain</qti-value>
+            <qti-value>runoff gap_river</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="evaporation gap_sea" mapped-value="1"/>
+            <qti-map-entry map-key="condensation gap_cloud" mapped-value="1"/>
+            <qti-map-entry map-key="precipitation gap_rain" mapped-value="1"/>
+            <qti-map-entry map-key="runoff gap_river" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="4">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>4</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <qti-graphic-gap-match-interaction response-identifier="RESPONSE">
+            <qti-prompt>
+                <p>Drag each stage of the water cycle to the right place in the picture.</p>
+            </qti-prompt>
+            <img src="resources/water-cycle.svg" width="800" height="450" alt="The water cycle: the sun warms the sea, water vapour rises to a cloud, rain falls on a mountain and a river flows back to the sea. Four empty labels mark the stages."/>
+            <qti-gap-text identifier="evaporation" match-max="1">Evaporation</qti-gap-text>
+            <qti-gap-text identifier="condensation" match-max="1">Condensation</qti-gap-text>
+            <qti-gap-text identifier="precipitation" match-max="1">Precipitation</qti-gap-text>
+            <qti-gap-text identifier="runoff" match-max="1">Run-off</qti-gap-text>
+            <qti-associable-hotspot identifier="gap_sea" shape="rect" coords="120,200,290,240" match-max="1"/>
+            <qti-associable-hotspot identifier="gap_cloud" shape="rect" coords="470,28,640,68" match-max="1"/>
+            <qti-associable-hotspot identifier="gap_rain" shape="rect" coords="615,215,785,255" match-max="1"/>
+            <qti-associable-hotspot identifier="gap_river" shape="rect" coords="410,395,580,435" match-max="1"/>
+        </qti-graphic-gap-match-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Above the sea → Evaporation</li>
+                    <li>Above the cloud → Condensation</li>
+                    <li>Beside the rain → Precipitation</li>
+                    <li>By the river → Run-off</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

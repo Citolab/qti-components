@@ -35,6 +35,11 @@ import type { CandidateCorrection } from '../mixins/active-element-correction.mi
  *   - The verdict survives typing. It is a property, not the `showCandidateCorrection` toggle, so
  *     `afterResponseVariableUpdated()` does not clear it. If a stale grade should be dropped when the
  *     candidate edits their answer, that is an explicit decision for the host app to make.
+ *
+ * @cssstate candidate-correct - The verdict pushed in is `correct`.
+ * @cssstate candidate-incorrect - The verdict pushed in is `incorrect`.
+ * @cssstate candidate-partial - The verdict pushed in is `partially-correct` (alias `candidate-partially-correct`, one major).
+ * @csspart correction - The verdict badge in the field's top end corner; its second token is the verdict state, followed by the old `correction-<verdict>` token for one major.
  */
 export class QtiExtendedTextInteractionCorrection extends ActiveElementCorrectionMixin(QtiExtendedTextInteraction) {
   static override styles = [
@@ -46,9 +51,9 @@ export class QtiExtendedTextInteractionCorrection extends ActiveElementCorrectio
        * is the contract in correction.styles.ts, which deliberately leaves the shared badge in flow
        * and invites a component to lift it out if it wants a corner badge.
        *
-       * A textarea is a box the candidate writes in, so the badge goes over its top-left corner
-       * rather than trailing the text the way a chip's does, and the theme reserves the gutter for it
-       * (padding-left on ::part(textarea)).
+       * A textarea is a box the candidate writes in, so the badge goes in its top end corner (top
+       * right in a left-to-right text) rather than trailing the text the way a chip's does, and the
+       * theme reserves the gutter for it (the end padding on ::part(textarea)).
        *
        * Anchored to the TEXTAREA, not to the host. The badge's containing block is :host, and the
        * host also contains the prompt slot — so a plain top: 0.85rem measured from the host lands on
@@ -77,9 +82,10 @@ export class QtiExtendedTextInteractionCorrection extends ActiveElementCorrectio
          */
         height: calc(var(--qti-correction-size) * var(--qti-field-line-height));
 
-        /* Inset exactly as the text is: the same trailing token the two field-shaped interactions
-           use, read here as a LEADING inset because this badge lives in a left gutter. */
-        left: var(--qti-correction-inset);
+        /* In the gutter at the end of the line, inset exactly as the text is from the other side:
+           the same trailing token the two field-shaped interactions use. The gutter was on the start
+           side once, which left every answer indented by the badge's room even when ungraded. */
+        inset-inline-end: var(--qti-correction-inset);
 
         /* Anchored to the field's first line: its top edge plus the field's own padding-top. */
         top: calc(anchor(top) + var(--qti-spacing));

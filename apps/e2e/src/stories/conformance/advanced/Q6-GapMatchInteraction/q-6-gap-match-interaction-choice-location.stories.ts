@@ -16,7 +16,7 @@ type Story = StoryObj;
  * Tests for choice positioning relative to the passage text (top, bottom, left, right).
  */
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-6 Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-6 Gap Match Interaction'
 };
 export default meta;
 
@@ -36,7 +36,7 @@ const getInteraction = (assessmentItem: QtiAssessmentItem, className: string) =>
   const interaction = assessmentItem.querySelector<QtiGapMatchInteraction>(
     `qti-gap-match-interaction[class="${className}"]`
   )!;
-  const dragSlot = interaction.shadowRoot!.querySelector('slot[part="drags"]')!;
+  const dragSlot = interaction.shadowRoot!.querySelector('slot[part~="bank"]')!;
   const passageText = interaction.querySelector('blockquote')!;
   return { interaction, dragSlot, passageText };
 };

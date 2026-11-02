@@ -31,7 +31,7 @@ class ShadowDropTarget extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const chip = document.createElement('qti-gap-text');
     chip.setAttribute('identifier', 'hidden_chip');
-    chip.setAttribute('qti-draggable', 'true');
+    chip.setAttribute('data-draggable', 'true');
     chip.textContent = 'deep';
     root.append(chip);
   }

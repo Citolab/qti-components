@@ -31,8 +31,10 @@ export type Orientation = 'horizontal' | 'vertical' | undefined;
  * @slot - Default slot for `qti-simple-choice` elements.
  *
  * @csspart prompt - Wrapper around the prompt slot.
- * @csspart slot - Wrapper around the default slot containing the choices.
+ * @csspart choices - The slot holding the choices (was `slot`).
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiChoiceInteraction
   extends VocabularyMixin(ChoicesMixin(Interaction, 'qti-simple-choice'), 'qti-simple-choice')
@@ -53,7 +55,7 @@ export class QtiChoiceInteraction
   override render() {
     return html`
       <slot part="prompt" name="prompt"></slot>
-      <slot part="slot" @slotchange=${this.#handleSlotChange}></slot>
+      <slot part="choices slot" @slotchange=${this.#handleSlotChange}></slot>
       <div part="message" role="alert" id="validation-message"></div>
     `;
   }

@@ -1,0 +1,63 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as Player from './build-a-player.stories';
+
+<Meta of={Player} />
+
+# Build a player
+
+A test player is plain markup: the test, the item on screen, and the controls you place around it.
+The parts that show where the candidate is (a progress line, numbered navigation) are written as
+templates, with `<test-stamp>`. No component to write, no framework.
+
+```js
+import '@citolab/qti-components';
+```
+
+That one import registers every element used below, `<test-stamp>` included.
+
+## 1. The skeleton
+
+<Canvas of={Player.Skeleton} sourceState="shown" />
+
+- `qti-test` is the root: it owns the session. `navigate="item"` shows one item at a time.
+- `test-navigation` provides the test's state to everything inside it. Put your controls anywhere
+  inside, in any layout.
+- `test-container` loads the test from `test-url` and shows the current item.
+- `test-prev` and `test-next` move through it.
+
+## 2. Say where the candidate is
+
+<Canvas of={Player.Progress} sourceState="shown" />
+
+`<test-stamp>` renders the `<template>` inside it with the state of the test, and renders it again
+whenever that state changes. `{{ … }}` is an expression on that state:
+
+| Name             | What it is                                                                                    |
+| ---------------- | --------------------------------------------------------------------------------------------- |
+| `test`           | the test: `title`, `identifier`, and `plugins` (what plugins keep, such as bookmarks)         |
+| `activeTestpart` | the current test part; `items` and `sections` list everything in it                           |
+| `activeSection`  | the current section, with its `items`                                                         |
+| `activeItem`     | the item on screen: `identifier`, `title`, `index`, `type` (`info` or `regular`), `completed` |
+| `view`           | the current view (`candidate`, `scorer`, …)                                                   |
+
+Add the `debug` attribute to a stamp to print everything it can read above the template.
+
+## 3. Numbered navigation
+
+<Canvas of={Player.Navigation} sourceState="shown" />
+
+- `<template type="repeat" repeat="{{ activeTestpart.items }}">` stamps its content once per item,
+  with the item as `item`. Repeat `activeTestpart.sections` for one entry per section, with
+  `<test-section-link section-id="{{ section.identifier }}">`.
+- `<test-item-link item-id="…">` jumps to that item. It looks like the other test buttons; the
+  `active` class is yours to style (here the demo pages paint it in the theme's selection colours).
+- `<template type="if" if="{{ … }}">` renders its content only when the expression is true, for
+  example a mark on an info item: `if="{{ item.type === 'info' }}"`.
+
+## Where next
+
+- [Theming](?path=/story/implementation-theming--theming): give the player your colours, type and shape.
+- [State](?path=/docs/implementation-state--docs): start a test, store its state and come back to it.
+- [Plugins](?path=/docs/qti-test-plugins-bookmark--docs): bookmarks, text to speech, scoring and the
+  other controls you can drop into the player.

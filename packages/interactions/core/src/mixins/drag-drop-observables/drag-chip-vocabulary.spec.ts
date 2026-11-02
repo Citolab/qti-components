@@ -101,7 +101,8 @@ const OPT_IN = [
 const GRAPHIC_GAP_MATCH = `
   <qti-graphic-gap-match-interaction response-identifier="R">
     <img slot="image" alt="" width="200" height="120" />
-    <qti-gap-text identifier="G1" match-max="1">winter</qti-gap-text>
+    <qti-gap-img identifier="G1" match-max="1"><img alt="" width="40" height="30" /></qti-gap-img>
+    <qti-gap-text identifier="G2" match-max="1">winter</qti-gap-text>
     <qti-associable-hotspot coords="0,0,60,40" identifier="H1" match-max="1" shape="rect"></qti-associable-hotspot>
   </qti-graphic-gap-match-interaction>`;
 
@@ -207,11 +208,12 @@ describe('drag chip vocabulary', () => {
   });
 
   /**
-   * The other half, and the one the removed exclusions used to state. A ggm chip is a picture on a
-   * picture: give it a card and it covers the image its hotspot sits on. It stays out by declaring
-   * no vocabulary block, so this fails the moment anything reintroduces a cross-interaction rule.
+   * The other half, and the one the removed exclusions used to state. A ggm image tile is a picture
+   * on a picture: give it a card and it covers the image its hotspot sits on. It stays out by
+   * declaring no vocabulary block, so this fails the moment anything reintroduces a cross-interaction
+   * rule.
    */
-  test('graphic-gap-match: its chips take no card and no grip', async () => {
+  test('graphic-gap-match: its image tiles take no card and no grip', async () => {
     document.body.innerHTML = GRAPHIC_GAP_MATCH;
     await settle();
 
@@ -225,5 +227,16 @@ describe('drag chip vocabulary', () => {
 
     const grip = gripOf(chip);
     expect(grip?.content ?? 'none', 'a ggm chip shows no drag handle').toBe('none');
+  });
+
+  /** A ggm WORD chip is a label, not a picture, so it is boxed like a gap-match chip. */
+  test('graphic-gap-match: its word chips are boxed', async () => {
+    document.body.innerHTML = GRAPHIC_GAP_MATCH;
+    await settle();
+
+    const cs = getComputedStyle(byId('G2'));
+    expect(cs.backgroundColor, 'a word chip has an opaque fill').not.toBe('rgba(0, 0, 0, 0)');
+    expect(parseFloat(cs.borderTopWidth), 'a word chip has a border').toBeGreaterThan(0);
+    expect(parseFloat(cs.paddingLeft), 'a word chip has room round its text').toBeGreaterThan(0);
   });
 });

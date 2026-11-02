@@ -20,11 +20,18 @@ Unlike the other interactions on this site, `qti-end-attempt-interaction` extend
 
 Clicking it dispatches an `end-attempt` event (bubbles/composed) with `detail: { responseIdentifier, countAttempt }`. On its own — outside a `qti-assessment-item`/`qti-test` context — that's all it does; the actual "end attempt" behavior (scoring, revealing feedback) is handled by whatever's listening, such as [`test-navigation`](/qti-test/navigation/) or an item's own response processing.
 
+## Behaviour
+
+- **Pressing it ends the attempt.** Response processing runs at once. The button's response is `true`, every other end-attempt interaction's `false`; an attempt ended any other way sets them all to `false` ([QTI info model §2.4.5](https://www.imsglobal.org/spec/qti/v3p0/info#Data_EndAttemptInteraction)).
+- **It counts as an attempt unless it says `count-attempt="false"`.** QTI 3 gives `count-attempt` no default. We count when it is absent, as QTI 2.x's default `true` did and as amp-up and QTI.JS do.
+- **A counted attempt uses up `max-attempts`.** In a test the default is one attempt, and the item is locked once it is used. Give a hint or "show solution" button `count-attempt="false"` when it must not cost the candidate an attempt.
+- **It follows its item.** It cannot be pressed while the item is `disabled` or `readonly`, or once an adaptive item has set `completionStatus` to `completed`: that closes the item session, so no further attempt can start ([QTI info model §2.2.2](https://www.imsglobal.org/spec/qti/v3p0/info#Variables)).
+
 ## `qti-end-attempt-interaction`
 
 | Attribute | Type | Default | Notes |
 |---|---|---|---|
 | `response-identifier` | `string` | — | Reported in the `end-attempt` event detail. |
 | `disabled` | `boolean` (reflect) | `false` | |
-| `count-attempt` | `'true' \| 'false'` | `null` | Per the QTI spec's `count-attempt` characteristic — limits how many times this mechanism can be used (e.g. capping the number of hints). |
+| `count-attempt` | `'true' \| 'false'` | `null` (counts) | Whether pressing it counts as an attempt. Only `'false'` does not count. |
 | `title` | `string` | `'end attempt'` | The button's label text. |

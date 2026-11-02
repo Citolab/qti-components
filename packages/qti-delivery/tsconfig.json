@@ -1,0 +1,19 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "moduleResolution": "bundler",
+        // No DOM lib and no ambient types: this package runs under Node too, so a browser
+        // global (`document`, `window`, `HTMLElement`) fails the build instead of a server.
+        "lib": ["ES2022"],
+        "types": []
+    },
+    "include": [
+        "src/index.ts"
+    ],
+    "exclude": [
+        "**/*.spec.ts",
+        "**/*.stories.ts"
+    ]
+}

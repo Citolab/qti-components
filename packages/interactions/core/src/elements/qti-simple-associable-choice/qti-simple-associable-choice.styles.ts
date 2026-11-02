@@ -26,9 +26,9 @@ export default [
      * draggable chip; in match's last match-set it is a drop target. In tabular match it is neither —
      * drag-drop is off and it is a row or column header in a grid.
      *
-     * So the drop-target rules key on :state(droppable), which the interaction sets on exactly the
+     * So the drop-target rules key on :state(drop), which the interaction sets on exactly the
      * elements it tracks as droppables. Keying on the *absence* of a chip marker instead
-     * (:not(:state(drag))) swept up every tabular header cell and gave each one a 4rem minimum.
+     * (:not(:state(chip))) swept up every tabular header cell and gave each one a 4rem minimum.
      *
      * A state rather than an attribute, and this used to be written both ways. An attribute cannot
      * be used by every host: the editor renders these choices inside a ProseMirror document, whose
@@ -37,7 +37,7 @@ export default [
      * that observer, so the state is the form that works everywhere and the [qti-droppable]
      * attribute that used to accompany it is gone. Positive opt-in, so tabular headers are untouched.
      */
-    :host(:is(:state(droppable), [data-state~='droppable'])) {
+    :host(:is(:state(drop), [data-state~='drop'])) {
       /*
        * The CARD token, not the slot one. This element is a droppable only in match, and match
        * publishes no measurement — so reading --qti-dropzone-min-height here meant reading a name
@@ -63,7 +63,7 @@ export default [
       justify-content: space-between;
     }
 
-    :host(:is(:state(droppable), [data-state~='droppable'])) [part~='drop'] {
+    :host(:is(:state(drop), [data-state~='drop'])) [part~='drop'] {
       /*
        * Match's dropzones are NOT auto-sized from the chips: a match target is a category, and
        * should look able to hold several answers rather than hugging the widest one. So this reads
@@ -103,7 +103,7 @@ export default [
     }
 
     /* The label sits against the drop region below it. */
-    :host(:is(:state(droppable), [data-state~='droppable'])) [part~='label'] {
+    :host(:is(:state(drop), [data-state~='drop'])) [part~='label'] {
       align-content: flex-end;
     }
 
@@ -113,12 +113,12 @@ export default [
      * bank. The <slot> this replaced collapsed to nothing by accident; a div has to be told.
      *
      * Two conditions, because a chip identifies itself two ways:
-     *   :state(drag)    a chip in the light-DOM bank, from the interaction's draggablesSelector
-     *   [part~='drag']  a chip a drop target renders, where that selector cannot reach it — match's
+     *   :state(chip)    a chip in the light-DOM bank, from the interaction's draggablesSelector
+     *   [part~='chip']  a chip a drop target renders, where that selector cannot reach it — match's
      *                   selector names a light-DOM ancestry the placed clone no longer has
      */
-    :host(:is(:state(drag), [data-state~='drag'])) [part~='drop'],
-    :host([part~='drag']) [part~='drop'] {
+    :host(:is(:state(chip), [data-state~='chip'])) [part~='drop'],
+    :host([part~='chip']) [part~='drop'] {
       display: none;
     }
 

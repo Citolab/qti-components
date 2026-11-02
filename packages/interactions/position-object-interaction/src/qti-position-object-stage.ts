@@ -2,73 +2,21 @@ import { LitElement, html } from 'lit';
 
 import styles from './qti-position-object-stage.styles';
 
-import type { CSSResultGroup, PropertyValueMap } from 'lit';
+import type { CSSResultGroup } from 'lit';
+
+/**
+ * The stage of one or more position object interactions: the image the objects are placed on, and
+ * the containing block of their placed copies. Layout only: each `qti-position-object-interaction`
+ * inside it handles its own input and response, measured against this stage's image.
+ *
+ * @customElement qti-position-object-stage
+ * @slot - The stage image (`img` or `picture`), then the interactions.
+ */
 export class QtiPositionObjectStage extends LitElement {
   static override styles: CSSResultGroup = styles;
 
-  choiceOrdering: boolean;
-  startX: any;
-  startY: any;
-  dragElement: any;
-
   override render() {
     return html`<slot></slot>`;
-  }
-
-  constructor() {
-    super();
-    this.removeMoveListener = this.removeMoveListener.bind(this);
-    this.dragElementHandler = this.dragElementHandler.bind(this);
-  }
-
-  // Define a function to handle the mousemove event on the draggable element
-  dragElementHandler(event: MouseEvent): void {
-    event.preventDefault();
-
-    // Calculate the distance the mouse has moved since the last event
-    const deltaX: number = event.clientX - this.startX;
-    const deltaY: number = event.clientY - this.startY;
-
-    // Update the position of the draggable element
-    this.dragElement.style.left = this.dragElement.offsetLeft + deltaX + 'px';
-    this.dragElement.style.top = this.dragElement.offsetTop + deltaY + 'px';
-
-    // Update the starting position of the mouse
-    this.startX = event.clientX;
-    this.startY = event.clientY;
-  }
-
-  override firstUpdated(a: PropertyValueMap<any>): void {
-    super.firstUpdated(a);
-
-    // Get the draggable and drop zone elements
-    this.dragElement = this.querySelector('qti-position-object-interaction>img');
-    // const canvasElement = document.getElementById('canvas');
-
-    // Initialize variables for the starting position of the draggable element
-    this.startX = 0;
-    this.startY = 0;
-
-    // Add a mousedown event listener to the draggable element
-    this.dragElement.addEventListener('mousedown', (event: MouseEvent) => {
-      // Save the starting position of the mouse
-      this.startX = event.clientX;
-      this.startY = event.clientY;
-
-      // Add a mousemove event listener to the document
-      document.addEventListener('mousemove', this.dragElementHandler, true);
-    });
-    document.addEventListener('mouseup', this.removeMoveListener);
-  }
-
-  removeMoveListener() {
-    document.removeEventListener('mousemove', this.dragElementHandler, true);
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    document.removeEventListener('mousemove', this.dragElementHandler);
-    document.removeEventListener('mouseup', this.removeMoveListener);
   }
 }
 

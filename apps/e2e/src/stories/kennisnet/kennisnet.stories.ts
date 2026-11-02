@@ -1,13 +1,26 @@
 import { html } from 'lit';
 
+import { KENNISNET_STORY_WIDTH } from './story-width';
 import { withCorrection } from './with-correction';
 
-import type { Meta, StoryObj } from '@storybook/web-components-vite';
+import type { Decorator, Meta, StoryObj } from '@storybook/web-components-vite';
+
+/**
+ * Fixed width for overlay comparison — see story-width.ts. On white, so the captures stay white: the
+ * Kennisnet preset paints the page in its lavender, which is the page's colour, not the item's.
+ */
+const withFixedWidth: Decorator = story =>
+  html`<div style="width: ${KENNISNET_STORY_WIDTH}; background-color: white">${story()}</div>`;
 
 const meta: Meta = {
-  title: 'Kennisnet',
+  title: 'Corrections/Visual regression suite',
+  // The VRT baselines are named after the story id; keep the id it had under its old title.
+  id: 'corrections-kennisnet-suite',
+  // Kennisnet's look comes from its theme preset (.storybook/themes.css), tier-1 tokens only.
+  globals: { theme: 'Kennisnet' },
   tags: ['autodocs', 'no-tests', 'vrt'],
-  decorators: [withCorrection],
+  // Later decorators wrap earlier ones: the fixed width sits outside the correction shadow host.
+  decorators: [withCorrection, withFixedWidth],
   parameters: {
     layout: 'fullscreen',
     viewport: {

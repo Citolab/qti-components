@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="title">
+  <title id="title">The water cycle: the sun warms the sea, water vapour rises to a cloud, rain falls on a mountain and a river flows back to the sea. Four empty labels mark the stages.</title>
+  <rect width="800" height="450" fill="#dcedf6"/>
+  <circle cx="90" cy="80" r="42" fill="#f6c344"/>
+  <g stroke="#f6c344" stroke-width="5" stroke-linecap="round">
+    <path d="M90 20 v-12"/><path d="M150 80 h12"/><path d="M132 38 l9 -9"/><path d="M132 122 l9 9"/><path d="M48 38 l-9 -9"/>
+  </g>
+
+  <path d="M380 450 L380 330 L470 280 L560 210 L640 150 L720 220 L800 250 L800 450 Z" fill="#7aa66b"/>
+  <path d="M640 150 L668 174 L652 172 L640 184 L626 170 L612 172 Z" fill="#ffffff"/>
+  <path d="M0 330 Q 50 318 100 330 T 200 330 T 300 330 T 400 330 L400 450 L0 450 Z" fill="#2f7fb5"/>
+  <path d="M0 360 Q 50 350 100 360 T 200 360 T 300 360" fill="none" stroke="#9fd0e6" stroke-width="3"/>
+  <path d="M600 200 C 580 260 520 280 500 320 S 430 360 390 380" fill="none" stroke="#2f7fb5" stroke-width="12" stroke-linecap="round"/>
+
+  <g fill="#ffffff" stroke="#9fb7c8" stroke-width="2">
+    <path d="M470 130 a32 32 0 0 1 40 -40 a42 42 0 0 1 78 6 a30 30 0 0 1 22 54 h-130 a20 20 0 0 1 -10 -20 z"/>
+  </g>
+  <g stroke="#2f7fb5" stroke-width="4" stroke-linecap="round">
+    <path d="M500 165 l-6 18"/><path d="M530 170 l-6 18"/><path d="M560 165 l-6 18"/><path d="M590 170 l-6 18"/>
+    <path d="M515 195 l-6 18"/><path d="M545 200 l-6 18"/><path d="M575 195 l-6 18"/>
+  </g>
+
+  <g fill="none" stroke="#5a8fb5" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10">
+    <path d="M160 310 C 200 250 260 200 330 170 S 430 130 460 125"/>
+    <path d="M260 310 C 290 260 340 220 400 190"/>
+  </g>
+  <path d="M452 116 l14 8 l-14 8 z" fill="#5a8fb5"/>
+
+  <g fill="#ffffff" stroke="#1f5f8b" stroke-width="2" stroke-dasharray="6 4">
+    <rect x="120" y="200" width="170" height="40" rx="8"/>
+    <rect x="470" y="28" width="170" height="40" rx="8"/>
+    <rect x="615" y="215" width="170" height="40" rx="8"/>
+    <rect x="410" y="395" width="170" height="40" rx="8"/>
+  </g>
+</svg>

@@ -15,36 +15,22 @@ type Story = StoryObj;
 const rgbIsEqual = (color1: { r: number; g: number; b: number }, color2: { r: number; g: number; b: number }) =>
   Boolean(color1 && color2 && color1.r === color2.r && color1.g === color2.g && color1.b === color2.b);
 
-// Utility function to convert hex color to RGB
-function hexToRgb(hex) {
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  hex = hex.replace(shorthandRegex, (_m, r, g, b) => r + r + g + g + b + b);
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      }
-    : null;
-}
-
-// Utility function to convert RGB string to RGB object
-function rgbStringToRgb(rgbString) {
-  const result = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*[\d.]+)?\s*\)$/.exec(rgbString);
-  return result
-    ? {
-        r: parseInt(result[1], 10),
-        g: parseInt(result[2], 10),
-        b: parseInt(result[3], 10)
-      }
-    : null;
+// Any CSS colour (hex, rgb(), oklch(), …) as 8-bit sRGB, by painting it on a canvas. The theme
+// writes its colours in oklch, so a computed value is no longer an rgb() string to parse.
+const colorCanvas = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+function toRgb(color: string) {
+  if (!color) return null;
+  colorCanvas.clearRect(0, 0, 1, 1);
+  colorCanvas.fillStyle = color;
+  colorCanvas.fillRect(0, 0, 1, 1);
+  const [r, g, b] = colorCanvas.getImageData(0, 0, 1, 1).data;
+  return { r, g, b };
 }
 
 const wait = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-8 Graphic Gap Match Interaction'
 };
 export default meta;
 
@@ -52,8 +38,8 @@ export const Q8_L2_D108: Story = {
   name: 'Q8-L2-D108',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -62,8 +48,8 @@ export const Q8_L2_D108: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -95,10 +81,10 @@ export const Q8_L2_D108: Story = {
     const qtiDarkBgActive = rootStyles.getPropertyValue('--qti-selections-dark-bg').trim();
     const qtiDarkBorderActive = rootStyles.getPropertyValue('--qti-selections-dark-border').trim();
 
-    const qtiLightBgActiveRgb = rgbStringToRgb(qtiLightBgActive) || hexToRgb(qtiLightBgActive);
-    const qtiLightBorderActiveRgb = rgbStringToRgb(qtiLightBorderActive) || hexToRgb(qtiLightBorderActive);
-    const qtiDarkBgActiveRgb = rgbStringToRgb(qtiDarkBgActive) || hexToRgb(qtiDarkBgActive);
-    const qtiDarkBorderActiveRgb = rgbStringToRgb(qtiDarkBorderActive) || hexToRgb(qtiDarkBorderActive);
+    const qtiLightBgActiveRgb = toRgb(qtiLightBgActive);
+    const qtiLightBorderActiveRgb = toRgb(qtiLightBorderActive);
+    const qtiDarkBgActiveRgb = toRgb(qtiDarkBgActive);
+    const qtiDarkBorderActiveRgb = toRgb(qtiDarkBorderActive);
 
     // Disable animations for all graphic-gap-match-interaction elements to avoid timing issues
     const allInteractions = assessmentItem.querySelectorAll('qti-graphic-gap-match-interaction');
@@ -110,7 +96,7 @@ export const Q8_L2_D108: Story = {
       'qti-graphic-gap-match-interaction[class="qti-choices-top qti-selections-dark"]'
     ) as HTMLElement;
 
-    const dragSlot = qtiGapMatchInteraction.shadowRoot.querySelector('slot[part="drags"]');
+    const dragSlot = qtiGapMatchInteraction.shadowRoot.querySelector('slot[part~="bank"]');
     const responseArea = qtiGapMatchInteraction.shadowRoot.querySelector('slot[part="image"]');
     const gapChoices = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-gap-img'));
     const responseHotspots = Array.from(qtiGapMatchInteraction.querySelectorAll('qti-associable-hotspot'));
@@ -135,8 +121,8 @@ export const Q8_L2_D108: Story = {
       await wait(300);
       const computedStyle = getComputedStyle(responseHotspots[2]);
 
-      const backgroundColor = rgbStringToRgb(computedStyle.backgroundColor) || hexToRgb(computedStyle.backgroundColor);
-      const borderColor = rgbStringToRgb(computedStyle.borderColor) || hexToRgb(computedStyle.borderColor);
+      const backgroundColor = toRgb(computedStyle.backgroundColor);
+      const borderColor = toRgb(computedStyle.borderColor);
 
       expect(rgbIsEqual(backgroundColor, qtiDarkBgActiveRgb)).toBe(true); // Ensure dark background
       expect(rgbIsEqual(borderColor, qtiDarkBorderActiveRgb)).toBe(true); // Ensure dark border
@@ -147,7 +133,7 @@ export const Q8_L2_D108: Story = {
       'qti-graphic-gap-match-interaction[class="qti-choices-top qti-selections-light"]'
     ) as HTMLElement;
 
-    const dragSlotLight = qtiGapMatchInteractionLight.shadowRoot.querySelector('slot[part="drags"]');
+    const dragSlotLight = qtiGapMatchInteractionLight.shadowRoot.querySelector('slot[part~="bank"]');
     const responseAreaLight = qtiGapMatchInteractionLight.shadowRoot.querySelector('slot[part="image"]');
     const gapChoicesLight = Array.from(qtiGapMatchInteractionLight.querySelectorAll('qti-gap-img'));
     const responseHotspotsLight = Array.from(qtiGapMatchInteractionLight.querySelectorAll('qti-associable-hotspot'));
@@ -167,8 +153,8 @@ export const Q8_L2_D108: Story = {
       await wait(300);
       const computedStyle = getComputedStyle(responseHotspotsLight[2]);
 
-      const backgroundColor = rgbStringToRgb(computedStyle.backgroundColor) || hexToRgb(computedStyle.backgroundColor);
-      const borderColor = rgbStringToRgb(computedStyle.borderColor) || hexToRgb(computedStyle.borderColor);
+      const backgroundColor = toRgb(computedStyle.backgroundColor);
+      const borderColor = toRgb(computedStyle.borderColor);
 
       expect(rgbIsEqual(backgroundColor, qtiLightBgActiveRgb)).toBe(true); // Ensure light background
       expect(rgbIsEqual(borderColor, qtiLightBorderActiveRgb)).toBe(true); // Ensure light border

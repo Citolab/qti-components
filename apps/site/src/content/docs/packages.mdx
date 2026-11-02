@@ -11,7 +11,7 @@ Shared, framework-level plumbing with no QTI knowledge of its own: the `@watch` 
 
 ## `@qti-components/theme`
 
-The CSS. Exports `item.css` (the theme every item/interaction/test expects to be loaded once, globally — this is what `import '@citolab/qti-components/item.css'` in the Quick Start actually pulls in) and `native.css`. It has no dark-mode variant, which is why every live example on this site renders inside a fixed light panel regardless of the site's own theme.
+The CSS. Exports `item.css` (the theme every item/interaction/test expects to be loaded once, globally — this is what `import '@citolab/qti-components/item.css'` in the Quick Start actually pulls in) and `native.css`. How to set its inputs, override a part or a state, and get CSS into the containers' shadow roots is in [Styling and theming](/guides/styling/). Its colours are `light-dark()` pairs that follow the page's `color-scheme`; the live examples on this site render inside a fixed light panel regardless of the site's own theme.
 
 ## `@qti-components/transformers`
 
@@ -40,6 +40,10 @@ The single-item runtime: `<qti-item>` + `<item-container>` (used in the [Quick S
 ## `@qti-components/test`
 
 The full test runner — navigation, test-level outcome processing, scoring UI, views. Documented in its own section: see [qti-test](/qti-test/overview/).
+
+## `@qti-components/extended`
+
+Test plugins: the navigation links `<test-item-link>` and `<test-section-link>`, `<test-stamp>`, `<test-lock>` (locks the test when the candidate leaves the page), the scoring helpers `<test-scoring-buttons>` and `<test-scoring-feedback>`, the views `<test-view>` and `<test-view-toggle>`, the debug printers `<test-print-context>`, `<test-print-item-variables>` and `<test-print-state>`, and for a candidate's toolbar `<test-bookmark>`, `<test-item-to-speech>` with its `test-tts-*` buttons, `<test-zoom-in>`/`<test-zoom-out>`/`<test-zoom-reset>` and `<test-character-sheet>`. Each sits inside `<test-navigation>` and reads only the test's public context. This package is **not** part of `@citolab/qti-components`: install it next to the umbrella (it has `@citolab/qti-components` as a peer dependency, so both share one copy of the test) and `import '@qti-components/extended'` once. React users get the tags' JSX types from `@qti-components/extended/react`, next to `@citolab/qti-components/react`. It needs the npm build of the umbrella: the CDN bundle carries its own copy of the test, which plugins installed from npm cannot see. It registers only its own tags, so it loads in any order next to the package root or `/corrections`.
 
 ## `@qti-components/loader`
 

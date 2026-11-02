@@ -120,7 +120,7 @@ describe('qti-assessment-item-ref template hook', () => {
       const itemRef = document.createElement('qti-assessment-item-ref');
       itemRef.identifier = 'ITEM-1';
       const connected = new Promise<void>(resolve => {
-        itemRef.addEventListener('qti-assessment-item-ref-connected', () => resolve(), { once: true });
+        itemRef.addEventListener('qc-item-ref-connected', () => resolve(), { once: true });
       });
       test.append(itemRef);
       await itemRef.updateComplete;

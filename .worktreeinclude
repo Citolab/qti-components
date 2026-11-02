@@ -1,0 +1,3 @@
+# Gitignored files Claude Code copies into a new worktree. Personal Claude settings (extra
+# directories, model, deny rules) would otherwise be missing in every worktree session.
+.claude/settings.local.json

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessmentResult xmlns="http://www.imsglobal.org/xsd/imsqti_result_v3p0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_resultv3p0_v1p0.xsd">
+  <context sourcedId="test-run-1"/>
+  <testResult identifier="results-reporting-form2" datestamp="2021-04-19T14:01:40.619">
+    <outcomeVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>104.181387</value>
+      </candidateResponse>
+    </outcomeVariable>
+  </testResult>
+  <itemResult identifier="rr-choice-single-1" datestamp="2021-04-19T13:59:51.971" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>4.677993</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="single" baseType="identifier">
+      <candidateResponse>
+        <value>ChoiceA</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-choice-multiple-1" datestamp="2021-04-19T13:59:56.662" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>3.883123</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>2</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="identifier">
+      <candidateResponse>
+        <value>H</value>
+        <value>O</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-match-1" datestamp="2021-04-19T14:00:07.990" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>10.249754</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>3</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="directedPair">
+      <candidateResponse>
+        <value>D M</value>
+        <value>L M</value>
+        <value>C R</value>
+        <value>P T</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-gap-match-1" datestamp="2021-04-19T14:00:15.229" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>6.425264</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>3</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="directedPair">
+      <candidateResponse>
+        <value>W G1</value>
+        <value>Su G2</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-graphic-gap-match-1" datestamp="2021-04-19T14:00:27.893" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>11.659726</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="MAXSCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE1" cardinality="multiple" baseType="directedPair">
+      <candidateResponse>
+        <value>DraggerA D</value>
+        <value>DraggerB A</value>
+        <value>DraggerC C</value>
+        <value>DraggerD B</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-hotspot-multiple-1" datestamp="2021-04-19T14:00:36.443" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>7.526799</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="identifier">
+      <candidateResponse>
+        <value>A</value>
+        <value>B</value>
+        <value>D</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-hot-text-single-1" datestamp="2021-04-19T14:00:41.041" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>3.705727</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="single" baseType="identifier">
+      <candidateResponse>
+        <value>B</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-hot-text-multiple-1" datestamp="2021-04-19T14:00:45.675" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>3.860675</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="identifier">
+      <candidateResponse>
+        <value>A</value>
+        <value>B</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-composite-ic-te-1" datestamp="2021-04-19T14:00:56.513" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>9.708636</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>3</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE_1" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE_2" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE_3" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="response_1" cardinality="single" baseType="identifier">
+      <candidateResponse>
+        <value>choice_1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="response_2" cardinality="single" baseType="identifier">
+      <candidateResponse>
+        <value>choice_4</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="response_3" cardinality="single" baseType="string">
+      <candidateResponse>
+        <value>poet</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-order-1" datestamp="2021-04-19T14:01:29.657" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>32.326383</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="ordered" baseType="identifier">
+      <candidateResponse>
+        <value>D</value>
+        <value>C</value>
+        <value>A</value>
+        <value>B</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-extended-text-1" datestamp="2021-04-19T14:01:40.610" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>10.157307</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>0</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="single" baseType="string">
+      <candidateResponse>
+        <value>To be? Or not to be?</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+</assessmentResult>

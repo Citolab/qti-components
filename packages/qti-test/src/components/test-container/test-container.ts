@@ -104,7 +104,7 @@ export class TestContainer extends LitElement {
    * Assign a new test document and announce it.
    *
    * The announcement has to happen here rather than on
-   * `qti-assessment-test-connected`, because by then the new document's
+   * `qc-test-loaded`, because by then the new document's
    * children have already connected and registered themselves — a host that
    * resets its context on that event throws those registrations away. Lit's
    * re-render is async, so a handler running now still gets in before any child

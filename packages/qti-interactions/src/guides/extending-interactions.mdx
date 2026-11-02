@@ -1,0 +1,164 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+
+import * as ExtendingStories from './extending-interactions.stories';
+
+<Meta of={ExtendingStories} />
+
+# Creating an extended interaction
+
+An interaction is a form-associated custom element with some wiring to the item around it.
+`Interaction` is that element. It is `formAssociated`, attaches `ElementInternals` and exposes them as
+`internals`, reports validity through them, resets on `formResetCallback`, and has `name` and `value`.
+You add your own interaction by subclassing it and placing it in an item.
+
+```ts
+import { Interaction } from '@citolab/qti-components/qti-base';
+```
+
+The contract on this page is pinned by the **API Reference / Extension API** stories, which run a
+subclass like this one inside a real item. If a change to the base class breaks it, a story fails
+before a host does.
+
+<Canvas of={ExtendingStories.RatingInteraction} />
+
+The element above is the whole of it (`extending-interactions.example.ts`, next to this page):
+
+```ts
+class ExampleRatingInteraction extends Interaction {
+  #rating = '';
+
+  validate(): boolean {
+    return this.#rating !== '';
+  }
+
+  get response(): string | null {
+    return this.#rating || null;
+  }
+
+  set response(value: string | string[] | null) {
+    this.#rating = typeof value === 'string' ? value : '';
+    this.internals.setFormValue(this.#rating || null);
+    this.requestUpdate();
+  }
+
+  #rate(rating: string) {
+    this.#rating = rating;
+    this.internals.setFormValue(rating);
+    this.saveResponse(rating);
+    this.requestUpdate();
+  }
+
+  // render(): five buttons that call #rate
+}
+customElements.define('example-rating-interaction', ExampleRatingInteraction);
+```
+
+```html
+<qti-assessment-item identifier="item-1" title="My item">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"></qti-response-declaration>
+  <qti-item-body>
+    <example-rating-interaction response-identifier="RESPONSE"></example-rating-interaction>
+  </qti-item-body>
+</qti-assessment-item>
+```
+
+## What you implement
+
+- `validate(): boolean`
+- `get response()` and `set response(value)`
+
+`response` is the compatibility surface the item uses to talk to the interaction today, and the
+project's own rule calls it transitional. Leaving it out is a compile error (`Non-abstract class …
+does not implement inherited abstract member response`). The base class does not set the form value
+for you: if the interaction should take part in a `<form>`, call `this.internals.setFormValue(…)`
+when the answer changes, as the example does.
+
+## What you call
+
+`saveResponse(value, state?)` when the candidate answers. It reaches the item's variables and fires
+`qc-item-response-changed`. Pass `state` for opaque state that should survive a reload, such as a
+portable custom interaction's `getState()`.
+
+## What the base class does for you
+
+- **Registers with the enclosing item.** The item then asks your `validate()`, and the verdict is
+  published as `itemContext.valid`.
+- **Hands your `response` setter a value restored or assigned from outside**, for example
+  `item.variables = …` or `qtiTest.state = …`. It does so only when the item's value changed to
+  something you did not publish yourself, so the setter never runs for the candidate's own answer.
+- **Follows the item's `readonly` and `disabled`** through the `readonly` and `disabled`
+  properties. An interaction you author with either set stays so inside an item that says nothing about it.
+- **Provides `configContext`**: the delivery options the host set on the test or item.
+
+## Extend an existing interaction
+
+Most of the time you do not need a new interaction, only a different look for one that exists. Subclass
+it, redefine what is drawn, and let the item ask for it in plain QTI with a class. Here a slider is
+shown as five buttons: `<qti-slider-interaction class="type:five-pager">`.
+
+```xml
+<qti-slider-interaction class="type:five-pager" response-identifier="RESPONSE"
+                        lower-bound="1" upper-bound="5" step="1">
+  <qti-prompt>How difficult was this item?</qti-prompt>
+</qti-slider-interaction>
+```
+
+The XML stays valid QTI, and an item that is opened somewhere that does not know `five-pager` still
+shows a slider. The host's transformer does the rest: `extendElementsWithClass('type')` renames
+every element that has a `type:<suffix>` class to `<tag>-<suffix>`, keeping its attributes and children.
+
+```ts
+const transformed = await qtiTransformItem().parse(xml).extendElementsWithClass('type');
+itemContainer.itemXML = transformed.xml(); // <qti-slider-interaction-five-pager class="type:five-pager" …>
+```
+
+```ts
+class QtiSliderInteractionFivePager extends QtiSliderInteraction {
+  #pick(value: string) {
+    this.response = value; // shows it
+    this.saveResponse(value); // publishes it
+  }
+
+  override render() {
+    // one <button> per value from this.min to this.max, calling #pick
+  }
+}
+customElements.define('qti-slider-interaction-five-pager', QtiSliderInteractionFivePager);
+```
+
+<Canvas of={ExtendingStories.FivePagerThroughTheTransformer} />
+
+`validate`, `response`, the bounds, form participation and `readonly`/`disabled` are inherited, so
+only what is drawn changes. Two things to know when you subclass a built-in:
+
+- Its internals are private. The slider's drag handling (`#commit`) cannot be reached, so you publish
+  the way every interaction does: set `response` to show the value, then call `saveResponse`.
+- Some interactions offer a hook for adding to their UI instead of replacing it. The slider has
+  `renderRailSupplement()` for content on its rail; prefer a hook over overriding `render`.
+
+## What you can do
+
+- Render anything: Lit templates, your own shadow DOM, a third-party widget.
+- Read the session with `@consume` from `@lit/context` (`subscribe: true`): `testContext`,
+  `computedContext`, `configContext` and the item's contexts, all exported from
+  `@citolab/qti-components/qti-base`.
+- Take part in forms and expose state through `ElementInternals` (`internals`).
+- Keep opaque state across a reload by passing `state` to `saveResponse`.
+
+## What you cannot do
+
+- **Redeclare `responseIdentifier`.** The base class binds it to the `response-identifier`
+  attribute. A subclass that declares `@property() responseIdentifier` again loses that binding: the
+  attribute is read as `responseidentifier` and `response-identifier="…"` leaves it unset.
+- **Call `saveResponse` from the `response` setter.** The value came from outside and is already in
+  the item. Update your own state and re-render. The setter must also be safe to call again with the
+  same value: no re-render loop, no event that echoes back.
+- **Import from `/exports/*`.** Those paths are gone. Use `@citolab/qti-components/qti-base`.
+- **Rely on `qti-register-feedback`.** It is no longer sent.
+- **Patch the shadow DOM of the built-in interactions** (icons, info text, `MutationObserver`s on
+  their shadow roots). It is not part of the public API and breaks without notice. Subclass the
+  interaction, as above, or style it through the theme (see Theming).
+- **Reach a built-in's private members** (`#`-fields and methods). Use its public properties,
+  `response`, `saveResponse` and the protected hooks it documents.
+- **Rely on events that do not start with `qc-`** where a `qc-` name exists. The 9.x `cito-` names are
+  still sent, but go in the next major.

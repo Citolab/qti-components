@@ -1,5 +1,11 @@
 # @qti-components/transformers
 
+## 1.8.0-next.0
+
+### Minor Changes
+
+- [#345](https://github.com/Citolab/qti-components/pull/345) [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTransformItem()` has a `validateBindings()` step: it throws a `QTI validation error` listing every interaction bound to a response it cannot hold, by the base-type, cardinality and max-choices / max-associations rules the information model states for each interaction (for example an inline choice interaction bound to multiple cardinality, §5.74). `load()` and `parse()` do not run it; a host calls it and shows the error. Conformance: Q12-L2-I21, Q12-L2-D21.
+
 ## 1.7.3
 
 ### Patch Changes

@@ -10,6 +10,7 @@ import {
   getMatchMaxValue,
   hasDragChipState,
   setDropFilled,
+  setDropFull,
   setDragChipState
 } from './utils/drag-drop.utils';
 import { DragDropCoreMixin } from './drag-drop-core.mixin';
@@ -25,7 +26,7 @@ import {
 
 import type { ComplexAttributeConverter } from 'lit';
 import type { CollisionDetectionAlgorithm } from './utils/drag-drop.utils';
-import type { Interaction, RegisteredInteraction } from '@qti-components/base';
+import type { Interaction, RegisteredInteraction, ValidityKind, ValidityTrigger } from '@qti-components/base';
 import type { DragDropState } from '../../context/drag-drop.context';
 import type { DragDropCore } from './drag-drop-core.mixin';
 import type { DropzoneAutoSize } from '../dropzone-auto-size/dropzone-auto-size.mixin';
@@ -39,7 +40,7 @@ export type DragDropSlotted = DragDropCore &
     disableAnimations: boolean;
     enableFlipAnimations: boolean;
     validate(): boolean;
-    reportValidity(): boolean;
+    reportValidity(options?: { trigger?: ValidityTrigger }): boolean;
     reset(): void;
     saveResponse(value?: string | string[]): void;
     shouldTreatBlockedMaxAsInvalid(): boolean;
@@ -69,7 +70,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]',
+  dragContainersSelector = 'slot[part~="bank"]',
   collisionAlgorithm: CollisionDetectionAlgorithm = 'closestCornersWithInventoryPriority'
 ) => {
   /*
@@ -104,30 +105,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
      */
     @property({ type: Number, reflect: true, attribute: 'min-associations' }) minAssociations = 1;
 
-    private _maxAssociations = 0;
-    private _maxAssociationsDefaultApplied = false;
-
-    @property({ type: Number, reflect: true, attribute: 'max-associations' })
-    get maxAssociations(): number {
-      // QTI compatibility: gap-match interactions default max-associations to 1
-      // when the attribute is omitted.
-      if (!this._maxAssociationsDefaultApplied) {
-        this._maxAssociationsDefaultApplied = true;
-        const tagName = this.tagName?.toLowerCase() || '';
-        const isGapMatchInteraction =
-          tagName === 'qti-graphic-gap-match-interaction' || tagName === 'qti-gap-match-interaction';
-        if (isGapMatchInteraction && !this.hasAttribute('max-associations') && this._maxAssociations === 0) {
-          this._maxAssociations = 1;
-        }
-      }
-      return this._maxAssociations;
-    }
-
-    set maxAssociations(value: number) {
-      const oldValue = this._maxAssociations;
-      this._maxAssociations = value;
-      this.requestUpdate('maxAssociations', oldValue);
-    }
+    @property({ type: Number, reflect: true, attribute: 'max-associations' }) maxAssociations = 0;
 
     protected _response: string[] = [];
 
@@ -247,7 +225,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         const bySelector = this.chipsIn(droppable);
         const byAttribute = this.isDeclarativeTarget(droppable)
           ? bySelector
-          : Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+          : Array.from(droppable.querySelectorAll<HTMLElement>('[data-draggable="true"]'));
 
         // Response uses the structural selector only; capacity uses whichever finds more.
         // These differ, and collapsing them would silently change matchMax behaviour.
@@ -405,6 +383,9 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       this._internals.setFormValue(JSON.stringify(this._response));
+      // A restored or host-written response changes validity like a drop does (silently: a validate
+      // never shows a message), so a form or an end attempt judges what is there now.
+      if (this.trackedDroppables?.length) this.validate();
     }
 
     public override afterCache(): void {
@@ -516,7 +497,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       // Always refresh configured validity UI after user-driven drop changes.
       // This ensures inline messages clear immediately when state becomes valid again.
       this.validate();
-      this.reportValidity();
+      this.reportValidity({ trigger: 'change' });
     }
 
     public override handleInvalidDrop(dragSource: HTMLElement | null): void {
@@ -542,7 +523,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // it travels there. The clone is still alive at this point — `handleDragEnd` removes it
         // only after `handleInvalidDrop` returns — so its rect is the chip's last real position.
         this.dropDraggableInDroppable(dragSource, sourceDroppable, this.dragState.dragClone?.getBoundingClientRect());
-      } else if (hasDragChipState(dragSource, 'dragging')) {
+      } else if (hasDragChipState(dragSource, 'lifted')) {
         // Drag started from inventory: simply restore inventory visual state.
         this.restoreInventoryItem(dragSource, this.dragState.dragClone?.getBoundingClientRect());
         const identifier = dragSource.getAttribute('identifier');
@@ -566,7 +547,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       this._dropBlockedDueToMax = attemptedDisabledTarget && maxReached;
       this.validate();
-      this.reportValidity();
+      this.reportValidity({ trigger: 'change' });
     }
 
     /**
@@ -662,14 +643,14 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const allowsMultiple = matchMax === 0 || matchMax > 1;
 
       // FLIP: First - capture positions of existing children in droppable
-      const existingChildren = Array.from(droppable.querySelectorAll<HTMLElement>('[qti-draggable="true"]'));
+      const existingChildren = Array.from(droppable.querySelectorAll<HTMLElement>('[data-draggable="true"]'));
       const flipStates =
         this.enableFlipAnimations && existingChildren.length > 0 ? captureMultipleFlipStates(existingChildren) : null;
 
       if (!allowsMultiple) {
         const existing =
           this.chipsIn(droppable)[0] ??
-          (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[qti-draggable="true"]'));
+          (this.isDeclarativeTarget(droppable) ? null : droppable.querySelector('[data-draggable="true"]'));
         if (existing) {
           const existingId = existing.getAttribute('identifier');
           // Where the evicted occupant is standing right now. Taken before it is removed, because
@@ -703,7 +684,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const cleanClone = draggable.cloneNode(true) as HTMLElement;
       cleanClone.removeAttribute('style'); // Remove inline styles from the clone
       cleanClone.removeAttribute('data-keyboard-dragging'); // Remove keyboard dragging indicator
-      cleanClone.setAttribute('qti-draggable', 'true');
+      cleanClone.setAttribute('data-draggable', 'true');
       cleanClone.setAttribute('tabindex', '0');
 
       // FLIP: Last - add the new element (this may cause siblings to shift)
@@ -712,16 +693,29 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         // from the document — `::part()` is the only way in, and a bare `::part(drag)` matches in
         // any shadow root. Without this the chip renders unstyled, which the invariance spec
         // catches as "a chip is not the same size wherever it lives".
-        cleanClone.setAttribute('part', 'drag');
-        // Parts do not chain: `::part(drag)::part(control)` is inert. The chip forwards its own
-        // inner part up one level, renamed, so a theme can still reach the drag handle as
-        // `::part(drag-control)`. Drawing the grip on the chip host instead would have worked too,
-        // but it moves the glyph for every *other* interaction's chips as well.
-        // `correction*` forwarded under its own name: the theme reaches the badge with a bare
-        // `::part(correction-correct)` whether the chip is in the bank or inside this target.
+        // A text chip also carries `text`, so a theme can give a word a label box where it leaves
+        // an image tile plain (graphic-gap-match takes both). The old tokens `drag` and `drag-text`
+        // ride along for one major (CONTRACT.md §3).
+        cleanClone.setAttribute(
+          'part',
+          cleanClone.localName === 'qti-gap-text' ? 'chip text drag drag-text' : 'chip drag'
+        );
+        // Parts do not chain: `::part(chip)::part(control)` is inert. The chip forwards its own
+        // inner parts up one level as `chip-control` / `chip-label` (CONTRACT.md §3 rule 9): under
+        // their bare names they would collide with the target's own `control` and `label` in the
+        // same shadow root, and a `::part(label)` meant for the card would pad the chip too. The old
+        // names `drag-control` / `drag-label` are forwarded as well for one major. Drawing the grip
+        // on the chip host instead would have worked, but it moves the glyph for every *other*
+        // interaction's chips as well.
+        // `correction` and its verdict tokens are forwarded under their own names: the theme reaches
+        // the badge with a bare `::part(correction candidate-correct)` wherever the chip lives.
         cleanClone.setAttribute(
           'exportparts',
-          'control: drag-control, label: drag-label, correction, correction-correct, correction-incorrect'
+          [
+            'control: chip-control, control: drag-control, label: chip-label, label: drag-label',
+            'correction, candidate-correct, candidate-incorrect, candidate-partial',
+            'correction-correct, correction-incorrect, correction-partially-correct'
+          ].join(', ')
         );
         // Cloned once, here — never inside `render()`, which would mint a new node per update and
         // lose focus, transitions and the chip's own shadow root.
@@ -755,16 +749,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           // Only animate if there's actual movement
           if (deltaX !== 0 || deltaY !== 0) {
             cleanClone.animate(
-              [
-                {
-                  transform: `translate(${deltaX}px, ${deltaY}px)`,
-                  opacity: 0.8
-                },
-                {
-                  transform: 'translate(0, 0)',
-                  opacity: 1
-                }
-              ],
+              [{ transform: `translate(${deltaX}px, ${deltaY}px)` }, { transform: 'translate(0, 0)' }],
               {
                 duration: this.flipAnimationConfig.duration || 200,
                 easing: this.flipAnimationConfig.easing || 'ease',
@@ -820,7 +805,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       const shiftingItems: HTMLElement[] = [];
       this.trackedDragContainers.forEach(container => {
         container
-          .querySelectorAll<HTMLElement>('[qti-draggable="true"]')
+          .querySelectorAll<HTMLElement>('[data-draggable="true"]')
           .forEach(item => !returning.has(item) && shiftingItems.push(item));
       });
 
@@ -857,13 +842,15 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       // This source chip's copies are all placed — it becomes the hole they left behind.
       inventoryItems.forEach(item => {
-        setDragChipState(item, 'placeholder', matchMax !== 0 && placedInDropzones >= matchMax);
+        setDragChipState(item, 'used', matchMax !== 0 && placedInDropzones >= matchMax);
       });
     }
 
     private checkAllMaxAssociations(): void {
       const totalAssociations = this.totalAssociationsFromState();
-      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: true });
+      // Off unless the host asks: QTI renders a message "upon violation of the max-associations
+      // constraint" (vocabulary §1.2.8.3), so the candidate must be able to go over it.
+      const disableAtMax = this.resolveDisableAfterMaxReached({ defaultWhenUnset: false });
 
       const maxReached = this.maxAssociations > 0 && totalAssociations >= this.maxAssociations;
 
@@ -872,11 +859,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
         const isDragSource = droppable.hasAttribute('data-drag-source');
         const isAtCapacity = this.droppableAtCapacityFromState(droppable);
 
-        if ((isAtCapacity || (disableAtMax && maxReached)) && !isDragSource) {
-          droppable.setAttribute('disabled', '');
-        } else {
-          droppable.removeAttribute('disabled');
-        }
+        setDropFull(droppable, (isAtCapacity || (disableAtMax && maxReached)) && !isDragSource);
       });
     }
 
@@ -930,6 +913,12 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       this.resetDragState();
       this.cacheInteractiveElements();
+      // Every target is empty again, so none is full: recompute capacity, or a target that held a
+      // chip before the reset keeps refusing drops. And a fresh attempt waits for a submit before
+      // it shows a too-few message (Interaction.reportValidity); this override skips super.reset().
+      this.trackedDroppables.forEach(droppable => setDropFull(droppable, false));
+      this.checkAllMaxAssociations();
+      this.resetValidityReport();
 
       this._response = [];
       this._internals.setFormValue(JSON.stringify(this._response));
@@ -948,9 +937,11 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
 
       let validityMessage = '';
       let isValid = true;
+      let kind: ValidityKind = 'other';
 
       // Priority order: exceedsMax > (atMaxCapacity && blockedDrop) > belowMin
       if (exceedsMax) {
+        kind = 'max';
         // QTI conformance: default platform message format
         validityMessage =
           this.getFirstMessageAttribute(['data-max-associations-message', 'data-max-selections-message']) ||
@@ -959,6 +950,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
         isValid = false;
       } else if (atMaxCapacity && this._dropBlockedDueToMax && this.shouldTreatBlockedMaxAsInvalid()) {
+        kind = 'max';
         validityMessage =
           this.getFirstMessageAttribute(['data-max-associations-message', 'data-max-selections-message']) ||
           this.dataset.maxAssociationsMessage ||
@@ -966,6 +958,7 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
           `You've selected too many associations. Maximum allowed is ${this.maxAssociations}.`;
         isValid = false;
       } else if (belowMin) {
+        kind = 'min';
         validityMessage =
           this.getFirstMessageAttribute(['data-min-associations-message', 'data-min-selections-message']) ||
           this.dataset.minAssociationsMessage ||
@@ -980,13 +973,13 @@ export const DragDropSlottedMixin = <T extends Constructor<Interaction>>(
       }
 
       const validityAnchor = this.trackedDroppables[0] ?? this.trackedDraggables[0] ?? this;
-      this.setInteractionValidity(isValid, validityMessage, validityAnchor, { suppressInline: true });
+      this.setInteractionValidity(isValid, validityMessage, validityAnchor, { suppressInline: true, kind });
 
       return isValid;
     }
 
-    public override reportValidity(): boolean {
-      return super.reportValidity();
+    public override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
+      return super.reportValidity(options);
     }
   }
 

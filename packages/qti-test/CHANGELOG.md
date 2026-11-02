@@ -1,12 +1,262 @@
 # @qti-components/test
 
-## 1.10.1
+## 2.0.0-next.15
+
+### Major Changes
+
+- [#349](https://github.com/Citolab/qti-components/pull/349) [`e059bf8`](https://github.com/Citolab/qti-components/commit/e059bf818ff8cb52e1ae9235718b45ccd447d4c4) Thanks [@herrKlein](https://github.com/herrKlein)! - New package `@qti-components/extended`: the test plugins. These move here out of `@qti-components/test`: `<test-item-link>`, `<test-section-link>`, `<test-scoring-buttons>`, `<test-scoring-feedback>`, `<test-view>`, `<test-view-toggle>`, `<test-print-context>`, `<test-print-item-variables>`, `<test-print-state>` (with `formatVariableValue`), `<test-stamp>`, `<test-bookmark>` (with `bookmarkedItems`) and text-to-speech (`<test-item-to-speech>`, the `test-tts-*` buttons, `ttsElements`). The new zoom and character-sheet plugins are here too. `@qti-components/test` keeps `<test-next>`, `<test-prev>`, `<test-end-attempt>`, `<test-container>`, `<test-navigation>` and the plugin `<test-submit>`.
+
+  **Removed:** `<test-check-item>` (`TestCheckItem`), and with it the corrections build's `TestCheckItemCorrection`. It ended the attempt of the item on screen without the guards `<test-end-attempt>` has (attempts used, answer not valid yet) and then switched the test to the scorer view. Use `<test-end-attempt>`, and `<test-view-toggle>` where the view should change too. No surveyed host used it.
+
+  **Breaking:** `@qti-components/test`, `@citolab/qti-components` and `@citolab/qti-components/corrections` no longer register or export these plugins, and the umbrella's CDN bundle and React types no longer contain them. The extended package is not part of the umbrella: install it next to it and import it once (`import '@qti-components/extended'`). It has `@citolab/qti-components` as a peer dependency and imports from its subpaths, so the plugins share the umbrella's single copy of the test and its contexts. It registers only its own tags, so it loads in any order next to the package root or `/corrections`. `@qti-components/extended/elements` gives the `{ tag, ctor }` pairs (`qtiExtendedElements`) for a scoped registry. Tags, attributes, parts, tokens and the state entries (`session.plugins.bookmarks`) are unchanged. Two type changes come with the move: `QtiTestPluginState` no longer declares `bookmarks`, so `pluginState(context, 'bookmarks')` is a type error now (use `bookmarkedItems(context)`); and the umbrella's React types (`@citolab/qti-components/react`) no longer list the moved tags, which come from `@qti-components/extended/react` instead. The umbrella's CDN bundle is self-contained, so the extended package needs the npm build of the umbrella: loading the CDN bundle by script tag and the plugins from npm gives two copies of the test, and the plugins never see it.
+
+  `@qti-components/test` gains a `plugin-api` entry, and the umbrella exposes it as `@citolab/qti-components/qti-test/plugin-api`. It registers nothing: the public events and their helpers, `pluginState`, the state types and `controlStyles`, the look of the test controls. A plugin in its own package builds on it through the umbrella, with the umbrella as a peer dependency.
+
+  Host notes: `plans/host-migration/citotestuit.md` (uses text-to-speech; item links and scoring in templates), `plans/host-migration/examenkompas.md`, `plans/host-migration/kennisnet.md`, `plans/host-migration/peilinglezen.md`.
+
+## 2.0.0-next.14
+
+### Major Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - The public prefix is `qc-` (qti-components); `cito-` is its old name and keeps working for one major.
+
+  - **Theme inputs:** `--cito-color-primary` → `--qc-color-primary`, and so on for every tier-1 input
+    (CONTRACT §8). The theme reads `var(--qc-x, var(--cito-x, <default>))`, so a page that sets only
+    the old name is unchanged. Four inputs that still carried the `qti-` prefix get their public name:
+    `--qc-spacing` (was `--qti-spacing`), `--qc-motion`, `--qc-line-height` (was
+    `--qti-field-line-height`), `--qc-color-text` (was `--qti-fg`), plus `--qc-border-style`.
+  - **Fewer inputs:** `--cito-color-well`, `--cito-shadow-drag` and `--cito-color-marker` are no longer read
+    (a well is the surface colour, the in-flight shadow and the marker colour derive from the text colour
+    and the primary; a brand that wants another paints `.qti-well` or `::part(point)`). Tier 1 is 36
+    inputs.
+  - **A quieter handle:** the default grip is one column of dots in a faded text colour, narrower and
+    closer to the label, so the word is what a chip shows; `--qc-size-drag-icon` sets the handle's width
+    for a brand with a wider icon.
+  - **Two faces:** `--qc-font-family-heading` sets the font of `h1`–`h6` in an item alone; unset, headings
+    keep the reading font (`--qc-font-family`). The Cito preset uses PT Sans for headings only.
+  - **Events:** every public event `cito-*` is dispatched and handled as `qc-*` (`qc-test-navigated`,
+    `qc-item-outcome-changed`, `qc-feedback-show`, …); the `cito-*` name is still sent and listened to
+    for one major. The 7.x names (`qti-request-navigation`, `test-end-attempt`, `on-test-switch-view`,
+    `qti-outcome-changed`, …) are no longer sent.
+  - **Buttons:** the test controls and the button-like interactions (end attempt, upload) read one slot
+    set, `--button-*` (`--button-background-color`, `--button-color`, `--button-border-color`,
+    `--button-hover-background-color`, `--button-active-background-color`, `--button-size`,
+    `--button-border-radius`, `--button-primary-*`, `--button-selected-*`). `--test-button-*` are the
+    old names, read as fallbacks for one major. The selected text-to-speech button carries
+    `:state(selected)`.
+  - **Internal, documented as such:** `qti-variables.css` is one block, one line per token, with the
+    old spellings (`--qti-bg`, `--qti-border-thickness`, `--qti-correct`, …) kept as aliases;
+    `qti-mixins.css` keeps the mixins that carry an idea and inlines the rest (the paint role `button`
+    is now `choice`); the empty `qti-components.overrides` layer is gone (write unlayered CSS or
+    `@layer qti-extended`); `qti-components.interactions.brand` stays as the one theme layer a brand
+    may write into.
+  - **The override contract** is CONTRACT §11 and the docs page "Styling and theming": set `--qc-*`;
+    override on parts and states, unlayered; put that CSS in the container's `<template><style>`.
+
+  Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.
+
+### Patch Changes
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/base@3.0.0-next.6
+  - @qti-components/elements@2.0.0-next.7
+  - @qti-components/theme@3.0.0-next.6
+  - @qti-components/processing@1.6.1-next.5
+  - @qti-components/interactions@1.10.5-next.8
+
+## 2.0.0-next.13
+
+### Patch Changes
+
+- Updated dependencies [[`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3), [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8)]:
+  - @qti-components/base@3.0.0-next.5
+  - @qti-components/elements@2.0.0-next.6
+  - @qti-components/theme@2.3.0-next.5
+  - @qti-components/transformers@1.8.0-next.0
+  - @qti-components/interactions@1.10.5-next.7
+
+## 2.0.0-next.12
+
+### Major Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `completionStatus` follows QTI 3 (info model §2.2.2, §2.5) and the 1EdTech conformance suite's Results Reporting reference results.
+
+  - **completionStatus is no longer derived from validity.** Before, a non-adaptive item set `completed` or `incomplete` on every answer, from whether its interactions were valid. Now it is `not_attempted` until the item is presented, `unknown` from then on, and `completed` once an attempt of a non-adaptive item ends (after `processResponse()`), unless response processing set a value itself. An adaptive item is completed only by its response processing, as before. Whether the answers are valid is `valid` in the item context and in the computed context; to know whether an item is answered, read `valid && !isDefaultResponse` per item instead of `completionStatus === 'completed'`.
+  - An item that is presented is never `not_attempted`: after a reset or a restore that says so, it is `unknown`. The test context still holds `not_attempted` for items that were never presented.
+  - Response processing no longer resets `completionStatus` before a run of a non-adaptive item: it is built in and has no default.
+  - `test-scoring-feedback` shows its "no response" text from the item's validity and default response, not from completionStatus.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major).
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-navigation` disables an item once it has used its attempts, so the candidate can no longer change the answer after the last attempt is ended (`test-end-attempt`). The rule is the one `test-end-attempt` already used for its own button: a non-adaptive item with `max-attempts` above 0 (default 1) and `numAttempts >= max-attempts`. Adaptive items, `max-attempts="0"` (unlimited) and items in a `submission-mode="simultaneous"` part (one attempt each, processed when the part ends; the answer may change until then) are never disabled, and nothing is locked with `auto-score-items`, where every change is scored as an attempt.
+
+  It reads the computed context, so it holds for every item on screen (`navigate="section"`) and for a restored `qtiTest.state` (disabled as soon as the item loads), and it releases the item when its attempts are back to zero. Only an item the navigation disabled itself is released: a host or view that sets `disabled` on an item keeps it so.
+
+  A practice test that lets the candidate check again must say so in its package: `<qti-item-session-control max-attempts="0" />`. QTI's default is one attempt, also without `qti-item-session-control`, so a plain package now locks each item after its first attempt. Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major).
+
+### Minor Changes
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`fbfc478`](https://github.com/Citolab/qti-components/commit/fbfc4785212a7ef6e146551b10057b995f99396d) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-end-attempt require-answer>` stays disabled until the item has a valid, non-default response, independent of `allow-skipping`.
+
+### Patch Changes
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`5856bfc`](https://github.com/Citolab/qti-components/commit/5856bfc3bc60075b9c19b9e3a6a77f77ac50a3cd) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls look the same on a page that uses a CSS reset, such as Tailwind's preflight.
+
+  A reset like `*, ::before, ::after { margin: 0; padding: 0; border: 0 solid }` is a rule of the page, and a page rule beats the `:host` rules of a shadow root, whatever its layer or specificity. `test-next`, `test-prev`, `test-end-attempt`, `test-item-link`, `test-section-link`, `test-submit`, `test-check-item` and `test-bookmark` painted their padding and border on the host, so on such a page they lost both: a label against the edge of its fill, and no border.
+
+  The look now sits on an inner element, `<span class="control" part="button">`, in the shadow tree, where the page's `*` does not reach. The host keeps only what a reset leaves alone: its display, the cursor and the radius its focus ring follows. Nothing changes on a page without a reset. The inner element is also a new part: `test-next::part(button)` repaints the control from a host stylesheet.
+
+  `item-show-correct-response`, `item-show-candidate-correction` and `test-show-correct-response` get the same treatment: their padding is on the inner `div`.
+
+  If a host styled the controls by their host box (a `padding` or `border` set on `test-next` itself), that moves to `::part(button)`. The `--test-button-*` slots work as before.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`fbfc478`](https://github.com/Citolab/qti-components/commit/fbfc4785212a7ef6e146551b10057b995f99396d) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-end-attempt` ends the attempt of its own item when it has one, like `test-bookmark`.
+
+  Stamped into a `<template item-ref>`, each item gets its own button, which ends the attempt of that item and is `disabled` by that item's state (`max-attempts`, `numAttempts`, an optimal or completed attempt). With `<qti-test navigate="section">` every item of the section is on screen, so a candidate can check them one by one in any order. A new `item` attribute (an item-ref identifier) names the item from anywhere. In the toolbar, without either, it follows the item on screen as before.
+
+  `cito-test-end-attempt` carries the item as `{ itemId }`; `test-navigation` then processes that item's response instead of the one on screen. Without `itemId` nothing changes.
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`85437ae`](https://github.com/Citolab/qti-components/commit/85437aef3e4febe3c8b1540485bdbfc6f2bc9540) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-navigation` no longer throws while building a section's `completed` when one of its items has no `completionStatus` in the test context.
+- Updated dependencies [[`7bb058f`](https://github.com/Citolab/qti-components/commit/7bb058ff4a4755677fda7c4a2ebdddac42767f68), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`26cdb6e`](https://github.com/Citolab/qti-components/commit/26cdb6e1e3206392d226f70fe6f7bd90af99fe53), [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320), [`b1cb7e9`](https://github.com/Citolab/qti-components/commit/b1cb7e90df09765608e1ffe2d766e7974883f8a2)]:
+  - @qti-components/processing@1.6.1-next.4
+  - @qti-components/base@3.0.0-next.4
+  - @qti-components/elements@2.0.0-next.5
+  - @qti-components/theme@2.3.0-next.4
+  - @qti-components/interactions@1.10.5-next.6
+
+## 2.0.0-next.11
+
+### Minor Changes
+
+- [#339](https://github.com/Citolab/qti-components/pull/339) [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6) Thanks [@herrKlein](https://github.com/herrKlein)! - New `<test-print-state>`: drop it anywhere inside `<qti-test>` to see the test's state (`qtiTest.state`) as a tree you can fold open and shut. It follows every `cito-test-state-changed`. A debug helper, next to `<test-print-context>` and `<test-print-item-variables>`.
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6), [`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+  - @qti-components/theme@2.3.0-next.3
+  - @qti-components/interactions@1.10.5-next.5
+  - @qti-components/elements@1.10.0-next.4
+  - @qti-components/processing@1.6.1-next.3
+
+## 2.0.0-next.10
+
+### Patch Changes
+
+- [#335](https://github.com/Citolab/qti-components/pull/335) [`e0aed5d`](https://github.com/Citolab/qti-components/commit/e0aed5d24309fef6dbe350b503d86e0e2bc6064f) Thanks [@herrKlein](https://github.com/herrKlein)! - With `navigate="item"`, a `test-section-link` (a `cito-test-navigate` request of type `section`) now makes the section's first item the active one. Before, no item was active, so `test-next` and `test-prev` stayed disabled and item links highlighted nothing. The whole section still loads, and `navigate="section"` is unchanged. Since that first item is now the active item, `test-check-item`, `test-end-attempt` and the scoring buttons act on it. Hosts: see "Section link in item mode" in `plans/host-migration/kennisnet.md` and `plans/host-migration/citotestuit.md` ([#332](https://github.com/Citolab/qti-components/issues/332)).
+
+## 2.0.0-next.9
+
+### Minor Changes
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls (`test-prev`, `test-next`, item and section links, end attempt, ...) look neutral by default, and `test-next` is the primary action.
+
+  They used to be white with a blue border and black text, painted from the shared `--qti-component-*` tokens. Now the neutral look is a white button with a thin gray border and the surrounding text colour, with a faint gray hover, and `test-next` is solid dark with white text. There are no shadows, glows or transitions. The focus ring and the disabled look are unchanged.
+
+  The controls no longer read `--qti-component-border-color`, `--qti-component-background-color` or `--qti-component-color`, so changing those tokens repaints interactions and no longer the test controls. To repaint the controls, set the `--test-button-*` slots on the test:
+
+  - `--test-button-background-color`, `--test-button-color`, `--test-button-border-color`, `--test-button-hover-background-color` for the neutral look.
+  - New: `--test-button-primary-background-color`, `--test-button-primary-color`, `--test-button-primary-hover-background-color` for `test-next`. Setting the neutral slots no longer repaints `test-next`.
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - The test controls take their colours from the theme, and everything a candidate presses answers the press.
+
+  - **Test controls** (`test-next`, `test-prev`, item and section links, submit, check, end attempt, bookmark, the text-to-speech buttons) read the theme's tier-1 tokens instead of literal colours. The neutral button is the page's surface (`--cito-color-base-100`) with the theme's border; `test-next` is filled with `--cito-color-neutral` and labelled in `--cito-color-neutral-content`. Hover and press mix the content colour into the fill (`--qti-hover-mix`, `--qti-active-mix`). Without the theme they fall back to the system colours `Canvas`, `CanvasText` and `Highlight`, so they follow the page's `color-scheme`. Every `--test-button-*` slot still works; new are `--test-button-active-background-color` and `--test-button-primary-active-background-color`. Hover now applies only on a device with a fine pointer, so it no longer sticks after a tap.
+  - **A press is visible.** Test controls, choices and chips (gap-match, match, associate, order) darken a little while pressed (`@mixin press`), paint only.
+  - **Text to speech.** The highlights are see-through tints of `--cito-color-info` (the element being read) and `--cito-color-warning` (the word being spoken), re-valued with `--test-tts-element-highlight` and `--test-tts-word-highlight`. A pressed TTS button falls back to `Highlight` without the theme.
+  - **A choice with a radio or checkbox shown has no fill**: it shows the page behind it, not the theme's white surface. Its selection and its correction are painted on the radio or checkbox, as before. A choice drawn as a box (`qti-input-control-hidden`) keeps its fill. While pressed, a chip that has been lifted (its placeholder) does not darken.
+
+### Patch Changes
+
+- [#329](https://github.com/Citolab/qti-components/pull/329) [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd) Thanks [@herrKlein](https://github.com/herrKlein)! - `test-stamp` is no longer described as deprecated. Its JSDoc (and so the custom-elements manifest and the Storybook docs) said it would be removed, but it is the kept `stamp` plugin; the description now says what it renders.
+- Updated dependencies [[`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd), [`9c83247`](https://github.com/Citolab/qti-components/commit/9c83247192fb9b0fe073cf21056ab80e6b579ecd)]:
+  - @qti-components/theme@2.3.0-next.2
+  - @qti-components/interactions@1.10.5-next.4
+
+## 2.0.0-next.8
+
+### Minor Changes
+
+- [#318](https://github.com/Citolab/qti-components/pull/318) [`b410a9f`](https://github.com/Citolab/qti-components/commit/b410a9f628da90986044a664f5aa12e46ed3b0ea) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-submit>` scores the test: on click it asks the test to submit (`cito-test-submit`), which runs outcome processing and then dispatches `cito-test-submitted`. `qtiTest.submit()` does the same from code. `qtiTest.outcomeProcessing()` now starts every run from the test outcomes' declared defaults, as QTI does and as the documentation already said; before, a rule that adds to its own outcome, such as `SCORE_TOTAL = sum + SCORE_TOTAL`, grew on every run.
+
+## 2.0.0-next.7
 
 ### Patch Changes
 
 - [#310](https://github.com/Citolab/qti-components/pull/310) [`16a7f1d`](https://github.com/Citolab/qti-components/commit/16a7f1d92be2a25dcb866460ccc2cb7dfdc94609) Thanks [@Marcelh1983](https://github.com/Marcelh1983)! - `test-print-item-variables` prints a record value field by field (`time: 3.6, point: 455 250`, e.g. the response of a portable custom interaction) instead of `[object Object]`, for the value and the correct response. A correct response of `0` is printed instead of left out.
 
-## 1.10.0
+## 2.0.0-next.6
+
+### Patch Changes
+
+- Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a), [`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
+  - @qti-components/theme@2.3.0-next.1
+  - @qti-components/base@2.5.0-next.2
+  - @qti-components/elements@1.10.0-next.3
+  - @qti-components/processing@1.6.1-next.2
+  - @qti-components/interactions@1.10.5-next.3
+
+## 2.0.0-next.5
+
+### Major Changes
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - Removed `<test-paging-buttons-stamp>` and `<test-section-buttons-stamp>`, deprecated since before 9.0. Use `<test-stamp>` with a repeat: `<test-stamp><template><template type="repeat" repeat="{{ activeTestpart.items }}">…</template></template></test-stamp>` for items, `activeTestpart.sections` for sections. The repeated variable is still `item`.
+
+  Behaviour difference: the removed elements listed the items (or sections) of every test part; the repeat lists those of the active test part. No surveyed host source uses either element.
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - The optional pieces of `qti-test` become plugins (`print`, `scoring`, `stamp`, `tts`, `view`): sets of files that use only the test's public API, with nothing in the core referring to them. Text-to-speech has its own folder; the others stay in `components/`. `@qti-components/test` still registers them, and the package root still exports them. The new entry `@qti-components/test/plugins/elements` lists every plugin's `{ tag, ctor }` entries for a scoped registry. A boundary spec (`plugin-boundary.spec.ts`) fails on a reference to a plugin from outside its folder and on an import of test internals; guide: Storybook "Guides / Test plugins".
+
+  - **`computedContext.itemElement(identifier)`** (`@qti-components/base` type, set by `test-navigation`): the rendered `qti-assessment-item` for an item-ref identifier, looked up when called. Text-to-speech now reads only `computedContext`; it no longer uses the session context, reaches into `test-container`'s shadow root, or uses the test's internal context. A player that follows navigation must sit inside `<test-navigation>` (CitoTestUit and qti-player already place it there).
+
+  Breaking:
+
+  - A text-to-speech player that follows navigation must sit inside `<test-navigation>`, where `computedContext` is provided. Before, it found the item from anywhere on the page; outside `<test-navigation>` it now reads nothing. CitoTestUit and qti-player already place it inside.
+  - Deep imports of the plugin files change: `components/test-item-to-speech/test-item-to-speech.js` is now `tts/test-item-to-speech.js`, and `components/index.js` no longer exports the plugins. Import from the package root or `@qti-components/test/plugins/elements`.
+
+### Minor Changes
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - Test plugins can keep state that survives a reload. `QtiTestState.session.plugins` holds one JSON entry per plugin name; a plugin writes it with the request `cito-test-update-plugin-state` (`{ plugin, value }`, `null` removes the entry) and reads it from `computedContext.plugins` (or `pluginState(computedContext, name)`, typed by augmenting `QtiTestPluginState`). A host that already stores `state` stores it, because a change fires `cito-test-state-changed`. Entries of plugins that are not loaded are kept on a round trip. No `version` bump: the field is optional.
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - New plugin `<test-bookmark>`: a toggle (`role="button"`, `aria-pressed`) inside `<test-navigation>` that marks an item to come back to. In the toolbar it marks the item on screen; in `<template item-ref>` each item gets its own button, which marks that item. The marks are the item-ref identifiers in `state.session.plugins.bookmarks`, so a host that stores `state` stores them and a reloaded test shows them again. It reflects `bookmarked` and `disabled` on the host for styling; `bookmarkedItems(computedContext)` gives a host's own navigation the marks.
+
+  CitoTestUit can replace `marked` on its context items with it; see `plans/host-migration/citotestuit.md`.
+
+### Patch Changes
+
+- [#261](https://github.com/Citolab/qti-components/pull/261) [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-stamp>` updates its context in `navigate="section"` too. It used to wait for an active item, and a test showing a section has none, so the template kept its empty defaults. `activeItem` is `{}` there; `activeSection`, `activeTestpart` and `test` (with `test.plugins`) are filled.
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+  - @qti-components/elements@1.10.0-next.2
+  - @qti-components/interactions@1.10.5-next.2
+  - @qti-components/processing@1.6.1-next.1
+
+## 2.0.0-next.4
+
+### Major Changes
+
+- [#302](https://github.com/Citolab/qti-components/pull/302) [`c585b34`](https://github.com/Citolab/qti-components/commit/c585b346a510c533ae253c22335f7d6f578dda42) Thanks [@herrKlein](https://github.com/herrKlein)! - `<test-check-item>` no longer reaches into `<test-container>`'s shadow root. After ending the attempt it switches the test to a view, named by its new `view` attribute (default `scorer`), through `cito-test-switch-view`.
+
+  Behaviour change: `[view]` content for other views, including `candidate`, is hidden while that view is active; before, every `[view]` element was shown. Use `<test-view-toggle>` to switch back. No surveyed host uses `<test-check-item>`.
+
+## 1.10.0-next.3
+
+### Minor Changes
+
+- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - New test-level expression `qti-number-presented`: the number of selected item refs that have been presented to the candidate, with the same `section-identifier`, `include-category` and `exclude-category` filters as `qti-number-selected`. An item is presented once its `completionStatus` has left `not_attempted`, so items a linear test part passed over (pre-conditions, branch rules) and items not reached yet are not counted. Use it for totals over the candidate's own route, such as a maximum score of one point per presented item.
+
+  - A presented item no longer keeps a `not_attempted` the test context held for it (a restored session, or values set with `updateItemVariables` before the item was reached): presenting an item starts its first attempt, so it takes the item's own status.
+
+- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTest.getTestFeedback(access?)` returns the `qti-test-feedback` elements that apply after outcome processing, so a host no longer filters them by hand. `qti-test-feedback` reads its `access` attribute (`atEnd`, the default, or `during`) and gets `matches(value)`: whether it applies for a value of its `outcome-identifier`, honouring `show-hide` and container values. It still renders nothing where it is declared: where and when to show it stays up to the host.
+
+## 1.10.0-next.2
+
+### Patch Changes
+
+- [#298](https://github.com/Citolab/qti-components/pull/298) [`54ad14e`](https://github.com/Citolab/qti-components/commit/54ad14e4cf57ea95ccbc917ed734e46c6184c528) Thanks [@herrKlein](https://github.com/herrKlein)! - Adaptive items (`adaptive="true"`) are done when their response processing sets `completionStatus` to `completed`, not when `max-attempts` is reached. QTI 3 does not apply `max-attempts` to adaptive items, but the player did, so in a linear test with `max-attempts="1"` Next unlocked after a wrong first attempt while the item still had its next phase to show.
+
+  - `test-navigation`: `done` for an adaptive item is `completionStatus === 'completed'`.
+  - `test-end-attempt` is disabled once an adaptive item is completed.
+
+## 1.10.0-next.1
 
 ### Minor Changes
 
@@ -16,6 +266,18 @@
   - `qti-variable` can read an item session with `ITEMREF.VAR` (e.g. `Q01.SCORE`); an item that was never presented gives NULL.
   - `qti-match` and the other comparisons now work on `boolean` values (they were always false), so the `qti-end-attempt-interaction` pattern can be matched.
 
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+  - @qti-components/elements@1.10.0-next.1
+  - @qti-components/interactions@1.10.5-next.1
+  - @qti-components/processing@1.6.1-next.0
+
+## 1.10.0-next.0
+
+### Minor Changes
+
 - [#285](https://github.com/Citolab/qti-components/pull/285) [`b1ea89b`](https://github.com/Citolab/qti-components/commit/b1ea89b72109f8acc7f73b88fce920cb453c21a3) Thanks [@herrKlein](https://github.com/herrKlein)! - The test's public events get the `cito-` prefix, declared in one module (`public-events.ts`): requests `cito-test-navigate`, `cito-test-end-attempt`, `cito-test-update-outcome`, `cito-test-switch-view`; notifications `cito-test-navigated` (new: sent only after a navigation succeeded and rendered), `cito-test-navigation-started`, `cito-test-navigation-failed`, `cito-test-rendered`, `cito-test-loaded`, `cito-test-state-changed`, `cito-item-ref-connected`.
 
   - **Deprecated:** the old names (`qti-request-navigation`, `test-end-attempt`, `test-update-outcome-variable`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-navigation-error`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-state-changed`, `qti-assessment-item-ref-connected`) are still sent and handled, with the same `detail`. They go in the next major. A request sent under an old name (`qti-request-navigation`, `test-end-attempt`, …) logs a one-time `console.warn` naming the new one.
@@ -23,23 +285,12 @@
 
   Host entries: `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md`.
 
-- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - New test-level expression `qti-number-presented`: the number of selected item refs that have been presented to the candidate, with the same `section-identifier`, `include-category` and `exclude-category` filters as `qti-number-selected`. An item is presented once its `completionStatus` has left `not_attempted`, so items a linear test part passed over (pre-conditions, branch rules) and items not reached yet are not counted. Use it for totals over the candidate's own route, such as a maximum score of one point per presented item.
-
-  - A presented item no longer keeps a `not_attempted` the test context held for it (a restored session, or values set with `updateItemVariables` before the item was reached): presenting an item starts its first attempt, so it takes the item's own status.
-
-- [#300](https://github.com/Citolab/qti-components/pull/300) [`e7bee3a`](https://github.com/Citolab/qti-components/commit/e7bee3a22d2f7ea1ae515ccc92a9e87e7eec5aeb) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTest.getTestFeedback(access?)` returns the `qti-test-feedback` elements that apply after outcome processing, so a host no longer filters them by hand. `qti-test-feedback` reads its `access` attribute (`atEnd`, the default, or `during`) and gets `matches(value)`: whether it applies for a value of its `outcome-identifier`, honouring `show-hide` and container values. It still renders nothing where it is declared: where and when to show it stays up to the host.
-
 ### Patch Changes
 
-- [#298](https://github.com/Citolab/qti-components/pull/298) [`54ad14e`](https://github.com/Citolab/qti-components/commit/54ad14e4cf57ea95ccbc917ed734e46c6184c528) Thanks [@herrKlein](https://github.com/herrKlein)! - Adaptive items (`adaptive="true"`) are done when their response processing sets `completionStatus` to `completed`, not when `max-attempts` is reached. QTI 3 does not apply `max-attempts` to adaptive items, but the player did, so in a linear test with `max-attempts="1"` Next unlocked after a wrong first attempt while the item still had its next phase to show.
-
-  - `test-navigation`: `done` for an adaptive item is `completionStatus === 'completed'`.
-  - `test-end-attempt` is disabled once an adaptive item is completed.
-
-- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7), [`4476095`](https://github.com/Citolab/qti-components/commit/4476095f7cb1939ce780980f3a7a3317fc86c5c0), [`b1ea89b`](https://github.com/Citolab/qti-components/commit/b1ea89b72109f8acc7f73b88fce920cb453c21a3)]:
-  - @qti-components/base@2.4.1
-  - @qti-components/theme@2.2.2
-  - @qti-components/elements@1.10.0
+- Updated dependencies [[`4476095`](https://github.com/Citolab/qti-components/commit/4476095f7cb1939ce780980f3a7a3317fc86c5c0), [`b1ea89b`](https://github.com/Citolab/qti-components/commit/b1ea89b72109f8acc7f73b88fce920cb453c21a3)]:
+  - @qti-components/theme@2.2.2-next.0
+  - @qti-components/elements@1.10.0-next.0
+  - @qti-components/interactions@1.10.5-next.0
 
 ## 1.9.0
 

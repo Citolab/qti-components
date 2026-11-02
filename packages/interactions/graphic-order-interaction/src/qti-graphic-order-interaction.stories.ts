@@ -1,6 +1,9 @@
 import { html } from 'lit';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
+import mapUsPng from './fixtures/map-us.png';
+import ukPng from './fixtures/uk.png';
+
 import type { QtiGraphicOrderInteraction } from './qti-graphic-order-interaction';
 import type { StoryObj, Meta } from '@storybook/web-components-vite';
 
@@ -18,7 +21,7 @@ type Story = StoryObj<QtiGraphicOrderInteraction & typeof args>;
  */
 const meta: Meta<QtiGraphicOrderInteraction> = {
   component: 'qti-graphic-order-interaction',
-  title: '11 Graphic Order',
+  title: 'Interactions/Graphic Order/Overview',
   args,
   argTypes,
   parameters: {
@@ -34,7 +37,7 @@ export const Default: Story = {
     template(
       args,
       html`
-        <img src="assets/qti-graphic-order-interaction/uk.png" height="280" width="206" />
+        <img src=${ukPng} height="280" width="206" />
         <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>
@@ -48,7 +51,7 @@ export const MultipleShapes: Story = {
     template(
       args,
       html`
-        <img src="assets/qti-graphic-order-interaction/map-us.png" alt="" width="795" height="492" />
+        <img src=${mapUsPng} alt="" width="795" height="492" />
         <qti-hotspot-choice
           identifier="hotspot_1"
           fixed="false"
@@ -89,9 +92,7 @@ export const SpecFormObjectGraphic: Story = {
       args,
       html`
         <qti-prompt>Mark the airports shown on the map according to Lorna's preferences.</qti-prompt>
-        <object type="image/png" data="assets/qti-graphic-order-interaction/uk.png" width="206" height="280">
-          UK Map
-        </object>
+        <object type="image/png" data=${ukPng} width="206" height="280">UK Map</object>
         <qti-hotspot-choice coords="78,102,8" identifier="A" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="117,171,8" identifier="B" shape="circle"></qti-hotspot-choice>
         <qti-hotspot-choice coords="166,227,8" identifier="C" shape="circle"></qti-hotspot-choice>

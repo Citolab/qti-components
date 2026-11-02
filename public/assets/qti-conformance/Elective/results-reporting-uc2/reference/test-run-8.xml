@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessmentResult xmlns="http://www.imsglobal.org/xsd/imsqti_result_v3p0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_result_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_resultv3p0_v1p0.xsd">
+  <context sourcedId="test-run-8"/>
+  <itemResult identifier="rr-choice-single-1" datestamp="2021-04-19T21:43:23.433" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>5.073093</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>1</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="single" baseType="identifier">
+      <candidateResponse>
+        <value>ChoiceA</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-choice-multiple-1" datestamp="2021-04-19T21:43:25.692" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>1.899851</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>0</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="identifier">
+      <candidateResponse>
+        <value></value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+  <itemResult identifier="rr-match-1" datestamp="2021-04-19T21:43:34.379" sessionStatus="final">
+    <responseVariable identifier="numAttempts" cardinality="single" baseType="integer">
+      <candidateResponse>
+        <value>1</value>
+      </candidateResponse>
+    </responseVariable>
+    <responseVariable identifier="duration" cardinality="single" baseType="float">
+      <candidateResponse>
+        <value>8.258061</value>
+      </candidateResponse>
+    </responseVariable>
+    <outcomeVariable identifier="completionStatus" cardinality="single" baseType="identifier">
+      <value>completed</value>
+    </outcomeVariable>
+    <outcomeVariable identifier="SCORE" cardinality="single" baseType="float">
+      <value>0.5</value>
+    </outcomeVariable>
+    <responseVariable identifier="RESPONSE" cardinality="multiple" baseType="directedPair">
+      <candidateResponse>
+        <value>L M</value>
+        <value>D R</value>
+        <value>C T</value>
+      </candidateResponse>
+    </responseVariable>
+  </itemResult>
+</assessmentResult>

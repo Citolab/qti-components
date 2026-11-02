@@ -21,8 +21,8 @@ const settle = async () => {
   await new Promise(r => setTimeout(r, 0));
 };
 
-const hasDrag = (el: Element | null) => !!el && (el as Stateful).internals.states.has('drag');
-const hasDrop = (el: Element | null) => !!el && (el as Stateful).internals.states.has('droppable');
+const hasDrag = (el: Element | null) => !!el && (el as Stateful).internals.states.has('chip');
+const hasDrop = (el: Element | null) => !!el && (el as Stateful).internals.states.has('drop');
 
 describe(':state(drag) from draggablesSelector', () => {
   test('order-interaction: every qti-simple-choice is a drag, and takes no ARIA role', async () => {
@@ -36,7 +36,7 @@ describe(':state(drag) from draggablesSelector', () => {
     const choices = Array.from(document.querySelectorAll('qti-simple-choice')) as Stateful[];
     expect(choices).toHaveLength(2);
     for (const c of choices) {
-      expect(c.internals.states.has('drag')).toBe(true);
+      expect(c.internals.states.has('chip')).toBe(true);
       // `drag` is not a valid ARIA role
       expect(c.internals.role).toBeNull();
     }
@@ -51,7 +51,7 @@ describe(':state(drag) from draggablesSelector', () => {
 
     const choice = document.querySelector('qti-simple-choice') as Stateful;
     expect(choice.internals.states.has('radio')).toBe(true);
-    expect(choice.internals.states.has('drag')).toBe(false);
+    expect(choice.internals.states.has('chip')).toBe(false);
   });
 
   test('match-interaction: sources are drags, drop targets are not — same tag, different answer', async () => {

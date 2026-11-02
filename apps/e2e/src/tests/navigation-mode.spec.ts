@@ -95,7 +95,7 @@ describe('navigation-mode', () => {
 
       // Manually request navigation to ITM-choice
       qtiTest.dispatchEvent(
-        new CustomEvent('qti-request-navigation', {
+        new CustomEvent('qc-test-navigate', {
           bubbles: true,
           composed: true,
           detail: { type: 'item', id: 'ITM-choice' }
@@ -134,7 +134,7 @@ describe('navigation-mode', () => {
 
       // Move to item-2
       qtiTest.dispatchEvent(
-        new CustomEvent('qti-request-navigation', {
+        new CustomEvent('qc-test-navigate', {
           bubbles: true,
           composed: true,
           detail: { type: 'item', id: 'item-2' }
@@ -200,13 +200,13 @@ describe('navigation-mode', () => {
     test('should restrict jumping to item 3 from item 1 and dispatch navigation-error', async () => {
       const qtiTest = container.querySelector('qti-test');
       let errorReceived = false;
-      qtiTest.addEventListener('qti-navigation-error', () => {
+      qtiTest.addEventListener('qc-test-navigation-failed', () => {
         errorReceived = true;
       });
 
       // Manually request navigation to ITM-choice
       qtiTest.dispatchEvent(
-        new CustomEvent('qti-request-navigation', {
+        new CustomEvent('qc-test-navigate', {
           bubbles: true,
           composed: true,
           detail: { type: 'item', id: 'ITM-choice' }

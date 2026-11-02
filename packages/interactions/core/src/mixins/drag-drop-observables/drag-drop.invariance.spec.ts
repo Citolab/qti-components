@@ -95,7 +95,7 @@ describe.each(CONTRACT_SUBSTRATES)('drag-drop layout invariance — %s', substra
     const atRest = boxOf(chip);
 
     // `dragging` is what the mixin sets on the source while its clone follows the cursor.
-    chip.internals.states.add('dragging');
+    chip.internals.states.add('lifted');
     await settle();
     const whileDragging = boxOf(chip);
 
@@ -109,7 +109,7 @@ describe.each(CONTRACT_SUBSTRATES)('drag-drop layout invariance — %s', substra
     const chip = byId('winter');
     const atRest = boxOf(chip);
 
-    chip.internals.states.add('placeholder');
+    chip.internals.states.add('used');
     await settle();
 
     expect(boxOf(chip), 'a spent chip still occupies its own footprint').toEqual(atRest);
@@ -123,7 +123,7 @@ describe.each(CONTRACT_SUBSTRATES)('drag-drop layout invariance — %s', substra
     const g2 = el<HTMLElement>('[identifier="G2"]');
     const before = { G1: originOf(g1), G2: originOf(g2) };
 
-    byId('winter').internals.states.add('dragging');
+    byId('winter').internals.states.add('lifted');
     await settle();
 
     expect({ G1: originOf(g1), G2: originOf(g2) }, 'the target must not slide out from under the pointer').toEqual(
@@ -343,8 +343,8 @@ describe.each(CONTRACT_SUBSTRATES)('a spent drag keeps its footprint — %s', su
     interaction.handleDrop(chip, spec.target());
     await settle();
 
-    expect(chip.internals.states.has('placeholder'), 'the source is spent').toBe(true);
-    expect(chip.internals.states.has('drag'), 'and is still a drag').toBe(true);
+    expect(chip.internals.states.has('used'), 'the source is spent').toBe(true);
+    expect(chip.internals.states.has('chip'), 'and is still a chip').toBe(true);
     expect(boxOf(chip), 'the hole is the size of the drag that left it').toEqual(inBank);
   });
 });

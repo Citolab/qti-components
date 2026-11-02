@@ -1,6 +1,42 @@
 # @qti-components/processing
 
-## 1.6.1
+## 1.6.1-next.5
+
+### Patch Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - `qti-position-object-interaction` is a real QTI interaction (3.2.16). It extends `Interaction`, so it
+  has a `response-identifier`, a `point` response (each placement's centre point in the stage image's
+  own coordinates), a form value, validity with `min-choices` / `max-choices` (default 1) and the
+  change/submit message timing, `center-point`, `reset`, and restore through `response`. Placing: drag
+  the object onto the stage or click it and then the stage; drag a copy to move it or off the stage
+  to remove it; keyboard Enter places a copy at the stage centre, arrows move it, Delete removes it.
+  Parts `object` (tokens `selected`, `used`), `point`, `message`; state `used`.
+
+  `qti-position-object-stage` is now layout only: it no longer moves the object image itself.
+
+  `mapResponsePoint` no longer throws on an unanswered single `point` response.
+
+  Host notes: `plans/host-migration/citotestuit.md`.
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/base@3.0.0-next.6
+
+## 1.6.1-next.4
+
+### Patch Changes
+
+- [#307](https://github.com/Citolab/qti-components/pull/307) [`7bb058f`](https://github.com/Citolab/qti-components/commit/7bb058ff4a4755677fda7c4a2ebdddac42767f68) Thanks [@herrKlein](https://github.com/herrKlein)! - A `qti-response-if`, `qti-response-else-if`, `qti-outcome-if` or `qti-outcome-else-if` whose condition is a boolean variable or base value applies only when it is `true`. Before, `false` was read as the string `'false'`, which is truthy, so `<qti-response-if><qti-variable identifier="HINT"/>` ran whenever HINT had a value. The spec's own adaptive examples test booleans this way. Fixes [#340](https://github.com/Citolab/qti-components/issues/340).
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320)]:
+  - @qti-components/base@3.0.0-next.4
+
+## 1.6.1-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+
+## 1.6.1-next.2
 
 ### Patch Changes
 
@@ -11,7 +47,21 @@
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
 - Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/base@2.5.0
+  - @qti-components/base@2.5.0-next.2
+
+## 1.6.1-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+
+## 1.6.1-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
 
 ## 1.6.0
 

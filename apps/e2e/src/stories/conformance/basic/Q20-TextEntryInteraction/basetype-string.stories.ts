@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/Q20 - Text Entry Interaction/baseType-string',
+  title: 'Testing/Conformance/basic/Q20 - Text Entry Interaction/baseType-string',
   beforeEach: async () => {}
 };
 export default meta;
@@ -21,8 +21,8 @@ export const Q20_L1_D1: Story = {
   name: 'Q20-L1-D1',
   render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -31,8 +31,8 @@ export const Q20_L1_D1: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
         ${xml}
@@ -66,8 +66,8 @@ export const Q20_L1_D2: Story = {
   name: 'Q20-L1-D2',
   render: (_, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -76,8 +76,8 @@ export const Q20_L1_D2: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemConnected}
       >
         ${xml}

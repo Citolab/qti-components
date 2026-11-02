@@ -1,3 +1,4 @@
+import { hasState } from '@qti-components/base';
 import { QtiGraphicOrderInteraction } from '@qti-components/graphic-order-interaction/elements';
 
 import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
@@ -7,16 +8,21 @@ import type { Choice } from '@qti-components/interactions-core/mixins/choices/ch
 type OrderedHotspot = Choice & { order: number | null };
 
 type CorrectableOrderedHotspot = OrderedHotspot & {
+  internals: ElementInternals;
   candidateCorrection: 'correct' | 'incorrect' | 'partially-correct' | null;
   orderCorrect: number | null;
 };
 
+/**
+ * Judges each hotspot's position in the order and paints its pin from the hotspot's verdict state.
+ * The answer key is the hotspot's `orderCorrect` (`data-order-correct`), set by
+ * `toggleInternalCorrectResponse`; it sets no state on the hotspot.
+ */
 export class QtiGraphicOrderInteractionCorrection extends CandidateCorrectionMixin(QtiGraphicOrderInteraction) {
   protected override resolvePinColor(choice: OrderedHotspot): string {
-    const correctableChoice = choice as CorrectableOrderedHotspot;
-    if (correctableChoice.matches(':state(candidate-incorrect)')) return 'var(--qti-incorrect)';
-    if (correctableChoice.matches(':state(candidate-correct)')) return 'var(--qti-correct)';
-    if (correctableChoice.matches(':state(correct-response)')) return 'var(--qti-answer-border)';
+    const { internals } = choice as CorrectableOrderedHotspot;
+    if (hasState(internals.states, 'candidate-incorrect')) return 'var(--qti-incorrect)';
+    if (hasState(internals.states, 'candidate-correct')) return 'var(--qti-correct)';
     return super.resolvePinColor(choice);
   }
 

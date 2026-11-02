@@ -1,0 +1,17 @@
+/*
+ * The hole a lifted or spent chip leaves, in every drag-and-drop interaction: a tint of the primary
+ * colour, no border, and an inset shadow, so it reads as a slot the chip came out of rather than as
+ * a chip without its label. Both colours are tier 2, derived from the primary (qti-variables.css).
+ *
+ * A bare `:state(used)` on purpose, imported into `interactions.states`. The layer puts it
+ * above a brand's resting chip (`interactions.brand`), so a filled chip still leaves a tinted hole;
+ * the low specificity lets a brand sheet restyle the hole with the same selector, no contest. Each
+ * interaction's own placeholder rule (`@mixin drag-placeholder`) only hides the text and the handle, so it does not
+ * fight this one. Graphic gap match reads no --drag-* slot, so its tiles keep their own placeholder.
+ * Corrections, a layer higher, still win.
+ */
+:state(used) {
+  --drag-background-color: var(--qti-placeholder-bg);
+  --drag-border-color: transparent;
+  --drag-box-shadow: inset var(--qti-placeholder-shadow);
+}

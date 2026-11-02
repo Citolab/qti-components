@@ -116,7 +116,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const targetId = id || this._getDefaultNavigationId(type);
 
       if (targetId) {
-        dispatchPublic(this, 'cito-test-navigate', { type, id: targetId });
+        dispatchPublic(this, 'qc-test-navigate', { type, id: targetId });
       }
     }
 
@@ -125,8 +125,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     private _bindEventHandlers(): void {
-      listenPublic(this, 'cito-test-navigate', this._handleNavigationRequest.bind(this));
-      listenPublic(this, 'cito-test-loaded', this._handleTestConnected.bind(this));
+      listenPublic(this, 'qc-test-navigate', this._handleNavigationRequest.bind(this));
+      listenPublic(this, 'qc-test-loaded', this._handleTestConnected.bind(this));
       this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
       this.addEventListener('qti-assessment-stimulus-ref-connected', this._handleStimulusRefConnected.bind(this));
     }
@@ -229,9 +229,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         const refs = [...this._testElement.querySelectorAll('qti-assessment-item-ref')];
         if (refs[0]?.closest('qti-test-part')?.getAttribute('navigation-mode') === 'linear') {
           const first = resolveFirstItem(refs);
-          if (first.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: first.skipped });
+          if (first.skipped.length) dispatchPublic(this, 'qc-test-items-skipped', { ids: first.skipped });
           if (first.id === null) {
-            dispatchPublic(this, 'cito-test-end-reached', {});
+            dispatchPublic(this, 'qc-test-end-reached', {});
             return;
           }
           id = first.id;
@@ -313,8 +313,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
       const resolved = this._resolveLinearNext(detail.type, detail.id);
       if (resolved?.id === null) {
-        if (resolved.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: resolved.skipped });
-        dispatchPublic(this, 'cito-test-end-reached', {});
+        if (resolved.skipped.length) dispatchPublic(this, 'qc-test-items-skipped', { ids: resolved.skipped });
+        dispatchPublic(this, 'qc-test-end-reached', {});
         return;
       }
       const target = resolved?.id ?? detail.id;
@@ -335,7 +335,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         await this._executeNavigation(detail.type, target, navigationId, controller);
         // only tell hosts about skipped items once the jump went through
         if (resolved?.skipped.length && navigationId === this._navigationId && !controller.signal.aborted) {
-          dispatchPublic(this, 'cito-test-items-skipped', { ids: resolved.skipped });
+          dispatchPublic(this, 'qc-test-items-skipped', { ids: resolved.skipped });
         }
       } catch (error) {
         this._handleNavigationError(error, detail.type, target);
@@ -703,7 +703,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     private _dispatchLoadingStarted(type: string, id: string): void {
-      dispatchPublic(this, 'cito-test-navigation-started', { type: type as 'item' | 'section', id });
+      dispatchPublic(this, 'qc-test-navigation-started', { type: type as 'item' | 'section', id });
     }
 
     private _dispatchLoadingEnded(type: string, id: string): void {
@@ -717,21 +717,21 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     }
 
     private _dispatchError(error: NavigationError): void {
-      dispatchPublic(this, 'cito-test-navigation-failed', error);
+      dispatchPublic(this, 'qc-test-navigation-failed', error);
     }
 
-    /** The items are in the DOM: tell hosts the new position rendered (`cito-test-navigated`) and which items it holds. */
+    /** The items are in the DOM: tell hosts the new position rendered (`qc-test-navigated`) and which items it holds. */
     private _dispatchTestLoaded(results: any[], type: 'item' | 'section', id: string): void {
       requestAnimationFrame(() => {
         dispatchPublic(
           this,
-          'cito-test-rendered',
+          'qc-test-rendered',
           results.map(({ itemRef }) => ({
             identifier: itemRef?.identifier,
             element: itemRef
           }))
         );
-        dispatchPublic(this, 'cito-test-navigated', { type, id });
+        dispatchPublic(this, 'qc-test-navigated', { type, id });
       });
     }
   }

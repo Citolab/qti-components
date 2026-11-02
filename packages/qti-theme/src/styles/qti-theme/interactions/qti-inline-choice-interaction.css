@@ -5,7 +5,8 @@
        text, rather than the contract's `inherit`) is set as --field-* so it stays overridable — and
        being the field's own slot, it no longer inherits into the menu and message below. Those two
        still land on the same colour: they inherit the field's computed `color`. */
-    @mixin field;
+    @mixin paint field;
+    @mixin inline;
     --field-color: var(--qti-fg);
 
     /* ── Trigger: transparent inside the field border ───────────────────────── */
@@ -17,29 +18,34 @@
       color: inherit;
       cursor: pointer;
       font-size: inherit;
+      /* The same line as a text entry's input (@mixin field-typography), so the two fields sit in a
+         sentence at the same height. `normal` made the dropdown about 6px shorter. */
+      line-height: var(--qti-field-line-height);
     }
 
-    &::part(trigger):focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+    /* The trigger fills the field inside its border, so its ring is pushed out past that border:
+       it then sits where a text entry's does, which rings its host. */
+    &::part(trigger):focus {
+      @mixin foc;
+      outline-offset: var(--qti-focus-offset-past-border);
     }
 
-    &:state(disabled)::part(trigger),
+    /* The attribute, not `:state(disabled)` / `:state(readonly)`: this host sets neither state
+       (plans/parts-and-states-naming.md, "Names that exist on one side only"). */
     &[disabled]::part(trigger) {
       cursor: not-allowed;
     }
 
-    &:state(readonly)::part(trigger),
     &[readonly]::part(trigger) {
       cursor: pointer;
     }
 
     /* ── Chevron icon: color only; transform/mask/size live in shadow DOM ────── */
-    &::part(dropdown-icon) {
+    &::part(icon) {
       color: inherit;
     }
 
-    &::part(dropdown-icon-open) {
+    &::part(icon open) {
       color: inherit;
     }
 
@@ -57,9 +63,21 @@
      * above it. Two spacing tokens for one box is the whole bug — the vocabulary says pick one and
      * spend it whole (see the CONTRACT note on --qti-padding-box / -inline / --qti-gap).
      */
+    /*
+     * The seam is ONE border. The menu anchors to the field's outer bottom edge, so its top border
+     * used to stack under the field's bottom border: two borders read as one thick band. Pulled up by
+     * the field's border width, the menu's top border lies on the field's bottom border instead.
+     *
+     * A negative margin rather than dropping the menu's top border: `position-try-fallbacks:
+     * flip-block` flips margins with the menu, so a menu flipped above the field overlaps the
+     * field's top border the same way and still has a border on its free edge. Not in a :state —
+     * the menu is only painted while open anyway, so this never toggles.
+     */
     &::part(menu) {
-      @mixin menu;
+      @mixin paint menu;
+      border-radius: var(--menu-border-radius, var(--qti-radius-box));
       padding: 0;
+      margin-block-start: calc(-1 * var(--field-border-width, var(--qti-component-border-width)));
     }
 
     /*
@@ -87,29 +105,28 @@
       border-end-end-radius: 0;
     }
 
+    /* All four corners square: the top because it joins the field, the bottom by design — the open
+       list is a straight-edged sheet under the field. */
     &::part(menu):popover-open {
-      border-start-start-radius: 0;
-      border-start-end-radius: 0;
+      border-radius: 0;
     }
 
     /* ── Option rows ─────────────────────────────────────────────────────────── */
     &::part(option) {
       padding: var(--qti-padding-box);
       border: 0;
-      /* Square, because a row now spans the full width of the menu. The menu's own radius still
-         rounds the first and last row, since it clips them (overflow: auto). A radius here would
-         only show as a notch inside a straight edge. */
+      /* Square, because a row spans the full width of the menu, and the open menu is square too.
+         A radius here would only show as a notch inside a straight edge. */
       border-radius: 0;
       background: transparent;
       cursor: pointer;
     }
 
     &::part(option):focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc-inset;
     }
 
-    &::part(option-selected) {
+    &::part(option selected) {
       background-color: var(--qti-bg-active);
     }
 
@@ -133,8 +150,7 @@
     }
 
     & qti-inline-choice:focus-visible {
-      box-shadow: 0 0 0 var(--qti-focus-border-width) var(--qti-focus-color);
-      outline: none;
+      @mixin foc-inset;
     }
 
     & qti-inline-choice:state(checked) {
@@ -145,9 +161,10 @@
        (fg text, amber-tinted fill, amber border) are --message-* overrides; width/style/radius
        come from the defaults. ── */
     &::part(message) {
-      @mixin message;
+      @mixin paint message;
+      border-radius: var(--message-border-radius, var(--qti-radius-box));
       --message-color: var(--qti-fg);
-      --message-background-color: color-mix(in srgb, var(--qti-warning) 5%, white);
+      --message-background-color: color-mix(in oklab, var(--qti-warning) 5%, var(--qti-bg));
       --message-border-color: var(--qti-warning);
       padding: var(--qti-padding-box);
     }
@@ -156,8 +173,9 @@
 
 @layer qti-components.interactions.corrections {
   /* The answer key, moved here from the shared qti-corrections.css: it names this interaction, so
-     this file owns it. */
-  .full-correct-response qti-inline-choice-interaction {
+     this file owns it. Keyed on `answer-key` on the cloned host (CorrectResponseMixin), where the
+     `.full-correct-response` wrapper class used to be read. */
+  qti-inline-choice-interaction:state(answer-key) {
     @mixin answer;
 
     &::part(value) {

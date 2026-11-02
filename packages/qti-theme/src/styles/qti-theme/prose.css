@@ -42,7 +42,7 @@
   :scope td {
     border: var(--qti-prose-table-border-width, var(--qti-border-thickness, 1px))
       var(--qti-prose-table-border-style, var(--qti-border-style, solid))
-      var(--qti-prose-table-border-color, var(--qti-border-color, #c6cad0));
+      var(--qti-prose-table-border-color, var(--qti-border-color));
     padding: var(--qti-prose-table-cell-padding, 0.25rem 0.5rem);
     text-align: left;
     /* No vertical-align here: that is layout, and the theme does not do layout (CONTRACT.md §7,
@@ -50,7 +50,7 @@
   }
 
   :scope th {
-    background: var(--qti-prose-table-header-bg, var(--qti-bg-active, #f6f8fa));
+    background: var(--qti-prose-table-header-bg, var(--qti-bg-active));
     font-weight: 600;
   }
 }

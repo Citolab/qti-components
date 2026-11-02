@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/Q2 - Choice Interaction/multiple-cardinality',
+  title: 'Testing/Conformance/basic/Q2 - Choice Interaction/multiple-cardinality',
   beforeEach: async () => {}
 };
 export default meta;

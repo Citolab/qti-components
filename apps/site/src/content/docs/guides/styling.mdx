@@ -1,0 +1,103 @@
+---
+title: Styling and theming
+description: Set the theme's inputs, override a part or a state, and get your CSS to where the items render.
+---
+
+`item.css` (the [theme package](/packages/#qti-componentstheme)) paints every item, interaction and test control. A host changes that look at three levels, from the cheapest to the most specific: set the theme's inputs, write a rule on a part or a state, or put a whole stylesheet next to the items.
+
+## Set the theme inputs
+
+The theme is derived from a small set of inputs, custom properties with the `--qc-` prefix. Set them on `:root`, or on any element carrying a `data-qti-theme` attribute to theme one subtree. The theme never declares these names itself, so a value set on the page inherits into every shadow root and every item re-derives its colours, radii and sizes from it.
+
+```css
+:root {
+  /* Surface */
+  --qc-color-base-100: oklch(100% 0 none);
+  --qc-color-base-content: oklch(32% 0 none);
+  /* Brand */
+  --qc-color-primary: oklch(64% 0.26 5);
+  --qc-color-primary-content: oklch(100% 0 none);
+  --qc-color-neutral: oklch(64% 0.26 5); /* the Next button */
+  --qc-color-neutral-content: oklch(100% 0 none);
+  --qc-color-chip: oklch(100% 0 none); /* what you drag */
+  --qc-color-chip-content: oklch(32% 0 none);
+  /* States */
+  --qc-color-info: oklch(53% 0.12 239); /* the answer key */
+  --qc-color-success: oklch(64% 0.18 149); /* correct */
+  --qc-color-warning: oklch(86% 0.18 89); /* partially correct */
+  --qc-color-error: oklch(65% 0.23 27); /* incorrect */
+  /* Shape */
+  --qc-radius-field: 5px;
+  --qc-radius-selector: 5px;
+  --qc-radius-box: 15px;
+  --qc-border-width: 1px;
+  /* Size */
+  --qc-spacing: 0.5rem;
+  --qc-size-selector: 0.3125em; /* radios and checkboxes */
+  --qc-size-field: 0.25rem;
+  /* Type */
+  --qc-font-family: system-ui, sans-serif; /* reading text; unset: the page's font */
+  --qc-font-family-heading: 'PT Sans', Arial, sans-serif; /* headings only; unset: the reading font */
+  /* Feel */
+  --qc-depth: 1; /* 0 flat, 1 lifted */
+  --qc-motion: 1;
+  --qc-line-height: 1.5; /* text fields */
+}
+```
+
+Light and dark are one set of inputs: every colour follows the page's `color-scheme`, so a dark theme is `color-scheme: dark` on the container, never a second set of tokens.
+
+The optional inputs cover what a brand sometimes wants its own say in: `--qc-color-border` for every edge, `--qc-color-chip-border`, `--qc-icon-drag`, `--qc-size-drag-icon` and `--qc-color-drag-icon` for a chip's handle, `--qc-shadow-chip` for a chip at rest, `--qc-color-order-placed` / `-content` / `-border` for an order interaction's placed chip, `--qc-icon-marker` and `--qc-marker-anchor` for the select-point marker, and `--qc-color-focus` for the focus ring.
+
+The inputs used to carry the `--cito-` prefix. Those names still work for this major: the theme reads `--qc-*` first and falls back to `--cito-*`.
+
+## Override anything else
+
+Every component exposes its look through **parts** and **states**, and those are its styling API. A part is a role inside the shadow root (`control`, `label`, `chip`, `drop`, `bank`, `button`, `message`, `correction`, …); a state says what the element is right now (`checked`, `disabled`, `readonly`, `open`, `filled`, `full`, `lifted`, `used`, `candidate-correct`, `answer-key`, …). A state on a part is a second token with the same name: `::part(drop filled)`. The full tables are in the theme's contract, [`packages/qti-theme/CONTRACT.md` §3](https://github.com/Citolab/qti-components/blob/main/packages/qti-theme/CONTRACT.md); each element lists its own under `@csspart` / `@cssstate`.
+
+Write plain CSS on `<tag>::part(name)` and `<tag>:state(name)`:
+
+```css
+qti-gap::part(chip) {
+  background: oklch(95% 0.03 250);
+}
+qti-simple-choice:state(checked)::part(control) {
+  border-color: oklch(64% 0.26 5);
+}
+qti-gap:state(filled)::part(drop) {
+  border-style: solid;
+}
+```
+
+The whole theme is layered (`@layer qti-base, qti-components, qti-extended`), so an unlayered rule of yours wins over the theme at any specificity; you never need `!important` or a heavier selector to beat it. `@layer qti-extended` is the theme's last, empty layer, there for a host that wants to keep its own rules in a layer and still sit above the theme.
+
+## Put the CSS where the items render
+
+Items render inside the shadow root of `test-container` and `item-container`. Custom properties cross that boundary; a document stylesheet does not, so a `::part()` rule in the page's CSS reaches nothing inside. Both containers adopt a `<template>` child into their shadow root, so a `<style>` in it lands next to the items:
+
+```html
+<qti-test>
+  <test-container test-url="/tests/demo/assessment.xml">
+    <template>
+      <style>
+        qti-gap::part(chip) {
+          background: oklch(95% 0.03 250);
+        }
+        qti-simple-choice:state(checked)::part(control) {
+          border-color: oklch(64% 0.26 5);
+        }
+      </style>
+    </template>
+  </test-container>
+</qti-test>
+```
+
+An unlayered rule in that `<style>` beats the theme as it does on the page. If you do write it in a layer, restate the theme's layer statement first (`@layer qti-base, qti-components, qti-extended;`): a `<style>` in a shadow root cascades before the adopted theme, so a layer first named there would otherwise rank lowest. The Storybook story `ItemWithKennisnetOverlay` in `packages/qti-item/src/components/item-container/item-container.stories.ts` is a working example of a brand overlay delivered this way.
+
+## What is not API
+
+- Never read a `--qti-*` token. They are the theme's own derived values and may change in a minor release; the `--qc-*` inputs, the parts and the states are what is stable.
+- Never depend on a theme sublayer (`qti-components.interactions.states`, `.corrections`, …). Write unlayered CSS, or in `qti-extended`. The one theme layer you may write into is `qti-components.interactions.brand`: a resting look that the theme's state and correction paint must still beat (a chip colour that a used-up chip still turns into a hole) goes there, as the `ItemWithKennisnetOverlay` story does.
+- Never expect a mixin. The theme's mixins are compiled away; the published CSS contains only parts, states and tokens.
+
+The test controls (`test-next`, `test-prev`, the item links, the text-to-speech buttons) are the one exception to "the theme paints everything": they paint themselves, so they look the same without `item.css`. Each exposes `::part(button)` and reads the `--button-*` slots the theme's own buttons read (`--button-background-color`, `--button-color`, `--button-border-color`, `--button-hover-background-color`, `--button-active-background-color`, `--button-primary-*` for the filled Next button, `--button-selected-*` for a toggle that is on, `--button-size`, `--button-border-radius`). The older `--test-button-*` names are aliases for this major.

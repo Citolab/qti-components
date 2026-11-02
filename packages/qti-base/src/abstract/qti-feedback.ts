@@ -77,12 +77,41 @@ export abstract class QtiFeedback extends LitElement {
     this.#showFeedback(isFound);
   }
 
+  /** The host cancelled the show: it has this feedback, and is not asked again until the condition has gone. */
+  #hostShows = false;
+
   #showFeedback(value: boolean) {
-    if (!this.#sessionControlAllowsFeedback()) {
-      this.showStatus = 'off';
-      return;
+    const next = this.#sessionControlAllowsFeedback() && this.#conditionHolds(value) ? 'on' : 'off';
+    if (next === 'on') {
+      if (this.showStatus === 'on' || this.#hostShows) return;
+      if (!this.feedbackShowing()) {
+        // The host takes over showing: this stays off and the host shows the content itself.
+        this.#hostShows = true;
+        this.showStatus = 'off';
+        return;
+      }
+    } else {
+      this.#hostShows = false;
+      if (this.showStatus === 'on' && !this.feedbackHiding()) return;
     }
-    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';
+    this.showStatus = next;
+  }
+
+  #conditionHolds(value: boolean) {
+    return (value && this.showHide === 'show') || (!value && this.showHide === 'hide');
+  }
+
+  /**
+   * Called when this feedback is about to show. Return `false` to keep it hidden: the host shows the
+   * content itself. The elements dispatch `qc-feedback-show` here.
+   */
+  protected feedbackShowing(): boolean {
+    return true;
+  }
+
+  /** Called when this feedback is about to hide. Return `false` to keep it showing: the host hides it itself. */
+  protected feedbackHiding(): boolean {
+    return true;
   }
 
   /**

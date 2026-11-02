@@ -5,8 +5,9 @@ import { css } from 'lit';
  *
  * The component decides where the badge sits in the markup — last, after the label — and how big
  * its box is. It decides nothing about how it looks. The disc, the tick, the cross, and whether it
- * is lifted out of flow at all are the theme's, keyed on ::part(correction-correct) /
- * ::part(correction-incorrect).
+ * is lifted out of flow at all are the theme's, keyed on ::part(correction candidate-correct) /
+ * ::part(correction candidate-incorrect) / ::part(correction candidate-partial) (CONTRACT.md §3; the
+ * old single tokens correction-correct etc. stay on the part for one major).
  *
  * It replaces six implementations of one idea: four ::after glyph blocks in kennisnet, an
  * ::before/::after pair in order-interaction, and a .correct-option span that gap-match and match
@@ -16,13 +17,13 @@ import { css } from 'lit';
  *
  * Reachable everywhere. A chip has three homes, and inside a drop target's shadow root the document
  * cannot see its badge: parts do not chain, so ::part(drag)::part(correction) is inert. A part
- * token survives exportparts, so one bare ::part(correction-correct) reaches the badge in the drag
+ * token survives exportparts, so one bare ::part(correction candidate-correct) reaches the badge in the drag
  * bank, on the floating clone, and inside a gap. Verified in Chromium.
  *
  * Deliberately not anchored, and not absolutely positioned. Both were tried; both left
  * qti-choice-interaction unable to reach layout stability, and the VRT stability detector spent 20
  * seconds waiting before capturing a half-settled frame. A theme that wants a corner badge can
- * position ::part(correction-correct) itself — it is a part, that is the point.
+ * position ::part(correction candidate-correct) itself — it is a part, that is the point.
  */
 export const correctionPart = css`
   /* Nothing at all until the item judges this element. */
@@ -30,9 +31,9 @@ export const correctionPart = css`
     display: none;
   }
 
-  [part~='correction-correct'],
-  [part~='correction-incorrect'],
-  [part~='correction-partially-correct'] {
+  [part~='correction'][part~='candidate-correct'],
+  [part~='correction'][part~='candidate-incorrect'],
+  [part~='correction'][part~='candidate-partial'] {
     display: inline-flex;
     flex: 0 0 auto;
 

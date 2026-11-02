@@ -30,7 +30,7 @@ export class QtiNumberPresented extends QtiExpression<number> {
 
   constructor() {
     super();
-    listenPublic(this, 'cito-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail));
+    listenPublic(this, 'qc-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail));
   }
 
   /** The test this expression is in: handed over by a test harness, or found up the tree in a real document. */

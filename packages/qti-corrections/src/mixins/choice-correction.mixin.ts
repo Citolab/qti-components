@@ -1,3 +1,5 @@
+import { setState } from '@qti-components/base';
+
 import { CandidateCorrectionMixin } from './candidate-correction.mixin';
 
 import type { Interaction } from '@qti-components/base';
@@ -16,7 +18,14 @@ type ChoicesCorrectionBase = Interaction & {
   readonly internals: ElementInternals;
 };
 
-/** Adds per-choice candidate marking to interactions built on `ChoicesMixin`. */
+/**
+ * Adds per-choice candidate marking to interactions built on `ChoicesMixin`.
+ *
+ * Each choice gets its own states (CONTRACT.md §3): the verdict through its `candidateCorrection`
+ * (`ActiveElementCorrectionMixin`), and `answer-key` when it is part of the correct response (alias
+ * `correct-response`, one major). A choice outside the key gets nothing; the old `incorrect-response`
+ * was never styled and is gone.
+ */
 export const ChoiceCorrectionMixin = <T extends AbstractConstructor<ChoicesCorrectionBase>>(superClass: T) => {
   abstract class ChoiceCorrectionMixinClass extends CandidateCorrectionMixin(superClass) {
     declare protected _choiceElements: CorrectableChoice[];
@@ -32,13 +41,8 @@ export const ChoiceCorrectionMixin = <T extends AbstractConstructor<ChoicesCorre
         : [];
 
       for (const choice of this._choiceElements) {
-        choice.internals.states.delete('correct-response');
-        choice.internals.states.delete('incorrect-response');
-        if (show && correctResponses.length > 0) {
-          choice.internals.states.add(
-            correctResponses.includes(choice.identifier) ? 'correct-response' : 'incorrect-response'
-          );
-        }
+        const inKey = show && correctResponses.includes(choice.identifier);
+        setState(choice.internals.states, 'answer-key', inKey, ['correct-response']);
       }
     }
 

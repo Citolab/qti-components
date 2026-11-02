@@ -10,7 +10,7 @@ import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref
 import type { QtiTestState } from '../types/qti-test-state';
 
 /**
- * `qtiTest.state` and `qti-state-changed` are the whole persistence contract for a host: listen,
+ * `qtiTest.state` and `qc-test-state-changed` are the whole persistence contract for a host: listen,
  * store, and assign the stored value back to resume. These specs hold that contract to what a
  * host would actually do — assign before anything has loaded, or after — and to what it must
  * never see: an empty state emitted mid-load, or the answer key in what it stores.
@@ -88,7 +88,7 @@ describe('qti-test state', () => {
     render(assessmentTest, host);
     qtiTest = host.querySelector('qti-test') as QtiTest;
     emitted = [];
-    qtiTest.addEventListener('qti-state-changed', e => emitted.push(e.detail));
+    qtiTest.addEventListener('qc-test-state-changed', e => emitted.push(e.detail));
   });
 
   afterEach(() => host.remove());
@@ -149,7 +149,7 @@ describe('qti-test state', () => {
       const requested: unknown[] = [];
       // Captured and stopped at the target: the real handler would fetch the item's href.
       qtiTest.addEventListener(
-        'qti-request-navigation',
+        'qc-test-navigate',
         (e: CustomEvent) => {
           requested.push(e.detail);
           e.stopImmediatePropagation();
@@ -191,7 +191,7 @@ describe('qti-test state', () => {
     });
   });
 
-  describe('qti-state-changed', () => {
+  describe('qc-test-state-changed', () => {
     beforeEach(connect);
 
     it('emits when the candidate answers, without declaration metadata or the answer key', async () => {

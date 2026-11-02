@@ -24,13 +24,23 @@ import itemCss from '@qti-components/theme/item-css';
 
 const settle = () => new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
-const CORRECT = 'rgb(43, 131, 14)';
-const INCORRECT = 'rgb(223, 0, 0)';
+// The verdict colours, read from the theme's own tokens rather than written here, so the test follows
+// the theme. Read off a probe in the same document, after applyTheme.
+const tokenColor = (token: string) => {
+  const probe = document.createElement('div');
+  probe.style.color = `var(${token})`;
+  document.body.appendChild(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+};
 const TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
 const applyTheme = () => {
   document.querySelectorAll('style[data-corr]').forEach(s => s.remove());
-  for (const css of [normalizeCss, itemCss]) {
+  // The theme fades a verdict in (qti-motion.css); a computed colour read right after the state is
+  // set would be mid-fade. Its one knob is an inherited input, so zeroing it here reaches every root.
+  for (const css of [normalizeCss, itemCss, ':root { --qc-motion: 0; }']) {
     const style = document.createElement('style');
     style.setAttribute('data-corr', '');
     style.textContent = css;
@@ -75,13 +85,14 @@ const CASES: Array<{ name: string; html: string; carrier: string; painted?: stri
       </qti-match-interaction>`
   },
   {
-    // The roleless one: no card, so its correction is written as direct properties rather than slots.
+    // The roleless one: an IMAGE tile takes no card, so its correction is written as direct properties
+    // rather than slots. (A word chip in this interaction is a label box, like gap-match's.)
     name: 'graphic-gap-match chip',
     card: false,
     carrier: '[identifier="G1"]',
     html: `<qti-graphic-gap-match-interaction response-identifier="R">
         <img slot="image" alt="" width="200" height="120" />
-        <qti-gap-text identifier="G1" match-max="1">winter</qti-gap-text>
+        <qti-gap-img identifier="G1" match-max="1"><img alt="winter" width="40" height="30" /></qti-gap-img>
         <qti-associable-hotspot coords="0,0,60,40" identifier="H1" match-max="1" shape="rect"></qti-associable-hotspot>
       </qti-graphic-gap-match-interaction>`
   },
@@ -135,6 +146,9 @@ describe('candidate correction paint', () => {
   beforeEach(() => applyTheme());
 
   test.each(CASES.map(c => [c.name, c] as const))('%s repaints for both verdicts', async (_n, spec) => {
+    const CORRECT = tokenColor('--qti-correct');
+    const INCORRECT = tokenColor('--qti-incorrect');
+    expect(CORRECT, 'the two verdicts must be told apart').not.toBe(INCORRECT);
     for (const [state, expected] of [
       ['candidate-correct', CORRECT],
       ['candidate-incorrect', INCORRECT]
@@ -203,7 +217,7 @@ describe('candidate correction paint', () => {
     await settle();
 
     const cs = getComputedStyle(chip);
-    expect(cs.color, 'it is still corrected').toBe(CORRECT);
+    expect(cs.color, 'it is still corrected').toBe(tokenColor('--qti-correct'));
     expect(parseFloat(cs.borderTopWidth), 'but draws no border over the image').toBe(0);
     expect(parseFloat(cs.paddingLeft), 'and takes no padding').toBe(0);
   });

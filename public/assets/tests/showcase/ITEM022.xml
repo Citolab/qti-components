@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM022"
+                     title="Making pairs"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="pair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>newton gravity</qti-value>
+            <qti-value>curie radioactivity</qti-value>
+            <qti-value>darwin selection</qti-value>
+            <qti-value>fleming penicillin</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="newton gravity" mapped-value="1"/>
+            <qti-map-entry map-key="curie radioactivity" mapped-value="1"/>
+            <qti-map-entry map-key="darwin selection" mapped-value="1"/>
+            <qti-map-entry map-key="fleming penicillin" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="4">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>4</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div class="qti-layout-row">
+            <div class="qti-layout-col9">
+                <qti-associate-interaction response-identifier="RESPONSE" shuffle="true" max-associations="4">
+                    <qti-prompt>
+                        <p>Pair each scientist with the discovery they are best known for.</p>
+                    </qti-prompt>
+                    <qti-simple-associable-choice identifier="newton" match-max="1">Isaac Newton</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="curie" match-max="1">Marie Curie</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="darwin" match-max="1">Charles Darwin</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="fleming" match-max="1">Alexander Fleming</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="gravity" match-max="1">Gravity</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="radioactivity" match-max="1">Radioactivity</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="selection" match-max="1">Natural selection</qti-simple-associable-choice>
+                    <qti-simple-associable-choice identifier="penicillin" match-max="1">Penicillin</qti-simple-associable-choice>
+                </qti-associate-interaction>
+            </div>
+            <div class="qti-layout-col3">
+                <img src="resources/atom.png" alt="Model of an atom" width="200" />
+            </div>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Newton → gravity</li>
+                    <li>Curie → radioactivity</li>
+                    <li>Darwin → natural selection</li>
+                    <li>Fleming → penicillin</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

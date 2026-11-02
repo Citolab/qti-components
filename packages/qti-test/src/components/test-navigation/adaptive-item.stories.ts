@@ -20,7 +20,7 @@ import type { QtiSimpleChoice } from '@qti-components/interactions-core';
  * right answer, or after one hint and a second attempt.
  */
 const meta: Meta = {
-  title: 'test-navigation/Adaptive Item',
+  title: 'QTI Test/Navigation/Adaptive Item',
   component: 'qti-test',
   parameters: { testTimeout: 30000 }
 };

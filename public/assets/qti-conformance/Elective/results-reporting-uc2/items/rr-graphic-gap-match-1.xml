@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" 
+  identifier="rr-graphic-gap-match-1" title="RR - GGM 1"
+  adaptive="false" time-dependent="false">
+  
+  <qti-response-declaration base-type="directedPair" cardinality="multiple" identifier="RESPONSE1">
+    <qti-correct-response>
+      <qti-value>DraggerD B</qti-value>
+      <qti-value>DraggerC C</qti-value>
+      <qti-value>DraggerA D</qti-value>
+      <qti-value>DraggerB A</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>  
+  </qti-outcome-declaration>
+  
+  
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="MAXSCORE">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>  
+  </qti-outcome-declaration>
+  
+  <qti-item-body>
+    <p>Place the events onto the correct place on the timeline below.</p>
+    
+    <qti-graphic-gap-match-interaction class="qti-choices-top" data-choices-container-width="188" response-identifier="RESPONSE1">
+      <object alt="timeline" data="assets/timeline-558.png" height="326" type="image/png" width="558"/>
+      <qti-gap-img identifier="DraggerA" match-max="1">
+        <object data="assets/a-cw.png" alt="a-cw" height="63" type="image/png" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerB" match-max="1">
+        <object data="assets/b-ww2.png" alt="b-ww2" height="63" type="image/png" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerC" match-max="1">
+        <object data="assets/c-vietnam.png" alt="c-vietnam" height="63" type="image/png" width="78"/>
+      </qti-gap-img>
+      <qti-gap-img identifier="DraggerD" match-max="1">
+        <object data="assets/d-bay.png" alt="d-bay" height="63" type="image/png" width="78"/>
+      </qti-gap-img>
+      <qti-associable-hotspot coords="55,256,133,319" identifier="A" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="190,256,268,319" identifier="B" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="309,256,387,319" identifier="C" match-max="1" shape="rect"/>
+      <qti-associable-hotspot coords="450,256,528,319" identifier="D" match-max="1" shape="rect"/>
+    </qti-graphic-gap-match-interaction>
+    
+  </qti-item-body>
+
+  <qti-response-processing> 
+    <qti-response-condition>
+        <qti-response-if>
+            <qti-match>
+                <qti-variable identifier="RESPONSE1"/>
+                <qti-correct identifier="RESPONSE1"/>
+            </qti-match>
+            <qti-set-outcome-value identifier="SCORE">
+                <qti-base-value base-type="float">1</qti-base-value>
+            </qti-set-outcome-value>
+        </qti-response-if>
+        <qti-response-else>
+            <qti-set-outcome-value identifier="SCORE">
+                <qti-base-value base-type="float">0</qti-base-value>
+            </qti-set-outcome-value>
+        </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

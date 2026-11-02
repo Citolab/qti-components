@@ -3,20 +3,20 @@ title: Interactions overview
 description: The contract every QTI interaction shares, before looking at each type individually.
 ---
 
-Every interaction package under `packages/interactions/*` renders a [form-associated custom element](https://web.dev/articles/more-capable-form-controls) that implements a shared base contract (`Interaction`, in `@qti-components/base`). The per-interaction pages in this section only describe what's *specific* to each interaction — this page covers what's common to all of them.
+Every interaction package under `packages/interactions/*` renders a [form-associated custom element](https://web.dev/articles/more-capable-form-controls) that implements a shared base contract (`Interaction`, in `@qti-components/base`). The per-interaction pages in this section only describe what's _specific_ to each interaction — this page covers what's common to all of them.
 
 ## Shared attributes
 
-| Attribute | Type | Notes |
-|---|---|---|
-| `response-identifier` | `string` | Matches the interaction to a `qti-response-declaration` when used inside a full item; optional in standalone use. |
-| `disabled` | `boolean` | Reflected. |
-| `readonly` | `boolean` | Reflected. |
-| `name` | `string` | Used as the form field name when the interaction participates in an HTML `<form>`. |
-| `correct-response` | `string` (comma-separated for multiple values) | Sets the correct response directly — useful for standalone demos and docs, without a full item/response-processing context. |
-| `show-correct-response` | `boolean` | Reflected. Marks each choice/child as correct or incorrect via CSS custom states (`:state(correct-response)` / `:state(incorrect-response)`). |
-| `show-full-correct-response` | `boolean` | Reflected. Instead of annotating in place, clones the interaction right after itself with the correct response filled in and disabled. |
-| `show-candidate-correction` | `boolean` | Reflected. Annotates the candidate's own selections as right/wrong via `:state(candidate-correct)` / `:state(candidate-incorrect)`. |
+| Attribute                    | Type                                           | Notes                                                                                                                                         |
+| ---------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `response-identifier`        | `string`                                       | Matches the interaction to a `qti-response-declaration` when used inside a full item; optional in standalone use.                             |
+| `disabled`                   | `boolean`                                      | Reflected.                                                                                                                                    |
+| `readonly`                   | `boolean`                                      | Reflected.                                                                                                                                    |
+| `name`                       | `string`                                       | Used as the form field name when the interaction participates in an HTML `<form>`.                                                            |
+| `correct-response`           | `string` (comma-separated for multiple values) | Sets the correct response directly — useful for standalone demos and docs, without a full item/response-processing context.                   |
+| `show-correct-response`      | `boolean`                                      | Reflected. Marks each choice/child as correct or incorrect via CSS custom states (`:state(correct-response)` / `:state(incorrect-response)`). |
+| `show-full-correct-response` | `boolean`                                      | Reflected. Instead of annotating in place, clones the interaction right after itself with the correct response filled in and disabled.        |
+| `show-candidate-correction`  | `boolean`                                      | Reflected. Annotates the candidate's own selections as right/wrong via `:state(candidate-correct)` / `:state(candidate-incorrect)`.           |
 
 ## Standalone mode vs. item context
 
@@ -39,13 +39,36 @@ new CustomEvent('qti-interaction-response', {
 
 This is the one event to listen for regardless of which interaction type you're using.
 
+## Validation: when a message shows
+
+The interactions that carry a response in a form (choice, hottext, hotspot, graphic order, graphic
+associate, select point, position object, text entry, extended text, inline choice, upload, gap match,
+graphic gap match, associate, match, order, slider) are
+form-associated custom elements. Their validity is set through `ElementInternals` from the first
+render, on every change and when a response is restored: an interaction below its minimum (`min-choices`,
+`min-associations`, `min-strings`, `required`) or over its maximum is invalid, so a `<form>` holding
+it does not submit and `checkValidity()` is false.
+
+The message is timed like a native form:
+
+- **Too many** shows at once, on the change that caused it.
+- **Too few** shows only after a submit: the item's end attempt (`processResponse`,
+  `reportValidity()`), or a form's submit, whose browser validation fires `invalid` on the element.
+- **After that first submit** every change reports: meeting the minimum clears the message, losing it
+  brings it back.
+- **A reset** (`form.reset()`, `interaction.reset()`, a new attempt) clears the message and waits for a
+  submit again.
+
+`configContext.validationDisplayMode` chooses where it shows: `inline` (the default, the element's
+`::part(message)`), `native` (the browser's bubble), `both` or `none`.
+
 ## Choice-based interactions
 
 Several interactions (`qti-choice-interaction`, `qti-order-interaction`, and others) share a second mixin, `ChoicesMixin`, on top of the base contract. It adds:
 
-| Attribute | Type | Notes |
-|---|---|---|
-| `min-choices` | `number` | Default `0` (unlimited). |
+| Attribute     | Type     | Notes                                                                                           |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| `min-choices` | `number` | Default `0` (unlimited).                                                                        |
 | `max-choices` | `number` | Default `1`. `1` renders children with `role="radio"`; anything else renders `role="checkbox"`. |
 
 Choice-based interactions track their child choice elements (e.g. `qti-simple-choice`) via a `MutationObserver`, so choices can be added/removed dynamically and the interaction stays in sync.

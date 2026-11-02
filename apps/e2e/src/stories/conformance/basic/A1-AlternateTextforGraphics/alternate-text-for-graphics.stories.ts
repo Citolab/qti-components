@@ -10,15 +10,15 @@ import type { ArgTypes, Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics/A1-L1-D1'
+  title: 'Testing/Conformance/basic/A1 - Alternate Text for Graphics/alternate-text-for-graphics/A1-L1-D1'
 };
 export default meta;
 
 export const A1L1D1: Story = {
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected');
@@ -27,8 +27,8 @@ export const A1L1D1: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
