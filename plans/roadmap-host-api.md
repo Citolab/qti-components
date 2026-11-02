@@ -155,6 +155,8 @@ Plan: [host-api.md](host-api.md) → How this is enforced (#240, #251).
 
 - [ ] Members not in `host-api.md` are `@internal` and stripped from the `.d.ts`; an API report in CI.
 - [ ] The custom-elements manifest lists only the public members.
+- [ ] `sessionContext` and `testContext` deprecated and removed; `view` an input only; whether
+      `computedContext` is renamed decided ([delivery-state.md](delivery-state.md)).
 - [ ] Contract stories for every member; host-shaped tests (Kennisnet first).
 
 Done when: CI fails on any change to the public surface that `host-api.md` does not list.

@@ -12,6 +12,7 @@
   "devDependencies": {
     "@qti-components/base": "workspace:^",
     "@qti-components/corrections": "workspace:^",
+    "@qti-components/delivery": "workspace:^",
     "@qti-components/elements": "workspace:^",
     "@qti-components/interactions": "workspace:^",
     "@qti-components/item": "workspace:^",

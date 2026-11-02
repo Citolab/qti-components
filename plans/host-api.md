@@ -66,7 +66,7 @@ part token; the verdict badge is `::part(correction candidate-correct|candidate-
 | `startAt`                       | `start-at`                      | `string`                                        | The item-ref to start on (a deep link). Wins over the position in `state`.                                                                                                                                                           | new (#328)                                           |
 | `view`                          | `view`                          | `View` (`candidate`, `scorer`, …)               | Who looks at the test. Shows the matching `[view]` elements and feedback.                                                                                                                                                            | request event `qc-test-switch-view` only             |
 | `config`                        | —                               | `ConfigContext`                                 | All delivery options as one object: a view over the option attributes (see Delivery options).                                                                                                                                        | exists as `configContext`, also on `test-navigation` |
-| `qtiContext`                    | —                               | `QtiContext`                                    | Candidate, environment and the shuffle `seed`. Pass the same seed on resume.                                                                                                                                                         | exists; alias on `test-navigation`                   |
+| `qtiContext`                    | —                               | `QtiContext`                                    | Candidate, environment and the shuffle `seed` for a first start. On resume the seed in `state` wins.                                                                                                                                 | exists; alias on `test-navigation`                   |
 | `itemData`                      | —                               | `{ identifier, …fields }[]`                     | Your own per-item fields, merged into each item that plugins and `<test-stamp>` templates read.                                                                                                                                      | on `test-navigation` as `initContext`                |
 | `requestTimeout`                | `request-timeout`               | `number` (ms, default 30000)                    | How long an item may take to load before `qc-test-navigation-failed`.                                                                                                                                                                | exists                                               |
 | `postLoadTransformCallback`     | —                               | `(transformer, itemRef) => transformer`         | Change each item's XML after it loads, before it renders.                                                                                                                                                                            | exists                                               |
@@ -236,7 +236,7 @@ document.querySelector('#check').onclick = () => qtiItem.endAttempt();
 | `state`                      | —                               | `QtiItemState`                             | The candidate's persistable state of this item: responses, outcomes, template values, attempts. Assign it to resume, before or after load. | new; today `item.variables` on the inner element |
 | `view`                       | `view`                          | `View` (`candidate`, `scorer`, …)          | Who looks at the item. Shows the matching `[view]` content, such as a scorer's rubric.                                                     | exists                                           |
 | `config`                     | —                               | `ConfigContext`                            | The same view over the same option attributes as on `qti-test` (see Delivery options).                                                     | exists as `configContext`                        |
-| `qtiContext`                 | —                               | `QtiContext`                               | Candidate, environment and the shuffle `seed`.                                                                                             | exists                                           |
+| `qtiContext`                 | —                               | `QtiContext`                               | Candidate, environment and the shuffle `seed` for a first load. On resume the seed in `state` wins.                                        | exists                                           |
 | `disabled`                   | `disabled`                      | `boolean`                                  | Locks the item: no input, no focus.                                                                                                        | on the inner item only                           |
 | `readonly`                   | `readonly`                      | `boolean`                                  | Shows the answers, takes no input.                                                                                                         | on the inner item only                           |
 | `postLoadTransformCallback`  | —                               | `(transformer) => transformer`             | Change the item XML after it loads, before it renders.                                                                                     | new; only `qti-test` has it                      |
@@ -565,6 +565,16 @@ Plus `color-scheme` (a CSS property, not a variable): every light / dark default
 
 `computedContext` is the one context a plugin reads; `qti-test` provides it. `testContext`, `sessionContext`,
 `configContext` and `qtiContext` are not API for components; use the properties above.
+
+## Experimental packages
+
+Published, but not covered by this page's promises until they leave 0.x: their API may change in
+any minor.
+
+- **`@qti-components/delivery`** (roadmap 1, T0): the delivery engine with no browser globals, for a
+  Node server that runs the same rules as the browser. Its delivery state (the one source of truth,
+  [delivery-state.md](delivery-state.md)), commands and effects are settled through roadmap 1 and the
+  CitoTestUit pilot (roadmap 2). Hosts keep persisting `QtiTestState`, converted to and from it.
 
 ## Deprecated names
 

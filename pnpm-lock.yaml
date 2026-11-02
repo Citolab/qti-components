@@ -812,6 +812,9 @@ importers:
       '@qti-components/corrections':
         specifier: workspace:^
         version: link:../qti-corrections
+      '@qti-components/delivery':
+        specifier: workspace:^
+        version: link:../qti-delivery
       '@qti-components/elements':
         specifier: workspace:^
         version: link:../qti-elements
@@ -921,6 +924,8 @@ importers:
       lit:
         specifier: 'catalog:'
         version: 3.3.3
+
+  packages/qti-delivery: {}
 
   packages/qti-elements:
     dependencies:
@@ -1141,7 +1146,11 @@ importers:
         specifier: ^1.103.1
         version: 1.104.0
 
-  packages/qti-transformers: {}
+  packages/qti-transformers:
+    dependencies:
+      '@qti-components/delivery':
+        specifier: workspace:^
+        version: link:../qti-delivery
 
   packages/qti-utilities:
     devDependencies:
