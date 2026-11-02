@@ -1,4 +1,4 @@
-import type { SeededRandomSource } from './prng';
+import type { SeededRandomSource } from './seeded-random.js';
 
 export type RandomSource = SeededRandomSource | (() => number);
 

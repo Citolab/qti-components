@@ -1,0 +1,79 @@
+{
+  "description": "Seeded randomness and the fixed-aware shuffle, as qti-transformers produced them before they moved into @qti-components/delivery (2026-11-02). Every runtime, a .NET port included, must give exactly these values, or a resumed session gets another item order.",
+  "seededRandom": [
+    {
+      "seed": "",
+      "values": [0.9757088038604707, 0.6221915907226503, 0.6578594758175313, 0.23277555429376662, 0.09539095987565815]
+    },
+    {
+      "seed": "a",
+      "values": [0.11000576918013394, 0.5356475834269077, 0.2972125029191375, 0.47833533538505435, 0.609476268524304]
+    },
+    {
+      "seed": "seed-1",
+      "values": [0.010097497841343284, 0.44074329640716314, 0.682782836491242, 0.5955381169915199, 0.9807584453374147]
+    },
+    {
+      "seed": "candidate-42:test-7",
+      "values": [0.6684563348535448, 0.22640257119201124, 0.2850888220127672, 0.47283476451411843, 0.5265994183719158]
+    },
+    {
+      "seed": 0,
+      "values": [0.4269284224137664, 0.949020626489073, 0.5009324024431407, 0.8920741784386337, 0.228948486270383]
+    },
+    {
+      "seed": 12345,
+      "values": [0.4619957043323666, 0.0029825845267623663, 0.8986300807446241, 0.3045296985656023, 0.38723630690947175]
+    },
+    {
+      "seed": "\u00dcn\u00efc\u00f8d\u00e9 \u2713",
+      "values": [0.012598494067788124, 0.308697261614725, 0.14725856925360858, 0.9340603409800678, 0.22919116611592472]
+    }
+  ],
+  "fixedByte": [
+    {
+      "byte": 0,
+      "values": [0.3545153196901083, 0.16492840670980513, 0.0987864607013762]
+    },
+    {
+      "byte": 1,
+      "values": [0.08915300527587533, 0.5552253455389291, 0.6848061201162636]
+    },
+    {
+      "byte": 255,
+      "values": [0.9106889816466719, 0.6402184851467609, 0.33798667695373297]
+    }
+  ],
+  "shuffleKeepingFixed": [
+    {
+      "seed": "seed-1",
+      "fixed": [false, false, false, false, false],
+      "order": [4, 3, 2, 1, 0]
+    },
+    {
+      "seed": "seed-1",
+      "fixed": [false, true, false, false, true, false],
+      "order": [5, 1, 3, 2, 4, 0]
+    },
+    {
+      "seed": "candidate-42:test-7",
+      "fixed": [false, false, false, false, false, false, false, false, false, false],
+      "order": [0, 5, 7, 1, 4, 9, 3, 8, 2, 6]
+    },
+    {
+      "seed": "x",
+      "fixed": [true, false, true, false, true],
+      "order": [0, 1, 2, 3, 4]
+    },
+    {
+      "seed": "only-one",
+      "fixed": [false],
+      "order": [0]
+    },
+    {
+      "seed": "empty",
+      "fixed": [],
+      "order": []
+    }
+  ]
+}

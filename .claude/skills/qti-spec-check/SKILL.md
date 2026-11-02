@@ -18,6 +18,11 @@ With the `qti-azure` MCP server:
 - `get_example_item` for a reference item; `validate_qti_item` to validate an item against the
   schema.
 
+The suite upstream: <https://github.com/1EdTech/qti-conformance/tree/master/qti3.0> (Basic,
+Advanced, Elective, Elevated Accessibility, Usage Data; each criterion folder's README lists its
+IDs). List it with `gh api "repos/1EdTech/qti-conformance/git/trees/master?recursive=1"`; the commit
+our stories were written from is `SUITE` in `apps/e2e/src/stories/conformance/conformance-todo.ts`.
+
 In the repo:
 
 - Conformance stories: `apps/e2e/src/stories/conformance/**` (criterion IDs in story names).

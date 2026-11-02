@@ -1,0 +1,39 @@
+{
+  "name": "@qti-components/delivery",
+  "description": "The QTI 3 delivery engine: test model, item session lifecycle, sequencing and session state, with no browser globals",
+  "version": "0.0.0",
+  "author": "",
+  "keywords": [
+    "qti",
+    "delivery"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "pnpm run clean && tsc --paths null",
+    "clean": "rm -rf dist",
+    "yalc": "yalc publish",
+    "yalc:push": "yalc push"
+  },
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-delivery"
+  }
+}

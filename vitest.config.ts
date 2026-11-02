@@ -213,7 +213,8 @@ export default defineConfig({
             'tools/**/*.spec.ts'
           ],
           // Assert old-browser behaviour, so they run only in the `legacy` project below.
-          exclude: ['**/node_modules/**', '**/*.legacy.spec.ts'],
+          // `@qti-components/delivery` has no DOM, so its specs run in the `node` project instead.
+          exclude: ['**/node_modules/**', '**/*.legacy.spec.ts', 'packages/qti-delivery/**'],
           globals: true,
           typecheck: {
             tsconfig: './tsconfig.json'
@@ -227,6 +228,17 @@ export default defineConfig({
             screenshotFailures: false,
             instances: [{ browser: 'chromium', headless: true }]
           }
+        }
+      },
+      /* Specs with no DOM, in Node: `@qti-components/delivery` must run on a server too, so its specs
+         run where no browser global exists (see no-browser-globals.spec.ts). */
+      {
+        plugins: [tsconfigPaths()],
+        test: {
+          name: 'node',
+          include: ['packages/qti-delivery/**/*.spec.ts'],
+          environment: 'node',
+          globals: true
         }
       },
       /* Old-browser checks: `*.legacy.spec.ts` in a Chrome that predates `:state()`, so the

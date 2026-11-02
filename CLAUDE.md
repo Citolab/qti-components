@@ -32,7 +32,8 @@ packages for hosts that want one install.
 
 One test: `pnpm exec vitest run --project tests <path>` or `--project stories -t "<name>"`.
 Vitest projects (`vitest.config.ts`): `stories` runs every story's play function in Chromium,
-`tests` runs `*.spec.ts`/`*.test.ts`, `vrt` exists only with `VRT=1`, `legacy` only with `LEGACY=1`.
+`tests` runs `*.spec.ts`/`*.test.ts` in Chromium, `node` runs `packages/qti-delivery`'s specs in Node
+(no browser globals), `vrt` exists only with `VRT=1`, `legacy` only with `LEGACY=1`.
 
 ## Repo map
 
@@ -42,6 +43,8 @@ Vitest projects (`vitest.config.ts`): `stories` runs every story's play function
     `packages/interactions/core` the shared mixins; `qti-interactions` only re-registers them.
   - `qti-item`, `qti-test` the host elements; `qti-processing` response and outcome processing;
     `qti-loader` loading; `qti-transformers` content transforms.
+  - `qti-delivery` the delivery engine (test model, item session lifecycle, sequencing, session
+    state) with no browser globals, so it also runs on a server; experimental, 0.x.
   - `qti-corrections` correction overlays; `qti-extended` the test plugins (bookmark, lock, stamp,
     zoom, tts, print, scoring…), published alone with the umbrella as peer, never re-exported.
   - `qti-theme` all semantic CSS; `CONTRACT.md` there is the styling reference.

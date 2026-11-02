@@ -17,7 +17,9 @@ paths:
 
 1. **The QTI 3 XSD** decides structure: which elements and attributes exist and where.
 2. **The QTI 3 spec text** (and the 1EdTech implementation guide) decides behaviour.
-3. **The 1EdTech conformance suite** shows the expected behaviour per criterion.
+3. **The 1EdTech conformance suite**
+   (<https://github.com/1EdTech/qti-conformance/tree/master/qti3.0>) shows the expected behaviour
+   per criterion.
 
 When two disagree, stop: present the evidence (the XSD fragment, the spec section, the criterion
 and fixture) and ask. Never pre-pick a deviation, never add a non-QTI option to keep old

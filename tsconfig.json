@@ -31,6 +31,7 @@
       // package has no index, only CSS and these text modules.)
       "@qti-components/theme/item-css": ["./packages/qti-theme/src/item-css.ts"],
       "@qti-components/theme/native-css": ["./packages/qti-theme/src/native-css.ts"],
+      "@qti-components/delivery": ["./packages/qti-delivery/src/index.ts"],
       "@qti-components/transformers": ["./packages/qti-transformers/src/index.ts"],
       "@qti-components/loader": ["./packages/qti-loader/src/index.ts"],
       "@qti-components/utilities": ["./packages/qti-utilities/src/index.ts"],

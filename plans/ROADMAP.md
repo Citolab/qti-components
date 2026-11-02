@@ -145,7 +145,7 @@ If not, the stale check moves into a vitest setup file, as `.storybook/vitest.vr
 Plan: this section. Decided with the user on 2026-10-28, topic by topic; the decisions are the rules
 in `CLAUDE.md` and `.claude/rules/`. Each step is its own PR into `next`.
 
-- [ ] **G1** One rulebook and the Claude setup: `CLAUDE.md` is the one instruction file (`AGENTS.md`,
+- [x] **G1** One rulebook and the Claude setup (PR #352): `CLAUDE.md` is the one instruction file (`AGENTS.md`,
       `SKILLS.md` and `.github/skills/` folded in), path-scoped rules, permissions and git hooks for
       Claude, skills, two read-only reviewer agents, `.mcp.json` with the QTI servers.
 - [ ] **G2** `guidance-references.spec.ts` (every path and script a rule names exists) and
