@@ -101,6 +101,37 @@ What a test part supports from QTI 3, today and after which phase. Today is read
 
 This roadmap is done when every row up to adaptive selection is complete: the whole test part is QTI.
 
+## Conformance per phase
+
+The 1EdTech suite's test-level delivery criteria
+([qti3.0](https://github.com/1EdTech/qti-conformance/tree/master/qti3.0), read 2026-11-02), and the
+phase that turns each into a passing story under `apps/e2e/src/stories/conformance/`. A phase copies
+its fixture from the suite unmodified into `public/assets/qti-conformance/` and replaces the
+placeholder in the `*.todo.stories.ts` with a story whose play function asserts the criterion.
+
+| Criterion                    | Delivery must                                               | Today       | Phase  |
+| ---------------------------- | ----------------------------------------------------------- | ----------- | ------ |
+| T4-L1-D1/D2, T7-L1-D1/D2     | test → part → section → item, linear and individual         | passes      | kept   |
+| T14-L1-D1                    | restore responses after the session is discontinued         | passes      | T1     |
+| T12-L2-D1                    | 8 items in 3 sections                                       | placeholder | T1     |
+| S9-L2-D1                     | a section from `qti-assessment-section-ref`                 | placeholder | T1     |
+| S4-L2-D11, S4-L2-D12         | a nonlinear part; both sections visible                     | placeholder | T1     |
+| Elective T4 (no IDs)         | items 1–3 nonlinear, 4–6 linear: one mode per part          | no story    | T1, T7 |
+| Elective T7 (no IDs)         | nested sections taken in a fixed order                      | no story    | T1     |
+| S1-L2-D1, S1-L2-D2           | `allow-skipping` per section, true and false                | placeholder | T3     |
+| T5-L2-D1                     | unlimited attempts set on the test part                     | placeholder | T3     |
+| S3-L2-D1, S3-L2-D2, S4-L2-D1 | select 2 of 3 (with and without a required item), reshuffle | placeholder | T4     |
+| T2-L2-D1                     | a 60-second test limit, the time remaining shown            | placeholder | T5     |
+
+Elective T4 and T7 are QTI 2.2 samples: if their files are not QTI 3, the phase writes its own story
+under `conformance/spec/` instead. Elective S3/S4 and T6 have no criteria yet. S5 (rubric blocks in
+sections) is rendering, not navigation, and stays outside this roadmap.
+
+The suite does not cover branch rules and pre-conditions, simultaneous submission, `max-attempts`
+other than unlimited, `with-replacement`, test feedback, leaving a test part, or time limits below
+the test. Those phases (T3–T8) prove QTI with their own `conformance/spec/` stories, quoting the
+spec section, and with JSON vectors in `delivery`.
+
 ## Phases
 
 ### T0. The delivery package
@@ -148,6 +179,8 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
 - [ ] T1d Navigation and submission mode from the test part only.
 - [ ] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
       `QtiTestState` converted to and from `DeliveryState`.
+- [ ] Conformance: T12-L2-D1, S9-L2-D1, S4-L2-D11/D12, Elective T4 (the modes) and T7 pass; T14-L1-D1
+      still passes.
 
 Done when: that plan's "Done when".
 
@@ -176,6 +209,8 @@ Scope: `packages/qti-test` (`test-navigation`, `test-next`, `test-prev`, `test-e
 - [ ] T3c `validate-responses` and `allow-comment` take effect.
 - [ ] T3d `lifecycle`, `numAttempts` and `completionStatus` in `DeliveryState`; the `can*` flags
       derived from them.
+- [ ] Conformance: S1-L2-D1/D2 and T5-L2-D1 pass; a `spec/` story per session-control attribute the
+      suite does not cover (`max-attempts` above one, `allow-review`, `show-solution`).
 
 Done when: that plan's "Done when".
 
@@ -187,6 +222,7 @@ Plan: this section. Scope: `packages/qti-transformers` (next to `shuffleOrdering
       load, seeded like the ordering, so a resumed session gets the same items.
 - [ ] The T1 model holds only the selected item-refs; `DeliveryState.order` is written once from
       the seed.
+- [ ] Conformance: S3-L2-D1/D2 and S4-L2-D1 pass; a `spec/` story for `with-replacement`.
 - [ ] Ordering dissolves a subsection only when `visible` and `keep-together` are both false
       (`shuffle-sections.ts`), as implementation guide §4.5.2 says.
 
@@ -200,6 +236,7 @@ Plan: to write before the phase starts. Scope: `qti-test`, the T3 machine.
 - [ ] `duration` counts `interacting` only; running out of time ends the item session or the part
       through the T3 machine.
 - [ ] `timing` and each item's `duration` in `DeliveryState`.
+- [ ] Conformance: T2-L2-D1 passes; `spec/` stories for the limits on part, section and item-ref.
 
 Done when: a time limit at each level ends what it limits, and `duration` excludes suspended time.
 
@@ -208,6 +245,9 @@ Done when: a time limit at each level ends what it limits, and `duration` exclud
 Plan: [submission-mode-scoring.md](submission-mode-scoring.md) (#299). Was roadmap phase 7; it moved
 here because simultaneous submission is not QTI without it. Its proposal to deprecate
 `auto-score-items` waits for roadmap 5's options research (phase 5).
+
+- [ ] Conformance: a `spec/` story for a simultaneous part (responses processed when the part is
+      submitted); the suite has none.
 
 Done when: that plan's "Done when".
 
@@ -226,6 +266,8 @@ Plan: to write before the phase starts. Scope: the navigation mixin, the T3 mach
       `main`: `during` shows as soon as its outcome matches, `atEnd` becomes available when its test
       part or the test ends and opens through `<test-show-feedback>`); T7 moves that logic into
       `delivery`, from the model and the test outcomes, without changing it.
+- [ ] Conformance: Elective T4 (leaving the nonlinear part) passes; `spec/` stories for leaving a
+      part, unsubmitted responses and part feedback.
 
 Done when: a two-part test cannot navigate back into part 1, and each part's feedback shows at its end.
 
@@ -244,6 +286,8 @@ Plan: to write before the phase starts. Scope: `test-processing.mixin.ts`,
 - [ ] Sequencing reads the T1 model and test variables, not the live DOM.
 - [ ] Response, outcome and template values and the interaction state move into `DeliveryState`;
       `testContext` no longer holds state.
+- [ ] Conformance: `spec/` stories for branch rules and pre-conditions on item, section and part,
+      each quoting implementation guide §4.5.3; the suite has none.
 
 Done when: a branch rule on a test outcome set by the previous item fires, and a part-level
 pre-condition skips a part after a nonlinear one.
