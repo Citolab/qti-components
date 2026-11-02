@@ -43,7 +43,7 @@ graph LR
   CAT 1.0), on 1's model and lifecycle.
 - **5** builds the host API in [host-api.md](host-api.md) on top of 1–4 and ships the major.
 
-The guardrails (G) run next to all of them. The licence stays GPL-3.0 (decided 2026-10-30).
+The guardrails (G) and browser compatibility (B) run next to all of them. The licence stays GPL-3.0 (decided 2026-10-30).
 Results Reporting is out of scope (decided 2026-10-30); it has a row below.
 
 ## Not yet in a sub-roadmap
@@ -166,6 +166,37 @@ in `CLAUDE.md` and `.claude/rules/`. Each step is its own PR into `next`.
 
 Done when: CI fails on a broken rule reference, a story outside the taxonomy, an invalid fixture, an
 axe violation without `a11y-todo`, a type error in a story or spec, and an undocumented part or state.
+
+## B. Browser compatibility and the readiness banner
+
+Plan: this section, added 2026-11-02; not decided step by step yet. Each step is its own PR into
+`next`.
+
+First the latest stable Safari, Chrome and Firefox, and the current Firefox ESR. The legacy
+baseline is Safari 16.4+, Chrome 111+ and Firefox 121+: proposed minimums that look reachable
+with polyfills and small fixes, to be verified. It includes first-generation iPad Pros on iPadOS
+16.4 or later; a Chromebook follows its installed Chrome. `.browserslistrc` has the Safari/iOS 16.4
+floor today (unguarded `attachInternals`), not the Chrome and Firefox ones.
+
+- [ ] **B1** Close the gaps on the baseline. Keep the custom-state shim and the CSS transforms: they
+      fix custom states, not compatibility as a whole. Cover what is left in popovers, dropdown
+      positioning, theme colours, scoped styles and correction-state styling.
+- [ ] **B2** Verify on the baseline, a real first-generation iPad Pro included: answer selection,
+      dropdowns, drag and drop, validation, navigation, and submitting and restoring responses.
+      Document the known limitations.
+- [ ] **B3** An optional `<test-browser-support>` in `qti-extended` that shows a readiness banner once
+      the polyfills have initialized:
+
+  - green: every capability the test needs works, verified fallbacks included;
+  - orange: optional functionality is missing, or compatibility is not verified;
+  - red: a required capability is missing and the test cannot run reliably.
+
+  It detects capabilities and behaviour, never browser names: `CSS.supports()`, API checks and
+  small behavioural probes. `named-feature()` is an optional enhancement; its absence never rejects
+  a browser.
+
+Done when: the baseline passes the essential test-taking flows, the known limitations are
+documented, and the banner reports readiness against what the test actually needs.
 
 ## Found
 
