@@ -191,6 +191,117 @@ For the author of the schema; each needs the trade-off shown, then a decision. D
 | S3b | Auto-scroll while dragging                 | S3         | todo   |
 | S4  | Rendered docs and the Figma copy           | S2         | todo   |
 
+## Implementation steps
+
+The phases below say *what* is done; this says *in which order*, so it is clear what has to exist
+before an interaction can change. Each step is one branch and one PR (`CLAUDE.md` → "One change,
+start to finish"), committed and merged before the steps that need it start.
+
+```mermaid
+flowchart LR
+  subgraph V[1 Verify first]
+    V1[V1 Screen-reader and browser spikes]
+    V2[V2 Drag test helper and Q15 gaps]
+  end
+  subgraph I[2 Spec infrastructure]
+    I1[I1 Spec types]
+    I2[I2 Message catalogue and announcer]
+    I3[I3 Coverage reporter]
+  end
+  subgraph B[3 Shared behaviour]
+    B1[B1 Accessible names]
+    B2[B2 Validation region]
+    B3[B3 Choice keys and group roles]
+    B4[B4 Drag stack: keys, tap, focus, occupant]
+    B5[B5 Auto-scroll]
+    B6[B6 Text key filter]
+    B7[B7 Target size]
+  end
+  subgraph P[4 Interactions, by pattern]
+    PS[select: choice, hottext, hotspot, inline-choice]
+    PI[input: text-entry, extended-text, slider]
+    PP[place: gap-match, graphic-gap-match, select-point, position-object]
+    PO[order: order, graphic-order]
+    PA[pair: associate, graphic-associate, match]
+    PC[PCI frame]
+    PX[media, upload, end-attempt]
+  end
+  D[5 Docs and Figma copy]
+
+  Q1[Q1 slider keys] --> PI
+  Q2[Q2 PCI frame role and name] --> PC
+
+  V1 --> B1
+  V1 --> B2
+  V2 --> B4
+  I1 --> I3
+  I1 --> PS
+  I2 --> B2
+  I2 --> B4
+  I3 --> PS
+  B1 --> PS
+  B2 --> PS
+  B3 --> PS
+  B1 --> PI
+  B2 --> PI
+  B6 --> PI
+  B4 --> PP
+  B4 --> PO
+  B4 --> PA
+  B4 --> B5
+  B1 --> PC
+  B7 --> PP
+  PS --> PI
+  PS --> PP
+  PP --> PO
+  PP --> PA
+  PS --> PX
+  PS --> D
+  PI --> D
+  PP --> D
+  PO --> D
+  PA --> D
+```
+
+Read the chart left to right: nothing in a column starts before the arrows into it are done. `select`
+goes first (S2) because it proves the spec infrastructure on the simplest pattern; `place` comes
+before `order` and `pair` because they reuse its keyboard sequence (D10, D11). Q1 and Q2 are quick
+fixes that need nothing and can ship at once.
+
+**Owner** follows the maintainer's working agreement: the **maintainer** writes domain modelling,
+control flow that encodes a rule, data-structure choices, API boundaries and anything about the
+lifetime of state; **Claude** writes wiring, tests, stories, fixtures and mechanical changes, and
+brings the rest to the maintainer as options. **Lane**: `main` for a non-breaking fix, `next` for a change a
+host would notice (a key, a role, a behaviour).
+
+| Step | What                                                                                                                                                                     | Needs                 | Owner                                        | Lane   | Phase |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- | -------------------------------------------- | ------ | ----- |
+| Q1   | Slider keys (K10): arrows, Home, End, PageUp, PageDown, `aria-valuetext`, orientation and `reverse` (F-1, the worst finding)                                                | none                  | maintainer: key-to-value rules; Claude: stories     | `main` | S3    |
+| Q2   | PCI frame: drop `role="application"` and `aria-hidden`, one name per R4 (C1, C2, F-2)                                                                                    | none                  | Claude, reviewed by the maintainer                      | `next` | S3    |
+| V1   | Spikes, read only: hidden-then-shown alert (F-4); element references across shadow roots (R4, R6); a live region inside a PCI frame (A6); `role="application"` on a frame (C2); the screen-reader set from the WebAIM survey | none                  | Claude runs, maintainer judges                       | none   | S1    |
+| V2   | `tools/testing/drag.ts` can move in steps and hold at an edge; Q15 criteria read for gaps in an ordered response (F-11) and `min-choices`/`max-choices` (F-10)             | none                  | Claude; F-10/F-11 go to the maintainer as a QTI question | none   | S1    |
+| I1   | The spec types: dimensions, modes, transitions, keyboard map (D1, D2, D3, D5)                                                                                             | none                  | **maintainer** (domain model)                       | `next` | S2    |
+| I2   | The message catalogue and one announcer per interaction: an always-present `status` and `alert` region, politeness per message, throttling (D4, A1)                        | none                  | **maintainer** (catalogue shape, lifetime of the regions); Claude: wiring | `next` | S2    |
+| I3   | The Vitest reporter over `task.meta`: rows with no passing story fail (D6, D7)                                                                                            | I1                    | maintainer approves the design; Claude builds        | `next` | S2    |
+| B1   | Accessible names in `qti-base`: authored ARIA, prompt or QTI hint, generated (R4, R6, C1), and the sentence as description                                               | V1                    | **maintainer** (the naming rule); Claude: wiring and stories | `next` | S2    |
+| B2   | The validation region always in the tree, linked with `aria-describedby` and `aria-invalid` (A2, A5, F-4)                                                                | V1, I2                | Claude, reviewed by the maintainer                      | `next` | S2    |
+| B3   | Choice keys: native radio and checkbox conventions, roving focus in a radio group, Enter on keydown for buttons only (K6, D9); group roles (R5, F-5)                      | none                  | **maintainer** (key rules); Claude: stories         | `next` | S2    |
+| B4   | The drag stack: Tab cancels (K7, F-7), focus follows the chip (F2), the occupant back to the bank (K8), tap-or-drag (mouse distance, touch hold), one input path instead of three, announcements | V2, I2                | **maintainer** (input state machine, lifetime); Claude: tests | `next` | S3    |
+| B5   | Auto-scroll (S3b, AS1–AS4)                                                                                                                                               | B4                    | **maintainer** (algorithm, loop lifetime); Claude: specs | `next` | S3b   |
+| B6   | Text key filter: stop printable keys only (K9, F-9)                                                                                                                      | none                  | Claude, reviewed by the maintainer                      | `next` | S3    |
+| B7   | Minimum target size 24×24 for our controls, and a story warning for small authored hotspots (V3)                                                                          | none                  | Claude, reviewed by the maintainer                      | `next` | S3    |
+| PS   | `select`: specs and stories for choice, hottext, hotspot and inline-choice; F-8 (`aria-ordervalue`) fixed                                                                 | I1, I3, B1, B2, B3    | maintainer: the spec rows; Claude: stories          | `next` | S2    |
+| PI   | `input`: text entry and extended text (R6, K9), slider (after Q1)                                                                                                         | PS, B1, B2, B6, Q1    | as PS                                        | `next` | S3    |
+| PP   | `place`: gap-match, graphic-gap-match, select-point and position-object (keyboard steps E3, snap V3 and V4)                                                               | PS, B4, B7            | as PS                                        | `next` | S3    |
+| PO   | `order`: order and graphic-order, on the place sequence (D10)                                                                                                            | PP                    | as PS                                        | `next` | S3    |
+| PA   | `pair`: associate (place sequence), graphic-associate (pick-then-pick), match (grid) (D11)                                                                                | PP                    | as PS                                        | `next` | S3    |
+| PC   | PCI: preferences sent in and updated (C5), authoring guidance (C3, A6)                                                                                                   | Q2, B1                | Claude, reviewed by the maintainer                      | `next` | S3    |
+| PX   | media, upload, end-attempt: their own short rows                                                                                                                          | PS                    | as PS                                        | `next` | S3    |
+| D    | Docs page and evidence matrix; Figma copy                                                                                                                                | all patterns          | Claude, reviewed by the maintainer                      | `next` | S4    |
+
+What can run side by side once V1, V2 and I1 are done: I2 and I3; B3, B6 and B7 at any time; the PCI
+track (Q2, PC) independently of the patterns; B4 alongside `select`.
+
 ## Phases
 
 ### S0. Review the guidelines and answer D1–D11
