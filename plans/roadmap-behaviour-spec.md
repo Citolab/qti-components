@@ -322,12 +322,16 @@ Steps, each a commit; H1 to H4 before B4, H5 after it:
       `vitest.config.ts` (`browser.commands`), run on the Node side with Playwright: mouse down,
       move in steps, wait, up; touch through a CDP session (`Input.dispatchTouchEvent`). Coordinates
       are translated from the story iframe to the page (the story renders inside Vitest's iframe).
-- [ ] **H3 Engine switch.** A build-time constant through the project's `define` (as
-      `QTI_A11Y_TEST` already is), not a setup file: the `stories` project must keep no
-      `setupFiles`, or `@storybook/addon-vitest` skips its own provisioning (comment in
-      `vitest.config.ts`). The helper loads the command engine only when the constant is set.
-      **Spike first:** whether Storybook's own Vite build accepts the guarded `import('vitest/browser')`.
-      If not, the command is reached through a global the Vitest side sets instead.
+- [ ] **H3 Engine switch.** **Spiked 2026-11-16, works:** the helper imports one alias
+      (`qc-drag-engine` in the spike), and `.storybook/main.ts` `viteFinal` points it at the real
+      engine when `process.env.VITEST` is set (Vitest's Node process) and at the synthetic engine
+      otherwise. Measured: under `vitest run --project stories` the story got the real engine with
+      Vitest's browser commands available; in `storybook dev` it got the synthetic engine.
+      `vitest/browser` is never imported into the Storybook UI, so no guarded import is needed.
+      Two things that did **not** work: an alias in the `stories` project of `vitest.config.ts`
+      (Storybook's `viteFinal` alias wins over it), and `import.meta.env.VITEST` in the browser
+      (undefined). Not run: `storybook build` (the real engine is never referenced there) and Vitest
+      launched from the Storybook UI's test widget (`process.env.VITEST` should be set there too).
 - [ ] **H4 Run the suite on real input.** The 28 story files that drag run under the real-input
       engine on today's drag code; failures that real input reveals (the 10 ms and 100 ms start
       delays, the pointer path) are listed for B4, not fixed here. The Storybook UI keeps today's
