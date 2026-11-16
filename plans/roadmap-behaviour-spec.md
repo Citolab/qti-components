@@ -138,7 +138,7 @@ Each is input to S1, not fixed here, and each maps to a guideline above.
 | F-10 | Order does not implement QTI's `min-choices` and `max-choices`; it reads the non-QTI `min-associations` and `max-associations` (its own JSDoc says so). With a subset, a chip left in the bank means "not part of the answer"; without one, every choice must be placed. | `order-interaction/src/qti-order-interaction.ts`                          | QTI info §5.97, K8 |
 | F-11 | A QTI ordered response has no gaps, but a candidate can fill slot 3 with slots 1 and 2 empty, and `getResponse` returns one string per slot, so an empty slot comes out as `''`. **Confirmed (V2, 2026-11-12):** our story `Q15-L1-D6` asserts `['', '', 'A']`. The 1EdTech suite itself could not be read (not reachable from here); `Q15-L1-D6` to `D9` look like our own scenarios named as criteria (D9 tests our `validationDisplayMode` option). **Decided 2026-11-12: a gap makes the interaction invalid until the slots before it are filled** (the validity state and message say so); the response never contains `''`. Rejected: collapsing the gap, and moving a chip to the first free slot. `Q15-L1-D6` changes with it, on `next`. While a gap is open the response is NULL (a valid QTI value; scoring sees "not answered"); accepted cost: restoring the item cannot rebuild the gap, so the chip shows in the bank again. | `qti-order-interaction.ts` (`getResponse`)                                | QTI impl §3.2.10 |
 | F-12 | `orientation` is a hint that the ordering has an inherent direction; where the choices sit against the targets is the `qti-choices-top`, `-bottom`, `-left`, `-right` vocabulary. How the component reads both was not checked. | `qti-order-interaction.styles.ts`                                         | QTI vocab §1.2.9.3 |
-| F-13 | The drag test helper sends synthetic mouse and pointer events (`fireEvent`, `isTrusted` false), and the drag code's pointer path ignores untrusted events, so the 28 story files that use it only exercise the mouse fallback, which starts a drag at once. The path real users take (pointer, with the 10 ms / 100 ms delay) is untested. The helper moves in steps (default 20, `duration` ignored), sends mouse only (no touch), and cannot hold still (no press-and-hold, no dwell at an edge). **Decided 2026-11-12: the helper sends real browser input through Vitest browser mode** (the stories project already runs on the Playwright provider; a custom Vitest browser command can drive Playwright's mouse in steps, hold and dwell, and touch through CDP touch events). Rejected: letting the drag code accept synthetic events. | `tools/testing/drag.ts`, `drag-drop-core.mixin.ts` (pointerdown filter) | B4, B5, K2 |
+| F-13 | The drag test helper sends synthetic mouse and pointer events (`fireEvent`, `isTrusted` false), and the drag code's pointer path ignores untrusted events, so the 28 story files that use it only exercise the mouse fallback, which starts a drag at once. The path real users take (pointer, with the 10 ms / 100 ms delay) is untested. The helper moves in steps (default 20, `duration` ignored), sends mouse only (no touch), and cannot hold still (no press-and-hold, no dwell at an edge). **Decided 2026-11-16: one helper with two engines** (step H below): real browser input under Vitest, synthetic pointer events in the Storybook UI, so play functions still run visibly there. Rejected: real input only (drag play functions would stop working in the Storybook UI), and synthetic events only (the real input path stays untested). | `tools/testing/drag.ts`, `drag-drop-core.mixin.ts` (pointerdown filter) | B4, B5, K2 |
 
 What looked right: ARIA state is written through `ElementInternals` (not attributes) so it does not clash with
 author-supplied ARIA; `aria-grabbed` and `aria-dropeffect` are not used (they are deprecated); inline-choice
@@ -234,7 +234,8 @@ flowchart LR
 
   V1 --> B1
   V1 --> B2
-  V2 --> B4
+  V2 --> H[H Drag test helper]
+  H --> B4
   I1 --> I3
   I1 --> PS
   I2 --> B2
@@ -287,7 +288,8 @@ host would notice (a key, a role, a behaviour).
 | B1   | Accessible names in `qti-base`: authored ARIA, prompt or QTI hint, generated (R4, R6, C1), and the sentence as description                                               | V1                    | **maintainer** (the naming rule); Claude: wiring and stories | `next` | S2    |
 | B2   | The validation region always in the tree, linked with `aria-describedby` and `aria-invalid` (A2, A5, F-4)                                                                | V1, I2                | Claude, reviewed by the maintainer                      | `next` | S2    |
 | B3   | Choice keys: native radio and checkbox conventions, roving focus in a radio group, Enter on keydown for buttons only (K6, D9); group roles (R5, F-5)                      | none                  | **maintainer** (key rules); Claude: stories         | `next` | S2    |
-| B4   | The drag stack: Tab cancels (K7, F-7), focus follows the chip (F2), the occupant back to the bank (K8), tap-or-drag (mouse distance, touch hold), one input path instead of three, announcements; first the drag test helper on real browser input (F-13) | V2, I2                | **maintainer** (input state machine, lifetime); Claude: tests | `next` | S3    |
+| H    | The drag test helper with two engines (see "Step H" below)                                                                                                              | V2                    | Claude, reviewed by the maintainer           | `next` | S3    |
+| B4   | The drag stack: Tab cancels (K7, F-7), focus follows the chip (F2), the occupant back to the bank (K8), tap-or-drag (mouse distance, touch hold), one input path instead of three (which removes the `isTrusted` filter), announcements | H, I2                | **maintainer** (input state machine, lifetime); Claude: tests | `next` | S3    |
 | B5   | Auto-scroll (S3b, AS1–AS4)                                                                                                                                               | B4                    | **maintainer** (algorithm, loop lifetime); Claude: specs | `next` | S3b   |
 | B6   | Text key filter: stop printable keys only (K9, F-9)                                                                                                                      | none                  | Claude, reviewed by the maintainer                      | `next` | S3    |
 | B7   | Minimum target size 24×24 for our controls, and a story warning for small authored hotspots (V3)                                                                          | none                  | Claude, reviewed by the maintainer                      | `next` | S3    |
@@ -299,6 +301,43 @@ host would notice (a key, a role, a behaviour).
 | PC   | PCI: preferences sent in and updated (C5), authoring guidance (C3, A6)                                                                                                   | Q2, B1                | Claude, reviewed by the maintainer                      | `next` | S3    |
 | PX   | media, upload, end-attempt: their own short rows                                                                                                                          | PS                    | as PS                                        | `next` | S3    |
 | D    | Docs page and evidence matrix; Figma copy                                                                                                                                | all patterns          | Claude, reviewed by the maintainer                      | `next` | S4    |
+
+### Step H: the drag test helper
+
+Decided 2026-11-16 (F-13): one helper, `tools/testing/drag.ts`, with the call sites unchanged
+(`drag(chip, { to: slot })`) and two engines behind it.
+
+| Engine           | Runs when                          | Sends                                                                                                   | Proves                                         |
+| ---------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Real input       | Vitest (`pnpm run test`, CI)       | Real browser input through a custom Vitest browser command: Playwright's mouse; touch through CDP touch events | the path real users take (`isTrusted` true)  |
+| Synthetic        | the Storybook UI                   | Pointer events from the page (with `pointerType`, steps and real pauses)                                | that the play function reads well; not real input |
+
+Steps, each a commit; H1 to H4 before B4, H5 after it:
+
+- [ ] **H1 Options.** Add `pointerType` (`mouse`, `pen`, `touch`), `hold` (press and hold before
+      moving, for the touch hold) and `dwell` (hold still at the end before release, for auto-scroll
+      at an edge), plus a `tap` helper for tap-to-place (K8). `duration` stays, deprecated
+      (removing it touches 28 files; ask first).
+- [ ] **H2 Real-input engine.** A browser command registered in the `stories` project of
+      `vitest.config.ts` (`browser.commands`), run on the Node side with Playwright: mouse down,
+      move in steps, wait, up; touch through a CDP session (`Input.dispatchTouchEvent`). Coordinates
+      are translated from the story iframe to the page (the story renders inside Vitest's iframe).
+- [ ] **H3 Engine switch.** A build-time constant through the project's `define` (as
+      `QTI_A11Y_TEST` already is), not a setup file: the `stories` project must keep no
+      `setupFiles`, or `@storybook/addon-vitest` skips its own provisioning (comment in
+      `vitest.config.ts`). The helper loads the command engine only when the constant is set.
+      **Spike first:** whether Storybook's own Vite build accepts the guarded `import('vitest/browser')`.
+      If not, the command is reached through a global the Vitest side sets instead.
+- [ ] **H4 Run the suite on real input.** The 28 story files that drag run under the real-input
+      engine on today's drag code; failures that real input reveals (the 10 ms and 100 ms start
+      delays, the pointer path) are listed for B4, not fixed here. The Storybook UI keeps today's
+      synthetic mouse sequence, because today's pointer path ignores synthetic events.
+- [ ] **H5 After B4.** B4 leaves one pointer path and drops the `isTrusted` filter, so the synthetic
+      engine switches to pointer events only (no mouse or HTML drag events), including `touch`.
+
+Risks: Playwright's touch support is tap-only, so touch drags depend on CDP (Chromium only, which is
+our test browser); the two engines can drift, so a small spec drives one drag through each and
+compares the response.
 
 What can run side by side once V1, V2 and I1 are done: I2 and I3; B3, B6 and B7 at any time; the PCI
 track (Q2, PC) independently of the patterns; B4 alongside `select`.
