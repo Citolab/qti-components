@@ -18,6 +18,14 @@ written before each phase starts.
 - **The rule that makes it work**: the evaluator reads attributes, never properties of an upgraded
   element, and gets variables from a `ctx` passed in, never from Lit context or `closest`.
 - It plugs into roadmap 1's processing seam (T0), so `delivery` does not change.
+- **Scoring vectors, shared between engines**: like roadmap 1's `test-model.vectors.json`, one
+  language-neutral JSON file of cases that every scoring engine runs as its test, so the JS
+  evaluator and the .NET qti-scoring-engine (and any later engine) are checked against the same
+  expected outcomes. Two levels: an item (item XML + a candidate's responses → the outcome
+  variables) and a test (test XML + the outcomes per item → the test outcomes). Each case has a
+  plain-language name. Seeded from the .NET engine's `Scoring.Tests/Resources` and the 1EdTech
+  conformance fixtures in `apps/e2e`; a difference between engines is a bug in one of them, or a
+  question for `.claude/rules/qti-spec.md`.
 
 What has to move, read from source on 2026-10-30: 76 operators and about 4,600 lines; 46 files
 read variables through Lit context, `closest` or the item; 20 use `@property`; rules such as
@@ -43,13 +51,15 @@ the DOM; `qti-assessment-item` resets outcomes and keeps `numAttempts` and `comp
 - [ ] The slice runs under Node on `@xmldom/xmldom` and in the browser, on the same cases.
 - [ ] The .NET engine's test resources (`Scoring.Tests/Resources`) as the check: the JS evaluator
       scores them as the .NET engine does.
+- [ ] The scoring-vector format (see the design), with the `match_correct` cases as its first
+      vectors; the JS evaluator runs them, and the qti-scoring-engine can run the same file.
 
 Done when: a `match_correct` item scores the same in the browser, under Node and in .NET.
 
 ### P2. Every operator
 
 - [ ] The remaining operators and rules, each checked against the .NET cases that cover it; the
-      ones .NET does not cover keep their own specs.
+      ones .NET does not cover keep their own specs. Every checked case becomes a scoring vector.
 - [ ] No operator reads a property of an upgraded element or a Lit context.
 
 Done when: the evaluator scores every .NET case the browser scores, under Node.

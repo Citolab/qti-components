@@ -62,6 +62,27 @@ Applies to every package (`packages/**`); `apps/e2e` has its own layout (`.claud
 - **Assert the contract, not only the look**: every behaviour story also checks the
   `ElementInternals` form value and validity and the accessible state.
 
+### Readable for an assessment expert
+
+A play function is also a spec that an assessment expert (a _toetsdeskundige_, who does not read
+code) follows in Storybook's Interactions panel. Write it so they can check the behaviour against
+the item without opening the source.
+
+- **The story name says the behaviour** in plain words; Storybook shows `SelectsUpToMaxChoices` as
+  "Selects up to max choices". No `Test1`, `Default2`, `Event`.
+- **Split the play function into `step()`s** whenever it does more than one thing. Each label is
+  what the candidate does and what they then see or what the response becomes, in item terms:
+  `'Candidate selects A and B: the response is A, B'`,
+  `'Candidate tries a third choice (max-choices=2): it stays unselected'`.
+  Not code terms: `'response null'`, `'event'`, `'children have default attribute values'`.
+- **Use assessment vocabulary**: item, interaction, choice, response, max-choices, correct
+  response, score, candidate. Avoid implementation words (shadow root, internals, dispatch, host)
+  in names and labels; they belong in the code inside the step.
+- **`.api` stories** may name the member, but still say what it means for the item:
+  `'restoreState() reopens the item with the saved response'`.
+- Existing names and labels are fixed when a roadmap phase touches the file, like the suffix
+  renames above; new stories follow this from the start.
+
 ## Tags
 
 | Tag         | Meaning                                                                           |

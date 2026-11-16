@@ -31,18 +31,22 @@ import { within } from 'shadow-dom-testing-library';
 // Shape only: take the real roles, names and form field name from the element. The choice
 // interaction's .a11y story asserts `internals.role` / `internals.ariaChecked` this way; its split
 // stories still use getStorybookHelpers and fireEvent, which are listed violations, not a model.
+// The name and the step labels are read by an assessment expert in the Interactions panel:
+// plain item terms, what the candidate does and what happens (rules: "Readable for an assessment expert").
 export const SelectsAChoice: Story = {
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const form = canvas.getByRole<HTMLFormElement>('form');
     const choice = canvas.getByRole('<role>', { name: 'Option A' }); // by role and name
 
-    await userEvent.click(choice); // real input
+    await step('Candidate selects A: it is checked and the response is A', async () => {
+      await userEvent.click(choice); // real input
 
-    // the accessible state lives on ElementInternals, not on host attributes
-    await expect(choice.internals.ariaChecked).toBe('true');
-    // the contract, not only the look: form value (and validity) through ElementInternals
-    await expect(new FormData(form).getAll('<response-identifier>')).toEqual(['A']);
+      // the accessible state lives on ElementInternals, not on host attributes
+      await expect(choice.internals.ariaChecked).toBe('true');
+      // the contract, not only the look: form value (and validity) through ElementInternals
+      await expect(new FormData(form).getAll('<response-identifier>')).toEqual(['A']);
+    });
   }
 };
 ```
@@ -52,6 +56,8 @@ export const SelectsAChoice: Story = {
   `// query-exception: <reason>` on the line above.
 - Do not set `.response`, do not `fireEvent` where `userEvent` works.
 - Assert only the element in the title.
+- Name the story after the behaviour and label every `step()` in item terms (candidate action →
+  what they see or what the response becomes), never in code terms like `'response null'`.
 
 ## Tags
 
