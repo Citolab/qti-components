@@ -185,8 +185,8 @@ For the author of the schema; each needs the trade-off shown, then a decision. D
 
 | #   | Phase                                      | Needs      | Status |
 | --- | ------------------------------------------ | ---------- | ------ |
-| S0  | Review the guidelines and answer D1–D11    | none       | todo   |
-| S1  | Read what the code does today              | none       | todo   |
+| S0  | Review the guidelines and answer D1–D11    | none       | in progress: D1–D11 and AS1–AS4 decided; reviewer sign-off and the WCAG check open |
+| S1  | Read what the code does today              | none       | in progress: V1 and V2 started (see their rows)  |
 | S2  | One pattern end to end: `select`           | S0, S1     | todo   |
 | S3  | The other patterns                         | S2         | todo   |
 | S3b | Auto-scroll while dragging                 | S3         | todo   |
@@ -280,8 +280,8 @@ host would notice (a key, a role, a behaviour).
 | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- | -------------------------------------------- | ------ | ----- |
 | Q1   | Slider keys (K10): arrows, Home, End, PageUp, PageDown, `aria-valuetext`, orientation and `reverse` (F-1, the worst finding)                                                | none                  | maintainer: key-to-value rules; Claude: stories     | `main` | S3    |
 | Q2   | PCI frame: drop `role="application"` and `aria-hidden`, one name per R4 (C1, C2, F-2)                                                                                    | none                  | Claude, reviewed by the maintainer                      | `next` | S3    |
-| V1   | Spikes, read only: hidden-then-shown alert (F-4); element references across shadow roots (R4, R6); a live region inside a PCI frame (A6); `role="application"` on a frame (C2); the screen-reader set from the WebAIM survey | none                  | Claude runs, maintainer judges                       | none   | S1    |
-| V2   | `tools/testing/drag.ts` can move in steps and hold at an edge; Q15 criteria read for gaps in an ordered response (F-11) and `min-choices`/`max-choices` (F-10)             | none                  | Claude; F-10/F-11 go to the maintainer as a QTI question | none   | S1    |
+| V1   | Spikes, read only: hidden-then-shown alert (F-4); element references across shadow roots (R4, R6); a live region inside a PCI frame (A6); `role="application"` on a frame (C2); the screen-reader set from the WebAIM survey. **In progress:** A6 done with VoiceOver and Safari (2026-11-12; JAWS and NVDA to run); F-4, R4/R6, C2 and the survey not run | none                  | Claude runs, maintainer judges                       | none   | S1    |
+| V2   | `tools/testing/drag.ts` can move in steps and hold at an edge; Q15 criteria read for gaps in an ordered response (F-11) and `min-choices`/`max-choices` (F-10). **In progress:** the helper's gaps are decided and moved to step H (F-13, 2026-11-16); the F-11 gap is confirmed in our story `Q15-L1-D6` and decided (2026-11-12); the 1EdTech suite was not reachable, so the Q15 criteria are not read and F-10 is not answered | none                  | Claude; F-10/F-11 go to the maintainer as a QTI question | none   | S1    |
 | I1   | The spec types: dimensions, modes, transitions, keyboard map (D1, D2, D3, D5)                                                                                             | none                  | **maintainer** (domain model)                       | `next` | S2    |
 | I2   | The message catalogue and one announcer per interaction: an always-present `status` and `alert` region, politeness per message, throttling (D4, A1)                        | none                  | **maintainer** (catalogue shape, lifetime of the regions); Claude: wiring | `next` | S2    |
 | I3   | The Vitest reporter over `task.meta`: rows with no passing story fail (D6, D7)                                                                                            | I1                    | maintainer approves the design; Claude builds        | `next` | S2    |
