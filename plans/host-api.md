@@ -636,6 +636,10 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
 
 ## Decided
 
+- **Stored 9.x states keep restoring** (2026-11-18): a version 1 `QtiTestState`, and the
+  `testContext` + `sessionContext` that 9.x hosts stored, restore on `next`. A public converter
+  turns stored contexts into a `QtiTestState` (roadmap 1, T1e);
+  [delivery-state.md](delivery-state.md) → Old states.
 - **Session control inherits per attribute** (2026-11-02, roadmap 1 T1a): each
   `qti-item-session-control` attribute comes from the closest level that declares it, its default
   only when none does (implementation guide §4.4.2). Nested sections are listed once each in
