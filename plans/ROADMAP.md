@@ -70,8 +70,8 @@ surface follows in 10.x minors.
 - **10.0: the surface is final.** Everything that renames, removes or reshapes a member, changes
   what is stored, or adds a required import:
 
-  - roadmap 1: T0, T1 (T1a–T1e, with the state converter and the stored-states spec), T2 (with the
-    two flat lists, T2d);
+  - roadmap 1: T0, T1 (T1a–T1e, with the state converter and the stored-states spec), T2 (the tree in
+    `computedContext`, T2d, and the stamp's flat view, T2a);
   - roadmap 5: phases 2, 3, 4, 5, 6, 8, 10, 11, 12, 13, 14 and 15;
   - roadmap 6: F-10 (order reads QTI's `min-choices` and `max-choices`) and F-11 (an order
     response never holds `''`), and C2 (the PCI frame keeps its native role);
@@ -261,8 +261,9 @@ Things a phase found that changed the plan, in either roadmap. Newest first.
 
 - 2026-11-18: 10.0 ships when the surface is final (roadmap 1 T0–T2, roadmap 5's surface phases,
   roadmap 6's F-10, F-11 and C2), not after roadmap 4; the rest is 10.x, and 11 only removes
-  aliases. A change towards QTI behaviour is a fix. `computedContext` gets two flat lists (option
-  C, T2d). The behaviour spec (PR #359) is roadmap 6.
+  aliases. A change towards QTI behaviour is a fix. `computedContext` is the tree of the test,
+  with helpers for flat readers; `stampContext` stays the stamp's flat view of the current part
+  (T2a, T2d). The behaviour spec (PR #359) is roadmap 6.
 - 2026-11-18: hosts' stored 9.x states must keep restoring on `next`. A 9.x `QtiTestState` is a
   slim copy of `testContext` + `sessionContext`, so stored contexts convert without loss. T1e gets
   a public converter and a spec over real saved states; every phase keeps it passing.

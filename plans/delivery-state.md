@@ -83,8 +83,8 @@ restoring on `next` (decided 2026-11-18):
 - **T0**: `SessionState` renamed `DeliveryState`; this file.
 - **T1**: `order`, the resolved `sessionControl` (derived, not stored), the `QtiTestState`
   conversions.
-- **T2**: `computedContext` as the derivation; `initContext` into `item.data`; `stampContext` into
-  `active`.
+- **T2**: `computedContext` as the derivation; `initContext` into `item.data`; `stampContext` the stamp's
+  flat view of the current part.
 - **T3**: `lifecycle`, `numAttempts`, `completionStatus`; the `can*` flags derived from them.
 - **T4**: `order` written once from the seed.
 - **T5**: `timing` and `duration`.

@@ -200,11 +200,12 @@ Plan: [computed-context.md](computed-context.md).
 Scope: `packages/qti-test` (`test-navigation`), `packages/qti-extended` (`test-stamp`),
 `packages/qti-base` (`computed.types.ts`).
 
-- [ ] T2a `stampContext` merged into `computedContext.active`.
+- [ ] T2a `stampContext` is `<test-stamp>`'s flat view of the current test part, derived from
+      `computedContext`.
 - [ ] T2b Host `itemData` under `item.data`, no longer overriding computed fields.
 - [ ] T2c `computedContext` is `derive(DeliveryState, inputs)`, read-only.
-- [ ] T2d Items and sections as two flat lists: `part.items` in document order, `part.sections`
-      with `parentId`, `depth` and `visible` (option C, decided 2026-11-18).
+- [ ] T2d `computedContext` as the tree of the test (sections nested, `content` in document order),
+      with exported helpers for flat readers (decided 2026-11-18).
 
 Roadmap 5's phase 6 renames the host input (`initContext` → `itemData`); T2 decides where it lands.
 

@@ -640,10 +640,12 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   names and shapes in 10.0; 10.x only adds members, and 11 only removes the deprecated aliases
   (ROADMAP.md → Releases). **A change towards QTI behaviour is a fix**, a minor with
   host-migration entries, not a break.
-- **`computedContext` has two flat lists** (2026-11-18, roadmap 1 T2d): `part.items`, every item in
-  document order with `instance`, `sectionId` and `index`; `part.sections`, every section once,
-  with `parentId`, `depth` and `visible`; `section.items` stays as a view
-  ([computed-context.md](computed-context.md)).
+- **`computedContext` is the tree of the test; `stampContext` is the stamp's flat view**
+  (2026-11-18, roadmap 1 T2a and T2d): `computedContext` holds all derived state in the structure
+  of the `qti-assessment-test` (sections nested, item-refs in document order), for everything that
+  subscribes to it; `@qti-components/test` exports helpers for flat readers (`itemsInOrder` and
+  others). `stampContext` stays as `<test-stamp>`'s flat view of the current test part only,
+  derived on every update. Why: [computed-context.md](computed-context.md) → "The test as a tree".
 - **Stored 9.x states keep restoring** (2026-11-18): a version 1 `QtiTestState`, and the
   `testContext` + `sessionContext` that 9.x hosts stored, restore on `next`. A public converter
   turns stored contexts into a `QtiTestState` (roadmap 1, T1e);
