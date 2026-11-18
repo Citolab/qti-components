@@ -59,7 +59,7 @@ start; 4, 8 and 9 once their needs are done; 13–16 next to everything.
 | 16  | Docs prose on the Astro site (10.x)             | G1       | todo   |
 
 "none" means nothing beyond roadmap 1's T0 and T1. Phase 11 (10.0) also needs T2 and roadmap 6's
-F-10, F-11 and C2.
+F-10 and C2.
 
 ## Phases
 

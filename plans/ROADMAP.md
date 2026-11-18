@@ -11,7 +11,7 @@ sub-roadmaps share: the guardrails, the rules for every phase and what was found
 | --- | --------------------------------------------------------------------------- | -------------------------- | ---------------------------- | ------ |
 | 1   | [QTI test navigation](roadmap-qti-navigation.md) (T0–T8)                    | after G1; now              | T0–T2 in 10.0, T3–T8 in 10.x | todo   |
 | 5   | [The host API major](roadmap-host-api.md) (phases 2–16)                     | now, next to 1             | 10.0, except 9 and 16 (10.x) | todo   |
-| 6   | Behaviour spec and accessibility (PR #359, not merged yet)                  | when #359 is accepted      | F-10, F-11, C2 in 10.0; 10.x | slot   |
+| 6   | [Behaviour spec and accessibility](roadmap-behaviour-spec.md)               | now, next to 1 and 5       | F-10, C2 in 10.0; F-11 in 11 | todo   |
 | 2   | CitoTestUit server pilot (below)                                            | after 10.0, when 1 is done | 10.x                         | slot   |
 | 3   | [Response processing as pure functions](roadmap-pure-processing.md) (P1–P3) | after 10.0, next to 2      | 10.x                         | todo   |
 | 4   | [Adaptive selection (CAT)](roadmap-adaptive-selection.md) (A1–A4)           | when roadmap 2 is done     | 10.x                         | todo   |
@@ -25,7 +25,7 @@ graph LR
   G --> R5[5 Host API, 10.0 phases]
   R1a --> V10{{10.0}}
   R5 --> V10
-  R6a[6: F-10, F-11, C2] --> V10
+  R6a[6: F-10, C2] --> V10
   V10 --> R1b[1: T3-T8]
   V10 --> R2[2 CitoTestUit server pilot]
   V10 --> R3[3 Pure processing]
@@ -54,7 +54,7 @@ graph LR
   T0–T2 instead of after roadmap 4 (decided 2026-11-18).
 - **6** is the behaviour spec: how a candidate operates each interaction (keys, focus, roles,
   announcements), and the accessibility guidelines that go with it. Its plan is
-  `plans/roadmap-behaviour-spec.md` in PR #359; it gets its own roadmap file when that PR is merged.
+  [roadmap-behaviour-spec.md](roadmap-behaviour-spec.md) (PR #359, merged 2026-11-18).
 
 The guardrails (G) and browser compatibility (B) run next to all of them. The licence stays GPL-3.0 (decided 2026-10-30).
 Results Reporting is out of scope (decided 2026-10-30); it has a row below.
@@ -73,8 +73,8 @@ surface follows in 10.x minors.
   - roadmap 1: T0, T1 (T1a–T1e, with the state converter and the stored-states spec), T2 (the tree in
     `computedContext`, T2d, and the stamp's flat view, T2a);
   - roadmap 5: phases 2, 3, 4, 5, 6, 8, 10, 11, 12, 13, 14 and 15;
-  - roadmap 6: F-10 (order reads QTI's `min-choices` and `max-choices`) and F-11 (an order
-    response never holds `''`), and C2 (the PCI frame keeps its native role);
+  - roadmap 6: F-10 (order reads QTI's `min-choices` and `max-choices`) and C2 (the PCI frame
+    keeps its native role);
   - guardrails: G3, which phase 15 needs.
 
   A renamed member keeps its old name as a deprecated alias for one major.
@@ -89,15 +89,11 @@ surface follows in 10.x minors.
   order. We never promised the non-QTI behaviour, so such a change is a minor in 10.x, with a
   host-migration entry for every host it touches.
 - **11** removes the deprecated aliases (the `cito-` names, the old element names, `test-url`,
-  `testContext`, `sessionContext`, `stampContext`, …) and nothing else.
+  `testContext`, `sessionContext`, `stampContext`, …), and takes roadmap 6's F-11 (the order
+  response while a gap is open), once it is decided with colleagues
+  ([host-api.md](host-api.md) → Open decisions). Until then the order response stays as in 9.x.
 
-Open before 10.0:
-
-- F-11: while a gap is open in an order interaction, is the response NULL (the plan), or the placed
-  choices in slot order with the interaction invalid until the gap is filled? The second keeps a
-  partial answer and restores it.
-- F-10: items authored with `min-associations` or `max-associations` on order lose their limits;
-  check what QTI-Editor writes, and give hosts a migration entry.
+F-10, open until 2026-11-18, is decided ([host-api.md](host-api.md) → Decided); F-11 moved to 11.
 
 ## Not yet in a sub-roadmap
 
@@ -259,6 +255,11 @@ documented, and the banner reports readiness against what the test actually need
 
 Things a phase found that changed the plan, in either roadmap. Newest first.
 
+- 2026-11-18: F-10 decided after checking TAO, QTI.JS and Amp-up (their source, not run) and
+  QTI-Editor: order reads only `min-choices` and `max-choices`, with no alias. F-11 is not decided
+  for 10.0: the order response keeps one entry per slot (`''` for an empty slot) and the question
+  moves to 11, to discuss with colleagues; it touches the corrections package, and compacting would
+  lose the positions in stored states. This replaces "NULL while a gap is open" in PR #359's F-11 row.
 - 2026-11-18: 10.0 ships when the surface is final (roadmap 1 T0–T2, roadmap 5's surface phases,
   roadmap 6's F-10, F-11 and C2), not after roadmap 4; the rest is 10.x, and 11 only removes
   aliases. A change towards QTI behaviour is a fix. `computedContext` is the tree of the test,
