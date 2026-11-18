@@ -173,12 +173,19 @@ Plan: [test-model.md](test-model.md).
 Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`,
 `qti-assessment-section`), `packages/qti-base` (`computed.types.ts`).
 
-- [ ] T1a The test model from the test XML, not the live DOM; nested sections right.
+- [x] T1a The test model from the test XML, not the live DOM; nested sections right.
 - [ ] T1b All seven session-control attributes, resolved, as `item.sessionControl`.
 - [ ] T1c Item facts from the item XML.
 - [ ] T1d Navigation and submission mode from the test part only.
 - [ ] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
-      `QtiTestState` converted to and from `DeliveryState`.
+      `QtiTestState` converted to and from `DeliveryState`. Stored 9.x states keep restoring
+      ([delivery-state.md](delivery-state.md) → Old states):
+  - a public converter from a stored `testContext` + `sessionContext` to a `QtiTestState` (today's
+    `toState`); it adds and breaks nothing, so it can also go to `main` for hosts on 9.x;
+  - a spec that restores real saved states, anonymised, from each host's database (version 1
+    `QtiTestState`, and `testContext` + `sessionContext` as hosts stored them) and checks the
+    answers, outcomes, position and attempts; written before the conversion changes, and kept
+    passing in every later phase.
 - [ ] Conformance: T12-L2-D1, S9-L2-D1, S4-L2-D11/D12, Elective T4 (the modes) and T7 pass; T14-L1-D1
       still passes.
 

@@ -185,6 +185,24 @@ next to `@citolab/qti-components` in `player/` and `import '@qti-components/exte
 The tags and their parts are unchanged, so the SCSS keeps working.
 Evidence: searched the host source for the tags, not run; the compiled player was not read
 
+### Nested sections and session control follow QTI (roadmap 1, T1a)
+
+Status: behaviour change; nothing required unless the package nests sections or declares part of a
+`qti-item-session-control` below another one
+Members: `computedContext` (`testParts[].sections`, `ComputedItem.maxAttempts`, `showFeedback`,
+`showSolution`, `allowSkipping`)
+Do: nothing for a package with one level of sections and at most one `qti-item-session-control` per
+path. Otherwise:
+
+- A nested section is listed once in `computedContext.testParts[].sections`, with only its own
+  item-refs; its outer section no longer lists them too, so every item is in the context once (item
+  numbers no longer skip). An outer section that only holds subsections has `items: []`.
+- Session control inherits per attribute: an item-ref that declares only `show-feedback` keeps its
+  section's `max-attempts`, where it used to fall back to the defaults (implementation guide §4.4.2);
+  a nested section inherits from its parent section, not from the test part.
+
+Evidence: read from source, not run against the host's packages
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

@@ -59,14 +59,15 @@ interface TestPartModel {
   sections: SectionModel[];
 }
 interface SectionModel {
+  kind: 'section';
   identifier: string;
   title: string;
   visible: boolean;
   sessionControl: SessionControl; // resolved
-  sections: SectionModel[]; // nested, in order
-  itemRefs: ItemRefModel[];
+  content: (SectionModel | ItemRefModel)[]; // item-refs and subsections, in document order
 }
 interface ItemRefModel {
+  kind: 'itemRef';
   identifier: string;
   href: string;
   categories: string[];
@@ -95,20 +96,32 @@ interface ItemFacts {
 }
 ```
 
-## Decide before the steps
+## Decided before the steps
 
-- **Inheritance per attribute or per element?** When an item-ref declares
-  `<qti-item-session-control show-feedback="true"/>`, do its other attributes come from the parent
-  section, or from the element's defaults? Check the spec text with `/qti-spec-check`; the model
-  follows it, with a fixture for each reading.
-- **The old flat fields** (`maxAttempts`, `showFeedback`, `showSolution`, `allowSkipping` on the
-  item): deprecated aliases for one major (recommended), or gone in this major.
+Decided with the user on 2026-11-02.
+
+- **Inheritance is per attribute.** Each attribute comes from the closest level that declares it
+  (item-ref, the enclosing sections, the test part), its default only when none does. The spec
+  text: a test-part setting applies "unless the setting is overridden", and the defaults "are used
+  only in the absence of any applicable constraint" (info model §7.19, implementation guide
+  §4.4.2). The XSD puts `default=` on six of the seven attributes (not `max-attempts`), which a
+  schema-aware reader would fill in per element; behaviour is the spec text's, and a browser's
+  parser never applies XSD defaults. `max-attempts` resolves to 1 when no level declares it.
+- **The old flat fields go in this major** (`maxAttempts`, `showFeedback`, `showSolution`,
+  `allowSkipping` on the item), replaced by `item.sessionControl` in T1b, with host-migration
+  entries.
+- **Document order is kept in the model**: a section has one `content` list of item-refs and
+  subsections, in document order, as the XML has them (not separate `sections` and `itemRefs`).
+- **Nested sections in `computedContext`** stay a flat list (T2 decides its shape): every section
+  once, depth first, each with only its own item-refs; a section that only holds subsections has
+  `items: []` and is completed when theirs are. Item `index` follows document order, so it matches
+  `test-next` where item-refs and subsections interleave.
 
 ## Steps
 
 Each step is one PR into `next`.
 
-- [ ] **T1a** `buildTestModel(doc)`: a pure function in `@qti-components/delivery` (T0), specs in node over
+- [x] **T1a** `buildTestModel(doc)`: a pure function in `@qti-components/delivery` (T0), specs in node over
       fixtures with nested sections and session control at every level. `test-navigation` builds
       the structure of `computedContext` from it instead of querying the DOM. Fixes the nested
       sections.

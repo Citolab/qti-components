@@ -1,3 +1,5 @@
+export * from './model/test-model.js';
+export type { XmlElement, XmlNode } from './model/xml-node.js';
 export * from './random/seeded-random.js';
 export * from './random/shuffle.js';
 export * from './state/clock.js';

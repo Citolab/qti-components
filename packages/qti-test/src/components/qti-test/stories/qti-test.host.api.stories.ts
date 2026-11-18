@@ -513,26 +513,33 @@ const REQUIRED_TEST = `<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/
   </qti-test-part>
 </qti-assessment-test>`;
 
-/** Reads the computed context the way a component inside the test does: by asking for it. */
-const computedItems = (canvasElement: HTMLElement) => {
+/**
+ * Every item in the computed context, as a plugin lists them, read the way a component inside the
+ * test does: by asking for it.
+ */
+const computedItemList = (canvasElement: HTMLElement) => {
   const consumer = hostOf(canvasElement).querySelector<HTMLElement>('test-prev');
   let value: ComputedContext | undefined;
   consumer.dispatchEvent(new ContextEvent(computedContext, consumer, v => (value = v), false));
-  return Object.fromEntries(
-    (value?.testParts ?? [])
-      .flatMap(part => part.sections.flatMap(section => section.items))
-      .map(i => [i.identifier, i])
-  );
+  return (value?.testParts ?? []).flatMap(part => part.sections.flatMap(section => section.items));
 };
 
-const mountRequiredTest = async (canvasElement: HTMLElement, setup?: (test: QtiTest) => void) => {
+/** The computed items by item-ref identifier. */
+const computedItems = (canvasElement: HTMLElement) =>
+  Object.fromEntries(computedItemList(canvasElement).map(i => [i.identifier, i]));
+
+const mountRequiredTest = async (
+  canvasElement: HTMLElement,
+  setup?: (test: QtiTest) => void,
+  testXML = REQUIRED_TEST
+) => {
   const host = hostOf(canvasElement);
   host.replaceChildren();
   const container = document.createElement('div');
   render(
     html`<qti-test navigate="item">
       <test-navigation>
-        <test-container .testXML=${REQUIRED_TEST}></test-container>
+        <test-container .testXML=${testXML}></test-container>
         <test-prev>Previous</test-prev>
         <test-next>Next</test-next>
       </test-navigation>
@@ -570,6 +577,66 @@ export const ItemValidityFollowsTheAnswer: StoryObj = {
     test.navigateTo('item', 'REQ');
     await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
     await waitFor(() => expect(computedItems(canvasElement).REQ.valid, 'REQ after coming back').toBe(true));
+  }
+};
+
+const NESTED_TEST = `<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="nested" title="Nested">
+  <qti-test-part identifier="tp" navigation-mode="nonlinear" submission-mode="individual">
+    <qti-assessment-section identifier="outer" title="Outer" visible="true">
+      <qti-item-session-control max-attempts="3" allow-skipping="false"/>
+      <qti-assessment-section identifier="inner" title="Inner" visible="true">
+        <qti-assessment-item-ref identifier="REQ" href="/assets/api/kennisnet/ITEM001.xml">
+          <qti-item-session-control show-feedback="true"/>
+        </qti-assessment-item-ref>
+      </qti-assessment-section>
+      <qti-assessment-item-ref identifier="FREE" href="/assets/qti-conformance/Basic/T4-T7/items/text-entry.xml"/>
+    </qti-assessment-section>
+  </qti-test-part>
+</qti-assessment-test>`;
+
+/**
+ * A test with a section inside a section: every item is listed once and numbered in the test's
+ * order, and session control inherits per attribute (QTI 3 implementation guide §4.4.2). REQ, in
+ * the inner section, declares only `show-feedback`; FREE, in the outer section, declares nothing.
+ * The outer section sets `max-attempts="3"` and `allow-skipping="false"`.
+ */
+export const NestedSectionsKeepTheirItemsAndSessionControl: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement, step }) => {
+    await step('The candidate opens a test whose outer section holds an inner section', async () => {
+      await mountRequiredTest(canvasElement, undefined, NESTED_TEST);
+      await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+    });
+
+    await step('computedContext lists each item once: REQ is item 1, FREE is item 2, as in the test', async () => {
+      const items = computedItemList(canvasElement);
+      expect(items.map(item => item.identifier).sort()).toEqual(['FREE', 'REQ']);
+      expect(computedItems(canvasElement).REQ.index).toBe(1);
+      expect(computedItems(canvasElement).FREE.index).toBe(2);
+    });
+
+    await step(
+      'REQ declares only show-feedback: it shows feedback, and keeps max-attempts 3 and no skipping from the outer section',
+      async () => {
+        expect(computedItems(canvasElement).REQ).toMatchObject({
+          showFeedback: true,
+          maxAttempts: 3,
+          allowSkipping: false
+        });
+      }
+    );
+
+    await step(
+      'FREE declares nothing: max-attempts 3 and no skipping from the outer section, no feedback',
+      async () => {
+        expect(computedItems(canvasElement).FREE).toMatchObject({
+          showFeedback: false,
+          maxAttempts: 3,
+          allowSkipping: false
+        });
+      }
+    );
   }
 };
 

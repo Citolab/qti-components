@@ -311,3 +311,21 @@ Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-n
 names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-request-navigation`, `on-test-switch-view`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-assessment-item-ref-connected`, `qti-interaction-changed`, `qti-outcome-changed`, `qti-rubric:discretionary-placement`) are no
 longer sent or handled: every listener or dispatch on one of them (the 9.x guide, entries on events) moves to its `qc-*` name in the same upgrade.
 Evidence: read from the event table of the public-API survey (K), not run
+
+### Nested sections and session control follow QTI (roadmap 1, T1a)
+
+Status: behaviour change; nothing required unless the package nests sections or declares part of a
+`qti-item-session-control` below another one
+Members: `computedContext` (`testParts[].sections`, `ComputedItem.maxAttempts`, `showFeedback`,
+`showSolution`, `allowSkipping`)
+Do: nothing for a package with one level of sections and at most one `qti-item-session-control` per
+path. Otherwise:
+
+- A nested section is listed once in `computedContext.testParts[].sections`, with only its own
+  item-refs; its outer section no longer lists them too, so every item is in the context once (item
+  numbers no longer skip). An outer section that only holds subsections has `items: []`.
+- Session control inherits per attribute: an item-ref that declares only `show-feedback` keeps its
+  section's `max-attempts`, where it used to fall back to the defaults (implementation guide §4.4.2);
+  a nested section inherits from its parent section, not from the test part.
+
+Evidence: read from source, not run against the host's packages
