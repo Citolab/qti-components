@@ -646,6 +646,15 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   subscribes to it; `@qti-components/test` exports helpers for flat readers (`itemsInOrder` and
   others). `stampContext` stays as `<test-stamp>`'s flat view of the current test part only,
   derived on every update. Why: [computed-context.md](computed-context.md) → "The test as a tree".
+- **Order reads only `min-choices` and `max-choices`** (2026-11-18, roadmap 6 F-10): QTI's
+  attributes for order (info model §5.97), replacing the non-QTI `min-associations` and
+  `max-associations`, with no alias (an alias would be a non-QTI switch). Hosts with
+  hand-authored items that put the association attributes on order get a host-migration entry.
+  - Checked: TAO's runner, QTI.JS and Amp-up read only `min-choices` and `max-choices` on order
+    and silently ignore the association attributes (their source, not run). QTI-Editor writes
+    neither pair on order and drops both on import, and no fixture here carries them, so no
+    editor-authored item depends on the old names.
+  - Not checked: Kennisnet's and CitoTestUit's content, and what TAO's authoring writes.
 - **Stored 9.x states keep restoring** (2026-11-18): a version 1 `QtiTestState`, and the
   `testContext` + `sessionContext` that 9.x hosts stored, restore on `next`. A public converter
   turns stored contexts into a `QtiTestState` (roadmap 1, T1e);
@@ -771,6 +780,24 @@ Decided before this plan, in the public-API survey, and still in force:
 ## Open decisions
 
 The order in which this plan is built, and what depends on what, is in [ROADMAP.md](ROADMAP.md).
+
+- **The order response while a gap is open** (roadmap 6 F-11; moved to 11 on 2026-11-18, to discuss
+  with colleagues, also because it touches the corrections package). Until then the response stays
+  as it is: one entry per slot, `''` for an empty slot (`['', '', 'A']`), free placement and
+  gaps allowed. This replaces "NULL while a gap is open" (decided 2026-11-12 in PR #359). The
+  options:
+
+  - (a) Amp-up exactly: `[null, null, 'A']`. A recorded deviation from QTI, since an ordered
+    container cannot hold NULL (info model §2.11.3.9).
+  - (b) Amp-up's form stored, compacted only where the response leaves as QTI.
+  - (c) No gaps in the UI, as QTI.JS and TAO do; this reverses the 2026-11-12 rejection.
+
+  Against compacting the stored response: old stored `['', '', 'A']` states would lose their
+  positions. What QTI and the other players do: an ordered response has no notion of a gap,
+  `min-choices` decides when it is valid (info model §5.97), and only an empty container is NULL
+  (§2.11.3.34). QTI.JS and TAO send the placed identifiers compacted; Amp-up sends `null` per
+  empty slot and marks the response invalid against `min-choices`; TAO only shows an instruction.
+  None puts `''` in the response (their source read, not run).
 
 - **Our options against QTI**: research in [options-against-qti.md](options-against-qti.md).
 - **Scoring that follows `submission-mode`** (#299): `auto-score-items` stays until scoring follows
