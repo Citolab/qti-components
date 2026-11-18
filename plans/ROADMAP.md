@@ -7,22 +7,31 @@ sub-roadmaps share: the guardrails, the rules for every phase and what was found
 
 ## The sub-roadmaps, in order
 
-| #   | Roadmap                                                                     | Starts                            | Status |
-| --- | --------------------------------------------------------------------------- | --------------------------------- | ------ |
-| 1   | [QTI test navigation](roadmap-qti-navigation.md) (T0–T8)                    | after G1; now                     | todo   |
-| 2   | CitoTestUit server pilot (below)                                            | when roadmap 1 is done            | slot   |
-| 3   | [Response processing as pure functions](roadmap-pure-processing.md) (P1–P3) | when roadmap 1 is done, next to 2 | todo   |
-| 4   | [Adaptive selection (CAT)](roadmap-adaptive-selection.md) (A1–A4)           | when roadmap 2 is done            | todo   |
-| 5   | [The host API major](roadmap-host-api.md) (phases 2–16)                     | when roadmap 4 is done            | todo   |
+| #   | Roadmap                                                                     | Starts                     | Release                      | Status |
+| --- | --------------------------------------------------------------------------- | -------------------------- | ---------------------------- | ------ |
+| 1   | [QTI test navigation](roadmap-qti-navigation.md) (T0–T8)                    | after G1; now              | T0–T2 in 10.0, T3–T8 in 10.x | todo   |
+| 5   | [The host API major](roadmap-host-api.md) (phases 2–16)                     | now, next to 1             | 10.0, except 9 and 16 (10.x) | todo   |
+| 6   | Behaviour spec and accessibility (PR #359, not merged yet)                  | when #359 is accepted      | F-10, F-11, C2 in 10.0; 10.x | slot   |
+| 2   | CitoTestUit server pilot (below)                                            | after 10.0, when 1 is done | 10.x                         | slot   |
+| 3   | [Response processing as pure functions](roadmap-pure-processing.md) (P1–P3) | after 10.0, next to 2      | 10.x                         | todo   |
+| 4   | [Adaptive selection (CAT)](roadmap-adaptive-selection.md) (A1–A4)           | when roadmap 2 is done     | 10.x                         | todo   |
+
+The numbers stay as they were (the plans and code comments name them); the order of the rows is
+the order of the work. See "Releases" below.
 
 ```mermaid
 graph LR
-  G[G Guardrails] --> R1[1 QTI test navigation]
-  R1 --> R2[2 CitoTestUit server pilot]
-  R1 --> R3[3 Pure processing]
+  G[G Guardrails] --> R1a[1: T0-T2]
+  G --> R5[5 Host API, 10.0 phases]
+  R1a --> V10{{10.0}}
+  R5 --> V10
+  R6a[6: F-10, F-11, C2] --> V10
+  V10 --> R1b[1: T3-T8]
+  V10 --> R2[2 CitoTestUit server pilot]
+  V10 --> R3[3 Pure processing]
   R2 --> R4[4 Adaptive selection]
-  R4 --> R5[5 Host API major]
-  R1 -. delivery package .-> R2
+  V10 --> R6b[6: the rest]
+  R1b -. delivery package .-> R2
   R3 -. scoring under Node .-> R2
 ```
 
@@ -41,10 +50,54 @@ graph LR
   custom elements and under Node. Not needed by 2, which scores in .NET; it runs next to it.
 - **4** adds `qti-adaptive-selection`: a section whose items an external CAT engine chooses (IMS
   CAT 1.0), on 1's model and lifecycle.
-- **5** builds the host API in [host-api.md](host-api.md) on top of 1–4 and ships the major.
+- **5** builds the host API in [host-api.md](host-api.md) and ships the major, 10.0, next to roadmap 1's
+  T0–T2 instead of after roadmap 4 (decided 2026-11-18).
+- **6** is the behaviour spec: how a candidate operates each interaction (keys, focus, roles,
+  announcements), and the accessibility guidelines that go with it. Its plan is
+  `plans/roadmap-behaviour-spec.md` in PR #359; it gets its own roadmap file when that PR is merged.
 
 The guardrails (G) and browser compatibility (B) run next to all of them. The licence stays GPL-3.0 (decided 2026-10-30).
 Results Reporting is out of scope (decided 2026-10-30); it has a row below.
+
+## Releases: 10.0, 10.x, 11
+
+Decided with the user on 2026-11-18. 10.0 ships as soon as the public surface is final, so hosts
+and QTI-Editor can run it in production and find problems early; the work that does not change the
+surface follows in 10.x minors.
+
+- **Until 10.0**, QTI-Editor and test hosts follow the `10.0.0-next.x` prereleases (`@next` on npm)
+  or the pkg.pr.new build of a PR.
+- **10.0: the surface is final.** Everything that renames, removes or reshapes a member, changes
+  what is stored, or adds a required import:
+
+  - roadmap 1: T0, T1 (T1a–T1e, with the state converter and the stored-states spec), T2 (the tree in
+    `computedContext`, T2d, and the stamp's flat view, T2a);
+  - roadmap 5: phases 2, 3, 4, 5, 6, 8, 10, 11, 12, 13, 14 and 15;
+  - roadmap 6: F-10 (order reads QTI's `min-choices` and `max-choices`) and F-11 (an order
+    response never holds `''`), and C2 (the PCI frame keeps its native role);
+  - guardrails: G3, which phase 15 needs.
+
+  A renamed member keeps its old name as a deprecated alias for one major.
+
+- **10.x: minors, no breaks.** Roadmap 1 T3–T8; roadmaps 2, 3 and 4; roadmap 5 phases 9 (hooks,
+  `:state(loading)`, `reset`: new members only) and 16 (docs); the rest of roadmap 6 (keyboard,
+  announcements, focus, select-then-place); browser compatibility (B); guardrails G2, G4 and G5.
+  `@qti-components/delivery` stays 0.x on its own version line, so its state and commands may
+  still change.
+- **A change towards QTI behaviour is a fix, not a break** (decided 2026-11-18): `allow-review` or
+  `validate-responses` taking effect, no return to an earlier test part, branch rules in QTI's
+  order. We never promised the non-QTI behaviour, so such a change is a minor in 10.x, with a
+  host-migration entry for every host it touches.
+- **11** removes the deprecated aliases (the `cito-` names, the old element names, `test-url`,
+  `testContext`, `sessionContext`, `stampContext`, …) and nothing else.
+
+Open before 10.0:
+
+- F-11: while a gap is open in an order interaction, is the response NULL (the plan), or the placed
+  choices in slot order with the interaction invalid until the gap is filled? The second keeps a
+  partial answer and restores it.
+- F-10: items authored with `min-associations` or `max-associations` on order lose their limits;
+  check what QTI-Editor writes, and give hosts a migration entry.
 
 ## Not yet in a sub-roadmap
 
@@ -76,7 +129,7 @@ test support" table; adaptive selection is roadmap 4.
 ## How phases work
 
 Each phase is one branch, one worktree and one PR into `next` (or one PR per step, where it says
-so). The PR that ships a phase sets its status in its roadmap and ticks its steps in the same
+so). Once 10.0 has shipped, a 10.x phase goes into `main`, which then holds 10.x, and `next` holds 11. The PR that ships a phase sets its status in its roadmap and ticks its steps in the same
 commit, so no roadmap runs behind the code. A phase starts only when everything in **Needs** is
 `done`. When something found in a phase changes a decision, the decision goes into `host-api.md`
 and the phase gets a line under **Found** here.
@@ -126,7 +179,8 @@ If not, the stale check moves into a vitest setup file, as `.storybook/vitest.vr
 
 ## In every phase
 
-- A changeset: `major` when it breaks, otherwise `minor` or `patch` (`next` is in pre mode).
+- A changeset: `major` when it breaks, otherwise `minor` or `patch` (`next` is in pre mode). A change
+  towards QTI behaviour is not a break: `minor`, with host-migration entries (see Releases).
 - A host-migration entry for every host that uses a member the phase touches, linked from the changeset.
 - A contract story for every member the phase adds or changes (#240), so roadmap 5's phase 10 only closes gaps.
 - Stored state keeps restoring: a phase that changes what `qti-test` stores or restores keeps every
@@ -205,6 +259,11 @@ documented, and the banner reports readiness against what the test actually need
 
 Things a phase found that changed the plan, in either roadmap. Newest first.
 
+- 2026-11-18: 10.0 ships when the surface is final (roadmap 1 T0–T2, roadmap 5's surface phases,
+  roadmap 6's F-10, F-11 and C2), not after roadmap 4; the rest is 10.x, and 11 only removes
+  aliases. A change towards QTI behaviour is a fix. `computedContext` is the tree of the test,
+  with helpers for flat readers; `stampContext` stays the stamp's flat view of the current part
+  (T2a, T2d). The behaviour spec (PR #359) is roadmap 6.
 - 2026-11-18: hosts' stored 9.x states must keep restoring on `next`. A 9.x `QtiTestState` is a
   slim copy of `testContext` + `sessionContext`, so stored contexts convert without loss. T1e gets
   a public converter and a spec over real saved states; every phase keeps it passing.

@@ -22,31 +22,122 @@ describe the test, but:
 `computedContext` is a pure combination of the test model and item facts (phase T1),
 `testContext` and `sessionContext`. Per item: `sessionControl`, its state (`numAttempts`,
 `completionStatus`, score, `valid`), its lifecycle state and the rule answers once phase T3 lands,
-and `data`, the host's `itemData` under its own key. At the top: `active: { testPart, section,
-item }`, the views the stamp renders, derived on read, not stored copies.
+and `data`, the host's `itemData` under its own key.
+
+### The test as a tree; the stamp's flat view
+
+Decided with the user on 2026-11-18. It replaces "two flat lists" (option C), chosen earlier the
+same day. The shape ships in 10.0 and later phases build on it (T3–T8, adaptive sections in
+roadmap 4): they only add fields.
+
+**Why this split** (the user's reasons):
+
+- **`computedContext` is the test as it is.** It is a realistic representation of all derived
+  state in the structure of the `qti-assessment-test`: test parts, sections nested as the test
+  nests them, item-refs in document order. Reading it is reading the test, so a plugin or host
+  component that subscribes to it through Lit context sees the same tree an author wrote.
+- **Flat is a view, so it lives with what needs it.** The stamp templates loop with a
+  non-recursive `repeat`, so they need flat lists; that is a presentation need, and it belongs to
+  `<test-stamp>`, not in the model everyone reads.
+- **The stamp needs the current test part only.** What a stamp shows (numbered navigation,
+  progress, the active section and item) is about where the candidate is. Other test parts add
+  nothing: with T7 a candidate cannot go back to an earlier part.
+
+```ts
+// computedContext: the tree.
+interface ComputedTestPart {
+  identifier: string;
+  navigationMode: 'linear' | 'nonlinear';
+  submissionMode: 'individual' | 'simultaneous';
+  active: boolean;
+  sections: ComputedSection[]; // nested, as in the test
+}
+interface ComputedSection {
+  kind: 'section';
+  identifier: string;
+  title: string;
+  /** QTI `visible`: a section with `visible="false"` groups items the candidate does not see as a group. */
+  visible: boolean;
+  active: boolean;
+  /** Every item in the section and its subsections is completed. */
+  completed: boolean;
+  /** The item-refs and subsections directly inside, in document order. */
+  content: (ComputedSection | ComputedItem)[];
+}
+interface ComputedItem {
+  kind: 'item';
+  /** The item instance: the item-ref identifier, plus `#2`, `#3` for a `with-replacement` clone (T4). */
+  instance: string;
+  /** The `qti-assessment-item-ref` identifier. */
+  identifier: string;
+  /** The number in document order, counting no info items; null for an info item. */
+  index: number | null;
+  sessionControl: SessionControl;
+  // … item facts, live state and `data` as above
+}
+
+// stampContext: <test-stamp>'s flat view of the current test part, derived on every update.
+interface StampContext {
+  view: View;
+  test: { identifier: string; title: string }; // no test parts
+  activeTestpart: ComputedTestPart & {
+    items: ComputedItem[]; // every item of the part, in document order
+    sections: (ComputedSection & { parentId: string | null; depth: number; items: ComputedItem[] })[]; // flat, depth first
+  };
+  activeSection: ComputedSection & { items: ComputedItem[] }; // its own items
+  activeItem: ComputedItem;
+}
+```
+
+- **Helpers for flat readers.** Host navigation bars (CitoTestUit, Examenkompas, PeilingLezen) and
+  five plugins (bookmark, scoring buttons, character sheet, zoom, tts) want every item in order.
+  `@qti-components/test` exports small functions over the tree, next to `pluginState` and
+  `bookmarkedItems`: `itemsInOrder(part)`, `sectionsInOrder(part)`, and `activeTestPart`,
+  `activeSection`, `activeItem` of a `computedContext`.
+- **`stampContext` stays** as `<test-stamp>`'s own view, derived from `computedContext` on every
+  update, never a copy that has to be kept in step. Its template names stay (`activeTestpart`,
+  `activeSection`, `activeItem`, `test`, `view`), so stamp templates do not change.
+- **If whole-test progress is wanted** ("question 12 of 40" across parts), `test` gets a summary
+  (an item count per part), not the other parts.
+- **Rejected:** two flat lists in `computedContext` (option C: serves flat readers directly, but
+  puts a presentation shape in the model everyone reads); today's flat `sections` alone (T1a:
+  interleaved item-refs and subsections are out of order, no visibility); a tree with no flat view
+  (stamp templates would need recursion).
+- **Migration:** a reader of `part.sections.flatMap(section => section.items)` calls
+  `itemsInOrder(part)`. Host-migration entries for every host that reads `computedContext`
+  (CitoTestUit, Examenkompas, PeilingLezen) and the six qti-extended plugins.
 
 ## Decide before the steps
 
 - **Examenkompas and `externalScored`.** QTI puts `external-scored` on the outcome declaration.
   Either the items carry it, or `data.externalScored` is read where scoring decides. Ask, then write
   its host-migration entry.
-- **`stampContext` and `qti-stamp-context-updated`**: deprecated aliases for one major
-  (recommended), or gone in this major.
+- **`qti-stamp-context-updated`**: the event stays with `stampContext`; its name follows phase 14
+  (`qc-` names) with the old name as an alias.
 
 ## Steps
 
 Each step is one PR into `next`.
 
-- [ ] **T2a** The stamp merge: `computedContext.active` holds the views; `<test-stamp>` stays and
-      renders from them; `stampContext` as decided above. CitoTestUit (`nav-list.tsx`,
-      `AssessmentPlayerView.tsx`) gets a host-migration entry.
+- [ ] **T2a** The stamp's view: `stampContext` is `<test-stamp>`'s flat view of the current test
+      part, derived from `computedContext` on every update (above): `activeTestpart.items` in
+      document order across nested sections, `activeTestpart.sections` flat with `parentId`,
+      `depth` and `visible`. CitoTestUit (`nav-list.tsx`, `AssessmentPlayerView.tsx`) gets a
+      host-migration entry if what its templates read changes.
 - [ ] **T2b** Host data under `item.data`; it no longer overrides computed fields. Host-migration
       entries for Examenkompas (`initContext`), CitoTestUit and Peilinglezen.
+- [ ] **T2d** The tree: `computedContext.testParts[].sections` nested as in the test, each section's
+      `content` in document order, items with `instance` and `index`; the helpers
+      (`itemsInOrder`, `sectionsInOrder`, `activeTestPart`, `activeSection`, `activeItem`)
+      exported; the six qti-extended plugins use them.
 
 Order: side by side.
 
 ## Done when
 
-- `<test-stamp>` stays, keeps no context of its own, and its templates read `computedContext`.
+- `<test-stamp>` stays; `stampContext` is derived from `computedContext` on every update and
+  holds only the current test part, flat.
 - No host value overrides a computed field.
+- `computedContext` nests sections as the test does, item-refs and subsections in document order;
+  `itemsInOrder(part)` lists every item once in document order, interleaved item-refs included.
 - Host-migration entries for CitoTestUit, Examenkompas and Peilinglezen, linked from the changesets.

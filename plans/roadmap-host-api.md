@@ -1,10 +1,10 @@
 # Roadmap 5: the host API major
 
 The fifth sub-roadmap (see [ROADMAP.md](ROADMAP.md)): the order in which [host-api.md](host-api.md)
-is built. It starts when [roadmap 4](roadmap-adaptive-selection.md) is done, so every phase here can
-rely on the test model, one computed context, the item session lifecycle and adaptive sections
-from roadmaps 1 and 4. `host-api.md` says what the
-API is and holds every decision; this file says what is built when. The rules in
+is built. It runs now, next to roadmap 1's T0–T2, and ships 10.0 (phase 11); phases 9 and 16 add
+no breaks and follow in 10.x (ROADMAP.md → Releases, decided 2026-11-18). It no longer waits for
+roadmap 4: later roadmaps only add members and fields to the surface built here. `host-api.md`
+says what the API is and holds every decision; this file says what is built when. The rules in
 [ROADMAP.md](ROADMAP.md) → "In every phase" apply.
 
 Phase numbers are kept from the single roadmap they came from (phases 0, 1 and 7 left it), because
@@ -31,7 +31,6 @@ graph LR
   P3 --> P9
   P4 --> P10[10 Enforcement]
   P8 --> P10
-  P9 --> P10
   P10 --> P11[11 Ship the major]
   P12[12 Design tokens]
   P12 --> P11
@@ -42,24 +41,25 @@ start; 4, 8 and 9 once their needs are done; 13–16 next to everything.
 
 ## Status
 
-| #   | Phase                                           | Needs       | Status |
-| --- | ----------------------------------------------- | ----------- | ------ |
-| 2   | `src` on `qti-test` and start-up                | none        | todo   |
-| 3   | Corrections out of the core                     | none        | todo   |
-| 4   | Core stories in the plain markup                | 2, 3        | todo   |
-| 5   | Options against QTI: research and docs page     | none        | todo   |
-| 6   | Options as attributes, `config` as a view       | 5           | todo   |
-| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6        | todo   |
-| 9   | Hooks, `:state(loading)`, `reset`               | 2, 3        | todo   |
-| 10  | Enforcement                                     | 4, 8, 9, 14 | todo   |
-| 11  | Ship the major                                  | 10, 12      | todo   |
-| 12  | Design tokens: one source for the tier-1 inputs | none        | todo   |
-| 13  | Side-effect-free registration                   | G1          | todo   |
-| 14  | `qc-` names for our own elements                | G1          | todo   |
-| 15  | QTI 3 only                                      | G3          | todo   |
-| 16  | Docs prose on the Astro site                    | G1          | todo   |
+| #   | Phase                                           | Needs    | Status |
+| --- | ----------------------------------------------- | -------- | ------ |
+| 2   | `src` on `qti-test` and start-up                | none     | todo   |
+| 3   | Corrections out of the core                     | none     | todo   |
+| 4   | Core stories in the plain markup                | 2, 3     | todo   |
+| 5   | Options against QTI: research and docs page     | none     | todo   |
+| 6   | Options as attributes, `config` as a view       | 5        | todo   |
+| 8   | `<qti-item>` has the shape of `<qti-test>`      | 2, 6     | todo   |
+| 9   | Hooks, `:state(loading)`, `reset` (10.x)        | 2, 3     | todo   |
+| 10  | Enforcement                                     | 4, 8, 14 | todo   |
+| 11  | Ship the major                                  | 10, 12   | todo   |
+| 12  | Design tokens: one source for the tier-1 inputs | none     | todo   |
+| 13  | Side-effect-free registration                   | G1       | todo   |
+| 14  | `qc-` names for our own elements                | G1       | todo   |
+| 15  | QTI 3 only                                      | G3       | todo   |
+| 16  | Docs prose on the Astro site (10.x)             | G1       | todo   |
 
-"none" means nothing beyond roadmaps 1–4.
+"none" means nothing beyond roadmap 1's T0 and T1. Phase 11 (10.0) also needs T2 and roadmap 6's
+F-10, F-11 and C2.
 
 ## Phases
 
@@ -155,8 +155,8 @@ Plan: [host-api.md](host-api.md) → How this is enforced (#240, #251).
 
 - [ ] Members not in `host-api.md` are `@internal` and stripped from the `.d.ts`; an API report in CI.
 - [ ] The custom-elements manifest lists only the public members.
-- [ ] `sessionContext` and `testContext` deprecated and removed; `view` an input only; whether
-      `computedContext` is renamed decided ([delivery-state.md](delivery-state.md)).
+- [ ] `sessionContext` and `testContext` deprecated in 10.0 and removed in 11; `view` an input only;
+      whether `computedContext` is renamed decided ([delivery-state.md](delivery-state.md)).
 - [ ] Contract stories for every member; host-shaped tests (Kennisnet first).
 
 Done when: CI fails on any change to the public surface that `host-api.md` does not list.
@@ -167,7 +167,7 @@ Plan: CLAUDE.md → Releasing.
 
 - [ ] Survey PeilingLezen's 7.14 → 9.x gap.
 - [ ] Every host-migration file complete for the major.
-- [ ] Leave pre mode, merge `next` into `main`, release; cut `9.x` first.
+- [ ] Leave pre mode, merge `next` into `main`, release 10.0; cut `9.x` first. `next` becomes 11.
 
 ### 12. Design tokens: one source for the tier-1 inputs
 
