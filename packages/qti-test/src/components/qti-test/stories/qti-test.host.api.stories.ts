@@ -513,17 +513,20 @@ const REQUIRED_TEST = `<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/
   </qti-test-part>
 </qti-assessment-test>`;
 
-/** Reads the computed context the way a component inside the test does: by asking for it. */
-const computedItems = (canvasElement: HTMLElement) => {
+/**
+ * Every item in the computed context, as a plugin lists them, read the way a component inside the
+ * test does: by asking for it.
+ */
+const computedItemList = (canvasElement: HTMLElement) => {
   const consumer = hostOf(canvasElement).querySelector<HTMLElement>('test-prev');
   let value: ComputedContext | undefined;
   consumer.dispatchEvent(new ContextEvent(computedContext, consumer, v => (value = v), false));
-  return Object.fromEntries(
-    (value?.testParts ?? [])
-      .flatMap(part => part.sections.flatMap(section => section.items))
-      .map(i => [i.identifier, i])
-  );
+  return (value?.testParts ?? []).flatMap(part => part.sections.flatMap(section => section.items));
 };
+
+/** The computed items by item-ref identifier. */
+const computedItems = (canvasElement: HTMLElement) =>
+  Object.fromEntries(computedItemList(canvasElement).map(i => [i.identifier, i]));
 
 const mountRequiredTest = async (
   canvasElement: HTMLElement,
@@ -592,22 +595,48 @@ const NESTED_TEST = `<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/im
 </qti-assessment-test>`;
 
 /**
- * Nested sections are listed once each, with only their own items, and items are numbered in the
- * test's order. Session control inherits per attribute (QTI 3 implementation guide §4.4.2): REQ
- * declares only `show-feedback` and keeps `max-attempts` and `allow-skipping` from the outer
- * section, through the inner one.
+ * A test with a section inside a section: every item is listed once and numbered in the test's
+ * order, and session control inherits per attribute (QTI 3 implementation guide §4.4.2). REQ, in
+ * the inner section, declares only `show-feedback`; FREE, in the outer section, declares nothing.
+ * The outer section sets `max-attempts="3"` and `allow-skipping="false"`.
  */
-export const ComputedContextNestedSections: StoryObj = {
+export const NestedSectionsKeepTheirItemsAndSessionControl: StoryObj = {
   parameters: { testTimeout: 60000 },
   render: () => html`<div data-testid="host"></div>`,
-  play: async ({ canvasElement }) => {
-    await mountRequiredTest(canvasElement, undefined, NESTED_TEST);
-    await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+  play: async ({ canvasElement, step }) => {
+    await step('The candidate opens a test whose outer section holds an inner section', async () => {
+      await mountRequiredTest(canvasElement, undefined, NESTED_TEST);
+      await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+    });
 
-    const items = computedItems(canvasElement);
-    expect(Object.keys(items)).toEqual(['FREE', 'REQ']);
-    expect(items.REQ).toMatchObject({ index: 1, maxAttempts: 3, allowSkipping: false, showFeedback: true });
-    expect(items.FREE).toMatchObject({ index: 2, maxAttempts: 3, allowSkipping: false, showFeedback: false });
+    await step('computedContext lists each item once: REQ is item 1, FREE is item 2, as in the test', async () => {
+      const items = computedItemList(canvasElement);
+      expect(items.map(item => item.identifier).sort()).toEqual(['FREE', 'REQ']);
+      expect(computedItems(canvasElement).REQ.index).toBe(1);
+      expect(computedItems(canvasElement).FREE.index).toBe(2);
+    });
+
+    await step(
+      'REQ declares only show-feedback: it shows feedback, and keeps max-attempts 3 and no skipping from the outer section',
+      async () => {
+        expect(computedItems(canvasElement).REQ).toMatchObject({
+          showFeedback: true,
+          maxAttempts: 3,
+          allowSkipping: false
+        });
+      }
+    );
+
+    await step(
+      'FREE declares nothing: max-attempts 3 and no skipping from the outer section, no feedback',
+      async () => {
+        expect(computedItems(canvasElement).FREE).toMatchObject({
+          showFeedback: false,
+          maxAttempts: 3,
+          allowSkipping: false
+        });
+      }
+    );
   }
 };
 
