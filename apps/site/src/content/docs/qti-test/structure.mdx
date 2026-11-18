@@ -40,6 +40,10 @@ Dispatches `qti-test-part-connected`.
 
 A section groups item references (and, optionally, nested sections).
 
+In `computedContext`, `testParts[].sections` lists every section once, nested ones included (a section before its subsections), each with only its own items; a section that only holds subsections has no items of its own. Items are numbered (`index`) in the test's order.
+
+A `qti-item-session-control` on the test part, a section or an item-ref resolves per attribute: each attribute comes from the closest level that declares it, and its QTI default only when none does. An item-ref that declares only `show-feedback="true"` keeps its section's `max-attempts`.
+
 | Attribute | Type | Notes |
 |---|---|---|
 | `identifier` | `string` | |

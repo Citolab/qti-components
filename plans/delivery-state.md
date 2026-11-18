@@ -60,6 +60,24 @@ Per item instance (`ItemInstanceId` → item):
 T0 ships `version`, `seed`, `startedAt`, `current` and `items` with `itemRefIdentifier` and
 `occurrence`; each phase adds its fields.
 
+## Old states
+
+9.x hosts store either `QtiTestState` (version 1) or the `testContext` and `sessionContext` it is
+made from: `state` keeps each item's variables (identifier, type, value) and interaction state, the
+test outcomes and the position, and leaves out what the XML gives on every load. Both keep
+restoring on `next` (decided 2026-11-18):
+
+- Version 1 is read for as long as hosts may hold it; a later version reads it too.
+- A field version 1 lacks is derived or defaulted, and the phase that adds it says how: `order`
+  from the seed the host passes (T1e), `lifecycle` from `numAttempts` and the session control
+  (T3), `timing` from the stored `duration` (T5). T4 decides what happens to stored answers for
+  items a selection leaves out.
+- Stored contexts convert to `QtiTestState` with a public function (today's `toState`), so a host
+  can convert what it stored before `testContext` and `sessionContext` are removed (roadmap 5).
+- A state that cannot be read is not dropped silently, as it is today (a console warning); T1e
+  decides how the host hears of it.
+- A spec restores real saved states from each host, anonymised, and runs in every phase.
+
 ## Phase by phase
 
 - **T0**: `SessionState` renamed `DeliveryState`; this file.

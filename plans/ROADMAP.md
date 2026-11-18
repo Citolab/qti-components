@@ -183,6 +183,9 @@ If not, the stale check moves into a vitest setup file, as `.storybook/vitest.vr
   towards QTI behaviour is not a break: `minor`, with host-migration entries (see Releases).
 - A host-migration entry for every host that uses a member the phase touches, linked from the changeset.
 - A contract story for every member the phase adds or changes (#240), so roadmap 5's phase 10 only closes gaps.
+- Stored state keeps restoring: a phase that changes what `qti-test` stores or restores keeps every
+  9.x state restoring (the stored-states spec, from T1e), derives or defaults each field that
+  version 1 lacks and says how, and never drops a state silently.
 - A renamed or moved story moves its VRT baseline; a re-blessed PNG is checked, not trusted.
 - Where the code and QTI disagree, QTI wins, in this order (decided 2026-10-28; it replaces "follow
   the suite literally"): the XSD for structure, then the spec text for behaviour, then the 1EdTech
@@ -260,6 +263,15 @@ Things a phase found that changed the plan, in either roadmap. Newest first.
   roadmap 6's F-10, F-11 and C2), not after roadmap 4; the rest is 10.x, and 11 only removes
   aliases. A change towards QTI behaviour is a fix. `computedContext` gets two flat lists (option
   C, T2d). The behaviour spec (PR #359) is roadmap 6.
+- 2026-11-18: hosts' stored 9.x states must keep restoring on `next`. A 9.x `QtiTestState` is a
+  slim copy of `testContext` + `sessionContext`, so stored contexts convert without loss. T1e gets
+  a public converter and a spec over real saved states; every phase keeps it passing.
+- 2026-11-02 (T1a): `qti-item-session-control` inherits per attribute (the spec text), not per
+  element as the XSD defaults would suggest; the flat session-control fields go in this major (T1b);
+  the model keeps document order (`content`); nested sections stay a flat list in `computedContext`,
+  numbered in document order. The rendered test is not its XML: our test,
+  part and section elements move `title` to `data-title`, so `test-navigation` reads the markup
+  through an adapter until it gets the test document itself.
 - 2026-10-30: `delivery` is public (0.x), not private; the pilot scores with the .NET
   qti-scoring-engine, sending only responses; response processing as pure functions is its own
   roadmap 3, next to the pilot; Results Reporting is out of scope. Adaptive selection and the host

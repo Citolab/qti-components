@@ -6,6 +6,7 @@
   "dependencies": {
     "@heximal/templates": "catalog:",
     "@qti-components/base": "workspace:^",
+    "@qti-components/delivery": "workspace:^",
     "@qti-components/elements": "workspace:^",
     "@qti-components/interactions": "workspace:^",
     "@qti-components/processing": "workspace:^",

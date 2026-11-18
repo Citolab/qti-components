@@ -644,6 +644,17 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   document order with `instance`, `sectionId` and `index`; `part.sections`, every section once,
   with `parentId`, `depth` and `visible`; `section.items` stays as a view
   ([computed-context.md](computed-context.md)).
+- **Stored 9.x states keep restoring** (2026-11-18): a version 1 `QtiTestState`, and the
+  `testContext` + `sessionContext` that 9.x hosts stored, restore on `next`. A public converter
+  turns stored contexts into a `QtiTestState` (roadmap 1, T1e);
+  [delivery-state.md](delivery-state.md) → Old states.
+- **Session control inherits per attribute** (2026-11-02, roadmap 1 T1a): each
+  `qti-item-session-control` attribute comes from the closest level that declares it, its default
+  only when none does (implementation guide §4.4.2). Nested sections are listed once each in
+  `computedContext.testParts[].sections`, depth first, with only their own item-refs; `index`
+  follows the test's document order. The flat fields on the computed item (`maxAttempts`,
+  `showFeedback`, `showSolution`, `allowSkipping`) are removed in this major in favour of
+  `item.sessionControl` (T1b).
 - **Our elements are `qc-`** (2026-10-28, replaces the open decision on the `qti-` namespace):
   `qti-` belongs to 1EdTech (impl. guide §2.2.2), so every element that is ours, not QTI's, takes
   `qc-`, in this major: the `test-*` controls, `item-container`, `test-container` and the
