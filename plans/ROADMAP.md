@@ -202,6 +202,12 @@ documented, and the banner reports readiness against what the test actually need
 
 Things a phase found that changed the plan, in either roadmap. Newest first.
 
+- 2026-11-02 (T1a): `qti-item-session-control` inherits per attribute (the spec text), not per
+  element as the XSD defaults would suggest; the flat session-control fields go in this major (T1b);
+  the model keeps document order (`content`); nested sections stay a flat list in `computedContext`,
+  numbered in document order. The rendered test is not its XML: our test,
+  part and section elements move `title` to `data-title`, so `test-navigation` reads the markup
+  through an adapter until it gets the test document itself.
 - 2026-10-30: `delivery` is public (0.x), not private; the pilot scores with the .NET
   qti-scoring-engine, sending only responses; response processing as pure functions is its own
   roadmap 3, next to the pilot; Results Reporting is out of scope. Adaptive selection and the host

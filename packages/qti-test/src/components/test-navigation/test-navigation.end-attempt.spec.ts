@@ -46,12 +46,13 @@ describe('TestNavigation event handlers without a loaded test', () => {
   };
 
   /**
-   * Stand in for the loaded `<qti-assessment-test>`: an element holding one
-   * item-ref, whose `assessmentItem` is the given stub — or absent, for the case
-   * where the ref exists but its item has not rendered yet.
+   * Stand in for the loaded `<qti-assessment-test>`: an unupgraded element of
+   * that name (the test model reads its markup) holding one item-ref, whose
+   * `assessmentItem` is the given stub — or absent, for the case where the ref
+   * exists but its item has not rendered yet.
    */
   const connectTest = (nav: TestNavigation, assessmentItem?: unknown): void => {
-    const test = document.createElement('div');
+    const test = document.createElementNS('http://www.imsglobal.org/xsd/imsqtiasi_v3p0', 'qti-assessment-test');
     test.innerHTML = `<qti-assessment-item-ref identifier="item1"></qti-assessment-item-ref>`;
     if (assessmentItem !== undefined) {
       // `assessmentItem` is a getter on the real element, so it has to be

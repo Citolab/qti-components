@@ -173,7 +173,7 @@ Plan: [test-model.md](test-model.md).
 Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`,
 `qti-assessment-section`), `packages/qti-base` (`computed.types.ts`).
 
-- [ ] T1a The test model from the test XML, not the live DOM; nested sections right.
+- [x] T1a The test model from the test XML, not the live DOM; nested sections right.
 - [ ] T1b All seven session-control attributes, resolved, as `item.sessionControl`.
 - [ ] T1c Item facts from the item XML.
 - [ ] T1d Navigation and submission mode from the test part only.

@@ -4,8 +4,13 @@ import type { ComputedItemContext } from './computed-item.types';
 export type ComputedItem = ComputedItemContext & {
   categories?: string[]; // not necessary for outside world
   type?: 'info' | 'regular';
+  /** The item's number in the test's document order, counting no info items; null for an info item. */
   index?: number;
   active?: boolean;
+  /**
+   * `qti-item-session-control`, resolved per attribute: each comes from the closest level that
+   * declares it (item-ref, enclosing sections, test part), its QTI default only when none does.
+   */
   allowSkipping?: boolean;
   maxAttempts?: number;
   showFeedback?: boolean;
@@ -30,11 +35,18 @@ export type ComputedContext = {
     navigationMode: 'linear' | 'nonlinear';
     submissionMode: 'individual' | 'simultaneous';
     allowSkipping?: boolean;
+    /**
+     * Every section of the part once, nested ones included, depth first (a section before its
+     * subsections), each with only its own item-refs, so every item is listed once. Where a
+     * section's item-refs and subsections interleave, this order is not the test's; `index` is.
+     */
     sections: {
       active?: boolean;
       identifier: string;
       title: string;
+      /** Every item in the section and its subsections is completed. */
       completed?: boolean;
+      /** This section's own item-refs, not those of its subsections; empty for a section that only holds sections. */
       items: ComputedItem[];
       navigationMode: 'linear' | 'nonlinear';
       submissionMode: 'individual' | 'simultaneous';

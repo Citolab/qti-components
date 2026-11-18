@@ -525,14 +525,18 @@ const computedItems = (canvasElement: HTMLElement) => {
   );
 };
 
-const mountRequiredTest = async (canvasElement: HTMLElement, setup?: (test: QtiTest) => void) => {
+const mountRequiredTest = async (
+  canvasElement: HTMLElement,
+  setup?: (test: QtiTest) => void,
+  testXML = REQUIRED_TEST
+) => {
   const host = hostOf(canvasElement);
   host.replaceChildren();
   const container = document.createElement('div');
   render(
     html`<qti-test navigate="item">
       <test-navigation>
-        <test-container .testXML=${REQUIRED_TEST}></test-container>
+        <test-container .testXML=${testXML}></test-container>
         <test-prev>Previous</test-prev>
         <test-next>Next</test-next>
       </test-navigation>
@@ -570,6 +574,40 @@ export const ItemValidityFollowsTheAnswer: StoryObj = {
     test.navigateTo('item', 'REQ');
     await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
     await waitFor(() => expect(computedItems(canvasElement).REQ.valid, 'REQ after coming back').toBe(true));
+  }
+};
+
+const NESTED_TEST = `<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="nested" title="Nested">
+  <qti-test-part identifier="tp" navigation-mode="nonlinear" submission-mode="individual">
+    <qti-assessment-section identifier="outer" title="Outer" visible="true">
+      <qti-item-session-control max-attempts="3" allow-skipping="false"/>
+      <qti-assessment-section identifier="inner" title="Inner" visible="true">
+        <qti-assessment-item-ref identifier="REQ" href="/assets/api/kennisnet/ITEM001.xml">
+          <qti-item-session-control show-feedback="true"/>
+        </qti-assessment-item-ref>
+      </qti-assessment-section>
+      <qti-assessment-item-ref identifier="FREE" href="/assets/qti-conformance/Basic/T4-T7/items/text-entry.xml"/>
+    </qti-assessment-section>
+  </qti-test-part>
+</qti-assessment-test>`;
+
+/**
+ * Nested sections are listed once each, with only their own items, and items are numbered in the
+ * test's order. Session control inherits per attribute (QTI 3 implementation guide §4.4.2): REQ
+ * declares only `show-feedback` and keeps `max-attempts` and `allow-skipping` from the outer
+ * section, through the inner one.
+ */
+export const ComputedContextNestedSections: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement }) => {
+    await mountRequiredTest(canvasElement, undefined, NESTED_TEST);
+    await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+
+    const items = computedItems(canvasElement);
+    expect(Object.keys(items)).toEqual(['FREE', 'REQ']);
+    expect(items.REQ).toMatchObject({ index: 1, maxAttempts: 3, allowSkipping: false, showFeedback: true });
+    expect(items.FREE).toMatchObject({ index: 2, maxAttempts: 3, allowSkipping: false, showFeedback: false });
   }
 };
 
