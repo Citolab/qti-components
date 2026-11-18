@@ -52,6 +52,9 @@ graph LR
 
 The hexagons are not phases: they mark when a QTI test feature is complete (see QTI test support).
 
+T0–T2 ship in 10.0; T3–T8 follow in 10.x minors, since a change towards QTI behaviour is a fix
+(ROADMAP.md → Releases).
+
 Critical path: G1 → T0 → T1 → T3 → T8 → T7. Side by side, in separate worktrees: T2, T3 and T4 after
 T1; T5, T6 and T8 after T3; T7 after T8.
 
@@ -193,6 +196,8 @@ Scope: `packages/qti-test` (`test-navigation`), `packages/qti-extended` (`test-s
 - [ ] T2a `stampContext` merged into `computedContext.active`.
 - [ ] T2b Host `itemData` under `item.data`, no longer overriding computed fields.
 - [ ] T2c `computedContext` is `derive(DeliveryState, inputs)`, read-only.
+- [ ] T2d Items and sections as two flat lists: `part.items` in document order, `part.sections`
+      with `parentId`, `depth` and `visible` (option C, decided 2026-11-18).
 
 Roadmap 5's phase 6 renames the host input (`initContext` → `itemData`); T2 decides where it lands.
 

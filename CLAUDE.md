@@ -100,6 +100,9 @@ Two lanes, one backlog.
   "9.x". **`next`** is the next major: breaking and architectural changes, milestone "Next major".
   Would it break an existing user of a published package (removed or renamed member, changed
   behaviour, new required import)? Then `next`. Unsure: "Next major", decided at triage.
+  From 10.0, a change towards QTI behaviour is a fix, not a break: a minor with host-migration
+  entries (decided 2026-11-18; `plans/ROADMAP.md` → Releases). Once 10.0 ships, `main` holds 10.x
+  and `next` holds 11.
 - **The backlog** is `plans/ROADMAP.md` (the roadmaps, in order) for planned work; GitHub issues only for bugs and outside
   requests. Read the roadmap before planned work. The PR that ships a phase ticks it in the same
   commit.

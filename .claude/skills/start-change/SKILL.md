@@ -11,8 +11,9 @@ disable-model-invocation: true
    order: read it, check every **Needs** is `done`, and read the plan it links. A bug or outside request is a GitHub issue
    (`gh issue view <n>`). Do not open an issue for planned work.
 2. **Lane.** Would it break an existing user of a published package (removed or renamed member,
-   changed behaviour, new required import)? Yes → `next`; no → `main`; unsure → `next`. Roadmap
-   phases are on `next`. Say the lane to the user.
+   changed behaviour, new required import)? Yes → `next`; no → `main`; unsure → `next`. From 10.0,
+   a change towards QTI behaviour is not a break. Roadmap phases are on `next` until 10.0 ships;
+   after that a 10.x phase (`plans/ROADMAP.md` → Releases) is on `main`. Say the lane to the user.
 3. **Branch name.** Conventional prefix + short slug: `feat/…`, `fix/…`, `chore/…`, `docs/…`,
    `test/…`, `ci/…`. The worktree is the branch with `/` → `-`.
 4. **Worktree** (from the repo root, never switching the root checkout's branch):

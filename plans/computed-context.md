@@ -25,6 +25,63 @@ describe the test, but:
 and `data`, the host's `itemData` under its own key. At the top: `active: { testPart, section,
 item }`, the views the stamp renders, derived on read, not stored copies.
 
+### Items and sections: two flat lists (option C)
+
+Decided with the user on 2026-11-18. The shape ships in 10.0 and is the one later phases build on
+(T3–T8, adaptive sections in roadmap 4), so they only add fields.
+
+```ts
+interface ComputedTestPart {
+  identifier: string;
+  navigationMode: 'linear' | 'nonlinear';
+  submissionMode: 'individual' | 'simultaneous';
+  active: boolean;
+  /** Every item of the part, in document order, nested sections included. */
+  items: ComputedItem[];
+  /** Every section of the part once, depth first (a section before its subsections). */
+  sections: ComputedSection[];
+}
+interface ComputedSection {
+  identifier: string;
+  title: string;
+  /** QTI `visible`: a section with `visible="false"` groups items the candidate does not see as a group. */
+  visible: boolean;
+  /** The enclosing section, or null for a section directly in the part. */
+  parentId: string | null;
+  /** 0 for a section directly in the part. */
+  depth: number;
+  active: boolean;
+  /** Every item in the section and its subsections is completed. */
+  completed: boolean;
+  /** A view of `items`: this section's own items, in document order. */
+  items: ComputedItem[];
+}
+interface ComputedItem {
+  /** The item instance: the item-ref identifier, plus `#2`, `#3` for a `with-replacement` clone (T4). */
+  instance: string;
+  /** The `qti-assessment-item-ref` identifier. */
+  identifier: string;
+  /** The innermost section the item-ref is in. */
+  sectionId: string;
+  /** The number in document order, counting no info items; null for an info item. */
+  index: number | null;
+  sessionControl: SessionControl;
+  // … item facts, live state and `data` as above
+}
+```
+
+- **Why two flat lists.** What most readers want is every item in test order (navigation bars,
+  `test-stamp`, bookmark, scoring buttons, tts): `part.items`. What section navigation wants is the
+  sections with their titles and state: `part.sections`. Nesting and `visible` are there for the
+  few tests that use them, through `parentId` and `depth`, without recursive templates; a tree can
+  be built from them.
+- **Rejected:** today's flat `sections` alone (T1a: interleaved item-refs and subsections are out of
+  order, no parent or visibility), and a tree of `content` entries (breaks every reader, needs
+  recursive stamp templates, "all items" needs a walk).
+- **Migration:** a reader of `part.sections.flatMap(section => section.items)` reads `part.items`;
+  `section.items` stays, as a view. Host-migration entries for every host that reads
+  `computedContext` (CitoTestUit, Examenkompas, PeilingLezen) and the six qti-extended plugins.
+
 ## Decide before the steps
 
 - **Examenkompas and `externalScored`.** QTI puts `external-scored` on the outcome declaration.
@@ -42,6 +99,10 @@ Each step is one PR into `next`.
       `AssessmentPlayerView.tsx`) gets a host-migration entry.
 - [ ] **T2b** Host data under `item.data`; it no longer overrides computed fields. Host-migration
       entries for Examenkompas (`initContext`), CitoTestUit and Peilinglezen.
+- [ ] **T2d** The two flat lists (option C above): `part.items` in document order with `instance`,
+      `sectionId` and `index`; `part.sections` with `parentId`, `depth` and `visible`;
+      `section.items` a view. The six qti-extended plugins and the stamp templates in stories read
+      `part.items`.
 
 Order: side by side.
 
@@ -49,4 +110,6 @@ Order: side by side.
 
 - `<test-stamp>` stays, keeps no context of its own, and its templates read `computedContext`.
 - No host value overrides a computed field.
+- `part.items` lists every item once in document order, nested sections and interleaved item-refs
+  included, and `part.sections` carries `parentId`, `depth` and `visible`.
 - Host-migration entries for CitoTestUit, Examenkompas and Peilinglezen, linked from the changesets.

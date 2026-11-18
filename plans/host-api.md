@@ -636,6 +636,14 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
 
 ## Decided
 
+- **10.0 ships when the surface is final** (2026-11-18): the members on this page get their final
+  names and shapes in 10.0; 10.x only adds members, and 11 only removes the deprecated aliases
+  (ROADMAP.md → Releases). **A change towards QTI behaviour is a fix**, a minor with
+  host-migration entries, not a break.
+- **`computedContext` has two flat lists** (2026-11-18, roadmap 1 T2d): `part.items`, every item in
+  document order with `instance`, `sectionId` and `index`; `part.sections`, every section once,
+  with `parentId`, `depth` and `visible`; `section.items` stays as a view
+  ([computed-context.md](computed-context.md)).
 - **Our elements are `qc-`** (2026-10-28, replaces the open decision on the `qti-` namespace):
   `qti-` belongs to 1EdTech (impl. guide §2.2.2), so every element that is ours, not QTI's, takes
   `qc-`, in this major: the `test-*` controls, `item-container`, `test-container` and the
