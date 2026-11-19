@@ -636,6 +636,9 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
 
 ## Decided
 
+- **The interaction message catalogue is host API** (2026-11-19, roadmap 6 I2): whatever a host
+  can see or change of the announcements (message ids, translating or replacing a message) is
+  listed on this page before I2 ships, and its ids are `qc-`. Its shape is open (Open decisions).
 - **10.0 ships when the surface is final** (2026-11-18): the members on this page get their final
   names and shapes in 10.0; 10.x only adds members, and 11 only removes the deprecated aliases
   (ROADMAP.md → Releases). **A change towards QTI behaviour is a fix**, a minor with
@@ -809,6 +812,9 @@ The order in which this plan is built, and what depends on what, is in [ROADMAP.
   Styling list above, so today they are not API. Either list the
   slots a host may set, or give the controls `--qc-*` inputs (primary and neutral already exist) and
   leave the rest to `::part(button)` with its states. Decide before phase 10.
+- **The message catalogue's host surface** (roadmap 6 I2, D4): whether hosts may read, translate
+  or replace the interaction messages, and through which member. Decided with the catalogue's
+  design in roadmap 6 S2, before I2 is built.
 
 Settled 2026-10-27:
 

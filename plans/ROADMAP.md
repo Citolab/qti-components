@@ -31,6 +31,7 @@ graph LR
   V10 --> R3[3 Pure processing]
   R2 --> R4[4 Adaptive selection]
   V10 --> R6b[6: the rest]
+  G -. G4 accessibility gate .-> R6b
   R1b -. delivery package .-> R2
   R3 -. scoring under Node .-> R2
 ```
@@ -54,7 +55,9 @@ graph LR
   T0–T2 instead of after roadmap 4 (decided 2026-11-18).
 - **6** is the behaviour spec: how a candidate operates each interaction (keys, focus, roles,
   announcements), and the accessibility guidelines that go with it. Its plan is
-  [roadmap-behaviour-spec.md](roadmap-behaviour-spec.md) (PR #359, merged 2026-11-18).
+  [roadmap-behaviour-spec.md](roadmap-behaviour-spec.md) (PR #359, merged 2026-11-18). Its S2
+  needs the accessibility gate (G4); its docs go to the Astro site, its names are `qc-`, and what
+  hosts see of its message catalogue is decided in `host-api.md`.
 
 The guardrails (G) and browser compatibility (B) run next to all of them. The licence stays GPL-3.0 (decided 2026-10-30).
 Results Reporting is out of scope (decided 2026-10-30); it has a row below.
@@ -255,6 +258,10 @@ documented, and the banner reports readiness against what the test actually need
 
 Things a phase found that changed the plan, in either roadmap. Newest first.
 
+- 2026-11-19: roadmap 6 fitted to the others: its S2 needs G4 (without the gate, axe fails nothing
+  in CI); its docs page goes to `apps/site` (roadmap 5 phase 16); everything it names is `qc-`
+  (phase 14); the host-visible part of its message catalogue (I2) is host API, so it is decided in
+  `host-api.md`.
 - 2026-11-18: F-10 decided after checking TAO, QTI.JS and Amp-up (their source, not run) and
   QTI-Editor: order reads only `min-choices` and `max-choices`, with no alias. F-11 is not decided
   for 10.0: the order response keeps one entry per slot (`''` for an empty slot) and the question
