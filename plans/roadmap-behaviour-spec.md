@@ -6,7 +6,8 @@ it has**, so every interaction behaves predictably, above all for keyboard, focu
 technology. Drafted 2026-11-12. Nothing here is built. The schema decisions D1–D7 and most keyboard,
 focus and announcement rows were decided with the author on 2026-11-12 (see "Decisions" and the
 Status column); what is still open is marked Open. The rules in [ROADMAP.md](ROADMAP.md) → "In every
-phase" apply.
+phase" apply. Every event, attribute, token, element and message id this plan adds is named `qc-`
+(`CLAUDE.md` → "`qti-` belongs to 1EdTech"; roadmap 5 phase 14).
 
 ## Why
 
@@ -187,7 +188,7 @@ For the author of the schema; each needs the trade-off shown, then a decision. D
 | --- | ------------------------------------------ | ---------- | ------ |
 | S0  | Review the guidelines and answer D1–D11    | none       | in progress: D1–D11 and AS1–AS4 decided; reviewer sign-off and the WCAG check open |
 | S1  | Read what the code does today              | none       | in progress: V1 and V2 started (see their rows)  |
-| S2  | One pattern end to end: `select`           | S0, S1     | todo   |
+| S2  | One pattern end to end: `select`           | S0, S1, G4 | todo   |
 | S3  | The other patterns                         | S2         | todo   |
 | S3b | Auto-scroll while dragging                 | S3         | todo   |
 | S4  | Rendered docs and the Figma copy           | S2         | todo   |
@@ -283,7 +284,7 @@ host would notice (a key, a role, a behaviour).
 | V1   | Spikes, read only: hidden-then-shown alert (F-4); element references across shadow roots (R4, R6); a live region inside a PCI frame (A6); `role="application"` on a frame (C2); the screen-reader set from the WebAIM survey. **In progress:** A6 done with VoiceOver and Safari (2026-11-12; JAWS and NVDA to run); F-4, R4/R6, C2 and the survey not run | none                  | Claude runs, maintainer judges                       | none   | S1    |
 | V2   | `tools/testing/drag.ts` can move in steps and hold at an edge; Q15 criteria read for gaps in an ordered response (F-11) and `min-choices`/`max-choices` (F-10). **In progress:** the helper's gaps are decided and moved to step H (F-13, 2026-11-16); the F-11 gap is confirmed in our story `Q15-L1-D6`; the 1EdTech suite was not reachable, so the Q15 criteria are not read. F-10 is decided and F-11 moved to 11 (2026-11-18), after reading TAO, QTI.JS and Amp-up instead | none                  | Claude; F-10/F-11 go to the maintainer as a QTI question | none   | S1    |
 | I1   | The spec types: dimensions, modes, transitions, keyboard map (D1, D2, D3, D5)                                                                                             | none                  | **maintainer** (domain model)                       | `next` | S2    |
-| I2   | The message catalogue and one announcer per interaction: an always-present `status` and `alert` region, politeness per message, throttling (D4, A1)                        | none                  | **maintainer** (catalogue shape, lifetime of the regions); Claude: wiring | `next` | S2    |
+| I2   | The message catalogue and one announcer per interaction: an always-present `status` and `alert` region, politeness per message, throttling (D4, A1). What hosts see or change of it is host API: decided in `host-api.md` before it is built | none                  | **maintainer** (catalogue shape, lifetime of the regions); Claude: wiring | `next` | S2    |
 | I3   | The Vitest reporter over `task.meta`: rows with no passing story fail (D6, D7)                                                                                            | I1                    | maintainer approves the design; Claude builds        | `next` | S2    |
 | B1   | Accessible names in `qti-base`: authored ARIA, prompt or QTI hint, generated (R4, R6, C1), and the sentence as description                                               | V1                    | **maintainer** (the naming rule); Claude: wiring and stories | `next` | S2    |
 | B2   | The validation region always in the tree, linked with `aria-describedby` and `aria-invalid` (A2, A5, F-4)                                                                | V1, I2                | Claude, reviewed by the maintainer                      | `next` | S2    |
@@ -386,6 +387,9 @@ Done when: the Today column is complete and the list of differences exists.
 - [ ] Every difference S1 found for these four is fixed, or tagged `a11y-todo` with a reason.
 - [ ] A changeset, and host-migration entries where a key or role changes.
 
+Needs the accessibility gate ([ROADMAP.md](ROADMAP.md) G4): until it is built, axe fails nothing in
+CI, so "axe on" and an `a11y-todo` tag prove nothing.
+
 Done when: the four interactions pass their rows, and a row without a story fails CI (D6).
 
 ### S3. The other patterns
@@ -447,7 +451,8 @@ Also a new util module (like `collision.utils.ts`) and no library: both need app
 
 ### S4. Rendered docs and the Figma copy
 
-- [ ] The docs page renders the spec; the evidence matrix (`docs/interaction-evidence.mdx`) shows
+- [ ] The docs page renders the spec on the Astro site (`apps/site`, roadmap 5 phase 16), not under
+      `docs/`; the evidence matrix (today `docs/interaction-evidence.mdx`) moves there and shows
       expected against proven rows.
 - [ ] State stories exported to Figma variant sets (story.to.design), as a copy, not a source.
 
