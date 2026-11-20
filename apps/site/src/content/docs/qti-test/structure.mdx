@@ -44,6 +44,8 @@ In `computedContext`, `testParts[].sections` lists every section once, nested on
 
 A `qti-item-session-control` on the test part, a section or an item-ref resolves per attribute: each attribute comes from the closest level that declares it, and its QTI default only when none does. An item-ref that declares only `show-feedback="true"` keeps its section's `max-attempts`.
 
+Each item in `computedContext` carries the result as `sessionControl`: all seven attributes, resolved (`maxAttempts`, `showFeedback`, `allowReview`, `showSolution`, `allowComment`, `allowSkipping`, `validateResponses`; type `SessionControl` from `@qti-components/base`). These are the values QTI gives; `allow-review`, `allow-comment` and `validate-responses` have no effect in the player yet.
+
 | Attribute | Type | Notes |
 |---|---|---|
 | `identifier` | `string` | |

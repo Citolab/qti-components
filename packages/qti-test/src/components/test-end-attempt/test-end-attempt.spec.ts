@@ -3,7 +3,18 @@ import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import '../../register';
 
 import type { TestEndAttempt } from './test-end-attempt';
-import type { ComputedContext } from '@qti-components/base';
+import type { ComputedContext, SessionControl } from '@qti-components/base';
+
+/** QTI's defaults for `qti-item-session-control`; each context below overrides what it tests. */
+const SESSION_CONTROL: SessionControl = {
+  maxAttempts: 1,
+  showFeedback: false,
+  allowReview: true,
+  showSolution: false,
+  allowComment: false,
+  allowSkipping: true,
+  validateResponses: false
+};
 
 describe('TestEndAttempt', () => {
   let container: HTMLDivElement;
@@ -42,9 +53,9 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: false,
                   valid: true,
-                  isDefaultResponse: true
+                  isDefaultResponse: true,
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: false }
                 }
               ]
             }
@@ -84,9 +95,9 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: false,
                   valid: true,
-                  isDefaultResponse: false
+                  isDefaultResponse: false,
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: false }
                 }
               ]
             }
@@ -126,9 +137,9 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: false,
                   valid: false,
-                  isDefaultResponse: false
+                  isDefaultResponse: false,
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: false }
                 }
               ]
             }
@@ -168,9 +179,9 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
-                  isDefaultResponse: true
+                  isDefaultResponse: true,
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true }
                 }
               ]
             }
@@ -210,12 +221,11 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
                   isDefaultResponse: false,
                   adaptive: false,
                   numAttempts: 1,
-                  maxAttempts: 1
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true, maxAttempts: 1 }
                 }
               ]
             }
@@ -255,11 +265,11 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
                   isDefaultResponse: false,
                   adaptive: false,
-                  numAttempts: 1
+                  numAttempts: 1,
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true }
                 }
               ]
             }
@@ -299,12 +309,11 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
                   isDefaultResponse: false,
                   adaptive: false,
                   numAttempts: 1,
-                  maxAttempts: 3
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true, maxAttempts: 3 }
                 }
               ]
             }
@@ -344,12 +353,11 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
                   isDefaultResponse: false,
                   adaptive: true,
                   numAttempts: 3,
-                  maxAttempts: 1
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true, maxAttempts: 1 }
                 }
               ]
             }
@@ -389,13 +397,12 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
                   isDefaultResponse: false,
                   adaptive: true,
                   completionStatus: 'completed',
                   numAttempts: 2,
-                  maxAttempts: 1
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true, maxAttempts: 1 }
                 }
               ]
             }
@@ -435,12 +442,11 @@ describe('TestEndAttempt', () => {
                 {
                   identifier: 'item1',
                   active: true,
-                  allowSkipping: true,
                   valid: true,
                   isDefaultResponse: false,
                   adaptive: false,
                   numAttempts: 5,
-                  maxAttempts: 0
+                  sessionControl: { ...SESSION_CONTROL, allowSkipping: true, maxAttempts: 0 }
                 }
               ]
             }
@@ -471,8 +477,20 @@ describe('TestEndAttempt', () => {
                 active: true,
                 identifier: 'section1',
                 items: [
-                  { identifier: 'ITEM-1', active: true, adaptive: false, numAttempts: 0, maxAttempts: 1 },
-                  { identifier: 'ITEM-2', active: false, adaptive: false, numAttempts: 1, maxAttempts: 1 }
+                  {
+                    identifier: 'ITEM-1',
+                    active: true,
+                    adaptive: false,
+                    numAttempts: 0,
+                    sessionControl: { ...SESSION_CONTROL, maxAttempts: 1 }
+                  },
+                  {
+                    identifier: 'ITEM-2',
+                    active: false,
+                    adaptive: false,
+                    numAttempts: 1,
+                    sessionControl: { ...SESSION_CONTROL, maxAttempts: 1 }
+                  }
                 ]
               }
             ]

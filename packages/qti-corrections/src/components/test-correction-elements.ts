@@ -48,7 +48,7 @@ export class TestNavigationCorrection extends TestNavigation {
     computedItem: ComputedItem | undefined,
     done: boolean
   ): void {
-    if (!assessmentItem || !computedItem?.showSolution) return;
+    if (!assessmentItem || !computedItem?.sessionControl?.showSolution) return;
 
     const correctable = assessmentItem as Partial<CorrectionAssessmentItem>;
     correctable.showCandidateCorrection?.(true);

@@ -3,7 +3,18 @@ import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest';
 import { TestNavigationCorrection } from './test-correction-elements';
 
 import type { TestNavigation } from '@qti-components/test/elements';
-import type { ComputedContext } from '@qti-components/base';
+import type { ComputedContext, SessionControl } from '@qti-components/base';
+
+/** QTI's defaults for `qti-item-session-control`; each context below overrides what it tests. */
+const SESSION_CONTROL: SessionControl = {
+  maxAttempts: 1,
+  showFeedback: false,
+  allowReview: true,
+  showSolution: false,
+  allowComment: false,
+  allowSkipping: true,
+  validateResponses: false
+};
 
 /**
  * Behaviour of the QTI-standard `qti-item-session-control show-solution` opt-in
@@ -55,7 +66,14 @@ describe('TestNavigationCorrection show-solution', () => {
               title: 'Section 1',
               navigationMode: 'nonlinear',
               submissionMode: 'individual',
-              items: [{ identifier: 'item1', active: true, categories: [], maxAttempts, showSolution }]
+              items: [
+                {
+                  identifier: 'item1',
+                  active: true,
+                  categories: [],
+                  sessionControl: { ...SESSION_CONTROL, maxAttempts, showSolution }
+                }
+              ]
             }
           ]
         }

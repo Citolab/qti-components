@@ -1,20 +1,38 @@
 import type { View } from '../session.context';
 import type { ComputedItemContext } from './computed-item.types';
 
+/**
+ * QTI 3 `qti-item-session-control`, resolved per attribute: each comes from the closest level that
+ * declares it (the item-ref, its enclosing sections, the test part), its QTI default only when none
+ * does (implementation guide §4.4.2). These are the values QTI gives; whether the player applies
+ * each one is roadmap 1's T3 (`allowReview`, `allowComment` and `validateResponses` have no effect
+ * yet, and `allowSkipping` and `validateResponses` apply only in a part with individual submission).
+ */
+export type SessionControl = {
+  /** `max-attempts`: 0 means unlimited; 1 when no level declares it. Ignored for an adaptive item. */
+  maxAttempts: number;
+  /** `show-feedback`; default false. */
+  showFeedback: boolean;
+  /** `allow-review`; default true. */
+  allowReview: boolean;
+  /** `show-solution`; default false. */
+  showSolution: boolean;
+  /** `allow-comment`; default false. */
+  allowComment: boolean;
+  /** `allow-skipping`; default true. Individual submission only. */
+  allowSkipping: boolean;
+  /** `validate-responses`; default false. Individual submission only. */
+  validateResponses: boolean;
+};
+
 export type ComputedItem = ComputedItemContext & {
   categories?: string[]; // not necessary for outside world
   type?: 'info' | 'regular';
   /** The item's number in the test's document order, counting no info items; null for an info item. */
   index?: number;
   active?: boolean;
-  /**
-   * `qti-item-session-control`, resolved per attribute: each comes from the closest level that
-   * declares it (item-ref, enclosing sections, test part), its QTI default only when none does.
-   */
-  allowSkipping?: boolean;
-  maxAttempts?: number;
-  showFeedback?: boolean;
-  showSolution?: boolean;
+  /** The item's `qti-item-session-control`, resolved (see `SessionControl`). */
+  sessionControl: SessionControl;
   numAttempts?: number;
   valid?: boolean;
   isDefaultResponse?: boolean;

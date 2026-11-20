@@ -135,14 +135,14 @@ export abstract class QtiFeedback extends LitElement {
       ?.find(tp => tp.active)
       ?.sections.flatMap(s => s.items)
       .find(i => i.active);
-    if (!activeItem || activeItem.showFeedback) return true;
+    if (!activeItem || activeItem.sessionControl?.showFeedback) return true;
 
     // Adaptive items ignore max-attempts: "the number of attempts is limited by
     // the value of the completionStatus built-in outcome variable".
     if (activeItem.adaptive) return activeItem.completionStatus !== 'completed';
 
     // `max-attempts="0"` is "no limit", so the last attempt never arrives.
-    const maxAttempts = activeItem.maxAttempts ?? 1;
+    const maxAttempts = activeItem.sessionControl?.maxAttempts ?? 1;
     if (maxAttempts <= 0) return true;
 
     const numAttempts = Number(this._context?.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;

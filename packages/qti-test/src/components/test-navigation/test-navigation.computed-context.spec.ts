@@ -105,8 +105,26 @@ describe('test-navigation computedContext from the test model', () => {
     const items = (await mount()).testParts[0].sections.flatMap(section => section.items);
     const byId = Object.fromEntries(items.map(item => [item.identifier, item]));
     // I2 declares only show-feedback: max-attempts and allow-skipping still come from OUTER.
-    expect(byId.I2).toMatchObject({ maxAttempts: 3, allowSkipping: false, showFeedback: true, showSolution: false });
+    expect(byId.I2.sessionControl).toMatchObject({ maxAttempts: 3, allowSkipping: false, showFeedback: true });
     // I3 declares nothing: INNER declares nothing, so it inherits from OUTER, not from the part.
-    expect(byId.I3).toMatchObject({ maxAttempts: 3, allowSkipping: false, showFeedback: false });
+    expect(byId.I3.sessionControl).toMatchObject({ maxAttempts: 3, allowSkipping: false, showFeedback: false });
+  });
+
+  it('carries all seven session-control attributes under sessionControl, not as flat fields', async () => {
+    const items = (await mount()).testParts[0].sections.flatMap(section => section.items);
+    const i2 = items.find(item => item.identifier === 'I2')!;
+    // Every attribute resolved; the ones no level declares take QTI's defaults.
+    expect(i2.sessionControl).toEqual({
+      maxAttempts: 3,
+      showFeedback: true,
+      allowReview: true,
+      showSolution: false,
+      allowComment: false,
+      allowSkipping: false,
+      validateResponses: false
+    });
+    for (const flat of ['maxAttempts', 'showFeedback', 'showSolution', 'allowSkipping']) {
+      expect(i2).not.toHaveProperty(flat);
+    }
   });
 });
