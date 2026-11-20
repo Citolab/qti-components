@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM021"
+                     title="Connecting points in a picture"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="pair" cardinality="multiple">
+        <qti-correct-response>
+            <qti-value>grass grasshopper</qti-value>
+            <qti-value>grasshopper frog</qti-value>
+            <qti-value>frog heron</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="grass grasshopper" mapped-value="1"/>
+            <qti-map-entry map-key="grasshopper frog" mapped-value="1"/>
+            <qti-map-entry map-key="frog heron" mapped-value="1"/>
+            <qti-map-entry map-key="grass frog" mapped-value="-1"/>
+            <qti-map-entry map-key="grass heron" mapped-value="-1"/>
+            <qti-map-entry map-key="grasshopper heron" mapped-value="-1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="3">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>3</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <qti-graphic-associate-interaction response-identifier="RESPONSE" max-associations="3">
+            <qti-prompt>
+                <p>Build the food chain: connect each living thing to the one that eats it.</p>
+            </qti-prompt>
+            <img src="resources/food-chain.svg" width="800" height="360" alt="Four living things in a meadow: grass (bottom left), a grasshopper (top, left of centre), a frog (bottom, right of centre) and a heron (top right)"/>
+            <qti-associable-hotspot identifier="grass" shape="circle" coords="120,250,62" match-max="3"/>
+            <qti-associable-hotspot identifier="grasshopper" shape="circle" coords="320,110,62" match-max="3"/>
+            <qti-associable-hotspot identifier="frog" shape="circle" coords="510,250,62" match-max="3"/>
+            <qti-associable-hotspot identifier="heron" shape="circle" coords="690,110,62" match-max="3"/>
+        </qti-graphic-associate-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Food chain: grass → grasshopper → frog → heron. One point for each correct link, minus one for each link that skips a step.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

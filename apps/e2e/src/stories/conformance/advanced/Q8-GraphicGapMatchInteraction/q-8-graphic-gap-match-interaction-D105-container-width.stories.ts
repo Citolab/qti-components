@@ -18,7 +18,7 @@ import type {
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/advanced/Q-8 Graphic Gap Match Interaction'
+  title: 'Testing/Conformance/advanced/Q-8 Graphic Gap Match Interaction'
 };
 export default meta;
 
@@ -26,8 +26,8 @@ export const Q8_L2_D105: Story = {
   name: 'Q8-L2-D105',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -36,8 +36,8 @@ export const Q8_L2_D105: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -58,7 +58,7 @@ export const Q8_L2_D105: Story = {
     const graphicInteraction = assessmentItem.querySelector(
       'qti-graphic-gap-match-interaction[class="qti-choices-top"][data-choices-container-width]'
     ) as QtiGraphicGapMatchInteraction;
-    const dragSlot = graphicInteraction.shadowRoot.querySelector('slot[part="drags"]');
+    const dragSlot = graphicInteraction.shadowRoot.querySelector('slot[part~="bank"]');
     const responseArea = graphicInteraction.shadowRoot.querySelector('slot[part="image"]');
     const gapChoices = Array.from(graphicInteraction.querySelectorAll('qti-associable-hotspot'));
 
@@ -132,8 +132,8 @@ export const Q8_L2_D106: Story = {
   name: 'Q8-L2-D106',
   render: (_args, { loaded: { xml } }: { argTypes: ArgTypes; loaded: Record<'xml', Element> }) => {
     let item: QtiAssessmentItem;
-    const onInteractionChangedAction = action('qti-interaction-changed');
-    const onOutcomeChangedAction = action('qti-outcome-changed');
+    const onInteractionChangedAction = action('qc-item-response-changed');
+    const onOutcomeChangedAction = action('qc-item-outcome-changed');
     const onItemFirstUpdated = ({ detail: qtiAssessmentItem }) => {
       item = qtiAssessmentItem;
       action('qti-assessment-item-connected')();
@@ -142,8 +142,8 @@ export const Q8_L2_D106: Story = {
     return html`
       <div
         class="item"
-        @qti-interaction-changed=${onInteractionChangedAction}
-        @qti-outcome-changed=${onOutcomeChangedAction}
+        @qc-item-response-changed=${onInteractionChangedAction}
+        @qc-item-outcome-changed=${onOutcomeChangedAction}
         @qti-assessment-item-connected=${onItemFirstUpdated}
       >
         ${xml}
@@ -164,7 +164,7 @@ export const Q8_L2_D106: Story = {
     const graphicInteraction = assessmentItem.querySelector(
       'qti-graphic-gap-match-interaction[class="qti-choices-left"][data-choices-container-width]'
     ) as QtiGraphicGapMatchInteraction;
-    const dragSlot = graphicInteraction.shadowRoot.querySelector('slot[part="drags"]');
+    const dragSlot = graphicInteraction.shadowRoot.querySelector('slot[part~="bank"]');
     const responseArea = graphicInteraction.shadowRoot.querySelector('slot[part="image"]');
     const gapChoices = Array.from(graphicInteraction.querySelectorAll('qti-associable-hotspot'));
 

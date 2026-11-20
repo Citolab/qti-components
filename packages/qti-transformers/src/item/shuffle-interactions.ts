@@ -1,5 +1,4 @@
-import { createSeededRandom } from '../shared/prng';
-import { shuffleKeepingFixed } from '../shared/shuffle';
+import { createSeededRandom, shuffleKeepingFixed } from '@qti-components/delivery';
 
 function getShuffleQuerySelectorByTagName(tagName: string): string | string[] | null {
   switch (tagName) {

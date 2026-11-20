@@ -1,0 +1,86 @@
+/*
+ * Motion: how a state change feels, for every interaction, in one place.
+ *
+ * Paint lives with the interaction; the way paint ARRIVES lives here. A press shrinks the thing
+ * under the pointer a touch and lets it spring back on release; a state's colours fade in rather
+ * than snap; a target under a chip lights up over a few frames. Nothing here lays out: `scale` and
+ * `transition` leave every box where it is (CONTRACT.md §7).
+ *
+ * One knob: `--qti-motion` (the input `--qc-motion`), 1 by default, 0 under
+ * prefers-reduced-motion. Every duration is a multiple of it and the press scale is derived from
+ * it, so 0 turns all of this off at once, 0.5 slows it down, and a host or a PNP profile sets it
+ * once.
+ *
+ * Its own layer, last in the theme, so a brand's or an interaction's rule never has to repeat a
+ * transition and nothing below has to know motion exists.
+ */
+
+:root,
+:host,
+[data-qti-theme] {
+  --qti-motion-duration: calc(200ms * var(--qti-motion));
+  --qti-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  /* 1 at rest; 0.97 pressed when motion is on, 1 when it is off. */
+  --qti-motion-press: calc(1 - 0.03 * var(--qti-motion));
+}
+
+/* ── What fades: a state's paint arrives over a few frames instead of snapping ─────────────── */
+
+/* Choices, hottexts, tabular cells, chips in the bank and placed, drop targets, text fields, the
+   dropdown trigger, hotspots and pins: the properties the paint contract binds. */
+qti-simple-choice,
+qti-hottext,
+qti-gap-text,
+qti-gap-img,
+qti-simple-associable-choice,
+qti-gap,
+qti-associable-hotspot,
+qti-hotspot-choice,
+qti-text-entry-interaction,
+qti-extended-text-interaction,
+::part(chip),
+::part(drop),
+::part(cell),
+::part(control),
+::part(control-mark),
+::part(trigger),
+::part(textarea),
+::part(input),
+::part(button) {
+  /* Not outline-color: a focus ring that fades in starts from currentColor, a black flash. */
+  transition-property: background-color, border-color, color, box-shadow, scale;
+  transition-duration: var(--qti-motion-duration);
+  transition-timing-function: var(--qti-motion-ease);
+}
+
+/* The chip in flight: its tilt and lift arrive over a few frames rather than on the first one. */
+[data-drag-clone] {
+  transition-property: rotate, box-shadow;
+  transition-duration: var(--qti-motion-duration);
+  transition-timing-function: var(--qti-motion-ease);
+}
+
+/* ── The press: anticipation under the pointer ─────────────────────────────────────────────── */
+
+/* What you pick shrinks a touch while the button is down, and springs back on release. The press,
+   not the release, is the moment of the choice: by the time the state's colour fades in, the hand
+   has already been answered. Not a chip: picking one up is answered by the chip lifting away. */
+qti-simple-choice:active:not(:state(chip), :state(disabled)),
+qti-hottext:active:not(:state(disabled)),
+::part(cell):active,
+::part(button):active {
+  scale: var(--qti-motion-press);
+}
+
+/* A control inside a choice presses with its choice, a touch more than the box around it. */
+qti-simple-choice:active:not(:state(chip), :state(disabled))::part(control),
+qti-hottext:active:not(:state(disabled))::part(control),
+::part(cell):active ::part(control) {
+  scale: calc(1 - 0.08 * var(--qti-motion));
+}
+
+/* A chip (order's choices are chips too) is excluded above: `:state(chip)` alone would lose to
+   `qti-simple-choice:active` on specificity. A switched-off interaction's choices do not press. */
+[disabled] :is(qti-simple-choice, qti-hottext):active {
+  scale: none;
+}

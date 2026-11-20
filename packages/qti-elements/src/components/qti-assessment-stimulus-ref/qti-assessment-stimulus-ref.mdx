@@ -63,7 +63,7 @@ sequenceDiagram
     Note over NavigationMixin: ✅ Stimulus load complete
 
     NavigationMixin->>NavigationMixin: _dispatchTestLoaded()
-    NavigationMixin->>User: qti-test-loaded event
+    NavigationMixin->>User: qc-test-rendered event
 
     Note over NavigationMixin: Navigation complete, finally block runs
     NavigationMixin->>AbortController: _activeController = null

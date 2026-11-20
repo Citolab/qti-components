@@ -7,8 +7,8 @@ import { QtiRule } from '../qti-rule/qti-rule';
  * @documentation https://www.imsglobal.org/spec/qti/v3p0/impl#h.exit-response
  *
  * No rule after it runs, at any depth. The outcomes already set are kept: a
- * `qti-set-outcome-value` writes as it is processed, so everything before the
- * exit has landed by the time this throws.
+ * `qti-set-outcome-value` writes to the run's working copy as it is processed,
+ * and the item applies that copy once the run ends.
  */
 export class QtiExitResponse extends QtiRule {
   public override process(): never {

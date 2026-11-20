@@ -5,6 +5,10 @@ import { QtiGraphicAssociateInteraction } from '@qti-components/graphic-associat
 
 import { CandidateCorrectionMixin } from '../mixins/candidate-correction.mixin';
 
+/**
+ * @csspart line - An association line; the answer key's lines carry the `answer-key` token
+ *   (`line answer-key`), followed by the old `correct-line` token for one major.
+ */
 export class QtiGraphicAssociateInteractionCorrection extends CandidateCorrectionMixin(QtiGraphicAssociateInteraction) {
   #correctLines: string[] = [];
 
@@ -22,7 +26,7 @@ export class QtiGraphicAssociateInteractionCorrection extends CandidateCorrectio
       line => line,
       line => svg`
         <line
-          part="correct-line"
+          part="line answer-key correct-line"
           x1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`)!.style.left)}
           y1=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[0]}]`)!.style.top)}
           x2=${parseInt(this.querySelector<SVGLineElement>(`[identifier=${line.split(' ')[1]}]`)!.style.left)}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM020"
+                     title="Ordering in a picture"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="ordered">
+        <qti-correct-response>
+            <qti-value>wheel</qti-value>
+            <qti-value>press</qti-value>
+            <qti-value>locomotive</qti-value>
+            <qti-value>smartphone</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <qti-graphic-order-interaction response-identifier="RESPONSE">
+            <qti-prompt>
+                <p>Click the inventions in the order they were invented, starting with the oldest.</p>
+            </qti-prompt>
+            <img src="resources/inventions.svg" width="800" height="280" alt="Four inventions on cards, from left to right: the steam locomotive, the smartphone, the wheel and the printing press"/>
+            <qti-hotspot-choice identifier="locomotive" shape="rect" coords="30,40,200,240"/>
+            <qti-hotspot-choice identifier="smartphone" shape="rect" coords="220,40,390,240"/>
+            <qti-hotspot-choice identifier="wheel" shape="rect" coords="410,40,580,240"/>
+            <qti-hotspot-choice identifier="press" shape="rect" coords="600,40,770,240"/>
+        </qti-graphic-order-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <ul>
+                    <li>Correct order: wheel (about 3500 BC) → printing press (about 1440) → steam locomotive (1804) → smartphone (1990s)</li>
+                </ul>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-response-condition>
+            <qti-response-if>
+                <qti-match>
+                    <qti-variable identifier="RESPONSE"/>
+                    <qti-correct identifier="RESPONSE"/>
+                </qti-match>
+                <qti-set-outcome-value identifier="SCORE">
+                    <qti-base-value base-type="float">1</qti-base-value>
+                </qti-set-outcome-value>
+            </qti-response-if>
+        </qti-response-condition>
+    </qti-response-processing>
+</qti-assessment-item>

@@ -3,11 +3,13 @@ import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { computedContext } from '@qti-components/base';
+import { buildTestModel, itemRefsInOrder, ownItemRefs, sectionsInOrder } from '@qti-components/delivery';
 import { configContext } from '@qti-components/base';
 import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
 import { listenPublic as listenItemPublic } from '@qti-components/elements/public-events';
 
+import { renderedMarkup } from '../../internal/rendered-markup';
 import { testHostContext } from '../../internal/test-host.context';
 import { listenPublic } from '../../public-events';
 
@@ -17,10 +19,8 @@ import type { OutcomeVariable } from '@qti-components/base';
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
-import type { QtiAssessmentSection } from '../qti-assessment-section/qti-assessment-section';
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
-import type { QtiTestPart } from '../qti-test-part/qti-test-part';
-import type { QtiItemSessionControl } from '../qti-item-session-control/qti-item-session-control';
+import type { ItemRefModel } from '@qti-components/delivery';
 import type { ConfigContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
@@ -127,14 +127,14 @@ export class TestNavigation extends LitElement {
 
   constructor() {
     super();
-    listenPublic(this, 'cito-test-loaded', this.#handleTestConnected.bind(this));
+    listenPublic(this, 'qc-test-loaded', this.#handleTestConnected.bind(this));
     this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
-    listenItemPublic(this, 'cito-item-response-changed', this.#handleInteractionChanged.bind(this));
+    listenItemPublic(this, 'qc-item-response-changed', this.#handleInteractionChanged.bind(this));
     this.addEventListener('qti-item-context-updated', this.#handleItemContextUpdated.bind(this));
 
-    listenPublic(this, 'cito-test-end-attempt', this.#handleTestEndAttempt.bind(this));
-    listenPublic(this, 'cito-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
+    listenPublic(this, 'qc-test-end-attempt', this.#handleTestEndAttempt.bind(this));
+    listenPublic(this, 'qc-test-update-outcome', this.#handleTestUpdateOutcomeVariable.bind(this));
   }
 
   /**
@@ -157,7 +157,13 @@ export class TestNavigation extends LitElement {
     this.afterAttemptEnded(
       (event.composedPath()[0] as HTMLElement)?.closest<QtiAssessmentItem>('qti-assessment-item'),
       computedItem,
-      this.#isItemDone(numAttempts, optimality, computedItem?.maxAttempts, computedItem?.adaptive, completionStatus)
+      this.#isItemDone(
+        numAttempts,
+        optimality,
+        computedItem?.sessionControl?.maxAttempts,
+        computedItem?.adaptive,
+        completionStatus
+      )
     );
   }
 
@@ -185,10 +191,13 @@ export class TestNavigation extends LitElement {
   #assessmentItemFor(identifier: string | undefined): QtiAssessmentItem | undefined {
     if (!identifier) return undefined;
     const itemRef = this.#testElement?.querySelector<QtiAssessmentItemRef>(
-      `qti-assessment-item-ref[identifier="${identifier}"]`
+      `qti-assessment-item-ref[identifier="${CSS.escape(identifier)}"]`
     );
     return itemRef?.assessmentItem ?? undefined;
   }
+
+  /** `computedContext.itemElement`: one function for the life of this element, carried along by every update. */
+  #itemElement = (identifier: string): HTMLElement | null => this.#assessmentItemFor(identifier) ?? null;
 
   /** The currently active assessment item, exposed for optional presentation extensions. */
   protected get activeAssessmentItem(): QtiAssessmentItem | undefined {
@@ -199,13 +208,12 @@ export class TestNavigation extends LitElement {
   }
 
   /**
-   * Handles the 'test-end-attempt' event.
-   * @private
-   * @listens TestNavigation#test-end-attempt
-   * @param {CustomEvent} event - The custom event object.
+   * Ends an attempt: the item named by `detail.itemId` (a `test-end-attempt` stamped into an item, or
+   * given an `item`), or else the item on screen.
    */
-  #handleTestEndAttempt(_event: CustomEvent) {
-    const qtiAssessmentItemEl = this.activeAssessmentItem;
+  #handleTestEndAttempt(event: CustomEvent<{ itemId?: string } | undefined>) {
+    const itemId = event.detail?.itemId;
+    const qtiAssessmentItemEl = itemId ? this.#assessmentItemFor(itemId) : this.activeAssessmentItem;
     if (!qtiAssessmentItemEl) return;
     const reportValidityAfterScoring = this.configContext?.reportValidityAfterScoring === true ? true : false;
     qtiAssessmentItemEl.processResponse(true, reportValidityAfterScoring);
@@ -238,7 +246,6 @@ export class TestNavigation extends LitElement {
   }
 
   override render() {
-    // return this.myTemplate ? this.myTemplate(this.stampContext) : nothing;
     return html`<slot></slot>`;
   }
 
@@ -279,69 +286,81 @@ export class TestNavigation extends LitElement {
       }
     });
 
-    const testPartElements = Array.from(this.#testElement?.querySelectorAll<QtiTestPart>(`qti-test-part`) || []);
+    // The structure and the session-control cascade come from the test's markup, not from upgraded
+    // properties, so they do not depend on registration or render timing.
+    const model = buildTestModel(renderedMarkup(this.#testElement));
+    this.#sectionItems = new Map(
+      model.testParts.flatMap(part =>
+        sectionsInOrder(part.sections).map(
+          section => [section.identifier, itemRefsInOrder(section.content).map(item => item.identifier)] as const
+        )
+      )
+    );
+    this.#itemOrder = model.testParts.flatMap(part => itemRefsInOrder(part.sections));
     this.computedContext = {
-      identifier: this.#testElement.identifier,
-      title: this.#testElement.title,
+      itemElement: this.#itemElement,
+      identifier: model.identifier,
+      title: model.title,
       view: this._sessionContext?.view,
-      testParts: testPartElements.map(testPart => {
-        const sectionElements = [...testPart.querySelectorAll<QtiAssessmentSection>(`qti-assessment-section`)];
-        const testPartSessionControl = testPart.querySelector<QtiItemSessionControl>(
-          ':scope > qti-item-session-control'
-        );
-        const partAllowSkipping = testPartSessionControl ? testPartSessionControl.allowSkipping : true;
-        const partMaxAttempts = testPartSessionControl ? testPartSessionControl.maxAttempts : 1;
-        const partShowFeedback = testPartSessionControl ? testPartSessionControl.showFeedback : false;
-        const partShowSolution = testPartSessionControl ? testPartSessionControl.showSolution : false;
-        return {
+      plugins: this._sessionContext?.plugins ?? {},
+      testParts: model.testParts.map(testPart => ({
+        active: false,
+        identifier: testPart.identifier,
+        navigationMode: testPart.navigationMode,
+        submissionMode: testPart.submissionMode,
+        allowSkipping: testPart.sessionControl.allowSkipping,
+        // Flat, depth first: every section once, each with only its own item-refs, so every item is
+        // listed once. Where a section's item-refs and subsections interleave, this list is not in
+        // document order; `index` is.
+        sections: sectionsInOrder(testPart.sections).map(section => ({
           active: false,
-          identifier: testPart.identifier,
-          navigationMode: testPart.navigationMode,
-          submissionMode: testPart.submissionMode,
-          allowSkipping: partAllowSkipping,
-          sections: sectionElements.map(section => {
-            const itemElements = [...section.querySelectorAll<QtiAssessmentItemRef>(`qti-assessment-item-ref`)];
-            const sectionSessionControl = section.querySelector<QtiItemSessionControl>(
-              ':scope > qti-item-session-control'
-            );
-            const sectionAllowSkipping = sectionSessionControl
-              ? sectionSessionControl.allowSkipping
-              : partAllowSkipping;
-            const sectionMaxAttempts = sectionSessionControl ? sectionSessionControl.maxAttempts : partMaxAttempts;
-            const sectionShowFeedback = sectionSessionControl ? sectionSessionControl.showFeedback : partShowFeedback;
-            const sectionShowSolution = sectionSessionControl ? sectionSessionControl.showSolution : partShowSolution;
-            return {
-              active: false,
-              identifier: section.identifier,
-              title: section.title,
-              navigationMode: section.navigationMode,
-              submissionMode: section.submissionMode,
-              allowSkipping: sectionAllowSkipping,
-              items: itemElements.map(item => {
-                const itemSessionControl = item.querySelector<QtiItemSessionControl>(
-                  ':scope > qti-item-session-control'
-                );
-                const itemAllowSkipping = itemSessionControl ? itemSessionControl.allowSkipping : sectionAllowSkipping;
-                const itemMaxAttempts = itemSessionControl ? itemSessionControl.maxAttempts : sectionMaxAttempts;
-                const itemShowFeedback = itemSessionControl ? itemSessionControl.showFeedback : sectionShowFeedback;
-                const itemShowSolution = itemSessionControl ? itemSessionControl.showSolution : sectionShowSolution;
-                return {
-                  ...this.initContext?.find(i => i.identifier === item.identifier),
-                  active: false,
-                  identifier: item.identifier,
-                  categories: item.category ? item.category?.split(' ') : [],
-                  href: item.href,
-                  variables: [] as OutcomeVariable[],
-                  allowSkipping: itemAllowSkipping,
-                  maxAttempts: itemMaxAttempts,
-                  showFeedback: itemShowFeedback,
-                  showSolution: itemShowSolution
-                };
-              })
-            };
-          })
-        };
-      })
+          identifier: section.identifier,
+          title: section.title,
+          // QTI defines both modes on the test part only; the section attributes go in roadmap T1d.
+          ...this.#sectionModes(section.identifier),
+          allowSkipping: section.sessionControl.allowSkipping,
+          items: ownItemRefs(section).map(item => ({
+            ...this.initContext?.find(i => i.identifier === item.identifier),
+            active: false,
+            identifier: item.identifier,
+            categories: item.categories,
+            href: item.href,
+            variables: [] as OutcomeVariable[],
+            sessionControl: { ...item.sessionControl }
+          }))
+        }))
+      }))
+    };
+  }
+
+  /**
+   * The item-refs of each section, its subsections' included, by section identifier: a section that
+   * only holds subsections is completed when theirs are.
+   */
+  #sectionItems = new Map<string, string[]>();
+
+  /** Every item-ref of the test in document order, which item numbers follow. */
+  #itemOrder: ItemRefModel[] = [];
+
+  /** Item numbers in document order, skipping info items; null for an info item. */
+  #itemIndexes(): Map<string, number | null> {
+    let index = 1;
+    return new Map(
+      this.#itemOrder.map(item => [
+        item.identifier,
+        item.categories.includes(this.configContext?.infoItemCategory) ? null : index++
+      ])
+    );
+  }
+
+  /** The non-QTI `navigation-mode` / `submission-mode` a section declares, as before; removed in T1d. */
+  #sectionModes(
+    identifier: string
+  ): Pick<ComputedContext['testParts'][number]['sections'][number], 'navigationMode' | 'submissionMode'> {
+    const section = this.#testElement.querySelector(`qti-assessment-section[identifier="${CSS.escape(identifier)}"]`);
+    return {
+      navigationMode: (section?.getAttribute('navigation-mode') ?? undefined) as 'linear' | 'nonlinear',
+      submissionMode: (section?.getAttribute('submission-mode') ?? undefined) as 'individual' | 'simultaneous'
     };
   }
 
@@ -451,10 +470,11 @@ export class TestNavigation extends LitElement {
   protected override willUpdate(_changedProperties: PropertyValues): void {
     if (!this.computedContext) return;
 
-    let itemIndex = 1;
+    const itemIndexes = this.#itemIndexes();
     this.computedContext = {
       ...this.computedContext,
       view: this._sessionContext?.view,
+      plugins: this._sessionContext?.plugins ?? {},
       testParts: this.computedContext.testParts.map(testPart => {
         return {
           ...testPart,
@@ -463,11 +483,11 @@ export class TestNavigation extends LitElement {
             return {
               ...section,
               active: this._sessionContext?.navSectionId === section.identifier || false,
-              completed: section.items.every(
-                item =>
+              completed: (this.#sectionItems.get(section.identifier) ?? section.items.map(i => i.identifier)).every(
+                identifier =>
                   this._testContext.items
-                    .find(i => i.identifier === item.identifier)
-                    ?.variables.find(v => v.identifier === 'completionStatus').value === 'completed'
+                    .find(i => i.identifier === identifier)
+                    ?.variables.find(v => v.identifier === 'completionStatus')?.value === 'completed'
               ),
 
               items: section.items.map(item => {
@@ -494,7 +514,8 @@ export class TestNavigation extends LitElement {
                 // Published by the item. One that is not on screen has nothing to be invalid.
                 const valid = itemContext?.valid ?? true;
 
-                const responseVars = itemContext?.variables?.filter(v => v.type === 'response') || [];
+                const responseVars =
+                  itemContext?.variables?.filter(v => v.type === 'response' && v.identifier !== 'numAttempts') || [];
 
                 const isDefaultResponse = responseVars.every(v => {
                   if (v.value === undefined || v.value === null) {
@@ -536,7 +557,7 @@ export class TestNavigation extends LitElement {
                 // const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
                 // const completed = completionStatus === 'completed';
 
-                const index = item.categories.includes(this.configContext?.infoItemCategory) ? null : itemIndex++;
+                const index = itemIndexes.get(item.identifier) ?? null;
                 const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
                 const maxScore =
                   rawMaxScore === undefined || rawMaxScore === null ? null : parseFloat(rawMaxScore?.toString());
@@ -555,7 +576,7 @@ export class TestNavigation extends LitElement {
                 const done = this.#isItemDone(
                   numAttempts,
                   optimality,
-                  computedItem.maxAttempts,
+                  computedItem.sessionControl?.maxAttempts,
                   computedItem.adaptive,
                   completionStatus
                 );
@@ -596,6 +617,63 @@ export class TestNavigation extends LitElement {
         bubbles: true
       })
     );
+  }
+
+  protected override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    this.#lockUsedItems();
+  }
+
+  /** The items this navigation disabled because their attempts are used, so it releases only those. */
+  #lockedItems = new WeakSet<QtiAssessmentItem>();
+
+  /**
+   * Disables every rendered item whose attempts are used, from the computed context, so the
+   * candidate cannot change the answer once the last attempt is ended. Runs after every update:
+   * an item rendered later (another item, a section on screen, a restored state) is locked as it
+   * arrives, and one whose attempts are back to zero (a new state) is released.
+   *
+   * Only `disabled = true` is ever set here, and only on an item that was not disabled already; a
+   * host or view that disables or makes an item read-only itself keeps it so.
+   */
+  #lockUsedItems(): void {
+    if (!this.#testElement || !this.computedContext) return;
+    // In a simultaneous part every item has one attempt, processed when the part ends (QTI info model
+    // §2.8.2), so the candidate may change the answer until then: TAO keeps such an item open too.
+    const items = new Map(
+      this.computedContext.testParts.flatMap(part =>
+        part.sections.flatMap(section =>
+          (section.submissionMode || part.submissionMode) === 'simultaneous'
+            ? []
+            : section.items.map(item => [item.identifier, item] as const)
+        )
+      )
+    );
+    for (const itemRef of this.#testElement.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref')) {
+      const element = itemRef.assessmentItem;
+      if (!element) continue;
+      const used = this.#attemptsUsed(items.get(itemRef.identifier), element);
+      if (used && !element.disabled) {
+        element.disabled = true;
+        this.#lockedItems.add(element);
+      } else if (!used && this.#lockedItems.has(element)) {
+        this.#lockedItems.delete(element);
+        element.disabled = false;
+      }
+    }
+  }
+
+  /**
+   * The same rule as `test-end-attempt`'s max-attempts guard: a non-adaptive item with a
+   * `max-attempts` above 0 whose attempts reached it. Adaptive items end themselves, and 0 is
+   * unlimited. With `auto-score-items` every change is scored as an attempt, so the count is not
+   * the candidate's and locks nothing.
+   */
+  #attemptsUsed(item: ComputedItem | undefined, element: QtiAssessmentItem): boolean {
+    if (!item || this.autoScoreItems) return false;
+    if (item.adaptive || element.adaptive === 'true') return false;
+    const maxAttempts = item.sessionControl?.maxAttempts ?? 1;
+    return maxAttempts > 0 && (item.numAttempts ?? 0) >= maxAttempts;
   }
 
   /**

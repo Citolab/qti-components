@@ -14,6 +14,25 @@ export default [
     :host(.qti-match-tabular) slot:not([hidden]) {
       display: contents;
     }
+    /*
+     * Each cell's radio or checkbox is a real input, visually hidden over the whole cell: it takes
+     * Tab focus, the arrow keys move within a row's radio group and Space toggles a checkbox, all
+     * natively. It was the hidden attribute, which took it out of the tab order, so the grid could not be
+     * answered from a keyboard at all. The span beside it draws the control; the theme rings the
+     * cell (::part(input-cell):focus-within).
+     */
+    :host(.qti-match-tabular) [part~='input-cell'] {
+      position: relative;
+    }
+    :host(.qti-match-tabular) [part~='input-cell'] > input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
     :host(.qti-match-tabular) [part='grid'] {
       display: grid;
       /* Clips the cell rules — which are the grid's own background showing through a 1px gap — to the
@@ -28,19 +47,19 @@ export default [
      outer grid's tracks. This structure is shared with the editor's tabular
      template so both can inherit the same theme CSS. No per-choice inline
      style writes are needed — auto-flow + subgrid handle placement. */
-    :host(.qti-match-tabular) [part='cols-wrap'] {
+    :host(.qti-match-tabular) [part~='columns'] {
       grid-column: 2 / -1;
       grid-row: 1;
       display: grid;
       grid-template-columns: subgrid;
     }
-    :host(.qti-match-tabular) [part='rows-wrap'] {
+    :host(.qti-match-tabular) [part~='rows'] {
       grid-column: 1;
       grid-row: 2 / -1;
       display: grid;
       grid-template-rows: subgrid;
     }
-    :host(.qti-match-tabular) [part='checkbox-grid'] {
+    :host(.qti-match-tabular) [part~='cells'] {
       grid-column: 2 / -1;
       grid-row: 2 / -1;
       display: grid;
@@ -49,6 +68,20 @@ export default [
     }
     :host(.qti-match-tabular) ::slotted(qti-simple-match-set) {
       display: contents;
+    }
+
+    /*
+     * qti-header-hidden (vocabulary §1.2.8.2): "Do not display the top row of the table where the
+     * column headers are displayed." The whole row goes, the top-left cell with it.
+     */
+    :host(.qti-match-tabular.qti-header-hidden) [part='grid'] {
+      grid-template-rows: repeat(var(--qti-match-rows, 1), auto);
+    }
+    :host(.qti-match-tabular.qti-header-hidden) :is([part='corner'], [part~='columns']) {
+      display: none;
+    }
+    :host(.qti-match-tabular.qti-header-hidden) :is([part~='rows'], [part~='cells']) {
+      grid-row: 1 / -1;
     }
 
     /*

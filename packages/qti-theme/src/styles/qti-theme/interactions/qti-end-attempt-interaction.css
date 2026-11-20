@@ -1,0 +1,23 @@
+/* End attempt is one button, drawn as a test control (`@mixin button`). Flat: a pseudo-class
+   after ::part() in a nested list compiles to a dead `:is()`. */
+qti-end-attempt-interaction::part(button) {
+  @mixin button;
+}
+
+qti-end-attempt-interaction::part(button):hover {
+  @mixin button-hover;
+}
+
+qti-end-attempt-interaction::part(button):active {
+  @mixin button-active;
+}
+
+qti-end-attempt-interaction::part(button):focus-visible {
+  @mixin foc;
+}
+
+qti-end-attempt-interaction::part(button):disabled {
+  cursor: not-allowed;
+  color: var(--qti-color-disabled);
+  border-color: var(--qti-color-disabled);
+}

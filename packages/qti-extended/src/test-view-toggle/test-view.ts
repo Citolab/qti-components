@@ -1,0 +1,73 @@
+import { html, LitElement } from 'lit';
+import { property, state } from 'lit/decorators.js';
+import { consume } from '@lit/context';
+import { computedContext } from '@citolab/qti-components/qti-base';
+import { dispatchPublic } from '@citolab/qti-components/qti-test/plugin-api';
+
+import { watch } from '@qti-components/utilities';
+
+import type { ComputedContext } from '@citolab/qti-components/qti-base';
+import type { View } from '@citolab/qti-components/qti-base';
+
+export class TestView extends LitElement {
+  static DEFAULT_VIEW_OPTIONS = ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'];
+
+  @consume({ context: computedContext, subscribe: true })
+  private computedContext?: ComputedContext;
+
+  /** label accompanying the select view dropdown  */
+  @property({ type: String })
+  label = 'view';
+
+  /** The options to display in the dropdown, default: ['author', 'candidate', 'proctor', 'scorer', 'testConstructor', 'tutor'] */
+  @property({ type: String, attribute: 'view-options' }) viewOptions: string;
+  @watch('viewOptions', { waitUntilFirstUpdate: true })
+  protected _handleViewOptionsChange = () => {
+    this.#updateViewOptions();
+  };
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.#updateViewOptions();
+  }
+
+  @state()
+  private _viewOptions: string[] = TestView.DEFAULT_VIEW_OPTIONS;
+
+  #updateViewOptions() {
+    if (this.viewOptions) {
+      const options = this.viewOptions.split(',').map(opt => opt.trim());
+      this._viewOptions = options.filter(opt => TestView.DEFAULT_VIEW_OPTIONS.includes(opt));
+    } else {
+      this._viewOptions = TestView.DEFAULT_VIEW_OPTIONS;
+    }
+  }
+
+  protected _switchView(view: string) {
+    dispatchPublic(this, 'qc-test-switch-view', view as View);
+  }
+
+  override render() {
+    return html`
+      <label part="label" for="viewSelect">${this.label}</label>
+      <select
+        part="select"
+        id="viewSelect"
+        @change=${(e: Event) => {
+          const el = e.target as HTMLSelectElement;
+          this._switchView(el.value);
+        }}
+      >
+        ${this._viewOptions.map(
+          v => html`<option value="${v}" ?selected=${v === this.computedContext?.view}>${v}</option>`
+        )}
+      </select>
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'test-view': TestView;
+  }
+}

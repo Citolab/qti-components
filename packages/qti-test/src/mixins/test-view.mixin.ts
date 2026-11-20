@@ -17,11 +17,11 @@ export const TestViewMixin = <T extends Constructor<TestBaseInterface>>(superCla
       super(...args);
       this.sessionContext = { ...this.sessionContext, view: 'candidate' };
 
-      listenPublic(this, 'cito-test-switch-view', e => {
+      listenPublic(this, 'qc-test-switch-view', e => {
         this.sessionContext = { ...this.sessionContext, view: e.detail };
         this._updateElementView();
       });
-      listenPublic(this, 'cito-test-loaded', () => {
+      listenPublic(this, 'qc-test-loaded', () => {
         this._updateElementView();
       });
       this.addEventListener('qti-assessment-item-connected', (e: CustomEvent) => {

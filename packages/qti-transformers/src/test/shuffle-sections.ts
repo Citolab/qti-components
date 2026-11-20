@@ -1,5 +1,4 @@
-import { createSeededRandom } from '../shared/prng';
-import { shuffleKeepingFixed } from '../shared/shuffle';
+import { createSeededRandom, shuffleKeepingFixed } from '@qti-components/delivery';
 
 const isLocal = (el: Element, ...names: string[]): boolean =>
   names.includes(el.localName) || names.includes(el.localName?.toLowerCase?.());

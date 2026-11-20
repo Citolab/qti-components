@@ -13,6 +13,7 @@ import TextEntry from './fixtures/qti-conformance/Basic/T4-T7/items/text-entry.x
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 const meta = {
+  title: 'Testing/E2E/slow-loading-items',
   component: 'qti-assessment-stimulus-ref'
 } satisfies Meta<any>;
 

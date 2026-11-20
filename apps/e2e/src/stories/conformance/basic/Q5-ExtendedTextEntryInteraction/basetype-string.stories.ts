@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 type Story = StoryObj;
 
 const meta: Meta<QtiAssessmentItem> = {
-  title: 'qti-conformance/basic/Q5 - Extended Text Interaction/baseType-string',
+  title: 'Testing/Conformance/basic/Q5 - Extended Text Interaction/baseType-string',
   beforeEach: async () => {}
 };
 export default meta;
@@ -166,8 +166,8 @@ Wish you could see it too!`;
   ]
 };
 
-export const Q5L1D104: Story = {
-  name: 'Q5_L1_D104',
+export const Q5_L1_D104: Story = {
+  name: 'Q5-L1-D104',
   render: (_args, { loaded: { xml } }) => {
     let item: QtiAssessmentItem;
     const onItemConnected = ({ detail: qtiAssessmentItem }) => {

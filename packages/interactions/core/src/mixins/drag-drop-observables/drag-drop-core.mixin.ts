@@ -1,6 +1,6 @@
 import { isSupported, apply } from 'observable-polyfill/fn';
 
-import { interactionContext } from '@qti-components/base';
+import { interactionContext, setState } from '@qti-components/base';
 
 import {
   clearDragChipStates,
@@ -10,7 +10,8 @@ import {
   isDragChipHidden,
   isDraggableDisabled,
   setDragChipState,
-  setDropFlag
+  setDropFlag,
+  setDropFull
 } from './utils/drag-drop.utils';
 import {
   IDENTITY_FIXED_FRAME,
@@ -71,7 +72,7 @@ export type DragDropCore = Interaction & {
   ): void;
   createDragClone(element: HTMLElement, rect: DOMRect): HTMLElement;
   updateClonePosition(clientX: number, clientY: number): void;
-  activateAllDroppables(): void;
+  activateAllDroppables(fromDroppable?: boolean): void;
   setupMoveObservables(inputType: 'mouse' | 'touch', eventSource?: 'pointer' | 'mouse' | 'touch'): void;
 };
 
@@ -105,7 +106,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
   superClass: T,
   draggablesSelector: string,
   droppablesSelector: string,
-  dragContainersSelector = 'slot[part="drags"]',
+  dragContainersSelector = 'slot[part~="bank"]',
   defaultCollisionAlgorithm: CollisionDetectionAlgorithm = 'pointerWithin'
 ) => {
   abstract class DragDropCoreElement extends superClass {
@@ -135,6 +136,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
     private cloneFrame: FixedFrame = IDENTITY_FIXED_FRAME;
 
     /** The current clone's own `zoom`, e.g. a graphic-gap-match chip scaled with its graphic. */
+    /** The page's own cursor, put back when a pointer drag ends. */
+    private cursorBeforeDrag: string | null = null;
     private cloneZoom = 1;
 
     private subscriptions: Array<{ unsubscribe: () => void }> = [];
@@ -246,8 +249,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       const lightDraggables = collect(draggablesSelector, this);
       const shadowDraggables = collect(draggablesSelector, this.shadowRoot);
 
-      const lightClones = collect('[qti-draggable="true"]:not([data-drag-clone])', this);
-      const shadowClones = collect('[qti-draggable="true"]:not([data-drag-clone])', this.shadowRoot);
+      const lightClones = collect('[data-draggable="true"]:not([data-drag-clone])', this);
+      const shadowClones = collect('[data-draggable="true"]:not([data-drag-clone])', this.shadowRoot);
 
       // The registry finds chips a query cannot reach — one shadow root deeper, inside a drop
       // target that renders its own contents. It is a union, not a replacement: an element that
@@ -274,12 +277,12 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       const draggableSet = new Set(this.trackedDraggables);
       const droppableSet = new Set(this.trackedDroppables);
       /*
-       * The `drag` role state is NOT filtered by isDragChipHidden.
+       * The `chip` role state is NOT filtered by isDragChipHidden.
        *
-       * `drag` is the noun here, the same one `part="drags"` uses for the bank: it says what an
-       * element *is*, not what is happening to it. One that has been lifted or spent is still a
-       * drag, and has to keep saying so — the theme draws its box from `:state(drag)` and only
-       * repaints it from `:state(placeholder)` / `:state(dragging)`. Filter the role and those stop
+       * `chip` is a noun: it says what an element *is*, not what is happening to it. One that has
+       * been lifted or used is still a chip, and has to keep saying so — the theme draws its box
+       * from `:state(chip)` and only repaints it from `:state(used)` / `:state(lifted)`. Filter
+       * the role and those stop
        * composing: the base rule stops matching the moment it is placed, the box collapses, and the
        * bank reflows around a hole 20px narrower than the thing that left it.
        *
@@ -288,7 +291,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
        *
        * Pickability is the separate question, and still filtered: isDragChipHidden is consulted
        * directly at the drag-start and keyboard-navigation sites below, and a spent drag still loses
-       * `qti-draggable` and its tabindex.
+       * `data-draggable` and its tabindex.
        */
       const dragRoleSet = dragDropEnabled ? draggableSet : new Set<HTMLElement>();
       const effectiveDroppableSet = dragDropEnabled ? droppableSet : new Set<HTMLElement>();
@@ -297,14 +300,14 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       // Clear stale drag/drop role states from elements that are no longer tracked.
       for (const el of this.#statefulRoleElements) {
         if (currentStateful.has(el)) continue;
-        el.internals.states.delete('drag');
-        el.internals.states.delete('droppable');
+        setState(el.internals.states, 'chip', false);
+        setState(el.internals.states, 'drop', false);
       }
 
       /*
        * Drag-drop ownership of the drag/droppable role states.
        *
-       * `droppable` is the drop-side twin of `qti-draggable`, and it is the ONLY marker. Three of
+       * `droppable` is the drop-side twin of `data-draggable`, and it is the ONLY marker. Three of
        * the five drop targets are light-DOM elements authored in the item body (`qti-gap`,
        * `qti-associable-hotspot`, `qti-simple-associable-choice`), so no part can name them — a part
        * only exists inside the shadow tree that declares it — and a stylesheet needs some way to say
@@ -334,11 +337,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       for (const el of currentStateful) {
         const isDrag = dragRoleSet.has(el);
         const isDrop = !isDrag && effectiveDroppableSet.has(el);
-        if (isDrag) el.internals.states.add('drag');
-        else el.internals.states.delete('drag');
-
-        if (isDrop) el.internals.states.add('droppable');
-        else el.internals.states.delete('droppable');
+        setState(el.internals.states, 'chip', isDrag);
+        setState(el.internals.states, 'drop', isDrop);
       }
 
       this.#statefulRoleElements = currentStateful;
@@ -353,7 +353,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           draggable.style.touchAction = 'none'; // Prevent ALL default touch behaviors
           draggable.style.webkitUserSelect = 'none'; // Safari compatibility
           (draggable.style as any).webkitTouchCallout = 'none'; // Prevent iOS callout
-          draggable.setAttribute('qti-draggable', 'true');
+          draggable.setAttribute('data-draggable', 'true');
           draggable.setAttribute('tabindex', '0');
         } else {
           draggable.style.cursor = '';
@@ -361,7 +361,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           draggable.style.touchAction = '';
           draggable.style.webkitUserSelect = '';
           (draggable.style as any).webkitTouchCallout = '';
-          draggable.removeAttribute('qti-draggable');
+          draggable.removeAttribute('data-draggable');
           if (draggable.getAttribute('tabindex') === '0') {
             draggable.removeAttribute('tabindex');
           }
@@ -550,6 +550,12 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           if (target && ['Space', 'Enter'].includes(e.code) && !hostDisabled && !targetDisabled) {
             e.preventDefault();
             target.setAttribute('data-keyboard-dragging', 'true');
+            // Same states as a pointer drag (CONTRACT.md §3 rule 8): the chip is lifted, the host
+            // and the targets are drag-active, and the candidate target is drag-over.
+            setDragChipState(target, 'lifted', true);
+            this.activateAllDroppables(
+              this.trackedDroppables.some(d => d.contains(target) || !!d.shadowRoot?.contains(target))
+            );
             keyboardState = {
               dragging: true,
               dragElement: target,
@@ -590,7 +596,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
                   this.handleInvalidDrop(keyboardState.dragElement);
                 }
               }
-              this.trackedDraggables.forEach(d => d.removeAttribute('data-keyboard-dragging'));
+              this.endKeyboardDrag();
               this.saveResponse();
               keyboardState = {
                 dragging: false,
@@ -603,7 +609,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
             }
             case 'Escape': {
               e.preventDefault();
-              this.trackedDraggables.forEach(d => d.removeAttribute('data-keyboard-dragging'));
+              this.endKeyboardDrag();
               keyboardState = {
                 dragging: false,
                 dragElement: null,
@@ -616,9 +622,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
           }
         }
 
-        this.allDropzones.forEach(zone => zone.removeAttribute('hover'));
+        this.allDropzones.forEach(zone => setDropFlag(zone, 'drag-over', false));
         if (keyboardState.dragging && keyboardState.dropElement) {
-          keyboardState.dropElement.setAttribute('hover', '');
+          setDropFlag(keyboardState.dropElement, 'drag-over', true);
           if (
             keyboardState.dropElement.hasAttribute('tabindex') &&
             keyboardState.dropElement.getAttribute('tabindex') !== '-1'
@@ -688,6 +694,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         // back on the next render. The target has to be told to stop holding it.
         this.removeChipFromDroppable(sourceDroppable, dragElement);
         this.cacheInteractiveElements();
+        // The chip has left, so the target is no longer at capacity: `full` goes, and with it the
+        // theme's not-allowed cursor over the spot the chip was lifted from. The drop recomputes it.
+        setDropFull(sourceDroppable, false);
 
         // Mark the source droppable so it won't be disabled during drag
         if (sourceDroppable) {
@@ -698,18 +707,26 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         const identifier = dragElement.getAttribute('identifier');
         if (identifier) {
           const anchors = findInventoryItems(this.trackedDragContainers, identifier);
-          anchors.forEach(item => setDragChipState(item, 'return-anchor', true));
+          anchors.forEach(item => setDragChipState(item, 'return-target', true));
           this.dragState.returnAnchorItems = anchors;
         }
       } else {
         this.dragState.dragClone?.setAttribute('data-drag-origin', 'inventory');
         // The clone is already made, so it does not inherit this state. CSS hides the source.
-        setDragChipState(dragElement, 'dragging', true);
+        setDragChipState(dragElement, 'lifted', true);
       }
 
       this.updateClonePosition(startX, startY);
-      this.activateAllDroppables();
+      this.activateAllDroppables(isCloneInDroppable);
       this.watchDragCloneHost();
+      // The clone is transparent to the pointer (`pointer-events: none`, so targets see the pointer),
+      // which means the cursor is whatever lies under it: a pointer over a target, an arrow over
+      // the page. A grabbed chip keeps a grabbing hand for the whole drag; restored when it ends.
+      if (eventSource === 'pointer') {
+        const root = this.ownerDocument.documentElement;
+        this.cursorBeforeDrag = root.style.cursor;
+        root.style.cursor = 'grabbing';
+      }
       this.setupMoveObservables(inputType, eventSource);
     }
 
@@ -884,9 +901,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       if (dropTarget !== this.dragState.currentTarget) {
         // Allow immediate switch to null (leaving a zone) or if enough time has passed
         if (dropTarget === null || timeSinceLastChange >= MIN_TARGET_SWITCH_INTERVAL) {
-          this.allDropzones.forEach(zone => setDropFlag(zone, 'hover', false));
+          this.allDropzones.forEach(zone => setDropFlag(zone, 'drag-over', false));
           if (dropTarget) {
-            setDropFlag(dropTarget, 'hover', true);
+            setDropFlag(dropTarget, 'drag-over', true);
           }
           this.dragState.currentTarget = dropTarget;
           this.dragState.lastTargetChangeTime = now;
@@ -936,7 +953,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         // decided whether it becomes a `placeholder`; only the transient state is cleared here.
         // (`handleInvalidDrop` clears both.) This used to be implicit: the inventory refresh
         // reset `style.opacity = '1.0'`, undoing the mid-drag hiding as a side effect.
-        setDragChipState(dragSource, 'dragging', false);
+        setDragChipState(dragSource, 'lifted', false);
       } else {
         this.handleInvalidDrop(dragSource);
       }
@@ -946,7 +963,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       }
 
       (this.dragState.returnAnchorItems || []).forEach(item => {
-        setDragChipState(item, 'return-anchor', false);
+        setDragChipState(item, 'return-target', false);
       });
 
       if (this.dragState.touchCleanup) {
@@ -989,6 +1006,9 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
         const property = computedStyles[i];
         clone.style.setProperty(property, computedStyles.getPropertyValue(property));
       }
+      // The chip's resting shadow would be copied inline with the rest and outrank the theme, which
+      // gives a chip in flight its own elevation (`[data-drag-clone]`, --qti-drag-elevation).
+      clone.style.removeProperty('box-shadow');
 
       // Where the clone can live: the interaction's root while the browser paints it, the
       // fullscreen element when it does not. See utils/drag-clone-host.ts for why each is needed —
@@ -1011,9 +1031,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       clone.style.pointerEvents = 'none'; // Critical: never capture events
       clone.style.touchAction = 'none'; // Prevent touch interactions
       clone.style.userSelect = 'none'; // Prevent selection
-      clone.style.opacity = '0.8';
 
-      clone.removeAttribute('qti-draggable');
+      clone.removeAttribute('data-draggable');
       clone.removeAttribute('tabindex');
       clone.setAttribute('data-drag-clone', 'true');
       // Which interaction this chip came from, for theme rules that need to tell one in flight from
@@ -1092,25 +1111,39 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       });
     }
 
-    protected activateAllDroppables(): void {
-      this.setInternalsState('dragzone-enabled', true);
-      this.setInternalsState('dragzone-active', true);
-
+    /**
+     * A drag is in progress: the host and every target carry `drag-active` (CONTRACT.md §3). The
+     * bank carries it only when the chip comes from a target: then the bank can take it back, and
+     * lights up as a place to drop. A chip lifted out of the bank itself gives the bank nothing to
+     * say. The host's old pair `dragzone-enabled` + `dragzone-active` is set alongside for one major.
+     */
+    protected activateAllDroppables(fromDroppable = false): void {
+      this.setDragActive(true);
       this.allDropzones.forEach(zone => {
-        setDropFlag(zone, 'enabled', true);
-        setDropFlag(zone, 'active', true);
+        const isBank = this.trackedDragContainers.includes(zone);
+        setDropFlag(zone, 'drag-active', fromDroppable || !isBank);
       });
     }
 
     protected deactivateAllDroppables(): void {
-      this.setInternalsState('dragzone-enabled', false);
-      this.setInternalsState('dragzone-active', false);
-
+      this.setDragActive(false);
       this.allDropzones.forEach(zone => {
-        setDropFlag(zone, 'enabled', false);
-        setDropFlag(zone, 'active', false);
-        setDropFlag(zone, 'hover', false);
+        setDropFlag(zone, 'drag-active', false);
+        setDropFlag(zone, 'drag-over', false);
       });
+    }
+
+    /** The keyboard drag is over, dropped or cancelled: clear what the pick-up set. */
+    private endKeyboardDrag(): void {
+      this.trackedDraggables.forEach(d => {
+        if (d.hasAttribute('data-keyboard-dragging')) setDragChipState(d, 'lifted', false);
+        d.removeAttribute('data-keyboard-dragging');
+      });
+      this.deactivateAllDroppables();
+    }
+
+    private setDragActive(on: boolean): void {
+      setState((this as any)._internals?.states, 'drag-active', on, ['dragzone-active', 'dragzone-enabled']);
     }
 
     public resetDragState(): void {
@@ -1119,7 +1152,7 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       }
 
       (this.dragState.returnAnchorItems || []).forEach(item => {
-        setDragChipState(item, 'return-anchor', false);
+        setDragChipState(item, 'return-target', false);
       });
 
       if (this.dragState.touchCleanup) {
@@ -1142,6 +1175,10 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
       this.dragSubscriptions = [];
       this.cloneFrame = IDENTITY_FIXED_FRAME;
       this.cloneZoom = 1;
+      if (this.cursorBeforeDrag !== null) {
+        this.ownerDocument.documentElement.style.cursor = this.cursorBeforeDrag;
+        this.cursorBeforeDrag = null;
+      }
 
       this.dragState = {
         dragging: false,
@@ -1185,8 +1222,8 @@ export const DragDropCoreMixin = <T extends Constructor<Interaction>>(
 
       for (const el of this.#statefulRoleElements) {
         if (!hasStates(el)) continue;
-        el.internals.states.delete('drag');
-        el.internals.states.delete('droppable');
+        setState(el.internals.states, 'chip', false);
+        setState(el.internals.states, 'drop', false);
       }
       this.#statefulRoleElements.clear();
 

@@ -77,12 +77,41 @@ export abstract class QtiFeedback extends LitElement {
     this.#showFeedback(isFound);
   }
 
+  /** The host cancelled the show: it has this feedback, and is not asked again until the condition has gone. */
+  #hostShows = false;
+
   #showFeedback(value: boolean) {
-    if (!this.#sessionControlAllowsFeedback()) {
-      this.showStatus = 'off';
-      return;
+    const next = this.#sessionControlAllowsFeedback() && this.#conditionHolds(value) ? 'on' : 'off';
+    if (next === 'on') {
+      if (this.showStatus === 'on' || this.#hostShows) return;
+      if (!this.feedbackShowing()) {
+        // The host takes over showing: this stays off and the host shows the content itself.
+        this.#hostShows = true;
+        this.showStatus = 'off';
+        return;
+      }
+    } else {
+      this.#hostShows = false;
+      if (this.showStatus === 'on' && !this.feedbackHiding()) return;
     }
-    this.showStatus = (value && this.showHide === 'show') || (!value && this.showHide === 'hide') ? 'on' : 'off';
+    this.showStatus = next;
+  }
+
+  #conditionHolds(value: boolean) {
+    return (value && this.showHide === 'show') || (!value && this.showHide === 'hide');
+  }
+
+  /**
+   * Called when this feedback is about to show. Return `false` to keep it hidden: the host shows the
+   * content itself. The elements dispatch `qc-feedback-show` here.
+   */
+  protected feedbackShowing(): boolean {
+    return true;
+  }
+
+  /** Called when this feedback is about to hide. Return `false` to keep it showing: the host hides it itself. */
+  protected feedbackHiding(): boolean {
+    return true;
   }
 
   /**
@@ -106,14 +135,14 @@ export abstract class QtiFeedback extends LitElement {
       ?.find(tp => tp.active)
       ?.sections.flatMap(s => s.items)
       .find(i => i.active);
-    if (!activeItem || activeItem.showFeedback) return true;
+    if (!activeItem || activeItem.sessionControl?.showFeedback) return true;
 
     // Adaptive items ignore max-attempts: "the number of attempts is limited by
     // the value of the completionStatus built-in outcome variable".
     if (activeItem.adaptive) return activeItem.completionStatus !== 'completed';
 
     // `max-attempts="0"` is "no limit", so the last attempt never arrives.
-    const maxAttempts = activeItem.maxAttempts ?? 1;
+    const maxAttempts = activeItem.sessionControl?.maxAttempts ?? 1;
     if (maxAttempts <= 0) return true;
 
     const numAttempts = Number(this._context?.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;

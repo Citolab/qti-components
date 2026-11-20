@@ -9,6 +9,7 @@ import { Interaction } from '@qti-components/base';
 import styles from './qti-text-entry-interaction.styles';
 
 import type { CSSResultGroup } from 'lit';
+import type { ValidityTrigger } from '@qti-components/base';
 
 /**
  * Text-entry interaction: single-line inline text input.
@@ -30,9 +31,12 @@ import type { CSSResultGroup } from 'lit';
  *   single-line input has no formatting to render: it can show neither preserved line breaks nor
  *   markup. The field is always plain text, so this is not planned either.
  *
- * @csspart answer - The answer-key line, revealed above the field when the correct response is shown.
+ * @csspart answer-key - The correct answer, revealed above the field when the correct response is
+ *   shown (was `answer`).
  * @csspart input - The text input element.
  * @csspart message - The validation message, hidden until `reportValidity` shows it.
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiTextEntryInteraction extends Interaction {
   static override styles: CSSResultGroup = styles;
@@ -86,15 +90,17 @@ export class QtiTextEntryInteraction extends Interaction {
       isValid = this._input.checkValidity();
     }
 
+    let kind: 'min' | 'other' = 'other';
     if (isValid && this.response === '') {
       isValid = false;
+      kind = 'min';
     }
 
     if (!isValid && !validityMessage) {
       validityMessage = this._input.validationMessage || 'Invalid value.';
     }
 
-    this.setInteractionValidity(isValid, validityMessage, this._input, { suppressInline: true });
+    this.setInteractionValidity(isValid, validityMessage, this._input, { suppressInline: true, kind });
     return isValid;
   }
 
@@ -106,7 +112,7 @@ export class QtiTextEntryInteraction extends Interaction {
 
   /** The answer-key line, revealed above the field when the correct response is shown. */
   protected renderAnswer(): unknown {
-    return html`<div part="answer" aria-hidden="true"></div>`;
+    return html`<div part="answer-key answer" aria-hidden="true"></div>`;
   }
 
   /** The field itself. */
@@ -117,7 +123,7 @@ export class QtiTextEntryInteraction extends Interaction {
       spellcheck="false"
       autocomplete="off"
       @blur="${(_: FocusEvent) => {
-        this.reportValidity();
+        this.reportValidity({ trigger: 'change' });
       }}"
       @keydown="${(event: KeyboardEvent) => event.stopImmediatePropagation()}"
       @keyup="${this.textChanged}"
@@ -150,9 +156,9 @@ export class QtiTextEntryInteraction extends Interaction {
     }
   }
 
-  override reportValidity(): boolean {
+  override reportValidity(options?: { trigger?: ValidityTrigger }): boolean {
     this.validate();
-    return super.reportValidity();
+    return super.reportValidity(options);
   }
 
   override reset(): void {

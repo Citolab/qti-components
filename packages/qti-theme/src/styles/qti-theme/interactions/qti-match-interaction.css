@@ -14,14 +14,14 @@
    sat on document.body it was in a different tree from the adopted stylesheet, and nothing — no
    part, no attribute — could style it. */
 @layer qti-components.global {
-  qti-match-interaction :state(drag),
+  qti-match-interaction :state(chip),
   [data-drag-clone][data-drag-interaction='qti-match-interaction'] {
     @mixin drag;
   }
 
-  qti-match-interaction :state(drag)::part(control)::before,
-  qti-match-interaction::part(drag-control)::before,
-  qti-match-interaction ::part(drag-control)::before,
+  qti-match-interaction :state(chip)::part(control)::before,
+  qti-match-interaction::part(chip-control)::before,
+  qti-match-interaction ::part(chip-control)::before,
   [data-drag-clone][data-drag-interaction='qti-match-interaction']::part(control)::before {
     @mixin grip;
   }
@@ -31,24 +31,18 @@
   /* Editor fake-drag projected into the target choice's `drop` shadow.
      Reuses the same `drag` styling so the editor preview matches what students
      see when an answer is dropped onto a target at runtime. */
-  qti-simple-associable-choice::part(drag) {
+  qti-simple-associable-choice::part(chip) {
     @mixin drag;
-    &:hover {
-      @mixin drag-hover;
-    }
-    &:focus {
-      @mixin foc;
-    }
   }
 
   qti-match-interaction:not(.qti-match-tabular) {
     /*
      * The drag bank does not light up while you drag.
      *
-     * `:state(dragzone-enabled)` filled it, `:state(dragzone-active)` drew a solid
-     * `--qti-border-active` box around it, and both fired the instant a chip was picked up — so
+     * The host's `dragzone-enabled` filled it, `dragzone-active` drew a solid `--qti-border-active`
+     * box around it (one `drag-active` now), and both fired the instant a chip was picked up — so
      * lifting a chip framed the container the chip had just left. The one thing worth looking at is
-     * the hole, and the chip paints that itself via `:state(dragging)` / `:state(placeholder)`.
+     * the hole, and the chip paints that itself via `:state(lifted)` / `:state(used)`.
      *
      * `border: 2px solid transparent` went with them. It was reserving space for the active border,
      * so that a transient state could repaint without resizing. With nothing left to repaint, it is
@@ -65,13 +59,10 @@
       gap: var(--qti-gap);
       & qti-simple-associable-choice {
         @mixin drag;
-        &[dragging] {
-          @mixin dragging;
-        }
         &:hover {
           @mixin drag-hover;
         }
-        &:focus {
+        &:focus:not(:state(used), :active) {
           @mixin foc;
         }
       }
@@ -83,7 +74,9 @@
           max-width: 100%;
           height: auto;
         }
-        &[disabled] {
+        /* At capacity: `full`, the state setDropFull sets beside the `disabled` attribute the drag
+           code still reads. */
+        &:state(full) {
           &::part(drop) {
             cursor: not-allowed;
           }
@@ -92,7 +85,7 @@
          * No `[active]` highlight. Lifting a chip used to draw a solid `--qti-border-active` border
          * around every drop container at once, which says "any of these" — the least useful thing to
          * say. What the candidate wants to see is the hole the chip left, and that is painted on the
-         * chip's own `:state(dragging)` / `:state(placeholder)`.
+         * chip's own `:state(lifted)` / `:state(used)`.
          */
         &::part(drop) {
           @mixin drop;
@@ -102,25 +95,27 @@
              used to LEAK: `dragging` sets --component-box-shadow, one shared namespace, so it
              inherited onto every chip nested in the drop. That half is now structural — `dragging`
              sets --drag-box-shadow, which a drop does not read.) */
-          &:focus {
-            @mixin foc;
-          }
           margin-top: var(--qti-gap);
           gap: var(--qti-gap);
+        }
+        /* The ring goes on the target itself: it is what takes keyboard focus. Nothing in its shadow
+           is focusable, so the `::part(drop):focus` this replaces never matched. */
+        &:focus:not(:state(used)) {
+          @mixin foc;
         }
         & > *:not(qti-simple-associable-choice) {
           pointer-events: none;
         }
         /* A chip nested in a drop target renders no drop region of its own. That is the component's
            own rule — qti-simple-associable-choice.styles.ts hides [part~='drop'] for both
-           :host(:state(drag)) and :host([part~='drag']), which covers the placed clone this
+           :host(:state(chip)) and :host([part~='drag']), which covers the placed clone this
            selector could not reach. */
         & > qti-simple-associable-choice {
           @mixin drag;
           &:hover {
             @mixin drag-hover;
           }
-          &:focus {
+          &:focus:not(:state(used), :active) {
             @mixin foc;
           }
         }
@@ -130,19 +125,19 @@
 
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(drag),
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag) {
+    qti-simple-associable-choice:state(chip),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(chip) {
     @mixin drag;
   }
 
   qti-match-interaction:not(.qti-match-tabular) qti-simple-match-set:last-of-type > qti-simple-associable-choice {
     /* The label's `align-content` and the drop's `flex-grow` are the target card's own box, and live
-       in qti-simple-associable-choice.styles.ts under :host(:state(droppable)). `box-sizing` went with
+       in qti-simple-associable-choice.styles.ts under :host(:state(drop)). `box-sizing` went with
        them: border-box is already the reset, and content-box is what dropRegion sets. */
     &::part(label) {
       border: var(--qti-border);
-      border-top-left-radius: var(--qti-border-radius);
-      border-top-right-radius: var(--qti-border-radius);
+      border-top-left-radius: var(--qti-radius-box);
+      border-top-right-radius: var(--qti-radius-box);
       padding: 0.5rem;
     }
 
@@ -153,76 +148,83 @@
       border-top-right-radius: 0;
       background: none;
     }
-
   }
 }
 
 @layer qti-components.interactions.states {
+  /*
+   * A placed chip's hover and focus ring. Written flat: nested under `&::part(chip)` they
+   * compiled to `:is(…::part(chip)):hover`, and a pseudo-element cannot sit inside `:is()`, so none
+   * of them ever matched. In this layer, after the chip rule, because `@mixin drag` sets
+   * `background-color` and must not out-rank the hover.
+   */
+  qti-simple-associable-choice::part(chip):hover {
+    @mixin drag-hover;
+  }
+  qti-simple-associable-choice::part(chip):focus:not(:active) {
+    @mixin foc;
+  }
+
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(dragging),
+    qti-simple-associable-choice:state(lifted),
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(placeholder) {
+    qti-simple-associable-choice:state(used) {
     @mixin drag-placeholder;
     pointer-events: none;
   }
 
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(dragging)
+    qti-simple-associable-choice:state(lifted)
     > *,
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(placeholder)
+    qti-simple-associable-choice:state(used)
     > * {
     visibility: hidden;
   }
 
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(dragging)::part(label),
+    qti-simple-associable-choice:state(lifted)::part(label),
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(placeholder)::part(label) {
+    qti-simple-associable-choice:state(used)::part(label) {
     visibility: hidden;
   }
 
+  /* A target during a drag: `drag-active`, once the pair `active` + `enabled`, which painted alike. */
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:last-of-type
-    > qti-simple-associable-choice:state(hover)::part(drop),
-  qti-match-interaction:not(.qti-match-tabular)
-    qti-simple-match-set:last-of-type
-    > qti-simple-associable-choice:state(active)::part(drop) {
-    background-color: var(--qti-drop-highlight-bg);
-  }
-
-  qti-match-interaction:not(.qti-match-tabular)
-    qti-simple-match-set:last-of-type
-    > qti-simple-associable-choice:state(enabled)::part(drop) {
+    > qti-simple-associable-choice:state(drag-active)::part(drop) {
     background-color: var(--qti-drop-highlight-enabled-bg);
   }
 
+  /* After `drag-active`, which every target carries during a drag: the one under the chip. */
   qti-match-interaction:not(.qti-match-tabular)
-    qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(dragging) {
-    border-color: var(--qti-drop-highlight-border-color);
-    box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+    qti-simple-match-set:last-of-type
+    > qti-simple-associable-choice:state(drag-over)::part(drop) {
+    @mixin drop-over;
   }
 
   qti-match-interaction:not(.qti-match-tabular)
     qti-simple-match-set:first-of-type
-    qti-simple-associable-choice:state(return-anchor) {
+    qti-simple-associable-choice:state(lifted) {
     border-color: var(--qti-drop-highlight-border-color);
     box-shadow: inset 0 0 0 var(--qti-drop-highlight-border-width, 2px)
-      color-mix(in srgb, var(--qti-drop-highlight-border-color) 55%, transparent);
+      color-mix(in oklab, var(--qti-drop-highlight-border-color) 55%, transparent);
   }
+
+  /* `:state(return-target)` (the bank chip a lifted placed chip goes back to) is set but not painted:
+     the cue is the bank as a whole, lit while the chip is in flight and ringed when the chip is over
+     it, not the one slot it came from. */
 }
 
 @layer qti-components.interactions.corrections {
   /* A corrected chip — in the bank, and where it landed. Moved here from the shared
-     qti-corrections.css, which claimed `:state(drag)` for EVERY interaction in one unscoped rule:
+     qti-corrections.css, which claimed `:state(chip)` for EVERY interaction in one unscoped rule:
      the same shape the chip vocabulary had before it was sprayed, and moved for the same reason.
      `[data-drag-clone]:state(candidate-*)` went with it and is deliberately NOT reproduced — a clone
      carries no custom states at all, because cloneNode does not copy ElementInternals (measured), so
@@ -231,13 +233,13 @@
      same reason as gap-match's: the shared rule's DIRECT `background-color` outranked the binding
      that reads them, so their solid fill never rendered. They out-specify this block, so leaving them
      would have flipped a corrected placed chip from the pale tint to solid. */
-  qti-match-interaction:not(.qti-match-tabular) :state(drag):state(candidate-correct),
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-correct) {
+  qti-match-interaction:not(.qti-match-tabular) :state(chip):state(candidate-correct),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(chip):state(candidate-correct) {
     @mixin candidate drag, var(--qti-correct), var(--qti-correct-light);
   }
 
-  qti-match-interaction:not(.qti-match-tabular) :state(drag):state(candidate-incorrect),
-  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(drag):state(candidate-incorrect) {
+  qti-match-interaction:not(.qti-match-tabular) :state(chip):state(candidate-incorrect),
+  qti-match-interaction:not(.qti-match-tabular) qti-simple-associable-choice::part(chip):state(candidate-incorrect) {
     @mixin candidate drag, var(--qti-incorrect), var(--qti-incorrect-light);
   }
 

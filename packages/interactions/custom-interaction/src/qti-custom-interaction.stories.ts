@@ -1,8 +1,10 @@
 import { html } from 'lit';
+import { expect, waitFor } from 'storybook/test';
 import { getStorybookHelpers } from '@wc-toolkit/storybook-helpers';
 
 import { qtiTransformItem } from '@qti-components/transformers';
 
+import { CUSTOM_INTERACTION_FIXTURES } from './qti-custom-interaction.fixtures';
 import itemXML from './qti-custom-interaction.xml?raw';
 
 import type { QtiCustomInteraction } from './qti-custom-interaction';
@@ -26,6 +28,7 @@ type Story = StoryObj<QtiCustomInteraction & typeof args>;
  *
  */
 const meta: Meta<QtiCustomInteraction> = {
+  title: 'Interactions/Custom/Overview',
   component: 'qti-custom-interaction',
   args,
   argTypes,
@@ -39,6 +42,12 @@ const meta: Meta<QtiCustomInteraction> = {
 export default meta;
 
 const xml = String.raw;
+
+/** The interaction found its manifest in the fixtures folder: the files are served where it looks. */
+const manifestLoads = async (canvasElement: HTMLElement) => {
+  const interaction = canvasElement.querySelector<QtiCustomInteraction>('qti-custom-interaction')!;
+  await waitFor(() => expect(interaction.manifest).toBeTruthy(), { timeout: 5000 });
+};
 
 /**
  * before it enters the dom it is transformed
@@ -61,11 +70,12 @@ export const Default: Story = {
       height="370"
       width="467"
       data="../ref/6047-BiKB-bmi_467x370_29/json/manifest.json"
-      data-base-item="/qti-custom-interaction/items/"
-      data-base-ref="/qti-custom-interaction/"
+      data-base-item="${CUSTOM_INTERACTION_FIXTURES}items/"
+      data-base-ref=${CUSTOM_INTERACTION_FIXTURES}
       .response=${`{"data":["","3","","12","","4",""]}`}
     >
-    </qti-custom-interaction>`
+    </qti-custom-interaction>`,
+  play: async ({ canvasElement }) => manifestLoads(canvasElement)
 };
 
 export const AbsolutePaths: Story = {
@@ -108,8 +118,9 @@ export const TransformXML: Story = {
         </object>
       </qti-custom-interaction>`
       )
-      .customInteraction('/qti-custom-interaction/', 'items/')
-      .htmlDoc()
+      .customInteraction(CUSTOM_INTERACTION_FIXTURES, 'items/')
+      .htmlDoc(),
+  play: async ({ canvasElement }) => manifestLoads(canvasElement)
 };
 
 /**
@@ -122,7 +133,8 @@ export const TransformItem: Story = {
   render: () =>
     qtiTransformItem()
       .parse(itemXML)
-      .path('/qti-custom-interaction/items/')
-      .customInteraction('/qti-custom-interaction/', 'items/')
-      .htmlDoc()
+      .path(`${CUSTOM_INTERACTION_FIXTURES}items/`)
+      .customInteraction(CUSTOM_INTERACTION_FIXTURES, 'items/')
+      .htmlDoc(),
+  play: async ({ canvasElement }) => manifestLoads(canvasElement)
 };

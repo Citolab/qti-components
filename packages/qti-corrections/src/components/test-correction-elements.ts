@@ -1,4 +1,4 @@
-import { QtiTest, TestCheckItem, TestNavigation } from '@qti-components/test/elements';
+import { QtiTest, TestNavigation } from '@qti-components/test/elements';
 
 import type { ComputedItem, View } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
@@ -48,7 +48,7 @@ export class TestNavigationCorrection extends TestNavigation {
     computedItem: ComputedItem | undefined,
     done: boolean
   ): void {
-    if (!assessmentItem || !computedItem?.showSolution) return;
+    if (!assessmentItem || !computedItem?.sessionControl?.showSolution) return;
 
     const correctable = assessmentItem as Partial<CorrectionAssessmentItem>;
     correctable.showCandidateCorrection?.(true);
@@ -60,15 +60,5 @@ export class TestNavigationCorrection extends TestNavigation {
 export class QtiTestCorrection extends QtiTest {
   public override updateAssessmentItemView(assessmentItem: QtiAssessmentItem, view: View): void {
     (assessmentItem as Partial<CorrectionAssessmentItem>).showCorrectResponse?.(view === 'scorer');
-  }
-}
-
-/** Check-item extension that reveals the correct response after scoring. */
-export class TestCheckItemCorrection extends TestCheckItem {
-  constructor() {
-    super();
-    this.addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('test-show-correct-response', { detail: true, bubbles: true }));
-    });
   }
 }

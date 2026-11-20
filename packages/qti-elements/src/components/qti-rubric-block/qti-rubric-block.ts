@@ -20,7 +20,7 @@ export class QtiRubricBlock extends LitElement {
       switch (className) {
         case 'qti-rubric-discretionary-placement':
           {
-            const notCancelled = dispatchPublic(this, 'cito-item-rubric-placement', { className, element: this }, true);
+            const notCancelled = dispatchPublic(this, 'qc-item-rubric-placement', { className, element: this }, true);
             if (!notCancelled) return;
             this.setAttribute('slot', 'qti-rubric-block');
           }

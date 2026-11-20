@@ -45,7 +45,7 @@ type RestoreStoryOptions = {
 };
 
 const meta: Meta = {
-  title: 'qti-conformance/portable-custom-interaction'
+  title: 'QTI behaviour/Conformance/portable-custom-interaction'
 };
 export default meta;
 
@@ -279,7 +279,7 @@ const navigateToItemRef = (qtiTest: any, itemRefId: string) => {
     return;
   }
   qtiTest?.dispatchEvent(
-    new CustomEvent('qti-request-navigation', {
+    new CustomEvent('qc-test-navigate', {
       detail: { type: 'item', id: itemRefId },
       bubbles: true,
       composed: true
@@ -405,6 +405,11 @@ const renderPciItemWithEndAttempt = (message: string) => html`
   </qti-item>
 `;
 
+/**
+ * Stories built from the helpers below carry `tags: ['play-fn']` by hand. Storybook adds that tag itself
+ * only when it can read a `play` written in the story, and a `play` that arrives through a spread or a
+ * function call is invisible to it. The QTI 3 conformance page counts the tag as "asserts".
+ */
 const createPciStory = ({
   itemName,
   expectedPciCount = 1,
@@ -617,11 +622,13 @@ export const Q16_PCI_I01: Story = {
   }
 };
 
-export const Q16_PCI_D11: Story = { name: 'Q16-PCI-D11', ...createPciStory({ itemName: 'item-1' }) };
+export const Q16_PCI_D11: Story = { tags: ['play-fn'], name: 'Q16-PCI-D11', ...createPciStory({ itemName: 'item-1' }) };
 export const Q16_PCI_D12: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D12',
   ...createPciStory({ itemName: 'item-1', consoleExpectations: consoleSingle })
 };
+/** Q16-PCI-D13: ending an attempt with nothing marked on the graph is an invalid response; the delivery system can tell from the item's `valid`. */
 export const Q16_PCI_D13: Story = {
   name: 'Q16-PCI-D13',
   render: () => html`
@@ -640,37 +647,31 @@ export const Q16_PCI_D13: Story = {
       </div>
     </qti-item>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     await loadPciItem(canvasElement, 'item-1');
     const { assessmentItem } = await assertPciLoaded(canvasElement, 1);
-
     const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
+    let isValid = true;
 
-    clickEndAttempt(canvasElement);
+    await step('Press End Attempt without marking a point on the graph', () => {
+      clickEndAttempt(canvasElement);
+      isValid = assessmentItem.validate(true);
+      // The delivery system shows its message when the item says the response is invalid.
+      if (!isValid) validationMessage.style.display = 'block';
+    });
 
-    // Validate without marking any points - should be invalid
-    const isValid = assessmentItem.validate(true);
-
-    // Show validation message if invalid (simulating delivery system behavior)
-    if (!isValid) {
-      validationMessage.style.display = 'block';
-    }
-
-    // Verify completionStatus is NOT 'completed' (no points marked = invalid response)
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).not.toBe('completed');
-
-    // Verify the response is invalid
-    expect(isValid).toBe(false);
-
-    // Verify validation message is shown
-    expect(validationMessage.style.display).toBe('block');
+    await step('The item says the response is invalid, and the message shows', () => {
+      expect(isValid).toBe(false);
+      expect(assessmentItem.itemContext.valid).toBe(false);
+      expect(validationMessage.style.display).toBe('block');
+    });
   },
   parameters: {
     chromatic: { disableSnapshot: true }
   }
 };
 export const Q16_PCI_D14: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D14',
   ...createPciStory({
     itemName: 'item-1',
@@ -684,6 +685,7 @@ export const Q16_PCI_D14: Story = {
     ]
   })
 };
+/** Q16-PCI-D15: one marked point is a valid response for item 1; `valid` says so and no message shows. */
 export const Q16_PCI_D15: Story = {
   name: 'Q16-PCI-D15',
   render: () => html`
@@ -702,63 +704,57 @@ export const Q16_PCI_D15: Story = {
       </div>
     </qti-item>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     await loadPciItem(canvasElement, 'item-1');
     const { assessmentItem, pciElements } = await assertPciLoaded(canvasElement, 1);
-
     const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
     const pciElement = pciElements[0] as any;
+    let isValid = false;
 
-    // Mark a point on the graph to make the response valid
-    await clickGraphPoint(pciElement, '#graph svg', { x: 1, y: -3 });
-
-    // Wait for the response to be registered
-    await waitFor(() => {
-      const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
-      expect(response?.value).toEqual(['1,-3']);
-      return true;
+    await step('Mark the point (1, -3) on the graph', async () => {
+      await clickGraphPoint(pciElement, '#graph svg', { x: 1, y: -3 });
+      await waitFor(() => {
+        expect(assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value).toEqual(['1,-3']);
+        return true;
+      });
     });
 
-    clickEndAttempt(canvasElement);
+    await step('Press End Attempt', () => {
+      clickEndAttempt(canvasElement);
+      isValid = assessmentItem.validate(true);
+      if (!isValid) validationMessage.style.display = 'block';
+    });
 
-    // Validate with a valid response - should pass
-    const isValid = assessmentItem.validate(true);
-
-    // Only show validation message if invalid (should NOT show)
-    if (!isValid) {
-      validationMessage.style.display = 'block';
-    }
-
-    // Verify the response is valid
-    expect(isValid).toBe(true);
-
-    // Verify completionStatus IS 'completed'
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).toBe('completed');
-
-    // Verify NO validation message is shown
-    expect(validationMessage.style.display).toBe('none');
+    await step('The item says the response is valid, and no message shows', () => {
+      expect(isValid).toBe(true);
+      expect(assessmentItem.itemContext.valid).toBe(true);
+      expect(validationMessage.style.display).toBe('none');
+    });
   },
   parameters: {
     chromatic: { disableSnapshot: true }
   }
 };
-export const Q16_PCI_D16: Story = createRestoreStory({
-  name: 'Q16-PCI-D16',
-  itemIdentifier: 'pci-graphing-interaction-1',
-  nextItemIdentifier: 'pci-graphing-interaction-2',
-  plotSpecs: [
-    {
-      responseIdentifier: 'RESPONSE',
-      graphSelector: '#graph svg',
-      points: [{ x: 1, y: -3 }],
-      expected: ['1,-3']
-    }
-  ]
-});
+export const Q16_PCI_D16: Story = {
+  tags: ['play-fn'],
+  ...createRestoreStory({
+    name: 'Q16-PCI-D16',
+    itemIdentifier: 'pci-graphing-interaction-1',
+    nextItemIdentifier: 'pci-graphing-interaction-2',
+    plotSpecs: [
+      {
+        responseIdentifier: 'RESPONSE',
+        graphSelector: '#graph svg',
+        points: [{ x: 1, y: -3 }],
+        expected: ['1,-3']
+      }
+    ]
+  })
+};
 
-export const Q16_PCI_D21: Story = { name: 'Q16-PCI-D21', ...createPciStory({ itemName: 'item-2' }) };
+export const Q16_PCI_D21: Story = { tags: ['play-fn'], name: 'Q16-PCI-D21', ...createPciStory({ itemName: 'item-2' }) };
 export const Q16_PCI_D22: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D22',
   ...createPciStory({ itemName: 'item-2', consoleExpectations: consoleSingle })
 };
@@ -812,6 +808,7 @@ export const Q16_PCI_D23: Story = {
   }
 };
 export const Q16_PCI_D24: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D24',
   ...createPciStory({
     itemName: 'item-2',
@@ -828,6 +825,7 @@ export const Q16_PCI_D24: Story = {
     ]
   })
 };
+/** Q16-PCI-D25: item 2 needs two marked points; with both, `valid` says the response is valid. */
 export const Q16_PCI_D25: Story = {
   name: 'Q16-PCI-D25',
   render: () => html`
@@ -844,80 +842,79 @@ export const Q16_PCI_D25: Story = {
       </div>
     </qti-item>
   `,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     await loadPciItem(canvasElement, 'item-2');
     const { assessmentItem, pciElements } = await assertPciLoaded(canvasElement, 1);
-
     const validationMessage = canvasElement.querySelector('#validation-message') as HTMLElement;
     const pciElement = pciElements[0] as any;
+    let isValid = false;
 
-    // Mark TWO points - Item 2 requires two points for valid response
-    await clickGraphPoint(pciElement, '#graph svg', { x: -3, y: 0 });
-    await clickGraphPoint(pciElement, '#graph svg', { x: 0, y: -2 });
-
-    // Wait for the response to be registered
-    await waitFor(() => {
-      const response = assessmentItem.variables.find(v => v.identifier === 'RESPONSE');
-      expect(response?.value).toEqual(['-3,0', '0,-2']);
-      return true;
+    await step('Mark the two points this item needs: (-3, 0) and (0, -2)', async () => {
+      await clickGraphPoint(pciElement, '#graph svg', { x: -3, y: 0 });
+      await clickGraphPoint(pciElement, '#graph svg', { x: 0, y: -2 });
+      await waitFor(() => {
+        expect(assessmentItem.variables.find(v => v.identifier === 'RESPONSE')?.value).toEqual(['-3,0', '0,-2']);
+        return true;
+      });
     });
 
-    clickEndAttempt(canvasElement);
+    await step('Press End Attempt', () => {
+      clickEndAttempt(canvasElement);
+      isValid = assessmentItem.validate(true);
+      if (!isValid) {
+        validationMessage.textContent = 'You must plot two points to answer this question.';
+        validationMessage.style.display = 'block';
+      }
+    });
 
-    // Validate with 2 points - should be valid
-    const isValid = assessmentItem.validate(true);
-
-    // Only show validation message if invalid (should NOT show)
-    if (!isValid) {
-      validationMessage.textContent = 'You must plot two points to answer this question.';
-      validationMessage.style.display = 'block';
-    }
-
-    // Verify the response is valid
-    expect(isValid).toBe(true);
-
-    // Verify completionStatus IS 'completed'
-    const completionStatus = assessmentItem.variables.find(v => v.identifier === 'completionStatus');
-    expect(completionStatus?.value).toBe('completed');
-
-    // Verify NO validation message is shown
-    expect(validationMessage.style.display).toBe('none');
+    await step('The item says the response is valid, and no message shows', () => {
+      expect(isValid).toBe(true);
+      expect(assessmentItem.itemContext.valid).toBe(true);
+      expect(validationMessage.style.display).toBe('none');
+    });
   },
   parameters: {
     chromatic: { disableSnapshot: true }
   }
 };
-export const Q16_PCI_D26: Story = createRestoreStory({
-  name: 'Q16-PCI-D26',
-  itemIdentifier: 'pci-graphing-interaction-2',
-  nextItemIdentifier: 'pci-graphing-interaction-variables',
-  startItemIndex: 1, // Start on item 2 (0-based index)
-  plotSpecs: [
-    {
-      responseIdentifier: 'RESPONSE',
-      graphSelector: '#graph svg',
-      points: [
-        { x: -3, y: 0 },
-        { x: 0, y: -2 }
-      ],
-      expected: ['-3,0', '0,-2']
-    }
-  ]
-});
+export const Q16_PCI_D26: Story = {
+  tags: ['play-fn'],
+  ...createRestoreStory({
+    name: 'Q16-PCI-D26',
+    itemIdentifier: 'pci-graphing-interaction-2',
+    nextItemIdentifier: 'pci-graphing-interaction-variables',
+    startItemIndex: 1, // Start on item 2 (0-based index)
+    plotSpecs: [
+      {
+        responseIdentifier: 'RESPONSE',
+        graphSelector: '#graph svg',
+        points: [
+          { x: -3, y: 0 },
+          { x: 0, y: -2 }
+        ],
+        expected: ['-3,0', '0,-2']
+      }
+    ]
+  })
+};
 
 export const Q16_PCI_D31: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D31',
   ...createPciStory({ itemName: 'item-3', expectedPciCount: 2 })
 };
 export const Q16_PCI_D32: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D32',
   ...createPciStory({ itemName: 'item-3', expectedPciCount: 2, consoleExpectations: consoleDouble })
 };
 export const Q16_PCI_D33: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D33',
   ...createPciStory({ itemName: 'item-3', expectedPciCount: 2 })
 };
 export const Q16_PCI_D34: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D34',
   ...createPciStory({
     itemName: 'item-3',
@@ -945,6 +942,7 @@ export const Q16_PCI_D34: Story = {
   })
 };
 export const Q16_PCI_D35: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D35',
   ...createPciStory({
     itemName: 'item-3',
@@ -972,39 +970,44 @@ export const Q16_PCI_D35: Story = {
     endAttemptCheck: { expectedValid: true, message: 'Invalid response: Please mark at least one point on the graph.' }
   })
 };
-export const Q16_PCI_D36: Story = createRestoreStory({
-  name: 'Q16-PCI-D36',
-  itemIdentifier: 'pci-graphing-interaction-variables',
-  nextItemIdentifier: 'pci-graphing-interaction-altconfig',
-  startItemIndex: 2, // Start on item 3 (0-based index)
-  plotSpecs: [
-    {
-      responseIdentifier: 'RESPONSE',
-      graphSelector: '#graph-1 svg',
-      points: [
-        { x: -3, y: 0 },
-        { x: 0, y: -2 }
-      ],
-      expected: ['-3,0', '0,-2']
-    },
-    {
-      responseIdentifier: 'RESPONSE1',
-      graphSelector: '#graph-2 svg',
-      points: [
-        { x: -3, y: 0 },
-        { x: 0, y: -2 }
-      ],
-      expected: ['-3,0', '0,-2']
-    }
-  ]
-});
+export const Q16_PCI_D36: Story = {
+  tags: ['play-fn'],
+  ...createRestoreStory({
+    name: 'Q16-PCI-D36',
+    itemIdentifier: 'pci-graphing-interaction-variables',
+    nextItemIdentifier: 'pci-graphing-interaction-altconfig',
+    startItemIndex: 2, // Start on item 3 (0-based index)
+    plotSpecs: [
+      {
+        responseIdentifier: 'RESPONSE',
+        graphSelector: '#graph-1 svg',
+        points: [
+          { x: -3, y: 0 },
+          { x: 0, y: -2 }
+        ],
+        expected: ['-3,0', '0,-2']
+      },
+      {
+        responseIdentifier: 'RESPONSE1',
+        graphSelector: '#graph-2 svg',
+        points: [
+          { x: -3, y: 0 },
+          { x: 0, y: -2 }
+        ],
+        expected: ['-3,0', '0,-2']
+      }
+    ]
+  })
+};
 
-export const Q16_PCI_D41: Story = { name: 'Q16-PCI-D41', ...createPciStory({ itemName: 'item-4' }) };
+export const Q16_PCI_D41: Story = { tags: ['play-fn'], name: 'Q16-PCI-D41', ...createPciStory({ itemName: 'item-4' }) };
 export const Q16_PCI_D42: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D42',
   ...createPciStory({ itemName: 'item-4', consoleExpectations: consoleSingle })
 };
 export const Q16_PCI_D43: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D43',
   ...createPciStory({
     itemName: 'item-4',
@@ -1019,6 +1022,7 @@ export const Q16_PCI_D43: Story = {
   })
 };
 export const Q16_PCI_D44: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D44',
   ...createPciStory({
     itemName: 'item-4',
@@ -1033,27 +1037,32 @@ export const Q16_PCI_D44: Story = {
     endAttemptCheck: { expectedValid: true, message: 'Invalid response: Please mark at least one point on the graph.' }
   })
 };
-export const Q16_PCI_D45: Story = createRestoreStory({
-  name: 'Q16-PCI-D45',
-  itemIdentifier: 'q16-pci-item4',
-  nextItemIdentifier: 'q16-pci-item5',
-  startItemIndex: 3, // Start on item 4 (0-based index)
-  plotSpecs: [
-    {
-      responseIdentifier: 'RESPONSE',
-      graphSelector: '#graph svg',
-      points: [{ x: 0.5, y: 2 }],
-      expected: ['0.5,2']
-    }
-  ]
-});
+export const Q16_PCI_D45: Story = {
+  tags: ['play-fn'],
+  ...createRestoreStory({
+    name: 'Q16-PCI-D45',
+    itemIdentifier: 'q16-pci-item4',
+    nextItemIdentifier: 'q16-pci-item5',
+    startItemIndex: 3, // Start on item 4 (0-based index)
+    plotSpecs: [
+      {
+        responseIdentifier: 'RESPONSE',
+        graphSelector: '#graph svg',
+        points: [{ x: 0.5, y: 2 }],
+        expected: ['0.5,2']
+      }
+    ]
+  })
+};
 
-export const Q16_PCI_D51: Story = { name: 'Q16-PCI-D51', ...createPciStory({ itemName: 'item-5' }) };
+export const Q16_PCI_D51: Story = { tags: ['play-fn'], name: 'Q16-PCI-D51', ...createPciStory({ itemName: 'item-5' }) };
 export const Q16_PCI_D52: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D52',
   ...createPciStory({ itemName: 'item-5', consoleExpectations: consoleSingle })
 };
 export const Q16_PCI_D53: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D53',
   ...createPciStory({
     itemName: 'item-5',
@@ -1068,6 +1077,7 @@ export const Q16_PCI_D53: Story = {
   })
 };
 export const Q16_PCI_D54: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D54',
   ...createPciStory({
     itemName: 'item-5',
@@ -1082,27 +1092,32 @@ export const Q16_PCI_D54: Story = {
     endAttemptCheck: { expectedValid: true, message: 'Invalid response: Please mark at least one point on the graph.' }
   })
 };
-export const Q16_PCI_D55: Story = createRestoreStory({
-  name: 'Q16-PCI-D55',
-  itemIdentifier: 'q16-pci-item5',
-  nextItemIdentifier: 'q16-pci-item6',
-  startItemIndex: 4, // Start on item 5 (0-based index)
-  plotSpecs: [
-    {
-      responseIdentifier: 'RESPONSE',
-      graphSelector: '#graph svg',
-      points: [{ x: 0.5, y: 2 }],
-      expected: ['0.5,2']
-    }
-  ]
-});
+export const Q16_PCI_D55: Story = {
+  tags: ['play-fn'],
+  ...createRestoreStory({
+    name: 'Q16-PCI-D55',
+    itemIdentifier: 'q16-pci-item5',
+    nextItemIdentifier: 'q16-pci-item6',
+    startItemIndex: 4, // Start on item 5 (0-based index)
+    plotSpecs: [
+      {
+        responseIdentifier: 'RESPONSE',
+        graphSelector: '#graph svg',
+        points: [{ x: 0.5, y: 2 }],
+        expected: ['0.5,2']
+      }
+    ]
+  })
+};
 
-export const Q16_PCI_D61: Story = { name: 'Q16-PCI-D61', ...createPciStory({ itemName: 'item-6' }) };
+export const Q16_PCI_D61: Story = { tags: ['play-fn'], name: 'Q16-PCI-D61', ...createPciStory({ itemName: 'item-6' }) };
 export const Q16_PCI_D62: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D62',
   ...createPciStory({ itemName: 'item-6', consoleExpectations: consoleSingle })
 };
 export const Q16_PCI_D63: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D63',
   ...createPciStory({
     itemName: 'item-6',
@@ -1117,6 +1132,7 @@ export const Q16_PCI_D63: Story = {
   })
 };
 export const Q16_PCI_D64: Story = {
+  tags: ['play-fn'],
   name: 'Q16-PCI-D64',
   ...createPciStory({
     itemName: 'item-6',
@@ -1131,18 +1147,21 @@ export const Q16_PCI_D64: Story = {
     endAttemptCheck: { expectedValid: true, message: 'Invalid response: Please mark at least one point on the graph.' }
   })
 };
-export const Q16_PCI_D65: Story = createRestoreStory({
-  name: 'Q16-PCI-D65',
-  itemIdentifier: 'q16-pci-item6',
-  nextItemIdentifier: 'q16-pci-item5',
-  startItemIndex: 5, // Start on item 6 (0-based index)
-  navigateAway: 'prev',
-  plotSpecs: [
-    {
-      responseIdentifier: 'RESPONSE',
-      graphSelector: '#graph svg',
-      points: [{ x: 0.5, y: 2 }],
-      expected: ['0.5,2']
-    }
-  ]
-});
+export const Q16_PCI_D65: Story = {
+  tags: ['play-fn'],
+  ...createRestoreStory({
+    name: 'Q16-PCI-D65',
+    itemIdentifier: 'q16-pci-item6',
+    nextItemIdentifier: 'q16-pci-item5',
+    startItemIndex: 5, // Start on item 6 (0-based index)
+    navigateAway: 'prev',
+    plotSpecs: [
+      {
+        responseIdentifier: 'RESPONSE',
+        graphSelector: '#graph svg',
+        points: [{ x: 0.5, y: 2 }],
+        expected: ['0.5,2']
+      }
+    ]
+  })
+};

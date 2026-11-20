@@ -1,6 +1,6 @@
 ---
 title: Persist & restore
-description: Save a candidate's test session and resume it later — qtiTest.state and the qti-state-changed event.
+description: Save a candidate's test session and resume it later — qtiTest.state and the qc-test-state-changed event.
 ---
 
 A `<qti-test>` has one property and one event for this. Where you store the state is up to you.
@@ -13,7 +13,7 @@ const saved = await load(candidateId);
 if (saved) qtiTest.state = saved;
 
 // Save. Fires on every change, so debounce writes to a backend.
-qtiTest.addEventListener('qti-state-changed', e => save(candidateId, e.detail));
+qtiTest.addEventListener('qc-test-state-changed', e => save(candidateId, e.detail));
 ```
 
 **Pass the same `seed` in `qtiContext` when resuming**, or items and choices come back in a different
@@ -49,7 +49,7 @@ with an unknown `version` is ignored with a console warning.
 ## Setting a single value
 
 To change values on one item from outside the session, such as a score from manual scoring, use
-`updateItemVariables`. It also fires `qti-state-changed`.
+`updateItemVariables`. It also fires `qc-test-state-changed`.
 
 ```js
 qtiTest.updateItemVariables('item-ref-1', [{ identifier: 'SCORE', value: '1' }]);

@@ -1,6 +1,149 @@
 # @qti-components/elements
 
-## 1.10.1
+## 2.0.0-next.7
+
+### Major Changes
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - One vocabulary for parts and states (qti-theme `CONTRACT.md` §3). Every part is a role and a noun;
+  every state is an adjective and a `:state()`; a state on a part is a second token with the state's
+  name; verdicts and the answer key have one word each. The old names are still set next to the new
+  ones for this major, so nothing breaks until the next one; the theme reads only the new names.
+
+  Renames (old → new):
+
+  - Chips and targets: `:state(drag)` → `:state(chip)`, `::part(drag)` → `::part(chip)`,
+    `::part(drag-text)` → `::part(chip text)`, `::part(drags)` → `::part(bank)`,
+    `:state(droppable)` → `:state(drop)`, `:state(dragging)` → `:state(lifted)`,
+    `:state(placeholder)` → `:state(used)`, `:state(return-anchor)` → `:state(return-target)`.
+  - A drag in progress: host `dragzone-active` + `dragzone-enabled` and target `active` + `enabled`
+    → `drag-active`; target `hover` → `drag-over`; a full target gets `full` (the `disabled` attribute
+    on a target stays for this major). A placed chip exports its handle and text as `chip-control` and
+    `chip-label` (`drag-control`, `drag-label` still exported).
+  - Keyboard drags now set the same states as pointer drags (`lifted`, `drag-active`, `drag-over`).
+  - The bank is `drag-active` (`::part(bank drag-active)`) only while a chip lifted out of a target is
+    in flight, when it can take the chip back; a chip lifted out of the bank leaves it unlit.
+  - Verdicts: `candidate-partially-correct` → `candidate-partial`; the badge is
+    `::part(correction candidate-correct|candidate-incorrect|candidate-partial)` (was
+    `correction-correct` …); select-point `::part(point correct)` → `::part(point candidate-correct)`;
+    match cells likewise. `:state(incorrect-response)` is gone (never styled).
+  - Answer key: `:state(correct-response)` → `:state(answer-key)` (a choice in the key, the full-mode
+    clone); `:state(show-correct-response)` → `:state(answer-key-shown)` (the host in internal mode);
+    `::part(answer)` → `::part(answer-key)`; `::part(correct-line)` → `::part(line answer-key)`;
+    `::part(knob-correct)` → `::part(knob answer-key)`. The theme no longer reads the
+    `correct-response` attribute or the `.full-correct-response` class.
+  - Other parts: choice `slot` → `choices`; inline-choice `option-selected|option-prompt|option-clear`
+    → `option selected|prompt|clear`, `dropdown-icon(-open)` → `icon (open)`; match `c-header`,
+    `r-header`, `cols-wrap`, `rows-wrap`, `checkbox-grid`, `input-cell` → `column-header`,
+    `row-header`, `columns`, `rows`, `cells`, `cell`; associate `drop-row` → `row`; item-body
+    `qti-rubric-blocks` → `rubrics`; graphic order `aria-ordervalue` / `aria-ordercorrectvalue` →
+    `data-order` / `data-order-correct`; the sortable preview `data-drop-placeholder` →
+    `data-drop-preview`.
+  - `@qti-components/base` exports `setState` / `hasState` / `STATE_ALIASES`.
+
+  Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.
+
+- [#347](https://github.com/Citolab/qti-components/pull/347) [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa) Thanks [@herrKlein](https://github.com/herrKlein)! - The public prefix is `qc-` (qti-components); `cito-` is its old name and keeps working for one major.
+
+  - **Theme inputs:** `--cito-color-primary` → `--qc-color-primary`, and so on for every tier-1 input
+    (CONTRACT §8). The theme reads `var(--qc-x, var(--cito-x, <default>))`, so a page that sets only
+    the old name is unchanged. Four inputs that still carried the `qti-` prefix get their public name:
+    `--qc-spacing` (was `--qti-spacing`), `--qc-motion`, `--qc-line-height` (was
+    `--qti-field-line-height`), `--qc-color-text` (was `--qti-fg`), plus `--qc-border-style`.
+  - **Fewer inputs:** `--cito-color-well`, `--cito-shadow-drag` and `--cito-color-marker` are no longer read
+    (a well is the surface colour, the in-flight shadow and the marker colour derive from the text colour
+    and the primary; a brand that wants another paints `.qti-well` or `::part(point)`). Tier 1 is 36
+    inputs.
+  - **A quieter handle:** the default grip is one column of dots in a faded text colour, narrower and
+    closer to the label, so the word is what a chip shows; `--qc-size-drag-icon` sets the handle's width
+    for a brand with a wider icon.
+  - **Two faces:** `--qc-font-family-heading` sets the font of `h1`–`h6` in an item alone; unset, headings
+    keep the reading font (`--qc-font-family`). The Cito preset uses PT Sans for headings only.
+  - **Events:** every public event `cito-*` is dispatched and handled as `qc-*` (`qc-test-navigated`,
+    `qc-item-outcome-changed`, `qc-feedback-show`, …); the `cito-*` name is still sent and listened to
+    for one major. The 7.x names (`qti-request-navigation`, `test-end-attempt`, `on-test-switch-view`,
+    `qti-outcome-changed`, …) are no longer sent.
+  - **Buttons:** the test controls and the button-like interactions (end attempt, upload) read one slot
+    set, `--button-*` (`--button-background-color`, `--button-color`, `--button-border-color`,
+    `--button-hover-background-color`, `--button-active-background-color`, `--button-size`,
+    `--button-border-radius`, `--button-primary-*`, `--button-selected-*`). `--test-button-*` are the
+    old names, read as fallbacks for one major. The selected text-to-speech button carries
+    `:state(selected)`.
+  - **Internal, documented as such:** `qti-variables.css` is one block, one line per token, with the
+    old spellings (`--qti-bg`, `--qti-border-thickness`, `--qti-correct`, …) kept as aliases;
+    `qti-mixins.css` keeps the mixins that carry an idea and inlines the rest (the paint role `button`
+    is now `choice`); the empty `qti-components.overrides` layer is gone (write unlayered CSS or
+    `@layer qti-extended`); `qti-components.interactions.brand` stays as the one theme layer a brand
+    may write into.
+  - **The override contract** is CONTRACT §11 and the docs page "Styling and theming": set `--qc-*`;
+    override on parts and states, unlayered; put that CSS in the container's `<template><style>`.
+
+  Host notes: `plans/host-migration/kennisnet.md`, `citotestuit.md`, `examenkompas.md`, `peilinglezen.md`.
+
+### Patch Changes
+
+- Updated dependencies [[`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa), [`0f2339a`](https://github.com/Citolab/qti-components/commit/0f2339a8f4a24c0c00dc3a8cbe63dd79018703aa)]:
+  - @qti-components/base@3.0.0-next.6
+
+## 2.0.0-next.6
+
+### Minor Changes
+
+- [#346](https://github.com/Citolab/qti-components/pull/346) [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3) Thanks [@herrKlein](https://github.com/herrKlein)! - Feedback asks the host before it shows or hides: `cito-feedback-show` and `cito-feedback-hide`, both cancelable, so a host can show feedback its own way (a toast, a dialog, an animation).
+
+  Both are sent by `qti-feedback-block`, `qti-feedback-inline` and `qti-modal-feedback`, just before `showStatus` changes, bubble and are composed. `detail` is `{ kind: 'block' | 'inline' | 'modal', identifier, outcomeIdentifier, element, itemIdentifier? }`. Calling `preventDefault()` on `cito-feedback-show` keeps the element hidden (a modal does not open), with its content still in the DOM for the host to read or clone; the host is not asked again until the condition has gone. Cancelling `cito-feedback-hide` keeps it showing. A feedback the host took over sends no hide event. A repeat attempt that ends in the same outcome sends nothing: the item publishes the final values once, so the feedback never passes through the reset to its default. Without a listener that cancels, nothing changes.
+
+### Patch Changes
+
+- Updated dependencies [[`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8), [`d37349b`](https://github.com/Citolab/qti-components/commit/d37349b2144112ae61cd0ff2dae7c1166089cbf3), [`f450725`](https://github.com/Citolab/qti-components/commit/f450725ce5d9223345b33a52654a9d85dc5b9ce8)]:
+  - @qti-components/base@3.0.0-next.5
+  - @qti-components/transformers@1.8.0-next.0
+
+## 2.0.0-next.5
+
+### Major Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - `completionStatus` follows QTI 3 (info model §2.2.2, §2.5) and the 1EdTech conformance suite's Results Reporting reference results.
+
+  - **completionStatus is no longer derived from validity.** Before, a non-adaptive item set `completed` or `incomplete` on every answer, from whether its interactions were valid. Now it is `not_attempted` until the item is presented, `unknown` from then on, and `completed` once an attempt of a non-adaptive item ends (after `processResponse()`), unless response processing set a value itself. An adaptive item is completed only by its response processing, as before. Whether the answers are valid is `valid` in the item context and in the computed context; to know whether an item is answered, read `valid && !isDefaultResponse` per item instead of `completionStatus === 'completed'`.
+  - An item that is presented is never `not_attempted`: after a reset or a restore that says so, it is `unknown`. The test context still holds `not_attempted` for items that were never presented.
+  - Response processing no longer resets `completionStatus` before a run of a non-adaptive item: it is built in and has no default.
+  - `test-scoring-feedback` shows its "no response" text from the item's validity and default response, not from completionStatus.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major).
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - Response processing runs the way it would on a backend: once, after which the item applies the final outcome values in one update.
+
+  Before, `processResponse` published the item context at every step: the attempt count, the reset of a non-adaptive item's outcomes to their defaults, every `qti-set-outcome-value`, the completion status. Every consumer (feedback, `test-navigation`, `test-end-attempt`, a modal) saw the in-between states, such as a score of 0 or an empty FEEDBACK. Now `qti-response-processing` runs its rules on a copy of the item context (outcomes reset for a non-adaptive item, `numAttempts` already counted), so a rule still sees what an earlier rule wrote (`SCORE = SCORE + 1` twice gives +2). When the rules are done it sends every outcome in one `cito-item-set-outcomes`; the item applies them with the completion status and the validity in one publish, then sends one `cito-item-outcomes-changed`.
+
+  What a host notices:
+
+  - **Changed:** `cito-item-outcome-changed` and its legacy name `qti-outcome-changed` keep their name and `detail` (`{ item, outcomeIdentifier, value }`), but are sent once per outcome after each update, with the final value, after the context is published. A handler no longer sees the reset to the defaults or a rule's in-between value.
+  - **New:** `cito-item-outcomes-changed`, the same outcomes in one event: `detail` is `{ item, outcomes: [{ identifier, value }] }`, sent once per update. After `processResponse` it lists every outcome of the item.
+  - **New:** `cito-item-set-outcomes`, a request a host sends on the item with the outcomes a backend returned: `detail` is `{ outcomes: [{ identifier, value }], responseProcessed? }`. The item applies them in one update, synchronously. With `responseProcessed: true` it also ends the attempt the way `processResponse` does: a non-adaptive item whose processing left completionStatus `unknown` becomes `completed` (see the completionStatus changeset) and `qti-item-context-updated` goes out with `responseProcessed`.
+  - A run that throws counts the attempt and applies no outcomes. Before, it also left the outcomes the rules had set before the error, and completionStatus at `null`.
+  - `qti-set-outcome-value` no longer reaches the item: `qti-response-processing` takes it and writes to its own copy of the item context, which only a run sends to the item.
+  - `qti-response-processing`'s `process()` is now `processResponse({ numAttempts })`, with the attempt count the item keeps, and sends its result instead of applying it; call `item.processResponse()` to score. The item no longer knows the element's class, only that it has `processResponse`.
+  - **Removed:** `item.updateResponseVariable` from the helper a `qti-custom-operator` script gets: response processing reads responses, it does not change them. `item.getVariable` and `item.updateOutcomeVariable` stay.
+
+  Host migration: [Kennisnet](../plans/host-migration/kennisnet.md#next-major), [PeilingLezen](../plans/host-migration/peilinglezen.md#next-major), [Examenkompas](../plans/host-migration/examenkompas.md#next-major), [CitoTestUit](../plans/host-migration/citotestuit.md#next-major) (nothing to do).
+
+### Minor Changes
+
+- [#344](https://github.com/Citolab/qti-components/pull/344) [`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320) Thanks [@herrKlein](https://github.com/herrKlein)! - When an attempt ends, the response of every `qti-end-attempt-interaction` other than the one used is `false` (QTI info model §2.4.5): a hint requested in an earlier attempt no longer stays `true` when the candidate ends the next attempt another way.
+
+### Patch Changes
+
+- Updated dependencies [[`f99bbd0`](https://github.com/Citolab/qti-components/commit/f99bbd07c2dd1919f292806e520ddcc6cc0ac320)]:
+  - @qti-components/base@3.0.0-next.4
+
+## 1.10.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [[`9e22536`](https://github.com/Citolab/qti-components/commit/9e225363df4072db7c9a7a7d680528611d5302b6)]:
+  - @qti-components/base@3.0.0-next.3
+
+## 1.10.0-next.3
 
 ### Patch Changes
 
@@ -11,9 +154,23 @@
   The PCI iframe takes the language of the interaction (the nearest `lang` or `xml:lang`, else the page's `lang`) instead of always `lang="en"`, so a PCI that follows `lang` shows its own texts in the item's language.
 
 - Updated dependencies [[`d0a05aa`](https://github.com/Citolab/qti-components/commit/d0a05aa7415a8fa98b21557481231bc434b06f6a)]:
-  - @qti-components/base@2.5.0
+  - @qti-components/base@2.5.0-next.2
 
-## 1.10.0
+## 1.10.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd), [`ea9e3c1`](https://github.com/Citolab/qti-components/commit/ea9e3c156cb477b20a23918a47ef3fbe83fdedbd)]:
+  - @qti-components/base@2.5.0-next.1
+
+## 1.10.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
+  - @qti-components/base@2.4.1-next.0
+
+## 1.10.0-next.0
 
 ### Minor Changes
 
@@ -23,11 +180,6 @@
   - `qti-assessment-item-connected` stays: it is internal plumbing for the test and item container. Hosts use `cito-item-rendered`.
 
   Host entries: `plans/host-migration/{kennisnet,citotestuit,peilinglezen}.md`.
-
-### Patch Changes
-
-- Updated dependencies [[`05c1822`](https://github.com/Citolab/qti-components/commit/05c1822887d82c5627c9bc526e97495618fa7cb7)]:
-  - @qti-components/base@2.4.1
 
 ## 1.9.0
 

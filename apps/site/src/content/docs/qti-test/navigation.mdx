@@ -3,18 +3,18 @@ title: Navigation
 description: How moving between items and sections works — test-navigation, test-container, test-next/prev, and the navigation event.
 ---
 
-Navigation in `qti-test` is event-driven: any element can request navigation by dispatching a `qti-request-navigation` event, and `<qti-test>`'s navigation logic (backed by `TestNavigationMixin`) is the only thing that actually loads items and updates context in response.
+Navigation in `qti-test` is event-driven: any element can request navigation by dispatching a `qc-test-navigate` event, and `<qti-test>`'s navigation logic (backed by `TestNavigationMixin`) is the only thing that actually loads items and updates context in response.
 
 ## `<test-navigation>`
 
 The context hub. It computes `computedContext` (see [Overview](/qti-test/overview/#how-data-flows)) from the loaded test structure.
 
-| Attribute          | Type                                | Notes                                                                                                                                                            |
-| ------------------ | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `identifier`       | `string`                            | Optional.                                                                                                                                                        |
-| `auto-score-items` | `boolean` (`auto-score-items` attr) | When set, listens for `qti-interaction-changed` and automatically calls `processResponse()` on non-adaptive items whose `SCORE` outcome isn't externally scored. |
+| Attribute          | Type                                | Notes                                                                                                                                                             |
+| ------------------ | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `identifier`       | `string`                            | Optional.                                                                                                                                                         |
+| `auto-score-items` | `boolean` (`auto-score-items` attr) | When set, listens for `qc-item-response-changed` and automatically calls `processResponse()` on non-adaptive items whose `SCORE` outcome isn't externally scored. |
 
-It also listens for and re-dispatches several test-level events onto the currently active item's `<qti-assessment-item>`: `test-end-attempt`, `test-show-correct-response`, `test-show-candidate-correction`, and `test-update-outcome-variable` (used by [`test-scoring-buttons`](/qti-test/scoring-and-state/#test-scoring-buttons)).
+It also listens for and re-dispatches several test-level events onto the currently active item's `<qti-assessment-item>`: `qc-test-end-attempt`, `test-show-correct-response`, `test-show-candidate-correction`, and `qc-test-update-outcome` (used by [`test-scoring-buttons`](/qti-test/scoring-and-state/#test-scoring-buttons)).
 
 ## `<test-container>`
 
@@ -33,7 +33,7 @@ Any element can trigger navigation by dispatching:
 
 ```ts
 this.dispatchEvent(
-  new CustomEvent('qti-request-navigation', {
+  new CustomEvent('qc-test-navigate', {
     bubbles: true,
     composed: true,
     detail: { type: 'item' | 'section', id: identifier }
@@ -43,7 +43,7 @@ this.dispatchEvent(
 
 `<qti-test>` exposes this as a public `navigateTo(type, id?)` method too (from `ITestNavigationMixin`) — useful for driving navigation from outside the DOM tree, e.g. a router.
 
-The navigation lifecycle dispatches (in order): `qti-navigation-loading-started`, then either `qti-test-loaded` (with the loaded item ref(s) in `detail`) or `qti-navigation-error` (with a `NavigationError`), and finally `qti-navigation-loading-ended` — all bubbling and composed, so a page can show a loading spinner without reaching into internals.
+The navigation lifecycle dispatches (in order): `qc-test-navigation-started`, then either `qc-test-rendered` (with the loaded item ref(s) in `detail`) or `qc-test-navigation-failed` (with a `NavigationError`), and finally `qti-navigation-loading-ended` — all bubbling and composed, so a page can show a loading spinner without reaching into internals.
 
 ## Built-in navigation controls
 
@@ -53,4 +53,6 @@ All of these read `computedContext` to know the active test part/section/item an
 - **`<test-item-link item-id="...">`** — jump straight to a specific item by identifier.
 - **`<test-section-link section-id="...">`** — jump to the first item of a specific section.
 
-All four ultimately dispatch the same `qti-request-navigation` event described above — they're thin, replaceable wrappers around it.
+The two links are plugins: From `@qti-components/extended`, a package installed next to `@citolab/qti-components` (`import '@qti-components/extended'`); the umbrella does not register them.
+
+All four ultimately dispatch the same `qc-test-navigate` event described above — they're thin, replaceable wrappers around it.

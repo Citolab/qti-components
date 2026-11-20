@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -39,20 +39,7 @@ export class TestPrev extends LitElement {
     }
   }
 
-  static override styles = css`
-    :host {
-      ${styles.btn};
-    }
-    :host(:hover:not([disabled])) {
-      ${styles.btnInteractive};
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+  static override styles = styles.button;
 
   constructor() {
     super();
@@ -82,11 +69,11 @@ export class TestPrev extends LitElement {
   }
 
   protected _requestItem(identifier: string): void {
-    dispatchPublic(this, 'cito-test-navigate', { type: 'item', id: identifier });
+    dispatchPublic(this, 'qc-test-navigate', { type: 'item', id: identifier });
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return styles.control;
   }
 }
 

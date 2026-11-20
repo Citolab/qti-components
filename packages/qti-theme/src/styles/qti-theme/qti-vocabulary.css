@@ -1,0 +1,36 @@
+/*
+ * The QTI 3 shared vocabulary (qti-native/qti3p0.css) in the theme's shape. Its colours come from
+ * the hooks filled in qti-variables.css; what a hook cannot carry is restated here. The vocabulary's
+ * well has a fixed 4px corner; a theme rounds its boxes with --qti-radius-box.
+ */
+.qti-well {
+  border-radius: var(--qti-radius-box);
+}
+
+/*
+ * A bordered table. The vocabulary's `.qti-bordered` draws one line round whatever carries it; on a
+ * table that leaves the cells touching the line with no padding, and a cell-by-cell `qti-bordered`
+ * doubles every edge because nothing collapses them. One class on the table is the author's opt-in
+ * (prose.css: plain tables are left as delivered), and the theme completes it: collapsed borders,
+ * the theme's edge on every cell, room for the text, and a tint on the header row.
+ */
+table.qti-bordered {
+  border-collapse: collapse;
+  border: var(--qti-border);
+
+  & th,
+  & td {
+    border: var(--qti-border);
+    padding: var(--qti-padding-inline);
+  }
+
+  & th {
+    background-color: var(--qti-color-base-200);
+  }
+
+  & caption {
+    text-align: start;
+    padding-block: var(--qti-inline-gap);
+    font-weight: 600;
+  }
+}

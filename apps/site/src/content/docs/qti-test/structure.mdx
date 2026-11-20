@@ -21,7 +21,7 @@ The root of a test.
 | `identifier` | `string` | |
 | `title` | `string` | Stored internally and re-exposed as `data-title` (the native `title` attribute is removed) so it doesn't produce a browser tooltip. |
 
-Dispatches `qti-assessment-test-connected` (bubbles, composed) once connected — this is the event `<qti-test>` and `<test-navigation>` listen for to (re)initialize `testContext`/`computedContext`.
+Dispatches `qc-test-loaded` (bubbles, composed) once connected — this is the event `<qti-test>` and `<test-navigation>` listen for to (re)initialize `testContext`/`computedContext`.
 
 ## `<qti-test-part>`
 
@@ -39,6 +39,12 @@ Dispatches `qti-test-part-connected`.
 ## `<qti-assessment-section>`
 
 A section groups item references (and, optionally, nested sections).
+
+In `computedContext`, `testParts[].sections` lists every section once, nested ones included (a section before its subsections), each with only its own items; a section that only holds subsections has no items of its own. Items are numbered (`index`) in the test's order.
+
+A `qti-item-session-control` on the test part, a section or an item-ref resolves per attribute: each attribute comes from the closest level that declares it, and its QTI default only when none does. An item-ref that declares only `show-feedback="true"` keeps its section's `max-attempts`.
+
+Each item in `computedContext` carries the result as `sessionControl`: all seven attributes, resolved (`maxAttempts`, `showFeedback`, `allowReview`, `showSolution`, `allowComment`, `allowSkipping`, `validateResponses`; type `SessionControl` from `@qti-components/base`). These are the values QTI gives; `allow-review`, `allow-comment` and `validate-responses` have no effect in the player yet.
 
 | Attribute | Type | Notes |
 |---|---|---|
@@ -64,6 +70,6 @@ A reference to a single item within a section — this is what actually triggers
 | `fixed` | `boolean` | |
 | `xmlDoc` | `DocumentFragment` | Set programmatically once the referenced item is loaded and transformed — not an HTML attribute. |
 
-Exposes an `assessmentItem` getter that returns the rendered `<qti-assessment-item>` once loaded. Dispatches `qti-assessment-item-ref-connected` with `{ identifier, href, category }` in the event detail.
+Exposes an `assessmentItem` getter that returns the rendered `<qti-assessment-item>` once loaded. Dispatches `qc-item-ref-connected` with `{ identifier, href, category }` in the event detail.
 
 It also supports an optional `<template item-ref>` placed inside `<test-container>` for rendering extra per-item chrome (a bookmark, an index number, etc.) alongside the item — this uses the same [Heximal templates](https://github.com/heximal/templates) mechanism as `test-scoring-buttons` and `test-view-toggle` (see [Scoring & State](/qti-test/scoring-and-state/) and [View Helpers](/qti-test/view-helpers/)).
