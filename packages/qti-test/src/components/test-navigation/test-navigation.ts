@@ -157,7 +157,13 @@ export class TestNavigation extends LitElement {
     this.afterAttemptEnded(
       (event.composedPath()[0] as HTMLElement)?.closest<QtiAssessmentItem>('qti-assessment-item'),
       computedItem,
-      this.#isItemDone(numAttempts, optimality, computedItem?.maxAttempts, computedItem?.adaptive, completionStatus)
+      this.#isItemDone(
+        numAttempts,
+        optimality,
+        computedItem?.sessionControl?.maxAttempts,
+        computedItem?.adaptive,
+        completionStatus
+      )
     );
   }
 
@@ -320,10 +326,7 @@ export class TestNavigation extends LitElement {
             categories: item.categories,
             href: item.href,
             variables: [] as OutcomeVariable[],
-            allowSkipping: item.sessionControl.allowSkipping,
-            maxAttempts: item.sessionControl.maxAttempts,
-            showFeedback: item.sessionControl.showFeedback,
-            showSolution: item.sessionControl.showSolution
+            sessionControl: { ...item.sessionControl }
           }))
         }))
       }))
@@ -573,7 +576,7 @@ export class TestNavigation extends LitElement {
                 const done = this.#isItemDone(
                   numAttempts,
                   optimality,
-                  computedItem.maxAttempts,
+                  computedItem.sessionControl?.maxAttempts,
                   computedItem.adaptive,
                   completionStatus
                 );
@@ -669,7 +672,7 @@ export class TestNavigation extends LitElement {
   #attemptsUsed(item: ComputedItem | undefined, element: QtiAssessmentItem): boolean {
     if (!item || this.autoScoreItems) return false;
     if (item.adaptive || element.adaptive === 'true') return false;
-    const maxAttempts = item.maxAttempts ?? 1;
+    const maxAttempts = item.sessionControl?.maxAttempts ?? 1;
     return maxAttempts > 0 && (item.numAttempts ?? 0) >= maxAttempts;
   }
 

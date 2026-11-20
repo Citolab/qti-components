@@ -203,6 +203,18 @@ path. Otherwise:
 
 Evidence: read from source, not run against the host's packages
 
+### Session control as `item.sessionControl` (roadmap 1, T1b)
+
+Status: breaking
+Members: `computedContext` (`ComputedItem.maxAttempts`, `showFeedback`, `showSolution`,
+`allowSkipping`)
+Do: read `item.sessionControl.maxAttempts` (and `.showFeedback`, `.showSolution`,
+`.allowSkipping`) instead of the flat fields, which are gone. `sessionControl` also carries
+`allowReview`, `allowComment` and `validateResponses`, all resolved; type `SessionControl` from
+`@qti-components/base`. A context the host builds itself (in tests) needs `sessionControl` on
+every item. Stamp templates that print one of the four fields read `item.sessionControl.<name>`.
+Evidence: searched the host source for the four names: no reads; the compiled player was not read
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

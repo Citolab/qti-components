@@ -667,8 +667,10 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   only when none does (implementation guide §4.4.2). Nested sections are listed once each in
   `computedContext.testParts[].sections`, depth first, with only their own item-refs; `index`
   follows the test's document order. The flat fields on the computed item (`maxAttempts`,
-  `showFeedback`, `showSolution`, `allowSkipping`) are removed in this major in favour of
-  `item.sessionControl` (T1b).
+  `showFeedback`, `showSolution`, `allowSkipping`) are removed in this major, with no alias, in
+  favour of `item.sessionControl` (T1b): all seven attributes, resolved, typed `SessionControl`
+  in `@qti-components/base`. `testParts[].allowSkipping` and `sections[].allowSkipping` stay
+  until T2d reshapes them.
 - **Our elements are `qc-`** (2026-10-28, replaces the open decision on the `qti-` namespace):
   `qti-` belongs to 1EdTech (impl. guide §2.2.2), so every element that is ours, not QTI's, takes
   `qc-`, in this major: the `test-*` controls, `item-container`, `test-container` and the

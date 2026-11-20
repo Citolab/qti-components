@@ -98,7 +98,7 @@ export class TestEndAttempt extends LitElement {
       return;
     }
 
-    const maxAttempts = activeItem.maxAttempts ?? 1;
+    const maxAttempts = activeItem.sessionControl?.maxAttempts ?? 1;
     const numAttempts = activeItem.numAttempts || 0;
 
     // For non-adaptive items, the last ended attempt already reached the optimal
@@ -122,7 +122,7 @@ export class TestEndAttempt extends LitElement {
       return;
     }
 
-    if (this.requireAnswer || activeItem.allowSkipping === false) {
+    if (this.requireAnswer || activeItem.sessionControl?.allowSkipping === false) {
       this._internalDisabled = activeItem.valid === false || activeItem.isDefaultResponse;
     } else {
       this._internalDisabled = false;

@@ -619,7 +619,7 @@ export const NestedSectionsKeepTheirItemsAndSessionControl: StoryObj = {
     await step(
       'REQ declares only show-feedback: it shows feedback, and keeps max-attempts 3 and no skipping from the outer section',
       async () => {
-        expect(computedItems(canvasElement).REQ).toMatchObject({
+        expect(computedItems(canvasElement).REQ.sessionControl).toMatchObject({
           showFeedback: true,
           maxAttempts: 3,
           allowSkipping: false
@@ -630,7 +630,7 @@ export const NestedSectionsKeepTheirItemsAndSessionControl: StoryObj = {
     await step(
       'FREE declares nothing: max-attempts 3 and no skipping from the outer section, no feedback',
       async () => {
-        expect(computedItems(canvasElement).FREE).toMatchObject({
+        expect(computedItems(canvasElement).FREE.sessionControl).toMatchObject({
           showFeedback: false,
           maxAttempts: 3,
           allowSkipping: false

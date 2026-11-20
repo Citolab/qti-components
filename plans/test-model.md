@@ -112,8 +112,9 @@ Decided with the user on 2026-11-02.
   entries.
 - **Document order is kept in the model**: a section has one `content` list of item-refs and
   subsections, in document order, as the XML has them (not separate `sections` and `itemRefs`).
-- **Nested sections in `computedContext`** stay a flat list (T2 decides its shape): every section
-  once, depth first, each with only its own item-refs; a section that only holds subsections has
+- **Nested sections in `computedContext`** are a flat list until T2d, which makes it the tree of
+  the test (decided 2026-11-18, [computed-context.md](computed-context.md)): every section once,
+  depth first, each with only its own item-refs; a section that only holds subsections has
   `items: []` and is completed when theirs are. Item `index` follows document order, so it matches
   `test-next` where item-refs and subsections interleave.
 
@@ -125,7 +126,7 @@ Each step is one PR into `next`.
       fixtures with nested sections and session control at every level. `test-navigation` builds
       the structure of `computedContext` from it instead of querying the DOM. Fixes the nested
       sections.
-- [ ] **T1b** Session control as JSON: `item.sessionControl` with all seven attributes, resolved;
+- [x] **T1b** Session control as JSON: `item.sessionControl` with all seven attributes, resolved;
       the old flat fields as decided above.
 - [ ] **T1c** `readItemFacts(doc)` from the item XML in `_loadSingleItem`; the
       `qti-assessment-item-connected` listener goes.
