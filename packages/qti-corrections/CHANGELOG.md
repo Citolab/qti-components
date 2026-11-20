@@ -1,5 +1,17 @@
 # @qti-components/corrections
 
+## 1.0.0-next.11
+
+### Patch Changes
+
+- [#364](https://github.com/Citolab/qti-components/pull/364) [`2efa756`](https://github.com/Citolab/qti-components/commit/2efa7567eed99e5a6f2203b9003d9387d1f206c8) Thanks [@herrKlein](https://github.com/herrKlein)! - Each item in `computedContext` carries its resolved `qti-item-session-control` as `sessionControl`: all seven attributes (`maxAttempts`, `showFeedback`, `allowReview`, `showSolution`, `allowComment`, `allowSkipping`, `validateResponses`), each from the closest level that declares it, else its QTI default. The type is `SessionControl` from `@qti-components/base`.
+
+  Breaking: the flat `maxAttempts`, `showFeedback`, `showSolution` and `allowSkipping` on the computed item are gone; read `item.sessionControl.<name>` (host migration: [Kennisnet](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/kennisnet.md), [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md), [PeilingLezen](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/peilinglezen.md), [ExamenKompas](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/examenkompas.md)). `allow-review`, `allow-comment` and `validate-responses` are carried, with no effect in the player yet (roadmap 1, T3).
+
+- Updated dependencies [[`f1718a8`](https://github.com/Citolab/qti-components/commit/f1718a843fafef1e339daa4ddac38d3338f1f34e), [`2efa756`](https://github.com/Citolab/qti-components/commit/2efa7567eed99e5a6f2203b9003d9387d1f206c8)]:
+  - @qti-components/test@2.0.0-next.16
+  - @qti-components/base@3.0.0-next.8
+
 ## 1.0.0-next.10
 
 ### Major Changes

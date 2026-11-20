@@ -1,5 +1,28 @@
 # @citolab/qti-components
 
+## 10.0.0-next.20
+
+### Major Changes
+
+- [#360](https://github.com/Citolab/qti-components/pull/360) [`f1718a8`](https://github.com/Citolab/qti-components/commit/f1718a843fafef1e339daa4ddac38d3338f1f34e) Thanks [@herrKlein](https://github.com/herrKlein)! - `@qti-components/delivery` builds the test model from a `qti-assessment-test`'s markup: `buildTestModel` returns the test parts and, in document order, the nested sections and item-refs, with `qti-item-session-control` resolved per attribute, under Node (xmldom) and in the browser alike.
+
+  `test-navigation` now builds `computedContext` from that model instead of querying the rendered test. Two behaviour changes for tests that nest sections or declare part of a `qti-item-session-control` below another one (host migration: [Kennisnet](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/kennisnet.md), [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md), [PeilingLezen](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/peilinglezen.md), [ExamenKompas](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/examenkompas.md)):
+
+  - A nested section is listed once in `computedContext.testParts[].sections`, with only its own item-refs, so every item appears once; item `index` follows the test's document order.
+  - Session control inherits per attribute, as QTI 3 says: an item-ref that declares only `show-feedback` keeps its section's `max-attempts`, and a nested section inherits from its parent section.
+
+- [#364](https://github.com/Citolab/qti-components/pull/364) [`2efa756`](https://github.com/Citolab/qti-components/commit/2efa7567eed99e5a6f2203b9003d9387d1f206c8) Thanks [@herrKlein](https://github.com/herrKlein)! - Each item in `computedContext` carries its resolved `qti-item-session-control` as `sessionControl`: all seven attributes (`maxAttempts`, `showFeedback`, `allowReview`, `showSolution`, `allowComment`, `allowSkipping`, `validateResponses`), each from the closest level that declares it, else its QTI default. The type is `SessionControl` from `@qti-components/base`.
+
+  Breaking: the flat `maxAttempts`, `showFeedback`, `showSolution` and `allowSkipping` on the computed item are gone; read `item.sessionControl.<name>` (host migration: [Kennisnet](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/kennisnet.md), [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md), [PeilingLezen](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/peilinglezen.md), [ExamenKompas](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/examenkompas.md)). `allow-review`, `allow-comment` and `validate-responses` are carried, with no effect in the player yet (roadmap 1, T3).
+
+### Minor Changes
+
+- [#358](https://github.com/Citolab/qti-components/pull/358) [`8df1bea`](https://github.com/Citolab/qti-components/commit/8df1beaa8b9833661cb91f5daa067101eb5c8f99) Thanks [@herrKlein](https://github.com/herrKlein)! - New, experimental package: `@qti-components/delivery`, the QTI 3 delivery engine with no browser globals, so the same code runs in the browser and on a Node server. This first release holds the seeded random and the fixed-aware shuffle (moved from `@qti-components/transformers`, with identical output), the versioned delivery state (`DeliveryState`), the command and effect types, an injected clock and the interface to response and outcome processing. Its API may change in any 0.x release.
+
+### Patch Changes
+
+- [#358](https://github.com/Citolab/qti-components/pull/358) [`8df1bea`](https://github.com/Citolab/qti-components/commit/8df1beaa8b9833661cb91f5daa067101eb5c8f99) Thanks [@herrKlein](https://github.com/herrKlein)! - The seeded shuffle of sections and interactions now comes from `@qti-components/delivery`, a new dependency. The order for a given seed is unchanged.
+
 ## 10.0.0-next.19
 
 ### Minor Changes

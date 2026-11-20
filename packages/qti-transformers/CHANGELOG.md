@@ -1,5 +1,13 @@
 # @qti-components/transformers
 
+## 1.8.0-next.1
+
+### Patch Changes
+
+- [#358](https://github.com/Citolab/qti-components/pull/358) [`8df1bea`](https://github.com/Citolab/qti-components/commit/8df1beaa8b9833661cb91f5daa067101eb5c8f99) Thanks [@herrKlein](https://github.com/herrKlein)! - The seeded shuffle of sections and interactions now comes from `@qti-components/delivery`, a new dependency. The order for a given seed is unchanged.
+- Updated dependencies [[`8df1bea`](https://github.com/Citolab/qti-components/commit/8df1beaa8b9833661cb91f5daa067101eb5c8f99), [`f1718a8`](https://github.com/Citolab/qti-components/commit/f1718a843fafef1e339daa4ddac38d3338f1f34e)]:
+  - @qti-components/delivery@0.1.0-next.0
+
 ## 1.8.0-next.0
 
 ### Minor Changes
