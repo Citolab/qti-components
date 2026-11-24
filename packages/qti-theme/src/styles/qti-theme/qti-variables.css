@@ -115,6 +115,10 @@
     --qti-border-color: var(--qti-primary); /* THE border colour — the border half of the --qti-bg / --qti-fg pair */
     --qti-border-radius: 0.2rem;
     --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-border-color);
+    /* The QTI 3 shared CSS draws `.qti-bordered` with this (qti-native/qti3p0-variables.css declares the
+       spec's own grey for native.css alone); in the theme an author's bordered table or block follows the
+       theme's border colour, like every other border it paints. */
+    --table-border-color: var(--qti-border-color);
 
     /* ── The paint contract's resting look ──
      *

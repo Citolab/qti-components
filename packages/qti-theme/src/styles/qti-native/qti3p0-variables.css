@@ -1,0 +1,24 @@
+/*
+ * The custom properties the QTI 3 shared CSS reads but never declares.
+ *
+ * qti3p0.css is 1EdTech's published sheet, kept verbatim. Its presentation utilities (Shared CSS
+ * §2.12) paint with variables the sheet leaves to the delivery platform: `.qti-bordered` draws
+ * `1px solid var(--table-border-color)`, `.qti-well` takes its fill, frame and shadow from
+ * `--well-*`, `.qti-underline` colours its line with `--foreground`. Nothing declared them, so each
+ * of those declarations was invalid at computed-value time and fell back to its initial value: an
+ * element the author marked bordered showed no border at all, and a well had no fill or frame.
+ *
+ * The values are the spec's own example definitions (Shared Vocabulary §1.1.6.2, which writes them
+ * out literally), so the vocabulary renders as specified wherever this sheet is used on its own —
+ * the portable-custom-interaction inlines native.css into its iframe. The theme maps the border
+ * colour onto its own border token (qti-theme/qti-variables.css); a host retunes any of them by
+ * declaring the same property.
+ */
+:root,
+:host {
+  --table-border-color: #888888;
+  --well-bg: #f5f5f5;
+  --well-border: 1px solid #e3e3e3;
+  --well-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  --foreground: currentcolor;
+}
