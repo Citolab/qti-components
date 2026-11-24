@@ -4,7 +4,7 @@ import itemCss from '@qti-components/theme/item-css';
 import nativeCss from '@qti-components/theme/native-css';
 
 /**
- * The QTI 3 shared CSS (qti3p0.css, kept verbatim) paints `.qti-bordered`, `.qti-well` and `.qti-underline`
+ * The QTI 3 shared CSS (qti3p0.css, left untouched) paints `.qti-bordered`, `.qti-well` and `.qti-underline`
  * with custom properties it never declares. Undeclared, those declarations fall back to their initial values —
  * a bordered table showed no lines at all. qti3p0-variables.css declares them with the spec's own example values
  * and the theme maps the border colour onto its border token; this pins both, measured in a real browser.

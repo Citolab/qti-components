@@ -1,7 +1,7 @@
 /*
  * The custom properties the QTI 3 shared CSS reads but never declares.
  *
- * qti3p0.css is 1EdTech's published sheet, kept verbatim. Its presentation utilities (Shared CSS
+ * qti3p0.css is 1EdTech's published sheet, left untouched here. Its presentation utilities (Shared CSS
  * §2.12) paint with variables the sheet leaves to the delivery platform: `.qti-bordered` draws
  * `1px solid var(--table-border-color)`, `.qti-well` takes its fill, frame and shadow from
  * `--well-*`, `.qti-underline` colours its line with `--foreground`. Nothing declared them, so each
