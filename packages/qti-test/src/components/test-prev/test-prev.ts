@@ -7,6 +7,7 @@ import { computedContext } from '@qti-components/base';
 
 import * as styles from '../styles';
 import { dispatchPublic } from '../../public-events';
+import { itemsInOrder } from '../../items-in-order';
 
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 
@@ -54,7 +55,7 @@ export class TestPrev extends LitElement {
     if (!this.computedContext) return;
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     if (!testPart) return;
-    this.sectionItems = testPart.sections.flatMap(section => section.items);
+    this.sectionItems = itemsInOrder(testPart);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
     this.checkDisabled();
   }

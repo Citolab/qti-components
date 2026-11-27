@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                     identifier="t12-sections" title="T12 - Sections" 
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd">
+    <qti-time-limits max-time="60"/>
+    <qti-test-part identifier="testPart-1" navigation-mode="linear" submission-mode="individual">
+        <qti-assessment-section identifier="assessmentSection-1" visible="true" title="Section 1">
+            <qti-item-session-control allow-skipping="true"/>
+            <qti-rubric-block view="candidate" use="instructions">
+                <qti-content-body>
+                    <p>Instructions for Section 1...</p>
+                </qti-content-body>
+            </qti-rubric-block>
+            <qti-assessment-item-ref identifier="t12-sections-item-1" href="items/item-1.xml"/>
+            <qti-assessment-item-ref identifier="t12-sections-item-2" href="items/item-2.xml"/>
+            <qti-assessment-item-ref identifier="t12-sections-item-3" href="items/item-3.xml"/>
+            <qti-assessment-item-ref identifier="t12-sections-item-4" href="items/item-4.xml"/>
+        </qti-assessment-section>
+        <qti-assessment-section identifier="assessmentSection-2" visible="true" title="Section 2">
+            <qti-item-session-control allow-skipping="false"/>
+            <qti-rubric-block view="candidate" use="instructions">
+                <qti-content-body>
+                    <p>Instructions for Section of the Second...</p>
+                </qti-content-body>
+            </qti-rubric-block>
+            <qti-assessment-item-ref identifier="t12-sections-item-5" href="items/item-5.xml"/>
+            <qti-assessment-item-ref identifier="t12-sections-item-6" href="items/item-6.xml"/>
+            <qti-assessment-item-ref identifier="t12-sections-item-7" href="items/item-7.xml"/>
+        </qti-assessment-section>
+        <!-- This SectionRef contains one item:  t12-sections-item-8 -->
+        <qti-assessment-section-ref identifier="assessmentSection-3" href="section3.xml"/>
+    </qti-test-part>
+</qti-assessment-test>

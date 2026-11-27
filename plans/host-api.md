@@ -106,9 +106,10 @@ backend result goes back in unchanged.
 
 ### Functions from `@qti-components/test`
 
-| Function                                          | Returns        | What it does                                                                                                                                                                                              | Now                  |
-| ------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| `stateFromContexts(testContext, sessionContext?)` | `QtiTestState` | Turns a `testContext` and `sessionContext` a 9.x host stored (plain JSON) into a `state` to assign: values as strings, no declaration metadata. A host that kept only the item passes `{ navItemRefId }`. | new (roadmap 1, T1e) |
+| Function                                          | Returns          | What it does                                                                                                                                                                                                                              | Now                  |
+| ------------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `stateFromContexts(testContext, sessionContext?)` | `QtiTestState`   | Turns a `testContext` and `sessionContext` a 9.x host stored (plain JSON) into a `state` to assign: values as strings, no declaration metadata. A host that kept only the item passes `{ navItemRefId }`.                                 | new (roadmap 1, T1e) |
+| `itemsInOrder(testPart)`                          | `ComputedItem[]` | The items of a `computedContext` test part in the order the candidate takes them (document order, info items included); flattening `sections` is not that order where item-refs and subsections interleave. Reads the part's `itemOrder`. | new (roadmap 1, T1)  |
 
 ### The item you get from `item(id)` (and from `qti-item.item`)
 
@@ -665,6 +666,22 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
     neither pair on order and drops both on import, and no fixture here carries them, so no
     editor-authored item depends on the old names.
   - Not checked: Kennisnet's and CitoTestUit's content, and what TAO's authoring writes.
+- **Items in order: `itemOrder` and `itemsInOrder`** (2026-11-27, roadmap 1 T1, Elective T7): each
+  `computedContext.testParts[]` carries `itemOrder`, its item-ref identifiers in document order, and
+  `itemsInOrder(testPart)` from `@qti-components/test` reads the items in that order. `test-next`
+  and `test-prev` follow it: with nested sections they used the depth-first section list, so a
+  linear part refused Next where a section's item-refs and subsections interleave. Additive; T2d's
+  tree of the test may replace both.
+- **A `qti-assessment-section-ref` is included when the test is loaded** (2026-11-27, roadmap 1 T1,
+  S9-L2-D1): `qtiTransformTest().load()` (so `test-container` with a URL) replaces each reference by
+  the section it names, before ordering and the host's transform callback, as QTI's facade asks (info
+  model §7.5). The merged section takes the reference's `identifier`, since one file may be referenced
+  more than once; its URLs keep pointing at its own files. A merged test that repeats an item-ref
+  identifier (one file of item-refs referenced twice) is rejected: QTI allows the repeat reference
+  (§7.5) but requires unique item-ref identifiers (§5.6), and we invent no identifiers. A test given
+  as a string (`testXML`, `parse()`) has no location to fetch from and keeps the reference, with a
+  warning. Gap, roadmap 1 T8: branch rules should treat a referenced section as a leaf (§7.5), but
+  nothing marks a merged section yet, so a rule can target a section inside it.
 - **`stateFromContexts` is the converter, on `next` only** (2026-11-27, roadmap 1 T1e):
   `stateFromContexts(testContext, sessionContext?)` from `@qti-components/test` turns stored
   contexts into a `QtiTestState`; `qtiTest.state` reads the live contexts the same way. It reads

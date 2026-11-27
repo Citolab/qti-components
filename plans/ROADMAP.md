@@ -104,15 +104,16 @@ What QTI 3 has that no sub-roadmap builds yet. Read from the elements the librar
 names its source mentions on 2026-10-30, not run against the conformance suite; each row is
 checked when it gets a phase.
 
-| QTI                                                                                                       | Today                     | Slot                 |
-| --------------------------------------------------------------------------------------------------------- | ------------------------- | -------------------- |
-| Results Reporting (`assessmentResult`, `itemResult`, `testResult`)                                        | not supported             | out of scope for now |
-| Template rules: `qti-template-condition`, `qti-set-default-value`, `qti-template-default` on the item-ref | not found in source       | after roadmap 5      |
-| Template content: `qti-template-block`, `qti-template-inline`                                             | not found in source       | after roadmap 5      |
-| `qti-outcome-processing-fragment`, `qti-variable-mapping`                                                 | not found in source       | after roadmap 5      |
-| `qti-drawing-interaction`                                                                                 | not found in source       | after roadmap 5      |
-| Companion materials: `qti-calculator`, `qti-protractor`, `qti-rule`                                       | not found in source       | after roadmap 5      |
-| Accessibility catalogs and PNP: `qti-catalog-info`, `qti-catalog`, `qti-card`                             | mentioned, not registered | after roadmap 5      |
+| QTI                                                                                                                                                                                                                         | Today                                                | Slot                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | -------------------- |
+| Results Reporting (`assessmentResult`, `itemResult`, `testResult`)                                                                                                                                                          | not supported                                        | out of scope for now |
+| Template rules: `qti-template-condition`, `qti-set-default-value`, `qti-template-default` on the item-ref                                                                                                                   | not found in source                                  | after roadmap 5      |
+| Template content: `qti-template-block`, `qti-template-inline`                                                                                                                                                               | not found in source                                  | after roadmap 5      |
+| `qti-outcome-processing-fragment`, `qti-variable-mapping`                                                                                                                                                                   | not found in source                                  | after roadmap 5      |
+| `qti-drawing-interaction`                                                                                                                                                                                                   | not found in source                                  | after roadmap 5      |
+| Companion materials: `qti-calculator`, `qti-protractor`, `qti-rule`                                                                                                                                                         | not found in source                                  | after roadmap 5      |
+| Accessibility catalogs and PNP: `qti-catalog-info`, `qti-catalog`, `qti-card`                                                                                                                                               | mentioned, not registered                            | after roadmap 5      |
+| `class` and `data-*` on `qti-assessment-section-ref` (§7.5): carried onto the merged section; QTI does not say whether the reference's or the section's win (suggested: merge `class` tokens, the reference's `data-*` win) | dropped on merge (found in roadmap 1 T1, 2026-11-27) | not decided          |
 
 Not QTI features, but slots of their own:
 

@@ -54,6 +54,13 @@ export type ComputedContext = {
     submissionMode: 'individual' | 'simultaneous';
     allowSkipping?: boolean;
     /**
+     * The item-ref identifiers of the part in the test's document order, info items included: the
+     * order a candidate takes them in. `sections` is depth first, so where a section's item-refs and
+     * subsections interleave, flattening `sections` gives another order; read the items in order with
+     * `itemsInOrder(testPart)` from `@qti-components/test`.
+     */
+    itemOrder?: string[];
+    /**
      * Every section of the part once, nested ones included, depth first (a section before its
      * subsections), each with only its own item-refs, so every item is listed once. Where a
      * section's item-refs and subsections interleave, this order is not the test's; `index` is.

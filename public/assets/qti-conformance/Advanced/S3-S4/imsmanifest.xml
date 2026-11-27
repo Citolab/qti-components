@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          identifier="level2-S3S4-selection-ordering" 
+          xsi:schemaLocation="http://www.imsglobal.org/xsd/qti/qtiv3p0/imscp_v1p1 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqtiv3p0_imscpv1p2_v1p0.xsd">
+    <metadata>
+        <schema>QTI Package</schema>
+        <schemaversion>3.0.1</schemaversion>
+    </metadata>
+    <organizations/>
+    <resources>
+        <resource identifier="s3s4-sections-item-1" type="imsqti_item_xmlv3p0" href="items/item-1.xml">   
+            <file href="items/item-1.xml"/>
+        </resource>
+        <resource identifier="s3s4-sections-item-2" type="imsqti_item_xmlv3p0" href="items/item-2.xml">   
+            <file href="items/item-2.xml"/>
+        </resource>
+        <resource identifier="s3s4-sections-item-3" type="imsqti_item_xmlv3p0" href="items/item-3.xml">   
+            <file href="items/item-3.xml"/>
+        </resource>
+        <resource identifier="s3s4-sections-item-4" type="imsqti_item_xmlv3p0" href="items/item-4.xml">   
+            <file href="items/item-4.xml"/>
+        </resource>
+        <resource identifier="s3s4-sections-item-5" type="imsqti_item_xmlv3p0" href="items/item-5.xml">   
+            <file href="items/item-5.xml"/>
+        </resource>
+        <resource identifier="s3s4-sections-item-6" type="imsqti_item_xmlv3p0" href="items/item-6.xml">   
+            <file href="items/item-6.xml"/>
+        </resource>
+    
+        <resource identifier="s3s4-section-selection-ordering" type="imsqti_test_xmlv3p0" href="s3selection_s4ordering.xml">
+            <file href="s3selection_s4ordering.xml"/>
+        </resource>
+    </resources>
+</manifest>

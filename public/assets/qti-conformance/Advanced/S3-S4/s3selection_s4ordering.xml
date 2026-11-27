@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                     identifier="s3s4-section-selection-ordering" title="S3-S4 Section - Selection Ordering" 
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd">
+    <qti-test-part navigation-mode="nonlinear" submission-mode="simultaneous" identifier="RTEST-S3S4">
+        <qti-assessment-section identifier="sectionA" title="Section A" visible="true">
+            <!--
+              In Section A, we select 2 items out of 3 with the first item required
+            -->
+            <qti-selection select="2"/>
+            <qti-ordering shuffle="false"/>
+            <qti-rubric-block view="candidate">
+                <qti-content-body>
+                    <p>Instructions for Section A</p>
+                    <p>
+                        In Section A, we select 2 items out of 3 available, with Item 1 required.  The remaining item needed to 
+                        fill the selection (2 in this case) must be selected randomly from the remaining 2 non-required items. 
+                        Shuffled Order is false.
+                    </p>
+                </qti-content-body>
+            </qti-rubric-block>
+            <qti-assessment-item-ref identifier="s3s4-sections-item-1" href="items/item-1.xml" required="true"/>
+	    <qti-assessment-item-ref identifier="s3s4-sections-item-2" href="items/item-2.xml"/>
+            <qti-assessment-item-ref identifier="s3s4-sections-item-3" href="items/item-3.xml"/>
+        </qti-assessment-section>
+        <qti-assessment-section identifier="sectionB" title="Section B" visible="true">
+            <!--
+              In Section B, we select 2 items out of 3 with no items required and shuffled order
+            -->
+            <qti-selection select="2"/>
+            <qti-ordering shuffle="true"/>
+            <qti-rubric-block view="candidate">
+                <qti-content-body>
+                    <p>Instructions for Section B</p>
+                    <p>
+                        In Section B, we select 2 items out of 3 available, with no items required. The items needed to fill
+                        the selection (2 in this case) must be selected randomly from the 3 available items.
+                        Shuffled Order is true, which requires the selected items to be shuffled yet again.
+                    </p>
+                </qti-content-body>
+            </qti-rubric-block>
+            <qti-assessment-item-ref identifier="s3s4-sections-item-4" href="items/item-4.xml"/>
+	    <qti-assessment-item-ref identifier="s3s4-sections-item-5" href="items/item-5.xml"/>
+            <qti-assessment-item-ref identifier="s3s4-sections-item-6" href="items/item-6.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

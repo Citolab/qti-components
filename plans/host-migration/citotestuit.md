@@ -375,6 +375,16 @@ and the attempts lock. A package that relied on a linear section inside a nonlin
 those items into a linear test part of their own.
 Evidence: read from qti-components source; the host source was not searched, not run
 
+### Next and Previous follow the test's order in nested sections (roadmap 1, T1)
+
+Status: behaviour change (a fix); nothing required
+Members: `<test-next>`, `<test-prev>`, `computedContext` (`testParts[].itemOrder`, new)
+Do: nothing. Where a section's item-refs and subsections interleave, Next and Previous now go in
+document order; before, they followed `computedContext.testParts[].sections` (depth first), and in a
+linear part Next could get stuck. A host that walks the items itself reads them in order with
+`itemsInOrder(testPart)` from `@qti-components/test` instead of flattening `sections`.
+Evidence: read from qti-components source; the host source was not searched, not run
+
 ### Interaction replay listens to 7.x events and writes into the item's DOM (next major)
 
 Status: breaking; the replay stops recording silently on upgrade

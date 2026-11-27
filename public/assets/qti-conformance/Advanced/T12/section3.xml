@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This section will be included in the Test via assessmentSectionRef -->
+<qti-assessment-section identifier="assessmentSection-3" visible="true" title="Section 3"
+    xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd">
+    <qti-rubric-block view="candidate">
+        <qti-content-body>
+            <p>Instructions for Third Section...</p>
+        </qti-content-body>
+    </qti-rubric-block>
+    <qti-assessment-item-ref identifier="t12-sections-item-8" href="items/item-8.xml"/>
+</qti-assessment-section>

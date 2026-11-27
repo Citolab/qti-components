@@ -16,10 +16,10 @@ qti-assessment-test
 
 The root of a test.
 
-| Attribute | Type | Notes |
-|---|---|---|
-| `identifier` | `string` | |
-| `title` | `string` | Stored internally and re-exposed as `data-title` (the native `title` attribute is removed) so it doesn't produce a browser tooltip. |
+| Attribute    | Type     | Notes                                                                                                                               |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `identifier` | `string` |                                                                                                                                     |
+| `title`      | `string` | Stored internally and re-exposed as `data-title` (the native `title` attribute is removed) so it doesn't produce a browser tooltip. |
 
 Dispatches `qc-test-loaded` (bubbles, composed) once connected — this is the event `<qti-test>` and `<test-navigation>` listen for to (re)initialize `testContext`/`computedContext`.
 
@@ -27,12 +27,12 @@ Dispatches `qc-test-loaded` (bubbles, composed) once connected — this is the e
 
 A test part groups one or more sections and declares how navigation and submission behave for everything inside it.
 
-| Attribute | Type | Values |
-|---|---|---|
-| `identifier` | `string` | |
-| `title` | `string` | Same `data-title` handling as above. |
-| `navigation-mode` | `'linear' \| 'nonlinear'` | Default `'nonlinear'`. |
-| `submission-mode` | `'individual' \| 'simultaneous'` | Default `'individual'`. |
+| Attribute         | Type                             | Values                               |
+| ----------------- | -------------------------------- | ------------------------------------ |
+| `identifier`      | `string`                         |                                      |
+| `title`           | `string`                         | Same `data-title` handling as above. |
+| `navigation-mode` | `'linear' \| 'nonlinear'`        | Default `'nonlinear'`.               |
+| `submission-mode` | `'individual' \| 'simultaneous'` | Default `'individual'`.              |
 
 QTI defines both modes on the test part only, so they hold for every section and item in it. In `computedContext` they are on `testParts[]`, not on its sections.
 
@@ -42,20 +42,22 @@ Dispatches `qti-test-part-connected`.
 
 A section groups item references (and, optionally, nested sections).
 
-In `computedContext`, `testParts[].sections` lists every section once, nested ones included (a section before its subsections), each with only its own items; a section that only holds subsections has no items of its own. Items are numbered (`index`) in the test's order.
+In `computedContext`, `testParts[].sections` lists every section once, nested ones included (a section before its subsections), each with only its own items; a section that only holds subsections has no items of its own. Items are numbered (`index`) in the test's order. To walk a part's items in the order the candidate takes them, use `itemsInOrder(testPart)` from `@qti-components/test` (it reads `testParts[].itemOrder`); flattening `sections` gives another order where item-refs and subsections interleave.
+
+A `qti-assessment-section-ref` is replaced by the section it refers to when the test is loaded by URL (`test-url`), under the reference's `identifier`. A test given as a string (`testXML`) cannot fetch it and keeps the reference.
 
 A `qti-item-session-control` on the test part, a section or an item-ref resolves per attribute: each attribute comes from the closest level that declares it, and its QTI default only when none does. An item-ref that declares only `show-feedback="true"` keeps its section's `max-attempts`.
 
 Each item in `computedContext` carries the result as `sessionControl`: all seven attributes, resolved (`maxAttempts`, `showFeedback`, `allowReview`, `showSolution`, `allowComment`, `allowSkipping`, `validateResponses`; type `SessionControl` from `@qti-components/base`). These are the values QTI gives; `allow-review`, `allow-comment` and `validate-responses` have no effect in the player yet.
 
-| Attribute | Type | Notes |
-|---|---|---|
-| `identifier` | `string` | |
-| `title` | `string` | Same `data-title` handling. |
-| `required` | `string` | Per the [QTI 3.0 spec](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#Root_AssessmentSection). |
-| `fixed` | `boolean` | Parsed from the `"true"`/`"false"` string attribute. |
-| `visible` | `boolean` | Same boolean parsing. |
-| `keep-together` | `boolean` | Same boolean parsing. |
+| Attribute       | Type      | Notes                                                                                                                     |
+| --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `identifier`    | `string`  |                                                                                                                           |
+| `title`         | `string`  | Same `data-title` handling.                                                                                               |
+| `required`      | `string`  | Per the [QTI 3.0 spec](https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html#Root_AssessmentSection). |
+| `fixed`         | `boolean` | Parsed from the `"true"`/`"false"` string attribute.                                                                      |
+| `visible`       | `boolean` | Same boolean parsing.                                                                                                     |
+| `keep-together` | `boolean` | Same boolean parsing.                                                                                                     |
 
 Renders a named `qti-rubric-block` slot ahead of its default slot, so rubric content always appears before item refs. Dispatches `qti-assessment-section-connected`.
 
@@ -63,14 +65,14 @@ Renders a named `qti-rubric-block` slot ahead of its default slot, so rubric con
 
 A reference to a single item within a section — this is what actually triggers loading an item's XML.
 
-| Attribute | Type | Notes |
-|---|---|---|
-| `identifier` | `string` | Must match the `identifier` in the referenced item's XML — `<qti-test>` warns to the console if they don't. |
-| `category` | `string` | Space-separated categories; used for include/exclude filtering (see [`qti-test-variables`](/qti-test/scoring-and-state/#qti-test-variables)). |
-| `href` | `string` | Path to the item's XML. |
-| `required` | `boolean` | |
-| `fixed` | `boolean` | |
-| `xmlDoc` | `DocumentFragment` | Set programmatically once the referenced item is loaded and transformed — not an HTML attribute. |
+| Attribute    | Type               | Notes                                                                                                                                         |
+| ------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `identifier` | `string`           | Must match the `identifier` in the referenced item's XML — `<qti-test>` warns to the console if they don't.                                   |
+| `category`   | `string`           | Space-separated categories; used for include/exclude filtering (see [`qti-test-variables`](/qti-test/scoring-and-state/#qti-test-variables)). |
+| `href`       | `string`           | Path to the item's XML.                                                                                                                       |
+| `required`   | `boolean`          |                                                                                                                                               |
+| `fixed`      | `boolean`          |                                                                                                                                               |
+| `xmlDoc`     | `DocumentFragment` | Set programmatically once the referenced item is loaded and transformed — not an HTML attribute.                                              |
 
 Exposes an `assessmentItem` getter that returns the rendered `<qti-assessment-item>` once loaded. Dispatches `qc-item-ref-connected` with `{ identifier, href, category }` in the event detail.
 

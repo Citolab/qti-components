@@ -12,5 +12,6 @@ export type {
   StateRefusal
 } from './public-events.js';
 export { pluginState } from './plugin-state.js';
+export { itemsInOrder } from './items-in-order.js';
 export type { QtiTestPluginState, QtiTestState } from './types/qti-test-state.js';
 export * as controlStyles from './components/styles.js';
