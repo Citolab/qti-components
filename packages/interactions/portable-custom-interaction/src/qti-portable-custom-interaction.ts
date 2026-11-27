@@ -741,10 +741,9 @@ export class QtiPortableCustomInteraction extends Interaction {
     this._interactionReady = false;
     this.iframe = document.createElement('iframe');
     this.iframe.id = `pci-iframe-${this.responseIdentifier}`;
-    this.iframe.setAttribute('title', 'QTI PCI Iframe');
-    this.iframe.setAttribute('aria-label', 'QTI PCI Iframe');
-    this.iframe.setAttribute('aria-hidden', 'false');
-    this.iframe.setAttribute('role', 'application');
+    // Named by `title` only, and no `role="application"`: the frame keeps its native role, so
+    // browse-mode navigation by headings and landmarks still works (roadmap 6, C1 and C2).
+    this.iframe.setAttribute('title', this.#frameName());
     this.iframe.style.width = '100%';
     this.iframe.style.border = 'none';
     this.iframe.style.display = 'block';
@@ -782,6 +781,27 @@ export class QtiPortableCustomInteraction extends Interaction {
 
     // Append iframe to component
     this.appendChild(this.iframe);
+  }
+
+  /**
+   * The frame's accessible name (roadmap 6, R4 and C1): authored ARIA on the interaction
+   * (`aria-labelledby`, then `aria-label`), else its `qti-prompt`, else "Interactive question N",
+   * N counting the PCIs in the item. QTI's `label` attribute is never a name.
+   */
+  #frameName(): string {
+    const textOf = (element: Element | null | undefined) => element?.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+    const root = this.getRootNode() as Document | ShadowRoot;
+    const labelledBy = (this.getAttribute('aria-labelledby') ?? '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(id => textOf(root.getElementById(id)))
+      .filter(Boolean)
+      .join(' ');
+    const label = this.getAttribute('aria-label')?.trim() ?? '';
+    const prompt = textOf(this.querySelector(':scope > qti-prompt'));
+    const scope = this.closest('qti-assessment-item') ?? root;
+    const position = Array.from(scope.querySelectorAll(this.localName)).indexOf(this) + 1;
+    return labelledBy || label || prompt || `Interactive question ${position}`;
   }
 
   /**
@@ -940,7 +960,7 @@ export class QtiPortableCustomInteraction extends Interaction {
       <html lang="${iframeLang}">
         <head>
           <meta charset="utf-8" />
-          <title>QTI PCI Container</title>
+          ${Object.assign(document.createElement('title'), { textContent: this.#frameName() }).outerHTML}
           <base href="${iframeBaseHref}" />
           ${componentsCdnUrl ? `<script type="module">import '${componentsCdnUrl}';</script>` : ''}
           <style>${inlineStyleText(nativeCss)}</style>
