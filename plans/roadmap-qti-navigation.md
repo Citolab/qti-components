@@ -188,7 +188,8 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
   - a spec that restores real saved states, anonymised, from each host's database (version 1
     `QtiTestState`, and `testContext` + `sessionContext` as hosts stored them) and checks the
     answers, outcomes, position and attempts; written before the conversion changes, and kept
-    passing in every later phase.
+    passing in every later phase. Only CitoTestUit stores state today (decided 2026-11-27): its
+    Checkmate demo states, `apps/e2e/src/tests/stored-states.spec.ts`.
 - [ ] Conformance: T12-L2-D1, S9-L2-D1, S4-L2-D11/D12, Elective T4 (the modes) and T7 pass; T14-L1-D1
       still passes.
 

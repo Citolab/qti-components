@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd"
+  identifier="item-9" title="Wat weet ik nog? – Fotosynthese 9" adaptive="false"
+  time-dependent="false" xml:lang="nl">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>C</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <qti-choice-interaction max-choices="1"
+      response-identifier="RESPONSE" data-score="1">
+      <qti-prompt>
+        <p> Welke organismen leven van het voedsel dat planten maken? </p>
+      </qti-prompt>
+      <qti-simple-choice identifier="A">
+        <p> Alleen de planten zelf. </p>
+      </qti-simple-choice>
+      <qti-simple-choice identifier="B">
+        <p> Alleen mensen en dieren. </p>
+      </qti-simple-choice>
+      <qti-simple-choice identifier="C">
+        <p> De planten zelf, mensen en dieren. </p>
+      </qti-simple-choice>
+    </qti-choice-interaction>
+  </qti-item-body>
+  <qti-response-processing
+    template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct" />
+</qti-assessment-item>
