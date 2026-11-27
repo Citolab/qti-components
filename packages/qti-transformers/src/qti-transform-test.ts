@@ -12,9 +12,11 @@
 import { warnMissingSeed } from './shared/missing-seed-warning';
 import { loadXML, parseXML, setLocation, toHTML } from './shared/xml';
 import { itemsFromTest } from './test/items';
+import { hasSectionRefs, resolveSectionRefs } from './test/section-refs';
 import { hasShuffleOrdering, shuffleSectionsOrdering } from './test/shuffle-sections';
 
 export type transformTestApi = {
+  /** Fetches the test, includes every `qti-assessment-section-ref`'s section, and makes URLs absolute. */
   load: (uri: string, signal?: AbortSignal) => Promise<transformTestApi>;
   parse: (xmlString: string) => transformTestApi;
   path: (location: string) => transformTestApi;
@@ -41,16 +43,28 @@ export const qtiTransformTest = (): transformTestApi => {
     // promise. Callers own the failure: they can render it, retry it or let it
     // bubble — rather than it escaping as an unhandled rejection while their
     // own `await` never settles.
+    //
+    // Every qti-assessment-section-ref is replaced by the section it names, fetched relative to the
+    // test, before anything else reads the test: QTI makes the reference a facade (info model §7.5).
     async load(uri, signal) {
       xmlFragment = await loadXML(uri, signal);
       xmlUri = uri;
 
-      api.path(uri.substring(0, uri.lastIndexOf('/')));
+      const location = uri.substring(0, uri.lastIndexOf('/'));
+      await resolveSectionRefs(xmlFragment, location, signal);
+      api.path(location);
       return api;
     },
+    // A test given as a string has no location to fetch referenced sections from, so a
+    // qti-assessment-section-ref stays as it is (with a warning) and its items are not in the test.
     parse(xmlString: string) {
       xmlFragment = parseXML(xmlString);
       xmlUri = '';
+      if (hasSectionRefs(xmlFragment)) {
+        console.warn(
+          "[qtiTransformTest] qti-assessment-section-ref needs the test's location: load() the test by URL to include referenced sections."
+        );
+      }
       return api;
     },
     path: (location: string): typeof api => {

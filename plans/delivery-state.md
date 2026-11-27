@@ -18,6 +18,13 @@ phase by phase in [roadmap 1](roadmap-qti-navigation.md), with no refactor up fr
   [roadmap 5](roadmap-host-api.md); `view` becomes an input.
 - **`QtiTestState` stays the host's persistence format**, converted to and from `DeliveryState`
   (from T1). Whether the two formats merge later is open, for roadmap 2.
+- **The XML is the only source; JSON is not a copy of it** (decided 2026-11-27, roadmap 1 T1). The
+  content stays XML: the elements are the XML, and the fetched documents are kept
+  (`itemRef.xmlDoc`). Persisted JSON (`QtiTestState`) holds only the candidate's state.
+  `computedContext` holds only what the XML does not say directly (values resolved across levels,
+  such as session control and item numbers) and the summary hosts and plugins read without knowing
+  QTI XML; never mirrored content. It is rebuilt from the XML by pure functions (`buildTestModel`,
+  `readItemFacts`), never edited, and not from the live DOM or connected events.
 - **The rule: anything derivable is never stored**: `done`, the `can*` flags, scores, the resolved
   `sessionControl`, item facts.
 

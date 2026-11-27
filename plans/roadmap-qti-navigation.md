@@ -63,7 +63,7 @@ T1; T5, T6 and T8 after T3; T7 after T8.
 | #   | Phase                                  | Needs | Status |
 | --- | -------------------------------------- | ----- | ------ |
 | T0  | The delivery package                   | G1    | done   |
-| T1  | The test model from the XML            | T0    | todo   |
+| T1  | The test model from the XML            | T0    | done   |
 | T2  | One computed context                   | T1    | todo   |
 | T3  | The item session lifecycle             | T1    | todo   |
 | T4  | `qti-selection` and ordering           | T1    | todo   |
@@ -82,7 +82,7 @@ What a test part supports from QTI 3, today and after which phase. Today is read
 | `navigation-mode` linear / nonlinear                                                               | works, from the test part only                                             | T3             |
 | `submission-mode` individual                                                                       | attempts, end attempt and the lock work; rules spread over five components | T3             |
 | `submission-mode` simultaneous                                                                     | items not locked; responses not processed when the part is submitted       | T6             |
-| `qti-item-session-control` cascade (part → sections → ref)                                         | nested sections do not inherit from their parent section                   | T1 (T1a, T1b)  |
+| `qti-item-session-control` cascade (part → sections → ref)                                         | works: per attribute, nested sections inherit from their parent section    | T1             |
 | `max-attempts`                                                                                     | works (the attempts lock)                                                  | T3             |
 | `show-feedback`                                                                                    | works (`qti-feedback`)                                                     | T3             |
 | `show-solution`                                                                                    | works in the corrections package (`TestNavigationCorrection`)              | T3             |
@@ -116,11 +116,11 @@ placeholder in the `*.todo.stories.ts` with a story whose play function asserts 
 | ---------------------------- | ----------------------------------------------------------- | ----------- | ------ |
 | T4-L1-D1/D2, T7-L1-D1/D2     | test → part → section → item, linear and individual         | passes      | kept   |
 | T14-L1-D1                    | restore responses after the session is discontinued         | passes      | T1     |
-| T12-L2-D1                    | 8 items in 3 sections                                       | placeholder | T1     |
-| S9-L2-D1                     | a section from `qti-assessment-section-ref`                 | placeholder | T1     |
-| S4-L2-D11, S4-L2-D12         | a nonlinear part; both sections visible                     | placeholder | T1     |
-| Elective T4 (no IDs)         | items 1–3 nonlinear, 4–6 linear: one mode per part          | no story    | T1, T7 |
-| Elective T7 (no IDs)         | nested sections taken in a fixed order                      | no story    | T1     |
+| T12-L2-D1                    | 8 items in 3 sections                                       | passes      | T1     |
+| S9-L2-D1                     | a section from `qti-assessment-section-ref`                 | passes      | T1     |
+| S4-L2-D11, S4-L2-D12         | a nonlinear part; both sections visible                     | passes      | T1     |
+| Elective T4 (no IDs)         | items 1–3 nonlinear, 4–6 linear: one mode per part          | modes pass  | T1, T7 |
+| Elective T7 (no IDs)         | nested sections taken in a fixed order                      | passes      | T1     |
 | S1-L2-D1, S1-L2-D2           | `allow-skipping` per section, true and false                | placeholder | T3     |
 | T5-L2-D1                     | unlimited attempts set on the test part                     | placeholder | T3     |
 | S3-L2-D1, S3-L2-D2, S4-L2-D1 | select 2 of 3 (with and without a required item), reshuffle | placeholder | T4     |
@@ -172,7 +172,8 @@ Not here, each with a slot in [ROADMAP.md](ROADMAP.md): a processor that runs wi
 
 ### T1. The test model from the XML
 
-Plan: [test-model.md](test-model.md).
+Plan: done; its decisions are in [host-api.md](host-api.md) → Decided and
+[delivery-state.md](delivery-state.md).
 Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`,
 `qti-assessment-section`), `packages/qti-base` (`computed.types.ts`).
 
@@ -193,10 +194,15 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
   - [x] `DeliveryState` `order` and `plugins` (checked by `parseDeliveryState`, with state vectors);
         the `QtiTestState` conversions, internal and not called at runtime yet; a state that cannot be
         read reported with `qc-test-state-refused`.
-- [ ] Conformance: T12-L2-D1, S9-L2-D1, S4-L2-D11/D12, Elective T4 (the modes) and T7 pass; T14-L1-D1
-      still passes.
+- [x] Conformance: T12-L2-D1, S9-L2-D1, S4-L2-D11/D12, Elective T4 (the modes) and T7 pass; T14-L1-D1
+      still passes. S9 needed `qti-assessment-section-ref`, now included when a test is loaded by URL;
+      Elective T7 needed Next and Previous to follow document order in nested sections
+      (`itemOrder` on each computed test part, `itemsInOrder`).
 
-Done when: that plan's "Done when".
+Done when (met 2026-11-27): the model is built from the XML with no element registered, and its specs
+cover nested sections and inheritance; item facts come from the item XML, not from a connected event;
+no component reads `navigation-mode` or `submission-mode` off a section; the attempts-used and
+end-attempt specs and the linear, sequencing and adaptive stories pass.
 
 ### T2. One computed context
 
@@ -293,6 +299,8 @@ Done when: a two-part test cannot navigate back into part 1, and each part's fee
 Plan: to write before the phase starts. Scope: `test-processing.mixin.ts`,
 `internal/item-sequencing.ts`, the T3 machine.
 
+- [ ] Branch rules treat a section merged from a `qti-assessment-section-ref` as a leaf (info model
+      §7.5): a rule cannot target a section inside it. Found in T1 (S9-L2-D1).
 - [ ] Test outcome processing runs after every submission: per item in an individual part, per
       part in a simultaneous one (info model §2.9).
 - [ ] Leaving an item runs, in order: response and outcome processing, branch rules (item, then

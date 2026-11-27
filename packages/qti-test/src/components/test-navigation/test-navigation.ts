@@ -315,6 +315,7 @@ export class TestNavigation extends LitElement {
         navigationMode: testPart.navigationMode,
         submissionMode: testPart.submissionMode,
         allowSkipping: testPart.sessionControl.allowSkipping,
+        itemOrder: itemRefsInOrder(testPart.sections).map(item => item.identifier),
         // Flat, depth first: every section once, each with only its own item-refs, so every item is
         // listed once. Where a section's item-refs and subsections interleave, this list is not in
         // document order; `index` is.

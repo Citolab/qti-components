@@ -1,6 +1,6 @@
 # The item session lifecycle
 
-Roadmap phase T3. Needs phase T1 ([test-model.md](test-model.md)); runs next to phase T2
+Roadmap phase T3. Needs phase T1 (done); runs next to phase T2
 ([computed-context.md](computed-context.md)). Phase T6 builds on its simultaneous-part
 transitions. Decisions go into [host-api.md](host-api.md); this
 file is deleted when the phase ships. Found by reading source on 2026-10-30, checked against the

@@ -1,6 +1,6 @@
 # One computed context
 
-Roadmap phase T2. Needs phase T1 ([test-model.md](test-model.md)); runs next to phase T3
+Roadmap phase T2. Needs phase T1 (done); runs next to phase T3
 ([item-lifecycle.md](item-lifecycle.md)). Decisions go into [host-api.md](host-api.md); this file is
 deleted when the phase ships. Found by reading source on 2026-10-30.
 
