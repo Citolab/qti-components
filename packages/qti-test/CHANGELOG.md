@@ -1,5 +1,18 @@
 # @qti-components/test
 
+## 2.0.0-next.18
+
+### Major Changes
+
+- [#368](https://github.com/Citolab/qti-components/pull/368) [`584ea3d`](https://github.com/Citolab/qti-components/commit/584ea3dc567afb8b5a9a8b94e84dbf583f257f7d) Thanks [@herrKlein](https://github.com/herrKlein)! - `navigation-mode` and `submission-mode` come from the test part only, as the QTI 3 XSD defines them: a section that declares either is now ignored, so the part's mode decides Prev and Next, jumps between items and the attempts lock.
+
+  Breaking: `navigationMode` and `submissionMode` are gone from `computedContext.testParts[].sections[]` and from `QtiAssessmentSection`; read them from `computedContext.testParts[]` (host migration: [Kennisnet](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/kennisnet.md), [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md), [PeilingLezen](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/peilinglezen.md), [ExamenKompas](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/examenkompas.md)).
+
+### Patch Changes
+
+- Updated dependencies [[`584ea3d`](https://github.com/Citolab/qti-components/commit/584ea3dc567afb8b5a9a8b94e84dbf583f257f7d)]:
+  - @qti-components/base@3.0.0-next.9
+
 ## 2.0.0-next.17
 
 ### Patch Changes
