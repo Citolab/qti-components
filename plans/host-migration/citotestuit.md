@@ -375,6 +375,46 @@ and the attempts lock. A package that relied on a linear section inside a nonlin
 those items into a linear test part of their own.
 Evidence: read from qti-components source; the host source was not searched, not run
 
+### Interaction replay listens to 7.x events and writes into the item's DOM (next major)
+
+Status: breaking; the replay stops recording silently on upgrade
+Members: `qti-interaction-changed`, `qti-test-context-updated`, `qti-request-navigation`,
+`qti-assessment-test-connected`, `qtiTest.testContext`, `navigateTo`, interaction `response`,
+`::part(textarea)` / `::part(input)`
+Do:
+
+- Recording (`AssessmentPlayerView.tsx:1005-1043`, `interactionReplayBuffer.ts`) listens to
+  `qti-interaction-changed`, `qti-test-context-updated`, `qti-request-navigation` and
+  `qti-assessment-test-connected`. `next` no longer sends these 7.x names, so no
+  `interaction_changed` or `navigation` log is written and the replay of a 10.x delivery is empty.
+  Listen to `qc-item-response-changed` (its `detail.response` is the value, so the read of
+  `testContext` one `requestAnimationFrame` later can go), `qc-test-state-changed` (instead of
+  `qti-test-context-updated`), `qc-test-navigate` / `qc-test-navigated` and `qc-test-loaded`.
+- Only response identifiers starting with `RESPONSE` are recorded (`recordInteractionSnapshot`);
+  items with other response identifiers are left out of the replay without a word. Record every
+  response identifier.
+- The replay player (`applyStudentResponsesToLiveRoot.ts`) writes into shadow-root
+  `[part="textarea"]` / `[part="input"]` fields, sets a `data-replay-selected` attribute on
+  `qti-simple-choice` and `-stats` elements, and walks shadow roots with `deepQuerySelectorAll`.
+  None of that is host API (`plans/host-api.md` → The rule): it breaks on any change inside an
+  interaction. Show a moment of the replay by assigning `qtiTest.state` (or `item.variables` in a
+  review `qti-item`) with the values at that time, which every interaction restores itself.
+- Snapshot times (`snapshots[].ms`) come from the frontend buffer's own clock, while navigation and
+  other logs use the server's `CreatedAt`; the backend (`ReplayLogNormalizer`) mixes both, so the
+  timeline can drift. Stamp every logged action with one clock.
+
+Recommended direction (roadmap 2, the CitoTestUit pilot; not decided): the replay log becomes the
+delivery engine's command log. `@qti-components/delivery` records coalesced commands
+(`responseChanged { instance, responseIdentifier, value, at }`, navigation, end attempt, hand-in)
+with `at` from its injected clock, using the same coalescing the replay buffer has today (500 ms,
+long text at most every 1.2 s): never per keystroke. `DeliveryState` stays the snapshot for resume;
+the log is an append-only side channel the host may store. Replay folds the log through the same
+reducer up to time t, in the browser or on the backend, so it needs no DOM writes and keeps the
+structured values (no comma- or `&`-joined strings).
+Evidence: read from CitoTestUit `origin/main` (frontend `packages/ui/src/assessment-player`,
+backend `DeliveryReplayService`, `ReplayLogNormalizer`, `ReplayInteractionSynthesizer`) on
+2026-11-27; not run
+
 ## Not in the library, still in the host
 
 - `item.resetInteractions` no longer exists; the host already calls it with `?.`.
