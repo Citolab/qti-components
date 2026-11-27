@@ -1,5 +1,13 @@
 # @citolab/qti-components
 
+## 10.0.0-next.25
+
+### Minor Changes
+
+- [#373](https://github.com/Citolab/qti-components/pull/373) [`ffd4e9a`](https://github.com/Citolab/qti-components/commit/ffd4e9a581f59bc790b442b4ab28876c8176a378) Thanks [@herrKlein](https://github.com/herrKlein)! - A test loaded by URL includes every `qti-assessment-section-ref`: the referenced section replaces the reference before ordering and the transform callback, under the reference's `identifier`, with its URLs still pointing at its own files (QTI 3 info model §7.5). A test given as a string keeps the reference, with a warning.
+
+  Next and Previous follow the test's document order in nested sections; in a linear part where a section's item-refs and subsections interleave, Next could get stuck. Each `computedContext.testParts[]` carries `itemOrder`, and `itemsInOrder(testPart)` from `@qti-components/test` reads a part's items in that order (host migration: [Kennisnet](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/kennisnet.md), [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md), [PeilingLezen](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/peilinglezen.md), [ExamenKompas](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/examenkompas.md)).
+
 ## 10.0.0-next.24
 
 ### Minor Changes
