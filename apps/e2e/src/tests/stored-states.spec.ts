@@ -3,6 +3,8 @@ import '@citolab/qti-components';
 import { html, render } from 'lit';
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { stateFromContexts } from '@qti-components/test';
+
 import checkmate1 from './fixtures/stored-states/checkmate-1.json';
 import checkmate2 from './fixtures/stored-states/checkmate-2.json';
 import checkmate3 from './fixtures/stored-states/checkmate-3.json';
@@ -14,9 +16,10 @@ import type { QtiTest } from '@qti-components/test';
  * Stored 9.x states keep restoring (roadmap 1, T1e; `plans/delivery-state.md` → Old states). Every
  * later phase keeps this passing.
  *
- * Host: CitoTestUit (Checkmate). It stores `{ id, navItemId, items }` (its `ExtendedTestContext`)
- * and restores by assigning `testContext` once the test has loaded, then `navigateTo` the stored
- * item. The states are real exports of its demo delivery; see the fixture folder's README.
+ * Host: CitoTestUit (Checkmate). It stores `{ id, navItemId, items }` (its `ExtendedTestContext`).
+ * In 9.x it restores by assigning `testContext` once the test has loaded, then `navigateTo` the
+ * stored item; on `next` it can resume with `state = stateFromContexts(…)` instead. Both are covered.
+ * The states are real exports of its demo delivery; see the fixture folder's README.
  */
 
 type StoredVariable = { identifier: string; value: string | number | string[] | null };
@@ -42,9 +45,9 @@ describe('stored 9.x states restore (CitoTestUit)', () => {
   let host: HTMLDivElement;
   afterEach(() => host?.remove());
 
-  const mount = async (): Promise<QtiTest> => {
+  /** Mounts the test; `before` runs on the element before it connects, as a host assigns `state`. */
+  const mount = async (before?: (qtiTest: QtiTest) => void): Promise<QtiTest> => {
     host = document.createElement('div');
-    document.body.append(host);
     render(
       html`<qti-test navigate="item">
         <test-navigation>
@@ -54,6 +57,8 @@ describe('stored 9.x states restore (CitoTestUit)', () => {
       host
     );
     const qtiTest = host.querySelector('qti-test') as QtiTest;
+    before?.(qtiTest);
+    document.body.append(host);
     // CitoTestUit's guard: assign only once the test has put its item-refs in the context.
     await expect.poll(() => qtiTest.testContext.items.length, { timeout: 5000 }).toBe(16);
     return qtiTest;
@@ -82,6 +87,23 @@ describe('stored 9.x states restore (CitoTestUit)', () => {
         }
         // Not checked: the answer in the item on screen. Hosts have no public way to reach it until
         // `item(identifier)` ships (plans/host-api.md, roadmap 5).
+      });
+
+      it('resumes from stateFromContexts with the answers, scores, attempts and position', async () => {
+        const qtiTest = await mount(test => {
+          test.state = stateFromContexts(stored, { navItemRefId: stored.navItemId });
+        });
+
+        await expect.poll(() => qtiTest.sessionContext.navItemRefId, { timeout: 5000 }).toBe(stored.navItemId);
+
+        for (const item of stored.items) {
+          const restored = qtiTest.testContext.items.find(i => i.identifier === item.identifier)?.variables;
+          for (const identifier of ['RESPONSE', 'SCORE', 'numAttempts', 'completionStatus']) {
+            expect(valueOf(restored, identifier), `${item.identifier} ${identifier}`).toEqual(
+              asRead(valueOf(item.variables, identifier) as StoredVariable['value'])
+            );
+          }
+        }
       });
 
       it('saves the restored state as a version 1 QtiTestState with the same answers and position', async () => {

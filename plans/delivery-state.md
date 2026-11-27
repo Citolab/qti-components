@@ -72,14 +72,14 @@ restoring on `next` (decided 2026-11-18):
   from the seed the host passes (T1e), `lifecycle` from `numAttempts` and the session control
   (T3), `timing` from the stored `duration` (T5). T4 decides what happens to stored answers for
   items a selection leaves out.
-- Stored contexts convert to `QtiTestState` with a public function (today's `toState`), so a host
-  can convert what it stored before `testContext` and `sessionContext` are removed (roadmap 5).
+- Stored contexts convert to `QtiTestState` with a public function, `stateFromContexts` (T1e), so a
+  host can convert what it stored before `testContext` and `sessionContext` are removed (roadmap 5).
 - A state that cannot be read is not dropped silently, as it is today (a console warning); T1e
   decides how the host hears of it.
 - A spec restores real saved states from each host, anonymised, and runs in every phase:
   `apps/e2e/src/tests/stored-states.spec.ts`, over CitoTestUit's, the only host that stores state
-  today (2026-11-27). It restores them the 9.x way (assign `testContext`, then `navigateTo`) until
-  the converter lands, then through it.
+  today (2026-11-27). It restores them the 9.x way (assign `testContext`, then `navigateTo`) and
+  through `stateFromContexts`.
 
 ## Phase by phase
 

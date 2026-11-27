@@ -183,8 +183,8 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
 - [ ] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
       `QtiTestState` converted to and from `DeliveryState`. Stored 9.x states keep restoring
       ([delivery-state.md](delivery-state.md) → Old states):
-  - a public converter from a stored `testContext` + `sessionContext` to a `QtiTestState` (today's
-    `toState`); it adds and breaks nothing, so it can also go to `main` for hosts on 9.x;
+  - [x] a public converter from a stored `testContext` + `sessionContext` to a `QtiTestState` (today's
+        `toState`): `stateFromContexts`, on `next` only (decided 2026-11-27);
   - a spec that restores real saved states, anonymised, from each host's database (version 1
     `QtiTestState`, and `testContext` + `sessionContext` as hosts stored them) and checks the
     answers, outcomes, position and attempts; written before the conversion changes, and kept
