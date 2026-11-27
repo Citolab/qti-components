@@ -43,8 +43,15 @@ interface QtiTestState {
 }
 ```
 
-Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is. A state
-with an unknown `version` is ignored with a console warning.
+Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is.
+
+A value that is not a version 1 state is ignored, and the test sends `qc-test-state-refused` with
+`{ message, state }`, once it has loaded. Log it, or tell the candidate their answers could not be
+restored:
+
+```js
+qtiTest.addEventListener('qc-test-state-refused', e => report(candidateId, e.detail.message));
+```
 
 ## Resuming a state stored as contexts
 

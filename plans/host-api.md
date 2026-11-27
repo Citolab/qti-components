@@ -131,6 +131,7 @@ Listen on the test; `detail` is typed in `HTMLElementEventMap`.
 | ---------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------- | --------------------------------------------------- |
 | `qc-test-loaded`             | The test XML is parsed; structure and declarations are known.                            | `QtiAssessmentTest`                                      | no         | exists                                              |
 | `qc-test-state-changed`      | `state` changed. The one event to persist on.                                            | `QtiTestState`                                           | no         | exists                                              |
+| `qc-test-state-refused`      | A value assigned to `state` is not a version 1 `QtiTestState`; it was ignored.           | `{ message, state }`                                     | no         | new (roadmap 1, T1e)                                |
 | `qc-test-navigation-started` | A navigation began; show a spinner.                                                      | `{ type, id }`                                           | no         | exists                                              |
 | `qc-test-navigated`          | A navigation succeeded and its items are rendered.                                       | `{ type, id, items: { identifier, element }[] }`         | no         | exists without `items`; `qc-test-rendered` has them |
 | `qc-test-navigation-failed`  | A navigation was refused (linear) or an item did not load.                               | `{ message, itemId?, sectionId?, details? }`             | no         | exists                                              |
@@ -670,8 +671,10 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   plain JSON as hosts stored it (no `type`, numbers as JSON numbers) and writes QTI's strings. Not
   on `main`: only CitoTestUit stores contexts, and it moves to `state` with the major.
 - **A state that cannot be read is reported with `qc-test-state-refused`** (2026-11-27, roadmap 1
-  T1e): a declared event next to `qc-test-state-changed`, and the test starts fresh; today it is
-  only a console warning. Not built yet (T1e, the `DeliveryState` slice).
+  T1e): a declared event next to `qc-test-state-changed`, `{ message, state }`, and the test goes
+  on without the state (the console warning stays). A state assigned before the test loaded is
+  reported once it has, where a listener on the page hears it. The event is new in 10.0, so it has
+  no `cito-` alias.
 - **Stored 9.x states keep restoring** (2026-11-18): a version 1 `QtiTestState`, and the
   `testContext` + `sessionContext` that 9.x hosts stored, restore on `next`. A public converter
   turns stored contexts into a `QtiTestState` (roadmap 1, T1e);

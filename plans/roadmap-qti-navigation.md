@@ -180,16 +180,19 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
 - [x] T1b All seven session-control attributes, resolved, as `item.sessionControl`.
 - [x] T1c Item facts from the item XML.
 - [x] T1d Navigation and submission mode from the test part only.
-- [ ] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
+- [x] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
       `QtiTestState` converted to and from `DeliveryState`. Stored 9.x states keep restoring
       ([delivery-state.md](delivery-state.md) → Old states):
   - [x] a public converter from a stored `testContext` + `sessionContext` to a `QtiTestState` (today's
         `toState`): `stateFromContexts`, on `next` only (decided 2026-11-27);
-  - a spec that restores real saved states, anonymised, from each host's database (version 1
-    `QtiTestState`, and `testContext` + `sessionContext` as hosts stored them) and checks the
-    answers, outcomes, position and attempts; written before the conversion changes, and kept
-    passing in every later phase. Only CitoTestUit stores state today (decided 2026-11-27): its
-    Checkmate demo states, `apps/e2e/src/tests/stored-states.spec.ts`.
+  - [x] a spec that restores real saved states, anonymised, from each host's database (version 1
+        `QtiTestState`, and `testContext` + `sessionContext` as hosts stored them) and checks the
+        answers, outcomes, position and attempts; written before the conversion changes, and kept
+        passing in every later phase. Only CitoTestUit stores state today (decided 2026-11-27): its
+        Checkmate demo states, `apps/e2e/src/tests/stored-states.spec.ts`;
+  - [x] `DeliveryState` `order` and `plugins` (checked by `parseDeliveryState`, with state vectors);
+        the `QtiTestState` conversions, internal and not called at runtime yet; a state that cannot be
+        read reported with `qc-test-state-refused`.
 - [ ] Conformance: T12-L2-D1, S9-L2-D1, S4-L2-D11/D12, Elective T4 (the modes) and T7 pass; T14-L1-D1
       still passes.
 

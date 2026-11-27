@@ -29,18 +29,18 @@ state").
 
 ## Target fields
 
-| Field       | What it holds                                                 | Phase  |
-| ----------- | ------------------------------------------------------------- | ------ |
-| `version`   | the shape's version; another version is refused               | T0     |
-| `seed`      | the seed actually used (a branded `Seed` string)              | T0     |
-| `startedAt` | when the test started, from the injected clock                | T0     |
-| `current`   | the item instance on screen                                   | T0     |
-| `order`     | the item instances after selection and ordering, written once | T1, T4 |
-| `testParts` | the status of each test part                                  | T7     |
-| `outcomes`  | the test outcomes                                             | T8     |
-| `timing`    | the time spent per test, part, section and item               | T5     |
-| `plugins`   | what plugins keep, by plugin name, stored and restored unread | T1     |
-| `items`     | per item instance, below                                      | T0     |
+| Field       | What it holds                                                 | Phase   |
+| ----------- | ------------------------------------------------------------- | ------- |
+| `version`   | the shape's version; another version is refused               | T0      |
+| `seed`      | the seed actually used (a branded `Seed` string)              | T0      |
+| `startedAt` | when the test started, from the injected clock                | T0      |
+| `current`   | the item instance on screen                                   | T0      |
+| `order`     | the item instances after selection and ordering, written once | T1e, T4 |
+| `testParts` | the status of each test part                                  | T7      |
+| `outcomes`  | the test outcomes                                             | T8      |
+| `timing`    | the time spent per test, part, section and item               | T5      |
+| `plugins`   | what plugins keep, by plugin name, stored and restored unread | T1e     |
+| `items`     | per item instance, below                                      | T0      |
 
 Per item instance (`ItemInstanceId` → item):
 
@@ -74,8 +74,14 @@ restoring on `next` (decided 2026-11-18):
   items a selection leaves out.
 - Stored contexts convert to `QtiTestState` with a public function, `stateFromContexts` (T1e), so a
   host can convert what it stored before `testContext` and `sessionContext` are removed (roadmap 5).
-- A state that cannot be read is not dropped silently, as it is today (a console warning); T1e
-  decides how the host hears of it.
+- A state that cannot be read is not dropped silently: `qtiTest.state` reports it with
+  `qc-test-state-refused` (T1e, decided 2026-11-27).
+- `QtiTestState` converts to and from `DeliveryState` (T1e) with internal functions that nothing
+  calls at runtime yet: `qti-test` keeps its state in its contexts until T2 and T3 derive from a
+  `DeliveryState`. A version 1 state has no seed, order or start time, so the conversion takes them
+  as inputs (the order from the rendered test, shuffled with the host's seed). The variables come
+  back from the live contexts until T8. A position of only a section or a part (`navigate="section"`)
+  does not survive the conversion, since `current` is an item instance (decided 2026-11-27).
 - A spec restores real saved states from each host, anonymised, and runs in every phase:
   `apps/e2e/src/tests/stored-states.spec.ts`, over CitoTestUit's, the only host that stores state
   today (2026-11-27). It restores them the 9.x way (assign `testContext`, then `navigateTo`) and

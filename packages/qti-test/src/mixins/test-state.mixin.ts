@@ -3,6 +3,7 @@ import { dispatchPublic, listenPublic } from '../public-events';
 import { stateFromContexts } from '../state-from-contexts';
 
 import type { PropertyValues } from 'lit';
+import type { StateRefusal } from '../public-events';
 import type { QtiTestState, QtiTestStateSession } from '../types/qti-test-state';
 import type { TestBaseInterface } from './test-base';
 
@@ -21,6 +22,11 @@ export interface ITestStateMixin {
    * Items are matched by item-ref identifier; items the state does not mention start fresh, and
    * stored items, test outcomes or a position the test no longer has are ignored. Restoring is a
    * resume, so linear-mode navigation restrictions do not apply.
+   *
+   * A value that is not a version 1 `QtiTestState` is ignored and reported with
+   * `qc-test-state-refused`: at once when the test has loaded, or when it does if it was assigned
+   * before. A state assigned earlier that could be read stays in effect. A stored 9.x
+   * `testContext` is turned into a state with `stateFromContexts`.
    */
   state: QtiTestState;
 }
@@ -52,6 +58,9 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     /** A state assigned before the test connected, applied when it does. */
     #pending: QtiTestState | null = null;
 
+    /** A refused state assigned before the test connected, reported when it does. */
+    #refused: StateRefusal | null = null;
+
     /**
      * False while a test document is loading. Loading resets both contexts and rebuilds them, so
      * the intermediate states are empty — emitting one would invite a host to save it over the
@@ -74,6 +83,10 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
           this.#pending = null;
         }
         this.#ready = true;
+        if (this.#refused) {
+          dispatchPublic(this, 'qc-test-state-refused', this.#refused);
+          this.#refused = null;
+        }
       });
     }
 
@@ -99,7 +112,11 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
 
     set state(value: QtiTestState) {
       if (!isQtiTestState(value)) {
-        console.warn(`[qti-test] Ignoring a state that is not a version ${QTI_TEST_STATE_VERSION} QtiTestState.`);
+        const message = `Ignoring a state that is not a version ${QTI_TEST_STATE_VERSION} QtiTestState.`;
+        console.warn(`[qti-test] ${message}`);
+        // Hosts assign state before the test is in the page, where an event reaches no listener.
+        if (this.#ready) dispatchPublic(this, 'qc-test-state-refused', { message, state: value });
+        else this.#refused = { message, state: value };
         return;
       }
       if (!this.#ready) {

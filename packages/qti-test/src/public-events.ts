@@ -11,10 +11,10 @@ import type { QtiTestState } from './types/qti-test-state';
  * Requests are verbs (a host or plugin dispatches them at the test), notifications are past tense
  * (the test dispatches them). All bubble and are composed.
  *
- * `deprecated` is the `cito-` name this event had in 9.x. One helper (`dispatchPublic`,
- * `listenPublic`) sends or handles both names until the next major, then the field goes. The 7.x
- * names (`qti-request-navigation`, `test-end-attempt`, `on-test-switch-view`, …) are no longer sent
- * or handled.
+ * `deprecated` is the `cito-` name this event had in 9.x; an event new in 10.0 has none. One helper
+ * (`dispatchPublic`, `listenPublic`) sends or handles both names until the next major, then the field
+ * goes. The 7.x names (`qti-request-navigation`, `test-end-attempt`, `on-test-switch-view`, …) are no
+ * longer sent or handled.
  */
 export interface NavigationTarget {
   type: 'item' | 'section';
@@ -26,6 +26,14 @@ export interface NavigationFailure {
   details?: unknown;
   itemId?: string;
   sectionId?: string;
+}
+
+/** The detail of `qc-test-state-refused`. */
+export interface StateRefusal {
+  /** Why the state was not read. */
+  message: string;
+  /** The value that was assigned to `state`, as given. */
+  state: unknown;
 }
 
 export interface PublicEventMap {
@@ -54,6 +62,8 @@ export interface PublicEventMap {
   // `qc-test-loaded` (detail: the `QtiAssessmentTest`) is added by qti-assessment-test.ts, so this
   // module imports no element: that import would be a cycle.
   'qc-test-state-changed': CustomEvent<QtiTestState>;
+  /** A value assigned to `state` could not be read and was ignored: the test goes on without it. */
+  'qc-test-state-refused': CustomEvent<StateRefusal>;
   'qc-test-items-skipped': CustomEvent<{ ids: string[] }>;
   'qc-test-end-reached': CustomEvent<Record<string, never>>;
   'qc-item-ref-connected': CustomEvent<{ identifier: string; href: string; category: string }>;
@@ -75,6 +85,8 @@ export const PUBLIC_EVENTS: Record<PublicEventName, PublicEventDeclaration> = {
   'qc-test-rendered': { kind: 'notification', scope: 'test', deprecated: 'cito-test-rendered' },
   'qc-test-loaded': { kind: 'notification', scope: 'test', deprecated: 'cito-test-loaded' },
   'qc-test-state-changed': { kind: 'notification', scope: 'test', deprecated: 'cito-test-state-changed' },
+  // New in 10.0, so it has no cito- name.
+  'qc-test-state-refused': { kind: 'notification', scope: 'test' },
   'qc-test-items-skipped': { kind: 'notification', scope: 'test', deprecated: 'cito-test-items-skipped' },
   'qc-test-end-reached': { kind: 'notification', scope: 'test', deprecated: 'cito-test-end-reached' },
   'qc-item-ref-connected': { kind: 'notification', scope: 'item', deprecated: 'cito-item-ref-connected' }

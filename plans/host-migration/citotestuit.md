@@ -42,6 +42,16 @@ workaround of keeping the context round trip only to read old sessions.
 Evidence: the stored-states spec restores three Checkmate demo states this way
 (`apps/e2e/src/tests/stored-states.spec.ts`); the host itself was not run
 
+### Hear about a state that cannot be read (roadmap 1, T1e)
+
+Status: recommended; nothing breaks on upgrade
+Members: `qc-test-state-refused`, `state`
+Do: listen for `qc-test-state-refused` on the test and log `detail.message` (or tell the candidate)
+where a stored session is restored. Today such a state is dropped with only a console warning, and
+the candidate starts with empty answers without anyone knowing. The event is sent once the test has
+loaded, so a state assigned before that is reported too.
+Evidence: read from qti-components source; the host was not run
+
 ### Keep the seed and bookmarks where they are (PR #225)
 
 Status: recommended

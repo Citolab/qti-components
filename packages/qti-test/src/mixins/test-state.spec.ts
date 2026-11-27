@@ -179,15 +179,50 @@ describe('qti-test state', () => {
       expect(qtiTest.sessionContext.navSectionId).toBeUndefined();
     });
 
-    it('ignores a state of another version', () => {
+    it('ignores a state of another version, and reports it with qc-test-state-refused', () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const refused: unknown[] = [];
+      host.addEventListener('qc-test-state-refused', e => refused.push(e.detail));
       const before = qtiTest.state;
+      const unreadable = { ...savedState(), version: 2 };
 
-      qtiTest.state = { ...savedState(), version: 2 } as unknown as QtiTestState;
+      qtiTest.state = unreadable as unknown as QtiTestState;
 
       expect(qtiTest.state).toEqual(before);
       expect(warn).toHaveBeenCalled();
+      expect(refused).toEqual([{ message: expect.stringContaining('version 1'), state: unreadable }]);
       warn.mockRestore();
+    });
+  });
+
+  describe('a state that cannot be read, assigned before the test loads', () => {
+    let refused: unknown[];
+    let warn: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      refused = [];
+      host.addEventListener('qc-test-state-refused', e => refused.push((e as CustomEvent).detail));
+    });
+    afterEach(() => warn.mockRestore());
+
+    it('is reported once the test has loaded, where a host listening on the page hears it', async () => {
+      qtiTest.state = { not: 'a state' } as unknown as QtiTestState;
+      expect(refused).toEqual([]);
+
+      await connect();
+
+      expect(refused).toEqual([{ message: expect.any(String), state: { not: 'a state' } }]);
+      expect(variable(qtiTest, 'ITEM-1', 'completionStatus')?.value).toBe('not_attempted');
+    });
+
+    it('leaves a state assigned earlier that could be read in effect', async () => {
+      qtiTest.state = savedState();
+      qtiTest.state = null as unknown as QtiTestState;
+
+      await connect();
+
+      expect(refused).toHaveLength(1);
+      expect(variable(qtiTest, 'ITEM-1', 'RESPONSE')?.value).toBe('B');
     });
   });
 
