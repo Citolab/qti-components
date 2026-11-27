@@ -48,8 +48,6 @@ describe('qti-feedback-block show-feedback constraint', () => {
             active: true,
             identifier: 'sec-1',
             title: 'Section 1',
-            navigationMode: 'nonlinear',
-            submissionMode: 'individual',
             items: [
               {
                 active: true,

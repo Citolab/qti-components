@@ -139,7 +139,7 @@ Each step is one PR into `next`.
       the old flat fields as decided above.
 - [x] **T1c** `readItemFacts(doc)` from the item XML in `_loadSingleItem`; the
       `qti-assessment-item-connected` listener goes.
-- [ ] **T1d** Navigation and submission mode from the test part only: the section attributes and
+- [x] **T1d** Navigation and submission mode from the test part only: the section attributes and
       properties go, `test-next` and `_isLinearNavigationRestricted` read the part, and the
       "section-level linear mode" test in `navigation-mode.spec.ts` changes to assert QTI.
 

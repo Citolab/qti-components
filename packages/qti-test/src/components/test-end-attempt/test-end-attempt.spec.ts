@@ -47,8 +47,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -89,8 +87,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -131,8 +127,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -173,8 +167,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -215,8 +207,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -259,8 +249,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -303,8 +291,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -347,8 +333,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -391,8 +375,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -436,8 +418,6 @@ describe('TestEndAttempt', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',

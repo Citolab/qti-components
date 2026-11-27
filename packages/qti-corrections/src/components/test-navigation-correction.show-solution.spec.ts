@@ -64,8 +64,6 @@ describe('TestNavigationCorrection show-solution', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',

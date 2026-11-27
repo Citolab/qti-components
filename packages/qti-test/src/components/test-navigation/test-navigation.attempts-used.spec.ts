@@ -1,6 +1,6 @@
 import '@citolab/qti-components';
 
-import { html, render } from 'lit';
+import { html, nothing, render } from 'lit';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import type { TemplateResult } from 'lit';
@@ -18,7 +18,10 @@ import type { QtiTestState } from '../../types/qti-test-state';
  * the way the navigation mixin does once it has fetched them.
  */
 
-const testMarkup = (refs: TemplateResult, { autoScore = false, submissionMode = 'individual' } = {}) => html`
+const testMarkup = (
+  refs: TemplateResult,
+  { autoScore = false, submissionMode = 'individual', sectionSubmissionMode = undefined as string | undefined } = {}
+) => html`
   <qti-test>
     <test-navigation ?auto-score-items=${autoScore}>
       <test-end-attempt id="end-1" item="ITEM-1">Nakijken</test-end-attempt>
@@ -26,7 +29,13 @@ const testMarkup = (refs: TemplateResult, { autoScore = false, submissionMode = 
       <test-container>
         <qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="T1" title="Attempts">
           <qti-test-part identifier="P1" navigation-mode="nonlinear" submission-mode=${submissionMode}>
-            <qti-assessment-section identifier="S1" title="S1" visible="true">${refs}</qti-assessment-section>
+            <qti-assessment-section
+              identifier="S1"
+              title="S1"
+              visible="true"
+              submission-mode=${sectionSubmissionMode ?? nothing}
+              >${refs}</qti-assessment-section
+            >
           </qti-test-part>
         </qti-assessment-test>
       </test-container>
@@ -173,6 +182,15 @@ describe('test-navigation disables an item whose attempts are used', () => {
 
     expect(item('ITEM-1').disabled).toBeFalsy();
     expect(interaction('ITEM-1').disabled).toBe(false);
+  });
+
+  it('locks an item in an individual part even when its section says simultaneous: QTI sets the mode on the part only', async () => {
+    await mount(testMarkup(refs(1, 1), { sectionSubmissionMode: 'simultaneous' }));
+
+    await endAttempt('ITEM-1');
+
+    expect(item('ITEM-1').disabled).toBe(true);
+    expect(interaction('ITEM-1').disabled).toBe(true);
   });
 
   it('never disables an adaptive item', async () => {

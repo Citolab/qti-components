@@ -61,8 +61,7 @@ export class TestPrev extends LitElement {
 
   checkDisabled() {
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
-    const activeSection = testPart?.sections.find(s => s.active);
-    const navigationMode = activeSection?.navigationMode || testPart?.navigationMode || 'nonlinear';
+    const navigationMode = testPart?.navigationMode ?? 'nonlinear';
 
     this._internalDisabled =
       navigationMode === 'linear' || !this.computedContext || this.itemIndex === 0 || this.itemIndex === -1;

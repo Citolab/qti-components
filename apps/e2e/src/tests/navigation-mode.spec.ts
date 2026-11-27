@@ -106,11 +106,12 @@ describe('navigation-mode', () => {
       await expectNavTo(qtiTest, 'ITM-choice');
     });
 
-    test('should respect section-level linear mode when test-part is nonlinear', async () => {
-      const sectionOverrideTest = html` <qti-test navigate="item">
+    test('ignores navigation-mode on a section: QTI sets it on the test part only', async () => {
+      // The XSD has no navigation-mode on qti-assessment-section, so the nonlinear part decides.
+      const sectionModeTest = html` <qti-test navigate="item">
         <test-navigation>
-          <qti-assessment-test identifier="test-override" title="Section Override Test">
-            <qti-test-part identifier="part-1" navigation-mode="nonlinear">
+          <qti-assessment-test identifier="test-section-mode" title="Section Mode Test">
+            <qti-test-part identifier="part-1" navigation-mode="nonlinear" submission-mode="individual">
               <qti-assessment-section identifier="section-1" title="Section 1" navigation-mode="linear">
                 <qti-assessment-item-ref identifier="item-1" href="item-1.xml"></qti-assessment-item-ref>
                 <qti-assessment-item-ref identifier="item-2" href="item-2.xml"></qti-assessment-item-ref>
@@ -118,35 +119,38 @@ describe('navigation-mode', () => {
               </qti-assessment-section>
             </qti-test-part>
           </qti-assessment-test>
-          <test-prev id="prev-btn-override">Prev</test-prev>
+          <test-prev id="prev-btn-section-mode">Prev</test-prev>
         </test-navigation>
       </qti-test>`;
 
-      const overrideContainer = document.createElement('div');
-      document.body.appendChild(overrideContainer);
-      render(sectionOverrideTest, overrideContainer);
+      const sectionModeContainer = document.createElement('div');
+      document.body.appendChild(sectionModeContainer);
+      render(sectionModeTest, sectionModeContainer);
 
-      const qtiTest = overrideContainer.querySelector('qti-test');
-      const prevBtn = overrideContainer.querySelector('#prev-btn-override');
+      const qtiTest = sectionModeContainer.querySelector('qti-test');
+      const prevBtn = sectionModeContainer.querySelector('#prev-btn-section-mode');
+      let errorReceived = false;
+      qtiTest.addEventListener('qc-test-navigation-failed', () => {
+        errorReceived = true;
+      });
 
-      // Wait for it to load
       await expectNavTo(qtiTest, 'item-1');
 
-      // Move to item-2
+      // A jump past the next item is allowed in a nonlinear part.
       qtiTest.dispatchEvent(
         new CustomEvent('qc-test-navigate', {
           bubbles: true,
           composed: true,
-          detail: { type: 'item', id: 'item-2' }
+          detail: { type: 'item', id: 'item-3' }
         })
       );
+      await expectNavTo(qtiTest, 'item-3');
+      expect(errorReceived).toBe(false);
 
-      await expectNavTo(qtiTest, 'item-2');
+      // ...and so is going back.
+      await expect.poll(() => prevBtn, { timeout: 5000 }).toBeEnabled();
 
-      // Even though the test-part is nonlinear, the section is linear, so Prev should be disabled
-      expect(prevBtn).toBeDisabled();
-
-      overrideContainer.remove();
+      sectionModeContainer.remove();
     });
   });
 
