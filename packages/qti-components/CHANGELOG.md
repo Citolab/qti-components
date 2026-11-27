@@ -1,5 +1,13 @@
 # @citolab/qti-components
 
+## 10.0.0-next.24
+
+### Minor Changes
+
+- [#371](https://github.com/Citolab/qti-components/pull/371) [`7bd2a63`](https://github.com/Citolab/qti-components/commit/7bd2a63bf8961431aaba82a3aeaf3b787a7d2e1d) Thanks [@herrKlein](https://github.com/herrKlein)! - `qtiTest.state` reports a value it cannot read with `qc-test-state-refused` (`{ message, state }`), sent once the test has loaded, instead of only a console warning; the test goes on without it (host migration: [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md)).
+
+  `DeliveryState` (experimental) gets `order`, the item instances after selection and ordering, and `plugins`. `createDeliveryState` takes an `order`, and `parseDeliveryState` checks every field and refuses a state with a missing or mistyped one.
+
 ## 10.0.0-next.23
 
 ### Minor Changes
