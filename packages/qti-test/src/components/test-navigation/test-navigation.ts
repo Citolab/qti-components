@@ -9,6 +9,7 @@ import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
 import { listenPublic as listenItemPublic } from '@qti-components/elements/public-events';
 
+import { itemFactsContext } from '../../internal/item-facts.context';
 import { renderedMarkup } from '../../internal/rendered-markup';
 import { testHostContext } from '../../internal/test-host.context';
 import { listenPublic } from '../../public-events';
@@ -20,7 +21,8 @@ import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
-import type { ItemRefModel } from '@qti-components/delivery';
+import type { ItemFacts, ItemRefModel } from '@qti-components/delivery';
+import type { ItemFactsByRef } from '../../internal/item-facts.context';
 import type { ConfigContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
@@ -108,6 +110,11 @@ export class TestNavigation extends LitElement {
   @consume({ context: sessionContext, subscribe: true })
   protected _sessionContext?: SessionContext;
 
+  /** Read from each item's XML when `qti-test` fetches it; see `itemFactsContext`. */
+  @state()
+  @consume({ context: itemFactsContext, subscribe: true })
+  protected _itemFacts?: ItemFactsByRef;
+
   @state()
   @provide({ context: computedContext })
   protected computedContext: ComputedContext;
@@ -128,7 +135,6 @@ export class TestNavigation extends LitElement {
   constructor() {
     super();
     listenPublic(this, 'qc-test-loaded', this.#handleTestConnected.bind(this));
-    this.addEventListener('qti-assessment-item-connected', this.#handleItemConnected.bind(this));
 
     listenItemPublic(this, 'qc-item-response-changed', this.#handleInteractionChanged.bind(this));
     this.addEventListener('qti-item-context-updated', this.#handleItemContextUpdated.bind(this));
@@ -408,62 +414,12 @@ export class TestNavigation extends LitElement {
     return defaultValues;
   }
 
-  /* PK: on item connected we can add item only properties in the xml */
-  #handleItemConnected(event: CustomEvent) {
-    const itemElement = event.detail as QtiAssessmentItem;
-
-    this.computedContext = {
-      ...this.computedContext,
-      testParts: this.computedContext.testParts.map(testPart => {
-        return {
-          ...testPart,
-          sections: testPart.sections.map(section => {
-            return {
-              ...section,
-              items: section.items.map(item => {
-                if (item.identifier !== itemElement.parentElement.getAttribute('identifier')) {
-                  return item;
-                }
-
-                const scoreOutcome = itemElement.querySelector<HTMLElement>(
-                  "qti-outcome-declaration[identifier='SCORE']"
-                );
-                // const scoreOutcome = item.variables.find(vr => vr.identifier == 'SCORE') as OutcomeVariable;
-                const externalScored = scoreOutcome?.getAttribute('externalScored');
-
-                const responseDeclarations = itemElement.querySelectorAll<HTMLElement>('qti-response-declaration');
-                const containsCorrectResponse = Array.from(responseDeclarations).some((r: HTMLElement) =>
-                  r.querySelector('qti-correct-response')
-                );
-                // check if every responseDeclaration has a correctResponse
-                const containsMapping = Array.from(responseDeclarations).some((r: HTMLElement) => {
-                  const mapping = r.querySelector('qti-mapping');
-                  const areaMapping = r.querySelector('qti-area-mapping');
-                  return mapping?.querySelector('qti-map-entry') || areaMapping?.querySelector('qti-area-map-entry');
-                });
-
-                const hasCorrectResponse = containsCorrectResponse || containsMapping;
-
-                const hasResponseProcessing = itemElement.querySelector('qti-response-processing') ? true : false;
-
-                return {
-                  ...item,
-                  assessmentItemIdentifier: itemElement.getAttribute('identifier'),
-                  label: itemElement.getAttribute('label'),
-                  title: itemElement.title,
-                  externalScored,
-                  adaptive: itemElement.adaptive == 'true' || false,
-                  timeDependent: itemElement.timeDependent == 'true' || false,
-                  variables: itemElement.variables,
-                  hasCorrectResponse,
-                  hasResponseProcessing
-                };
-              })
-            };
-          })
-        };
-      })
-    };
+  /** An item's facts as `computedContext` has carried them; nothing until the item is fetched. */
+  #factsFor(identifier: string): Partial<Omit<ItemFacts, 'identifier'>> & { assessmentItemIdentifier?: string } {
+    const facts: ItemFacts | undefined = this._itemFacts?.get(identifier);
+    if (!facts) return {};
+    const { identifier: assessmentItemIdentifier, ...rest } = facts;
+    return { ...rest, assessmentItemIdentifier };
   }
 
   /* PK: on every change of the candidate we will recomputed the computedContext */
@@ -494,6 +450,7 @@ export class TestNavigation extends LitElement {
                 const itemContext = this._testContext?.items.find(i => i.identifier === item.identifier);
                 const computedItem = {
                   ...item,
+                  ...this.#factsFor(item.identifier),
                   ...itemContext,
                   ...this.initContext?.find(i => i.identifier === item.identifier)
                 };

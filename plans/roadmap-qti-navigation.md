@@ -178,7 +178,7 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
 
 - [x] T1a The test model from the test XML, not the live DOM; nested sections right.
 - [x] T1b All seven session-control attributes, resolved, as `item.sessionControl`.
-- [ ] T1c Item facts from the item XML.
+- [x] T1c Item facts from the item XML.
 - [ ] T1d Navigation and submission mode from the test part only.
 - [ ] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
       `QtiTestState` converted to and from `DeliveryState`. Stored 9.x states keep restoring
