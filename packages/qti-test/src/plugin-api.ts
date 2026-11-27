@@ -4,7 +4,13 @@
  * controls. `@qti-components/extended` is the consumer; a plugin of your own may use it too.
  */
 export { dispatchPublic, listenPublic, PUBLIC_EVENTS } from './public-events.js';
-export type { NavigationFailure, NavigationTarget, PublicEventMap, PublicEventName } from './public-events.js';
+export type {
+  NavigationFailure,
+  NavigationTarget,
+  PublicEventMap,
+  PublicEventName,
+  StateRefusal
+} from './public-events.js';
 export { pluginState } from './plugin-state.js';
 export type { QtiTestPluginState, QtiTestState } from './types/qti-test-state.js';
 export * as controlStyles from './components/styles.js';

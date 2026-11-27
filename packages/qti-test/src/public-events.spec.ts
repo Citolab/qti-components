@@ -26,11 +26,18 @@ describe('public events', () => {
     for (const name of Object.keys(PUBLIC_EVENTS)) expect(text, name).toContain(`'${name}'`);
   });
 
-  it('every declared name uses the qc- prefix, and its alias the cito- prefix', () => {
+  it('every declared name uses the qc- prefix, and its alias, if it had a 9.x name, the cito- prefix', () => {
     for (const [name, { deprecated }] of Object.entries(PUBLIC_EVENTS)) {
       expect(name.startsWith('qc-')).toBe(true);
-      expect(deprecated).toBe(name.replace(/^qc-/, 'cito-'));
+      if (deprecated !== undefined) expect(deprecated).toBe(name.replace(/^qc-/, 'cito-'));
     }
+  });
+
+  it('only events new in 10.0 have no cito- alias', () => {
+    const withoutAlias = Object.entries(PUBLIC_EVENTS)
+      .filter(([, { deprecated }]) => deprecated === undefined)
+      .map(([name]) => name);
+    expect(withoutAlias).toEqual(['qc-test-state-refused']);
   });
 
   it('no source dispatches or listens to a cito- or 7.x name directly', () => {

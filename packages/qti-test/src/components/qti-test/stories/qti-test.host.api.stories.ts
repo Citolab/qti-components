@@ -707,6 +707,35 @@ export const StateFromStoredContexts: StoryObj = {
 };
 
 /**
+ * `qc-test-state-refused` tells the host that a value it assigned to `state` could not be read. A
+ * host assigns the state before the test is in the page, so the event is sent once the test has
+ * loaded, where a listener on the page hears it.
+ */
+export const StateRefusedEvent: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement, step }) => {
+    const refused = fn();
+    hostOf(canvasElement).addEventListener('qc-test-state-refused', e => refused((e as CustomEvent).detail));
+    const warn = spyOn(console, 'warn').mockImplementation(() => {});
+    const unreadable = { version: 2, answers: {} };
+
+    await step('A stored state of another version is assigned: the test opens on its first item', async () => {
+      await mountRequiredTest(canvasElement, test => {
+        test.state = unreadable as unknown as QtiTestState;
+      });
+      await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+    });
+
+    await step('qc-test-state-refused reports it, with the value as given', async () => {
+      await waitFor(() => expect(refused).toHaveBeenCalledTimes(1));
+      expect(refused).toHaveBeenCalledWith({ message: expect.stringContaining('version 1'), state: unreadable });
+    });
+    warn.mockRestore();
+  }
+};
+
+/**
  * `postLoadTestTransformCallback` is set on `qti-test` and applied by the `test-container`. A host
  * that renders its navigation and container inside a component's own shadow root still expects it
  * to run: context crosses a shadow root, and looking the test up with `closest()` does not.
