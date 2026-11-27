@@ -1,7 +1,7 @@
 ---
 '@qti-components/delivery': minor
 '@qti-components/test': patch
-'@citolab/qti-components': patch
+'@citolab/qti-components': minor
 ---
 
 `readItemFacts(item)` in `@qti-components/delivery` reads what a `qti-assessment-item` says about itself from its XML (`adaptive`, `timeDependent`, `hasCorrectResponse`, `hasResponseProcessing`, `externalScored`, `label`, `title`, `identifier`), with no browser and no element registered. `qti-test` reads them when it fetches an item, and `computedContext` items carry them from there instead of from the rendered item on `qti-assessment-item-connected` (roadmap 1, T1c).
