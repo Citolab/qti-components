@@ -1,7 +1,10 @@
-import { property } from 'lit/decorators.js';
+import { provide } from '@lit/context';
+import { property, state } from 'lit/decorators.js';
 
+import { readItemFacts } from '@qti-components/delivery';
 import { qtiTransformItem } from '@qti-components/transformers';
 
+import { itemFactsContext } from '../internal/item-facts.context';
 import { idOf, resolveFirstItem, resolveNextItem } from '../internal/item-sequencing';
 import { dispatchPublic, listenPublic } from '../public-events';
 
@@ -14,6 +17,7 @@ import type { QtiTestPart } from '../components/qti-test-part/qti-test-part';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestContainer } from '../components/test-container/test-container';
 import type { PostLoadTestTransformCallback } from '../internal/test-host.context';
+import type { ItemFactsByRef } from '../internal/item-facts.context';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -80,6 +84,14 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     public _testElement: QtiAssessmentTest;
 
+    /**
+     * The facts of every item fetched so far, by item-ref identifier, read from the item XML in
+     * `_loadSingleItem`. Kept across navigation; a new test starts empty. @internal
+     */
+    @state()
+    @provide({ context: itemFactsContext })
+    protected itemFacts: ItemFactsByRef = new Map();
+
     // Navigation state tracking
     private _activeController: AbortController | null = null;
     private _loadResults: any[] = [];
@@ -133,6 +145,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     private _handleTestConnected(e: CustomEvent<QtiAssessmentTest>): void {
       this._testElement = e.detail;
+      this.itemFacts = new Map();
       this._initializeNavigation();
     }
 
@@ -569,9 +582,12 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
       if (this._isStaleNavigation(navigationId, controller)) return;
 
-      validResults.forEach(({ itemRef, doc }) => {
+      const itemFacts = new Map(this.itemFacts);
+      validResults.forEach(({ itemRef, doc, facts }) => {
         if (itemRef && doc) itemRef.xmlDoc = doc;
+        if (itemRef && facts) itemFacts.set(itemRef.identifier, facts);
       });
+      this.itemFacts = itemFacts;
 
       // Restore per-item state as early as possible (before iframe-based interactions initialize).
       // Some PCIs (including IMS conformance examples) only support restoration via getInstance(state),
@@ -607,7 +623,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
           return null;
         }
 
-        return { itemRef, doc: transformer.htmlDoc(this._customElementRegistry()) };
+        // The facts come from the XML as it will be rendered: after the host's transform.
+        const item = transformer.xmlDoc().documentElement;
+        const facts = item?.localName === 'qti-assessment-item' ? readItemFacts(item) : null;
+        return { itemRef, doc: transformer.htmlDoc(this._customElementRegistry()), facts };
       } catch (error) {
         if (error.name === 'AbortError') {
           console.info(`Item load for ${itemRef.identifier} was aborted`);

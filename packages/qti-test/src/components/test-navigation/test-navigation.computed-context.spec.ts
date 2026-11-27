@@ -1,7 +1,7 @@
 import '@citolab/qti-components';
 
 import { html, render } from 'lit';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { ComputedContext } from '@qti-components/base';
 import type { TestNavigation } from './test-navigation';
@@ -126,5 +126,73 @@ describe('test-navigation computedContext from the test model', () => {
     for (const flat of ['maxAttempts', 'showFeedback', 'showSolution', 'allowSkipping']) {
       expect(i2).not.toHaveProperty(flat);
     }
+  });
+});
+
+/** One item, fetched by the navigation mixin like any host's: its facts come from this XML. */
+const fetchedItem = `<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="ITEM-XML" title="Fetched"
+  label="L1" adaptive="false" time-dependent="false">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+    <qti-correct-response><qti-value>A</qti-value></qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" external-scored="human"/>
+  <qti-response-processing template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct.xml"/>
+  <qti-item-body>
+    <qti-choice-interaction response-identifier="RESPONSE" max-choices="1">
+      <qti-simple-choice identifier="A">A</qti-simple-choice>
+    </qti-choice-interaction>
+  </qti-item-body>
+</qti-assessment-item>`;
+
+describe('test-navigation computedContext item facts', () => {
+  let host: HTMLDivElement;
+
+  afterEach(() => {
+    host?.remove();
+    vi.unstubAllGlobals();
+  });
+
+  it('reads the facts from the fetched item XML, external-scored included', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(fetchedItem, { status: 200 }))
+    );
+    host = document.createElement('div');
+    render(
+      html`
+        <qti-test navigate="item">
+          <test-navigation>
+            <test-container>
+              <qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="T" title="Facts">
+                <qti-test-part identifier="P" navigation-mode="nonlinear" submission-mode="individual">
+                  <qti-assessment-section identifier="S" title="S" visible="true">
+                    <qti-assessment-item-ref identifier="I1" href="items/i1.xml"></qti-assessment-item-ref>
+                  </qti-assessment-section>
+                </qti-test-part>
+              </qti-assessment-test>
+            </test-container>
+          </test-navigation>
+        </qti-test>
+      `,
+      host
+    );
+    document.body.append(host);
+    const navigation = host.querySelector('test-navigation') as TestNavigation & { computedContext: ComputedContext };
+    const item = () => navigation.computedContext?.testParts[0]?.sections[0]?.items[0] as Record<string, unknown>;
+
+    await vi.waitFor(() => expect(item()?.hasResponseProcessing).toBe(true));
+    expect(item()).toMatchObject({
+      identifier: 'I1',
+      assessmentItemIdentifier: 'ITEM-XML',
+      title: 'Fetched',
+      label: 'L1',
+      adaptive: false,
+      timeDependent: false,
+      hasCorrectResponse: true,
+      hasResponseProcessing: true,
+      // QTI 3 spells it `external-scored`; the connected listener read `externalScored`, never set.
+      externalScored: 'human'
+    });
   });
 });

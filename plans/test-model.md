@@ -40,6 +40,14 @@ Not the live DOM. Connected events are not used for structure: they need orderin
 signal, fire again on reconnect, and repeat what the XML already says. Pre-conditions and branch
 rules keep their XML in the model; evaluating them stays a function of the test variables.
 
+**The XML is the only source; JSON is not a copy of it.** The content stays XML: the elements are
+the XML, and the fetched documents are kept (`itemRef.xmlDoc`). Persisted JSON (`QtiTestState`)
+holds only the candidate's state. `computedContext` holds only what the XML does not say directly
+(values resolved across levels, such as session control and item numbers) and the summary hosts
+and plugins read without knowing QTI XML; never mirrored content. It is rebuilt from the XML by
+pure functions (`buildTestModel`, `readItemFacts`), never edited, and a value that can be derived
+when read is derived, not stored (T1e). Decided 2026-11-27.
+
 ## Target shape
 
 Two layers, each built by a pure function:
@@ -86,12 +94,13 @@ interface SessionControl {
 
 // 2. From each item's XML, when it is fetched.
 interface ItemFacts {
+  identifier: string; // the item's own; computedContext carries it as `assessmentItemIdentifier`
   adaptive: boolean;
   timeDependent: boolean;
   hasCorrectResponse: boolean;
   hasResponseProcessing: boolean;
-  externalScored: string | null;
-  label: string;
+  externalScored: 'human' | 'externalMachine' | null; // on the SCORE outcome declaration
+  label: string | null;
   title: string;
 }
 ```
@@ -128,7 +137,7 @@ Each step is one PR into `next`.
       sections.
 - [x] **T1b** Session control as JSON: `item.sessionControl` with all seven attributes, resolved;
       the old flat fields as decided above.
-- [ ] **T1c** `readItemFacts(doc)` from the item XML in `_loadSingleItem`; the
+- [x] **T1c** `readItemFacts(doc)` from the item XML in `_loadSingleItem`; the
       `qti-assessment-item-connected` listener goes.
 - [ ] **T1d** Navigation and submission mode from the test part only: the section attributes and
       properties go, `test-next` and `_isLinearNavigationRestricted` read the part, and the
