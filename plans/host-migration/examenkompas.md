@@ -269,6 +269,19 @@ linear part Next could get stuck. A host that walks the items itself reads them 
 `itemsInOrder(testPart)` from `@qti-components/test` instead of flattening `sections`.
 Evidence: read from qti-components source; the host source was not searched, not run
 
+### A shuffled section keeps its subsections (roadmap 1, T4)
+
+Status: behaviour change (a fix); nothing required
+Members: `qti-ordering shuffle="true"` at load, `postLoadTestTransformCallback` (the test XML it gets)
+Do: nothing. In a section with `<qti-ordering shuffle="true">`, a subsection now moves as one section
+and stays in the test, with its rubric blocks and session control; before, its item-refs were
+lifted into the parent and the subsection dropped. Only a subsection with `visible="false"` and
+`keep-together="false"` still merges into the parent, and its items keep its session control. A
+`visible="true"` subsection with `keep-together="false"` now stays together, as implementation
+guide §4.5.2 says. A transform callback that expected only top-level sections after shuffling sees
+the subsections.
+Evidence: read from qti-components source; the host source was not searched, not run
+
 ### `computedContext` is derived anew on every update (roadmap 1, T2c)
 
 Status: behaviour change (a fix); nothing required

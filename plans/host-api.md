@@ -694,6 +694,25 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
   as a string (`testXML`, `parse()`) has no location to fetch from and keeps the reference, with a
   warning. Gap, roadmap 1 T8: branch rules should treat a referenced section as a leaf (§7.5), but
   nothing marks a merged section yet, so a rule can target a section inside it.
+- **Section ordering follows QTI; a subsection stays a section** (2026-11-27, roadmap 1 T4): in a
+  shuffled section a subsection moves as one block and stays in the test (its rubric blocks and
+  session control with it), unless it is both `visible="false"` and `keep-together="false"`; only
+  then do its children merge into the parent, carrying its `qti-item-session-control` (implementation
+  guide §4.5.2). Before, every subsection of a shuffled section was lifted away, and
+  `keep-together="false"` split a visible one. A `qti-ordering` with attributes or children other
+  than `shuffle` is ignored, as §4.5.2 asks of an extension the engine does not know.
+- **A `with-replacement` clone is its own item-ref, `item-3#2`** (2026-11-27, roadmap 1 T4): the
+  rendered test gets a copy of the `qti-assessment-item-ref` whose `identifier` is the instance id
+  (`itemInstanceId`: the first selection keeps `item-3`, the second is `item-3#2`), so navigation,
+  `testContext.items` and `QtiTestState.items[].identifier` use the instance id and every existing
+  state stays unchanged. `#` cannot occur in a QTI identifier, so no clone collides with an authored
+  one. QTI addresses the second instance as `Q01.2.SCORE` (info model §7.47); mapping that lookup
+  onto `item-3#2` is roadmap 1 T8.
+- **Stored answers for items a selection leaves out are dropped, with a warning** (2026-11-27,
+  roadmap 1 T4): 9.x ignored `qti-selection` and showed every item, so a resumed 9.x state can hold
+  answers for items the seeded selection now leaves out. They are not restored, the next state
+  written leaves them out, and a console warning names them. No repo fixture combines
+  `qti-selection` with a stored state; hosts' content was not checked.
 - **`stateFromContexts` is the converter, on `next` only** (2026-11-27, roadmap 1 T1e):
   `stateFromContexts(testContext, sessionContext?)` from `@qti-components/test` turns stored
   contexts into a `QtiTestState`; `qtiTest.state` reads the live contexts the same way. It reads

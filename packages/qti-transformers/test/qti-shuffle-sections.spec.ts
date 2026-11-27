@@ -1,6 +1,6 @@
 const xml = String.raw;
 
-import { afterEach, beforeEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { qtiTransformTest } from '../src/qti-transform-test';
 import { resetMissingSeedWarning } from '../src/shared/missing-seed-warning';
@@ -104,8 +104,8 @@ describe('shuffleOrdering', () => {
       // Ib and Ic stay adjacent and in order.
       expect(o[ib + 1]).toBe('Ic');
     }
-    // The wrapper is consumed: a subsection groups the shuffle, it is not delivered.
-    expect(flatSectionIds(doc, 'a')).not.toContain('S2');
+    // The subsection moves as a whole and stays a section (impl. guide §4.5.2).
+    expect(flatSectionIds(doc, 'a')).toEqual(['S1', 'S2']);
   });
 
   it('dissolves an invisible, non-keep-together child section (interleave)', () => {
@@ -162,11 +162,11 @@ describe('shuffleOrdering', () => {
       expect(starts.size).toBeGreaterThan(1);
     });
 
-    it('delivers every item exactly once and drops the wrapper', () => {
+    it('delivers every item exactly once and keeps the subsection a section', () => {
       for (const seed of SEEDS) {
         expect([...order(DEFAULT_BLOCK, seed)].sort()).toEqual(['Ia', 'Ib', 'Ic', 'Id', 'Ie', 'If']);
       }
-      expect(flatSectionIds(DEFAULT_BLOCK, 'a')).toEqual(['S1']);
+      expect(flatSectionIds(DEFAULT_BLOCK, 'a')).toEqual(['S1', 'S2']);
     });
 
     it('pins the block to its authored slot with fixed="true"', () => {
@@ -183,10 +183,10 @@ describe('shuffleOrdering', () => {
       }
     });
 
-    it('interleaves a subsection with an explicit keep-together="false"', () => {
+    it('interleaves an invisible subsection with keep-together="false"', () => {
       const doc = wrap(
         `${refs('Ia')}
-         <qti-assessment-section identifier="S2" keep-together="false">
+         <qti-assessment-section identifier="S2" visible="false" keep-together="false">
            ${refs('Ib', 'Ic', 'Id')}
          </qti-assessment-section>
          ${refs('Ie', 'If')}`
@@ -195,21 +195,39 @@ describe('shuffleOrdering', () => {
       expect(splitForSomeSeed).toBe(true);
     });
 
-    it('honours keep-together="false" even when the subsection is visible', () => {
-      // visible governs title/rubric rendering, not grouping — the two must not
-      // be conflated, or an explicit dissolve request is silently ignored.
+    it('keeps a visible subsection together even with keep-together="false"', () => {
+      // Impl. guide §4.5.2: "If visible="true" or keep-together="true" (the default), then the
+      // subsection is shuffled as a unit"; only both false merges it into the parent.
+      for (const visible of ['visible="true"', '']) {
+        const doc = wrap(
+          `${refs('Ia')}
+           <qti-assessment-section identifier="S2" ${visible} keep-together="false">
+             ${refs('Ib', 'Ic', 'Id')}
+           </qti-assessment-section>
+           ${refs('Ie', 'If')}`
+        );
+        for (const seed of SEEDS) {
+          expect(block(order(doc, seed), ['Ib', 'Ic', 'Id'])).toEqual(['Ib', 'Ic', 'Id']);
+        }
+        expect(flatSectionIds(doc, 'a')).toEqual(['S1', 'S2']);
+      }
+    });
+
+    it('keeps an invisible subsection together when keep-together is not false', () => {
       const doc = wrap(
         `${refs('Ia')}
-         <qti-assessment-section identifier="S2" visible="true" keep-together="false">
+         <qti-assessment-section identifier="S2" visible="false">
            ${refs('Ib', 'Ic', 'Id')}
          </qti-assessment-section>
          ${refs('Ie', 'If')}`
       );
-      const splitForSomeSeed = SEEDS.some(seed => block(order(doc, seed), ['Ib', 'Ic', 'Id']) === null);
-      expect(splitForSomeSeed).toBe(true);
+      for (const seed of SEEDS) {
+        expect(block(order(doc, seed), ['Ib', 'Ic', 'Id'])).toEqual(['Ib', 'Ic', 'Id']);
+      }
+      expect(flatSectionIds(doc, 'a')).toEqual(['S1', 'S2']);
     });
 
-    it('lifts a subsection nested inside a subsection transitively', () => {
+    it('moves a subsection with its own subsections as one block', () => {
       const doc = wrap(
         `${refs('Ia')}
          <qti-assessment-section identifier="S2">
@@ -225,18 +243,17 @@ describe('shuffleOrdering', () => {
         const o = order(doc, seed);
         expect(block(o, ['Ib', 'Ic', 'Id', 'Ie'])).toEqual(['Ib', 'Ic', 'Id', 'Ie']);
       }
-      expect(flatSectionIds(doc, 'a')).toEqual(['S1']);
+      expect(flatSectionIds(doc, 'a')).toEqual(['S1', 'S2', 'S3']);
     });
 
-    it('consumes the wrapper even when the block is the only unit', () => {
-      // Nothing to shuffle, but the wrapper must still not survive into the DOM.
+    it('keeps the subsection when the block is the only unit', () => {
       const doc = wrap(
         `<qti-assessment-section identifier="S2">
            ${refs('Ib', 'Ic')}
          </qti-assessment-section>`
       );
       expect(order(doc, 'a')).toEqual(['Ib', 'Ic']);
-      expect(flatSectionIds(doc, 'a')).toEqual(['S1']);
+      expect(flatSectionIds(doc, 'a')).toEqual(['S1', 'S2']);
     });
 
     it('keeps trailing structural children after the reordered items', () => {
@@ -338,6 +355,124 @@ describe('shuffleOrdering', () => {
     const min = Math.min(...positions);
     const max = Math.max(...positions);
     expect(max - min).toBe(4);
+  });
+});
+
+describe('shuffleOrdering (a dissolved subsection)', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const sessionControlOf = (doc: XMLDocument, itemRef: string): Record<string, string> => {
+    const ref = Array.from(doc.getElementsByTagName('qti-assessment-item-ref')).find(
+      el => el.getAttribute('identifier') === itemRef
+    );
+    const control = ref && Array.from(ref.children).find(el => el.localName === 'qti-item-session-control');
+    return Object.fromEntries(Array.from(control?.attributes ?? []).map(a => [a.name, a.value]));
+  };
+
+  it("carries the subsection's session control to its items, theirs winning", () => {
+    // The items leave the subsection, so what they inherited from it (info model §7.19) goes with them.
+    const doc = qtiTransformTest()
+      .parse(
+        wrap(
+          `${refs('Ia')}
+           <qti-assessment-section identifier="S2" visible="false" keep-together="false">
+             <qti-item-session-control max-attempts="3" show-feedback="true" />
+             ${refs('Ib')}
+             <qti-assessment-item-ref identifier="Ic" href="Ic.xml">
+               <qti-item-session-control max-attempts="0" />
+             </qti-assessment-item-ref>
+           </qti-assessment-section>`
+        )
+      )
+      .shuffleOrdering('a')
+      .xmlDoc();
+    expect(sessionControlOf(doc, 'Ib')).toEqual({ 'max-attempts': '3', 'show-feedback': 'true' });
+    expect(sessionControlOf(doc, 'Ic')).toEqual({ 'max-attempts': '0', 'show-feedback': 'true' });
+    expect(sessionControlOf(doc, 'Ia')).toEqual({});
+  });
+
+  it('merges a dissolved subsection inside a dissolved subsection into the parent', () => {
+    const doc = wrap(
+      `${refs('Ia')}
+       <qti-assessment-section identifier="S2" visible="false" keep-together="false">
+         ${refs('Ib')}
+         <qti-assessment-section identifier="S3" visible="false" keep-together="false">
+           ${refs('Ic', 'Id')}
+         </qti-assessment-section>
+       </qti-assessment-section>
+       ${refs('Ie')}`
+    );
+    expect(flatSectionIds(doc, 'a')).toEqual(['S1']);
+    const seeds = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const adjacent = (o: string[]) => Math.abs(o.indexOf('Ic') - o.indexOf('Id')) === 1;
+    expect(seeds.some(seed => !adjacent(order(doc, seed)))).toBe(true);
+  });
+
+  it('keeps a visible subsection inside a dissolved one as a block', () => {
+    const doc = wrap(
+      `${refs('Ia')}
+       <qti-assessment-section identifier="S2" visible="false" keep-together="false">
+         ${refs('Ib')}
+         <qti-assessment-section identifier="S3" visible="true">
+           ${refs('Ic', 'Id')}
+         </qti-assessment-section>
+       </qti-assessment-section>`
+    );
+    expect(flatSectionIds(doc, 'a')).toEqual(['S1', 'S3']);
+    for (const seed of ['a', 'b', 'c', 'd']) {
+      const o = order(doc, seed);
+      expect(o[o.indexOf('Ic') + 1]).toBe('Id');
+    }
+  });
+
+  it('warns about what the dissolved subsection held besides its items', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    order(
+      wrap(
+        `<qti-assessment-section identifier="S2" visible="false" keep-together="false">
+           <qti-rubric-block view="candidate" />
+           ${refs('Ib', 'Ic')}
+         </qti-assessment-section>
+         ${refs('Ia')}`
+      ),
+      'a'
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('qti-rubric-block'));
+  });
+});
+
+describe('shuffleOrdering (an extended qti-ordering)', () => {
+  it('ignores a qti-ordering with attributes it does not know', () => {
+    // Impl. guide §4.5.2: a delivery system "should ignore the qti-ordering element entirely".
+    const doc = xml`
+      <qti-assessment-test>
+        <qti-test-part identifier="P1">
+          <qti-assessment-section identifier="S1">
+            <qti-ordering shuffle="true" algorithm="by-difficulty" />
+            ${refs('I1', 'I2', 'I3', 'I4', 'I5', 'I6')}
+          </qti-assessment-section>
+        </qti-test-part>
+      </qti-assessment-test>`;
+    for (const seed of ['a', 'b', 'c']) {
+      expect(order(doc, seed)).toEqual(['I1', 'I2', 'I3', 'I4', 'I5', 'I6']);
+    }
+  });
+
+  it('ignores a qti-ordering with child elements', () => {
+    const doc = xml`
+      <qti-assessment-test>
+        <qti-test-part identifier="P1">
+          <qti-assessment-section identifier="S1">
+            <qti-ordering shuffle="true"><by-difficulty /></qti-ordering>
+            ${refs('I1', 'I2', 'I3', 'I4', 'I5', 'I6')}
+          </qti-assessment-section>
+        </qti-test-part>
+      </qti-assessment-test>`;
+    for (const seed of ['a', 'b', 'c']) {
+      expect(order(doc, seed)).toEqual(['I1', 'I2', 'I3', 'I4', 'I5', 'I6']);
+    }
   });
 });
 

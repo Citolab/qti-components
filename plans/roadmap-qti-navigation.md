@@ -66,7 +66,7 @@ T1; T5, T6 and T8 after T3; T7 after T8.
 | T1  | The test model from the XML            | T0    | done   |
 | T2  | One computed context                   | T1    | doing  |
 | T3  | The item session lifecycle             | T1    | todo   |
-| T4  | `qti-selection` and ordering           | T1    | todo   |
+| T4  | `qti-selection` and ordering           | T1    | doing  |
 | T5  | `qti-time-limits`                      | T3    | todo   |
 | T6  | Scoring that follows `submission-mode` | T3    | todo   |
 | T7  | Test-part boundaries                   | T8    | todo   |
@@ -97,7 +97,7 @@ What a test part supports from QTI 3, today and after which phase. Today is read
 | Test parts in order, no return to an earlier part                                                  | item-refs are one flat list across parts                                   | T7             |
 | Unsubmitted responses at the end of a nonlinear individual part                                    | not signalled                                                              | T7             |
 | `qti-test-feedback` on a test part (`atEnd` of the part)                                           | `getTestFeedback()` knows the whole test only                              | T7             |
-| `qti-ordering`                                                                                     | works; a subsection dissolves on `keep-together="false"` even when visible | T4             |
+| `qti-ordering`                                                                                     | works (impl. guide §4.5.2)                                                 | T4             |
 | `qti-selection`                                                                                    | not supported                                                              | T4             |
 | `qti-time-limits`                                                                                  | not supported                                                              | T5             |
 | `qti-adaptive-selection` (CAT)                                                                     | not supported                                                              | roadmap 4      |
@@ -248,8 +248,10 @@ Plan: this section. Scope: `packages/qti-transformers` (next to `shuffleOrdering
 - [ ] The T1 model holds only the selected item-refs; `DeliveryState.order` is written once from
       the seed.
 - [ ] Conformance: S3-L2-D1/D2 and S4-L2-D1 pass; a `spec/` story for `with-replacement`.
-- [ ] Ordering dissolves a subsection only when `visible` and `keep-together` are both false
-      (`shuffle-sections.ts`), as implementation guide §4.5.2 says.
+- [x] Ordering dissolves a subsection only when `visible` and `keep-together` are both false
+      (`shuffle-sections.ts`), as implementation guide §4.5.2 says. A subsection that moves as a
+      block stays a section; a dissolved one hands its session control to its children; an
+      extended `qti-ordering` is ignored.
 
 Done when: selection stories pass with a fixed seed, and the same seed selects the same items.
 
