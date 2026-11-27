@@ -55,7 +55,7 @@ Per item instance (`ItemInstanceId` → item):
 | ------------------- | --------------------------------------------------------------------------- | ----- |
 | `itemRefIdentifier` | the item-ref it was selected from                                           | T0    |
 | `occurrence`        | 1 for the first selection, 2 for its first clone (`with-replacement`)       | T0    |
-| `lifecycle`         | `initial`, `interacting`, `suspended`, `closed`, `review` or `solution`     | T3    |
+| `lifecycle`         | QTI's lifecycle state: one of `ITEM_LIFECYCLE_STATES` (seven)               | T3    |
 | `numAttempts`       | attempts so far                                                             | T3    |
 | `duration`          | time spent `interacting`                                                    | T5    |
 | `completionStatus`  | QTI's `completionStatus`                                                    | T3    |
