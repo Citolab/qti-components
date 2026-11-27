@@ -127,6 +127,21 @@ describe('test-navigation computedContext from the test model', () => {
       expect(i2).not.toHaveProperty(flat);
     }
   });
+
+  it('is derived anew on every update, so nothing survives from the previous context', async () => {
+    await mount();
+    const navigation = host.querySelector('test-navigation') as TestNavigation & { computedContext: ComputedContext };
+    const i1 = () => navigation.computedContext.testParts[0].sections[0].items[0] as Record<string, unknown>;
+
+    navigation.initContext = [{ identifier: 'I1', note: 'first' }];
+    await settle();
+    expect(i1().note).toBe('first');
+
+    // The host takes its field away again: the context no longer carries it.
+    navigation.initContext = [];
+    await settle();
+    expect(i1()).not.toHaveProperty('note');
+  });
 });
 
 /** One item, fetched by the navigation mixin like any host's: its facts come from this XML. */

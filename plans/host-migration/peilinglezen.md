@@ -238,6 +238,19 @@ linear part Next could get stuck. A host that walks the items itself reads them 
 `itemsInOrder(testPart)` from `@qti-components/test` instead of flattening `sections`.
 Evidence: read from qti-components source; the host source was not searched, not run
 
+### `computedContext` is derived anew on every update (roadmap 1, T2c)
+
+Status: behaviour change (a fix); nothing required
+Members: `computedContext`, `initContext` (on `test-navigation`)
+Do: nothing. `test-navigation` derives the whole context on every update from the test, the item
+facts, the test and session contexts and `initContext`, instead of copying the previous context and
+changing it. Two things can be seen: a field taken out of `initContext` is gone at the next update
+(before, it stayed), and an item's `maxScore` follows its current `MAXSCORE` (before, it lagged one
+update behind).
+This host sets no `initContext` (searched); `qti-navigation-bar.ts` reads the context and does
+not read `maxScore`.
+Evidence: read from qti-components source; the host source searched for `initContext`, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

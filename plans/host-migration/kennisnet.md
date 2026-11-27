@@ -364,3 +364,17 @@ document order; before, they followed `computedContext.testParts[].sections` (de
 linear part Next could get stuck. A host that walks the items itself reads them in order with
 `itemsInOrder(testPart)` from `@qti-components/test` instead of flattening `sections`.
 Evidence: read from qti-components source; the host source was not searched, not run
+
+### `computedContext` is derived anew on every update (roadmap 1, T2c)
+
+Status: behaviour change (a fix); nothing required
+Members: `computedContext`, `initContext` (on `test-navigation`)
+Do: nothing. `test-navigation` derives the whole context on every update from the test, the item
+facts, the test and session contexts and `initContext`, instead of copying the previous context and
+changing it. Two things can be seen: a field taken out of `initContext` is gone at the next update
+(before, it stayed), and an item's `maxScore` follows its current `MAXSCORE` (before, it lagged one
+update behind). `updateItems.ts:58-67` assigns the whole `initContext` from `player.itemsInfo` and the
+test info on every update, so a field is gone only when `itemsInfo` drops it; the stamp templates in
+`player.html` that read `activeItem.test.*` keep working. Roadmap 1 T2b moves `initContext` under
+`item.data`.
+Evidence: read from qti-components source and `frontend/scripts/player/updateItems.ts`, `player.html`, not run

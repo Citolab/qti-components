@@ -198,6 +198,9 @@ Plan: [host-api.md](host-api.md) → Decided "Our elements are `qc-`". Scope: `t
       `qti-item`; the old name is a deprecated alias for one major that warns once.
 - [ ] The remaining `qti-` theme hooks (`qti-dialog`, `qti-theme-kennisnet`,
       `qti-graphic-order-marker`, `qti-base-stimulus`, `qti-shared-stimulus`) are renamed.
+- [ ] The events that still carry `qti-`, such as `qti-computed-context-updated` from
+      `test-navigation`, take a `qc-` name with the old one as an alias. Found in roadmap 1 T2
+      (`qti-stamp-context-updated` is renamed there, in T2a).
 - [ ] Host-migration entries for every host; the docs and stories use the new names.
 
 Done when: a vocabulary spec finds no `qti-` name in our elements (other than `qti-test` and

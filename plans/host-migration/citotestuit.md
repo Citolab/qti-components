@@ -385,6 +385,20 @@ linear part Next could get stuck. A host that walks the items itself reads them 
 `itemsInOrder(testPart)` from `@qti-components/test` instead of flattening `sections`.
 Evidence: read from qti-components source; the host source was not searched, not run
 
+### `computedContext` is derived anew on every update (roadmap 1, T2c)
+
+Status: behaviour change (a fix); nothing required
+Members: `computedContext`, `initContext` (on `test-navigation`)
+Do: nothing. `test-navigation` derives the whole context on every update from the test, the item
+facts, the test and session contexts and `initContext`, instead of copying the previous context and
+changing it. Two things can be seen: a field taken out of `initContext` is gone at the next update
+(before, it stayed), and an item's `maxScore` follows its current `MAXSCORE` (before, it lagged one
+update behind).
+The `completionStatus`, `score` and `maxScore` that `initContext` passes
+(`AssessmentPlayerView.tsx:2190-2216`) were already replaced by the computed values, and still are;
+roadmap 1 T2b moves `initContext` under `item.data`.
+Evidence: read from qti-components source and `AssessmentPlayerView.tsx`, not run
+
 ### Interaction replay listens to 7.x events and writes into the item's DOM (next major)
 
 Status: breaking; the replay stops recording silently on upgrade

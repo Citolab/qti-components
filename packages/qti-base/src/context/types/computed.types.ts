@@ -41,6 +41,12 @@ export type ComputedItem = ComputedItemContext & {
   optimal?: boolean;
 };
 
+/**
+ * The test as plugins and hosts read it: its structure, the resolved rules, facts about each item and
+ * the candidate's state, in one object. Provided by `test-navigation`, which derives it anew on every
+ * update from the test, the item facts, the candidate's state and `initContext`; never edited, so
+ * read it and do not write to it (a write is gone at the next update).
+ */
 export type ComputedContext = {
   view: View;
   /** What test plugins keep, by plugin name (`QtiTestState.session.plugins`). Read-only; write with `qc-test-update-plugin-state`. */

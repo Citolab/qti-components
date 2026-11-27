@@ -107,18 +107,37 @@ interface StampContext {
   `itemsInOrder(part)`. Host-migration entries for every host that reads `computedContext`
   (CitoTestUit, Examenkompas, PeilingLezen) and the six qti-extended plugins.
 
-## Decide before the steps
+## Decided before the steps
 
-- **Examenkompas and `externalScored`.** QTI puts `external-scored` on the outcome declaration.
-  Either the items carry it, or `data.externalScored` is read where scoring decides. Ask, then write
-  its host-migration entry.
-- **`qti-stamp-context-updated`**: the event stays with `stampContext`; its name follows phase 14
-  (`qc-` names) with the old name as an alias.
+With the user on 2026-11-27; each moves to [host-api.md](host-api.md) → Decided.
+
+- **`externalScored` comes from the item.** QTI puts `external-scored` on the `SCORE` outcome
+  declaration, and the item facts already read it. Host data never sets it (T2b); both scoring
+  plugins read that one field. Examenkompas, which sets it through `initContext` from its own score
+  types, sets the attribute in its `postLoadTransformCallback` instead (host-migration entry).
+  Rejected: the scoring plugins reading `data.externalScored` (a non-QTI override kept in our
+  plugins).
+- **`qti-stamp-context-updated` becomes `qc-stamp-context-updated`** (T2a), the old name sent next
+  to it for one major. `qti-computed-context-updated` keeps its name here; phase 14 renames it.
+- **T2c is a step of its own, first**: one pure function derives `computedContext` from its inputs
+  on every update, so T2b can prove that no host value overrides a computed field and T2d reshapes
+  one function. `DeliveryState` is not live at runtime yet, so for now the inputs are the test model,
+  the item facts, `testContext`, `sessionContext`, `config` and `initContext`, plus the optimality
+  of each item's last ended attempt (kept by `test-navigation`); T3 and T8 move the candidate's state
+  into `DeliveryState`. Read-only means never written back, not frozen; the context symbol is typed
+  `Readonly` (shallow), and the types become `readonly` throughout with T2d's new types.
+- **Kennisnet is a host of T2b and T2a too** (found 2026-11-27): `updateItems.ts` passes each item's
+  info and a `test` object through `initContext`, and `player.html`'s stamp templates read
+  `activeItem.test.*`; both get host-migration entries.
+- **Order**: T2c, T2b, T2d, T2a. T2a's flat view is derived from T2d's tree, so it comes last.
 
 ## Steps
 
-Each step is one PR into `next`.
+Each step is one PR into `next`, in this order.
 
+- [x] **T2c** `computedContext` derived anew on every update by one pure function
+      (`deriveComputedContext`, internal to `@qti-components/test`), never from the previous
+      context; the per-item computation moves out of `test-navigation`.
 - [ ] **T2a** The stamp's view: `stampContext` is `<test-stamp>`'s flat view of the current test
       part, derived from `computedContext` on every update (above): `activeTestpart.items` in
       document order across nested sections, `activeTestpart.sections` flat with `parentId`,
@@ -130,8 +149,6 @@ Each step is one PR into `next`.
       `content` in document order, items with `instance` and `index`; the helpers
       (`itemsInOrder`, `sectionsInOrder`, `activeTestPart`, `activeSection`, `activeItem`)
       exported; the six qti-extended plugins use them.
-
-Order: side by side.
 
 ## Done when
 
