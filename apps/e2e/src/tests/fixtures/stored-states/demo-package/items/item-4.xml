@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd"
+  identifier="item-4" title="Wat weet ik nog? – Fotosynthese 4" adaptive="false"
+  time-dependent="false" xml:lang="nl">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-assessment-stimulus-ref identifier="stimulus-volkstuin" href="../stimuli/stimulus-volkstuin.xml"
+    title="De volkstuin" />
+  <qti-item-body>
+    <div class="qti-layout-row">
+      <div class="qti-layout-col6">
+        <div class="qti-shared-stimulus" data-stimulus-idref="stimulus-volkstuin"></div>
+      </div>
+      <div class="qti-layout-col6">
+        <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="6" data-score="1">
+          <qti-prompt>
+            <p> Hoe heten de eerste blaadjes die boven de grond uitkomen? </p>
+          </qti-prompt>
+        </qti-extended-text-interaction>
+      </div>
+    </div>
+    <qti-rubric-block view="scorer" use="scoring">
+      <qti-content-body>
+        <div>
+          <p>Zaadlobben</p>
+        </div>
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

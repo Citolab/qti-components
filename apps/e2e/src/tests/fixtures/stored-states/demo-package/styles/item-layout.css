@@ -1,0 +1,17 @@
+/* Package-specific layout helpers; own class names so the 1EdTech qti-* classes are left untouched. */
+.image-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.image-row > .image-row-cell {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 0;
+}
+
+/* Players that do not convert DEP dialogs: keep the enlarged copy out of the item.
+   Once converted to a native popover, the browser shows and hides it itself. */
+.dep-dialog.hide-dialog:not([popover]) {
+  display: none;
+}

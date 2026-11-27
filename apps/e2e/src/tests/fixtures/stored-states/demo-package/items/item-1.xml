@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd"
+      identifier="item-1" title="Wat weet ik nog? – Fotosynthese 1" adaptive="false"
+      time-dependent="false" xml:lang="nl">
+      <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="identifier">
+            <qti-correct-response>
+                  <qti-value>A</qti-value>
+            </qti-correct-response>
+      </qti-response-declaration>
+      <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+            <qti-default-value>
+                  <qti-value>0</qti-value>
+            </qti-default-value>
+      </qti-outcome-declaration>
+      <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+            <qti-default-value>
+                  <qti-value>1</qti-value>
+            </qti-default-value>
+      </qti-outcome-declaration>
+      <qti-item-body>
+            <p> Een plant kan zijn eigen voedsel maken. </p>
+            <qti-choice-interaction max-choices="1"
+                  class="qti-orientation-horizontal qti-choices-stacking-1"
+                  response-identifier="RESPONSE" data-score="1">
+                  <qti-prompt>
+                        <p> In welke delen van de plant wordt dit voedsel <em> vooral </em> gemaakt? </p>
+                  </qti-prompt>
+                  <qti-simple-choice identifier="A">
+                        <p> In de bladeren. </p>
+                  </qti-simple-choice>
+                  <qti-simple-choice identifier="B">
+                        <p> In de stengels.</p>
+                  </qti-simple-choice>
+                  <qti-simple-choice identifier="C">
+                        <p> In de wortels.</p>
+                  </qti-simple-choice>
+                  <qti-simple-choice identifier="D">
+                        <p> In de vruchten.</p>
+                  </qti-simple-choice>
+            </qti-choice-interaction>
+      </qti-item-body>
+      <qti-response-processing
+            template="https://purl.imsglobal.org/spec/qti/v3p0/rptemplates/match_correct" />
+</qti-assessment-item>
