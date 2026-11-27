@@ -243,6 +243,9 @@ Plan: this section. Scope: `packages/qti-transformers` (next to `shuffleOrdering
 
 - [ ] Apply `qti-selection` (`select`, `with-replacement`, `qti-selection` with required refs) at
       load, seeded like the ordering, so a resumed session gets the same items.
+  - [x] `selectUnits` in `@qti-components/delivery` (implementation guide §4.5.1), with
+        `selection.vectors.json` for a .NET port;
+  - [ ] applied at load in `qtiTransformTest`, before ordering.
 - [ ] The T1 model holds only the selected item-refs; `DeliveryState.order` is written once from
       the seed.
 - [ ] Conformance: S3-L2-D1/D2 and S4-L2-D1 pass; a `spec/` story for `with-replacement`.
