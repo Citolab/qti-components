@@ -79,7 +79,7 @@ What a test part supports from QTI 3, today and after which phase. Today is read
 
 | QTI                                                                                                | Today                                                                      | Complete after |
 | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------- |
-| `navigation-mode` linear / nonlinear                                                               | works, but also read off sections, which QTI does not allow                | T1 (T1d), T3   |
+| `navigation-mode` linear / nonlinear                                                               | works, from the test part only                                             | T3             |
 | `submission-mode` individual                                                                       | attempts, end attempt and the lock work; rules spread over five components | T3             |
 | `submission-mode` simultaneous                                                                     | items not locked; responses not processed when the part is submitted       | T6             |
 | `qti-item-session-control` cascade (part → sections → ref)                                         | nested sections do not inherit from their parent section                   | T1 (T1a, T1b)  |
@@ -179,7 +179,7 @@ Scope: `packages/qti-test` (`test-navigation`, the navigation mixin, `test-next`
 - [x] T1a The test model from the test XML, not the live DOM; nested sections right.
 - [x] T1b All seven session-control attributes, resolved, as `item.sessionControl`.
 - [x] T1c Item facts from the item XML.
-- [ ] T1d Navigation and submission mode from the test part only.
+- [x] T1d Navigation and submission mode from the test part only.
 - [ ] T1e `DeliveryState.order` and `plugins`; the resolved `sessionControl` derived, never stored;
       `QtiTestState` converted to and from `DeliveryState`. Stored 9.x states keep restoring
       ([delivery-state.md](delivery-state.md) → Old states):

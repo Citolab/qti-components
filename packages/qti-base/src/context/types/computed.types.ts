@@ -66,8 +66,6 @@ export type ComputedContext = {
       completed?: boolean;
       /** This section's own item-refs, not those of its subsections; empty for a section that only holds sections. */
       items: ComputedItem[];
-      navigationMode: 'linear' | 'nonlinear';
-      submissionMode: 'individual' | 'simultaneous';
       allowSkipping?: boolean;
     }[];
   }[];

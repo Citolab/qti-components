@@ -72,12 +72,9 @@ export class TestNext extends LitElement {
   checkDisabled() {
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     if (!testPart) return;
-    const activeSection = testPart.sections.find(s => s.active);
-    const navigationMode = activeSection?.navigationMode || testPart.navigationMode;
-    const submissionMode = activeSection?.submissionMode || testPart.submissionMode;
     const activeItem = this.sectionItems[this.itemIndex];
 
-    const isLinearIndividual = navigationMode === 'linear' && submissionMode === 'individual';
+    const isLinearIndividual = testPart.navigationMode === 'linear' && testPart.submissionMode === 'individual';
 
     // In linear individual mode the candidate may only advance once they are
     // "done" with the active item: they reached the optimal outcome (best score),

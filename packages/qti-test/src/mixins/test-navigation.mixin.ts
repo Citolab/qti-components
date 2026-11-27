@@ -13,7 +13,6 @@ import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
-import type { QtiTestPart } from '../components/qti-test-part/qti-test-part';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestContainer } from '../components/test-container/test-container';
 import type { PostLoadTestTransformCallback } from '../internal/test-host.context';
@@ -265,16 +264,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const currentItemRef = this._testElement?.querySelector(`qti-assessment-item-ref[identifier="${currentItemId}"]`);
       if (!currentItemRef) return false;
 
-      const section = currentItemRef.closest('qti-assessment-section') as QtiAssessmentSection;
-      const testPart = currentItemRef.closest('qti-test-part') as QtiTestPart;
-
-      const navigationMode = (section?.navigationMode ||
-        section?.getAttribute('navigation-mode') ||
-        testPart?.navigationMode ||
-        testPart?.getAttribute('navigation-mode') ||
-        'nonlinear') as string;
-
-      if (navigationMode !== 'linear') return false;
+      // QTI defines navigation-mode on the test part only.
+      if (currentItemRef.closest('qti-test-part')?.getAttribute('navigation-mode') !== 'linear') return false;
 
       const allItemRefs = Array.from(
         this._testElement?.querySelectorAll('qti-assessment-item-ref') || []

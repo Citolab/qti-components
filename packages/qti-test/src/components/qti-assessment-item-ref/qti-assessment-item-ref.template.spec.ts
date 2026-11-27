@@ -100,8 +100,6 @@ const computedWith = (item: { index: number; score: number }): ComputedContext =
           {
             identifier: 'section-1',
             title: 'Section 1',
-            navigationMode: 'nonlinear',
-            submissionMode: 'individual',
             items: [{ identifier: 'ITEM-1', ...item }]
           }
         ]

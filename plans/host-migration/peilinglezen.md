@@ -215,6 +215,19 @@ Do: read `item.sessionControl.maxAttempts` (and `.showFeedback`, `.showSolution`
 every item. Stamp templates that print one of the four fields read `item.sessionControl.<name>`.
 Evidence: searched the host source for the four names: no reads; the compiled player was not read
 
+### Navigation and submission mode from the test part only (roadmap 1, T1d)
+
+Status: breaking
+Members: `computedContext` (`testParts[].sections[].navigationMode`, `submissionMode`),
+`qti-assessment-section` (`navigationMode`, `submissionMode`)
+Do: read `testParts[].navigationMode` and `submissionMode` instead of the section's, which are gone;
+a context the host builds itself (in tests) drops them from its sections. The QTI 3 XSD defines both
+attributes on `qti-test-part` only, so a `navigation-mode` or `submission-mode` on a
+`qti-assessment-section` is now ignored: the part's mode decides Prev and Next, jumps between items
+and the attempts lock. A package that relied on a linear section inside a nonlinear part moves
+those items into a linear test part of their own.
+Evidence: read from qti-components source; the host source was not searched, not run
+
 ## Open
 
 - Deep `/exports/*` imports are internal. Documented entry points for `Interaction` and the

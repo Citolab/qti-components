@@ -34,6 +34,8 @@ A test part groups one or more sections and declares how navigation and submissi
 | `navigation-mode` | `'linear' \| 'nonlinear'` | Default `'nonlinear'`. |
 | `submission-mode` | `'individual' \| 'simultaneous'` | Default `'individual'`. |
 
+QTI defines both modes on the test part only, so they hold for every section and item in it. In `computedContext` they are on `testParts[]`, not on its sections.
+
 Dispatches `qti-test-part-connected`.
 
 ## `<qti-assessment-section>`

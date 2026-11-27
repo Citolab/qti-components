@@ -55,8 +55,6 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -104,8 +102,6 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -155,8 +151,6 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'simultaneous',
               items: [
                 {
                   identifier: 'item1',
@@ -204,8 +198,6 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -273,8 +265,6 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
@@ -324,8 +314,6 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',

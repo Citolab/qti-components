@@ -322,8 +322,6 @@ export class TestNavigation extends LitElement {
           active: false,
           identifier: section.identifier,
           title: section.title,
-          // QTI defines both modes on the test part only; the section attributes go in roadmap T1d.
-          ...this.#sectionModes(section.identifier),
           allowSkipping: section.sessionControl.allowSkipping,
           items: ownItemRefs(section).map(item => ({
             ...this.initContext?.find(i => i.identifier === item.identifier),
@@ -357,17 +355,6 @@ export class TestNavigation extends LitElement {
         item.categories.includes(this.configContext?.infoItemCategory) ? null : index++
       ])
     );
-  }
-
-  /** The non-QTI `navigation-mode` / `submission-mode` a section declares, as before; removed in T1d. */
-  #sectionModes(
-    identifier: string
-  ): Pick<ComputedContext['testParts'][number]['sections'][number], 'navigationMode' | 'submissionMode'> {
-    const section = this.#testElement.querySelector(`qti-assessment-section[identifier="${CSS.escape(identifier)}"]`);
-    return {
-      navigationMode: (section?.getAttribute('navigation-mode') ?? undefined) as 'linear' | 'nonlinear',
-      submissionMode: (section?.getAttribute('submission-mode') ?? undefined) as 'individual' | 'simultaneous'
-    };
   }
 
   /**
@@ -599,11 +586,9 @@ export class TestNavigation extends LitElement {
     // §2.8.2), so the candidate may change the answer until then: TAO keeps such an item open too.
     const items = new Map(
       this.computedContext.testParts.flatMap(part =>
-        part.sections.flatMap(section =>
-          (section.submissionMode || part.submissionMode) === 'simultaneous'
-            ? []
-            : section.items.map(item => [item.identifier, item] as const)
-        )
+        part.submissionMode === 'simultaneous'
+          ? []
+          : part.sections.flatMap(section => section.items.map(item => [item.identifier, item] as const))
       )
     );
     for (const itemRef of this.#testElement.querySelectorAll<QtiAssessmentItemRef>('qti-assessment-item-ref')) {
