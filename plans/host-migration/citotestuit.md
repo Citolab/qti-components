@@ -30,6 +30,18 @@ Do:
   `navigateTo(navItemId)` (`:1495-1530`). `navigate="section"` now starts at the restored section.
   Evidence: read, not run
 
+### Resume stored contexts with `stateFromContexts` (roadmap 1, T1e)
+
+Status: recommended; nothing breaks on upgrade
+Members: `stateFromContexts`, `state`, `qtiTest.testContext`, `navigateTo`
+Do: where a saved session is still the 9.x `ExtendedTestContext` (`{ id, navItemId, items }`),
+resume with `qtiTest.state = stateFromContexts(saved, { navItemRefId: saved.navItemId })`, assigned
+before the test loads, instead of the guarded `testContext` assignment plus `navigateTo(navItemId)`.
+From then on save `state` from `qc-test-state-changed`, so stored contexts run out. Replaces the
+workaround of keeping the context round trip only to read old sessions.
+Evidence: the stored-states spec restores three Checkmate demo states this way
+(`apps/e2e/src/tests/stored-states.spec.ts`); the host itself was not run
+
 ### Keep the seed and bookmarks where they are (PR #225)
 
 Status: recommended

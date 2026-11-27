@@ -1,8 +1,8 @@
 import { QTI_TEST_STATE_VERSION } from '../types/qti-test-state';
 import { dispatchPublic, listenPublic } from '../public-events';
+import { stateFromContexts } from '../state-from-contexts';
 
 import type { PropertyValues } from 'lit';
-import type { SessionContext, TestContext } from '@qti-components/base';
 import type { QtiTestState, QtiTestStateSession } from '../types/qti-test-state';
 import type { TestBaseInterface } from './test-base';
 
@@ -38,30 +38,6 @@ const isQtiTestState = (value: unknown): value is QtiTestState => {
     state.session !== null
   );
 };
-
-const toState = (test: Readonly<TestContext>, session: Readonly<SessionContext>): QtiTestState => ({
-  version: QTI_TEST_STATE_VERSION,
-  test: {
-    items: (test?.items ?? [])
-      .filter(item => item.identifier)
-      .map(item => ({
-        identifier: item.identifier,
-        variables: (item.variables ?? []).map(v => ({
-          identifier: v.identifier,
-          ...(v.type ? { type: v.type } : {}),
-          value: copy(v.value)
-        })),
-        ...(item.state ? { state: { ...item.state } } : {})
-      })),
-    outcomes: (test?.testOutcomeVariables ?? []).map(v => ({ identifier: v.identifier, value: copy(v.value) }))
-  },
-  session: {
-    ...(session?.plugins && Object.keys(session.plugins).length > 0 ? { plugins: { ...session.plugins } } : {}),
-    ...(session?.navPartId !== undefined ? { navPartId: session.navPartId } : {}),
-    ...(session?.navSectionId !== undefined ? { navSectionId: session.navSectionId } : {}),
-    ...(session?.navItemRefId !== undefined ? { navItemRefId: session.navItemRefId } : {})
-  }
-});
 
 /**
  * Persist and resume a test session through one value, `state`, and one event,
@@ -118,7 +94,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     }
 
     get state(): QtiTestState {
-      return toState(this.testContext, this.sessionContext);
+      return stateFromContexts(this.testContext, this.sessionContext);
     }
 
     set state(value: QtiTestState) {

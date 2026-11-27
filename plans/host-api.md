@@ -104,6 +104,12 @@ relates to them, is under Delivery options.
 `setOutcomes` takes `[{ identifier, value }]`, the shape `qc-item-outcomes-changed` sends, so a
 backend result goes back in unchanged.
 
+### Functions from `@qti-components/test`
+
+| Function                                          | Returns        | What it does                                                                                                                                                                                              | Now                  |
+| ------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `stateFromContexts(testContext, sessionContext?)` | `QtiTestState` | Turns a `testContext` and `sessionContext` a 9.x host stored (plain JSON) into a `state` to assign: values as strings, no declaration metadata. A host that kept only the item passes `{ navItemRefId }`. | new (roadmap 1, T1e) |
+
 ### The item you get from `item(id)` (and from `qti-item.item`)
 
 | Member                  | What it is                                                                      | Now                   |
@@ -658,6 +664,14 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
     neither pair on order and drops both on import, and no fixture here carries them, so no
     editor-authored item depends on the old names.
   - Not checked: Kennisnet's and CitoTestUit's content, and what TAO's authoring writes.
+- **`stateFromContexts` is the converter, on `next` only** (2026-11-27, roadmap 1 T1e):
+  `stateFromContexts(testContext, sessionContext?)` from `@qti-components/test` turns stored
+  contexts into a `QtiTestState`; `qtiTest.state` reads the live contexts the same way. It reads
+  plain JSON as hosts stored it (no `type`, numbers as JSON numbers) and writes QTI's strings. Not
+  on `main`: only CitoTestUit stores contexts, and it moves to `state` with the major.
+- **A state that cannot be read is reported with `qc-test-state-refused`** (2026-11-27, roadmap 1
+  T1e): a declared event next to `qc-test-state-changed`, and the test starts fresh; today it is
+  only a console warning. Not built yet (T1e, the `DeliveryState` slice).
 - **Stored 9.x states keep restoring** (2026-11-18): a version 1 `QtiTestState`, and the
   `testContext` + `sessionContext` that 9.x hosts stored, restore on `next`. A public converter
   turns stored contexts into a `QtiTestState` (roadmap 1, T1e);

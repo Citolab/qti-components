@@ -46,6 +46,21 @@ interface QtiTestState {
 Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is. A state
 with an unknown `version` is ignored with a console warning.
 
+## Resuming a state stored as contexts
+
+A host that stored `testContext` (and `sessionContext`, or only the item it was on) in 9.x turns it
+into a state with `stateFromContexts`, and assigns that:
+
+```js
+import { stateFromContexts } from '@citolab/qti-components';
+
+const stored = await load(candidateId); // { items: [...], navItemId: 'item-3' }, as saved in 9.x
+qtiTest.state = stateFromContexts(stored, { navItemRefId: stored.navItemId });
+```
+
+It keeps the values only and writes them as strings, so a number stored as a JSON number reads back
+as text. Save the new `state` from then on.
+
 ## Setting a single value
 
 To change values on one item from outside the session, such as a score from manual scoring, use

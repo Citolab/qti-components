@@ -8,6 +8,7 @@ import {
   getAssessmentItemFromTestContainerByDataTitle,
   getAssessmentItemsFromTestContainer
 } from '../../../../../../tools/testing/test-utils';
+import { stateFromContexts } from '../../../state-from-contexts';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import type { ComputedContext, QtiContext } from '@qti-components/base';
@@ -659,6 +660,49 @@ export const ItemValidityAfterRestore: StoryObj = {
     await waitFor(() => expect(within(item).getByText('Tin (Sn)').matches(':state(checked)')).toBe(true));
 
     await waitFor(() => expect(computedItems(canvasElement).REQ.valid).toBe(true), { timeout: 4000 });
+  }
+};
+
+/**
+ * `stateFromContexts` turns the `testContext` and position a 9.x host stored into a `state`: plain
+ * JSON with declaration metadata, no `type`, and numbers as JSON numbers, as hosts saved it.
+ */
+export const StateFromStoredContexts: StoryObj = {
+  parameters: { testTimeout: 60000 },
+  render: () => html`<div data-testid="host"></div>`,
+  play: async ({ canvasElement, step }) => {
+    const stored = {
+      id: 'stored-1',
+      navItemId: 'REQ',
+      items: [
+        {
+          identifier: 'REQ',
+          href: 'items/req.xml',
+          variables: [
+            { identifier: 'RESPONSE', cardinality: 'single', baseType: 'identifier', value: 'choice1' },
+            { identifier: 'SCORE', cardinality: 'single', baseType: 'float', value: 1 }
+          ]
+        }
+      ]
+    };
+
+    await step('stateFromContexts reads the stored context: values as strings, no declaration metadata', async () => {
+      const state = stateFromContexts(stored, { navItemRefId: stored.navItemId });
+      expect(state.version).toBe(1);
+      expect(state.session.navItemRefId).toBe('REQ');
+      expect(state.test.items[0].variables).toEqual([
+        { identifier: 'RESPONSE', value: 'choice1' },
+        { identifier: 'SCORE', value: '1' }
+      ]);
+    });
+
+    await step('Assigned as state, the item reopens with the stored answer selected', async () => {
+      await mountRequiredTest(canvasElement, test => {
+        test.state = stateFromContexts(stored, { navItemRefId: stored.navItemId });
+      });
+      const item = await loadedItem(canvasElement, 'Meerkeuzevraag één antwoord');
+      await waitFor(() => expect(within(item).getByText('Tin (Sn)').matches(':state(checked)')).toBe(true));
+    });
   }
 };
 
