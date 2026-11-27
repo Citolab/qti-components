@@ -1,5 +1,16 @@
 # @qti-components/test
 
+## 2.0.0-next.17
+
+### Patch Changes
+
+- [#367](https://github.com/Citolab/qti-components/pull/367) [`a21ff80`](https://github.com/Citolab/qti-components/commit/a21ff8027f0169abad74ef4dd4bc346f18035211) Thanks [@herrKlein](https://github.com/herrKlein)! - `readItemFacts(item)` in `@qti-components/delivery` reads what a `qti-assessment-item` says about itself from its XML (`adaptive`, `timeDependent`, `hasCorrectResponse`, `hasResponseProcessing`, `externalScored`, `label`, `title`, `identifier`), with no browser and no element registered. `qti-test` reads them when it fetches an item, and `computedContext` items carry them from there instead of from the rendered item on `qti-assessment-item-connected` (roadmap 1, T1c).
+
+  Fix: a computed item's `externalScored` now has the `external-scored` value of the item's `SCORE` outcome declaration (`human` or `externalMachine`). It was always null, because the attribute was read as `externalScored`; `test-scoring-feedback` now shows the external-scoring texts for such items. A host's `itemData` still overrides it.
+
+- Updated dependencies [[`a21ff80`](https://github.com/Citolab/qti-components/commit/a21ff8027f0169abad74ef4dd4bc346f18035211)]:
+  - @qti-components/delivery@0.1.0-next.1
+
 ## 2.0.0-next.16
 
 ### Major Changes
