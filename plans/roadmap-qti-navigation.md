@@ -98,7 +98,7 @@ What a test part supports from QTI 3, today and after which phase. Today is read
 | Unsubmitted responses at the end of a nonlinear individual part                                    | not signalled                                                              | T7             |
 | `qti-test-feedback` on a test part (`atEnd` of the part)                                           | `getTestFeedback()` knows the whole test only                              | T7             |
 | `qti-ordering`                                                                                     | works (impl. guide §4.5.2)                                                 | T4             |
-| `qti-selection`                                                                                    | not supported                                                              | T4             |
+| `qti-selection`                                                                                    | works at load; `with-replacement` clones not checked end to end yet        | T4             |
 | `qti-time-limits`                                                                                  | not supported                                                              | T5             |
 | `qti-adaptive-selection` (CAT)                                                                     | not supported                                                              | roadmap 4      |
 
@@ -123,7 +123,7 @@ placeholder in the `*.todo.stories.ts` with a story whose play function asserts 
 | Elective T7 (no IDs)         | nested sections taken in a fixed order                      | passes      | T1     |
 | S1-L2-D1, S1-L2-D2           | `allow-skipping` per section, true and false                | placeholder | T3     |
 | T5-L2-D1                     | unlimited attempts set on the test part                     | placeholder | T3     |
-| S3-L2-D1, S3-L2-D2, S4-L2-D1 | select 2 of 3 (with and without a required item), reshuffle | placeholder | T4     |
+| S3-L2-D1, S3-L2-D2, S4-L2-D1 | select 2 of 3 (with and without a required item), reshuffle | passes      | T4     |
 | T2-L2-D1                     | a 60-second test limit, the time remaining shown            | placeholder | T5     |
 
 Elective T4 and T7 are QTI 2.2 samples: if their files are not QTI 3, the phase writes its own story
@@ -245,10 +245,16 @@ Plan: this section. Scope: `packages/qti-transformers` (next to `shuffleOrdering
       load, seeded like the ordering, so a resumed session gets the same items.
   - [x] `selectUnits` in `@qti-components/delivery` (implementation guide §4.5.1), with
         `selection.vectors.json` for a .NET port;
-  - [ ] applied at load in `qtiTransformTest`, before ordering.
+  - [x] applied at load in `qtiTransformTest` (`applySelection`), before ordering, by `test-container`;
+        an invalid selection stops the test loading; stored answers for left-out items are dropped
+        with a warning.
 - [ ] The T1 model holds only the selected item-refs; `DeliveryState.order` is written once from
       the seed.
+  - [x] the model holds only the selected item-refs: it is built from the rendered test;
+  - [ ] `DeliveryState.order` from the rendered instance ids (`item-3#2`), written once.
 - [ ] Conformance: S3-L2-D1/D2 and S4-L2-D1 pass; a `spec/` story for `with-replacement`.
+  - [x] S3-L2-D1/D2 and S4-L2-D1 pass with the seed `s3-s4`; S4-L2-D11/D12 jump to items it selects;
+  - [ ] a `spec/` story for `with-replacement`.
 - [x] Ordering dissolves a subsection only when `visible` and `keep-together` are both false
       (`shuffle-sections.ts`), as implementation guide §4.5.2 says. A subsection that moves as a
       block stays a section; a dissolved one hands its session control to its children; an

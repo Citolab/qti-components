@@ -25,7 +25,7 @@ Loads the test XML and hosts the parsed `<qti-assessment-test>` tree in its shad
 | `test-url` | `string` | URL of `assessmenttest.xml` to load.                                                                      |
 | `testXML`  | `string` | Alternative to `test-url` — parse an already-fetched XML string directly (JS property, not an attribute). |
 
-Supports an optional `postLoadTestTransformCallback` (read from the closest `<qti-test>`) to transform the parsed test before it's rendered, and applies a shuffle `seed` from `qtiContext.QTI_CONTEXT.seed` if one is set (`qtiContext` is the `QTI_CONTEXT` variable: test/candidate/environment identifiers plus the optional seed. It is provided by `<qti-test>`; `test-navigation.qtiContext` is a deprecated alias of it), so item/choice ordering is reproducible across reloads.
+Supports an optional `postLoadTestTransformCallback` (read from the closest `<qti-test>`) to transform the parsed test before it's rendered, and applies a shuffle `seed` from `qtiContext.QTI_CONTEXT.seed` if one is set (`qtiContext` is the `QTI_CONTEXT` variable: test/candidate/environment identifiers plus the optional seed. It is provided by `<qti-test>`; `test-navigation.qtiContext` is a deprecated alias of it), so item selection and item/choice ordering are reproducible across reloads.
 
 ## Requesting navigation
 

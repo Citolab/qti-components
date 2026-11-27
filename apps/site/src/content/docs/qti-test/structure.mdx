@@ -44,6 +44,8 @@ A section groups item references (and, optionally, nested sections).
 
 In `computedContext`, `testParts[].sections` lists every section once, nested ones included (a section before its subsections), each with only its own items; a section that only holds subsections has no items of its own. Items are numbered (`index`) in the test's order. To walk a part's items in the order the candidate takes them, use `itemsInOrder(testPart)` from `@qti-components/test` (it reads `testParts[].itemOrder`); flattening `sections` gives another order where item-refs and subsections interleave.
 
+When the test loads, each section's `qti-selection` picks which item-refs and subsections it presents (required ones always, a subsection counting as one), and then its `qti-ordering shuffle="true"` shuffles them, both from the `seed` in `qtiContext`: the same seed presents the same items in the same order. A subsection moves as one block unless it is both `visible="false"` and `keep-together="false"`. With `with-replacement="true"` a selected item-ref can appear again as a clone with its own identifier (`item-3#2`). A selection that QTI calls an error (fewer than the required items, or more than there are without replacement) stops the test from loading.
+
 A `qti-assessment-section-ref` is replaced by the section it refers to when the test is loaded by URL (`test-url`), under the reference's `identifier`. A test given as a string (`testXML`) cannot fetch it and keeps the reference.
 
 A `qti-item-session-control` on the test part, a section or an item-ref resolves per attribute: each attribute comes from the closest level that declares it, and its QTI default only when none does. An item-ref that declares only `show-feedback="true"` keeps its section's `max-attempts`.

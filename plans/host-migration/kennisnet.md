@@ -377,3 +377,17 @@ lifted into the parent and the subsection dropped. Only a subsection with `visib
 guide §4.5.2 says. A transform callback that expected only top-level sections after shuffling sees
 the subsections.
 Evidence: read from qti-components source; the host source was not searched, not run
+
+### Tests with `qti-selection` present only the selected items (roadmap 1, T4)
+
+Status: behaviour change (a fix); check stored sessions of tests that select
+Members: `qtiContext` (`seed`), `state`, `postLoadTestTransformCallback` (the test XML it gets)
+Do: a section with `<qti-selection select="n">` now presents `n` of its item-refs and subsections,
+the required ones always, chosen by the seed in `qtiContext` (implementation guide §4.5.1); before,
+every item was presented. Pass the same seed on resume, or other items are selected. A stored state
+with answers for an item the selection leaves out (saved before this change) is restored without
+them, with a console warning, and the next state leaves them out. `with-replacement="true"` can add
+a clone of an item-ref with its own identifier (`item-3#2`). A selection QTI calls an error (fewer
+than the required items, more than there are without replacement) stops the test loading. The
+transform callback gets the test with the selection applied.
+Evidence: read from qti-components source; the host source and content were not searched, not run
