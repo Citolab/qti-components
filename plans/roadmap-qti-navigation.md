@@ -65,7 +65,7 @@ T1; T5, T6 and T8 after T3; T7 after T8.
 | T0  | The delivery package                   | G1    | done   |
 | T1  | The test model from the XML            | T0    | done   |
 | T2  | One computed context                   | T1    | todo   |
-| T3  | The item session lifecycle             | T1    | todo   |
+| T3  | The item session lifecycle             | T1    | doing  |
 | T4  | `qti-selection` and ordering           | T1    | done   |
 | T5  | `qti-time-limits`                      | T3    | todo   |
 | T6  | Scoring that follows `submission-mode` | T3    | todo   |
@@ -227,7 +227,8 @@ Plan: [item-lifecycle.md](item-lifecycle.md).
 Scope: `packages/qti-test` (`test-navigation`, `test-next`, `test-prev`, `test-end-attempt`),
 `packages/qti-base` (`qti-feedback`), `packages/qti-corrections`.
 
-- [ ] T3a The item session lifecycle (QTI 3 info model §2.2.1) as a finite state machine per item.
+- [x] T3a The item session lifecycle (QTI 3 info model §2.2.1) as a finite state machine per item:
+      `ITEM_LIFECYCLE` and `transition` in `@qti-components/delivery`, with JSON vectors.
 - [ ] T3b One rules module that drives the machine; the buttons, the lock and feedback read its state.
 - [ ] T3c `validate-responses` and `allow-comment` take effect.
 - [ ] T3d `lifecycle`, `numAttempts` and `completionStatus` in `DeliveryState`; the `can*` flags
