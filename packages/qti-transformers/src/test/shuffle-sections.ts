@@ -1,29 +1,15 @@
 import { createSeededRandom, shuffleKeepingFixed } from '@qti-components/delivery';
 
-const isLocal = (el: Element, ...names: string[]): boolean =>
-  names.includes(el.localName) || names.includes(el.localName?.toLowerCase?.());
-
-const isItemRef = (el: Element): boolean => isLocal(el, 'qti-assessment-item-ref', 'assessmentitemref');
-
-const isSection = (el: Element): boolean => isLocal(el, 'qti-assessment-section', 'assessmentsection');
-
-const attrIsTrue = (el: Element, ...names: string[]): boolean =>
-  names.some(n => {
-    const v = (el.getAttribute(n) ?? '').trim().toLowerCase();
-    return v === 'true' || v === '1';
-  });
-
-const attrIsFalse = (el: Element, ...names: string[]): boolean =>
-  names.some(n => {
-    const v = (el.getAttribute(n) ?? '').trim().toLowerCase();
-    return v === 'false' || v === '0';
-  });
-
-const isOrdering = (el: Element): boolean => isLocal(el, 'qti-ordering', 'ordering');
-
-const isSelection = (el: Element): boolean => isLocal(el, 'qti-selection', 'selection');
-
-const isSessionControl = (el: Element): boolean => isLocal(el, 'qti-item-session-control', 'itemsessioncontrol');
+import {
+  attrIsFalse,
+  attrIsTrue,
+  isItemRef,
+  isOrdering,
+  isSection,
+  isSelection,
+  isSessionControl,
+  sectionUnits
+} from './section-elements';
 
 /**
  * A `qti-ordering` this transform understands: only `shuffle` (and namespace declarations), no
@@ -139,7 +125,7 @@ function orderSection(section: Element, seed: string | number): void {
 
   // The pool of movable units in document order. Other children (qti-ordering,
   // qti-selection, a rubric block, …) are left in place.
-  const children = Array.from(section.children).filter(child => isItemRef(child) || isSection(child));
+  const children = sectionUnits(section);
   const units = children.flatMap(unitsOf);
 
   // Where the reordered units go back in: after the last child we take out, so

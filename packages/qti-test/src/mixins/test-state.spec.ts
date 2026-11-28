@@ -179,6 +179,20 @@ describe('qti-test state', () => {
       expect(qtiTest.sessionContext.navSectionId).toBeUndefined();
     });
 
+    it('drops, with a warning, the answers for an item the test does not present', () => {
+      // A 9.x state was saved when qti-selection was ignored: it can hold answers for an item the
+      // seeded selection now leaves out (roadmap 1 T4, plans/host-api.md → Decided).
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const stored = savedState();
+      stored.test.items.push({ identifier: 'NOT-SELECTED', variables: [{ identifier: 'RESPONSE', value: 'C' }] });
+
+      qtiTest.state = stored;
+
+      expect(qtiTest.state.test.items.map(i => i.identifier)).not.toContain('NOT-SELECTED');
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('NOT-SELECTED'));
+      warn.mockRestore();
+    });
+
     it('ignores a state of another version, and reports it with qc-test-state-refused', () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const refused: unknown[] = [];
