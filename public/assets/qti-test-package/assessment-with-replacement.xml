@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+        identifier="WithReplacementTest"
+        title="Selection with replacement"
+        xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+>
+    <qti-test-part identifier="test-part-1" navigation-mode="nonlinear" submission-mode="individual">
+        <!--
+          Three of two items, with replacement: each item once, then one clone (implementation guide
+          §4.5.1). The clone is a second instance of its item-ref, with its own session.
+        -->
+        <qti-assessment-section identifier="section-with-replacement" title="With replacement" visible="true">
+            <qti-selection select="3" with-replacement="true"/>
+            <qti-assessment-item-ref identifier="ITM-choice" href="items/choice.xml"/>
+            <qti-assessment-item-ref identifier="ITM-text" href="items/text_entry.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

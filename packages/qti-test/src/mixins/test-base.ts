@@ -57,7 +57,8 @@ export const TestBaseMixin = <T extends Constructor<LitElement>>(superClass: T) 
      * The test context is replaced rather than changed in place, so its consumers update and
      * `qc-test-state-changed` fires.
      *
-     * @param itemRefID The `qti-assessment-item-ref` identifier, not the item's own identifier.
+     * @param itemRefID The `qti-assessment-item-ref` identifier, not the item's own identifier; a
+     *   `with-replacement` clone's instance id (`item-3#2`).
      * @param state Opaque per-interaction state keyed by response identifier, e.g. a PCI's `getState()`.
      */
     updateItemVariables(itemRefID: string, values: readonly ItemVariableValue[], state?: ItemContext['state']): void {
