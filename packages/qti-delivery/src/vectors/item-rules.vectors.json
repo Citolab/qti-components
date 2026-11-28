@@ -1,0 +1,530 @@
+{
+  "about": "Each case's input is merged over its base (sessionControl and current field by field); expect lists only the answers the case is about. Written from QTI 3 info model §7.19 and implementation guide §4.1 and §4.4.2. numAttempts is the number of ended attempts, not QTI's count of attempts begun.",
+  "items": {
+    "base": {
+      "sessionControl": {
+        "maxAttempts": 1,
+        "showFeedback": false,
+        "allowReview": true,
+        "showSolution": false,
+        "allowSkipping": true,
+        "validateResponses": false
+      },
+      "adaptive": false,
+      "navigationMode": "nonlinear",
+      "submissionMode": "individual",
+      "numAttempts": 0,
+      "completionStatus": "unknown",
+      "left": false,
+      "modalFeedback": false,
+      "state": "interacting",
+      "skipped": false,
+      "valid": true
+    },
+    "cases": [
+      {
+        "name": "an interacting item with attempts left may end its attempt",
+        "input": {},
+        "expect": {
+          "attemptsLeft": true,
+          "attemptsUsed": false,
+          "interactive": true,
+          "done": false,
+          "mayEndAttempt": true,
+          "maySubmit": true,
+          "maySkip": true
+        }
+      },
+      {
+        "name": "max-attempts reached: no attempt left",
+        "input": {
+          "numAttempts": 1
+        },
+        "expect": {
+          "attemptsLeft": false,
+          "attemptsUsed": true
+        }
+      },
+      {
+        "name": "max-attempts 0 is unlimited",
+        "input": {
+          "sessionControl": {
+            "maxAttempts": 0
+          },
+          "numAttempts": 7
+        },
+        "expect": {
+          "attemptsLeft": true
+        }
+      },
+      {
+        "name": "attempts left keep the attempt open, whatever the last attempt scored",
+        "input": {
+          "sessionControl": {
+            "maxAttempts": 3
+          },
+          "numAttempts": 1
+        },
+        "expect": {
+          "attemptsLeft": true,
+          "mayEndAttempt": true,
+          "done": false
+        }
+      },
+      {
+        "name": "an adaptive item ignores max-attempts",
+        "input": {
+          "adaptive": true,
+          "numAttempts": 5,
+          "completionStatus": "incomplete"
+        },
+        "expect": {
+          "attemptsLeft": true
+        }
+      },
+      {
+        "name": "an adaptive item has no attempt left once completed",
+        "input": {
+          "adaptive": true,
+          "numAttempts": 1,
+          "completionStatus": "completed"
+        },
+        "expect": {
+          "attemptsLeft": false,
+          "attemptsUsed": true
+        }
+      },
+      {
+        "name": "allow-skipping false refuses an item with no response",
+        "input": {
+          "sessionControl": {
+            "allowSkipping": false
+          },
+          "skipped": true
+        },
+        "expect": {
+          "maySkip": false,
+          "maySubmit": false,
+          "mayEndAttempt": false
+        }
+      },
+      {
+        "name": "allow-skipping false accepts an item with a response",
+        "input": {
+          "sessionControl": {
+            "allowSkipping": false
+          }
+        },
+        "expect": {
+          "maySkip": true,
+          "maySubmit": true,
+          "mayEndAttempt": true
+        }
+      },
+      {
+        "name": "allow-skipping false does not refuse an invalid response",
+        "input": {
+          "sessionControl": {
+            "allowSkipping": false
+          },
+          "valid": false
+        },
+        "expect": {
+          "maySkip": true,
+          "maySubmit": true,
+          "mayEndAttempt": true
+        }
+      },
+      {
+        "name": "allow-skipping true accepts an item with no response",
+        "input": {
+          "skipped": true
+        },
+        "expect": {
+          "maySkip": true,
+          "maySubmit": true,
+          "mayEndAttempt": true
+        }
+      },
+      {
+        "name": "validate-responses refuses an invalid response",
+        "input": {
+          "sessionControl": {
+            "validateResponses": true
+          },
+          "valid": false
+        },
+        "expect": {
+          "maySkip": true,
+          "maySubmit": false,
+          "mayEndAttempt": false
+        }
+      },
+      {
+        "name": "validate-responses accepts a valid response",
+        "input": {
+          "sessionControl": {
+            "validateResponses": true
+          }
+        },
+        "expect": {
+          "maySubmit": true,
+          "mayEndAttempt": true
+        }
+      },
+      {
+        "name": "validate-responses false accepts an invalid response",
+        "input": {
+          "valid": false
+        },
+        "expect": {
+          "maySubmit": true,
+          "mayEndAttempt": true
+        }
+      },
+      {
+        "name": "allow-skipping and validate-responses do not apply in simultaneous submission",
+        "input": {
+          "submissionMode": "simultaneous",
+          "sessionControl": {
+            "allowSkipping": false,
+            "validateResponses": true
+          },
+          "skipped": true,
+          "valid": false
+        },
+        "expect": {
+          "maySkip": true,
+          "maySubmit": true
+        }
+      },
+      {
+        "name": "simultaneous submission ends no attempt per item",
+        "input": {
+          "submissionMode": "simultaneous"
+        },
+        "expect": {
+          "interactive": true,
+          "mayEndAttempt": false
+        }
+      },
+      {
+        "name": "a closed item is done and fixed",
+        "input": {
+          "state": "closed",
+          "numAttempts": 1
+        },
+        "expect": {
+          "interactive": false,
+          "done": true,
+          "mayEndAttempt": false
+        }
+      },
+      {
+        "name": "a suspended item is neither done nor interactive",
+        "input": {
+          "state": "suspended"
+        },
+        "expect": {
+          "interactive": false,
+          "done": false,
+          "mayEndAttempt": false
+        }
+      },
+      {
+        "name": "modal feedback is read before another attempt begins",
+        "input": {
+          "state": "modalFeedback",
+          "sessionControl": {
+            "maxAttempts": 2
+          },
+          "numAttempts": 1
+        },
+        "expect": {
+          "interactive": false,
+          "done": false,
+          "mayEndAttempt": false,
+          "attemptsLeft": true
+        }
+      },
+      {
+        "name": "an initial item is neither done nor interactive",
+        "input": {
+          "state": "initial"
+        },
+        "expect": {
+          "interactive": false,
+          "done": false,
+          "mayEndAttempt": false
+        }
+      },
+      {
+        "name": "feedback shows while attempts are left",
+        "input": {
+          "sessionControl": {
+            "maxAttempts": 2
+          },
+          "numAttempts": 1
+        },
+        "expect": {
+          "mayShowFeedback": true
+        }
+      },
+      {
+        "name": "feedback shows with unlimited attempts",
+        "input": {
+          "sessionControl": {
+            "maxAttempts": 0
+          },
+          "numAttempts": 4
+        },
+        "expect": {
+          "mayShowFeedback": true
+        }
+      },
+      {
+        "name": "after the last attempt feedback shows only with show-feedback",
+        "input": {
+          "state": "closed",
+          "numAttempts": 1
+        },
+        "expect": {
+          "mayShowFeedback": false
+        }
+      },
+      {
+        "name": "show-feedback shows feedback after the last attempt",
+        "input": {
+          "state": "closed",
+          "numAttempts": 1,
+          "sessionControl": {
+            "showFeedback": true
+          }
+        },
+        "expect": {
+          "mayShowFeedback": true
+        }
+      },
+      {
+        "name": "an adaptive item shows feedback until it is completed",
+        "input": {
+          "adaptive": true,
+          "numAttempts": 2,
+          "completionStatus": "incomplete"
+        },
+        "expect": {
+          "mayShowFeedback": true
+        }
+      },
+      {
+        "name": "a completed adaptive item follows show-feedback",
+        "input": {
+          "state": "closed",
+          "adaptive": true,
+          "numAttempts": 2,
+          "completionStatus": "completed"
+        },
+        "expect": {
+          "mayShowFeedback": false
+        }
+      },
+      {
+        "name": "in review an adaptive item with allow-review shows feedback whatever show-feedback says",
+        "input": {
+          "state": "review",
+          "adaptive": true,
+          "numAttempts": 2,
+          "completionStatus": "completed"
+        },
+        "expect": {
+          "mayShowFeedback": true,
+          "done": true
+        }
+      },
+      {
+        "name": "in review a non-adaptive item follows show-feedback",
+        "input": {
+          "state": "review",
+          "numAttempts": 1
+        },
+        "expect": {
+          "mayShowFeedback": false,
+          "done": true
+        }
+      },
+      {
+        "name": "a closed item with allow-review may enter review",
+        "input": {
+          "state": "closed",
+          "numAttempts": 1
+        },
+        "expect": {
+          "mayBeginReview": true,
+          "mayBeginSolution": false
+        }
+      },
+      {
+        "name": "allow-review false keeps a closed item out of review",
+        "input": {
+          "state": "closed",
+          "numAttempts": 1,
+          "sessionControl": {
+            "allowReview": false
+          }
+        },
+        "expect": {
+          "mayBeginReview": false
+        }
+      },
+      {
+        "name": "show-solution lets a closed item enter solution",
+        "input": {
+          "state": "closed",
+          "numAttempts": 1,
+          "sessionControl": {
+            "showSolution": true
+          }
+        },
+        "expect": {
+          "mayBeginSolution": true
+        }
+      },
+      {
+        "name": "an item still interacting enters neither review nor solution",
+        "input": {
+          "sessionControl": {
+            "showSolution": true
+          }
+        },
+        "expect": {
+          "mayBeginReview": false,
+          "mayBeginSolution": false
+        }
+      },
+      {
+        "name": "solution is done and fixed",
+        "input": {
+          "state": "solution",
+          "numAttempts": 1,
+          "sessionControl": {
+            "showSolution": true
+          }
+        },
+        "expect": {
+          "done": true,
+          "interactive": false,
+          "mayBeginSolution": false
+        }
+      }
+    ]
+  },
+  "navigation": {
+    "base": {
+      "navigationMode": "linear",
+      "submissionMode": "individual",
+      "index": 0,
+      "count": 3,
+      "current": {
+        "maySubmit": true,
+        "interactive": true
+      }
+    },
+    "cases": [
+      {
+        "name": "a linear part goes to the next item",
+        "input": {
+          "index": 1
+        },
+        "expect": {
+          "mayGoNext": true,
+          "mayGoPrevious": false
+        }
+      },
+      {
+        "name": "a linear individual part keeps the candidate on an item whose responses may not be submitted",
+        "input": {
+          "current": {
+            "maySubmit": false,
+            "interactive": true
+          }
+        },
+        "expect": {
+          "mayGoNext": false
+        }
+      },
+      {
+        "name": "a linear individual part leaves a closed item whatever its responses",
+        "input": {
+          "current": {
+            "maySubmit": false,
+            "interactive": false
+          }
+        },
+        "expect": {
+          "mayGoNext": true
+        }
+      },
+      {
+        "name": "a linear simultaneous part does not check the responses",
+        "input": {
+          "submissionMode": "simultaneous",
+          "current": {
+            "maySubmit": false,
+            "interactive": true
+          }
+        },
+        "expect": {
+          "mayGoNext": true
+        }
+      },
+      {
+        "name": "a nonlinear part goes either way and does not check the responses",
+        "input": {
+          "navigationMode": "nonlinear",
+          "index": 1,
+          "current": {
+            "maySubmit": false,
+            "interactive": true
+          }
+        },
+        "expect": {
+          "mayGoNext": true,
+          "mayGoPrevious": true
+        }
+      },
+      {
+        "name": "the last item has no next",
+        "input": {
+          "navigationMode": "nonlinear",
+          "index": 2
+        },
+        "expect": {
+          "mayGoNext": false,
+          "mayGoPrevious": true
+        }
+      },
+      {
+        "name": "the first item has no previous",
+        "input": {
+          "navigationMode": "nonlinear",
+          "index": 0
+        },
+        "expect": {
+          "mayGoNext": true,
+          "mayGoPrevious": false
+        }
+      },
+      {
+        "name": "no current item: neither way",
+        "input": {
+          "navigationMode": "nonlinear",
+          "index": -1
+        },
+        "expect": {
+          "mayGoNext": false,
+          "mayGoPrevious": false
+        }
+      }
+    ]
+  }
+}

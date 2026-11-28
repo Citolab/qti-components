@@ -101,7 +101,8 @@ restoring on `next` (decided 2026-11-18):
   conversions.
 - **T2**: `computedContext` as the derivation; `initContext` into `item.data`; `stampContext` the stamp's
   flat view of the current part.
-- **T3**: `lifecycle`, `numAttempts`, `completionStatus`; the `can*` flags derived from them.
+- **T3**: `lifecycle`, `numAttempts`, `completionStatus`; the `can*` flags derived from them. Until
+  T3d the lifecycle state is a per-item map in `test-navigation`, changed only through `transition`.
 - **T4**: `order` written once from the seed: the rendered test's instance ids, a
   `with-replacement` clone as `item-3#2` wherever ordering puts it.
 - **T5**: `timing` and `duration`.

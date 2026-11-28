@@ -83,9 +83,11 @@ item goes `interacting ⇄ suspended` during the part and `closed` at its end.
   model, the item facts and the variables. Each item's state is in `computedContext` and in the
   persisted test state, so a resumed session comes back in the same state.
 - The rules module is a pure function `(model, facts, state) → answers`: per item `done`,
-  `attemptsUsed`, `mayEndAttempt`, `maySkip`, `mayShowFeedback`, `mayShowSolution`, `mayReview`,
-  plus the navigation answers `mayGoNext` and `mayGoPrevious`. It sends the machine its events. It
-  is a function `test-navigation` calls, not a controller (`.claude/rules/lit.md`).
+  `attemptsLeft`, `attemptsUsed`, `interactive`, `mayEndAttempt`, `maySubmit`, `maySkip`,
+  `mayShowFeedback`, `mayBeginReview`, `mayBeginSolution`, plus the navigation answers `mayGoNext`
+  and `mayGoPrevious`. Whether review or the solution shows is the state itself. It sends the
+  machine its events. It is a function `test-navigation` calls, not a controller
+  (`.claude/rules/lit.md`).
   `test-navigation` keeps `afterAttemptEnded` and `activeAssessmentItem` as its protected
   extension point, which the corrections package's `TestNavigationCorrection` overrides.
 
@@ -128,6 +130,23 @@ Chosen in T3a, for the user's review:
   Kept apart from `interacting` so a resumed session knows the candidate was reading feedback, and
   `delivery-state.md`'s `lifecycle` lists seven states.
 
+Chosen in T3b1, for the user's review:
+
+- **Until T3d, the lifecycle state lives in `test-navigation`**: a map per item instance, changed
+  only through `transition`, and seeded on a restore by the version 1 rule below. A pure derivation
+  cannot tell `modalFeedback`, `review` or `solution` apart from `closed`. T3d moves the map into
+  `DeliveryState` without changing its rules.
+- **The answers come from the state, not from the counters**: `done` is `closed`, `review` or
+  `solution`; the item lock is "not `interactive`". So a completed adaptive item is locked like any
+  other closed item, where today the lock skips adaptive items. A change for hosts, with entries in
+  T3b2.
+- **Next in a linear individual part is refused only while the responses may not be submitted**
+  (`maySubmit`: `allow-skipping` and, from T3c, `validate-responses`), not until the item is
+  "done".
+- **In `review`, an adaptive item with `allow-review` shows its feedback** whatever `show-feedback`
+  says (§7.19, `allow-review`: "the setting of show-feedback should be ignored for adaptive items
+  when allow-review is 'true'").
+
 ## A version 1 state
 
 A stored version 1 `QtiTestState` has no `lifecycle`. T3d derives it, per item, from what it has:
@@ -154,9 +173,22 @@ Each step is one PR into `next`.
       item facts and submission mode, the exhaustive transition spec and JSON vectors, all in
       `@qti-components/delivery`. Runs alone, before anything reads it; each item's state reaches
       `computedContext` in T3b and the persisted state in T3d.
-- [ ] **T3b** The rules module drives the machine: navigation and the buttons send its events;
+- [x] **T3b1** The rules module: `itemRules` (per item: `attemptsLeft`, `attemptsUsed`,
+      `interactive`, `done`, `mayEndAttempt`, `maySubmit`, `maySkip`, `mayShowFeedback`,
+      `mayBeginReview`, `mayBeginSolution`) and `navigationRules` (`mayGoNext`, `mayGoPrevious`), pure, in
+      `@qti-components/delivery`, with JSON vectors written from the QTI text (info model §7.19), not
+      from today's components. Nothing reads it yet. It already keeps `allow-skipping` and
+      `validate-responses` apart; T3c makes that take effect.
+- [ ] **T3b2** The rules module drives the machine: navigation and the buttons send its events;
       `test-next`, `test-prev`, `test-end-attempt`, `qti-feedback`, the corrections overlay and the
-      item lock read its state instead of deriving their own.
+      item lock read its state instead of deriving their own. Builds on T2c (PR #375): the answers
+      are added in `deriveComputedContext`. `qti-base` and `qti-corrections` do not depend on
+      `delivery`, so `qti-feedback` and the overlay read the answers from `computedContext`.
+      Changes for hosts, each with entries: `done` means closed (an item with `max-attempts="0"` is
+      no longer done after one optimal attempt); a completed adaptive item is locked;
+      `mayEndAttempt` is false in a simultaneous part, so `test-end-attempt` there waits for T6 or
+      is decided then. With `auto-score-items` every change counts as an attempt, so the rules get
+      the candidate's own count, not `numAttempts`.
 
 - [ ] **T3c** `validate-responses` and `allow-comment`: end attempt is refused while a response is
       invalid in an individual part with `validate-responses` (the `qc-test-navigation-failed`
@@ -166,7 +198,7 @@ Each step is one PR into `next`.
       `parseDeliveryState` and the state vectors); a version 1 state derives `lifecycle` as above;
       the `can*` flags derived, never stored.
 
-Order: T3a, then T3b and T3c, then T3d.
+Order: T3a, T3b1, then T3b2 and T3c, then T3d.
 
 ## Done when
 

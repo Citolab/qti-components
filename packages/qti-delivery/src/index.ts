@@ -2,6 +2,7 @@ export * from './model/test-model.js';
 export * from './model/item-facts.js';
 export type { XmlElement, XmlNode } from './model/xml-node.js';
 export * from './lifecycle/item-lifecycle.js';
+export * from './lifecycle/item-rules.js';
 export * from './random/seeded-random.js';
 export * from './random/selection.js';
 export * from './random/shuffle.js';

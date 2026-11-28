@@ -157,7 +157,10 @@ export interface ItemLifecycleInput {
   adaptive: boolean;
   navigationMode: TestPartModel['navigationMode'];
   submissionMode: TestPartModel['submissionMode'];
-  /** The item's `numAttempts`. */
+  /**
+   * The attempts the candidate has ended. QTI's `numAttempts` counts an attempt as it begins; this
+   * delivery counts it when it ends, and T3d keeps that (`plans/item-lifecycle.md`).
+   */
   numAttempts: number;
   /** The item's `completionStatus` (`not_attempted`, `unknown`, `incomplete`, `completed`). */
   completionStatus: string | null;
