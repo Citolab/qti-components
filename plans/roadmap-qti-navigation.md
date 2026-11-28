@@ -231,7 +231,9 @@ Scope: `packages/qti-test` (`test-navigation`, `test-next`, `test-prev`, `test-e
 
 - [x] T3a The item session lifecycle (QTI 3 info model §2.2.1) as a finite state machine per item:
       `ITEM_LIFECYCLE` and `transition` in `@qti-components/delivery`, with JSON vectors.
-- [ ] T3b One rules module that drives the machine; the buttons, the lock and feedback read its state.
+- [x] T3b1 The rules module: `itemRules` and `navigationRules` in `@qti-components/delivery`, with
+      JSON vectors written from QTI 3 info model §7.19.
+- [ ] T3b2 It drives the machine; the buttons, the lock and feedback read its state.
 - [ ] T3c `validate-responses` and `allow-comment` take effect.
 - [ ] T3d `lifecycle`, `numAttempts` and `completionStatus` in `DeliveryState`; the `can*` flags
       derived from them.
