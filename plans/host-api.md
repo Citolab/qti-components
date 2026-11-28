@@ -644,6 +644,18 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
 
 ## Decided
 
+- **`computedContext` is derived, read-only** (2026-11-27, roadmap 1 T2c): `test-navigation`
+  derives it anew on every update with one pure function, from the test model, the item facts, the
+  contexts and `initContext`, never from the previous context; a host or plugin reads it and never
+  writes it (a write is gone at the next update). Not frozen; its types become `readonly` throughout
+  with T2d's tree. Its inputs become `DeliveryState` as T3 and T8 move the state there.
+- **`externalScored` comes from the item** (2026-11-27, roadmap 1 T2b, not built yet): from
+  `external-scored` on the item's `SCORE` outcome declaration only, as QTI puts it; from T2b host
+  data under `item.data` never sets it, and the scoring plugins read that one field. A host that decides scoring itself sets the attribute
+  in `postLoadTransformCallback`. Rejected: plugins reading `data.externalScored` (a non-QTI override).
+- **`qc-stamp-context-updated`** (2026-11-27, roadmap 1 T2a, not built yet): in T2a `<test-stamp>`'s
+  event takes a `qc-` name; `qti-stamp-context-updated` is sent next to it for one major (it never
+  had a `cito-` name).
 - **The interaction message catalogue is host API** (2026-11-19, roadmap 6 I2): whatever a host
   can see or change of the announcements (message ids, translating or replacing a message) is
   listed on this page before I2 ships, and its ids are `qc-`. Its shape is open (Open decisions).

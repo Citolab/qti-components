@@ -64,7 +64,7 @@ T1; T5, T6 and T8 after T3; T7 after T8.
 | --- | -------------------------------------- | ----- | ------ |
 | T0  | The delivery package                   | G1    | done   |
 | T1  | The test model from the XML            | T0    | done   |
-| T2  | One computed context                   | T1    | todo   |
+| T2  | One computed context                   | T1    | doing  |
 | T3  | The item session lifecycle             | T1    | doing  |
 | T4  | `qti-selection` and ordering           | T1    | done   |
 | T5  | `qti-time-limits`                      | T3    | todo   |
@@ -213,7 +213,9 @@ Scope: `packages/qti-test` (`test-navigation`), `packages/qti-extended` (`test-s
 - [ ] T2a `stampContext` is `<test-stamp>`'s flat view of the current test part, derived from
       `computedContext`.
 - [ ] T2b Host `itemData` under `item.data`, no longer overriding computed fields.
-- [ ] T2c `computedContext` is `derive(DeliveryState, inputs)`, read-only.
+- [x] T2c `computedContext` is `derive(DeliveryState, inputs)`, read-only: one pure function,
+      derived anew on every update; its inputs are the contexts until T3 and T8 move the state into
+      `DeliveryState`.
 - [ ] T2d `computedContext` as the tree of the test (sections nested, `content` in document order),
       with exported helpers for flat readers (decided 2026-11-18).
 

@@ -3,12 +3,13 @@ import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { computedContext } from '@qti-components/base';
-import { buildTestModel, itemRefsInOrder, ownItemRefs, sectionsInOrder } from '@qti-components/delivery';
+import { buildTestModel } from '@qti-components/delivery';
 import { configContext } from '@qti-components/base';
 import { testContext } from '@qti-components/base';
 import { sessionContext } from '@qti-components/base';
 import { listenPublic as listenItemPublic } from '@qti-components/elements/public-events';
 
+import { assessOptimality, deriveComputedContext, isItemDone } from '../../internal/derive-computed-context';
 import { itemFactsContext } from '../../internal/item-facts.context';
 import { renderedMarkup } from '../../internal/rendered-markup';
 import { testHostContext } from '../../internal/test-host.context';
@@ -21,20 +22,13 @@ import type { ComputedContext, ComputedItem } from '@qti-components/base';
 import type { PropertyValues } from 'lit';
 import type { QtiAssessmentItemRef } from '../qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentTest } from '../qti-assessment-test/qti-assessment-test';
-import type { ItemFacts, ItemRefModel } from '@qti-components/delivery';
+import type { TestModel } from '@qti-components/delivery';
+import type { ItemOptimality } from '../../internal/derive-computed-context';
 import type { ItemFactsByRef } from '../../internal/item-facts.context';
 import type { ConfigContext } from '@qti-components/base';
 import type { SessionContext } from '@qti-components/base';
 import type { TestContext } from '@qti-components/base';
 import type { ItemContext } from '@qti-components/base';
-import type { ResponseVariable } from '@qti-components/base';
-
-/**
- * Whether an item's ended attempt reached the best achievable outcome:
- * 'optimal' (nothing to improve), 'suboptimal' (a better attempt is possible),
- * or 'unscored' (no machine-judgeable optimal value — see #assessOptimality).
- */
-type ItemOptimality = 'optimal' | 'suboptimal' | 'unscored';
 
 /** A new object each time: a host that mutates the one it read must not change anyone else's. */
 const newQtiContext = (): QtiContext => ({
@@ -154,7 +148,7 @@ export class TestNavigation extends LitElement {
     if (!event.detail?.responseProcessed) return;
     const itemContext = event.detail.itemContext;
     if (!itemContext?.identifier) return;
-    const optimality = this.#assessOptimality(itemContext);
+    const optimality = assessOptimality(itemContext);
     this.#optimality.set(itemContext.identifier, optimality);
 
     const computedItem = this.computedItemFor(itemContext.identifier);
@@ -163,7 +157,7 @@ export class TestNavigation extends LitElement {
     this.afterAttemptEnded(
       (event.composedPath()[0] as HTMLElement)?.closest<QtiAssessmentItem>('qti-assessment-item'),
       computedItem,
-      this.#isItemDone(
+      isItemDone(
         numAttempts,
         optimality,
         computedItem?.sessionControl?.maxAttempts,
@@ -294,68 +288,39 @@ export class TestNavigation extends LitElement {
 
     // The structure and the session-control cascade come from the test's markup, not from upgraded
     // properties, so they do not depend on registration or render timing.
-    const model = buildTestModel(renderedMarkup(this.#testElement));
-    this.#sectionItems = new Map(
-      model.testParts.flatMap(part =>
-        sectionsInOrder(part.sections).map(
-          section => [section.identifier, itemRefsInOrder(section.content).map(item => item.identifier)] as const
-        )
-      )
-    );
-    this.#itemOrder = model.testParts.flatMap(part => itemRefsInOrder(part.sections));
-    this.computedContext = {
-      itemElement: this.#itemElement,
-      identifier: model.identifier,
-      title: model.title,
-      view: this._sessionContext?.view,
-      plugins: this._sessionContext?.plugins ?? {},
-      testParts: model.testParts.map(testPart => ({
-        active: false,
-        identifier: testPart.identifier,
-        navigationMode: testPart.navigationMode,
-        submissionMode: testPart.submissionMode,
-        allowSkipping: testPart.sessionControl.allowSkipping,
-        itemOrder: itemRefsInOrder(testPart.sections).map(item => item.identifier),
-        // Flat, depth first: every section once, each with only its own item-refs, so every item is
-        // listed once. Where a section's item-refs and subsections interleave, this list is not in
-        // document order; `index` is.
-        sections: sectionsInOrder(testPart.sections).map(section => ({
-          active: false,
-          identifier: section.identifier,
-          title: section.title,
-          allowSkipping: section.sessionControl.allowSkipping,
-          items: ownItemRefs(section).map(item => ({
-            ...this.initContext?.find(i => i.identifier === item.identifier),
-            active: false,
-            identifier: item.identifier,
-            categories: item.categories,
-            href: item.href,
-            variables: [] as OutcomeVariable[],
-            sessionControl: { ...item.sessionControl }
-          }))
-        }))
-      }))
-    };
+    this.#model = buildTestModel(renderedMarkup(this.#testElement));
+    this.computedContext = this.#derive();
+  }
+
+  /** The test's structure and resolved session control, read from its markup when it is connected. */
+  #model?: TestModel;
+
+  /** `computedContext`, derived anew from its inputs (`deriveComputedContext`), never from the previous one. */
+  #derive(): ComputedContext {
+    this.#seedOptimality();
+    return deriveComputedContext({
+      model: this.#model,
+      itemFacts: this._itemFacts,
+      testContext: this._testContext,
+      sessionContext: this._sessionContext,
+      infoItemCategory: this.configContext?.infoItemCategory,
+      itemData: this.initContext,
+      optimality: this.#optimality,
+      itemElement: this.#itemElement
+    });
   }
 
   /**
-   * The item-refs of each section, its subsections' included, by section identifier: a section that
-   * only holds subsections is completed when theirs are.
+   * On a restored session no attempt is ended this run, so the latch is seeded once from the
+   * persisted context, which still holds the submitted response. A later change of the answer
+   * leaves the seeded value alone.
    */
-  #sectionItems = new Map<string, string[]>();
-
-  /** Every item-ref of the test in document order, which item numbers follow. */
-  #itemOrder: ItemRefModel[] = [];
-
-  /** Item numbers in document order, skipping info items; null for an info item. */
-  #itemIndexes(): Map<string, number | null> {
-    let index = 1;
-    return new Map(
-      this.#itemOrder.map(item => [
-        item.identifier,
-        item.categories.includes(this.configContext?.infoItemCategory) ? null : index++
-      ])
-    );
+  #seedOptimality(): void {
+    for (const itemContext of this._testContext?.items ?? []) {
+      if (!itemContext.identifier || this.#optimality.has(itemContext.identifier)) continue;
+      const numAttempts = Number(itemContext.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
+      if (numAttempts > 0) this.#optimality.set(itemContext.identifier, assessOptimality(itemContext));
+    }
   }
 
   /**
@@ -402,160 +367,10 @@ export class TestNavigation extends LitElement {
     return defaultValues;
   }
 
-  /** An item's facts as `computedContext` has carried them; nothing until the item is fetched. */
-  #factsFor(identifier: string): Partial<Omit<ItemFacts, 'identifier'>> & { assessmentItemIdentifier?: string } {
-    const facts: ItemFacts | undefined = this._itemFacts?.get(identifier);
-    if (!facts) return {};
-    const { identifier: assessmentItemIdentifier, ...rest } = facts;
-    return { ...rest, assessmentItemIdentifier };
-  }
-
-  /* PK: on every change of the candidate we will recomputed the computedContext */
+  /* On every change of the candidate's state, the context is derived again. */
   protected override willUpdate(_changedProperties: PropertyValues): void {
-    if (!this.computedContext) return;
-
-    const itemIndexes = this.#itemIndexes();
-    this.computedContext = {
-      ...this.computedContext,
-      view: this._sessionContext?.view,
-      plugins: this._sessionContext?.plugins ?? {},
-      testParts: this.computedContext.testParts.map(testPart => {
-        return {
-          ...testPart,
-          active: this._sessionContext?.navPartId === testPart.identifier || false,
-          sections: testPart.sections.map(section => {
-            return {
-              ...section,
-              active: this._sessionContext?.navSectionId === section.identifier || false,
-              completed: (this.#sectionItems.get(section.identifier) ?? section.items.map(i => i.identifier)).every(
-                identifier =>
-                  this._testContext.items
-                    .find(i => i.identifier === identifier)
-                    ?.variables.find(v => v.identifier === 'completionStatus')?.value === 'completed'
-              ),
-
-              items: section.items.map(item => {
-                const itemContext = this._testContext?.items.find(i => i.identifier === item.identifier);
-                const computedItem = {
-                  ...item,
-                  ...this.#factsFor(item.identifier),
-                  ...itemContext,
-                  ...this.initContext?.find(i => i.identifier === item.identifier)
-                };
-
-                const rawscore = computedItem.variables?.find(vr => vr.identifier == 'SCORE')?.value;
-
-                const score = rawscore === undefined || rawscore === null ? null : parseFloat(rawscore?.toString());
-
-                const completionStatus = computedItem.variables?.find(v => v.identifier === 'completionStatus')
-                  ?.value as string;
-
-                const response = computedItem.variables?.find(v => v.identifier === 'RESPONSE')?.value || '';
-                const numAttempts =
-                  Number(computedItem.variables?.find(v => v.identifier === 'numAttempts')?.value) || 0;
-
-                const active = this._sessionContext?.navItemRefId === computedItem.identifier || false;
-
-                // Published by the item. One that is not on screen has nothing to be invalid.
-                const valid = itemContext?.valid ?? true;
-
-                const responseVars =
-                  itemContext?.variables?.filter(v => v.type === 'response' && v.identifier !== 'numAttempts') || [];
-
-                const isDefaultResponse = responseVars.every(v => {
-                  if (v.value === undefined || v.value === null) {
-                    return true;
-                  }
-                  let fallbackValue: string;
-                  switch (v.baseType) {
-                    case 'integer':
-                    case 'float':
-                    case 'duration':
-                      fallbackValue = '0';
-                      break;
-                    case 'boolean':
-                      fallbackValue = 'false';
-                      break;
-                    case 'string':
-                    case 'directedPair':
-                    case 'identifier':
-                    case 'pair':
-                    case 'record':
-                    default:
-                      fallbackValue = '';
-                      break;
-                  }
-
-                  const defaultValue = v.defaultValue ?? fallbackValue;
-
-                  if (Array.isArray(v.value)) {
-                    const dv = Array.isArray(defaultValue) ? defaultValue : [defaultValue];
-                    return v.value.length === dv.length && v.value.every((val, i) => val === dv[i]);
-                  }
-
-                  return v.value === defaultValue;
-                });
-
-                // Computed and opiniated
-                // const type = item.categories.includes(this.configContext?.infoItemCategory) ? 'info' : 'regular';
-                // const correct = (type == 'regular' && score !== undefined && !isNaN(score) && score > 0) || false;
-                // const incorrect = (type == 'regular' && score !== undefined && !isNaN(score) && score <= 0) || false;
-                // const completed = completionStatus === 'completed';
-
-                const index = itemIndexes.get(item.identifier) ?? null;
-                const rawMaxScore = item.variables?.find(vr => vr.identifier == 'MAXSCORE')?.value;
-                const maxScore =
-                  rawMaxScore === undefined || rawMaxScore === null ? null : parseFloat(rawMaxScore?.toString());
-
-                // Optimality comes from the last *ended attempt* (#optimality),
-                // latched in #handleItemContextUpdated — never from a live
-                // mid-attempt selection. On a restored session no attempt is ended
-                // this run, so seed it once from the persisted context, which still
-                // holds the submitted response.
-                let optimality = this.#optimality.get(computedItem.identifier);
-                if (optimality === undefined) {
-                  optimality = itemContext ? this.#assessOptimality(itemContext) : 'unscored';
-                  if (numAttempts > 0) this.#optimality.set(computedItem.identifier, optimality);
-                }
-
-                const done = this.#isItemDone(
-                  numAttempts,
-                  optimality,
-                  computedItem.sessionControl?.maxAttempts,
-                  computedItem.adaptive,
-                  completionStatus
-                );
-
-                return {
-                  ...computedItem,
-                  completionStatus,
-                  numAttempts,
-                  score,
-                  response,
-                  index,
-                  active,
-                  valid,
-                  isDefaultResponse,
-                  maxScore,
-                  done,
-                  // Reflects the last *ended* attempt only. Read the latch directly
-                  // (not the `optimality` local) — the latch is written solely on
-                  // responseProcessed / restore-seed (line above, guarded by
-                  // numAttempts > 0), so a freshly-picked mid-attempt selection
-                  // computed live is never stored and never counts as optimal.
-                  optimal: this.#optimality.get(computedItem.identifier) === 'optimal'
-                  // type,
-                  // correct,
-                  // incorrect,
-                  // completed
-                };
-              })
-            };
-          })
-        };
-      })
-    };
-
+    if (!this.#model) return;
+    this.computedContext = this.#derive();
     this.dispatchEvent(
       new CustomEvent('qti-computed-context-updated', {
         detail: this.computedContext,
@@ -617,97 +432,6 @@ export class TestNavigation extends LitElement {
     if (item.adaptive || element.adaptive === 'true') return false;
     const maxAttempts = item.sessionControl?.maxAttempts ?? 1;
     return maxAttempts > 0 && (item.numAttempts ?? 0) >= maxAttempts;
-  }
-
-  /**
-   * Decide whether an item should be treated as "the candidate is done with it"
-   * for the purpose of gating forward navigation and further attempts.
-   *
-   * - The candidate must have actually ended an attempt (numAttempts > 0).
-   * - Once attempted, the item is done if they reached the optimal outcome
-   *   ('optimal'), or there's nothing to improve on ('unscored'). It is only *not*
-   *   done while a better attempt is still possible ('suboptimal') and attempts
-   *   remain — see #assessOptimality for how "optimal" is determined.
-   *
-   * `optimality` reflects the last *ended attempt* (see #optimality), not the
-   * live selection — so a freshly-picked optimal answer doesn't count as done
-   * until test-end-attempt evaluates it.
-   *
-   * Adaptive items decide this themselves: max-attempts does not apply to them
-   * (QTI 3, itemSessionControl), and a wrong attempt may be the step that leads
-   * on to the next part of the item. They are done once their response
-   * processing sets completionStatus to 'completed'.
-   */
-  #isItemDone(
-    numAttempts: number,
-    optimality: ItemOptimality,
-    maxAttempts: number | undefined,
-    adaptive?: boolean,
-    completionStatus?: string
-  ): boolean {
-    if (numAttempts === 0) return false;
-    if (adaptive) return completionStatus === 'completed';
-    if (optimality !== 'suboptimal') return true;
-    const max = maxAttempts ?? 1;
-    return max > 0 && numAttempts >= max;
-  }
-
-  /**
-   * Decide whether an item's submission is as good as it can get — i.e. the
-   * candidate reached the *optimal* outcome, so there's no reason to make them
-   * try again. 'optimal' means best achievable, 'suboptimal' means a better
-   * attempt is still possible, 'unscored' means there's nothing to judge against.
-   * ("optimal" is the spec's own word — a qti-correct-response is defined as
-   * "the (or an) optimal value".)
-   *
-   * Two signals, in order of authority:
-   *  1. The scored outcome: optimal ⟺ SCORE has reached its maximum (MAXSCORE).
-   *     This correctly handles partial-credit / qti-mapping items, where an exact
-   *     response match would under- or over-judge.
-   *  2. The declared qti-correct-response, for items that aren't scored (no
-   *     SCORE/MAXSCORE) — an exact match is the best available proxy. Bookkeeping
-   *     variables like numAttempts can be typed 'response' but never declare a
-   *     correctResponse, so we filter on a declared correctResponse.
-   *
-   * Items with neither a comparable score nor a correctResponse (essays, info
-   * items, etc.) are 'unscored' — there's no optimal value to require, so one
-   * attempt is enough.
-   */
-  #assessOptimality(item: ItemContext): ItemOptimality {
-    const variables = item.variables ?? [];
-
-    const score = this.#numericVariable(variables, 'SCORE');
-    const maxScore = this.#numericVariable(variables, 'MAXSCORE');
-    if (score !== null && maxScore !== null) {
-      return score >= maxScore ? 'optimal' : 'suboptimal';
-    }
-
-    const responseVars = variables.filter(
-      (v): v is ResponseVariable =>
-        v.type === 'response' &&
-        (v as ResponseVariable).correctResponse !== undefined &&
-        (v as ResponseVariable).correctResponse !== null
-    );
-    if (responseVars.length === 0) return 'unscored';
-    const allMatch = responseVars.every(v => {
-      const expected = v.correctResponse;
-      const actual = v.value;
-      if (actual === undefined || actual === null) return false;
-      if (Array.isArray(expected) && Array.isArray(actual)) {
-        return expected.length === actual.length && expected.every(e => actual.includes(e));
-      }
-      if (Array.isArray(expected) || Array.isArray(actual)) return false;
-      return expected === actual;
-    });
-    return allMatch ? 'optimal' : 'suboptimal';
-  }
-
-  /** Read a single numeric outcome value, or null when absent / non-numeric. */
-  #numericVariable(variables: ItemContext['variables'], identifier: string): number | null {
-    const raw = variables?.find(v => v.identifier === identifier)?.value;
-    if (raw === undefined || raw === null || Array.isArray(raw)) return null;
-    const parsed = parseFloat(raw.toString());
-    return Number.isNaN(parsed) ? null : parsed;
   }
 }
 
