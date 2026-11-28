@@ -6,6 +6,16 @@ run.
 
 ## Unreleased after 9.3.0
 
+### Inline choices are as wide as their widest option (inline-choice autosize)
+
+Status: behaviour change
+Members: `configContext` (`inlineChoiceAutosize`)
+Do: nothing to keep working. An inline choice now measures its options and is as wide as the
+widest from the start, so choosing no longer widens the field and reflows the sentence. Items with
+a `qti-input-width-*` class are unchanged. To keep the old look (the field sized to the option shown),
+set `inlineChoiceAutosize: false` in `configContext`. The host does not set this option today.
+Evidence: read, not run
+
 ### `state` replaces the `testContext` round trip (PR #225)
 
 Status: recommended; nothing breaks on upgrade
@@ -19,6 +29,28 @@ Do:
 - Restore once with `qtiTest.state = saved`, replacing the guarded `testContext` assignment plus
   `navigateTo(navItemId)` (`:1495-1530`). `navigate="section"` now starts at the restored section.
   Evidence: read, not run
+
+### Resume stored contexts with `stateFromContexts` (roadmap 1, T1e)
+
+Status: recommended; nothing breaks on upgrade
+Members: `stateFromContexts`, `state`, `qtiTest.testContext`, `navigateTo`
+Do: where a saved session is still the 9.x `ExtendedTestContext` (`{ id, navItemId, items }`),
+resume with `qtiTest.state = stateFromContexts(saved, { navItemRefId: saved.navItemId })`, assigned
+before the test loads, instead of the guarded `testContext` assignment plus `navigateTo(navItemId)`.
+From then on save `state` from `qc-test-state-changed`, so stored contexts run out. Replaces the
+workaround of keeping the context round trip only to read old sessions.
+Evidence: the stored-states spec restores three Checkmate demo states this way
+(`apps/e2e/src/tests/stored-states.spec.ts`); the host itself was not run
+
+### Hear about a state that cannot be read (roadmap 1, T1e)
+
+Status: recommended; nothing breaks on upgrade
+Members: `qc-test-state-refused`, `state`
+Do: listen for `qc-test-state-refused` on the test and log `detail.message` (or tell the candidate)
+where a stored session is restored. Today such a state is dropped with only a console warning, and
+the candidate starts with empty answers without anyone knowing. The event is sent once the test has
+loaded, so a state assigned before that is reported too.
+Evidence: read from qti-components source; the host was not run
 
 ### Keep the seed and bookmarks where they are (PR #225)
 
@@ -121,6 +153,16 @@ unchanged. Listening for both names runs your handler twice; pick one.
 - `qti-interaction-changed`: `AssessmentPlayerView.tsx:966` (interaction replay log).
   Evidence: read, not run
 
+### Bookmarks: `<test-bookmark>` replaces `marked` (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-bookmark>`, `bookmarkedItems`, `state.session.plugins.bookmarks`
+Do: put `<test-bookmark>Bookmark</test-bookmark>` in the toolbar next to the navigation instead of the
+`onMarkCurrentItem` handler (`ToolBar.tsx`), read the marks with `bookmarkedItems(computedContext)` where the
+navigation shows marked items, and drop `marked` on the context items (`assessmentStore.ts`). Persist nothing
+extra: the marks are part of `state`, which you already store. Replaces the workaround of keeping `marked`
+next to the state.
+
 ### Section link in item mode has an active item (#332)
 
 Status: behaviour change (fix); nothing to do
@@ -130,6 +172,299 @@ Do: nothing, unless the host sends a `section` request (`navigateTo('section', i
 item: `test-next`/`test-prev` work from it, and `test-check-item`, `test-end-attempt` and the
 scoring buttons act on it. The whole section still renders.
 Evidence: read, not run
+
+## Next major
+
+### Drag-and-drop interactions don't disable their targets at `max-associations` by default
+
+Status: behaviour change; none for this host
+Members: `configContext` (`disableAfterMaxReached`, `disableAfterIfMaxChoicesReached`)
+Do: nothing. Without the option, match, gap match, associate and order now let the candidate go over
+`max-associations` and show the max-selections message, as choice interactions already did. This host
+sets `disableAfterIfMaxChoicesReached: true` (`frontend/packages/ui/src/assessment-player/AssessmentPlayerView.tsx:99`), which keeps targets disabled at the maximum.
+Drop the option to get QTI's behaviour (go over, see the message).
+Evidence: read from `frontend/packages/ui/src/assessment-player/AssessmentPlayerView.tsx:99`, not run
+
+### A match interaction without `max-associations` allows one association (Q13-L2-D110)
+
+Status: breaking
+Members: `qti-match-interaction` `max-associations` / `min-associations`
+Do: items that leave `max-associations` out now take QTI's default of 1, so the candidate can make
+one pair without a message; a second is reported with the max-selections message. If your items rely on the old
+unlimited default, add `max-associations="0"` (unlimited) or the real limit to them. `min-associations` now defaults to 0, so an untouched match is no longer reported as
+"Please select at least 1 association."
+Evidence: not surveyed; whether CitoTestUit's items set `max-associations` is unknown
+
+### Response processing publishes once; outcome events carry only the final values (feat/processing-as-backend)
+
+Status: none
+Members: `qti-outcome-changed`
+Do: nothing; CitoTestUit does not listen for it. The item context is now published once at the end of
+an attempt instead of at every step, which the host only notices as fewer updates.
+Evidence: grep of the PrototypesQTI checkout for `outcome-changed`, not run
+
+### completionStatus follows QTI: no longer "answered" (feat/completion-status-qti)
+
+Status: breaking
+Members: `completionStatus` (item variables, test context, computed context)
+Do: stop reading `completionStatus === 'completed'` as "the candidate answered". It is now `not_attempted`
+until the item is shown, `unknown` while it is shown, and `completed` only after an attempt ended
+(`processResponse()` or end attempt). For "answered", read `valid && !isDefaultResponse` of the item in the
+computed context (or `itemContext.valid` on the item).
+
+- `frontend/packages/ui/src/assessment-player/nav-list.tsx:150-157`, `questionHeader.ts:31`,
+  `hasRecordedWork.ts:18-19`: nav pill, badge and recorded work read `completed`.
+- `frontend/apps/student/.../stores/assessmentStore.helpers.ts:92` (`answered`) and the scorer-view
+  templates `paging-template-{list,nav,thumbs}.html`: same.
+- `frontend/apps/admin/.../review/utils/responseUtils.ts:136-138, 319`: review counts.
+- Backend `AssessmentResultXmlBuilder.cs:81-83, 297-308` skips `not_attempted` items: still correct, a
+  presented item is never `not_attempted`.
+- `AssessmentPlayerView.tsx:2197` and `StudentAssessmentReviewDialog.tsx:99` use `'not-attempted'` with a
+  hyphen, which is no QTI value: use `'not_attempted'`.
+  Evidence: read from `frontend/` and `QtiBackend.Core/`, not run
+
+### One vocabulary for parts and states (feat/parts-states-vocabulary)
+
+Status: breaking in the next major; old names still set in this one
+Members: `::part(button)`, `internals.states` (stats)
+Do: `::part(button)` is unchanged. Where the stats code reads `internals.states` of a choice or chip,
+the names it will see are the new ones from qti-theme `CONTRACT.md` §3 (`chip`, `lifted`, `used`,
+`candidate-partial`, `answer-key`) next to the old ones; read the new ones. Any own CSS on
+`::part(drag)`, `::part(drags)` or `::part(correction-*)` moves to `::part(chip)`, `::part(bank)`,
+`::part(correction candidate-correct)`.
+Evidence: read from `AssessmentPlayerView.tsx`, `ttsControls.ts`, not run
+
+### Public events renamed `qc-*` (feat/parts-states-vocabulary)
+
+Status: breaking for the 7.x names; `cito-*` deprecated, still sent for one major
+Members: `qti-request-navigation`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-interaction-changed`, `qti-outcome-changed`, and the `cito-test-navigation-started` listener
+Do: listen to and dispatch the `qc-*` names (`cito-test-navigate` → `qc-test-navigate`, `cito-test-rendered` →
+`qc-test-rendered`, `cito-item-response-changed` → `qc-item-response-changed`, …; same `detail`). The `cito-*`
+names are still sent and handled for one major, so this can wait, but the 7.x names (`qti-request-navigation`, `on-test-switch-view`, `qti-navigation-loading-started`, `qti-test-loaded`, `qti-assessment-test-connected`, `qti-interaction-changed`, `qti-outcome-changed`) are no
+longer sent or handled: the navigation fallback that dispatches `qti-request-navigation` and the loading spinner on `qti-navigation-loading-started` move to `qc-test-navigate` and `qc-test-navigation-started` in the same upgrade; `cito-test-navigation-started` keeps working until then.
+Evidence: read from the event table of the public-API survey (C), not run
+
+### Theme inputs renamed `--qc-*`; buttons read `--button-*` (feat/parts-states-vocabulary)
+
+Status: recommended; old names read as fallbacks for one major
+Members: `--test-button-*` (`ttsControls.ts:28-39`), `::part(button)`
+Do: the seven `--test-button-*` values on `test-item-to-speech` become `--button-*` (`--button-size`,
+`--button-border-color`, `--button-background-color`, `--button-color`,
+`--button-hover-background-color`, `--button-selected-background-color`, `--button-selected-color`);
+the selected TTS button also carries `:state(selected)`. `::part(button)` is unchanged. Brand colours,
+when the player sets any, go in `--qc-*` on `:root` (CONTRACT §8, §11).
+Evidence: read from `ttsControls.ts:28-55`, not run
+
+### Validity messages are timed like a native form (feat/parts-states-vocabulary)
+
+Status: behaviour change; nothing required
+Members: `configContext` (`validationDisplayMode: 'none'`, `reportValidityAfterScoring: false`)
+Do: nothing. With `'none'` no message is rendered, before or after. What changed underneath: a too-few
+message (below `min-choices`, `min-associations`, `min-strings`) now shows only after a submit or end
+attempt, too-many shows at once, and validity is set from the first render. The reason given for
+`'none'` in `AssessmentPlayerView.tsx:80-108` (emptying a match interaction or tabbing out of an
+untouched extended text popped "select at least one …") no longer happens with the default
+`'inline'`, so `'none'` is now a choice, not a workaround. Keep it if students should never see a
+message, also not after an end attempt.
+Evidence: read from `AssessmentPlayerView.tsx:80-108`, not run
+
+### Position object is a real interaction; graphic associate follows QTI (feat/parts-states-vocabulary)
+
+Status: breaking (graphic associate `max-associations` default, position object response); review stats keep working
+Members: `QtiPositionObjectInteraction` (subclassed by `StatsInteractionMixin`), `QtiGraphicAssociateInteractionCorrection`
+Do:
+
+- `qti-position-object-interaction` now extends `Interaction` and records a `point` response: one
+  `"x y"` per placement, the object's centre in the stage image's own pixels, `max-choices` default 1.
+  Before, it recorded nothing, so stored attempts have no value for it. Review stats will now see
+  coordinates; group them into areas (the item's `qti-area-mapping`) before counting, or every
+  placement is its own row. The `-stats` subclass in `genericInteractionStats.ts:54` still works:
+  the class is still exported from `@citolab/qti-components` and `render()` still chains.
+- `qti-graphic-associate-interaction` without `max-associations` now allows one line (the QTI
+  default); an item that relied on unlimited lines needs the attribute. A pair is undirected, so
+  "B A" is stored as the existing "A B", and a point cannot pair with itself. The review fixture
+  `graphic-associate.xml` sets `max-associations="2"` and is not affected. The correction class keeps
+  its name.
+  Evidence: read from `genericInteractionStats.ts:1-60`, `reviewStatsModel.ts:64-74`,
+  `withStats.ts:120-160`, `review-interactions/items/graphic-associate.xml:23`, not run
+
+### The test plugins moved to `@qti-components/extended` (feat/extended)
+
+Status: breaking
+Members: `<test-item-to-speech>`, `test-tts-*`, `<test-item-link>`, `<test-scoring-buttons>`, `<test-scoring-feedback>`,
+`<test-stamp>`, `<test-bookmark>`, `bookmarkedItems`, `ttsElements` (and every other plugin listed in the changeset)
+Do: add `@qti-components/extended` as a dependency next to `@citolab/qti-components` (its peer, same major) and import it once
+where the player registers the components (`import '@qti-components/extended';`, next to the import of
+`@citolab/qti-components`). The umbrella and `/corrections` no longer register these tags, so without
+the import `<test-item-to-speech>` and its buttons stay unknown elements and nothing is read aloud.
+Tags, attributes, parts and `--test-tts-*` tokens are unchanged, so `ttsControls.ts` and its CSS stay
+as they are. Import `bookmarkedItems` from `@qti-components/extended`, not the umbrella.
+
+The same import registers `<test-stamp>`, which the player renders throughout (`AssessmentPlayerView.tsx:2220-2674`,
+the outer one wrapping the stamped header and four nested ones), so without it the header renders nothing. It also
+registers `<test-item-link>`, `<test-scoring-buttons>` and `<test-scoring-feedback>`, which
+the student app's templates use (`apps/student/src/features/assessment/components/templates/paging-template-*.html:2`,
+`scorer-template.html:10,21`). No code was found that loads those template files, so they may be unused.
+
+The JSX types move too: the TSX in `AssessmentPlayerView.tsx:2319-2324` and `AssessmentOverviewScreen.tsx:46-54`
+writes `<test-item-to-speech>` and `<test-tts-*>`, which `@citolab/qti-components/react` no longer lists. In
+the `declare module 'react'` block (`AssessmentPlayerView.tsx:66-76`), add
+`import type { CustomElements as ExtendedElements } from '@qti-components/extended/react';` and extend both:
+`interface IntrinsicElements extends CustomElements, ExtendedElements`.
+Evidence: read from `frontend/packages/ui/src/assessment-player/ttsControls.ts:1-31`,
+`AssessmentPlayerView.tsx:30,66-76,2319-2324`, `questionHeader.ts`, `AssessmentOverviewScreen.tsx:46-54`,
+`stimulus-references/applyStimulusReferences.ts`, not run
+
+### Zoom: `<test-zoom-in>`, `<test-zoom-out>`, `<test-zoom-reset>` replace the own zoom (test plugin architecture)
+
+Status: recommended; nothing breaks on upgrade
+Members: `<test-zoom-in>`, `<test-zoom-out>`, `<test-zoom-reset>`, `zoomLevel`, `state.session.plugins.zoom`
+Do: with `@qti-components/extended` imported (see above), put the three buttons in the toolbar instead of the `onZoomIn` / `onZoomOut` / `onResetZoom` and
+`zoomLevel` props (`ToolBar.tsx:14-17, 124-142`); `test-zoom-reset` shows the percentage itself. Drop
+the `zoomLevel` state, `clampZoom` and the handlers (`AssessmentPlayerView.tsx:215, 523-545`) and the
+effect that sets `style.zoom` on the main content or the vertical document (`:411-434`): the plugin
+sets `zoom` on each rendered `qti-assessment-item`, so the side pane stays unscaled in vertical mode
+without the switch. `step="0.1" min="0.5" max="2"` are the defaults, the same as `clampZoom`. The level
+is part of `state`, which you store, so it survives a reload; where the host needs it (the `zoom_in` /
+`zoom_out` log lines, or chrome of its own in the content area that should scale along) read
+`zoomLevel(computedContext)` on `qc-test-state-changed`. Replaces the workaround of zooming the
+content element from React state.
+Evidence: read from `frontend/packages/ui/src/assessment-player/ToolBar.tsx:14-17,124-142`,
+`AssessmentPlayerView.tsx:213-216,411-434,523-545`, not run
+
+### Nested sections and session control follow QTI (roadmap 1, T1a)
+
+Status: behaviour change; nothing required unless the package nests sections or declares part of a
+`qti-item-session-control` below another one
+Members: `computedContext` (`testParts[].sections`, `ComputedItem.maxAttempts`, `showFeedback`,
+`showSolution`, `allowSkipping`)
+Do: nothing for a package with one level of sections and at most one `qti-item-session-control` per
+path. Otherwise:
+
+- A nested section is listed once in `computedContext.testParts[].sections`, with only its own
+  item-refs; its outer section no longer lists them too, so every item is in the context once (item
+  numbers no longer skip). An outer section that only holds subsections has `items: []`.
+- Session control inherits per attribute: an item-ref that declares only `show-feedback` keeps its
+  section's `max-attempts`, where it used to fall back to the defaults (implementation guide §4.4.2);
+  a nested section inherits from its parent section, not from the test part.
+
+Evidence: read from source, not run against the host's packages
+
+### Session control as `item.sessionControl` (roadmap 1, T1b)
+
+Status: breaking
+Members: `computedContext` (`ComputedItem.maxAttempts`, `showFeedback`, `showSolution`,
+`allowSkipping`)
+Do: read `item.sessionControl.maxAttempts` (and `.showFeedback`, `.showSolution`,
+`.allowSkipping`) instead of the flat fields, which are gone. `sessionControl` also carries
+`allowReview`, `allowComment` and `validateResponses`, all resolved; type `SessionControl` from
+`@qti-components/base`. A context the host builds itself (in tests) needs `sessionControl` on
+every item. Stamp templates that print one of the four fields read `item.sessionControl.<name>`.
+Evidence: searched the host source for the four names (stamp templates included): no reads of the computed item, not run
+
+### Navigation and submission mode from the test part only (roadmap 1, T1d)
+
+Status: breaking
+Members: `computedContext` (`testParts[].sections[].navigationMode`, `submissionMode`),
+`qti-assessment-section` (`navigationMode`, `submissionMode`)
+Do: read `testParts[].navigationMode` and `submissionMode` instead of the section's, which are gone;
+a context the host builds itself (in tests) drops them from its sections. The QTI 3 XSD defines both
+attributes on `qti-test-part` only, so a `navigation-mode` or `submission-mode` on a
+`qti-assessment-section` is now ignored: the part's mode decides Prev and Next, jumps between items
+and the attempts lock. A package that relied on a linear section inside a nonlinear part moves
+those items into a linear test part of their own.
+Evidence: read from qti-components source; the host source was not searched, not run
+
+### Next and Previous follow the test's order in nested sections (roadmap 1, T1)
+
+Status: behaviour change (a fix); nothing required
+Members: `<test-next>`, `<test-prev>`, `computedContext` (`testParts[].itemOrder`, new)
+Do: nothing. Where a section's item-refs and subsections interleave, Next and Previous now go in
+document order; before, they followed `computedContext.testParts[].sections` (depth first), and in a
+linear part Next could get stuck. A host that walks the items itself reads them in order with
+`itemsInOrder(testPart)` from `@qti-components/test` instead of flattening `sections`.
+Evidence: read from qti-components source; the host source was not searched, not run
+
+### A shuffled section keeps its subsections (roadmap 1, T4)
+
+Status: behaviour change (a fix); nothing required
+Members: `qti-ordering shuffle="true"` at load, `postLoadTestTransformCallback` (the test XML it gets)
+Do: nothing. In a section with `<qti-ordering shuffle="true">`, a subsection now moves as one section
+and stays in the test, with its rubric blocks and session control; before, its item-refs were
+lifted into the parent and the subsection dropped. Only a subsection with `visible="false"` and
+`keep-together="false"` still merges into the parent, and its items keep its session control. A
+`visible="true"` subsection with `keep-together="false"` now stays together, as implementation
+guide §4.5.2 says. A transform callback that expected only top-level sections after shuffling sees
+the subsections.
+Evidence: read from qti-components source; the host source was not searched, not run
+
+### Tests with `qti-selection` present only the selected items (roadmap 1, T4)
+
+Status: behaviour change (a fix); check stored sessions of tests that select
+Members: `qtiContext` (`seed`), `state`, `postLoadTestTransformCallback` (the test XML it gets)
+Do: a section with `<qti-selection select="n">` now presents `n` of its item-refs and subsections,
+the required ones always, chosen by the seed in `qtiContext` (implementation guide §4.5.1); before,
+every item was presented. Pass the same seed on resume, or other items are selected. A stored state
+with answers for an item the selection leaves out (saved before this change) is restored without
+them, with a console warning, and the next state leaves them out. `with-replacement="true"` can add
+a clone of an item-ref with its own identifier (`item-3#2`). A selection QTI calls an error (fewer
+than the required items, more than there are without replacement) stops the test loading. The
+transform callback gets the test with the selection applied.
+Evidence: read from qti-components source; the host source and content were not searched, not run
+
+### `computedContext` is derived anew on every update (roadmap 1, T2c)
+
+Status: behaviour change (a fix); nothing required
+Members: `computedContext`, `initContext` (on `test-navigation`)
+Do: nothing. `test-navigation` derives the whole context on every update from the test, the item
+facts, the test and session contexts and `initContext`, instead of copying the previous context and
+changing it. Two things can be seen: a field taken out of `initContext` is gone at the next update
+(before, it stayed), and an item's `maxScore` follows its current `MAXSCORE` (before, it lagged one
+update behind).
+The `completionStatus`, `score` and `maxScore` that `initContext` passes
+(`AssessmentPlayerView.tsx:2190-2216`) were already replaced by the computed values, and still are;
+roadmap 1 T2b moves `initContext` under `item.data`.
+Evidence: read from qti-components source and `AssessmentPlayerView.tsx`, not run
+
+### Interaction replay listens to 7.x events and writes into the item's DOM (next major)
+
+Status: breaking; the replay stops recording silently on upgrade
+Members: `qti-interaction-changed`, `qti-test-context-updated`, `qti-request-navigation`,
+`qti-assessment-test-connected`, `qtiTest.testContext`, `navigateTo`, interaction `response`,
+`::part(textarea)` / `::part(input)`
+Do:
+
+- Recording (`AssessmentPlayerView.tsx:1005-1043`, `interactionReplayBuffer.ts`) listens to
+  `qti-interaction-changed`, `qti-test-context-updated`, `qti-request-navigation` and
+  `qti-assessment-test-connected`. `next` no longer sends these 7.x names, so no
+  `interaction_changed` or `navigation` log is written and the replay of a 10.x delivery is empty.
+  Listen to `qc-item-response-changed` (its `detail.response` is the value, so the read of
+  `testContext` one `requestAnimationFrame` later can go), `qc-test-state-changed` (instead of
+  `qti-test-context-updated`), `qc-test-navigate` / `qc-test-navigated` and `qc-test-loaded`.
+- Only response identifiers starting with `RESPONSE` are recorded (`recordInteractionSnapshot`);
+  items with other response identifiers are left out of the replay without a word. Record every
+  response identifier.
+- The replay player (`applyStudentResponsesToLiveRoot.ts`) writes into shadow-root
+  `[part="textarea"]` / `[part="input"]` fields, sets a `data-replay-selected` attribute on
+  `qti-simple-choice` and `-stats` elements, and walks shadow roots with `deepQuerySelectorAll`.
+  None of that is host API (`plans/host-api.md` → The rule): it breaks on any change inside an
+  interaction. Show a moment of the replay by assigning `qtiTest.state` (or `item.variables` in a
+  review `qti-item`) with the values at that time, which every interaction restores itself.
+- Snapshot times (`snapshots[].ms`) come from the frontend buffer's own clock, while navigation and
+  other logs use the server's `CreatedAt`; the backend (`ReplayLogNormalizer`) mixes both, so the
+  timeline can drift. Stamp every logged action with one clock.
+
+Recommended direction (roadmap 2, the CitoTestUit pilot; not decided): the replay log becomes the
+delivery engine's command log. `@qti-components/delivery` records coalesced commands
+(`responseChanged { instance, responseIdentifier, value, at }`, navigation, end attempt, hand-in)
+with `at` from its injected clock, using the same coalescing the replay buffer has today (500 ms,
+long text at most every 1.2 s): never per keystroke. `DeliveryState` stays the snapshot for resume;
+the log is an append-only side channel the host may store. Replay folds the log through the same
+reducer up to time t, in the browser or on the backend, so it needs no DOM writes and keeps the
+structured values (no comma- or `&`-joined strings).
+Evidence: read from CitoTestUit `origin/main` (frontend `packages/ui/src/assessment-player`,
+backend `DeliveryReplayService`, `ReplayLogNormalizer`, `ReplayInteractionSynthesizer`) on
+2026-11-27; not run
 
 ## Not in the library, still in the host
 

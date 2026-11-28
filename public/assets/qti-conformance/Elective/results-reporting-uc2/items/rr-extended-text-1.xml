@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item 
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd http://www.w3.org/1998/Math/MathML https://purl.imsglobal.org/spec/mathml/v3p0/schema/xsd/mathml3.xsd" 
+  adaptive="false" time-dependent="false" 
+  identifier="rr-extended-text-1" title="RR - Extended Text 1">
+  
+  <qti-response-declaration base-type="string" cardinality="single" identifier="RESPONSE" />
+
+  <qti-outcome-declaration base-type="float" cardinality="single" identifier="SCORE" external-scored="human" normal-maximum="2" normal-minimum="0">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  
+  <qti-item-body>
+    
+    <qti-extended-text-interaction class="qti-height-lines-3" format="xhtml" expected-length="200" response-identifier="RESPONSE">
+      <qti-prompt><p>To be? Or not to be?  That is the question.</p></qti-prompt>
+    </qti-extended-text-interaction>
+
+    <qti-rubric-block view="scorer">
+      <qti-content-body>
+        <ul>
+          <li>2 points for response of "To be"</li>
+          <li>1 point for response of "Not to be" or "Not sure"</li>
+          <li>0 points for response not relevant to the question</li>
+        </ul>
+      </qti-content-body>
+    </qti-rubric-block>
+    
+  </qti-item-body>
+</qti-assessment-item>

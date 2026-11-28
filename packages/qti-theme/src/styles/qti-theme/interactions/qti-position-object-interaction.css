@@ -1,5 +1,33 @@
-qti-position-object-stage {
-  & qti-position-object-interaction {
-    /* no styles necessary, only layout styles, defined in the component */
+/*
+ * Position object: the object beside the stage, and its copies placed on it. Paint only; where
+ * a copy lands is the component's (qti-position-object-interaction.styles.ts).
+ */
+qti-position-object-interaction {
+  /* The object waiting to be placed: a card the same way a chip is, so it reads as something to
+     pick up. Picked up by a click, it carries the selection ring; at max-choices it fades. */
+  &::part(object) {
+    border-radius: var(--qti-radius-selector);
+    box-shadow: var(--qti-drag-lift);
+    background-color: var(--qti-color-base-100);
+  }
+
+  &::part(object selected) {
+    outline: var(--qti-focus-border-width) solid var(--qti-selected-bg);
+    outline-offset: var(--qti-focus-offset);
+  }
+
+  &::part(object used) {
+    opacity: 0.4;
+    box-shadow: none;
+  }
+
+  &::part(object):focus-visible,
+  &::part(point):focus-visible {
+    @mixin foc;
+  }
+
+  /* A copy lifted off the stage while it is dragged. */
+  &::part(point):active {
+    filter: drop-shadow(var(--qti-drag-elevation));
   }
 }

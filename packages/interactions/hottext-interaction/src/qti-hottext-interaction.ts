@@ -22,6 +22,8 @@ import type { CSSResultGroup, PropertyValues } from 'lit';
  * @slot - Default slot for the mixed content and `qti-hottext` choices.
  *
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiHottextInteraction extends ChoicesMixin(Interaction, 'qti-hottext') {
   static override styles: CSSResultGroup = styles;

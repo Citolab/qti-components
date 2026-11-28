@@ -3,7 +3,18 @@ import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import '../../register';
 
 import type { TestNext } from './test-next';
-import type { ComputedContext } from '@qti-components/base';
+import type { ComputedContext, SessionControl } from '@qti-components/base';
+
+/** QTI's defaults for `qti-item-session-control`. */
+const SESSION_CONTROL: SessionControl = {
+  maxAttempts: 1,
+  showFeedback: false,
+  allowReview: true,
+  showSolution: false,
+  allowComment: false,
+  allowSkipping: true,
+  validateResponses: false
+};
 
 describe('TestNext', () => {
   let container: HTMLDivElement;
@@ -44,11 +55,21 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
-                { identifier: 'item1', active: true, variables: [], completionStatus: 'not_attempted' },
-                { identifier: 'item2', active: false, variables: [], completionStatus: 'not_attempted' }
+                {
+                  identifier: 'item1',
+                  sessionControl: SESSION_CONTROL,
+                  active: true,
+                  variables: [],
+                  completionStatus: 'not_attempted'
+                },
+                {
+                  identifier: 'item2',
+                  sessionControl: SESSION_CONTROL,
+                  active: false,
+                  variables: [],
+                  completionStatus: 'not_attempted'
+                }
               ]
             }
           ]
@@ -81,11 +102,23 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'individual',
               items: [
-                { identifier: 'item1', active: true, variables: [], completionStatus: 'not_attempted', done: false },
-                { identifier: 'item2', active: false, variables: [], completionStatus: 'not_attempted', done: false }
+                {
+                  identifier: 'item1',
+                  sessionControl: SESSION_CONTROL,
+                  active: true,
+                  variables: [],
+                  completionStatus: 'not_attempted',
+                  done: false
+                },
+                {
+                  identifier: 'item2',
+                  sessionControl: SESSION_CONTROL,
+                  active: false,
+                  variables: [],
+                  completionStatus: 'not_attempted',
+                  done: false
+                }
               ]
             }
           ]
@@ -118,11 +151,21 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'simultaneous',
               items: [
-                { identifier: 'item1', active: true, variables: [], completionStatus: 'not_attempted' },
-                { identifier: 'item2', active: false, variables: [], completionStatus: 'not_attempted' }
+                {
+                  identifier: 'item1',
+                  sessionControl: SESSION_CONTROL,
+                  active: true,
+                  variables: [],
+                  completionStatus: 'not_attempted'
+                },
+                {
+                  identifier: 'item2',
+                  sessionControl: SESSION_CONTROL,
+                  active: false,
+                  variables: [],
+                  completionStatus: 'not_attempted'
+                }
               ]
             }
           ]
@@ -155,11 +198,10 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'individual',
               items: [
                 {
                   identifier: 'item1',
+                  sessionControl: SESSION_CONTROL,
                   active: true,
                   variables: [
                     {
@@ -176,6 +218,7 @@ describe('TestNext', () => {
                 },
                 {
                   identifier: 'item2',
+                  sessionControl: SESSION_CONTROL,
                   active: false,
                   variables: [
                     {
@@ -222,11 +265,23 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'linear',
-              submissionMode: 'individual',
               items: [
-                { identifier: 'item1', active: true, variables: [], completionStatus: 'completed', done: false },
-                { identifier: 'item2', active: false, variables: [], completionStatus: 'not_attempted', done: false }
+                {
+                  identifier: 'item1',
+                  sessionControl: SESSION_CONTROL,
+                  active: true,
+                  variables: [],
+                  completionStatus: 'completed',
+                  done: false
+                },
+                {
+                  identifier: 'item2',
+                  sessionControl: SESSION_CONTROL,
+                  active: false,
+                  variables: [],
+                  completionStatus: 'not_attempted',
+                  done: false
+                }
               ]
             }
           ]
@@ -259,11 +314,21 @@ describe('TestNext', () => {
               active: true,
               identifier: 'section1',
               title: 'Section 1',
-              navigationMode: 'nonlinear',
-              submissionMode: 'individual',
               items: [
-                { identifier: 'item1', active: false, variables: [], completionStatus: 'completed' },
-                { identifier: 'item2', active: true, variables: [], completionStatus: 'completed' }
+                {
+                  identifier: 'item1',
+                  sessionControl: SESSION_CONTROL,
+                  active: false,
+                  variables: [],
+                  completionStatus: 'completed'
+                },
+                {
+                  identifier: 'item2',
+                  sessionControl: SESSION_CONTROL,
+                  active: true,
+                  variables: [],
+                  completionStatus: 'completed'
+                }
               ]
             }
           ]

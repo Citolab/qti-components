@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-export default {};
+export default { title: 'Elements/qti-feedback' };
 
 export const Inline = () => {
   return html`<qti-assessment-item>

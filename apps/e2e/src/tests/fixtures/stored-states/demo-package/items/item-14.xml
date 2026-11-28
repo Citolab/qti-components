@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd"
+  identifier="item-14" title="Wat weet ik nog? – Fotosynthese 14" adaptive="false"
+  time-dependent="false" xml:lang="nl">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>2</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-stylesheet href="../styles/item-layout.css" type="text/css" />
+  <qti-item-body>
+    <p> De bloem van de nachtschade is hieronder op twee foto’s afgebeeld.</p>
+    <div class="image-row">
+      <div class="image-row-cell">
+        <div class="dep-dialogTrigger" data-stimulus-idref="WIN_item-14-image-3">
+          <img src="../assets/item-14-image-3.jpeg" width="311"
+            alt="Afbeelding met plant, bloem, bloemblaadje, Pedicellus  Door AI gegenereerde inhoud is mogelijk onjuist." />
+        </div>
+        <div id="WIN_item-14-image-3" class="dep-dialog hide-dialog"
+          data-dep-dialog-caption="Foto 1"
+          data-dep-dialog-resizemode="auto"
+          data-dep-dialog-modal="true">
+          <img src="../assets/item-14-image-3.jpeg" width="800"
+            alt="Afbeelding met plant, bloem, bloemblaadje, Pedicellus  Door AI gegenereerde inhoud is mogelijk onjuist." />
+        </div>
+      </div>
+      <div class="image-row-cell">
+        <div class="dep-dialogTrigger" data-stimulus-idref="WIN_item-14-image-4">
+          <img src="../assets/item-14-image-4.jpeg" width="370"
+            alt="Afbeelding met plant, Pedicellus, bloem, flora  Door AI gegenereerde inhoud is mogelijk onjuist." />
+        </div>
+        <div id="WIN_item-14-image-4" class="dep-dialog hide-dialog"
+          data-dep-dialog-caption="Foto 2"
+          data-dep-dialog-resizemode="auto"
+          data-dep-dialog-modal="true">
+          <img src="../assets/item-14-image-4.jpeg" width="800"
+            alt="Afbeelding met plant, Pedicellus, bloem, flora  Door AI gegenereerde inhoud is mogelijk onjuist." />
+        </div>
+      </div>
+    </div>
+    <p> In welk deel wordt er zuurstof gemaakt? </p>
+    <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="6"
+      data-score="2">
+      <qti-prompt>
+        <p> Noteer het nummer en leg je antwoord uit. </p>
+      </qti-prompt>
+    </qti-extended-text-interaction>
+    <qti-rubric-block view="scorer" use="scoring">
+      <qti-content-body>
+        <p>maximaal 2 punten:</p>
+        <ol>
+          <li>Nummer: <strong>deel 4</strong> — 1 punt</li>
+          <li>Uitleg: <strong>dit deel is groen, dus hier kan fotosynthese plaatsvinden</strong> — 1
+        punt</li>
+        </ol>
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

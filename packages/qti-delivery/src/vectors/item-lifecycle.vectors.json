@@ -1,0 +1,524 @@
+{
+  "transitions": [
+    {
+      "name": "the first attempt begins when the item is shown",
+      "from": "initial",
+      "event": "beginAttempt",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "interacting"
+    },
+    {
+      "name": "an item never shown is closed with its NULL responses",
+      "from": "initial",
+      "event": "endItemSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "closed"
+    },
+    {
+      "name": "ending the last attempt closes the item",
+      "from": "interacting",
+      "event": "endAttempt",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": true,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "closed"
+    },
+    {
+      "name": "ending an attempt with attempts left shows modal feedback when processing set one",
+      "from": "interacting",
+      "event": "endAttempt",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": true,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "modalFeedback"
+    },
+    {
+      "name": "ending an attempt with attempts left and no modal feedback begins the next attempt",
+      "from": "interacting",
+      "event": "endAttempt",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "interacting"
+    },
+    {
+      "name": "no attempt ends on its own in a simultaneous part",
+      "from": "interacting",
+      "event": "endAttempt",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": false,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": null
+    },
+    {
+      "name": "leaving an item in a nonlinear part suspends it",
+      "from": "interacting",
+      "event": "endCandidateSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "suspended"
+    },
+    {
+      "name": "the end of the test part closes an item mid-attempt",
+      "from": "interacting",
+      "event": "endItemSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": false,
+        "modalFeedback": false,
+        "mayResume": false,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "closed"
+    },
+    {
+      "name": "trying again after modal feedback begins a new attempt",
+      "from": "modalFeedback",
+      "event": "beginAttempt",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": true,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "interacting"
+    },
+    {
+      "name": "no new attempt once none is left",
+      "from": "modalFeedback",
+      "event": "beginAttempt",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": true,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": null
+    },
+    {
+      "name": "leaving an item that shows modal feedback suspends it",
+      "from": "modalFeedback",
+      "event": "endCandidateSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": true,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "suspended"
+    },
+    {
+      "name": "returning to a suspended item in a nonlinear part",
+      "from": "suspended",
+      "event": "beginCandidateSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "interacting"
+    },
+    {
+      "name": "no return to an item the candidate left in a linear part",
+      "from": "suspended",
+      "event": "beginCandidateSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": false,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": null
+    },
+    {
+      "name": "a suspended item is closed when the test part ends",
+      "from": "suspended",
+      "event": "endItemSession",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "closed"
+    },
+    {
+      "name": "review with allow-review",
+      "from": "closed",
+      "event": "beginReview",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "review"
+    },
+    {
+      "name": "no review with allow-review false",
+      "from": "closed",
+      "event": "beginReview",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": false,
+        "showSolution": false
+      },
+      "to": null
+    },
+    {
+      "name": "the solution with show-solution",
+      "from": "closed",
+      "event": "beginSolution",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": true
+      },
+      "to": "solution"
+    },
+    {
+      "name": "no solution without show-solution",
+      "from": "closed",
+      "event": "beginSolution",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": null
+    },
+    {
+      "name": "a closed item takes no new attempt",
+      "from": "closed",
+      "event": "beginAttempt",
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": true
+      },
+      "to": null
+    },
+    {
+      "name": "review ends back in closed",
+      "from": "review",
+      "event": "endReview",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      },
+      "to": "closed"
+    },
+    {
+      "name": "the solution ends back in closed",
+      "from": "solution",
+      "event": "endSolution",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": true
+      },
+      "to": "closed"
+    },
+    {
+      "name": "review and solution do not switch into each other",
+      "from": "review",
+      "event": "beginSolution",
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": true
+      },
+      "to": null
+    }
+  ],
+  "guards": [
+    {
+      "name": "one attempt by default; none ended yet",
+      "input": {
+        "sessionControl": { "maxAttempts": 1, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 0,
+        "completionStatus": "not_attempted",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "one attempt by default; it is used",
+      "input": {
+        "sessionControl": { "maxAttempts": 1, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 1,
+        "completionStatus": "unknown",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "max-attempts 0 is unlimited",
+      "input": {
+        "sessionControl": { "maxAttempts": 0, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 12,
+        "completionStatus": "unknown",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "max-attempts 3 after two attempts",
+      "input": {
+        "sessionControl": { "maxAttempts": 3, "allowReview": false, "showSolution": true },
+        "adaptive": false,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 2,
+        "completionStatus": "unknown",
+        "left": false,
+        "modalFeedback": true
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": true,
+        "mayResume": true,
+        "allowReview": false,
+        "showSolution": true
+      }
+    },
+    {
+      "name": "max-attempts 3 after three attempts",
+      "input": {
+        "sessionControl": { "maxAttempts": 3, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 3,
+        "completionStatus": "unknown",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "an adaptive item ignores max-attempts until it is completed",
+      "input": {
+        "sessionControl": { "maxAttempts": 1, "allowReview": true, "showSolution": false },
+        "adaptive": true,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 4,
+        "completionStatus": "incomplete",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "an adaptive item has no attempt left once completed",
+      "input": {
+        "sessionControl": { "maxAttempts": 0, "allowReview": true, "showSolution": false },
+        "adaptive": true,
+        "navigationMode": "nonlinear",
+        "submissionMode": "individual",
+        "numAttempts": 2,
+        "completionStatus": "completed",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": false,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "a linear part: no return once left",
+      "input": {
+        "sessionControl": { "maxAttempts": 1, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "linear",
+        "submissionMode": "individual",
+        "numAttempts": 0,
+        "completionStatus": "not_attempted",
+        "left": true,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": false,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "a linear part: the item not left yet resumes",
+      "input": {
+        "sessionControl": { "maxAttempts": 1, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "linear",
+        "submissionMode": "individual",
+        "numAttempts": 0,
+        "completionStatus": "not_attempted",
+        "left": false,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": true,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    },
+    {
+      "name": "a simultaneous part",
+      "input": {
+        "sessionControl": { "maxAttempts": 1, "allowReview": true, "showSolution": false },
+        "adaptive": false,
+        "navigationMode": "nonlinear",
+        "submissionMode": "simultaneous",
+        "numAttempts": 0,
+        "completionStatus": "not_attempted",
+        "left": true,
+        "modalFeedback": false
+      },
+      "guards": {
+        "attemptsLeft": true,
+        "individualSubmission": false,
+        "modalFeedback": false,
+        "mayResume": true,
+        "allowReview": true,
+        "showSolution": false
+      }
+    }
+  ]
+}

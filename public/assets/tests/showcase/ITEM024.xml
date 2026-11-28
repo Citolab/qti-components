@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM024"
+                     title="Listening"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE_MEDIA" base-type="integer" cardinality="single">
+        <qti-correct-response>
+            <qti-value>1</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+    <qti-response-declaration identifier="RESPONSE" base-type="identifier" cardinality="single">
+        <qti-correct-response>
+            <qti-value>drops</qti-value>
+        </qti-correct-response>
+        <qti-mapping default-value="0" lower-bound="0">
+            <qti-map-entry map-key="drops" mapped-value="1"/>
+        </qti-mapping>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <qti-media-interaction response-identifier="RESPONSE_MEDIA" autostart="false" min-plays="0" max-plays="3">
+            <qti-prompt>
+                <p>Listen to a car sounding its horn as it drives past you. You can play the recording three times.</p>
+            </qti-prompt>
+            <audio controls="controls">
+                <source src="resources/car-horn-passing.mp3" type="audio/mpeg"/>
+            </audio>
+        </qti-media-interaction>
+
+        <qti-choice-interaction response-identifier="RESPONSE" shuffle="false" max-choices="1">
+            <qti-prompt>
+                <p>What happens to the pitch of the horn as the car passes you?</p>
+            </qti-prompt>
+            <qti-simple-choice identifier="rises">It rises.</qti-simple-choice>
+            <qti-simple-choice identifier="drops">It drops.</qti-simple-choice>
+            <qti-simple-choice identifier="same">It stays the same.</qti-simple-choice>
+        </qti-choice-interaction>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Correct: it drops. This is the Doppler effect: the pitch is higher while the car comes closer and lower once it moves away. The number of plays (RESPONSE_MEDIA) is recorded but not scored.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+
+    <qti-response-processing>
+        <qti-set-outcome-value identifier="SCORE">
+            <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+    </qti-response-processing>
+</qti-assessment-item>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300" role="img" aria-labelledby="title">
+  <title id="title">The Sun and the eight planets in a row, each labelled with its name</title>
+  <rect width="800" height="300" fill="#1d3b53"/>
+  <g fill="#ffffff" opacity="0.7">
+    <circle cx="160" cy="40" r="1.5"/><circle cx="270" cy="60" r="1"/><circle cx="340" cy="30" r="1.5"/>
+    <circle cx="470" cy="50" r="1"/><circle cx="590" cy="25" r="1.5"/><circle cx="690" cy="70" r="1"/>
+    <circle cx="760" cy="35" r="1.5"/><circle cx="215" cy="215" r="1"/><circle cx="455" cy="220" r="1.5"/>
+    <circle cx="680" cy="210" r="1"/><circle cx="770" cy="190" r="1"/><circle cx="350" cy="200" r="1"/>
+  </g>
+  <circle cx="-60" cy="140" r="140" fill="#f6c344"/>
+  <circle cx="-60" cy="140" r="155" fill="none" stroke="#f6c344" stroke-opacity="0.35" stroke-width="10"/>
+
+  <circle cx="130" cy="140" r="8" fill="#a7a29a"/>
+  <circle cx="185" cy="140" r="16" fill="#e3b46a"/>
+  <circle cx="245" cy="140" r="17" fill="#2f7fb5"/>
+  <path d="M236 130 q6 -4 10 2 q-2 6 -8 6 z M248 146 q6 -2 8 4 q-6 4 -10 0 z" fill="#5fae6e"/>
+  <circle cx="300" cy="140" r="11" fill="#c8553d"/>
+  <circle cx="395" cy="140" r="48" fill="#d9a066"/>
+  <g fill="none" stroke="#b97a45" stroke-width="5">
+    <path d="M351 122 h88"/><path d="M348 140 h94"/><path d="M352 158 h86"/>
+  </g>
+  <ellipse cx="410" cy="155" rx="10" ry="6" fill="#b5523b"/>
+  <ellipse cx="520" cy="140" rx="70" ry="14" fill="none" stroke="#c9ad74" stroke-width="7"/>
+  <circle cx="520" cy="140" r="40" fill="#e5c98a"/>
+  <path d="M450 140 a70 14 0 0 0 140 0" fill="none" stroke="#c9ad74" stroke-width="7"/>
+  <circle cx="630" cy="140" r="26" fill="#9fd8df"/>
+  <circle cx="730" cy="140" r="25" fill="#3f6fd1"/>
+
+  <g fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="middle">
+    <text x="130" y="250">Mercury</text>
+    <text x="185" y="275">Venus</text>
+    <text x="245" y="250">Earth</text>
+    <text x="300" y="275">Mars</text>
+    <text x="395" y="250">Jupiter</text>
+    <text x="520" y="250">Saturn</text>
+    <text x="630" y="250">Uranus</text>
+    <text x="730" y="250">Neptune</text>
+  </g>
+</svg>

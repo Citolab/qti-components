@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" identifier="t4-test-parts" title="T4 - Test Parts" xsi:schemaLocation=" http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd ">
+    <qti-test-part identifier="testPart-1" navigation-mode="nonlinear" submission-mode="individual">
+        <qti-item-session-control max-attempts="0"/>
+        <qti-assessment-section identifier="assessmentSection-1" required="true" fixed="false" title="Section 1" visible="true" keep-together="true">
+            <qti-assessment-item-ref identifier="item-1" required="false" fixed="false" href="items/item-1.xml"/>
+            <qti-assessment-item-ref identifier="item-2" required="false" fixed="false" href="items/item-2.xml"/>
+            <qti-assessment-item-ref identifier="item-3" required="false" fixed="false" href="items/item-3.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+    <qti-test-part identifier="testPart-2" navigation-mode="linear" submission-mode="individual">
+        <qti-assessment-section identifier="assessmentSection-2" required="true" fixed="false" title="Section 2" visible="true" keep-together="true">
+            <qti-assessment-item-ref identifier="item-4" required="false" fixed="false" href="items/item-4.xml"/>
+            <qti-assessment-item-ref identifier="item-5" required="false" fixed="false" href="items/item-5.xml"/>
+            <qti-assessment-item-ref identifier="item-6" required="false" fixed="false" href="items/item-6.xml"/>
+        </qti-assessment-section>
+    </qti-test-part>
+</qti-assessment-test>

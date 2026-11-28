@@ -60,8 +60,9 @@ import type { IQtiTest } from '../../types/iqti-test';
  * You can use normal class names to style the elements.
  * And you can use the `test-prev` and `test-next` elements to navigate through the test.
  *
- * @event qti-state-changed - The candidate's persistable state changed. `detail` is a `QtiTestState`; assign it back to `state` to resume.
- * @event qti-test-context-updated - Deprecated: listen to `qti-state-changed` to persist a session. `detail` is the full test context, including declaration metadata and the answer key. Removed in the next major.
+ * @event qc-test-state-changed - The candidate's persistable state changed. `detail` is a `QtiTestState`; assign it back to `state` to resume.
+ * @event qc-test-state-refused - A value assigned to `state` is not a version 1 `QtiTestState` and was ignored; the test goes on without it. `detail` is `{ message, state }`. Sent once the test has loaded.
+ * @event qti-test-context-updated - Deprecated: listen to `qc-test-state-changed` to persist a session. `detail` is the full test context, including declaration metadata and the answer key. Removed in the next major.
  */
 
 export class QtiTest extends TestNavigationMixin(

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+                     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+                     identifier="ITEM005"
+                     title="Open question"
+                     time-dependent="false"
+                     xml:lang="en-GB">
+    <qti-response-declaration identifier="RESPONSE" base-type="string" cardinality="single">
+        <!-- A model answer for the scorer; an open answer is scored by hand. -->
+        <qti-correct-response>
+            <qti-value>The sun and the wind do not deliver energy at the same moments: solar panels produce nothing at night and little in winter, while wind turbines stand still when there is no wind. Because sunny and windy periods often fall at different times, a mix of both gives a steadier supply. Relying on one source makes a country vulnerable to bad weather, breakdowns and price changes, so a mix is more reliable.</qti-value>
+        </qti-correct-response>
+    </qti-response-declaration>
+
+    <qti-outcome-declaration identifier="SCORE" base-type="float" cardinality="single" normal-minimum="0" normal-maximum="1">
+        <qti-default-value>
+            <qti-value>0</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+    <qti-outcome-declaration identifier="MAXSCORE" base-type="float" cardinality="single">
+        <qti-default-value>
+            <qti-value>1</qti-value>
+        </qti-default-value>
+    </qti-outcome-declaration>
+
+    <qti-item-body>
+        <div>
+            <img src="resources/solarpark-wind-park.jpg" alt="Solar panels in a field with wind turbines behind them" width="100%" />
+
+            <p>
+                In three to five sentences, explain why many countries are moving to a mix of solar and wind power rather than relying on a single source.
+            </p>
+            <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="5"/>
+        </div>
+
+        <qti-rubric-block view="scorer" use="scoring">
+            <qti-content-body>
+                <p>Marking criteria:</p>
+                <ul>
+                    <li>The answer gives at least two sound reasons (for example: output that varies, security of supply, cost, grid stability).</li>
+                    <li>It explains why a mix is more reliable.</li>
+                    <li>The reasoning is easy to follow.</li>
+                </ul>
+                <p>Note: this answer is marked by hand; there is no automatic scoring.</p>
+            </qti-content-body>
+        </qti-rubric-block>
+    </qti-item-body>
+</qti-assessment-item>

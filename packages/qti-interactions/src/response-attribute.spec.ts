@@ -35,14 +35,7 @@ const NO_RESPONSE_ATTRIBUTE: Record<string, string> = {
   // Play count, written by the player as the candidate watches.
   'qti-media-interaction': 'response is accumulated by the player',
   // Host-script driven; the script owns the response, not the markup.
-  'qti-custom-interaction': 'response is owned by the host script',
-  /*
-   * Questionable rather than principled: position-object records point coordinates, which the
-   * codec can express (`"100 150"`) and which qti-select-point already accepts as an attribute.
-   * Listed here to describe what is true today, not to argue it should stay that way — if it
-   * gains the attribute, delete this entry and the test goes green again.
-   */
-  'qti-position-object-interaction': 'not implemented; points would be expressible'
+  'qti-custom-interaction': 'response is owned by the host script'
 };
 
 const observesResponse = (ctor: CustomElementConstructor): boolean =>

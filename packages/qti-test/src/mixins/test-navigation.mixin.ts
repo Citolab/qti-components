@@ -1,7 +1,10 @@
-import { property } from 'lit/decorators.js';
+import { provide } from '@lit/context';
+import { property, state } from 'lit/decorators.js';
 
+import { readItemFacts } from '@qti-components/delivery';
 import { qtiTransformItem } from '@qti-components/transformers';
 
+import { itemFactsContext } from '../internal/item-facts.context';
 import { idOf, resolveFirstItem, resolveNextItem } from '../internal/item-sequencing';
 import { dispatchPublic, listenPublic } from '../public-events';
 
@@ -10,10 +13,10 @@ import type { QtiAssessmentItem } from '@qti-components/elements';
 import type { transformItemApi, transformTestApi } from '@qti-components/transformers';
 import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref/qti-assessment-item-ref';
 import type { QtiAssessmentSection } from '../components/qti-assessment-section/qti-assessment-section';
-import type { QtiTestPart } from '../components/qti-test-part/qti-test-part';
 import type { QtiAssessmentTest } from '../components/qti-assessment-test/qti-assessment-test';
 import type { TestContainer } from '../components/test-container/test-container';
 import type { PostLoadTestTransformCallback } from '../internal/test-host.context';
+import type { ItemFactsByRef } from '../internal/item-facts.context';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
@@ -80,6 +83,14 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
     public _testElement: QtiAssessmentTest;
 
+    /**
+     * The facts of every item fetched so far, by item-ref identifier, read from the item XML in
+     * `_loadSingleItem`. Kept across navigation; a new test starts empty. @internal
+     */
+    @state()
+    @provide({ context: itemFactsContext })
+    protected itemFacts: ItemFactsByRef = new Map();
+
     // Navigation state tracking
     private _activeController: AbortController | null = null;
     private _loadResults: any[] = [];
@@ -116,7 +127,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const targetId = id || this._getDefaultNavigationId(type);
 
       if (targetId) {
-        dispatchPublic(this, 'cito-test-navigate', { type, id: targetId });
+        dispatchPublic(this, 'qc-test-navigate', { type, id: targetId });
       }
     }
 
@@ -125,14 +136,15 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     private _bindEventHandlers(): void {
-      listenPublic(this, 'cito-test-navigate', this._handleNavigationRequest.bind(this));
-      listenPublic(this, 'cito-test-loaded', this._handleTestConnected.bind(this));
+      listenPublic(this, 'qc-test-navigate', this._handleNavigationRequest.bind(this));
+      listenPublic(this, 'qc-test-loaded', this._handleTestConnected.bind(this));
       this.addEventListener('qti-assessment-item-connected', this._handleItemConnected.bind(this));
       this.addEventListener('qti-assessment-stimulus-ref-connected', this._handleStimulusRefConnected.bind(this));
     }
 
     private _handleTestConnected(e: CustomEvent<QtiAssessmentTest>): void {
       this._testElement = e.detail;
+      this.itemFacts = new Map();
       this._initializeNavigation();
     }
 
@@ -229,9 +241,9 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         const refs = [...this._testElement.querySelectorAll('qti-assessment-item-ref')];
         if (refs[0]?.closest('qti-test-part')?.getAttribute('navigation-mode') === 'linear') {
           const first = resolveFirstItem(refs);
-          if (first.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: first.skipped });
+          if (first.skipped.length) dispatchPublic(this, 'qc-test-items-skipped', { ids: first.skipped });
           if (first.id === null) {
-            dispatchPublic(this, 'cito-test-end-reached', {});
+            dispatchPublic(this, 'qc-test-end-reached', {});
             return;
           }
           id = first.id;
@@ -252,16 +264,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
       const currentItemRef = this._testElement?.querySelector(`qti-assessment-item-ref[identifier="${currentItemId}"]`);
       if (!currentItemRef) return false;
 
-      const section = currentItemRef.closest('qti-assessment-section') as QtiAssessmentSection;
-      const testPart = currentItemRef.closest('qti-test-part') as QtiTestPart;
-
-      const navigationMode = (section?.navigationMode ||
-        section?.getAttribute('navigation-mode') ||
-        testPart?.navigationMode ||
-        testPart?.getAttribute('navigation-mode') ||
-        'nonlinear') as string;
-
-      if (navigationMode !== 'linear') return false;
+      // QTI defines navigation-mode on the test part only.
+      if (currentItemRef.closest('qti-test-part')?.getAttribute('navigation-mode') !== 'linear') return false;
 
       const allItemRefs = Array.from(
         this._testElement?.querySelectorAll('qti-assessment-item-ref') || []
@@ -313,8 +317,8 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
       const resolved = this._resolveLinearNext(detail.type, detail.id);
       if (resolved?.id === null) {
-        if (resolved.skipped.length) dispatchPublic(this, 'cito-test-items-skipped', { ids: resolved.skipped });
-        dispatchPublic(this, 'cito-test-end-reached', {});
+        if (resolved.skipped.length) dispatchPublic(this, 'qc-test-items-skipped', { ids: resolved.skipped });
+        dispatchPublic(this, 'qc-test-end-reached', {});
         return;
       }
       const target = resolved?.id ?? detail.id;
@@ -335,7 +339,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
         await this._executeNavigation(detail.type, target, navigationId, controller);
         // only tell hosts about skipped items once the jump went through
         if (resolved?.skipped.length && navigationId === this._navigationId && !controller.signal.aborted) {
-          dispatchPublic(this, 'cito-test-items-skipped', { ids: resolved.skipped });
+          dispatchPublic(this, 'qc-test-items-skipped', { ids: resolved.skipped });
         }
       } catch (error) {
         this._handleNavigationError(error, detail.type, target);
@@ -569,9 +573,12 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
 
       if (this._isStaleNavigation(navigationId, controller)) return;
 
-      validResults.forEach(({ itemRef, doc }) => {
+      const itemFacts = new Map(this.itemFacts);
+      validResults.forEach(({ itemRef, doc, facts }) => {
         if (itemRef && doc) itemRef.xmlDoc = doc;
+        if (itemRef && facts) itemFacts.set(itemRef.identifier, facts);
       });
+      this.itemFacts = itemFacts;
 
       // Restore per-item state as early as possible (before iframe-based interactions initialize).
       // Some PCIs (including IMS conformance examples) only support restoration via getInstance(state),
@@ -607,7 +614,10 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
           return null;
         }
 
-        return { itemRef, doc: transformer.htmlDoc(this._customElementRegistry()) };
+        // The facts come from the XML as it will be rendered: after the host's transform.
+        const item = transformer.xmlDoc().documentElement;
+        const facts = item?.localName === 'qti-assessment-item' ? readItemFacts(item) : null;
+        return { itemRef, doc: transformer.htmlDoc(this._customElementRegistry()), facts };
       } catch (error) {
         if (error.name === 'AbortError') {
           console.info(`Item load for ${itemRef.identifier} was aborted`);
@@ -703,7 +713,7 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     // ===========================================
 
     private _dispatchLoadingStarted(type: string, id: string): void {
-      dispatchPublic(this, 'cito-test-navigation-started', { type: type as 'item' | 'section', id });
+      dispatchPublic(this, 'qc-test-navigation-started', { type: type as 'item' | 'section', id });
     }
 
     private _dispatchLoadingEnded(type: string, id: string): void {
@@ -717,21 +727,21 @@ export const TestNavigationMixin = <T extends Constructor<TestBaseInterface>>(su
     }
 
     private _dispatchError(error: NavigationError): void {
-      dispatchPublic(this, 'cito-test-navigation-failed', error);
+      dispatchPublic(this, 'qc-test-navigation-failed', error);
     }
 
-    /** The items are in the DOM: tell hosts the new position rendered (`cito-test-navigated`) and which items it holds. */
+    /** The items are in the DOM: tell hosts the new position rendered (`qc-test-navigated`) and which items it holds. */
     private _dispatchTestLoaded(results: any[], type: 'item' | 'section', id: string): void {
       requestAnimationFrame(() => {
         dispatchPublic(
           this,
-          'cito-test-rendered',
+          'qc-test-rendered',
           results.map(({ itemRef }) => ({
             identifier: itemRef?.identifier,
             element: itemRef
           }))
         );
-        dispatchPublic(this, 'cito-test-navigated', { type, id });
+        dispatchPublic(this, 'qc-test-navigated', { type, id });
       });
     }
   }

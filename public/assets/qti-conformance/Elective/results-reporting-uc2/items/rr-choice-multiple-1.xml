@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item
+  xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd"
+  identifier="rr-choice-multiple-1" title="RR - Choice Multiple 1"
+  adaptive="false" time-dependent="false">
+  
+  <qti-response-declaration identifier="RESPONSE" cardinality="multiple" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>H</qti-value>
+      <qti-value>O</qti-value>
+    </qti-correct-response>
+    <qti-mapping default-value="-2" lower-bound="0" upper-bound="2">
+      <qti-map-entry map-key="H" mapped-value="1"/>
+      <qti-map-entry map-key="O" mapped-value="1"/>
+      <qti-map-entry map-key="Cl" mapped-value="-1"/>
+    </qti-mapping>
+  </qti-response-declaration>
+    
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" normal-maximum="2" normal-minimum="0">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  
+  <qti-item-body>
+  
+    <qti-choice-interaction class="qti-choices-stacking-3" max-choices="0" response-identifier="RESPONSE">
+      <qti-prompt><p>Which of the following elements are used to form water?</p></qti-prompt>
+      <qti-simple-choice identifier="H" fixed="false">Hydrogen</qti-simple-choice>
+      <qti-simple-choice identifier="He" fixed="false">Helium</qti-simple-choice>
+      <qti-simple-choice identifier="C" fixed="false">Carbon</qti-simple-choice>
+      <qti-simple-choice identifier="O" fixed="false">Oxygen</qti-simple-choice>
+      <qti-simple-choice identifier="N" fixed="false">Nitrogen</qti-simple-choice>
+      <qti-simple-choice identifier="Cl" fixed="false">Chlorine</qti-simple-choice>
+    </qti-choice-interaction>
+    
+  </qti-item-body>
+  
+  <qti-response-processing> 
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-is-null>
+          <qti-variable identifier="RESPONSE"/>
+        </qti-is-null>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-base-value base-type="float">0.0</qti-base-value>
+        </qti-set-outcome-value>
+      </qti-response-if>
+      <qti-response-else>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-map-response identifier="RESPONSE"/>
+        </qti-set-outcome-value>
+      </qti-response-else>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>

@@ -21,6 +21,21 @@ const BASELINE_TARGET = 'qti-item-body'; // element captured by the VRT setup
 
 const sanitizeStoryId = (id: string) => id.replace(/[^a-z0-9]+/gi, '-');
 
+/**
+ * The capture target, through open shadow roots: the Kennisnet stories mount their item inside the
+ * `withCorrection` shadow host, where a light-DOM query misses it and the overlay used to stretch
+ * over the whole story root instead.
+ */
+const findTarget = (node: ParentNode): HTMLElement | null => {
+  const direct = node.querySelector<HTMLElement>(BASELINE_TARGET);
+  if (direct) return direct;
+  for (const el of Array.from(node.querySelectorAll('*'))) {
+    const found = el.shadowRoot && findTarget(el.shadowRoot);
+    if (found) return found;
+  }
+  return null;
+};
+
 const renderBaselineOverlay = (context: { id: string; globals: Record<string, unknown> }) => {
   // The overlay is a human review tool. It must not participate in addon-vitest renders,
   // otherwise an existing baseline can influence the next captured baseline.
@@ -29,7 +44,7 @@ const renderBaselineOverlay = (context: { id: string; globals: Record<string, un
   document.getElementById(BASELINE_OVERLAY_ID)?.remove();
   const root = document.getElementById('storybook-root');
   if (!root) return;
-  const target = (root.querySelector(BASELINE_TARGET) as HTMLElement) ?? root;
+  const target = findTarget(root) ?? root;
   const targetParent = target.parentElement;
 
   const mode = (context.globals.baseline as string) ?? 'off';
@@ -44,7 +59,10 @@ const renderBaselineOverlay = (context: { id: string; globals: Record<string, un
 
   const img = document.createElement('img');
   img.id = BASELINE_OVERLAY_ID;
-  img.src = `${BASELINE_URL_BASE}/${BASELINE_SUBFOLDER}/${sanitizeStoryId(context.id)}-${BASELINE_PLATFORM}.png`;
+  // `legacy` shows the capture from `pnpm run test:vrt:legacy`: the same story in Chrome 120, which
+  // has no `:state()` and renders through the custom-state shim and the theme's fallback arms.
+  const source = context.globals.baselineSource === 'legacy' ? 'legacy-' : '';
+  img.src = `${BASELINE_URL_BASE}/${BASELINE_SUBFOLDER}/${sanitizeStoryId(context.id)}-${source}${BASELINE_PLATFORM}.png`;
   img.style.cssText = 'position:absolute;z-index:2147483647;pointer-events:none;opacity:0;';
   img.style.mixBlendMode = mode === 'diff' ? 'difference' : 'normal';
   // No baseline for this story → silently drop the overlay.
@@ -88,6 +106,19 @@ export const baselineOverlayGlobalTypes: Preview['globalTypes'] = {
         { value: 'off', title: 'Baseline off' },
         { value: 'overlay', title: 'Overlay baseline' },
         { value: 'diff', title: 'Difference blend' }
+      ],
+      dynamicTitle: true
+    }
+  },
+  baselineSource: {
+    name: 'Baseline source',
+    description: 'Which capture the overlay shows: the committed baseline, or the same story in legacy Chrome 120',
+    defaultValue: 'current',
+    toolbar: {
+      icon: 'browser',
+      items: [
+        { value: 'current', title: 'Current Chromium' },
+        { value: 'legacy', title: 'Legacy Chrome 120' }
       ],
       dynamicTitle: true
     }

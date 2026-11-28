@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { EvidenceMatrix } from './evidence-matrix';
+
+<Meta title="Interactions/Evidence" />
+
+# Evidence
+
+Every interaction is a folder in the sidebar: an **Overview** to try it, then **topic** stories that
+act as evidence. Each topic story is also a test (its `play` function runs in CI), so a green topic
+means that claim holds, and an empty one means nobody has checked it.
+
+The table counts the stories per interaction and topic, read from the story index of this Storybook.
+Click a number to open the first story of that topic. Hover a column heading to see what it proves.
+
+<EvidenceMatrix />
+
+## The reference
+
+**Choice** has every topic. Copy its structure for another interaction:
+
+| Topic       | Where the story lives                                            |
+| ----------- | ---------------------------------------------------------------- |
+| Overview    | `qti-<name>-interaction.stories.ts`, the only file with autodocs |
+| Every other | `stories/qti-<name>-interaction.<topic>.stories.ts`              |
+
+Topic files use a fixed suffix: `.a11y.`, `.api.`, `.behavior.`, `.config.`, `.configcontext.`,
+`.dom.`, `.forms.`, `.theming.`, `.validation.`, `.vocabulary.`. Give the story file the title
+`Interactions/<Name>/<Topic>` and it appears in the table by itself.

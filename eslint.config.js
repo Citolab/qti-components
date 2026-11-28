@@ -190,6 +190,20 @@ export default [
     }
   },
 
+  // `@qti-components/delivery` runs in the browser and under Node from the same code, so it never
+  // touches a browser global. Its tsconfig has no DOM lib; this catches what slips past a `declare`.
+  {
+    files: ['packages/qti-delivery/src/**/*.ts'],
+    rules: {
+      'no-restricted-globals': [
+        'error',
+        ...['window', 'document', 'customElements', 'HTMLElement', 'Element', 'Node', 'DOMParser', 'localStorage'].map(
+          name => ({ name, message: '`@qti-components/delivery` runs under Node: no browser globals.' })
+        )
+      ]
+    }
+  },
+
   // apps/* are private and never published, so nothing here can reach a consumer's bundler and
   // `?inline` is free to use — Vite resolves it. The `packages/*` path ban still applies, so this
   // redefines the rule without that one group rather than switching it off wholesale.

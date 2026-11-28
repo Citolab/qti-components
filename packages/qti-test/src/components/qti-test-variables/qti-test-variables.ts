@@ -18,11 +18,11 @@ export class QtiTestVariables extends QtiExpression<number> {
 
   constructor() {
     super();
-    listenPublic(this, 'cito-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail));
+    listenPublic(this, 'qc-test-loaded', (e: CustomEvent<QtiAssessmentTest>) => (this.#connectedTest = e.detail));
   }
 
   /**
-   * `qti-assessment-test-connected` bubbles *up* from the test element, and this
+   * `qc-test-loaded` bubbles *up* from the test element, and this
    * expression lives inside that test's `qti-outcome-processing` — so the
    * listener above only ever fires for a test handed to us directly (a test
    * harness). Walking up the tree is what resolves the test in a real document.

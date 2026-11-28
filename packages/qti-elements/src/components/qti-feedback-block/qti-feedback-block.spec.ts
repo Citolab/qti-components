@@ -4,8 +4,19 @@ import { ContextProvider } from '@lit/context';
 
 import { computedContext } from '@qti-components/base';
 
-import type { ComputedContext } from '@qti-components/base';
+import type { ComputedContext, SessionControl } from '@qti-components/base';
 import type { QtiAssessmentItem } from '@qti-components/elements';
+
+/** QTI's defaults for `qti-item-session-control`; each context below overrides what it tests. */
+const SESSION_CONTROL: SessionControl = {
+  maxAttempts: 1,
+  showFeedback: false,
+  allowReview: true,
+  showSolution: false,
+  allowComment: false,
+  allowSkipping: true,
+  validateResponses: false
+};
 
 describe('qti-feedback-block show-feedback constraint', () => {
   let container: HTMLDivElement;
@@ -37,17 +48,18 @@ describe('qti-feedback-block show-feedback constraint', () => {
             active: true,
             identifier: 'sec-1',
             title: 'Section 1',
-            navigationMode: 'nonlinear',
-            submissionMode: 'individual',
             items: [
               {
                 active: true,
                 identifier: 'feedback-test',
                 href: '',
                 variables: [],
-                showFeedback,
-                maxAttempts: 1,
-                ...item
+                ...item,
+                sessionControl: {
+                  ...SESSION_CONTROL,
+                  showFeedback: showFeedback ?? false,
+                  maxAttempts: item.maxAttempts ?? 1
+                }
               }
             ]
           }

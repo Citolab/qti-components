@@ -63,7 +63,8 @@ export interface ConfigContext {
 
   /**
    * If true, disables further user actions when an interaction reaches its configured maximum.
-   * Applies to both choice-based and drag/drop interactions.
+   * Applies to both choice-based and drag/drop interactions. Defaults to false: QTI lets the candidate
+   * go over the maximum and reports it with the max-selections message.
    */
   disableAfterMaxReached?: boolean;
 
@@ -87,8 +88,9 @@ export interface ConfigContext {
   inlineChoicePrompt?: string;
 
   /**
-   * If true, the inline choice interaction automatically measures the widest option and sizes the
-   * trigger button to match. Defaults to false.
+   * The inline choice interaction measures the widest option and sizes the trigger to match, so
+   * choosing an option never changes the field's width. Defaults to true; set false to size the
+   * field to the option shown.
    * When a `qti-input-width-*` class is present on the interaction, that class width always takes
    * precedence and autosizing is skipped regardless of this setting.
    */

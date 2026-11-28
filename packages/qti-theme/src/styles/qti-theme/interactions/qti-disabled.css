@@ -1,0 +1,54 @@
+/*
+ * A disabled interaction, or one disabled choice in it, is drawn in one muted grey: its text, its
+ * edges, its controls and the mark of what is selected (--qti-color-disabled). Not opacity: that
+ * faded everything equally, the selected answer too, let the background show through boxes and
+ * chips, and could not be themed. The box does not move; only colours change.
+ *
+ * It works by re-valuing, on the disabled element, the tokens its paint reads, the same way a
+ * [data-qti-theme] subtree re-themes; nothing per interaction has to know about it.
+ *
+ * Readonly is not disabled. A readonly interaction (an answered test in review) keeps its full look,
+ * so the answers stay readable; only its cursor changes.
+ *
+ * Imported into `interactions.states`, so a disabled correction (corrections, a layer higher) still
+ * shows its verdict colours.
+ */
+:is(
+    qti-choice-interaction,
+    qti-hottext-interaction,
+    qti-inline-choice-interaction,
+    qti-text-entry-interaction,
+    qti-extended-text-interaction,
+    qti-gap-match-interaction,
+    qti-order-interaction,
+    qti-associate-interaction,
+    qti-match-interaction,
+    qti-hotspot-interaction,
+    qti-graphic-order-interaction,
+    qti-graphic-associate-interaction,
+    qti-graphic-gap-match-interaction,
+    qti-select-point-interaction,
+    qti-slider-interaction
+  )[disabled],
+:state(disabled) {
+  color: var(--qti-color-disabled);
+  --qti-fg: var(--qti-color-disabled);
+  --qti-component-color: var(--qti-color-disabled);
+  --qti-border-color: var(--qti-color-disabled);
+  --qti-component-border-color: var(--qti-color-disabled);
+  --qti-border-active: var(--qti-color-disabled);
+  --qti-border: var(--qti-border-thickness) var(--qti-border-style) var(--qti-color-disabled);
+
+  /* What is selected stays visibly selected, in the same grey. */
+  --qti-primary: var(--qti-color-disabled);
+  --qti-selected-bg: var(--qti-color-disabled);
+  --qti-selected-color: var(--qti-color-base-100);
+  --qti-primary-fg: var(--qti-color-base-100);
+
+  /* Chips, filled or not, and their handles. */
+  --drag-background-color: var(--qti-color-base-100);
+  --drag-color: var(--qti-color-disabled);
+  --drag-border-color: var(--qti-color-disabled);
+  --drag-box-shadow: none;
+  --qti-grip-color: var(--qti-color-disabled);
+}

@@ -3,24 +3,23 @@ import { useArgs } from 'storybook/preview-api';
 
 import { getManifestInfo } from '@qti-components/loader';
 
-import packages from '../assets/packages.json';
+import { PACKAGE_NAMES, PACKAGES, type PackageName } from './packages.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
 import '../../../../.storybook/utilities.css';
 
 const meta: Meta = {
-  title: 'Qti Test',
+  title: 'QTI Test/Examples',
   argTypes: {
     packages: {
-      options: packages.packages,
+      options: PACKAGE_NAMES,
       control: { type: 'radio' }
     }
   },
   args: {
-    serverLocation: '/assets/api',
     itemIdentifier: undefined,
-    packages: 'examples'
+    packages: 'showcase'
   },
   parameters: {
     layout: 'fullscreen'
@@ -34,12 +33,13 @@ export const QtiTest: Story = {
     const [args, updateArgs] = useArgs();
     return html`
       <qti-test
+        navigate="item"
         class="h-full"
         @qti-test-connected=${(e: CustomEvent) => {
           console.log('qti-test-connected', e);
         }}
-        @qti-test-loaded=${(e: CustomEvent) => {
-          console.log('qti-test-loaded', e);
+        @qc-test-rendered=${(e: CustomEvent) => {
+          console.log('qc-test-rendered', e);
         }}
         @qti-load-item-request=${() => {
           // e.detail.returnedPromise = new Promise((resolve, reject) => {
@@ -60,42 +60,44 @@ export const QtiTest: Story = {
         @qti-assessment-stimulus-ref-connected=${(e: CustomEvent) => {
           console.log('qti-assessment-stimulus-ref-connected', e);
         }}
-        @qti-assessment-test-connected=${(e: CustomEvent) => {
-          console.log('qti-assessment-test-connected', e);
+        @qc-test-loaded=${(e: CustomEvent) => {
+          console.log('qc-test-loaded', e);
         }}
-        @qti-outcome-changed=${(e: CustomEvent) => {
-          console.log('qti-outcome-changed', e);
+        @qc-item-outcome-changed=${(e: CustomEvent) => {
+          console.log('qc-item-outcome-changed', e);
         }}
-        @qti-interaction-changed=${(e: CustomEvent) => {
-          console.log('qti-interaction-changed', e);
+        @qc-item-response-changed=${(e: CustomEvent) => {
+          console.log('qc-item-response-changed', e);
         }}
         @qti-request-test-section=${(e: CustomEvent) => {
           console.log('qti-request-test-section', e);
         }}
-        @qti-request-navigation=${(e: CustomEvent) => {
-          console.log('qti-request-navigation', e);
+        @qc-test-navigate=${(e: CustomEvent) => {
+          console.log('qc-test-navigate', e);
         }}
-        @qti-state-changed=${(e: CustomEvent) => {
-          console.log('qti-state-changed', e);
+        @qc-test-state-changed=${(e: CustomEvent) => {
+          console.log('qc-test-state-changed', e);
         }}
       >
         <test-navigation
           auto-score-items
           class="flex h-full overflow-hidden"
-          @qti-request-navigation=${({ detail }) => {
+          @qc-test-navigate=${({ detail }) => {
             updateArgs({ itemIdentifier: detail.id });
           }}
         >
-          <test-paging-buttons-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
+          <test-stamp class="flex flex-col gap-2 p-2 overflow-auto" style="min-width:160px">
             <template>
-              <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
-                {{ item.index }} {{ item.title }} {{ item.difficulty }}
-                <template type="if" if="{{ item.type === 'info' }}">
-                  <i class="bi bi-info-circle"></i>
-                </template>
-              </test-item-link>
+              <template type="repeat" repeat="{{ activeTestpart.items }}">
+                <test-item-link class="btn btn-primary {{item.active ? 'active' : ''}}" item-id="{{ item.identifier }}">
+                  {{ item.index }} {{ item.title }} {{ item.difficulty }}
+                  <template type="if" if="{{ item.type === 'info' }}">
+                    <i class="bi bi-info-circle"></i>
+                  </template>
+                </test-item-link>
+              </template>
             </template>
-          </test-paging-buttons-stamp>
+          </test-stamp>
 
           <div class="flex flex-col flex-1">
             <div class="flex items-center gap-2 p-2">
@@ -110,7 +112,6 @@ export const QtiTest: Story = {
             <test-container class="flex-1 overflow-auto p-2" test-url="${testURL}"></test-container>
             <nav class="flex justify-between p-2">
               <test-end-attempt>End attempt</test-end-attempt>
-              <test-show-correct-response>Show Correct</test-show-correct-response>
               <test-prev>Vorige</test-prev>
               <test-next>Volgende</test-next>
             </nav>
@@ -125,7 +126,7 @@ export const QtiTest: Story = {
   },
   loaders: [
     async ({ args }) => {
-      const { testURL } = await getManifestInfo(`${args.serverLocation}/${args.packages}/imsmanifest.xml`);
+      const { testURL } = await getManifestInfo(PACKAGES[args.packages as PackageName]);
       return { testURL };
     }
   ]

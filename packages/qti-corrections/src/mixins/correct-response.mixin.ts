@@ -1,7 +1,7 @@
 import { property, state } from 'lit/decorators.js';
 
 import { watch } from '@qti-components/utilities';
-import { responseAttributeConverter, type Interaction, type ResponseValue } from '@qti-components/base';
+import { responseAttributeConverter, setState, type Interaction, type ResponseValue } from '@qti-components/base';
 
 import type { CorrectionConfig } from '../context/correction-config';
 
@@ -16,6 +16,13 @@ export enum Correctness {
 /**
  * Adds correct-response and full-correct-response behaviour
  * on top of any `Interaction` subclass.
+ *
+ * @cssstate answer-key - This host IS the answer key: the clone the full mode inserts after the
+ *   interaction.
+ * @cssstate answer-key-shown - This host shows its answer key inline, next to the candidate's
+ *   answer (internal mode; alias `show-correct-response` for one major). The clone also carries the `answer-key` attribute and sits in a
+ *   `div.full-correct-response` wrapper, which a `<div>` has no internals to replace.
+ * @csspart correction - The verdict badge, bare `correction` until a verdict is set.
  *
  * Usage:
  * ```ts
@@ -112,6 +119,9 @@ export const CorrectResponseMixin = <T extends AbstractConstructor<Interaction>>
         // this element, so only a document selector could see it. This attribute is on the clone
         // itself, which is what a shadow root can reach.
         this.setAttribute('answer-key', '');
+        // The clone has internals, so it carries the state too (CONTRACT.md §3). Only the new name:
+        // the clone never had `show-correct-response`, whose paint is the internal mode's outline.
+        setState(this._internals.states, 'answer-key', true, []);
       }
     }
 
@@ -265,10 +275,13 @@ export const CorrectResponseMixin = <T extends AbstractConstructor<Interaction>>
     }
 
     public toggleInternalCorrectResponse(show: boolean): void {
-      this._internals.states.delete('show-correct-response');
-      if (show && this.correctResponse) {
-        this._internals.states.add('show-correct-response');
-      }
+      // The host shows its key inline, next to the candidate's answer: `answer-key-shown`, not
+      // `answer-key`, which is what the clone (and a choice in the key) IS. `show-correct-response`
+      // is the old name, set for one major; `correct-response` was a choice's and never a host's
+      // (see `ChoiceCorrectionMixin`).
+      setState(this._internals.states, 'answer-key-shown', Boolean(show && this.correctResponse), [
+        'show-correct-response'
+      ]);
     }
 
     public toggleCandidateCorrection(show: boolean): void {

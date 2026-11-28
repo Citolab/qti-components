@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-item xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ssml="http://www.w3.org/2001/10/synthesis"
+  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd
+                      http://www.w3.org/2001/10/synthesis https://purl.imsglobal.org/spec/ssml/v1p1/schema/xsd/ssmlv1p1-core.xsd"
+  identifier="item-7" title="Wat weet ik nog? – Fotosynthese 7" adaptive="false"
+  time-dependent="false" xml:lang="nl">
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string" />
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>0</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>2</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-item-body>
+    <p> Hieronder staat een schema van de fotosynthese:</p>
+    <p>
+      <ssml:sub alias="plaats 1 plus plaats 2 geeft onder invloed van licht glucose plus zuurstof"><math
+          xmlns="http://www.w3.org/1998/Math/MathML"
+          alttext="plaats 1 plus plaats 2 geeft onder invloed van licht glucose plus zuurstof">
+          <mrow>
+            <mtext>(1)</mtext>
+            <mo>+</mo>
+            <mtext>(2)</mtext>
+            <mover>
+              <mo>⟶</mo>
+              <mtext>LICHT</mtext>
+            </mover>
+            <mtext>glucose</mtext>
+            <mo>+</mo>
+            <mtext>zuurstof</mtext>
+          </mrow>
+        </math></ssml:sub>
+    </p>
+    <qti-extended-text-interaction response-identifier="RESPONSE" expected-lines="6" data-score="2">
+      <qti-prompt>
+        <p>Vul de woorden in die er moeten staan op de plaatsen <ssml:sub alias="1 en 2">(1) en (2)</ssml:sub>
+        staan? </p>
+      </qti-prompt>
+    </qti-extended-text-interaction>
+    <qti-rubric-block view="scorer" use="scoring">
+      <qti-content-body>
+        <p>maximaal 2 punten:</p>
+        <ol>
+          <li>Plaats (1): <strong>koolstofdioxide</strong> (of CO2) — 1 punt</li>
+          <li>Plaats (2): <strong>water</strong> — 1 punt</li>
+        </ol>
+        <p>De volgorde mag ook
+        andersom: (1) water en (2) koolstofdioxide.</p>
+      </qti-content-body>
+    </qti-rubric-block>
+  </qti-item-body>
+</qti-assessment-item>

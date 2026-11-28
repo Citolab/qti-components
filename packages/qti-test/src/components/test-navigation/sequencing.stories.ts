@@ -24,11 +24,11 @@ import type { QtiSimpleChoice } from '@qti-components/interactions-core';
  * - A **branch rule** sits inside an item ref (or section, or test part) and, after that item, jumps
  *   *forward* to its `target`: an item ref, a section, a test part, or `EXIT_SECTION`,
  *   `EXIT_TESTPART`, `EXIT_TEST`.
- * - Both only apply in linear mode. Items passed over are announced with `cito-test-items-skipped`;
- *   running out of items (or `EXIT_TEST`) with `cito-test-end-reached`.
+ * - Both only apply in linear mode. Items passed over are announced with `qc-test-items-skipped`;
+ *   running out of items (or `EXIT_TEST`) with `qc-test-end-reached`.
  */
 const meta: Meta = {
-  title: 'test-navigation/Sequencing',
+  title: 'QTI Test/Navigation/Sequencing',
   component: 'qti-test',
   parameters: { testTimeout: 30000 }
 };
@@ -73,10 +73,10 @@ const activeItemRef = (canvasElement: HTMLElement) =>
   (canvasElement.querySelector('qti-test') as unknown as { sessionContext?: { navItemRefId?: string } }).sessionContext
     ?.navItemRefId;
 
-/** Records the ids announced by `cito-test-items-skipped`. */
+/** Records the ids announced by `qc-test-items-skipped`. */
 function collectSkipped(canvasElement: HTMLElement): string[] {
   const skipped: string[] = [];
-  canvasElement.addEventListener('cito-test-items-skipped', e => skipped.push(...(e as CustomEvent).detail.ids));
+  canvasElement.addEventListener('qc-test-items-skipped', e => skipped.push(...(e as CustomEvent).detail.ids));
   return skipped;
 }
 
@@ -146,13 +146,13 @@ export const BranchRuleDoesNotFire: StoryObj = {
  * Test: `ITM-choice` (branch rule → `EXIT_TEST` when SCORE is 1) → `ITM-text_entry`.
  *
  * A right answer ends the test: the test stays on the current item and announces
- * `cito-test-end-reached`, which is where a host shows its result screen.
+ * `qc-test-end-reached`, which is where a host shows its result screen.
  */
 export const BranchRuleExitsTest: StoryObj = {
   render: () => render('/assets/qti-test-package/assessment-linear-exit-test.xml'),
   play: async ({ canvasElement }) => {
     let ended = false;
-    canvasElement.addEventListener('cito-test-end-reached', () => (ended = true));
+    canvasElement.addEventListener('qc-test-end-reached', () => (ended = true));
     const skipped = collectSkipped(canvasElement);
 
     const next = await answerFirstItem(canvasElement, CORRECT);

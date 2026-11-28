@@ -100,8 +100,6 @@ const computedWith = (item: { index: number; score: number }): ComputedContext =
           {
             identifier: 'section-1',
             title: 'Section 1',
-            navigationMode: 'nonlinear',
-            submissionMode: 'individual',
             items: [{ identifier: 'ITEM-1', ...item }]
           }
         ]
@@ -120,7 +118,7 @@ describe('qti-assessment-item-ref template hook', () => {
       const itemRef = document.createElement('qti-assessment-item-ref');
       itemRef.identifier = 'ITEM-1';
       const connected = new Promise<void>(resolve => {
-        itemRef.addEventListener('qti-assessment-item-ref-connected', () => resolve(), { once: true });
+        itemRef.addEventListener('qc-item-ref-connected', () => resolve(), { once: true });
       });
       test.append(itemRef);
       await itemRef.updateComplete;

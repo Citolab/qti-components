@@ -1,0 +1,920 @@
+{
+  "testContext": {
+    "id": "checkmate-demo-2",
+    "navItemId": "item-8",
+    "items": [
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-1",
+        "href": "items/item-1.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "identifier",
+            "identifier": "RESPONSE",
+            "value": "B",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-2",
+        "href": "items/item-2.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "identifier",
+            "identifier": "RESPONSE",
+            "value": "B",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-3",
+        "href": "items/item-3.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "identifier",
+            "identifier": "RESPONSE",
+            "value": "D",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-4",
+        "href": "items/item-4.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "11",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "bladereb",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-5",
+        "href": "items/item-5.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "17",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "licht en zuurstof\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 1,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-6",
+        "href": "items/item-6.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "identifier",
+            "identifier": "RESPONSE",
+            "value": "A",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 1,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 2,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-7",
+        "href": "items/item-7.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "9",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "licht",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 2,
+            "defaultValue": "2"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-8",
+        "href": "items/item-8.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "8",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "zuurstof\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-9",
+        "href": "items/item-9.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "identifier",
+            "identifier": "RESPONSE",
+            "value": "B",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-10",
+        "href": "items/item-10.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "identifier",
+            "identifier": "RESPONSE",
+            "value": "C",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-11",
+        "href": "items/item-11.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "30",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "omdat ze licht nodig hebben\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-12",
+        "href": "items/item-12.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 3,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-13",
+        "href": "items/item-13.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "16",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "glucose\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 3,
+            "defaultValue": "3"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 2,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-14",
+        "href": "items/item-14.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 2,
+            "defaultValue": "2"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-15",
+        "href": "items/item-15.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "1",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      },
+      {
+        "outcomes": [
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": null
+          }
+        ],
+        "identifier": "item-16",
+        "href": "items/item-16.xml",
+        "variables": [
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "completionStatus",
+            "value": "completed",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "integer",
+            "identifier": "numAttempts",
+            "value": "46",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "string",
+            "identifier": "RESPONSE",
+            "value": "omdat ze het nodig hebben om te groeien\n",
+            "defaultValue": null
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "SCORE",
+            "value": 0,
+            "defaultValue": "0"
+          },
+          {
+            "cardinality": "single",
+            "baseType": "float",
+            "identifier": "MAXSCORE",
+            "value": 1,
+            "defaultValue": "1"
+          }
+        ]
+      }
+    ]
+  }
+}

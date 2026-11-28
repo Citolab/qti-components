@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0p1_v1p0.xsd" identifier="Gonneke-13-05-2026-test" title="Wat weet ik nog? – Fotosynthese">
+  <qti-test-part identifier="test-part-1" navigation-mode="nonlinear" submission-mode="simultaneous" data-navigation-entity="section">
+    <qti-assessment-section identifier="TEST-PART-1-SEC-1" visible="true" title="Wat weet ik nog? – Fotosynthese 1">
+      <qti-assessment-item-ref identifier="item-1" href="items/item-1.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-2" visible="true" title="Wat weet ik nog? – Fotosynthese 2">
+      <qti-assessment-item-ref identifier="item-2" href="items/item-2.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-3" visible="true" title="Wat weet ik nog? – Fotosynthese 3">
+      <qti-assessment-item-ref identifier="item-3" href="items/item-3.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-4" visible="true" title="Wat weet ik nog? – Fotosynthese 4" keep-together="true">
+      <qti-assessment-item-ref identifier="item-4" href="items/item-4.xml" />
+      <qti-assessment-item-ref identifier="item-5" href="items/item-5.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-5" visible="true" title="Wat weet ik nog? – Fotosynthese 6">
+      <qti-assessment-item-ref identifier="item-6" href="items/item-6.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-6" visible="true" title="Wat weet ik nog? – Fotosynthese 7">
+      <qti-assessment-item-ref identifier="item-7" href="items/item-7.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-7" visible="true" title="Wat weet ik nog? – Fotosynthese 8">
+      <qti-assessment-item-ref identifier="item-8" href="items/item-8.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-8" visible="true" title="Wat weet ik nog? – Fotosynthese 9">
+      <qti-assessment-item-ref identifier="item-9" href="items/item-9.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-9" visible="true" title="Wat weet ik nog? – Fotosynthese 10">
+      <qti-assessment-item-ref identifier="item-10" href="items/item-10.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-10" visible="true" title="Wat weet ik nog? – Fotosynthese 11">
+      <qti-assessment-item-ref identifier="item-11" href="items/item-11.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-11" visible="true" title="Wat weet ik nog? – Fotosynthese 12">
+      <qti-assessment-item-ref identifier="item-12" href="items/item-12.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-12" visible="true" title="Wat weet ik nog? – Fotosynthese 13">
+      <qti-assessment-item-ref identifier="item-13" href="items/item-13.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-13" visible="true" title="Wat weet ik nog? – Fotosynthese 14">
+      <qti-assessment-item-ref identifier="item-14" href="items/item-14.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-14" visible="true" title="Wat weet ik nog? – Fotosynthese 15">
+      <qti-assessment-item-ref identifier="item-15" href="items/item-15.xml" />
+    </qti-assessment-section>
+    <qti-assessment-section identifier="TEST-PART-1-SEC-15" visible="true" title="Wat weet ik nog? – Fotosynthese 16">
+      <qti-assessment-item-ref identifier="item-16" href="items/item-16.xml" />
+    </qti-assessment-section>
+  </qti-test-part>
+</qti-assessment-test>

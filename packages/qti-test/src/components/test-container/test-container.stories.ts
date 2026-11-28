@@ -5,6 +5,7 @@ import { html } from 'lit';
 import { qtiTransformTest } from '@qti-components/transformers';
 
 import { getAssessmentItemFromTestContainerByDataTitle } from '../../../../../tools/testing/test-utils';
+import { SHOWCASE_TEST } from '../qti-test/showcase.fixtures';
 
 import type { TestContainer } from './test-container';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
@@ -14,8 +15,9 @@ const { events, args, argTypes, template } = getStorybookHelpers('test-container
 type Story = StoryObj<TestContainer & typeof args>;
 
 const meta: Meta<TestContainer & { 'test-url': string }> = {
+  title: 'QTI Test/Building blocks/test-container',
   component: 'test-container',
-  args: { ...args, 'test-url': '/assets/qti-conformance/Basic/T4-T7/assessment.xml' },
+  args: { ...args, 'test-url': SHOWCASE_TEST },
   argTypes,
   parameters: {
     actions: {
@@ -31,7 +33,10 @@ export const TestURL: Story = {
   },
   play: async ({ canvasElement }) => {
     //getAssessmentItemFromTestContainerByDataTitle
-    const testElement = await getAssessmentItemFromTestContainerByDataTitle(canvasElement, 'T1 - Test Entry - Item 1');
+    const testElement = await getAssessmentItemFromTestContainerByDataTitle(
+      canvasElement,
+      'Multiple choice, one answer'
+    );
     expect(testElement).toBeInTheDocument();
   }
 };

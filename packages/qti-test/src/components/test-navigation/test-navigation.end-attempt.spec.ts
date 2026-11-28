@@ -46,12 +46,13 @@ describe('TestNavigation event handlers without a loaded test', () => {
   };
 
   /**
-   * Stand in for the loaded `<qti-assessment-test>`: an element holding one
-   * item-ref, whose `assessmentItem` is the given stub — or absent, for the case
-   * where the ref exists but its item has not rendered yet.
+   * Stand in for the loaded `<qti-assessment-test>`: an unupgraded element of
+   * that name (the test model reads its markup) holding one item-ref, whose
+   * `assessmentItem` is the given stub — or absent, for the case where the ref
+   * exists but its item has not rendered yet.
    */
   const connectTest = (nav: TestNavigation, assessmentItem?: unknown): void => {
-    const test = document.createElement('div');
+    const test = document.createElementNS('http://www.imsglobal.org/xsd/imsqtiasi_v3p0', 'qti-assessment-test');
     test.innerHTML = `<qti-assessment-item-ref identifier="item1"></qti-assessment-item-ref>`;
     if (assessmentItem !== undefined) {
       // `assessmentItem` is a getter on the real element, so it has to be
@@ -61,16 +62,14 @@ describe('TestNavigation event handlers without a loaded test', () => {
         configurable: true
       });
     }
-    nav.dispatchEvent(
-      new CustomEvent('qti-assessment-test-connected', { detail: test as unknown as QtiAssessmentTest })
-    );
+    nav.dispatchEvent(new CustomEvent('qc-test-loaded', { detail: test as unknown as QtiAssessmentTest }));
   };
 
   const setSessionContext = (nav: TestNavigation): void => {
     (nav as unknown as { _sessionContext: unknown })._sessionContext = { navItemRefId: 'item1' };
   };
 
-  const candidateEvents = ['test-end-attempt', 'test-update-outcome-variable'];
+  const candidateEvents = ['qc-test-end-attempt', 'qc-test-update-outcome'];
 
   it.each(candidateEvents)('handles %s without a connected test', async eventName => {
     const nav = await mountNavigation();
@@ -114,14 +113,14 @@ describe('TestNavigation event handlers without a loaded test', () => {
    * session context, so it has its own way of finding nothing: an interaction
    * change that did not come from inside an assessment item.
    */
-  it('handles qti-interaction-changed raised outside an assessment item while autoscoring', async () => {
+  it('handles qc-item-response-changed raised outside an assessment item while autoscoring', async () => {
     const nav = await mountNavigation();
     nav.autoScoreItems = true;
     setSessionContext(nav);
     connectTest(nav, { processResponse: vi.fn() });
     await nav.updateComplete;
 
-    nav.dispatchEvent(new CustomEvent('qti-interaction-changed', { detail: {} }));
+    nav.dispatchEvent(new CustomEvent('qc-item-response-changed', { detail: {} }));
     await nav.updateComplete;
 
     expect(onError).not.toHaveBeenCalled();
@@ -134,7 +133,7 @@ describe('TestNavigation event handlers without a loaded test', () => {
     connectTest(nav, { processResponse });
     await nav.updateComplete;
 
-    nav.dispatchEvent(new CustomEvent('test-end-attempt'));
+    nav.dispatchEvent(new CustomEvent('qc-test-end-attempt'));
     await nav.updateComplete;
 
     expect(processResponse).toHaveBeenCalledWith(true, false);
@@ -149,7 +148,7 @@ describe('TestNavigation event handlers without a loaded test', () => {
     await nav.updateComplete;
 
     nav.dispatchEvent(
-      new CustomEvent('test-update-outcome-variable', {
+      new CustomEvent('qc-test-update-outcome', {
         detail: { assessmentItemRefId: 'item1', outcomeVariableId: 'SCORE', value: '1' }
       })
     );

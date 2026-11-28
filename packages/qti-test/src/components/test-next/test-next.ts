@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -7,6 +7,7 @@ import { computedContext } from '@qti-components/base';
 
 import * as styles from '../styles';
 import { dispatchPublic } from '../../public-events';
+import { itemsInOrder } from '../../items-in-order';
 
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 
@@ -39,20 +40,7 @@ export class TestNext extends LitElement {
     }
   }
 
-  static override styles = css`
-    :host {
-      ${styles.btn};
-    }
-    :host(:hover:not([disabled])) {
-      ${styles.btnInteractive};
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+  static override styles = [styles.button, styles.buttonPrimary];
   #internals: ElementInternals;
 
   constructor() {
@@ -77,7 +65,7 @@ export class TestNext extends LitElement {
     if (!this.computedContext) return;
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     if (!testPart) return;
-    this.sectionItems = testPart.sections.flatMap(section => section.items);
+    this.sectionItems = itemsInOrder(testPart);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
     this.checkDisabled();
   }
@@ -85,12 +73,9 @@ export class TestNext extends LitElement {
   checkDisabled() {
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     if (!testPart) return;
-    const activeSection = testPart.sections.find(s => s.active);
-    const navigationMode = activeSection?.navigationMode || testPart.navigationMode;
-    const submissionMode = activeSection?.submissionMode || testPart.submissionMode;
     const activeItem = this.sectionItems[this.itemIndex];
 
-    const isLinearIndividual = navigationMode === 'linear' && submissionMode === 'individual';
+    const isLinearIndividual = testPart.navigationMode === 'linear' && testPart.submissionMode === 'individual';
 
     // In linear individual mode the candidate may only advance once they are
     // "done" with the active item: they reached the optimal outcome (best score),
@@ -105,11 +90,11 @@ export class TestNext extends LitElement {
   }
 
   protected _requestItem(identifier: string): void {
-    dispatchPublic(this, 'cito-test-navigate', { type: 'item', id: identifier });
+    dispatchPublic(this, 'qc-test-navigate', { type: 'item', id: identifier });
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return styles.control;
   }
 }
 

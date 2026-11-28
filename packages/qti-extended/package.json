@@ -1,0 +1,68 @@
+{
+  "name": "@qti-components/extended",
+  "description": "Test plugins for @citolab/qti-components: navigation links, end attempt, scoring, print and view helpers, bookmark, text-to-speech, zoom and a character sheet",
+  "version": "1.0.0-next.0",
+  "author": "",
+  "dependencies": {
+    "@qti-components/utilities": "workspace:^"
+  },
+  "devDependencies": {
+    "@citolab/qti-components": "workspace:^",
+    "@heximal/templates": "catalog:",
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
+  },
+  "keywords": [
+    "qti",
+    "test",
+    "plugins"
+  ],
+  "license": "GPL-3.0-only",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
+    },
+    "./register": {
+      "types": "./dist/register.d.ts",
+      "import": "./dist/register.js"
+    },
+    "./react": {
+      "types": "./dist/qti-extended-jsx.d.ts",
+      "default": "./dist/qti-extended-jsx.js"
+    }
+  },
+  "peerDependencies": {
+    "@citolab/qti-components": "workspace:^",
+    "@heximal/templates": "catalog:",
+    "@lit/context": "catalog:",
+    "lit": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "attw": "attw --profile esm-only --pack",
+    "build": "pnpm run clean && run-s cem:react-types cem:react-types:patch-ref build:tsc",
+    "build:tsc": "tsc --paths null --noEmit false",
+    "cem:react-types": "pnpm -C ../.. run cem && node -e \"require('fs').writeFileSync('dist/qti-extended-jsx.js','export {};\\n')\"",
+    "cem:react-types:patch-ref": "node ../../tools/build/patch-jsx-react-ref.mjs dist/qti-extended-jsx.d.ts",
+    "clean": "rm -rf dist"
+  },
+  "sideEffects": true,
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Citolab/qti-components.git",
+    "directory": "packages/qti-extended"
+  }
+}

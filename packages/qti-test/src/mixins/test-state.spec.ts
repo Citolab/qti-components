@@ -10,7 +10,7 @@ import type { QtiAssessmentItemRef } from '../components/qti-assessment-item-ref
 import type { QtiTestState } from '../types/qti-test-state';
 
 /**
- * `qtiTest.state` and `qti-state-changed` are the whole persistence contract for a host: listen,
+ * `qtiTest.state` and `qc-test-state-changed` are the whole persistence contract for a host: listen,
  * store, and assign the stored value back to resume. These specs hold that contract to what a
  * host would actually do — assign before anything has loaded, or after — and to what it must
  * never see: an empty state emitted mid-load, or the answer key in what it stores.
@@ -88,7 +88,7 @@ describe('qti-test state', () => {
     render(assessmentTest, host);
     qtiTest = host.querySelector('qti-test') as QtiTest;
     emitted = [];
-    qtiTest.addEventListener('qti-state-changed', e => emitted.push(e.detail));
+    qtiTest.addEventListener('qc-test-state-changed', e => emitted.push(e.detail));
   });
 
   afterEach(() => host.remove());
@@ -149,7 +149,7 @@ describe('qti-test state', () => {
       const requested: unknown[] = [];
       // Captured and stopped at the target: the real handler would fetch the item's href.
       qtiTest.addEventListener(
-        'qti-request-navigation',
+        'qc-test-navigate',
         (e: CustomEvent) => {
           requested.push(e.detail);
           e.stopImmediatePropagation();
@@ -179,19 +179,68 @@ describe('qti-test state', () => {
       expect(qtiTest.sessionContext.navSectionId).toBeUndefined();
     });
 
-    it('ignores a state of another version', () => {
+    it('drops, with a warning, the answers for an item the test does not present', () => {
+      // A 9.x state was saved when qti-selection was ignored: it can hold answers for an item the
+      // seeded selection now leaves out (roadmap 1 T4, plans/host-api.md → Decided).
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const before = qtiTest.state;
+      const stored = savedState();
+      stored.test.items.push({ identifier: 'NOT-SELECTED', variables: [{ identifier: 'RESPONSE', value: 'C' }] });
 
-      qtiTest.state = { ...savedState(), version: 2 } as unknown as QtiTestState;
+      qtiTest.state = stored;
+
+      expect(qtiTest.state.test.items.map(i => i.identifier)).not.toContain('NOT-SELECTED');
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('NOT-SELECTED'));
+      warn.mockRestore();
+    });
+
+    it('ignores a state of another version, and reports it with qc-test-state-refused', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const refused: unknown[] = [];
+      host.addEventListener('qc-test-state-refused', e => refused.push(e.detail));
+      const before = qtiTest.state;
+      const unreadable = { ...savedState(), version: 2 };
+
+      qtiTest.state = unreadable as unknown as QtiTestState;
 
       expect(qtiTest.state).toEqual(before);
       expect(warn).toHaveBeenCalled();
+      expect(refused).toEqual([{ message: expect.stringContaining('version 1'), state: unreadable }]);
       warn.mockRestore();
     });
   });
 
-  describe('qti-state-changed', () => {
+  describe('a state that cannot be read, assigned before the test loads', () => {
+    let refused: unknown[];
+    let warn: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      refused = [];
+      host.addEventListener('qc-test-state-refused', e => refused.push((e as CustomEvent).detail));
+    });
+    afterEach(() => warn.mockRestore());
+
+    it('is reported once the test has loaded, where a host listening on the page hears it', async () => {
+      qtiTest.state = { not: 'a state' } as unknown as QtiTestState;
+      expect(refused).toEqual([]);
+
+      await connect();
+
+      expect(refused).toEqual([{ message: expect.any(String), state: { not: 'a state' } }]);
+      expect(variable(qtiTest, 'ITEM-1', 'completionStatus')?.value).toBe('not_attempted');
+    });
+
+    it('leaves a state assigned earlier that could be read in effect', async () => {
+      qtiTest.state = savedState();
+      qtiTest.state = null as unknown as QtiTestState;
+
+      await connect();
+
+      expect(refused).toHaveLength(1);
+      expect(variable(qtiTest, 'ITEM-1', 'RESPONSE')?.value).toBe('B');
+    });
+  });
+
+  describe('qc-test-state-changed', () => {
     beforeEach(connect);
 
     it('emits when the candidate answers, without declaration metadata or the answer key', async () => {

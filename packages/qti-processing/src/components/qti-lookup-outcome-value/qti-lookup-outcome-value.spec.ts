@@ -349,9 +349,11 @@ describe('qti-lookup-outcome-value', () => {
 
   it('writes the match table target onto the outcome variable', () => {
     const assessmentItem = setupMatchTableItem();
+    // Adaptive, so the run keeps RAW_SCORE instead of resetting it to its default first.
+    assessmentItem.setAttribute('adaptive', 'true');
     assessmentItem.updateOutcomeVariable('RAW_SCORE', '1');
-    const lookupOutcomeValue = assessmentItem!.querySelector('qti-lookup-outcome-value') as QtiLookupOutcomeValue;
-    lookupOutcomeValue.process();
+    // A rule's write lands only during a processing run.
+    assessmentItem.processResponse(false);
 
     expect(assessmentItem.variables.find(v => v.identifier === 'GRADE').value).toBe('PASS');
   });

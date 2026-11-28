@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { consume } from '@lit/context';
 
@@ -7,6 +7,7 @@ import { computedContext } from '@qti-components/base';
 
 import * as styles from '../styles';
 import { dispatchPublic } from '../../public-events';
+import { itemsInOrder } from '../../items-in-order';
 
 import type { ComputedContext, ComputedItem } from '@qti-components/base';
 
@@ -39,20 +40,7 @@ export class TestPrev extends LitElement {
     }
   }
 
-  static override styles = css`
-    :host {
-      ${styles.btn};
-    }
-    :host(:hover:not([disabled])) {
-      ${styles.btnInteractive};
-    }
-    :host(:focus-visible) {
-      ${styles.focusRing};
-    }
-    :host([disabled]) {
-      ${styles.dis};
-    }
-  `;
+  static override styles = styles.button;
 
   constructor() {
     super();
@@ -67,26 +55,25 @@ export class TestPrev extends LitElement {
     if (!this.computedContext) return;
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
     if (!testPart) return;
-    this.sectionItems = testPart.sections.flatMap(section => section.items);
+    this.sectionItems = itemsInOrder(testPart);
     this.itemIndex = this.sectionItems.findIndex(item => item.active);
     this.checkDisabled();
   }
 
   checkDisabled() {
     const testPart = this.computedContext?.testParts.find(testPart => testPart.active);
-    const activeSection = testPart?.sections.find(s => s.active);
-    const navigationMode = activeSection?.navigationMode || testPart?.navigationMode || 'nonlinear';
+    const navigationMode = testPart?.navigationMode ?? 'nonlinear';
 
     this._internalDisabled =
       navigationMode === 'linear' || !this.computedContext || this.itemIndex === 0 || this.itemIndex === -1;
   }
 
   protected _requestItem(identifier: string): void {
-    dispatchPublic(this, 'cito-test-navigate', { type: 'item', id: identifier });
+    dispatchPublic(this, 'qc-test-navigate', { type: 'item', id: identifier });
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return styles.control;
   }
 }
 

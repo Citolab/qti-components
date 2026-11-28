@@ -90,8 +90,8 @@ describe('an occupied drop target says so', () => {
     // the shadow tree that declares it. The state is the only cross-interaction hook, and it is a
     // state rather than an attribute so a host whose mutation observer reverts unknown attributes
     // (ProseMirror, in the editor) can carry the same marker.
-    expect(
-      gaps.every(g => (g as HTMLElement & { internals: ElementInternals }).internals.states.has('droppable'))
-    ).toBe(true);
+    expect(gaps.every(g => (g as HTMLElement & { internals: ElementInternals }).internals.states.has('drop'))).toBe(
+      true
+    );
   });
 });

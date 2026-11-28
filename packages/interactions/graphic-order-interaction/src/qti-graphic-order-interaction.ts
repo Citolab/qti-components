@@ -20,6 +20,8 @@ type HotspotChoice = Choice & { order: number | null };
  * @slot - Default slot for the image and hotspot choices.
  *
  * @csspart message - Live validation message region (role="alert").
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-hotspot-choice') {
   static override styles: CSSResultGroup = styles;
@@ -71,10 +73,15 @@ export class QtiGraphicOrderInteraction extends ChoicesMixin(Interaction, 'qti-h
     }
 
     this.response = ordered;
-
-    this.validate();
-    this.reportValidity();
     this.saveResponse(this.response);
+
+    // After the update that applies it: validate counts the choices' checked states, which the
+    // response watcher sets during that update. Validating here, before it, judged the previous
+    // pick, so the click that met the minimum still left the interaction invalid.
+    void this.updateComplete.then(() => {
+      this.validate();
+      this.reportValidity({ trigger: 'change' });
+    });
   }
 
   /** The response as the ordered identifier list this interaction always treats it as. */

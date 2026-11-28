@@ -176,6 +176,11 @@ const ciBootstrap = `
  *
  * Messages are sent to all parent windows to support embedding scenarios like Storybook
  * where window.top might not be the actual host application.
+ *
+ * No parts: the interaction renders inside an iframe it owns, and the iframe is not themed.
+ *
+ * @cssstate disabled - The interaction is switched off.
+ * @cssstate readonly - The interaction is frozen: it shows its value and takes no input.
  */
 
 export class QtiCustomInteraction extends Interaction {

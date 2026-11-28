@@ -1,0 +1,482 @@
+{
+  "description": "parseDeliveryState: a stored DeliveryState in, read back unchanged or refused with the error named here. createDeliveryState: the options in (with a fixed clock), the fresh state out. Every runtime, a .NET port included, must accept and refuse exactly these.",
+  "create": [
+    {
+      "name": "no order: nothing selected",
+      "options": {
+        "now": 0,
+        "seed": null
+      },
+      "state": {
+        "version": 1,
+        "seed": null,
+        "startedAt": 0,
+        "current": null,
+        "order": [],
+        "plugins": {},
+        "items": {}
+      }
+    },
+    {
+      "name": "an order: one instance per item-ref, in that order",
+      "options": {
+        "now": 1700000000000,
+        "seed": "seed-1",
+        "order": ["item-2", "item-1"]
+      },
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": null,
+        "order": ["item-2", "item-1"],
+        "plugins": {},
+        "items": {
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "an item-ref listed again is its next occurrence",
+      "options": {
+        "now": 0,
+        "seed": "s",
+        "order": ["item-1", "item-2", "item-1"]
+      },
+      "state": {
+        "version": 1,
+        "seed": "s",
+        "startedAt": 0,
+        "current": null,
+        "order": ["item-1", "item-2", "item-1#2"],
+        "plugins": {},
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "the rendered test's instance ids: a clone keeps its occurrence, even before its original",
+      "options": {
+        "now": 0,
+        "seed": "s",
+        "order": ["item-2", "item-1#2", "item-1", "item-1#3"]
+      },
+      "state": {
+        "version": 1,
+        "seed": "s",
+        "startedAt": 0,
+        "current": null,
+        "order": ["item-2", "item-1#2", "item-1", "item-1#3"],
+        "plugins": {},
+        "items": {
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          },
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-1#3": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "a cloned subsection: its items' clones, by instance id",
+      "options": {
+        "now": 0,
+        "seed": "s",
+        "order": ["item-4#2", "item-5#2", "item-4", "item-5"]
+      },
+      "state": {
+        "version": 1,
+        "seed": "s",
+        "startedAt": 0,
+        "current": null,
+        "order": ["item-4#2", "item-5#2", "item-4", "item-5"],
+        "plugins": {},
+        "items": {
+          "item-4#2": {
+            "itemRefIdentifier": "item-4",
+            "occurrence": 2
+          },
+          "item-5#2": {
+            "itemRefIdentifier": "item-5",
+            "occurrence": 2
+          },
+          "item-4": {
+            "itemRefIdentifier": "item-4",
+            "occurrence": 1
+          },
+          "item-5": {
+            "itemRefIdentifier": "item-5",
+            "occurrence": 1
+          }
+        }
+      }
+    }
+  ],
+  "accepted": [
+    {
+      "name": "a state on an item, with a clone and plugin entries",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "before the first navigation, no seed",
+      "state": {
+        "version": 1,
+        "seed": null,
+        "startedAt": 1700000000000,
+        "current": null,
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {},
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      }
+    }
+  ],
+  "refused": [
+    {
+      "name": "not an object",
+      "state": null,
+      "error": "TypeError"
+    },
+    {
+      "name": "an array",
+      "state": [],
+      "error": "TypeError"
+    },
+    {
+      "name": "another version",
+      "state": {
+        "version": 2,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "RangeError"
+    },
+    {
+      "name": "no version",
+      "state": {
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "RangeError"
+    },
+    {
+      "name": "no order (a T0 state)",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "no plugins",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "an order that names an instance items does not have",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-9"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "current not in items",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-9",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "a seed that is not a string",
+      "state": {
+        "version": 1,
+        "seed": 42,
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "no startedAt",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "an item without an occurrence",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": {
+          "bookmarks": ["item-1"]
+        },
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1"
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    },
+    {
+      "name": "plugins as an array",
+      "state": {
+        "version": 1,
+        "seed": "seed-1",
+        "startedAt": 1700000000000,
+        "current": "item-2",
+        "order": ["item-2", "item-1", "item-1#2"],
+        "plugins": [],
+        "items": {
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          }
+        }
+      },
+      "error": "TypeError"
+    }
+  ]
+}

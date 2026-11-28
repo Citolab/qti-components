@@ -1,0 +1,559 @@
+{
+  "description": "buildTestModel: a qti-assessment-test document in, the TestModel out. Session control inherits per attribute (item-ref, enclosing sections, test part, then the defaults; implementation guide §4.4.2); a section lists its item-refs and subsections in one list, in document order. Every runtime, a .NET port included, must give exactly these models.",
+  "testModel": [
+    {
+      "name": "no session control anywhere: the defaults, max-attempts 1",
+      "xml": "<qti-assessment-test xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" identifier=\"t\" title=\"Defaults\"><qti-test-part identifier=\"p\" navigation-mode=\"nonlinear\" submission-mode=\"individual\"><qti-assessment-section identifier=\"s\" title=\"S\" visible=\"true\"><qti-assessment-item-ref identifier=\"i1\" href=\"i1.xml\"/></qti-assessment-section></qti-test-part></qti-assessment-test>",
+      "model": {
+        "identifier": "t",
+        "title": "Defaults",
+        "testParts": [
+          {
+            "identifier": "p",
+            "navigationMode": "nonlinear",
+            "submissionMode": "individual",
+            "sessionControl": {
+              "maxAttempts": 1,
+              "showFeedback": false,
+              "allowReview": true,
+              "showSolution": false,
+              "allowComment": false,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "s",
+                "title": "S",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 1,
+                  "showFeedback": false,
+                  "allowReview": true,
+                  "showSolution": false,
+                  "allowComment": false,
+                  "allowSkipping": true,
+                  "validateResponses": false
+                },
+                "content": [
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i1",
+                    "href": "i1.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "per attribute: an item-ref that declares only show-feedback keeps its section's max-attempts and show-solution",
+      "xml": "<qti-assessment-test xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" identifier=\"t\" title=\"Per attribute\"><qti-test-part identifier=\"p\" navigation-mode=\"linear\" submission-mode=\"individual\"><qti-item-session-control max-attempts=\"0\" allow-comment=\"true\"/><qti-assessment-section identifier=\"s\" title=\"S\" visible=\"true\"><qti-item-session-control max-attempts=\"3\" show-solution=\"true\"/><qti-assessment-item-ref identifier=\"i1\" href=\"i1.xml\"><qti-item-session-control show-feedback=\"true\"/></qti-assessment-item-ref><qti-assessment-item-ref identifier=\"i2\" href=\"i2.xml\"/></qti-assessment-section></qti-test-part></qti-assessment-test>",
+      "model": {
+        "identifier": "t",
+        "title": "Per attribute",
+        "testParts": [
+          {
+            "identifier": "p",
+            "navigationMode": "linear",
+            "submissionMode": "individual",
+            "sessionControl": {
+              "maxAttempts": 0,
+              "showFeedback": false,
+              "allowReview": true,
+              "showSolution": false,
+              "allowComment": true,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "s",
+                "title": "S",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 3,
+                  "showFeedback": false,
+                  "allowReview": true,
+                  "showSolution": true,
+                  "allowComment": true,
+                  "allowSkipping": true,
+                  "validateResponses": false
+                },
+                "content": [
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i1",
+                    "href": "i1.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 3,
+                      "showFeedback": true,
+                      "allowReview": true,
+                      "showSolution": true,
+                      "allowComment": true,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {
+                      "showFeedback": true
+                    }
+                  },
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i2",
+                    "href": "i2.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 3,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": true,
+                      "allowComment": true,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "nested sections: the inner section inherits from the outer one, and each lists only its own item-refs",
+      "xml": "<qti-assessment-test xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" identifier=\"t\" title=\"Nested\"><qti-test-part identifier=\"p\" navigation-mode=\"nonlinear\" submission-mode=\"individual\"><qti-assessment-section identifier=\"outer\" title=\"Outer\" visible=\"true\"><qti-item-session-control allow-skipping=\"false\" validate-responses=\"true\"/><qti-assessment-item-ref identifier=\"i1\" href=\"i1.xml\"/><qti-assessment-section identifier=\"inner\" title=\"Inner\" visible=\"false\"><qti-assessment-item-ref identifier=\"i2\" href=\"i2.xml\"/><qti-assessment-item-ref identifier=\"i3\" href=\"i3.xml\"><qti-item-session-control allow-skipping=\"true\"/></qti-assessment-item-ref></qti-assessment-section></qti-assessment-section></qti-test-part></qti-assessment-test>",
+      "model": {
+        "identifier": "t",
+        "title": "Nested",
+        "testParts": [
+          {
+            "identifier": "p",
+            "navigationMode": "nonlinear",
+            "submissionMode": "individual",
+            "sessionControl": {
+              "maxAttempts": 1,
+              "showFeedback": false,
+              "allowReview": true,
+              "showSolution": false,
+              "allowComment": false,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "outer",
+                "title": "Outer",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 1,
+                  "showFeedback": false,
+                  "allowReview": true,
+                  "showSolution": false,
+                  "allowComment": false,
+                  "allowSkipping": false,
+                  "validateResponses": true
+                },
+                "content": [
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i1",
+                    "href": "i1.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": false,
+                      "validateResponses": true
+                    },
+                    "declaredSessionControl": {}
+                  },
+                  {
+                    "kind": "section",
+                    "identifier": "inner",
+                    "title": "Inner",
+                    "visible": false,
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": false,
+                      "validateResponses": true
+                    },
+                    "content": [
+                      {
+                        "kind": "itemRef",
+                        "identifier": "i2",
+                        "href": "i2.xml",
+                        "categories": [],
+                        "sessionControl": {
+                          "maxAttempts": 1,
+                          "showFeedback": false,
+                          "allowReview": true,
+                          "showSolution": false,
+                          "allowComment": false,
+                          "allowSkipping": false,
+                          "validateResponses": true
+                        },
+                        "declaredSessionControl": {}
+                      },
+                      {
+                        "kind": "itemRef",
+                        "identifier": "i3",
+                        "href": "i3.xml",
+                        "categories": [],
+                        "sessionControl": {
+                          "maxAttempts": 1,
+                          "showFeedback": false,
+                          "allowReview": true,
+                          "showSolution": false,
+                          "allowComment": false,
+                          "allowSkipping": true,
+                          "validateResponses": true
+                        },
+                        "declaredSessionControl": {
+                          "allowSkipping": true
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "two parts, xs:boolean 1 and 0, categories: each part resolves on its own",
+      "xml": "<qti-assessment-test xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" identifier=\"t\" title=\"Two parts\"><qti-test-part identifier=\"p1\" navigation-mode=\"linear\" submission-mode=\"simultaneous\"><qti-item-session-control show-feedback=\"1\" allow-review=\"0\"/><qti-assessment-section identifier=\"s1\" title=\"S1\" visible=\"true\"><qti-assessment-item-ref identifier=\"i1\" href=\"items/i1.xml\" category=\" info  intro \"/></qti-assessment-section></qti-test-part><qti-test-part identifier=\"p2\" navigation-mode=\"nonlinear\" submission-mode=\"individual\"><qti-assessment-section identifier=\"s2\" title=\"S2\" visible=\"true\"><qti-assessment-item-ref identifier=\"i2\" href=\"items/i2.xml\"/></qti-assessment-section></qti-test-part></qti-assessment-test>",
+      "model": {
+        "identifier": "t",
+        "title": "Two parts",
+        "testParts": [
+          {
+            "identifier": "p1",
+            "navigationMode": "linear",
+            "submissionMode": "simultaneous",
+            "sessionControl": {
+              "maxAttempts": 1,
+              "showFeedback": true,
+              "allowReview": false,
+              "showSolution": false,
+              "allowComment": false,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "s1",
+                "title": "S1",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 1,
+                  "showFeedback": true,
+                  "allowReview": false,
+                  "showSolution": false,
+                  "allowComment": false,
+                  "allowSkipping": true,
+                  "validateResponses": false
+                },
+                "content": [
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i1",
+                    "href": "items/i1.xml",
+                    "categories": ["info", "intro"],
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": true,
+                      "allowReview": false,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "identifier": "p2",
+            "navigationMode": "nonlinear",
+            "submissionMode": "individual",
+            "sessionControl": {
+              "maxAttempts": 1,
+              "showFeedback": false,
+              "allowReview": true,
+              "showSolution": false,
+              "allowComment": false,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "s2",
+                "title": "S2",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 1,
+                  "showFeedback": false,
+                  "allowReview": true,
+                  "showSolution": false,
+                  "allowComment": false,
+                  "allowSkipping": true,
+                  "validateResponses": false
+                },
+                "content": [
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i2",
+                    "href": "items/i2.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "a subsection before the outer section's own item-ref: content keeps document order",
+      "xml": "<qti-assessment-test xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" identifier=\"t\" title=\"Subsection first\"><qti-test-part identifier=\"p\" navigation-mode=\"nonlinear\" submission-mode=\"individual\"><qti-assessment-section identifier=\"outer\" title=\"Outer\" visible=\"true\"><qti-assessment-section identifier=\"inner\" title=\"Inner\" visible=\"true\"><qti-assessment-item-ref identifier=\"i1\" href=\"i1.xml\"/></qti-assessment-section><qti-assessment-item-ref identifier=\"i2\" href=\"i2.xml\"/></qti-assessment-section></qti-test-part></qti-assessment-test>",
+      "model": {
+        "identifier": "t",
+        "title": "Subsection first",
+        "testParts": [
+          {
+            "identifier": "p",
+            "navigationMode": "nonlinear",
+            "submissionMode": "individual",
+            "sessionControl": {
+              "maxAttempts": 1,
+              "showFeedback": false,
+              "allowReview": true,
+              "showSolution": false,
+              "allowComment": false,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "outer",
+                "title": "Outer",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 1,
+                  "showFeedback": false,
+                  "allowReview": true,
+                  "showSolution": false,
+                  "allowComment": false,
+                  "allowSkipping": true,
+                  "validateResponses": false
+                },
+                "content": [
+                  {
+                    "kind": "section",
+                    "identifier": "inner",
+                    "title": "Inner",
+                    "visible": true,
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "content": [
+                      {
+                        "kind": "itemRef",
+                        "identifier": "i1",
+                        "href": "i1.xml",
+                        "categories": [],
+                        "sessionControl": {
+                          "maxAttempts": 1,
+                          "showFeedback": false,
+                          "allowReview": true,
+                          "showSolution": false,
+                          "allowComment": false,
+                          "allowSkipping": true,
+                          "validateResponses": false
+                        },
+                        "declaredSessionControl": {}
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i2",
+                    "href": "i2.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 1,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "a subsection between item-refs: content keeps document order, and session control still inherits per level",
+      "xml": "<qti-assessment-test xmlns=\"http://www.imsglobal.org/xsd/imsqtiasi_v3p0\" identifier=\"t\" title=\"Interleaved\"><qti-test-part identifier=\"p\" navigation-mode=\"linear\" submission-mode=\"individual\"><qti-assessment-section identifier=\"outer\" title=\"Outer\" visible=\"true\"><qti-item-session-control max-attempts=\"2\"/><qti-assessment-item-ref identifier=\"i1\" href=\"i1.xml\"/><qti-assessment-section identifier=\"inner\" title=\"Inner\" visible=\"true\"><qti-item-session-control show-solution=\"true\"/><qti-assessment-item-ref identifier=\"i2\" href=\"i2.xml\"/></qti-assessment-section><qti-assessment-item-ref identifier=\"i3\" href=\"i3.xml\"/></qti-assessment-section></qti-test-part></qti-assessment-test>",
+      "model": {
+        "identifier": "t",
+        "title": "Interleaved",
+        "testParts": [
+          {
+            "identifier": "p",
+            "navigationMode": "linear",
+            "submissionMode": "individual",
+            "sessionControl": {
+              "maxAttempts": 1,
+              "showFeedback": false,
+              "allowReview": true,
+              "showSolution": false,
+              "allowComment": false,
+              "allowSkipping": true,
+              "validateResponses": false
+            },
+            "sections": [
+              {
+                "kind": "section",
+                "identifier": "outer",
+                "title": "Outer",
+                "visible": true,
+                "sessionControl": {
+                  "maxAttempts": 2,
+                  "showFeedback": false,
+                  "allowReview": true,
+                  "showSolution": false,
+                  "allowComment": false,
+                  "allowSkipping": true,
+                  "validateResponses": false
+                },
+                "content": [
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i1",
+                    "href": "i1.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 2,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  },
+                  {
+                    "kind": "section",
+                    "identifier": "inner",
+                    "title": "Inner",
+                    "visible": true,
+                    "sessionControl": {
+                      "maxAttempts": 2,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": true,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "content": [
+                      {
+                        "kind": "itemRef",
+                        "identifier": "i2",
+                        "href": "i2.xml",
+                        "categories": [],
+                        "sessionControl": {
+                          "maxAttempts": 2,
+                          "showFeedback": false,
+                          "allowReview": true,
+                          "showSolution": true,
+                          "allowComment": false,
+                          "allowSkipping": true,
+                          "validateResponses": false
+                        },
+                        "declaredSessionControl": {}
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "itemRef",
+                    "identifier": "i3",
+                    "href": "i3.xml",
+                    "categories": [],
+                    "sessionControl": {
+                      "maxAttempts": 2,
+                      "showFeedback": false,
+                      "allowReview": true,
+                      "showSolution": false,
+                      "allowComment": false,
+                      "allowSkipping": true,
+                      "validateResponses": false
+                    },
+                    "declaredSessionControl": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

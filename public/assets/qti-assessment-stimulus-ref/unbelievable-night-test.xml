@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qti-assessment-test xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" identifier="unbelievable-night-test" title="An Unbelievable Night">
+  <qti-test-part identifier="part-1" navigation-mode="nonlinear" submission-mode="individual">
+    <qti-assessment-section identifier="reading" title="An Unbelievable Night" visible="true">
+      <qti-assessment-item-ref identifier="unbelievable-night-q1" href="unbelievable-night-q1.xml"></qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="unbelievable-night-q2" href="unbelievable-night-q2.xml"></qti-assessment-item-ref>
+      <qti-assessment-item-ref identifier="unbelievable-night-q3" href="unbelievable-night-q3.xml"></qti-assessment-item-ref>
+    </qti-assessment-section>
+  </qti-test-part>
+</qti-assessment-test>

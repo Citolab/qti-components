@@ -1,19 +1,14 @@
 import { QTI_TEST_STATE_VERSION } from '../types/qti-test-state';
 import { dispatchPublic, listenPublic } from '../public-events';
+import { stateFromContexts } from '../state-from-contexts';
 
 import type { PropertyValues } from 'lit';
-import type { SessionContext, TestContext } from '@qti-components/base';
+import type { StateRefusal } from '../public-events';
 import type { QtiTestState, QtiTestStateSession } from '../types/qti-test-state';
 import type { TestBaseInterface } from './test-base';
 
 type Constructor<T = {}> = abstract new (...args: any[]) => T;
 type Value = string | string[] | null;
-
-declare global {
-  interface GlobalEventHandlersEventMap {
-    'qti-state-changed': CustomEvent<QtiTestState>;
-  }
-}
 
 export interface ITestStateMixin {
   /**
@@ -27,6 +22,11 @@ export interface ITestStateMixin {
    * Items are matched by item-ref identifier; items the state does not mention start fresh, and
    * stored items, test outcomes or a position the test no longer has are ignored. Restoring is a
    * resume, so linear-mode navigation restrictions do not apply.
+   *
+   * A value that is not a version 1 `QtiTestState` is ignored and reported with
+   * `qc-test-state-refused`: at once when the test has loaded, or when it does if it was assigned
+   * before. A state assigned earlier that could be read stays in effect. A stored 9.x
+   * `testContext` is turned into a state with `stateFromContexts`.
    */
   state: QtiTestState;
 }
@@ -45,34 +45,11 @@ const isQtiTestState = (value: unknown): value is QtiTestState => {
   );
 };
 
-const toState = (test: Readonly<TestContext>, session: Readonly<SessionContext>): QtiTestState => ({
-  version: QTI_TEST_STATE_VERSION,
-  test: {
-    items: (test?.items ?? [])
-      .filter(item => item.identifier)
-      .map(item => ({
-        identifier: item.identifier,
-        variables: (item.variables ?? []).map(v => ({
-          identifier: v.identifier,
-          ...(v.type ? { type: v.type } : {}),
-          value: copy(v.value)
-        })),
-        ...(item.state ? { state: { ...item.state } } : {})
-      })),
-    outcomes: (test?.testOutcomeVariables ?? []).map(v => ({ identifier: v.identifier, value: copy(v.value) }))
-  },
-  session: {
-    ...(session?.navPartId !== undefined ? { navPartId: session.navPartId } : {}),
-    ...(session?.navSectionId !== undefined ? { navSectionId: session.navSectionId } : {}),
-    ...(session?.navItemRefId !== undefined ? { navItemRefId: session.navItemRefId } : {})
-  }
-});
-
 /**
  * Persist and resume a test session through one value, `state`, and one event,
- * `qti-state-changed`.
+ * `qc-test-state-changed`.
  *
- * Sits directly on top of `TestBaseMixin`, so its `qti-assessment-test-connected` listener runs
+ * Sits directly on top of `TestBaseMixin`, so its `qc-test-loaded` listener runs
  * after the base has built `testContext.items` from the item-refs, and before the navigation
  * mixin's listener picks the first item to load.
  */
@@ -80,6 +57,9 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
   abstract class TestStateClass extends superClass implements ITestStateMixin {
     /** A state assigned before the test connected, applied when it does. */
     #pending: QtiTestState | null = null;
+
+    /** A refused state assigned before the test connected, reported when it does. */
+    #refused: StateRefusal | null = null;
 
     /**
      * False while a test document is loading. Loading resets both contexts and rebuilds them, so
@@ -96,22 +76,47 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
         this.#ready = false;
         this.#lastEmitted = null;
       });
-      listenPublic(this, 'cito-test-loaded', () => {
+      listenPublic(this, 'qc-test-update-plugin-state', ({ detail }) => this.#updatePluginState(detail));
+      listenPublic(this, 'qc-test-loaded', () => {
         if (this.#pending) {
           this.#apply(this.#pending);
           this.#pending = null;
         }
         this.#ready = true;
+        if (this.#refused) {
+          dispatchPublic(this, 'qc-test-state-refused', this.#refused);
+          this.#refused = null;
+        }
       });
     }
 
+    /** One plugin's entry, as JSON: the test stores it without reading it. `null` removes it. */
+    #updatePluginState({ plugin, value }: { plugin: string; value: unknown }): void {
+      if (typeof plugin !== 'string' || plugin === '') return;
+      const { [plugin]: _removed, ...others } = this.sessionContext.plugins ?? {};
+      let next: Record<string, unknown> = others;
+      if (value !== null && value !== undefined) {
+        try {
+          next = { ...others, [plugin]: JSON.parse(JSON.stringify(value)) };
+        } catch {
+          console.warn(`[qti-test] Ignoring plugin state for "${plugin}": it is not JSON.`);
+          return;
+        }
+      }
+      this.sessionContext = { ...this.sessionContext, plugins: next };
+    }
+
     get state(): QtiTestState {
-      return toState(this.testContext, this.sessionContext);
+      return stateFromContexts(this.testContext, this.sessionContext);
     }
 
     set state(value: QtiTestState) {
       if (!isQtiTestState(value)) {
-        console.warn(`[qti-test] Ignoring a state that is not a version ${QTI_TEST_STATE_VERSION} QtiTestState.`);
+        const message = `Ignoring a state that is not a version ${QTI_TEST_STATE_VERSION} QtiTestState.`;
+        console.warn(`[qti-test] ${message}`);
+        // Hosts assign state before the test is in the page, where an event reaches no listener.
+        if (this.#ready) dispatchPublic(this, 'qc-test-state-refused', { message, state: value });
+        else this.#refused = { message, state: value };
         return;
       }
       if (!this.#ready) {
@@ -138,13 +143,14 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
       const serialized = JSON.stringify(state);
       if (serialized === this.#lastEmitted) return;
       this.#lastEmitted = serialized;
-      dispatchPublic(this, 'cito-test-state-changed', state);
+      dispatchPublic(this, 'qc-test-state-changed', state);
     }
 
     #apply(state: QtiTestState): void {
       // Before the items load this only fills the test context; items already on screen are
       // updated too.
       for (const saved of state.test.items) this.updateItemVariables(saved.identifier, saved.variables, saved.state);
+      this.#warnLeftOut(state);
 
       const savedOutcomes = new Map(state.test.outcomes.map(outcome => [outcome.identifier, outcome.value]));
       this.testContext = {
@@ -156,7 +162,26 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
 
       // Written before any navigation request, so the linear-mode restriction — which compares
       // against the current position — sees the restored item as current and lets it load.
-      this.sessionContext = { ...this.sessionContext, ...this.#validSession(state.session) };
+      // Plugins are replaced, not merged: a state without them clears what an earlier one left.
+      this.sessionContext = {
+        ...this.sessionContext,
+        ...this.#validSession(state.session),
+        plugins: state.session.plugins && typeof state.session.plugins === 'object' ? { ...state.session.plugins } : {}
+      };
+    }
+
+    /**
+     * Answers for items this test does not present are not restored, and the next state leaves them
+     * out: a selection (`qti-selection`) that leaves an item out, or a revised test. Said, not silent
+     * (roadmap 1 T4, `plans/host-api.md` → Decided).
+     */
+    #warnLeftOut(state: QtiTestState): void {
+      const presented = new Set(this.testContext.items.map(item => item.identifier));
+      const leftOut = state.test.items.map(item => item.identifier).filter(identifier => !presented.has(identifier));
+      if (leftOut.length === 0) return;
+      console.warn(
+        `[qti-test] The state has answers for items this test does not present (not selected, or no longer in it); they are not restored: ${leftOut.join(', ')}.`
+      );
     }
 
     /** A stored position may point at an item or section a revised test no longer has. */
@@ -173,7 +198,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
     }
 
     #requestNavigation(type: 'item' | 'section', id: string): void {
-      dispatchPublic(this, 'cito-test-navigate', { type, id });
+      dispatchPublic(this, 'qc-test-navigate', { type, id });
     }
   }
 

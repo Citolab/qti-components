@@ -22,8 +22,11 @@ export class QtiMapResponsePoint extends QtiExpression<number> {
       return null;
     }
 
-    const candidateResponses = !Array.isArray(response.value) ? [response.value] : response.value;
-    if (!candidateResponses || candidateResponses.length === 0) {
+    // An unanswered single response is null, not an empty list: it scores the default, not a crash.
+    const candidateResponses = (!Array.isArray(response.value) ? [response.value] : response.value).filter(
+      (value): value is string => typeof value === 'string' && value.length > 0
+    );
+    if (candidateResponses.length === 0) {
       console.warn(`No candidate responses for response ${this.identifier}`);
       return null;
     }
