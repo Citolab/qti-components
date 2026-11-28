@@ -1,5 +1,16 @@
 # @qti-components/test
 
+## 2.0.0-next.23
+
+### Patch Changes
+
+- [#379](https://github.com/Citolab/qti-components/pull/379) [`4edd417`](https://github.com/Citolab/qti-components/commit/4edd417c9a72cdee5585062e6deefd8d9bf49ab6) Thanks [@herrKlein](https://github.com/herrKlein)! - `createDeliveryState({ order })` reads the rendered test's instance ids: a `with-replacement` clone listed as `item-3#2` keeps occurrence 2 wherever ordering put it, even before its original; a bare repeat still takes the next free occurrence, and an instance listed twice is refused with a `RangeError`. `parseItemInstanceId` is the inverse of `itemInstanceId`. The delivery-state vectors gain both cases.
+
+  `QtiTestState` documents that a `with-replacement` clone is stored, navigated to and updated by its instance id (`item-3#2`), and a session with a clone resumes with each instance's own answer.
+
+- Updated dependencies [[`d80ab69`](https://github.com/Citolab/qti-components/commit/d80ab6947413b95b0bc611db96e5ec0d76722c92), [`4edd417`](https://github.com/Citolab/qti-components/commit/4edd417c9a72cdee5585062e6deefd8d9bf49ab6)]:
+  - @qti-components/delivery@0.1.0-next.4
+
 ## 2.0.0-next.22
 
 ### Minor Changes

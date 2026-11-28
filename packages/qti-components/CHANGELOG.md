@@ -1,5 +1,17 @@
 # @citolab/qti-components
 
+## 10.0.0-next.28
+
+### Minor Changes
+
+- [#374](https://github.com/Citolab/qti-components/pull/374) [`d80ab69`](https://github.com/Citolab/qti-components/commit/d80ab6947413b95b0bc611db96e5ec0d76722c92) Thanks [@herrKlein](https://github.com/herrKlein)! - The item session lifecycle (QTI 3 info model §2.2.1) as a transition table (experimental): `ITEM_LIFECYCLE` with the six states QTI names plus `modalFeedback`, and QTI's events, a pure `transition(state, event, guards)` that refuses any transition the table does not list, and `itemLifecycleGuards` / `hasAttemptsLeft`, which read the guards from an item's session control, facts, test part and variables. Nothing calls it yet; `qti-test` follows it from roadmap 1 T3b.
+
+### Patch Changes
+
+- [#379](https://github.com/Citolab/qti-components/pull/379) [`4edd417`](https://github.com/Citolab/qti-components/commit/4edd417c9a72cdee5585062e6deefd8d9bf49ab6) Thanks [@herrKlein](https://github.com/herrKlein)! - `createDeliveryState({ order })` reads the rendered test's instance ids: a `with-replacement` clone listed as `item-3#2` keeps occurrence 2 wherever ordering put it, even before its original; a bare repeat still takes the next free occurrence, and an instance listed twice is refused with a `RangeError`. `parseItemInstanceId` is the inverse of `itemInstanceId`. The delivery-state vectors gain both cases.
+
+  `QtiTestState` documents that a `with-replacement` clone is stored, navigated to and updated by its instance id (`item-3#2`), and a session with a clone resumes with each instance's own answer.
+
 ## 10.0.0-next.27
 
 ### Minor Changes
