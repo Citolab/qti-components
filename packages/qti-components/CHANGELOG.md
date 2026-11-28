@@ -1,5 +1,11 @@
 # @citolab/qti-components
 
+## 10.0.0-next.29
+
+### Patch Changes
+
+- [#375](https://github.com/Citolab/qti-components/pull/375) [`575b22a`](https://github.com/Citolab/qti-components/commit/575b22a105d12ed72e0c6058dce68cc593f4897f) Thanks [@herrKlein](https://github.com/herrKlein)! - `computedContext` is derived anew on every update by one function, from the test, the item facts, the candidate's state and `initContext`, never from the previous context (roadmap 1, T2c). A field taken out of `initContext` is gone at the next update, and an item's `maxScore` follows its current `MAXSCORE` instead of lagging one update behind (host migration: [Kennisnet](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/kennisnet.md), [CitoTestUit](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/citotestuit.md), [PeilingLezen](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/peilinglezen.md), [ExamenKompas](https://github.com/Citolab/qti-components/blob/next/plans/host-migration/examenkompas.md)).
+
 ## 10.0.0-next.28
 
 ### Minor Changes
