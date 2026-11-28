@@ -23,7 +23,8 @@ import type { QtiTestState } from '../types/qti-test-state';
 export interface DeliveryStateInputs {
   /**
    * The item-ref identifiers in the order the candidate meets them: the rendered test's, which is
-   * already shuffled with the seed the host passed.
+   * already selected and shuffled with the seed the host passed; a `with-replacement` clone is its
+   * instance id (`item-1#2`).
    */
   order: readonly string[];
   /** The seed actually used for that order. */
@@ -57,7 +58,6 @@ export function deliveryStateFromQtiTestState(state: QtiTestState, inputs: Deliv
  * @internal
  */
 export function qtiTestStateFromDeliveryState(delivery: DeliveryState, test: QtiTestState['test']): QtiTestState {
-  const current = delivery.current ? delivery.items[delivery.current] : undefined;
   return {
     version: QTI_TEST_STATE_VERSION,
     test: {
@@ -70,7 +70,8 @@ export function qtiTestStateFromDeliveryState(delivery: DeliveryState, test: Qti
     },
     session: {
       ...(Object.keys(delivery.plugins).length > 0 ? { plugins: { ...delivery.plugins } } : {}),
-      ...(current ? { navItemRefId: current.itemRefIdentifier } : {})
+      // The instance id, as the rendered test names the item-ref: a clone is `item-1#2` (roadmap 1 T4).
+      ...(delivery.current ? { navItemRefId: delivery.current } : {})
     }
   };
 }

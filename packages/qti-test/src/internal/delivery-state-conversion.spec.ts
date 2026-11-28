@@ -69,6 +69,15 @@ describe('qtiTestStateFromDeliveryState', () => {
     expect(qtiTestStateFromDeliveryState(delivery, stored.test).session).toEqual({});
   });
 
+  it('keeps a with-replacement clone on screen as its instance id, item-1#2', () => {
+    const withClone = { ...inputs, order: ['item-1', 'item-2', 'item-1#2'] };
+    const state = { ...stored, session: { navItemRefId: 'item-1#2' } };
+    const delivery = deliveryStateFromQtiTestState(state, withClone);
+    expect(delivery.current).toBe('item-1#2');
+    expect(delivery.items['item-1#2']).toEqual({ itemRefIdentifier: 'item-1', occurrence: 2 });
+    expect(qtiTestStateFromDeliveryState(delivery, stored.test).session.navItemRefId).toBe('item-1#2');
+  });
+
   it('copies the values, so the result does not share arrays with its input', () => {
     const result = qtiTestStateFromDeliveryState(deliveryStateFromQtiTestState(stored, inputs), stored.test);
     (result.test.items[0].variables[0].value as string[]).push('C');

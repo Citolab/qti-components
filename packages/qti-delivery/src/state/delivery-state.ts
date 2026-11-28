@@ -52,6 +52,19 @@ export interface DeliveryState {
 export const itemInstanceId = (itemRefIdentifier: string, occurrence = 1): ItemInstanceId =>
   occurrence === 1 ? itemRefIdentifier : `${itemRefIdentifier}#${occurrence}`;
 
+/**
+ * The item-ref and occurrence an instance id names, the inverse of `itemInstanceId`: `item-3#2` is
+ * the second selection of `item-3`. Only a suffix `itemInstanceId` writes (`#2` and up) counts; `#`
+ * cannot occur in a QTI identifier, so no authored identifier reads as a clone.
+ */
+export function parseItemInstanceId(id: ItemInstanceId): { itemRefIdentifier: string; occurrence: number } {
+  const match = /^(.+)#([1-9]\d*)$/.exec(id);
+  const occurrence = match ? Number(match[2]) : 1;
+  return match && occurrence >= 2
+    ? { itemRefIdentifier: match[1], occurrence }
+    : { itemRefIdentifier: id, occurrence: 1 };
+}
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
