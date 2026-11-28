@@ -150,6 +150,7 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
       // Before the items load this only fills the test context; items already on screen are
       // updated too.
       for (const saved of state.test.items) this.updateItemVariables(saved.identifier, saved.variables, saved.state);
+      this.#warnLeftOut(state);
 
       const savedOutcomes = new Map(state.test.outcomes.map(outcome => [outcome.identifier, outcome.value]));
       this.testContext = {
@@ -167,6 +168,20 @@ export const TestStateMixin = <T extends Constructor<TestBaseInterface>>(superCl
         ...this.#validSession(state.session),
         plugins: state.session.plugins && typeof state.session.plugins === 'object' ? { ...state.session.plugins } : {}
       };
+    }
+
+    /**
+     * Answers for items this test does not present are not restored, and the next state leaves them
+     * out: a selection (`qti-selection`) that leaves an item out, or a revised test. Said, not silent
+     * (roadmap 1 T4, `plans/host-api.md` → Decided).
+     */
+    #warnLeftOut(state: QtiTestState): void {
+      const presented = new Set(this.testContext.items.map(item => item.identifier));
+      const leftOut = state.test.items.map(item => item.identifier).filter(identifier => !presented.has(identifier));
+      if (leftOut.length === 0) return;
+      console.warn(
+        `[qti-test] The state has answers for items this test does not present (not selected, or no longer in it); they are not restored: ${leftOut.join(', ')}.`
+      );
     }
 
     /** A stored position may point at an item or section a revised test no longer has. */

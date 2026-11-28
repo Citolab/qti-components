@@ -1,5 +1,11 @@
 # @qti-components/delivery
 
+## 0.1.0-next.3
+
+### Minor Changes
+
+- [#377](https://github.com/Citolab/qti-components/pull/377) [`6613f9a`](https://github.com/Citolab/qti-components/commit/6613f9a89de9c89b0d42c4b03950a8b9e58f8d0f) Thanks [@herrKlein](https://github.com/herrKlein)! - `selectUnits(units, { select, withReplacement }, random)` picks which children of a section a `qti-selection` selects, as implementation guide §4.5.1 recommends: required ones always, the rest with an equal chance, clones (`with-replacement`) only once every child is in, authored order kept for ordering to shuffle later. A `select` QTI calls an error is refused with a `RangeError`. `selection.vectors.json` records the selections per seed, for a .NET port to run.
+
 ## 0.1.0-next.2
 
 ### Minor Changes

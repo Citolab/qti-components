@@ -25,7 +25,10 @@ export interface QtiTestState {
 }
 
 export interface QtiTestStateItem {
-  /** The `qti-assessment-item-ref` identifier. */
+  /**
+   * The `qti-assessment-item-ref` identifier; for the clone of an item-ref that `qti-selection
+   * with-replacement="true"` selected again, its instance id: `item-3#2` (roadmap 1 T4).
+   */
   identifier: string;
   variables: (QtiTestStateValue & { type?: 'response' | 'outcome' | 'template' | 'context' })[];
   /** Opaque per-interaction state keyed by response identifier, e.g. a PCI's `getState()`. */
@@ -53,6 +56,7 @@ export interface QtiTestStateSession {
   plugins?: Partial<QtiTestPluginState> & Record<string, unknown>;
   navPartId?: string | null;
   navSectionId?: string | null;
+  /** The item on screen, as `items[].identifier` names it: a clone is `item-3#2`. */
   navItemRefId?: string | null;
 }
 

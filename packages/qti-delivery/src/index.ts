@@ -3,6 +3,7 @@ export * from './model/item-facts.js';
 export type { XmlElement, XmlNode } from './model/xml-node.js';
 export * from './lifecycle/item-lifecycle.js';
 export * from './random/seeded-random.js';
+export * from './random/selection.js';
 export * from './random/shuffle.js';
 export * from './state/clock.js';
 export * from './state/commands.js';
