@@ -55,7 +55,7 @@ Per item instance (`ItemInstanceId` → item):
 | ------------------- | --------------------------------------------------------------------------- | ----- |
 | `itemRefIdentifier` | the item-ref it was selected from                                           | T0    |
 | `occurrence`        | 1 for the first selection, 2 for its first clone (`with-replacement`)       | T0    |
-| `lifecycle`         | `initial`, `interacting`, `suspended`, `closed`, `review` or `solution`     | T3    |
+| `lifecycle`         | QTI's lifecycle state: one of `ITEM_LIFECYCLE_STATES` (seven)               | T3    |
 | `numAttempts`       | attempts so far                                                             | T3    |
 | `duration`          | time spent `interacting`                                                    | T5    |
 | `completionStatus`  | QTI's `completionStatus`                                                    | T3    |
@@ -77,8 +77,8 @@ restoring on `next` (decided 2026-11-18):
 - Version 1 is read for as long as hosts may hold it; a later version reads it too.
 - A field version 1 lacks is derived or defaulted, and the phase that adds it says how: `order`
   from the seed the host passes (T1e), `lifecycle` from `numAttempts` and the session control
-  (T3), `timing` from the stored `duration` (T5). T4 decides what happens to stored answers for
-  items a selection leaves out.
+  (T3), `timing` from the stored `duration` (T5). Stored answers for items a selection leaves out
+  are dropped, with a console warning (T4, decided 2026-11-27).
 - Stored contexts convert to `QtiTestState` with a public function, `stateFromContexts` (T1e), so a
   host can convert what it stored before `testContext` and `sessionContext` are removed (roadmap 5).
 - A state that cannot be read is not dropped silently: `qtiTest.state` reports it with
@@ -102,7 +102,8 @@ restoring on `next` (decided 2026-11-18):
 - **T2**: `computedContext` as the derivation; `initContext` into `item.data`; `stampContext` the stamp's
   flat view of the current part.
 - **T3**: `lifecycle`, `numAttempts`, `completionStatus`; the `can*` flags derived from them.
-- **T4**: `order` written once from the seed.
+- **T4**: `order` written once from the seed: the rendered test's instance ids, a
+  `with-replacement` clone as `item-3#2` wherever ordering puts it.
 - **T5**: `timing` and `duration`.
 - **T8**: the variables move into `DeliveryState`; `testContext` retires.
 - **Roadmap 5**: `sessionContext` and `testContext` deprecated and removed; `view` an input; maybe

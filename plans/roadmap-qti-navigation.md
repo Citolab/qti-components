@@ -65,8 +65,8 @@ T1; T5, T6 and T8 after T3; T7 after T8.
 | T0  | The delivery package                   | G1    | done   |
 | T1  | The test model from the XML            | T0    | done   |
 | T2  | One computed context                   | T1    | doing  |
-| T3  | The item session lifecycle             | T1    | todo   |
-| T4  | `qti-selection` and ordering           | T1    | doing  |
+| T3  | The item session lifecycle             | T1    | doing  |
+| T4  | `qti-selection` and ordering           | T1    | done   |
 | T5  | `qti-time-limits`                      | T3    | todo   |
 | T6  | Scoring that follows `submission-mode` | T3    | todo   |
 | T7  | Test-part boundaries                   | T8    | todo   |
@@ -98,7 +98,7 @@ What a test part supports from QTI 3, today and after which phase. Today is read
 | Unsubmitted responses at the end of a nonlinear individual part                                    | not signalled                                                              | T7             |
 | `qti-test-feedback` on a test part (`atEnd` of the part)                                           | `getTestFeedback()` knows the whole test only                              | T7             |
 | `qti-ordering`                                                                                     | works (impl. guide §4.5.2)                                                 | T4             |
-| `qti-selection`                                                                                    | works at load; `with-replacement` clones not checked end to end yet        | T4             |
+| `qti-selection`                                                                                    | works (impl. guide §4.5.1); `Q01.2.SCORE` lookups are T8                   | T4             |
 | `qti-time-limits`                                                                                  | not supported                                                              | T5             |
 | `qti-adaptive-selection` (CAT)                                                                     | not supported                                                              | roadmap 4      |
 
@@ -229,7 +229,8 @@ Plan: [item-lifecycle.md](item-lifecycle.md).
 Scope: `packages/qti-test` (`test-navigation`, `test-next`, `test-prev`, `test-end-attempt`),
 `packages/qti-base` (`qti-feedback`), `packages/qti-corrections`.
 
-- [ ] T3a The item session lifecycle (QTI 3 info model §2.2.1) as a finite state machine per item.
+- [x] T3a The item session lifecycle (QTI 3 info model §2.2.1) as a finite state machine per item:
+      `ITEM_LIFECYCLE` and `transition` in `@qti-components/delivery`, with JSON vectors.
 - [ ] T3b One rules module that drives the machine; the buttons, the lock and feedback read its state.
 - [ ] T3c `validate-responses` and `allow-comment` take effect.
 - [ ] T3d `lifecycle`, `numAttempts` and `completionStatus` in `DeliveryState`; the `can*` flags
@@ -243,26 +244,30 @@ Done when: that plan's "Done when".
 
 Plan: this section. Scope: `packages/qti-transformers` (next to `shuffleOrdering`), `qti-test`.
 
-- [ ] Apply `qti-selection` (`select`, `with-replacement`, `qti-selection` with required refs) at
+- [x] Apply `qti-selection` (`select`, `with-replacement`, `qti-selection` with required refs) at
       load, seeded like the ordering, so a resumed session gets the same items.
   - [x] `selectUnits` in `@qti-components/delivery` (implementation guide §4.5.1), with
         `selection.vectors.json` for a .NET port;
   - [x] applied at load in `qtiTransformTest` (`applySelection`), before ordering, by `test-container`;
         an invalid selection stops the test loading; stored answers for left-out items are dropped
         with a warning.
-- [ ] The T1 model holds only the selected item-refs; `DeliveryState.order` is written once from
+- [x] The T1 model holds only the selected item-refs; `DeliveryState.order` is written once from
       the seed.
   - [x] the model holds only the selected item-refs: it is built from the rendered test;
-  - [ ] `DeliveryState.order` from the rendered instance ids (`item-3#2`), written once.
-- [ ] Conformance: S3-L2-D1/D2 and S4-L2-D1 pass; a `spec/` story for `with-replacement`.
+  - [x] `DeliveryState.order` from the rendered instance ids (`item-3#2`), written once:
+        `createDeliveryState` and the `QtiTestState` conversion keep a clone's occurrence wherever
+        ordering puts it (`parseItemInstanceId`).
+- [x] Conformance: S3-L2-D1/D2 and S4-L2-D1 pass; a `spec/` story for `with-replacement`.
   - [x] S3-L2-D1/D2 and S4-L2-D1 pass with the seed `s3-s4`; S4-L2-D11/D12 jump to items it selects;
-  - [ ] a `spec/` story for `with-replacement`.
+  - [x] a `spec/` story for `with-replacement`: `QTI behaviour/Selection with replacement`, a clone
+        an item session of its own.
 - [x] Ordering dissolves a subsection only when `visible` and `keep-together` are both false
       (`shuffle-sections.ts`), as implementation guide §4.5.2 says. A subsection that moves as a
       block stays a section; a dissolved one hands its session control to its children; an
       extended `qti-ordering` is ignored.
 
-Done when: selection stories pass with a fixed seed, and the same seed selects the same items.
+Done when (met 2026-11-27): selection stories pass with a fixed seed, and the same seed selects the
+same items.
 
 ### T5. `qti-time-limits`
 
@@ -314,6 +319,9 @@ Plan: to write before the phase starts. Scope: `test-processing.mixin.ts`,
 
 - [ ] Branch rules treat a section merged from a `qti-assessment-section-ref` as a leaf (info model
       §7.5): a rule cannot target a section inside it. Found in T1 (S9-L2-D1).
+- [ ] A `with-replacement` instance's variables are looked up as `Q01.2.SCORE` (info model §7.47),
+      onto the clone `Q01#2`; plain `Q01.SCORE` is the last submitted instance with simultaneous
+      submission. Found in T4.
 - [ ] Test outcome processing runs after every submission: per item in an individual part, per
       part in a simultaneous one (info model §2.9).
 - [ ] Leaving an item runs, in order: response and outcome processing, branch rules (item, then

@@ -30,7 +30,7 @@ interface QtiTestState {
   version: 1;
   test: {
     items: {
-      identifier: string; // the qti-assessment-item-ref identifier
+      identifier: string; // the qti-assessment-item-ref identifier; a with-replacement clone's is item-3#2
       variables: {
         identifier: string;
         type?: 'response' | 'outcome' | 'template' | 'context';
@@ -44,7 +44,10 @@ interface QtiTestState {
 }
 ```
 
-Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is.
+Values only: no answer key, no declaration metadata. Treat it as opaque and store it as-is. An item
+that `qti-selection with-replacement="true"` presents more than once has an entry per instance: the
+first under its item-ref identifier, a clone under its instance id (`item-3#2`), which is also what
+`navItemRefId`, `navigateTo('item', …)` and `updateItemVariables` take.
 
 A value that is not a version 1 state is ignored, and the test sends `qc-test-state-refused` with
 `{ message, state }`, once it has loaded. Log it, or tell the candidate their answers could not be

@@ -678,6 +678,24 @@ item's `state`, which `setOutcomes` does not cover. Decide with the next item-ti
     neither pair on order and drops both on import, and no fixture here carries them, so no
     editor-authored item depends on the old names.
   - Not checked: Kennisnet's and CitoTestUit's content, and what TAO's authoring writes.
+- **Item session control follows QTI only; no "optimal" stop** (2026-11-27, roadmap 1 T3): attempts
+  are limited by `max-attempts` (0 unlimited), or for an adaptive item by `completionStatus`
+  (implementation guide §4.4.2.1), and nothing else. `test-end-attempt` stays enabled while attempts
+  are left, also when the last attempt was optimal, and Next in a linear part leaves the item (it is
+  closed) whatever attempts are left (§4.1). `computedContext`'s `optimal` stays, as information
+  only. A fix (10.x), shipped in T3b with host-migration entries.
+- **Next in a linear individual part ends the attempt** (2026-11-27, roadmap 1 T3): on an item whose
+  attempt the candidate has not ended, Next runs response processing, then closes the item. Skipping
+  is Next with no response; `allow-skipping="false"` and `validate-responses` keep Next disabled while
+  the response is the default or invalid (§4.4.2.6–7). Ships in T3b.
+- **`allow-comment` is carried, not rendered** (2026-11-27, roadmap 1 T3c): `sessionControl.allowComment`,
+  a `comment` in the item's state and a request to set it, refused unless the item allows comments and
+  is `interacting`. The comment field is a host's or a qti-extended plugin's.
+- **The item session lifecycle is a transition table in `delivery`** (2026-10-30, roadmap 1 T3):
+  `ITEM_LIFECYCLE` and a pure `transition(state, event, guards)` in `@qti-components/delivery`
+  (shipped in T3a), with the six states info model §2.2.1 names plus `modalFeedback`, and QTI's
+  events; no controller and no mixin, so a server runs the same rules. `test-navigation` calls it
+  (T3b).
 - **Items in order: `itemOrder` and `itemsInOrder`** (2026-11-27, roadmap 1 T1, Elective T7): each
   `computedContext.testParts[]` carries `itemOrder`, its item-ref identifiers in document order, and
   `itemsInOrder(testPart)` from `@qti-components/test` reads the items in that order. `test-next`

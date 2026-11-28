@@ -72,6 +72,74 @@
           }
         }
       }
+    },
+    {
+      "name": "the rendered test's instance ids: a clone keeps its occurrence, even before its original",
+      "options": {
+        "now": 0,
+        "seed": "s",
+        "order": ["item-2", "item-1#2", "item-1", "item-1#3"]
+      },
+      "state": {
+        "version": 1,
+        "seed": "s",
+        "startedAt": 0,
+        "current": null,
+        "order": ["item-2", "item-1#2", "item-1", "item-1#3"],
+        "plugins": {},
+        "items": {
+          "item-2": {
+            "itemRefIdentifier": "item-2",
+            "occurrence": 1
+          },
+          "item-1#2": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 2
+          },
+          "item-1": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 1
+          },
+          "item-1#3": {
+            "itemRefIdentifier": "item-1",
+            "occurrence": 3
+          }
+        }
+      }
+    },
+    {
+      "name": "a cloned subsection: its items' clones, by instance id",
+      "options": {
+        "now": 0,
+        "seed": "s",
+        "order": ["item-4#2", "item-5#2", "item-4", "item-5"]
+      },
+      "state": {
+        "version": 1,
+        "seed": "s",
+        "startedAt": 0,
+        "current": null,
+        "order": ["item-4#2", "item-5#2", "item-4", "item-5"],
+        "plugins": {},
+        "items": {
+          "item-4#2": {
+            "itemRefIdentifier": "item-4",
+            "occurrence": 2
+          },
+          "item-5#2": {
+            "itemRefIdentifier": "item-5",
+            "occurrence": 2
+          },
+          "item-4": {
+            "itemRefIdentifier": "item-4",
+            "occurrence": 1
+          },
+          "item-5": {
+            "itemRefIdentifier": "item-5",
+            "occurrence": 1
+          }
+        }
+      }
     }
   ],
   "accepted": [
