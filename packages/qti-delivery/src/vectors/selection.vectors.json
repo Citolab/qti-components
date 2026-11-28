@@ -1,0 +1,142 @@
+{
+  "description": "qti-selection (implementation guide §4.5.1), as selectUnits in @qti-components/delivery selects (2026-11-27). Every runtime, a .NET port included, must give exactly these indices for these seeds (createSeededRandom), or a resumed session gets other items. `selected` is in authored order; a repeated index is a with-replacement clone. Each entry of `invalid` is refused (a RangeError here).",
+  "selectUnits": [
+    {
+      "seed": "seed-1",
+      "required": [false, false, false],
+      "select": 2,
+      "withReplacement": false,
+      "selected": [0, 1]
+    },
+    {
+      "seed": "seed-2",
+      "required": [false, false, false],
+      "select": 2,
+      "withReplacement": false,
+      "selected": [0, 2]
+    },
+    {
+      "seed": "seed-1",
+      "required": [true, false, false],
+      "select": 2,
+      "withReplacement": false,
+      "selected": [0, 1]
+    },
+    {
+      "seed": "seed-2",
+      "required": [true, false, false],
+      "select": 2,
+      "withReplacement": false,
+      "selected": [0, 2]
+    },
+    {
+      "seed": "candidate-42:test-7",
+      "required": [false, false, false, false, false, false, false, false],
+      "select": 3,
+      "withReplacement": false,
+      "selected": [2, 3, 5]
+    },
+    {
+      "seed": "candidate-42:test-7",
+      "required": [false, true, false, false, true, false, false, false],
+      "select": 4,
+      "withReplacement": false,
+      "selected": [1, 3, 4, 6]
+    },
+    {
+      "seed": 12345,
+      "required": [false, false, false, false],
+      "select": 1,
+      "withReplacement": false,
+      "selected": [1]
+    },
+    {
+      "seed": "a",
+      "required": [false, false],
+      "select": 0,
+      "withReplacement": false,
+      "selected": []
+    },
+    {
+      "seed": "a",
+      "required": [false, true, false],
+      "select": 3,
+      "withReplacement": false,
+      "selected": [0, 1, 2]
+    },
+    {
+      "seed": "a",
+      "required": [],
+      "select": 0,
+      "withReplacement": false,
+      "selected": []
+    },
+    {
+      "seed": "seed-1",
+      "required": [false, false, false],
+      "select": 3,
+      "withReplacement": true,
+      "selected": [0, 1, 2]
+    },
+    {
+      "seed": "seed-1",
+      "required": [false, false, false],
+      "select": 7,
+      "withReplacement": true,
+      "selected": [0, 0, 1, 1, 1, 2, 2]
+    },
+    {
+      "seed": "seed-2",
+      "required": [true, false, false],
+      "select": 7,
+      "withReplacement": true,
+      "selected": [0, 1, 1, 2, 2, 2, 2]
+    },
+    {
+      "seed": "seed-1",
+      "required": [true, false, false, false],
+      "select": 2,
+      "withReplacement": true,
+      "selected": [0, 1]
+    },
+    {
+      "seed": "Ünïcødé ✓",
+      "required": [false, false, false, false, false],
+      "select": 12,
+      "withReplacement": true,
+      "selected": [0, 0, 0, 1, 1, 1, 1, 2, 3, 4, 4, 4]
+    }
+  ],
+  "invalid": [
+    {
+      "required": [true, true, false],
+      "select": 1,
+      "withReplacement": false
+    },
+    {
+      "required": [true, true, false],
+      "select": 1,
+      "withReplacement": true
+    },
+    {
+      "required": [false, false],
+      "select": 3,
+      "withReplacement": false
+    },
+    {
+      "required": [],
+      "select": 1,
+      "withReplacement": true
+    },
+    {
+      "required": [false],
+      "select": -1,
+      "withReplacement": false
+    },
+    {
+      "required": [false, false],
+      "select": 1.5,
+      "withReplacement": false
+    }
+  ]
+}

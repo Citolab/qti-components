@@ -80,7 +80,9 @@ export class TestContainer extends LitElement {
     if (!this.testURL) return;
     try {
       const explicitSeed = this.qtiContext?.QTI_CONTEXT?.seed;
-      let api = (await qtiTransformTest().load(this.testURL)).shuffleOrdering(explicitSeed);
+      let api = (await qtiTransformTest().load(this.testURL))
+        .applySelection(explicitSeed)
+        .shuffleOrdering(explicitSeed);
       // Apply external transformation if provided
       const qtiTest = this.testHost;
       if (qtiTest?.postLoadTestTransformCallback) {
@@ -128,6 +130,7 @@ export class TestContainer extends LitElement {
       this.#setTestDoc(
         qtiTransformTest()
           .parse(this.testXML)
+          .applySelection(explicitSeed)
           .shuffleOrdering(explicitSeed)
           .htmlDoc(this.#resolvedCustomElementRegistry ?? undefined)
       );

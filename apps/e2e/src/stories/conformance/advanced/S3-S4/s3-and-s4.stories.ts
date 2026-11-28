@@ -3,7 +3,6 @@ import { expect, waitFor } from 'storybook/test';
 import { within } from 'shadow-dom-testing-library';
 
 import { candidateIn } from '../../conformance-candidate';
-import { todo } from '../../conformance-todo';
 
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 
@@ -12,11 +11,11 @@ type Story = StoryObj;
 /**
  * The suite's "S3 and S4" sample (Advanced profile), loaded unmodified from
  * `public/assets/qti-conformance/Advanced/S3-S4/`: a nonlinear, simultaneous test part with two
- * visible sections, each selecting 2 of 3 items, section B shuffled. A story with a `play` asserts its
- * criterion; a placeholder (tagged `todo`, with the phase that tests it) has none yet.
+ * visible sections, each selecting 2 of 3 items, section B shuffled.
  *
- * `qti-selection` is roadmap 1 T4, so today every item of a section is presented; the stories here do
- * not count items. Section B shuffles, so the test gets a seed.
+ * Selection and ordering follow the seed (roadmap 1 T4): with the seed `s3-s4` section A presents
+ * items 1 and 2, and section B selects items 4 and 6 and shuffles them to 6, 4. Another seed selects
+ * other items; the same seed always the same ones.
  */
 const meta: Meta = {
   title: 'Testing/Conformance/advanced/S3 and S4',
@@ -33,37 +32,108 @@ const meta: Meta = {
 };
 export default meta;
 
-// todo: phase T4
+/** The item-refs the test presents, without the suite's prefix: `item-1`, `item-2`, … */
+const presented = (canvasElement: HTMLElement) =>
+  candidateIn(canvasElement)
+    .test()
+    .testContext.items.map(item => item.identifier.replace('s3s4-sections-', ''));
+
 export const S3_L2_D1: Story = {
   name: 'S3-L2-D1',
-  tags: ['todo'],
-  ...todo(
-    'S3-L2-D1',
-    's3selection_s4ordering.xml, In Section A, we select 2 items out of 3 with Item 1 required. The remaining item needed to fill the selection (value 2 in this case) must be selected randomly from the remaining 2 non-required items.',
-    'qti3.0/Advanced/S3 and S4/readme.md'
-  )
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'In Section A, we select 2 items out of 3 with Item 1 required. The remaining item needed to fill the selection must be selected randomly from the remaining 2 non-required items.'
+      }
+    },
+    testTimeout: 60000
+  },
+  play: async ({ canvasElement, step }) => {
+    const candidate = candidateIn(canvasElement);
+
+    await step('The test opens on item 1, the required item of section A', async () => {
+      await candidate.sees('S3S4 - Sections - Item 1');
+      expect(candidate.section()).toBe('sectionA');
+    });
+
+    await step('Next shows item 2: the seed selected it from items 2 and 3', async () => {
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 2');
+      expect(candidate.section()).toBe('sectionA');
+    });
+
+    await step('Section A presents 2 of its 3 items: item 3 is not in the test', async () => {
+      expect(presented(canvasElement).filter(id => ['item-1', 'item-2', 'item-3'].includes(id))).toEqual([
+        'item-1',
+        'item-2'
+      ]);
+    });
+  }
 };
 
-// todo: phase T4
 export const S4_L2_D1: Story = {
   name: 'S4-L2-D1',
-  tags: ['todo'],
-  ...todo(
-    'S4-L2-D1',
-    's3selection_s4ordering.xml, Section B, shuffled Order is true, which requires the selected items to be shuffled yet again.',
-    'qti3.0/Advanced/S3 and S4/readme.md'
-  )
+  parameters: {
+    docs: {
+      description: {
+        story: 'Section B, shuffled Order is true, which requires the selected items to be shuffled yet again.'
+      }
+    },
+    testTimeout: 60000
+  },
+  play: async ({ canvasElement, step }) => {
+    const candidate = candidateIn(canvasElement);
+
+    await step('After section A, section B opens on item 6, not on item 4 as authored', async () => {
+      await candidate.sees('S3S4 - Sections - Item 1');
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 2');
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 6');
+      expect(candidate.section()).toBe('sectionB');
+    });
+
+    await step('Next shows item 4: the selected items 4 and 6, shuffled', async () => {
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 4');
+      expect(candidate.section()).toBe('sectionB');
+    });
+  }
 };
 
-// todo: phase T4
 export const S3_L2_D2: Story = {
   name: 'S3-L2-D2',
-  tags: ['todo'],
-  ...todo(
-    'S3-L2-D2',
-    's3selection_s4ordering.xml, In Section B, we select 2 items out of 3 with no items required.  The items needed to fill the selection (value 2 in this case) must be selected randomly from the 3 available items.',
-    'qti3.0/Advanced/S3 and S4/readme.md'
-  )
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'In Section B, we select 2 items out of 3 with no items required. The items needed to fill the selection must be selected randomly from the 3 available items.'
+      }
+    },
+    testTimeout: 60000
+  },
+  play: async ({ canvasElement, step }) => {
+    const candidate = candidateIn(canvasElement);
+
+    await step('Section B presents 2 of its 3 items, chosen by the seed: items 6 and 4', async () => {
+      await candidate.sees('S3S4 - Sections - Item 1');
+      expect(presented(canvasElement).filter(id => ['item-4', 'item-5', 'item-6'].includes(id))).toEqual([
+        'item-6',
+        'item-4'
+      ]);
+    });
+
+    await step('Next through section B reaches items 6 and 4, and never item 5', async () => {
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 2');
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 6');
+      await candidate.press('Next');
+      await candidate.sees('S3S4 - Sections - Item 4');
+      expect(presented(canvasElement)).not.toContain('item-5');
+    });
+  }
 };
 
 export const S4_L2_D11: Story = {
@@ -79,9 +149,9 @@ export const S4_L2_D11: Story = {
       await candidate.sees('S3S4 - Sections - Item 1');
     });
 
-    await step('The candidate jumps over the rest of section A to item 5, in section B', async () => {
-      candidate.test().navigateTo('item', 's3s4-sections-item-5');
-      await candidate.sees('S3S4 - Sections - Item 5');
+    await step('The candidate jumps over the rest of section A to item 4, in section B', async () => {
+      candidate.test().navigateTo('item', 's3s4-sections-item-4');
+      await candidate.sees('S3S4 - Sections - Item 4');
       expect(candidate.section()).toBe('sectionB');
     });
 

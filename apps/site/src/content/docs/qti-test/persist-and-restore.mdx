@@ -16,8 +16,9 @@ if (saved) qtiTest.state = saved;
 qtiTest.addEventListener('qc-test-state-changed', e => save(candidateId, e.detail));
 ```
 
-**Pass the same `seed` in `qtiContext` when resuming**, or items and choices come back in a different
-order. Config, `qtiContext` and `view` are not part of the state; you supply them on every load.
+**Pass the same `seed` in `qtiContext` when resuming**, or the test selects other items
+(`qti-selection`) and items and choices come back in a different order. Answers in a state for items
+the test does not present are not restored, with a console warning. Config, `qtiContext` and `view` are not part of the state; you supply them on every load.
 
 Assign the state before the test loads where you can: a PCI that is already on screen only picks up
 a new state when its item loads again.
